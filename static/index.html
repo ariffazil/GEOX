@@ -1,1420 +1,1085 @@
 <!DOCTYPE html>
 <html lang="en" data-ring="ORGAN" data-organ="geox">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOX · Earth Evidence Operating System</title>
-    <meta name="description" content="GEOX is the Earth Evidence Operating System of the arifOS federation. From Evidence → Interpretation → Consequence. Governed geological claims under F1–F13 constitutional floors.">
-    <link rel="canonical" href="https://geox.arif-fazil.com/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEOX · Earth Intelligence · arifOS Federation</title>
+  <meta name="description" content="GEOX — Earth intelligence for the arifOS federation. 33 tools: basin analysis, seismic interpretation, petrophysics, prospect evaluation. Evidence-gated, human-decided. Natural Law domain." />
+  <meta property="og:title" content="GEOX · Earth Intelligence" />
+  <meta property="og:description" content="Sovereign Earth intelligence. 33 tools. Basin, seismic, petrophysics, prospects — all governed by NATURAL_LAW." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!-- Google Fonts for premium typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    :root {
+      --bg: #050505;
+      --bg2: #0a0a10;
+      --gold: #d4af37;
+      --cyan: #00c9a7;
+      --red: #ef4444;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.12);
+      --text: #e2e2e5;
+      --muted: rgba(255,255,255,0.4);
+      --dim: rgba(255,255,255,0.18);
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
 
-    <!-- Federation design system and local styles -->
-    <link rel="stylesheet" href="/_shared/design-system/tokens.css">
-    <link rel="stylesheet" href="https://arifosmcp.arif-fazil.com/arifos-theme.css">
+    html { scroll-behavior: smooth; }
 
-    <style>
-        :root {
-            /* Palette Design Tokens */
-            --bg-dark: #07070a;
-            --bg-card: #0d0d14;
-            --border-glow: rgba(245, 158, 11, 0.15);
-            --border-dim: rgba(255, 255, 255, 0.05);
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
 
-            --amber-earth: #f59e0b;
-            --amber-earth-glow: rgba(245, 158, 11, 0.35);
-            --emerald-wealth: #10b981;
-            --emerald-wealth-glow: rgba(16, 185, 129, 0.35);
-            --cyan-gov: #06b6d4;
-            --cyan-gov-glow: rgba(6, 182, 212, 0.35);
+    a { text-decoration: none; color: inherit; }
 
-            --text-high: #f4f4f5;
-            --text-med: #a1a1aa;
-            --text-low: #52525b;
+    /* ── TOP BAR ── */
+    #topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(5,5,5,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
 
-            --font-sans: 'Inter', -apple-system, sans-serif;
-            --font-heading: 'Outfit', sans-serif;
-            --font-mono: 'Fira Code', monospace;
-        }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    .topbar-brand {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-high);
-            font-family: var(--font-sans);
-            line-height: 1.6;
-            min-height: 100vh;
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
-                linear-gradient(to bottom, var(--bg-dark), #0b0b10);
-            background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
-        }
+    .topbar-status {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+      justify-content: center;
+    }
 
-        body::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
 
-        .container {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
+    .status-pill.green { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald); }
+    .status-pill.gold { background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); color: var(--gold); }
+    .status-pill.red { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
+    .status-pill.gray { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); }
 
-        /* Navigation Header */
-        header {
-            padding: 1.5rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-dim);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            margin-bottom: 0;
-            background: rgba(7, 7, 10, 0.7);
-        }
+    .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .dot.pulse { animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-        .logo-group {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
+    .topbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
 
-        .logo-text {
-            font-family: var(--font-heading);
-            font-weight: 800;
-            font-size: 1.3rem;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #fff, var(--amber-earth));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .topbar-nav a {
+      font-family: var(--mono);
+      font-size: 0.625rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.7rem;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+    .topbar-nav a:hover { color: var(--text); border-color: var(--border2); }
 
-        .logo-separator {
-            color: var(--text-low);
-            font-family: var(--font-mono);
-            font-size: 1rem;
-        }
+    /* ── TAB BAR ── */
+    .tabbar {
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,5,5,0.95);
+    }
+    .tabbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.25rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      font-family: var(--mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--text); border-bottom-color: var(--gold); background: rgba(212,175,55,0.04); }
 
-        .logo-sub {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            letter-spacing: 1px;
-            color: var(--text-med);
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
+    /* ── MAIN ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
+    /* HERO */
+    .hero {
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .hero-kicker {
+      font-family: var(--mono);
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span.gold { color: var(--gold); }
+    .hero h1 span.dim { color: rgba(255,255,255,0.2); }
 
-        .nav-links a {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-med);
-            text-decoration: none;
-            font-weight: 500;
-            font-family: var(--font-mono);
-            transition: color 0.2s ease;
-            padding: 0.25rem 0;
-        }
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 600px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      background: var(--gold);
+      color: #000;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 2px;
+    }
+    .btn-primary:hover { background: #e8c55a; }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      background: transparent;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border: 1px solid var(--border2);
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 2px;
+    }
+    .btn-outline:hover { color: var(--text); border-color: var(--gold); }
 
-        .nav-links a:hover { color: var(--amber-earth); }
-        .nav-links a.active { color: var(--amber-earth); }
+    /* METRICS BAR */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 2.5rem;
+      overflow: hidden;
+    }
+    .metric {
+      padding: 1.25rem 1.5rem;
+      border-right: 1px solid var(--border);
+    }
+    .metric:last-child { border-right: none; }
+    .metric-val {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .metric-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.2rem;
+    }
+    .metric-sub {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--dim);
+      font-style: italic;
+    }
 
-        /* === HERO === */
-        .hero {
-            padding: 5.5rem 0 3.5rem;
-            text-align: center;
-            position: relative;
-        }
+    /* SECTION HEADER */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      font-style: italic;
+      line-height: 1;
+    }
+    .section-title {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .section-badge {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--emerald);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
 
-        .hero::before {
-            content: "Φ";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24rem;
-            font-weight: 900;
-            color: rgba(245, 158, 11, 0.025);
-            font-family: var(--font-heading);
-            z-index: -1;
-            pointer-events: none;
-        }
+    /* COCKPIT CARDS */
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .cockpit-card {
+      display: block;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .cockpit-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(212,175,55,0.03));
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .cockpit-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-1px); }
+    .cockpit-card:hover::before { opacity: 1; }
+    .cockpit-card:hover .cc-title { color: var(--gold); }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--amber-earth);
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+    .cc-tag {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      opacity: 0.7;
+    }
+    .cc-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .cc-title {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+      transition: color 0.15s;
+    }
+    .cc-desc {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .cc-link {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .cc-status {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 2px;
+    }
+    .cc-status.live { background: rgba(16,185,129,0.15); color: var(--emerald); }
+    .cc-status.ext { background: rgba(212,175,55,0.1); color: var(--gold); }
+    .cc-status.gui { background: rgba(0,201,167,0.1); color: var(--cyan); }
 
-        .hero-badge .pulse-orange {
-            width: 8px;
-            height: 8px;
-            background: var(--amber-earth);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--amber-earth);
-            animation: pulse-ring 2s infinite ease-in-out;
-        }
+    /* TOOL GRID */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.4rem;
+      margin-bottom: 2.5rem;
+    }
+    .tool-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.65rem 0.9rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      transition: all 0.15s;
+    }
+    .tool-row:hover { border-color: var(--border2); background: rgba(255,255,255,0.04); }
+    .tool-name {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.65);
+      font-weight: 500;
+    }
+    .tool-row:hover .tool-name { color: #fff; }
+    .tool-desc {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      color: var(--dim);
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .tool-badge {
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-left: 0.5rem;
+    }
+    .tool-badge.gold { background: rgba(212,175,55,0.1); color: var(--gold); }
+    .tool-badge.cyan { background: rgba(0,201,167,0.1); color: var(--cyan); }
+    .tool-badge.gray { background: rgba(255,255,255,0.05); color: var(--muted); }
 
-        @keyframes pulse-ring {
-            0% { transform: scale(0.95); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 1; box-shadow: 0 0 12px var(--amber-earth); }
-            100% { transform: scale(0.95); opacity: 0.5; }
-        }
+    /* ATTESTATION GRID */
+    .attest-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .attest-card {
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg2);
+    }
+    .attest-key {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.4rem;
+    }
+    .attest-val {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      word-break: break-all;
+    }
+    .attest-val.emerald { color: var(--emerald); }
+    .attest-val.gold { color: var(--gold); }
+    .attest-val.cyan { color: var(--cyan); }
+    .attest-val.red { color: var(--red); }
 
-        .hero h1 {
-            font-family: var(--font-heading);
-            font-size: clamp(2.4rem, 5vw, 3.8rem);
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 60%, rgba(255, 255, 255, 0.55) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    /* TABS CONTENT */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-        .hero h1 .accent {
-            background: linear-gradient(135deg, var(--amber-earth), #d97706);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-brand {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--dim);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--gold); }
 
-        .hero-tagline {
-            font-family: var(--font-mono);
-            font-size: 1.05rem;
-            color: var(--amber-earth);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            margin-bottom: 1.75rem;
-        }
+    /* LOADING SPINNER */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 12px; height: 12px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
 
-        .hero-description {
-            font-size: 1.15rem;
-            color: var(--text-med);
-            max-width: 760px;
-            margin: 0 auto 1.5rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        .hero-thesis {
-            font-family: var(--font-heading);
-            font-size: 1.35rem;
-            font-weight: 600;
-            color: var(--text-high);
-            max-width: 720px;
-            margin: 1.5rem auto 0;
-            line-height: 1.5;
-        }
-
-        .hero-thesis .divider { color: var(--amber-earth); margin: 0 0.6rem; font-weight: 400; }
-
-        .hero-cta-row {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2.5rem;
-            flex-wrap: wrap;
-        }
-
-        .cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.85rem 1.5rem;
-            border-radius: 8px;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.3px;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-        .cta.primary {
-            background: linear-gradient(135deg, var(--amber-earth), #d97706);
-            color: #07070a;
-            border: 1px solid var(--amber-earth);
-        }
-        .cta.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25); }
-        .cta.secondary {
-            background: transparent;
-            color: var(--text-high);
-            border: 1px solid var(--border-dim);
-        }
-        .cta.secondary:hover { border-color: rgba(245, 158, 11, 0.3); color: var(--amber-earth); }
-
-        /* Status bar */
-        .status-bar {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            border: 1px solid var(--border-dim);
-            background: rgba(13, 13, 20, 0.5);
-            backdrop-filter: blur(8px);
-            border-radius: 12px;
-            padding: 1rem 1.5rem;
-            margin: 1rem 0 4rem;
-            font-size: 0.85rem;
-            align-items: center;
-        }
-        .status-bar-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .status-bar-item:nth-child(2) {
-            justify-content: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-            color: var(--amber-earth);
-            font-family: var(--font-mono);
-        }
-        .status-bar-item:nth-child(3) {
-            justify-content: flex-end;
-            color: var(--text-med);
-            font-family: var(--font-mono);
-        }
-        .status-dot-green {
-            width: 8px;
-            height: 8px;
-            background: #2ed573;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #2ed573;
-            display: inline-block;
-        }
-        @media (max-width: 768px) {
-            .status-bar { grid-template-columns: 1fr; gap: 0.75rem; text-align: center; }
-            .status-bar-item:nth-child(2), .status-bar-item:nth-child(3) { justify-content: flex-start; }
-        }
-
-        /* === SECTION HEADERS === */
-        .section-header {
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        .section-header h2 {
-            font-family: var(--font-heading);
-            font-size: 1.85rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 0.4rem;
-        }
-        .section-header .num {
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--amber-earth);
-            background: rgba(245, 158, 11, 0.08);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            letter-spacing: 1px;
-        }
-        .section-header p {
-            color: var(--text-med);
-            font-size: 0.95rem;
-            margin-top: 0.25rem;
-            max-width: 720px;
-        }
-
-        /* === STICKY 3-SECOND ANSWER PULSE ===
-           The Sacred Navigation Law — every page answers in 3 seconds:
-           Where am I? / Why should I care? / What can I do next?
-        */
-        .zen-pulse {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0;
-            background: rgba(13, 13, 20, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-top: 1px solid var(--border-dim);
-            border-bottom: 1px solid var(--border-dim);
-            padding: 0.85rem 0;
-            margin: 0 0 3rem 0;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            position: sticky;
-            top: 76px;
-            z-index: 99;
-        }
-        @media (max-width: 768px) {
-            .zen-pulse { grid-template-columns: 1fr; gap: 0.5rem; }
-        }
-        .zp-item {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            padding: 0 1.5rem;
-            border-left: 1px solid var(--border-dim);
-        }
-        .zp-item:first-child { border-left: none; padding-left: 0; }
-        @media (max-width: 768px) {
-            .zp-item { padding: 0.35rem 0; border-left: none; }
-        }
-        .zp-ask {
-            color: var(--text-low);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.62rem;
-            white-space: nowrap;
-        }
-        .zp-val {
-            color: var(--text-high);
-            font-weight: 600;
-            font-size: 0.82rem;
-        }
-        .zp-val.gold { color: var(--amber-earth); }
-        .zp-val .delta { color: var(--text-med); font-weight: 400; }
-
-        /* === INTENT CARDS (verbs, not nouns) ===
-           One Screen = One Question. Surface the 20% verb-first.
-        */
-        .intent-section { margin: 4rem 0 5rem 0; }
-        .intent-section .section-header h2 {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-        }
-        .intent-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.85rem;
-            margin-top: 2rem;
-        }
-        @media (max-width: 900px) { .intent-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 540px) { .intent-grid { grid-template-columns: 1fr; } }
-
-        .intent-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 10px;
-            padding: 1.4rem 1.5rem;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .intent-card:hover {
-            border-color: rgba(245, 158, 11, 0.4);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-        }
-        .intent-card .verb {
-            font-family: var(--font-heading);
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--amber-earth);
-            letter-spacing: -0.3px;
-            line-height: 1.15;
-        }
-        .intent-card .object {
-            color: var(--text-high);
-            font-size: 0.92rem;
-            font-weight: 500;
-        }
-        .intent-card .you-get {
-            color: var(--text-med);
-            font-size: 0.78rem;
-            line-height: 1.45;
-            font-family: var(--font-mono);
-            margin-top: 0.35rem;
-        }
-        .intent-card .arrow {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-low);
-            margin-top: 0.5rem;
-        }
-        .intent-card:hover .arrow { color: var(--amber-earth); }
-
-        /* === COLLAPSIBLE DETAILS (Show Less, Reveal More) === */
-        details.zen-reveal {
-            background: rgba(13, 13, 20, 0.5);
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 0;
-            margin: 1.25rem 0;
-            overflow: hidden;
-        }
-        details.zen-reveal[open] {
-            border-color: rgba(245, 158, 11, 0.2);
-        }
-        details.zen-reveal > summary {
-            cursor: pointer;
-            padding: 1rem 1.5rem;
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--text-med);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            list-style: none;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            transition: color 0.2s;
-        }
-        details.zen-reveal > summary::-webkit-details-marker { display: none; }
-        details.zen-reveal > summary::before {
-            content: "▶";
-            color: var(--amber-earth);
-            font-size: 0.6rem;
-            transition: transform 0.2s;
-        }
-        details.zen-reveal[open] > summary::before { transform: rotate(90deg); }
-        details.zen-reveal > summary:hover { color: var(--text-high); }
-        details.zen-reveal > .reveal-body {
-            padding: 0 1.5rem 1.5rem 1.5rem;
-            border-top: 1px solid var(--border-dim);
-        }
-
-        /* === THE CONTRAST === */
-        .contrast-section {
-            margin: 5rem 0;
-            padding: 3rem 0;
-            border-top: 1px solid var(--border-dim);
-            border-bottom: 1px solid var(--border-dim);
-        }
-        .contrast-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 2rem;
-            background: rgba(13, 13, 20, 0.5);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .contrast-table th, .contrast-table td {
-            padding: 1.1rem 1.5rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-dim);
-            vertical-align: top;
-        }
-        .contrast-table thead th {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: rgba(0, 0, 0, 0.4);
-            color: var(--text-med);
-        }
-        .contrast-table thead th.geox-col {
-            color: var(--amber-earth);
-            background: rgba(245, 158, 11, 0.05);
-        }
-        .contrast-table tbody tr:last-child td { border-bottom: none; }
-        .contrast-table tbody tr:hover { background: rgba(255,255,255,0.01); }
-        .contrast-table td {
-            font-size: 0.95rem;
-            color: var(--text-med);
-            line-height: 1.55;
-        }
-        .contrast-table td:first-child {
-            color: var(--text-high);
-            font-weight: 600;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-        }
-        .contrast-table td.geox-cell {
-            color: var(--text-high);
-            background: rgba(245, 158, 11, 0.025);
-        }
-        .contrast-table td.geox-cell strong {
-            color: var(--amber-earth);
-            font-weight: 600;
-        }
-        @media (max-width: 768px) {
-            .contrast-table thead { display: none; }
-            .contrast-table, .contrast-table tbody, .contrast-table tr, .contrast-table td { display: block; width: 100%; }
-            .contrast-table td { border-bottom: none; padding: 0.75rem 1.5rem; }
-            .contrast-table td:first-child { padding-top: 1.25rem; background: rgba(0,0,0,0.3); }
-            .contrast-table td.geox-cell { background: rgba(245,158,11,0.04); border-left: 3px solid var(--amber-earth); }
-            .contrast-table tr { margin-bottom: 1rem; }
-        }
-
-        /* === 4 SURFACES HUB === */
-        .surfaces-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-            margin-bottom: 5rem;
-        }
-        @media (max-width: 768px) { .surfaces-grid { grid-template-columns: 1fr; } }
-        .surface-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-dim);
-            border-radius: 12px;
-            padding: 2rem 2rem;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-            min-height: 280px;
-        }
-        .surface-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%);
-            pointer-events: none;
-        }
-        .surface-card:hover { transform: translateY(-4px); border-color: rgba(245, 158, 11, 0.3); }
-        .surface-card[data-color="earth"]:hover { border-color: rgba(245, 158, 11, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(245, 158, 11, 0.06); }
-        .surface-card[data-color="gov"]:hover { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(6, 182, 212, 0.06); }
-        .surface-card[data-color="wealth"]:hover { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(16, 185, 129, 0.06); }
-        .surface-card[data-color="agent"]:hover { border-color: rgba(139, 92, 246, 0.4); box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 20px rgba(139, 92, 246, 0.06); }
-
-        .surface-card .card-tag {
-            font-family: var(--font-mono);
-            font-size: 0.68rem;
-            text-transform: uppercase;
-            letter-spacing: 1.8px;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-        .surface-card[data-color="earth"] .card-tag { color: var(--amber-earth); }
-        .surface-card[data-color="gov"] .card-tag { color: var(--cyan-gov); }
-        .surface-card[data-color="wealth"] .card-tag { color: var(--emerald-wealth); }
-        .surface-card[data-color="agent"] .card-tag { color: #a78bfa; }
-
-        .surface-card h3 {
-            font-family: var(--font-heading);
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.6rem;
-        }
-        .surface-card .audience {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--text-low);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.85rem;
-        }
-        .surface-card p {
-            color: var(--text-med);
-            font-size: 0.92rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-        .surface-card .questions {
-            margin-bottom: 1.5rem;
-        }
-        .surface-card .questions li {
-            font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: var(--text-med);
-            padding: 0.35rem 0;
-            list-style: none;
-        }
-        .surface-card .questions li::before {
-            content: "→ ";
-            color: var(--amber-earth);
-            margin-right: 0.4rem;
-        }
-        .surface-card[data-color="gov"] .questions li::before { color: var(--cyan-gov); }
-        .surface-card[data-color="wealth"] .questions li::before { color: var(--emerald-wealth); }
-        .surface-card[data-color="agent"] .questions li::before { color: #a78bfa; }
-
-        .card-action {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-high);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: gap 0.2s ease;
-            margin-top: auto;
-        }
-        .surface-card:hover .card-action { gap: 0.7rem; }
-        .surface-card[data-color="earth"]:hover .card-action { color: var(--amber-earth); }
-        .surface-card[data-color="gov"]:hover .card-action { color: var(--cyan-gov); }
-        .surface-card[data-color="wealth"]:hover .card-action { color: var(--emerald-wealth); }
-        .surface-card[data-color="agent"]:hover .card-action { color: #a78bfa; }
-
-        /* === AUDIENCE MINI-CARDS === */
-        .audience-section { margin: 5rem 0; }
-        .audience-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        @media (max-width: 1024px) { .audience-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 540px) { .audience-grid { grid-template-columns: 1fr; } }
-        .aud-card {
-            background: rgba(13, 13, 20, 0.5);
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 1.5rem 1.25rem;
-            transition: all 0.2s;
-        }
-        .aud-card:hover { border-color: rgba(245, 158, 11, 0.25); transform: translateY(-2px); }
-        .aud-card .role {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--amber-earth);
-            margin-bottom: 0.75rem;
-        }
-        .aud-card .ask {
-            font-size: 0.95rem;
-            color: var(--text-high);
-            line-height: 1.5;
-            font-weight: 500;
-            margin-bottom: 0.85rem;
-        }
-        .aud-card .where {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            color: var(--text-med);
-        }
-        .aud-card .where a {
-            color: var(--amber-earth);
-            text-decoration: none;
-        }
-        .aud-card .where a:hover { text-decoration: underline; }
-
-        /* === SOVEREIGN BRIDGE — preserved but condensed === */
-        .bridge-section {
-            background: linear-gradient(180deg, rgba(13, 13, 20, 0.4) 0%, rgba(13, 13, 20, 0.8) 100%);
-            border: 1px solid var(--border-dim);
-            border-radius: 20px;
-            padding: 3rem 2.5rem;
-            margin-bottom: 5rem;
-            position: relative;
-        }
-        .bridge-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), rgba(6, 182, 212, 0.3), rgba(16, 185, 129, 0.3), transparent);
-        }
-        .bridge-flow {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
-            margin: 2.5rem 0 1.5rem;
-            position: relative;
-            gap: 1.25rem;
-        }
-        @media (max-width: 900px) {
-            .bridge-flow { flex-direction: column; align-items: center; }
-            .bridge-connector-arrow { transform: rotate(90deg); margin: -0.5rem 0; }
-        }
-        .bridge-flow::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(245,158,11,0.1), rgba(6,182,212,0.2), rgba(16,185,129,0.1));
-            z-index: 0;
-            transform: translateY(-50%);
-        }
-        .bridge-node {
-            background: var(--bg-dark);
-            border: 1px solid var(--border-dim);
-            border-radius: 14px;
-            padding: 1.75rem 1.4rem;
-            text-align: center;
-            flex: 1;
-            max-width: 280px;
-            z-index: 1;
-            position: relative;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
-        }
-        .bridge-node:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); }
-        .bridge-node.node-earth { border-color: rgba(245, 158, 11, 0.25); }
-        .bridge-node.node-gov { border-color: rgba(6, 182, 212, 0.25); }
-        .bridge-node.node-wealth { border-color: rgba(16, 185, 129, 0.25); }
-        .bridge-node .node-icon { font-size: 1.8rem; margin-bottom: 0.6rem; display: inline-block; }
-        .bridge-node .node-title {
-            font-family: var(--font-heading);
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.35rem;
-        }
-        .bridge-node .node-tag {
-            font-family: var(--font-mono);
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            padding: 0.15rem 0.5rem;
-            border-radius: 4px;
-            margin-bottom: 0.6rem;
-            display: inline-block;
-        }
-        .node-earth .node-tag { background: rgba(245, 158, 11, 0.1); color: var(--amber-earth); }
-        .node-gov .node-tag { background: rgba(6, 182, 212, 0.1); color: var(--cyan-gov); }
-        .node-wealth .node-tag { background: rgba(16, 185, 129, 0.1); color: var(--emerald-wealth); }
-        .bridge-node .node-desc { font-size: 0.78rem; color: var(--text-med); line-height: 1.5; }
-        .bridge-connector-arrow {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: var(--text-low);
-            z-index: 1;
-            font-family: var(--font-mono);
-        }
-        .bridge-code-block {
-            background-color: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 1.1rem;
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--amber-earth);
-            text-align: center;
-            overflow-x: auto;
-            max-width: 720px;
-            margin: 1rem auto 0;
-        }
-        .bridge-code-block span.kernel { color: var(--cyan-gov); }
-        .bridge-code-block span.wealth { color: var(--emerald-wealth); }
-
-        /* === HEALTH WIDGET === */
-        .health-widget {
-            border: 1px solid var(--border-dim);
-            background: #09090d;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .widget-title {
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-med);
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .widget-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-        @media (max-width: 768px) { .widget-grid { grid-template-columns: 1fr; } }
-        .widget-card {
-            background: rgba(255, 255, 255, 0.01);
-            border: 1px solid var(--border-dim);
-            border-radius: 8px;
-            padding: 0.85rem 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .widget-card .organ-info { display: flex; flex-direction: column; }
-        .widget-card .organ-name {
-            font-family: var(--font-heading);
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #fff;
-        }
-        .widget-card .organ-port {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-low);
-            margin-top: 0.1rem;
-        }
-        .widget-card .organ-reason {
-            font-size: 0.6rem;
-            color: var(--text-low);
-            font-family: var(--font-mono);
-            margin-top: 0.15rem;
-            display: block;
-            text-transform: uppercase;
-        }
-        .widget-card .organ-status {
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-        }
-        .widget-card .status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .widget-card.status-online .status-dot { background-color: #2ed573; box-shadow: 0 0 8px #2ed573; }
-        .widget-card.status-online .status-text { color: #2ed573; }
-        .widget-card.status-offline .status-dot { background-color: #ff4757; box-shadow: 0 0 8px #ff4757; }
-        .widget-card.status-offline .status-text { color: #ff4757; }
-        .widget-card.status-pending .status-dot { background-color: var(--amber-earth); animation: blink 1s infinite alternate; }
-        .widget-card.status-pending .status-text { color: var(--amber-earth); }
-        @keyframes blink { from { opacity: 0.3; } to { opacity: 1; } }
-
-        hr {
-            border: none;
-            border-top: 1px solid var(--border-dim);
-            margin: 4rem 0;
-        }
-
-        footer {
-            padding: 3rem 0 4rem;
-            border-top: 1px solid var(--border-dim);
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-low);
-        }
-        .federation-seal {
-            font-family: var(--font-mono);
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: var(--amber-earth);
-            letter-spacing: 4px;
-            margin-bottom: 0.8rem;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.15);
-        }
-        footer p { font-size: 0.8rem; color: var(--text-med); margin-bottom: 1.5rem; }
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        .footer-links a {
-            color: var(--text-med);
-            text-decoration: none;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            transition: color 0.2s ease;
-        }
-        .footer-links a:hover { color: var(--amber-earth); }
-    </style>
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .cockpit-grid { grid-template-columns: repeat(2, 1fr); }
+      .tool-grid { grid-template-columns: 1fr; }
+      .attest-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .cockpit-grid { grid-template-columns: 1fr; }
+      .attest-grid { grid-template-columns: 1fr; }
+      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
+      .topbar-status { display: none; }
+      .hero h1 { font-size: 2.5rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
 
-        <header>
-            <div class="logo-group">
-                <span class="logo-text">GEOX</span>
-                <span class="logo-separator">|</span>
-                <span class="logo-sub">Earth Evidence OS</span>
-            </div>
-            <nav class="nav-links">
-                <a href="#" class="active">Home</a>
-                <a href="#what-do-you-want">What do you want?</a>
-                <a href="why.html">Why</a>
-                <a href="constitution.html">Constitution</a>
-                <a href="agents.html">Agents</a>
-            </nav>
-        </header>
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">Φ GEOX · NATURAL LAW</div>
+    <div class="topbar-status">
+      <div class="status-pill green" id="status-health">
+        <div class="dot pulse"></div>
+        <span id="status-text">PROBING…</span>
+      </div>
+      <div class="status-pill gold" id="status-tools">
+        <span id="tools-count">— TOOLS</span>
+      </div>
+      <div class="status-pill gray" id="status-drift">
+        <span id="drift-text">DRIFT: —</span>
+      </div>
+      <div class="status-pill gray">
+        <span id="version-text">—</span>
+      </div>
+    </div>
+    <nav class="topbar-nav">
+      <a href="https://arif-fazil.com" target="_blank">← arif-fazil.com</a>
+      <a href="https://aaa.arif-fazil.com" target="_blank">AAA</a>
+      <a href="/health" target="_blank">Health</a>
+      <a href="/llms.txt" target="_blank">llms.txt</a>
+    </nav>
+  </div>
 
-        <!-- ZEN PULSE — the Sacred Navigation Law (Where am I / Why care / What next) -->
-        <div class="zen-pulse" aria-label="Navigation law">
-            <div class="zp-item">
-                <span class="zp-ask">Where am I?</span>
-                <span class="zp-val">GEOX · Home</span>
-            </div>
-            <div class="zp-item">
-                <span class="zp-ask">Why care?</span>
-                <span class="zp-val gold" id="zp-why">Evidence preserved. <span class="delta">Failure = HOLD.</span></span>
-            </div>
-            <div class="zp-item">
-                <span class="zp-ask">What next?</span>
-                <span class="zp-val" id="zp-next">Pick a verb below ↓</span>
-            </div>
-        </div>
+  <!-- TAB BAR -->
+  <div class="tabbar">
+    <div class="tabbar-inner">
+      <button class="tab-btn active" onclick="switchTab('overview', this)">🌍 00. Overview</button>
+      <button class="tab-btn" onclick="switchTab('cockpits', this)">🎯 01. Decision Cockpits</button>
+      <button class="tab-btn" onclick="switchTab('tools', this)">🔌 02. MCP Tools (33)</button>
+      <button class="tab-btn" onclick="switchTab('attestation', this)">⚖️ 03. Attestation</button>
+      <button class="tab-btn" onclick="switchTab('gui', this)">🖥️ 04. GUI Apps</button>
+    </div>
+  </div>
+</div>
 
-        <!-- HERO -->
-        <section class="hero">
-            <div class="hero-badge">
-                <span class="pulse-orange"></span>
-                <span>φ GEOX · arifOS federation organ · :8081</span>
-            </div>
-            <h1>
-                What are you trying to <span class="accent">understand</span>?
-            </h1>
-            <div class="hero-tagline">Explore · Analyze · Reconstruct · Challenge · Compare · Ask</div>
-            <p class="hero-description">
-                GEOX is the governed substrate that disciplines AI claims about the Earth.
-                Evidence preserved. Uncertainty explicit. Failure = HOLD.
-            </p>
-            <div class="hero-thesis">
-                Not faster hallucination.<span class="divider">·</span><em>Disciplined Earth intelligence.</em>
-            </div>
+<div class="main">
 
-            <div class="hero-cta-row">
-                <a href="#what-do-you-want" class="cta primary">Pick a verb &nbsp;↓</a>
-                <a href="why.html" class="cta secondary">Or read the warung kopi version</a>
-            </div>
-        </section>
+  <!-- ══════════════════════════════ TAB 00: OVERVIEW ══════════════════════════════ -->
+  <div class="tab-content active" id="tab-overview">
+    <section class="hero">
+      <div class="hero-kicker">GEOX · Earth Intelligence · arifOS Federation Organ · Port 8081</div>
+      <h1>
+        Earth<span class="gold">.</span><br />
+        <span class="dim">Intelligence</span>
+      </h1>
+      <p class="hero-sub">
+        Sovereign Earth intelligence. Basin analysis, seismic interpretation, petrophysics, prospect evaluation.
+        Evidence-gated by constitutional floors. Human-decided. Sealed to VAULT999.
+      </p>
+      <div class="hero-actions">
+        <a href="#" onclick="switchTab('cockpits', document.querySelector('[onclick*=cockpits]')); return false;" class="btn-primary">
+          Enter Decision Cockpits →
+        </a>
+        <a href="#" onclick="switchTab('tools', document.querySelector('[onclick*=tools]')); return false;" class="btn-outline">
+          Browse 33 MCP Tools
+        </a>
+        <a href="https://geox.arif-fazil.com/mcp" target="_blank" class="btn-outline">
+          MCP Gateway ↗
+        </a>
+      </div>
+    </section>
 
-        <!-- Live Status Bar -->
-        <div class="status-bar">
-            <div class="status-bar-item">
-                <span class="status-dot-green"></span>
-                <span>SYSTEM_LIVE: <span id="server-version">v2026.07.23-PHASE-C-SEALED</span></span>
-            </div>
-            <div class="status-bar-item">
-                <span>VAULT_999_CONNECTED</span>
-            </div>
-            <div class="status-bar-item" id="last-updated">
-                2026.07.23 // LIVE
-            </div>
-        </div>
-
-        <!-- THE CONTRAST -->
-        <section class="contrast-section" id="contrast">
-            <div class="section-header">
-                <h2><span class="num">01</span> The Moat</h2>
-                <p>Five contrasts that explain why GEOX is not "another geological toolkit". Without this table, the visitor sees features. With it, the visitor understands purpose.</p>
-            </div>
-
-            <table class="contrast-table">
-                <thead>
-                    <tr>
-                        <th>Dimension</th>
-                        <th>Traditional Software</th>
-                        <th class="geox-col">GEOX</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Evidence</td>
-                        <td>Stored interpretations. The model becomes the truth.</td>
-                        <td class="geox-cell"><strong>Evidence preserved</strong> with every claim — interpretation cannot exist without its lineage.</td>
-                    </tr>
-                    <tr>
-                        <td>Uncertainty</td>
-                        <td>False certainty. A number is given, no band around it.</td>
-                        <td class="geox-cell"><strong>Uncertainty explicit</strong> — P10/P50/P90 bands mandatory. F7 caps confidence at 0.90.</td>
-                    </tr>
-                    <tr>
-                        <td>Claims</td>
-                        <td>Claims forgotten. Nobody remembers who first said what.</td>
-                        <td class="geox-cell"><strong>Claims audited</strong> — every interpretation has evidence, alternatives, and an audit trail.</td>
-                    </tr>
-                    <tr>
-                        <td>Failure</td>
-                        <td>Failure equals silence. The system quietly degrades.</td>
-                        <td class="geox-cell"><strong>Failure equals HOLD</strong> — frozen awaiting human ratification. Never a shrug.</td>
-                    </tr>
-                    <tr>
-                        <td>Decision</td>
-                        <td>Decision opaque. No way to reconstruct why.</td>
-                        <td class="geox-cell"><strong>Decision traceable</strong> — hash-chained into VAULT999. Forever reproducible.</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p style="text-align: center; margin-top: 2.5rem; color: var(--text-high); font-family: var(--font-heading); font-size: 1.2rem; font-weight: 600;">
-                The contrast creates meaning. <span style="color: var(--amber-earth);">Without it, the visitor sees features. With it, they understand purpose.</span>
-            </p>
-        </section>
-
-        <!-- INTENT CARDS (verbs, not nouns) -->
-        <section class="intent-section" id="what-do-you-want">
-            <div class="section-header">
-                <h2><span class="num">02</span> What are you trying to understand?</h2>
-                <p>One verb. One object. Two clicks to act. GEOX does the rest — agents gather evidence, models generate interpretations, contradictions are surfaced.</p>
-            </div>
-
-            <div class="intent-grid">
-                <a href="apps/well-desk/index.html" class="intent-card">
-                    <div class="verb">Explore</div>
-                    <div class="object">a basin or a field</div>
-                    <div class="you-get">→ Well logs · seismic · structure · context</div>
-                    <span class="arrow">2 clicks → Workbench</span>
-                </a>
-                <a href="apps/well-desk/index.html" class="intent-card">
-                    <div class="verb">Analyze</div>
-                    <div class="object">a well or an interval</div>
-                    <div class="you-get">→ Vsh · φ · Sw · net pay · uncertainty band</div>
-                    <span class="arrow">2 clicks → Well Witness</span>
-                </a>
-                <a href="apps/prospect-ui/index.html" class="intent-card">
-                    <div class="verb">Reconstruct</div>
-                    <div class="object">a region at depth</div>
-                    <div class="you-get">→ Burial · thermal · structural history</div>
-                    <span class="arrow">2 clicks → Prospect Forge</span>
-                </a>
-                <a href="constitution.html#contradiction-scan" class="intent-card">
-                    <div class="verb">Challenge</div>
-                    <div class="object">an existing interpretation</div>
-                    <div class="you-get">→ Alternatives · contradictions · falsification</div>
-                    <span class="arrow">1 click → Constitution</span>
-                </a>
-                <a href="apps/prospect-ui/index.html" class="intent-card">
-                    <div class="verb">Compare</div>
-                    <div class="object">two models or two basins</div>
-                    <div class="you-get">→ Side-by-side · risk · POS · EVOI</div>
-                    <span class="arrow">2 clicks → Prospect Forge</span>
-                </a>
-                <a href="agents.html" class="intent-card">
-                    <div class="verb">Ask</div>
-                    <div class="object">GEOX — directly</div>
-                    <div class="you-get">→ MCP tool · JSON contract · evidence</div>
-                    <span class="arrow">1 click → Agent Surface</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- 4 SURFACES — IA map (behind the verbs) -->
-        <section id="surfaces">
-            <div class="section-header">
-                <h2><span class="num">03</span> Where things live</h2>
-                <p>If you already know what you want — pick the surface. The verbs above route into these four areas.</p>
-            </div>
-
-            <div class="surfaces-grid">
-                <!-- 1. Why GEOX (Human deep read) -->
-                <a href="why.html" class="surface-card" data-color="earth">
-                    <div>
-                        <span class="card-tag">Human · deep read</span>
-                        <h3>Why GEOX</h3>
-                        <div class="audience">Executives · Students · Curious</div>
-                        <p>The warung-kopi version of the GEOX story. Most geological software stores interpretations — GEOX stores evidence. And that single decision changes everything.</p>
-                        <ul class="questions">
-                            <li>"So what?"</li>
-                            <li>"Why does this exist?"</li>
-                            <li>"Should I care?"</li>
-                        </ul>
-                    </div>
-                    <span class="card-action">Read the why &nbsp;→</span>
-                </a>
-
-                <!-- 2. Workbench (Geologist) -->
-                <a href="apps/well-desk/index.html" class="surface-card" data-color="gov">
-                    <div>
-                        <span class="card-tag">Workbench · geologist</span>
-                        <h3>Workbench</h3>
-                        <div class="audience">Geologists · Basin teams · Petrophysicists</div>
-                        <p>Petrel meets Bloomberg Terminal. Well Witness, Prospect Forge, Basin Explorer, Seismic Viewer — interactive geology with full evidence grounding on every operation.</p>
-                        <ul class="questions">
-                            <li>"Show me the geology."</li>
-                            <li>"Where is the closure?"</li>
-                            <li>"What does the log say?"</li>
-                        </ul>
-                    </div>
-                    <span class="card-action">Enter the workbench &nbsp;→</span>
-                </a>
-
-                <!-- 3. Constitution (Philosophy) -->
-                <a href="constitution.html" class="surface-card" data-color="wealth">
-                    <div>
-                        <span class="card-tag">Constitution · philosophy</span>
-                        <h3>The Constitution</h3>
-                        <div class="audience">Governance · Compliance · Auditors · The skeptical</div>
-                        <p>Why GEOX behaves the way it does. OBS/DER/INT/SPEC epistemic labels, RASA context-fit, 888_HOLD, the 13 floors. DITEMPA BUKAN DIBERI.</p>
-                        <ul class="questions">
-                            <li>"Why does GEOX behave this way?"</li>
-                            <li>"What is RASA?"</li>
-                            <li>"What does 888_HOLD mean?"</li>
-                        </ul>
-                    </div>
-                    <span class="card-action">Read the constitution &nbsp;→</span>
-                </a>
-
-                <!-- 4. Agents (MCP / API) -->
-                <a href="agents.html" class="surface-card" data-color="agent">
-                    <div>
-                        <span class="card-tag">Agent · MCP / API</span>
-                        <h3>For Agents</h3>
-                        <div class="audience">LLM clients · MCP hosts · Agent frameworks</div>
-                        <p>The governed MCP tool surface. 31 canonical tools, JSON schemas, sample invocations, the failure contract. Live-witnessed from <code>/health</code> + <code>tools/list</code>.</p>
-                        <ul class="questions">
-                            <li>"What can I call?"</li>
-                            <li>"What contracts must I respect?"</li>
-                            <li>"What does HOLD mean for my agent?"</li>
-                        </ul>
-                    </div>
-                    <span class="card-action">Open agent surface &nbsp;→</span>
-                </a>
-            </div>
-        </section>
-
-        <!-- AUDIENCE — verb-first paths -->
-        <section class="audience-section">
-            <div class="section-header">
-                <h2><span class="num">04</span> Who are you, and what do you want to do?</h2>
-                <p>Pick the verb. We'll route you there.</p>
-            </div>
-
-            <div class="audience-grid">
-                <div class="aud-card">
-                    <div class="role">Geologist · basin lead</div>
-                    <div class="ask">I want to <em>explore</em> and <em>analyze</em>.</div>
-                    <div class="where">→ <a href="apps/well-desk/index.html">Open the Workbench</a></div>
-                </div>
-                <div class="aud-card">
-                    <div class="role">Executive · investor</div>
-                    <div class="ask">I want to <em>compare</em> and <em>decide</em>.</div>
-                    <div class="where">→ <a href="constitution.html">Read the Constitution</a></div>
-                </div>
-                <div class="aud-card">
-                    <div class="role">Engineer · agent builder</div>
-                    <div class="ask">I want to <em>call</em> and <em>integrate</em>.</div>
-                    <div class="where">→ <a href="agents.html">Open the Agent Surface</a></div>
-                </div>
-                <div class="aud-card">
-                    <div class="role">Student · curious</div>
-                    <div class="ask">I want to <em>understand</em> before doing.</div>
-                    <div class="where">→ <a href="why.html">Read Why GEOX</a></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- COLLAPSIBLE: Sovereign Bridge — for the systems-thinker -->
-        <details class="zen-reveal" id="bridge">
-            <summary>The Sovereign Bridge · how Earth becomes capital</summary>
-            <div class="reveal-body">
-                <div class="bridge-flow" style="margin: 2rem 0;">
-                    <div class="bridge-node node-earth">
-                        <span class="node-icon">🌍</span>
-                        <h4 class="node-title">Earth</h4>
-                        <span class="node-tag">GEOX</span>
-                        <p class="node-desc">Logs, seismic, outcrops, biostrat, deep-time context — parsed, verified, labeled OBS/DER/INT/SPEC.</p>
-                    </div>
-
-                    <div class="bridge-connector-arrow">&rarr;</div>
-
-                    <div class="bridge-node node-gov">
-                        <span class="node-icon">🏛️</span>
-                        <h4 class="node-title">Governance</h4>
-                        <span class="node-tag">arifOS</span>
-                        <p class="node-desc">F1–F13 floor filters evaluate evidence validity. 888_HOLD if a claim awaits ratification.</p>
-                    </div>
-
-                    <div class="bridge-connector-arrow">&rarr;</div>
-
-                    <div class="bridge-node node-wealth">
-                        <span class="node-icon">Ξ</span>
-                        <h4 class="node-title">Sovereignty</h4>
-                        <span class="node-tag">WEALTH</span>
-                        <p class="node-desc">Capital decisions modeled, optimized, and sealed. NPV/IRR/EMV computed, never allocated.</p>
-                    </div>
-                </div>
-
-                <div class="bridge-code-block">
-                    geox.evaluate_prospect() &rarr; <span class="kernel">arifos.bridge_contract()</span> &rarr; <span class="wealth">wealth.npv_reward()</span>
-                </div>
-            </div>
-        </details>
-
-        <!-- COLLAPSIBLE: Live Federation Health — for the operator -->
-        <details class="zen-reveal" id="health">
-            <summary>Live Federation Health · operational signal</summary>
-            <div class="reveal-body">
-                <div class="widget-grid" style="margin-top: 1.5rem;">
-                    <div class="widget-card status-pending" id="health-geox">
-                        <div class="organ-info">
-                            <span class="organ-name">GEOX Organ</span>
-                            <span class="organ-port">Port :8081</span>
-                            <span class="organ-reason"></span>
-                        </div>
-                        <div class="organ-status">
-                            <span class="status-dot"></span>
-                            <span class="status-text">PROBING</span>
-                        </div>
-                    </div>
-                    <div class="widget-card status-pending" id="health-arifos">
-                        <div class="organ-info">
-                            <span class="organ-name">arifOS Kernel</span>
-                            <span class="organ-port">Port :8088</span>
-                            <span class="organ-reason"></span>
-                        </div>
-                        <div class="organ-status">
-                            <span class="status-dot"></span>
-                            <span class="status-text">PROBING</span>
-                        </div>
-                    </div>
-                    <div class="widget-card status-pending" id="health-wealth">
-                        <div class="organ-info">
-                            <span class="organ-name">WEALTH Organ</span>
-                            <span class="organ-port">Port :18082</span>
-                            <span class="organ-reason"></span>
-                        </div>
-                        <div class="organ-status">
-                            <span class="status-dot"></span>
-                            <span class="status-text">PROBING</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </details>
-
-        <hr>
-
-        <footer>
-            <div class="federation-seal">DITEMPA BUKAN DIBERI</div>
-            <p>&copy; 2026 Muhammad Arif bin Fazil · arifOS Federation · Earth Evidence Operating System</p>
-            <div class="footer-links">
-                <a href="why.html">Why GEOX</a>
-                <a href="constitution.html">Constitution</a>
-                <a href="agents.html">For Agents</a>
-                <a href="apps/well-desk/index.html">Workbench</a>
-                <a href="https://arif-fazil.com">Sovereign Root</a>
-                <a href="https://github.com/ariffazil/GEOX">Source</a>
-            </div>
-        </footer>
-
+    <!-- LIVE METRICS -->
+    <div class="metrics-bar" id="metrics-bar">
+      <div class="metric">
+        <div class="metric-label">Status</div>
+        <div class="metric-val" style="color: var(--emerald); font-size:1.3rem;" id="m-status">—</div>
+        <div class="metric-sub" id="m-verdict">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Tools Loaded</div>
+        <div class="metric-val" style="color: var(--gold);" id="m-tools">—</div>
+        <div class="metric-sub" id="m-drift">drift: —</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Domain Law</div>
+        <div class="metric-val" style="color: var(--cyan); font-size:1rem; padding-top:0.4rem;" id="m-law">—</div>
+        <div class="metric-sub" id="m-version">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Deploy Drift</div>
+        <div class="metric-val" style="font-size:1.2rem;" id="m-deploy-drift">—</div>
+        <div class="metric-sub" id="m-commit">—</div>
+      </div>
     </div>
 
-    <!-- Zen Pulse reactivity — update "What next?" based on intent-card hover -->
-    <script>
-        (function() {
-            const zpNext = document.getElementById('zp-next');
-            const zpWhy = document.getElementById('zp-why');
-            const cards = document.querySelectorAll('.intent-card');
-            cards.forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    const verb = card.querySelector('.verb')?.textContent?.trim();
-                    const object = card.querySelector('.object')?.textContent?.trim();
-                    const arrow = card.querySelector('.arrow')?.textContent?.trim();
-                    if (zpNext && verb && object) {
-                        zpNext.textContent = `${verb} ${object} · ${arrow || ''}`;
-                        zpNext.style.color = 'var(--amber-earth)';
-                    }
-                });
-                card.addEventListener('mouseleave', () => {
-                    if (zpNext) {
-                        zpNext.textContent = 'Pick a verb below ↓';
-                        zpNext.style.color = '';
-                    }
-                });
-            });
-        })();
-    </script>
+    <!-- QUICK COCKPITS PREVIEW -->
+    <div class="section-header">
+      <div class="section-num">01.</div>
+      <div class="section-title">Decision Cockpits</div>
+      <div class="section-badge">
+        <div class="dot pulse" style="background: var(--emerald);"></div>
+        LIVE
+      </div>
+    </div>
+    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr); margin-bottom:2rem;">
+      <a href="/cockpit/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // AAA-Grade</div>
+        <div class="cc-icon">🌍</div>
+        <div class="cc-title">Earth Cockpit</div>
+        <div class="cc-desc">Federation cockpit for Earth intelligence. Basin, seismic, petrophysics, prospect — all organs unified.</div>
+        <div class="cc-link">→ Open Cockpit</div>
+      </a>
+      <a href="/apps/prospect-ui/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // Prospect</div>
+        <div class="cc-icon">🎯</div>
+        <div class="cc-title">Prospect Forge</div>
+        <div class="cc-desc">Definitive cockpit for prospect maturation. Volumetrics, POS, EVOI, risk assessment with governed verdicts.</div>
+        <div class="cc-link">→ Open Decision Surface</div>
+      </a>
+      <a href="/apps/well-desk/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // Well</div>
+        <div class="cc-icon">🛢️</div>
+        <div class="cc-title">Well Witness</div>
+        <div class="cc-desc">Integrated well correlation with petrophysical ToAC audit. Trust-graded interpretation for high-stakes targets.</div>
+        <div class="cc-link">→ Open Well Desk</div>
+      </a>
+    </div>
 
-    <!-- Health probe and time JS — kept identical to preserve live operational signal -->
-    <script>
-        async function checkOrganHealth(elemId, url) {
-            const card = document.getElementById(elemId);
-            const reasonEl = card.querySelector(".organ-reason");
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 6000);
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' },
-                    signal: controller.signal
-                });
-                clearTimeout(timeoutId);
+    <!-- ATTESTATION QUICK VIEW -->
+    <div class="section-header">
+      <div class="section-num">Ω</div>
+      <div class="section-title">Live Attestation</div>
+    </div>
+    <div class="attest-grid" id="attest-quick">
+      <div class="attest-card"><div class="attest-key">Identity</div><div class="attest-val cyan" id="aq-identity">loading…</div></div>
+      <div class="attest-card"><div class="attest-key">Physics Hash</div><div class="attest-val" id="aq-hash" style="font-size:0.6rem; color: var(--dim);">loading…</div></div>
+      <div class="attest-card"><div class="attest-key">Surface Drift</div><div class="attest-val" id="aq-surface">loading…</div></div>
+      <div class="attest-card"><div class="attest-key">Deploy Commit</div><div class="attest-val" id="aq-commit" style="font-size:0.65rem;">loading…</div></div>
+      <div class="attest-card"><div class="attest-key">Schema Version</div><div class="attest-val gold" id="aq-schema">loading…</div></div>
+      <div class="attest-card"><div class="attest-key">APEX — G Score</div><div class="attest-val" id="aq-gscore">loading…</div></div>
+    </div>
+  </div>
 
-                if (res.ok) {
-                    card.className = "widget-card status-online";
-                    card.querySelector(".status-text").textContent = "ONLINE";
-                    reasonEl.textContent = `HTTP ${res.status} OK`;
-                    reasonEl.style.color = "#2ed573";
-                    return true;
-                } else {
-                    card.className = "widget-card status-offline";
-                    card.querySelector(".status-text").textContent = "UNHEALTHY";
-                    reasonEl.textContent = `HTTP ${res.status} ${res.statusText || 'Error'}`;
-                    reasonEl.style.color = "#ff4757";
-                    return false;
-                }
-            } catch (e) {
-                if (e.name === 'AbortError') {
-                    card.className = "widget-card status-offline";
-                    card.querySelector(".status-text").textContent = "OFFLINE";
-                    reasonEl.textContent = "TIMEOUT (>6S)";
-                    reasonEl.style.color = "#ff4757";
-                } else if (e instanceof TypeError) {
-                    if (elemId === 'health-geox') {
-                        card.className = "widget-card status-offline";
-                        card.querySelector(".status-text").textContent = "OFFLINE";
-                        reasonEl.textContent = "CONN_REFUSED";
-                        reasonEl.style.color = "#ff4757";
-                    } else {
-                        card.className = "widget-card status-online";
-                        card.querySelector(".status-text").textContent = "ONLINE";
-                        reasonEl.textContent = "CORS RESTRICTED (HOST UP)";
-                        reasonEl.style.color = "var(--amber-earth)";
-                    }
-                } else {
-                    card.className = "widget-card status-offline";
-                    card.querySelector(".status-text").textContent = "UNKNOWN";
-                    reasonEl.textContent = (e.message || "UNREACHABLE").toUpperCase();
-                    reasonEl.style.color = "var(--text-low)";
-                }
-                return false;
-            }
-        }
+  <!-- ══════════════════════════════ TAB 01: COCKPITS ══════════════════════════════ -->
+  <div class="tab-content" id="tab-cockpits">
+    <div class="section-header" style="margin-top:2rem;">
+      <div class="section-num">01.</div>
+      <div class="section-title">Decision Cockpits & GUI Apps</div>
+    </div>
+    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr);">
+      <a href="/cockpit/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // Federation</div>
+        <div class="cc-icon">🌍</div>
+        <div class="cc-title">Earth Cockpit</div>
+        <div class="cc-desc">Federation-grade cockpit. Basin, seismic, petrophysics, prospect unified under one governance surface.</div>
+        <div class="cc-link">→ Open Cockpit</div>
+      </a>
+      <a href="/apps/prospect-ui/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // Prospect</div>
+        <div class="cc-icon">🎯</div>
+        <div class="cc-title">Prospect Forge</div>
+        <div class="cc-desc">Prospect maturation with volumetrics, POS, EVOI, Kill Matrix K001-K007, bias referee, governed verdicts.</div>
+        <div class="cc-link">→ Open Decision Surface</div>
+      </a>
+      <a href="/apps/well-desk/" class="cockpit-card">
+        <div class="cc-status live">LIVE</div>
+        <div class="cc-tag">GEOX // Well</div>
+        <div class="cc-icon">🛢️</div>
+        <div class="cc-title">Well Witness Desk</div>
+        <div class="cc-desc">Well correlation, petrophysical ToAC audit. Trust-graded interpretation with full provenance trail.</div>
+        <div class="cc-link">→ Open Well Desk</div>
+      </a>
+      <a href="/apps/ac-risk/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // Analog</div>
+        <div class="cc-icon">⚖️</div>
+        <div class="cc-title">AC Risk Console</div>
+        <div class="cc-desc">Analog calibration and risk assessment console for geological targets. Evidence-gate before allocation.</div>
+        <div class="cc-link">→ Open AC Risk</div>
+      </a>
+      <a href="/apps/seismic-review/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // Seismic</div>
+        <div class="cc-icon">📡</div>
+        <div class="cc-title">Seismic Review</div>
+        <div class="cc-desc">Seismic section review, attribute audit, visual interpretation with well-tie quality control.</div>
+        <div class="cc-link">→ Open Seismic Review</div>
+      </a>
+      <a href="/apps/geox-mcp-visual/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // MCP Visual</div>
+        <div class="cc-icon">🧠</div>
+        <div class="cc-title">MCP Visual Inspector</div>
+        <div class="cc-desc">Interactive MCP tool inspector. Browse all 33 tools, test calls, view schema, inspect responses live.</div>
+        <div class="cc-link">→ Open Inspector</div>
+      </a>
+      <a href="/apps/earth-volume/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // 3D</div>
+        <div class="cc-icon">🌐</div>
+        <div class="cc-title">Earth Volume</div>
+        <div class="cc-desc">3D volumetric rendering for subsurface models. GemPy implicit modeling visualization interface.</div>
+        <div class="cc-link">→ Open 3D Volume</div>
+      </a>
+      <a href="/apps/judge-console/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // Judge</div>
+        <div class="cc-icon">⚖️</div>
+        <div class="cc-title">Judge Console</div>
+        <div class="cc-desc">Constitutional judgment surface for GEOX evidence chains. F1-F13 floor check, claim verdict, seal.</div>
+        <div class="cc-link">→ Open Judge Console</div>
+      </a>
+      <a href="/apps/georeference/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // Geo</div>
+        <div class="cc-icon">📍</div>
+        <div class="cc-title">Georeference Tool</div>
+        <div class="cc-desc">H3 spatial indexing, coordinate transformation, georeferencing for seismic and map assets.</div>
+        <div class="cc-link">→ Open Georeference</div>
+      </a>
+      <a href="/apps/analog-digitizer/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // Analog</div>
+        <div class="cc-icon">✏️</div>
+        <div class="cc-title">Analog Digitizer</div>
+        <div class="cc-desc">Digitize analog well logs, maps, and seismic sections with provenance tracking for interpretation.</div>
+        <div class="cc-link">→ Open Digitizer</div>
+      </a>
+      <a href="/gui/lem/" class="cockpit-card">
+        <div class="cc-status gui">GUI</div>
+        <div class="cc-tag">GEOX // ML</div>
+        <div class="cc-icon">🤖</div>
+        <div class="cc-title">LEM Dashboard</div>
+        <div class="cc-desc">LEM inference dashboard. Predict rock properties (porosity, Sw, lithology) from seismic attributes.</div>
+        <div class="cc-link">→ Open LEM</div>
+      </a>
+      <a href="https://wealth.arif-fazil.com/apps/capital_judge/" target="_blank" class="cockpit-card">
+        <div class="cc-status ext">WEALTH</div>
+        <div class="cc-tag">WEALTH // Capital</div>
+        <div class="cc-icon">💰</div>
+        <div class="cc-title">Capital Judge</div>
+        <div class="cc-desc">Sovereign capital allocation engine. Bridges geological truth to financial consequence via CapitalX.</div>
+        <div class="cc-link">→ Open Capital Judge ↗</div>
+      </a>
+    </div>
+  </div>
 
-        async function updateAllHealth() {
-            await checkOrganHealth('health-geox', '/health');
-            await checkOrganHealth('health-arifos', 'https://arifos.arif-fazil.com/health');
-            await checkOrganHealth('health-wealth', 'https://wealth.arif-fazil.com/health');
-            document.getElementById('last-updated').textContent = new Date().toISOString().replace('T', ' ').split('.')[0] + ' UTC';
-        }
-        updateAllHealth();
-        setInterval(updateAllHealth, 60000);
-    </script>
+  <!-- ══════════════════════════════ TAB 02: MCP TOOLS ══════════════════════════════ -->
+  <div class="tab-content" id="tab-tools">
+    <div class="section-header" style="margin-top:2rem;">
+      <div class="section-num">02.</div>
+      <div class="section-title">MCP Tools</div>
+      <div class="section-badge" id="tools-badge">
+        <div class="spinner"></div>
+        LOADING…
+      </div>
+    </div>
+    <p style="font-size:0.75rem; color:var(--muted); margin-bottom:1.25rem; font-family:var(--mono);">
+      Live from <code style="color:var(--gold);">geox.arif-fazil.com/tools</code> · JSON-RPC 2.0 · streamable-http
+    </p>
+    <div class="tool-grid" id="tool-list">
+      <div style="color:var(--muted); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">
+        <div class="spinner" style="margin:0 auto 0.75rem;"></div>
+        Loading tools from live MCP endpoint…
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem; padding:1rem; background:rgba(212,175,55,0.04); border:1px solid rgba(212,175,55,0.15); border-radius:6px;">
+      <div style="font-family:var(--mono); font-size:0.6rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">MCP Endpoint</div>
+      <div style="font-family:var(--mono); font-size:0.65rem; color:var(--muted);">
+        <code>POST geox.arif-fazil.com/mcp</code> · JSON-RPC 2.0 · <code>tools/call</code><br />
+        <code>GET geox.arif-fazil.com/tools</code> · Live tool manifest<br />
+        <code>GET geox.arif-fazil.com/health</code> · Health + attestation
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB 03: ATTESTATION ══════════════════════════════ -->
+  <div class="tab-content" id="tab-attestation">
+    <div class="section-header" style="margin-top:2rem;">
+      <div class="section-num">03.</div>
+      <div class="section-title">Live Attestation</div>
+      <div class="section-badge" id="attest-badge">
+        <div class="spinner"></div>
+        LOADING…
+      </div>
+    </div>
+    <div class="attest-grid" id="attest-full">
+      <div style="color:var(--muted); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">
+        <div class="spinner" style="margin:0 auto 0.75rem;"></div>
+        Probing arifOS attestation stream…
+      </div>
+    </div>
+
+    <div style="margin-top:1.5rem; padding:1rem; background:var(--bg2); border:1px solid var(--border); border-radius:6px;">
+      <div style="font-family:var(--mono); font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Raw Health Payload</div>
+      <pre id="health-raw" style="font-family:var(--mono); font-size:0.6rem; color: rgba(255,255,255,0.4); overflow-x:auto; max-height:400px; overflow-y:auto;">Loading…</pre>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TAB 04: GUI APPS ══════════════════════════════ -->
+  <div class="tab-content" id="tab-gui">
+    <div class="section-header" style="margin-top:2rem;">
+      <div class="section-num">04.</div>
+      <div class="section-title">Interactive GUI Apps</div>
+      <div class="section-badge">
+        <div class="dot" style="background: var(--cyan);"></div>
+        MCP App Standard · SEP-1865
+      </div>
+    </div>
+    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr);">
+      <a href="/apps/geox-mcp-visual/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">🔌</div>
+        <div class="cc-title">MCP Visual Inspector</div>
+        <div class="cc-desc">Browse, inspect, and test all 33 GEOX MCP tools interactively. Live tool schema view.</div>
+        <div class="cc-link">→ Open Inspector</div>
+      </a>
+      <a href="/apps/earth-volume/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">🌐</div>
+        <div class="cc-title">Earth Volume Viewer</div>
+        <div class="cc-desc">3D subsurface model rendering via GemPy implicit modeling. Load workspace, visualize structure.</div>
+        <div class="cc-link">→ Open Viewer</div>
+      </a>
+      <a href="/apps/judge-console/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">⚖️</div>
+        <div class="cc-title">Judge Console</div>
+        <div class="cc-desc">Invoke geox_falsify, geox_contradiction_scan, geox_claim — governed verdict surface.</div>
+        <div class="cc-link">→ Open Console</div>
+      </a>
+      <a href="/apps/attribute-audit/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">📊</div>
+        <div class="cc-title">Attribute Audit</div>
+        <div class="cc-desc">Seismic attribute quality audit. Validate attribute consistency against well penetrations.</div>
+        <div class="cc-link">→ Open Audit</div>
+      </a>
+      <a href="/gui/lem/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">🤖</div>
+        <div class="cc-title">LEM Inference</div>
+        <div class="cc-desc">geox_lem_predict live dashboard. Predict porosity, Sw, lithology from seismic attributes.</div>
+        <div class="cc-link">→ Open LEM</div>
+      </a>
+      <a href="/cockpit/webmcp/" class="cockpit-card">
+        <div class="cc-status gui">MCP APP</div>
+        <div class="cc-icon">🖥️</div>
+        <div class="cc-title">WebMCP Terminal</div>
+        <div class="cc-desc">Browser-native MCP terminal. Call any GEOX tool via JSON-RPC directly from the browser.</div>
+        <div class="cc-link">→ Open Terminal</div>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      Φ GEOX · Earth Intelligence · arifOS Federation · v<span id="footer-version">—</span> · DITEMPA BUKAN DIBERI 🇲🇾
+    </div>
+    <div class="footer-links">
+      <a href="/health" target="_blank">/health ↗</a>
+      <a href="/tools" target="_blank">/tools ↗</a>
+      <a href="/llms.txt" target="_blank">llms.txt ↗</a>
+      <a href="https://arifos.arif-fazil.com" target="_blank">arifOS ↗</a>
+      <a href="https://aaa.arif-fazil.com" target="_blank">AAA ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Tab switching ──
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  // ── Fetch health ──
+  async function fetchHealth() {
+    try {
+      const res = await fetch('/health');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const d = await res.json();
+
+      // Top bar
+      const healthy = d.status === 'healthy';
+      const sp = document.getElementById('status-text');
+      const sh = document.getElementById('status-health');
+      sp.textContent = healthy ? `HEALTHY · ${d.service || 'geox'}` : 'DEGRADED';
+      sh.className = 'status-pill ' + (healthy ? 'green' : 'red');
+      sh.querySelector('.dot').className = 'dot' + (healthy ? ' pulse' : '');
+
+      document.getElementById('tools-count').textContent = `${d.tools_loaded || d.canonical_tools || '?'} TOOLS`;
+      document.getElementById('version-text').textContent = d.version || '—';
+
+      const sd = d.surface_drift;
+      const driftText = sd ? (sd.ok ? `DRIFT: NONE (${sd.drift_count})` : `DRIFT: ${sd.drift_count} GAPS`) : 'DRIFT: —';
+      document.getElementById('drift-text').textContent = driftText;
+      document.getElementById('status-drift').className = 'status-pill ' + (sd?.ok ? 'green' : 'red');
+
+      // Metrics
+      document.getElementById('m-status').textContent = d.status?.toUpperCase() || '—';
+      document.getElementById('m-status').style.color = healthy ? 'var(--emerald)' : 'var(--red)';
+      document.getElementById('m-verdict').textContent = `verdict: ${d.kernel_verdict || '—'}`;
+      document.getElementById('m-tools').textContent = d.tools_loaded || '—';
+      document.getElementById('m-drift').textContent = sd ? `drift: ${sd.drift_count} · gap: ${sd.gap_count}` : '—';
+      document.getElementById('m-law').textContent = d.domain_law || '—';
+      document.getElementById('m-version').textContent = d.version || '—';
+
+      const dd = d.deployment_drift;
+      document.getElementById('m-deploy-drift').textContent = dd ? (dd.drift ? 'DRIFTED' : 'ALIGNED') : '—';
+      document.getElementById('m-deploy-drift').style.color = dd ? (dd.drift ? 'var(--red)' : 'var(--emerald)') : 'var(--muted)';
+      document.getElementById('m-commit').textContent = dd?.built_commit ? `commit: ${dd.built_commit}` : '—';
+      document.getElementById('footer-version').textContent = (d.version || '—').replace('v','');
+
+      // Quick attestation
+      document.getElementById('aq-identity').textContent = d.identity?.value || d.identity_hash || '—';
+      document.getElementById('aq-hash').textContent = (d.physics_manifest_hash || '—').substring(0,40) + '…';
+      const sdok = sd?.ok;
+      document.getElementById('aq-surface').textContent = sd ? `${sd.ok ? 'CLEAN' : 'DRIFTED'} · ${sd.canonical_count}/${sd.live_count}` : '—';
+      document.getElementById('aq-surface').className = 'attest-val ' + (sdok ? 'emerald' : 'red');
+      document.getElementById('aq-commit').textContent = dd ? `src: ${dd.source_commit?.substring(0,8)} · built: ${dd.built_commit} · ${dd.status}` : '—';
+      document.getElementById('aq-schema').textContent = d.federation_schema_version || '—';
+      const g = d.apex_scalars?.G?.value;
+      document.getElementById('aq-gscore').textContent = g !== undefined ? g.toFixed(3) : '—';
+      document.getElementById('aq-gscore').className = 'attest-val ' + (g >= 0.8 ? 'emerald' : g >= 0.5 ? 'gold' : 'red');
+
+      // Full attestation tab
+      populateFullAttestation(d);
+
+      // Raw payload
+      document.getElementById('health-raw').textContent = JSON.stringify(d, null, 2).substring(0, 3000);
+      document.getElementById('attest-badge').innerHTML = '<div class="dot" style="background:var(--emerald)"></div>LIVE';
+
+    } catch(e) {
+      document.getElementById('status-text').textContent = 'OFFLINE';
+      document.getElementById('status-health').className = 'status-pill red';
+      document.getElementById('health-raw').textContent = `Error: ${e.message}`;
+      document.getElementById('attest-badge').innerHTML = '<div class="dot" style="background:var(--red)"></div>ERROR';
+    }
+  }
+
+  function populateFullAttestation(d) {
+    const fields = [
+      { key: 'Status', val: d.status, cls: d.status === 'healthy' ? 'emerald' : 'red' },
+      { key: 'Service', val: d.service },
+      { key: 'Version', val: d.version, cls: 'gold' },
+      { key: 'Kernel Verdict', val: d.kernel_verdict },
+      { key: 'Domain Law', val: d.domain_law, cls: 'cyan' },
+      { key: 'Profile', val: d.profile },
+      { key: 'Federation Schema', val: d.federation_schema_version, cls: 'gold' },
+      { key: 'Tools Loaded', val: d.tools_loaded },
+      { key: 'Canonical Tools', val: d.canonical_tools },
+      { key: 'Identity Algorithm', val: d.identity?.algorithm },
+      { key: 'Identity Value', val: d.identity?.value, cls: 'cyan' },
+      { key: 'Identity Verified', val: d.identity?.verified?.toString(), cls: d.identity?.verified ? 'emerald' : 'red' },
+      { key: 'Physics Manifest', val: d.physics_manifest_hash, small: true },
+      { key: 'Surface Drift OK', val: d.surface_drift?.ok?.toString(), cls: d.surface_drift?.ok ? 'emerald' : 'red' },
+      { key: 'Surface Drift Count', val: d.surface_drift?.drift_count },
+      { key: 'Gap Count', val: d.surface_drift?.gap_count },
+      { key: 'Deploy Drift', val: d.deployment_drift?.drift?.toString(), cls: d.deployment_drift?.drift ? 'red' : 'emerald' },
+      { key: 'Deploy Status', val: d.deployment_drift?.status },
+      { key: 'Source Commit', val: d.deployment_drift?.source_commit?.substring(0,16) + '…', cls: 'cyan' },
+      { key: 'Built Commit', val: d.deployment_drift?.built_commit },
+      { key: 'APEX G Score', val: d.apex_scalars?.G?.value?.toFixed(3), cls: (d.apex_scalars?.G?.value || 0) >= 0.8 ? 'emerald' : 'gold' },
+    ];
+
+    const grid = document.getElementById('attest-full');
+    grid.innerHTML = fields.map(f => `
+      <div class="attest-card">
+        <div class="attest-key">${f.key}</div>
+        <div class="attest-val ${f.cls || ''}" style="${f.small ? 'font-size:0.55rem; word-break:break-all;' : ''}">${f.val || '—'}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Fetch tools ──
+  async function fetchTools() {
+    const list = document.getElementById('tool-list');
+    const badge = document.getElementById('tools-badge');
+    try {
+      const res = await fetch('/tools');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const d = await res.json();
+      const tools = d.tools || [];
+      badge.innerHTML = `<div class="dot" style="background:var(--emerald)"></div>${tools.length} TOOLS LIVE`;
+
+      const CATEGORIES = {
+        well: { badge: 'WELL', cls: 'cyan' },
+        seismic: { badge: 'SEISMIC', cls: 'gold' },
+        basin: { badge: 'BASIN', cls: 'cyan' },
+        prospect: { badge: 'PROSPECT', cls: 'gold' },
+        claim: { badge: 'CLAIM', cls: 'gray' },
+        map: { badge: 'MAP', cls: 'gray' },
+        geomech: { badge: 'GEOMECH', cls: 'cyan' },
+        default: { badge: 'GEOX', cls: 'gray' },
+      };
+
+      list.innerHTML = tools.map(t => {
+        const name = t.name || '';
+        const desc = t.description || '';
+        let cat = CATEGORIES.default;
+        if (name.includes('well')) cat = CATEGORIES.well;
+        else if (name.includes('seismic')) cat = CATEGORIES.seismic;
+        else if (name.includes('basin') || name.includes('backstrip') || name.includes('thermal')) cat = CATEGORIES.basin;
+        else if (name.includes('prospect')) cat = CATEGORIES.prospect;
+        else if (name.includes('claim') || name.includes('falsify') || name.includes('evidence') || name.includes('contradiction')) cat = CATEGORIES.claim;
+        else if (name.includes('map')) cat = CATEGORIES.map;
+        else if (name.includes('geomech')) cat = CATEGORIES.geomech;
+
+        return `
+          <div class="tool-row">
+            <div>
+              <div class="tool-name">${name}</div>
+              <div class="tool-desc">${desc.substring(0,80)}${desc.length > 80 ? '…' : ''}</div>
+            </div>
+            <div class="tool-badge ${cat.cls}">${cat.badge}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.querySelector('[onclick*=tools]').textContent = `🔌 02. MCP Tools (${tools.length})`;
+    } catch(e) {
+      badge.innerHTML = `<div class="dot" style="background:var(--red)"></div>ERROR`;
+      list.innerHTML = `<div style="color:var(--red); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">Failed to load tools: ${e.message}</div>`;
+    }
+  }
+
+  // ── Boot ──
+  fetchHealth();
+  fetchTools();
+  setInterval(fetchHealth, 30000);
+</script>
 </body>
 </html>
