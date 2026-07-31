@@ -1176,3 +1176,182 @@ class EarthStateVector:
             if value is not None and key in params and not params.get(key):
                 params[key] = value
         return params
+
+
+# ── Automated Rw from formation water chemistry (G11) ─────────────────────
+
+
+def _compute_rw_from_chemistry(
+    salinity_ppm: float = 35000.0,
+    temperature_c: float = 75.0,
+    pressure_mpa: float = 20.0,
+) -> dict[str, Any]:
+    """Compute formation water resistivity (Rw) from salinity, temperature, and pressure.
+
+    Uses Batzle-Wang (1992) brine properties for density and empirical
+    NaCl-equivalent resistivity transforms (Arps 1953 / Schlumberger Gen-9).
+
+    Args:
+        salinity_ppm: NaCl-equivalent salinity (ppm). Default 35000 (seawater).
+        temperature_c: Formation temperature (°C).
+        pressure_mpa: Pore pressure (MPa).
+
+    Returns:
+        dict with rw_ohm_m, salinity_ppm, temperature_c, method, confidence.
+
+    DER — Derived from salinity and temperature. Not a direct Rw measurement.
+    F2 TRUTH: confidence capped at 0.85 without direct Rw_sample calibration.
+    """
+    salinity_frac = salinity_ppm / 1_000_000.0  # mass fraction
+
+    # Batzle-Wang (1992): brine density
+    t_c = temperature_c
+    rho_water = (
+        1.0 + 1.0e-6 * (-80.0 * t_c - 3.3 * t_c**2 + 0.00175 * t_c**3) + salinity_frac * (0.668 + 0.44 * salinity_frac)
+    )  # g/cm³
+
+    # Arps (1953) empirical: Rw ≈ (0.0123 + 3647.5 / salinity_ppm^0.955) * (T+21.5)/(T_ref+21.5)
+    # Simplified for typical formation temperatures:
+    if salinity_ppm > 1000:
+        rw_at_24c = 0.0123 + 3647.5 / (salinity_ppm**0.955)
+    else:
+        rw_at_24c = 1.0  # fresh water
+
+    # Temperature correction: Rw(T) = Rw(Tref) * (Tref + 21.5) / (T + 21.5)
+    t_ref = 24.0  # °C (standard lab temperature)
+    rw_ohm_m = rw_at_24c * (t_ref + 21.5) / (temperature_c + 21.5)
+
+    # Pressure correction (minor, ~1-2% per 10 MPa)
+    pressure_factor = 1.0 + 0.001 * (pressure_mpa - 0.1)  # negligible below 100 MPa
+    rw_ohm_m *= pressure_factor
+
+    confidence = "MEDIUM"
+    if salinity_ppm < 1000 or temperature_c > 200:
+        confidence = "LOW"
+
+    return {
+        "rw_ohm_m": round(rw_ohm_m, 4),
+        "salinity_ppm": salinity_ppm,
+        "temperature_c": temperature_c,
+        "pressure_mpa": pressure_mpa,
+        "brine_density_gcc": round(rho_water, 4),
+        "method": "Arps-1953 + Batzle-Wang-1992",
+        "confidence": confidence,
+        "epistemic": "DER — salinity-derived Rw. Calibrate against Rw_sample for A-grade.",
+    }
+
+
+# ── Dual Water / Waxman-Smits Sw computation (G10) ──────────────────────
+
+
+def _compute_sw_dual_water(
+    rt: float,
+    rw: float,
+    porosity: float,
+    vsh: float,
+    cec_meq_100g: float,
+    temperature_c: float = 75.0,
+    a: float = 1.0,
+    m: float = 2.0,
+    n: float = 2.0,
+) -> dict[str, Any]:
+    """Compute water saturation using Waxman-Smits (1968) Dual Water model.
+
+    Extends simple Archie by accounting for clay-bound water conductivity
+    through cation exchange capacity (CEC).
+
+    Waxman-Smits equation:
+        C0 = (1/F*) * (Cw + B·Qv)
+        Ct = (Sw^n / F*) * (Cw + B·Qv/Sw)
+
+    Where:
+        F* = a/φ^m* (formation factor corrected for clay)
+        Qv = CEC · (1-φ) · ρ_ma / φ  (counterion concentration per unit pore volume)
+        B  = 4.6 · (1 - 0.6·exp(-Cw/0.013))  (equivalent counterion conductance)
+
+    Args:
+        rt:         true formation resistivity (Ω·m)
+        rw:         formation water resistivity (Ω·m)
+        porosity:   total porosity (v/v)
+        vsh:        shale volume (v/v)
+        cec_meq_100g: cation exchange capacity (meq/100g)
+        temperature_c: formation temperature (°C)
+        a, m, n:    Archie parameters
+
+    Returns:
+        dict with sw, model, method, confidence.
+
+    DER — Dual Water model with CEC from mineral catalog.
+    F2 TRUTH: confidence ≤ 0.80 without core-calibrated m*.
+    """
+    if porosity <= 0 or rt <= 0 or rw <= 0:
+        return {"sw": None, "error": "Invalid input (zero/negative)", "method": "waxman_smits", "confidence": "VOID"}
+
+    import math as _math
+    import numpy as np
+
+    # Conductivities
+    cw = 1.0 / rw if rw > 0 else 0.0  # S/m equivalent for Ω·m
+    ct = 1.0 / rt if rt > 0 else 0.0
+
+    # B — equivalent counterion conductance (S·m²/meq)
+    # Waxman-Smits empirical fit
+    b_max = 4.6 * (1.0 - 0.6 * np.exp(-cw / 0.013)) if cw > 0 else 0.0
+
+    # Qv — counterion concentration per unit pore volume (meq/ml)
+    rho_ma = 2.65  # default quartz matrix density
+    if porosity > 0.01:
+        qv = cec_meq_100g * (1.0 - porosity) * rho_ma / porosity * 0.01
+    else:
+        qv = 0.0
+
+    # F* — formation factor (clay-corrected)
+    # m* ≈ m for low CEC, decreases with increasing CEC
+    m_star = m * (1.0 - 0.15 * vsh)  # empirical clay correction
+    f_star = a / (porosity**m_star)
+
+    # Waxman-Smits iterative solution for Sw
+    # Sw^n = (F* · Rw) / (Rt · (1 + Rw·B·Qv/Sw))
+    # Solved iteratively (converges in < 10 iterations for typical values)
+
+    sw_archie = (f_star * rw / rt) ** (1.0 / n) if rt > 0 else 1.0
+    sw = sw_archie  # initial guess
+
+    for _ in range(20):
+        if sw <= 0:
+            sw = 0.01
+        bqv_term = 1.0 + rw * b_max * qv / sw
+        sw_new = (f_star * rw / (rt * bqv_term)) ** (1.0 / n)
+        if abs(sw_new - sw) < 0.0001:
+            sw = sw_new
+            break
+        sw = sw_new
+
+    sw = max(0.0, min(1.0, sw))
+
+    # Confidence assessment
+    if cec_meq_100g < 1.0 or vsh < 0.02:
+        confidence = "HIGH"  # effectively Archie — clay contribution negligible
+        method_note = "archie_equivalent — CEC < 1 or Vsh < 2%"
+    elif qv < 0.01:
+        confidence = "MEDIUM"
+        method_note = "waxman_smits — low Qv"
+    else:
+        confidence = "MEDIUM"
+        method_note = "waxman_smits — clay correction active"
+
+    import numpy as np  # noqa: F811 (already imported in module)
+
+    return {
+        "sw": round(sw, 4),
+        "sw_archie": round(sw_archie, 4),
+        "sw_delta": round(abs(sw - sw_archie), 4),
+        "method": method_note,
+        "model": "waxman_smits",
+        "qw_meq_ml": round(qv, 4),
+        "b_conductance": round(b_max, 2),
+        "m_star": round(m_star, 3),
+        "f_star": round(f_star, 3),
+        "confidence": confidence,
+        "epistemic": "DER — Waxman-Smits from CEC. Calibrate m* against core for A-grade.",
+    }
