@@ -134,18 +134,21 @@ curl -s http://127.0.0.1:8081/health | jq .
 
 ---
 
-## Federation Integration
+## 🔗 Federation Architecture & Navigation
 
-GEOX operates as the Earth Intelligence organ within the broader **arifOS Federation**:
+GEOX operates as an Earth Intelligence organ within the **arifOS Federation**. Every organ maintains distinct boundaries and capabilities:
 
-| Organ | Role | Port | Endpoint / Target |
-|:---|:---|:---:|:---|
-| **arifOS** | Constitutional Kernel & Vault Governance | 8088 | `https://mcp.arif-fazil.com/mcp` |
-| **A-FORGE** | Execution & Automated Build Shell | 7071 | `https://forge.arif-fazil.com/mcp` |
-| **AAA** | Cockpit, Control Plane & A2A Gateway | 3001 | `https://aaa.arif-fazil.com` |
-| **GEOX** | Earth Intelligence & Subsurface Coprocessor | 8081 | `https://geox.arif-fazil.com/mcp` |
-| **WEALTH** | Capital Compute & Portfolio Optimization | 18082 | `https://wealth.arif-fazil.com/mcp` |
-| **WELL** | Human Readiness & Vitality Interface | 18083 | `https://well.arif-fazil.com/mcp` |
+| Organ | Domain Role | Port | Repo | Live MCP | Health Witness | Machine Spec |
+|:---|:---|:---:|:---|:---|:---|:---|
+| **arifOS** | Constitutional Kernel & Judge | 8088 | [repo](https://github.com/ariffazil/arifos) | [mcp](https://mcp.arif-fazil.com/mcp) | [health](https://arifos.arif-fazil.com/health) | [llms.txt](https://arifos.arif-fazil.com/llms.txt) |
+| **A-FORGE** | Governed Execution Engine | 7071 / 7072 | [repo](https://github.com/ariffazil/A-FORGE) | [mcp](https://forge.arif-fazil.com/mcp) | [health](https://forge.arif-fazil.com/health) | [llms.txt](https://forge.arif-fazil.com/llms.txt) |
+| **AAA** | Institution, Control Plane & A2A | 3001 | [repo](https://github.com/ariffazil/AAA) | — | [health](https://aaa.arif-fazil.com/health) | [llms.txt](https://aaa.arif-fazil.com/llms.txt) |
+| **GEOX** | Earth Intelligence (Subsurface) | 8081 | [repo](https://github.com/ariffazil/GEOX) | [mcp](https://geox.arif-fazil.com/mcp) | [health](https://geox.arif-fazil.com/health) | [llms.txt](https://geox.arif-fazil.com/llms.txt) |
+| **WEALTH** | Capital Intelligence (Compute) | 18082 | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | [llms.txt](https://wealth.arif-fazil.com/llms.txt) |
+| **WELL** | Vitality & Readiness Guard | 18083 | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
+| **HERMES** | Multi-Modal Bridge & Telegram Relay | 8644 | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
+
+**Public Domain:** [arif-fazil.com](https://arif-fazil.com) · **Federation Root:** [arifos.arif-fazil.com](https://arifos.arif-fazil.com)
 
 ---
 
@@ -158,4 +161,5 @@ GEOX operates as the Earth Intelligence organ within the broader **arifOS Federa
 
 *Maintained under F13 SOVEREIGN. Built on Marmousi, validated on Volve.*  
 *DITEMPA BUKAN DIBERI — truth must cool before it rules.*
+
 
