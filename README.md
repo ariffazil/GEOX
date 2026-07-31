@@ -1,293 +1,161 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-29T18:00Z
-valid_until: 2026-08-26
-federation_release: v2026.07.29
-live_commit: 62994c47
+last_verified: 2026-07-31T03:15:00Z
+valid_until: 2026-08-31
+federation_release: v2026.07.31
+live_commit: 28f4b0d0
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-**SOT:** 2026-07-28 | **seal_seq:** `62994c47` | **Status:** `999_SEAL`
+# 🌍 GEOX — Evidence-First Subsurface Coprocessor & Geological Intelligence Engine
 
-# 🌍 GEOX — Evidence-First Geological Intelligence & Subsurface Coprocessor
+[![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions)
+[![GEOX MCP](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
+[![Federation](https://img.shields.io/badge/Federation-v2026.07.31-0a7b83)](https://arifos.arif-fazil.com)
+[![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](./LICENSE)
 
-> **DITEMPA BUKAN DIBERI** — Forged, not given.
-> Corporate-grade Earth intelligence engine for the arifOS federation. Physics-governed. Evidence-provenance bound.
-
-![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)
-![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)
-![Federation](https://img.shields.io/badge/Federation-v2026.07.28-0a7b83)
-![License](https://img.shields.io/github/license/ariffazil/GEOX?label=License)
-
+**GEOX** is an enterprise-grade geological intelligence and subsurface coprocessor designed for modern E&P digital transformation, energy transition workflows, and automated subsurface auditing. Powered by physics-governed computation engines and strict provenance tracking, GEOX bridges raw geoscientific observation with executive capital decision-making.
 
 ---
 
-## GEOX in One Minute
+## Executive Overview
 
-GEOX is an evidence-first geological intelligence coprocessor. It ingests wells, seismic, and geological observations; computes subsurface workflows; tracks uncertainty; and preserves the provenance behind every geological claim.
+Modern subsurface evaluation requires processing heterogeneous data (well logs, SEG-Y seismic, biostratigraphy, geomechanics) while maintaining an auditable lineage from observation to commercial decision. GEOX introduces **Epistemic Layering**, enforcing explicit segregation between empirical measurement and interpretive inference:
 
-Unlike traditional interpretation software, GEOX separates:
+| Layer | Classification | Enterprise Meaning | Domain Examples |
+|:---:|:---:|:---|:---|
+| **OBS** | **Observed** | Directly measured sensor & physical data | Wireline logs (LAS), SEG-Y trace amplitudes, core measurements |
+| **DER** | **Derived** | Deterministic physical & mathematical computations | Effective porosity ($\phi$), Acoustic Impedance ($Z$), Water Saturation ($S_w$) |
+| **INT** | **Interpreted** | Synthesized geological evaluations & frameworks | Horizons, fault polygons, reservoir-seal-charge frameworks |
+| **SPEC** | **Speculated** | Unvalidated operational & fluid assumptions | Migration pathways, fluid phase boundaries, compartmentalization |
 
-| Layer | Meaning | Example |
-|-------|---------|---------|
-| **OBS** | Observed — what was measured | Log value, seismic amplitude |
-| **DER** | Derived — what was computed | Porosity, impedance |
-| **INT** | Interpreted — what was concluded | Reservoir, seal, charge |
-| **SPEC** | Speculated — what was assumed | Fluid phase, migration pathway |
+### Key Enterprise Value Drivers
 
-Most geological software produces answers. GEOX produces **claims with provenance** — so human experts can separate measurement from inference.
+1. **Falsification-First Subsurface Analytics:** Rather than confirming biased interpretation models, GEOX subjects all claims to rigorous physical stress-testing (falsification), reducing exploration risk and dry-hole capital wastage.
+2. **Auditability & Provenance:** Every computed attribute, horizon, or volumetric estimate generates a cryptographically sealed receipt in **VAULT999**, providing immutable audit trails for regulatory compliance and partner reviews.
+3. **Vendor-Neutral Integration:** Operates seamlessly alongside incumbent subsurface platforms (Petrel, DecisionSpace, PaleoScan) to validate interpretations and pipe results directly into financial decision engines.
 
-### Why GEOX Exists
+---
 
-Modern subsurface workflows generate interpretations faster than they preserve reasoning. GEOX exists to preserve the chain from evidence to decision — so geological conclusions remain auditable, challengeable, and reproducible.
-
-GEOX is a **geological falsification engine**: the objective is not to confirm interpretations, but to continuously test them against evidence. A claim survives because competing explanations failed, not because it was preferred.
-
-### Claim Lifecycle
-
-```
-OBSERVED DATA → DERIVATION → INTERPRETATION → CHALLENGE → FALSIFICATION → SEAL or HOLD
-```
-
-Claims can be created, challenged, falsified, recomputed, sealed (immutable record), or held (888_HOLD — awaiting human ratification). Every state transition carries an epistemic label and uncertainty band.
-
-### Federation Organs
-
-| Organ | Role | Port | Repo |
-|-------|------|------|------|
-| arifOS | Constitutional kernel — judge, seal, VAULT999 | 8088 | [ariffazil/arifos](https://github.com/ariffazil/arifos) |
-| AAA | Cockpit + A2A identity layer | 3001 | [ariffazil/AAA](https://github.com/ariffazil/AAA) |
-| A-FORGE | Execution shell — build, deploy, forge | 7071 | [ariffazil/A-FORGE](https://github.com/ariffazil/A-FORGE) |
-| **GEOX** | Earth intelligence — wells, seismic, petrophysics | 8081 | ← you are here |
-| WEALTH | Capital intelligence — NPV, IRR, EMV | 18082 | [ariffazil/WEALTH](https://github.com/ariffazil/WEALTH) |
-| WELL | Vitality guard — REFLECT_ONLY | 18083 | [ariffazil/WELL](https://github.com/ariffazil/WELL) |
-| HERMES | Multi-modal bridge + Telegram relay | 8644 | [ariffazil/HERMES](https://github.com/ariffazil/HERMES) |
+## System Architecture
 
 ```mermaid
-graph LR
-    subgraph GEOX [🌍 GEOX — Geological Claim Engine]
-        OBS[📊 OBS<br/>Measured<br/>Logs · Seismic · Wells] -->|ingest| DER[📐 DER<br/>Computed<br/>Porosity · Impedance · Sw]
-        DER -->|interpret| INT[🧠 INT<br/>Interpreted<br/>Reservoir · Seal · Charge]
-        INT -->|assume| SPEC[🔮 SPEC<br/>Speculated<br/>Fluid · Migration]
+graph TD
+    subgraph Data Layer [Data Ingestion & Support]
+        LAS[LAS 2.0/3.0 Well Logs]
+        SEGY[SEG-Y 2D/3D Seismic]
+        GEO[Geomechanical & Core Data]
     end
-    INT -->|challenge| FALSIFY{⚡ Falsify<br/>Kill Matrix K001-K007}
-    FALSIFY -->|KILL| REJECT[❌ Rejected]
-    FALSIFY -->|PASS| JUDGE{⚖️ arifOS 888<br/>Constitutional Judge}
-    JUDGE -->|SEAL| VAULT[(VAULT999<br/>Immutable Claim)]
-    JUDGE -->|HOLD| REVIEW[⏸️ Human Review]
-    JUDGE -->|VOID| BLOCK[🚫 Blocked]
+
+    subgraph Core Engine [GEOX Physics Engine]
+        OBS[OBS: Sensor Provenance]
+        DER[DER: Petrophysics & Seismic Computation]
+        INT[INT: Structural & Stratigraphic Synthesis]
+    end
+
+    subgraph Governance & Audit [arifOS Kernel Governance]
+        FALSIFY{Falsification Engine<br/>Kill Matrix K001-K007}
+        VAULT[(VAULT999<br/>Immutable Ledger)]
+        HOLD[888_HOLD<br/>Sovereign Human Review]
+    end
+
+    subgraph Output Layer [Enterprise Delivery]
+        MCP[MCP Server :8081]
+        WEALTH[WEALTH Capital Engine]
+        UI[AAA Cockpit & 4-View Canvas]
+    end
+
+    LAS --> OBS
+    SEGY --> OBS
+    GEO --> OBS
+    OBS --> DER
+    DER --> INT
+    INT --> FALSIFY
+    FALSIFY -->|PASS| VAULT
+    FALSIFY -->|REQUIRES RATIFICATION| HOLD
+    VAULT --> MCP
+    MCP --> WEALTH
+    MCP --> UI
 ```
 
 ---
 
-## Capabilities
+## Core Capabilities
 
-Each capability below carries the same OBS / DER / INT / SPEC standard:
+GEOX delivers 33 canonical, high-performance tools accessible via standard Model Context Protocol (MCP) and REST endpoints:
 
-| Task | Status | Label |
-|------|--------|-------|
-| LAS well log ingestion | ✅ Marmousi + Volve field wells | OBS |
-| Petrophysical computation | ✅ Vsh, φ, Sw — Archie + density methods | OBS |
-| SEG-Y seismic inspection | ✅ Header, trace count, sample rate, coordinates | OBS |
-| Synthetic seismogram generation | ✅ Ricker / Ormsby / Klauder wavelets | OBS |
-| Seismic attribute computation | ✅ RMS, sweetness, variance, spectral | OBS |
-| Seismic interpretation (horizon / fault) | ✅ Contrast detection + RSI pipeline | DER |
-| Basin analysis + deep-time context | ✅ Backstrip, thermal maturity, mass balance | DER |
-| Sequence stratigraphy | ✅ Well correlation + biostrat parsing | DER |
-| Geomechanics | ✅ Moduli, stress polygon, pore pressure | DER |
-| Gravity / magnetic forward modeling | ✅ Prism-based, screening mode | DER |
-| Prospect evaluation | ✅ Volumetrics, POS, EVOI | DER |
-| Geological claim management | ✅ Create, challenge, falsify, seal | OBS |
-| Structural geology battery | ✅ 6/6 Malay Basin battery green — K-DIP arccos (SVD normal vector), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing | OBS |
-| MCP Apps (SEP-1865) | ✅ 19 active apps + 3 deprecated + 1 planned — live-attested via `GEOX_MCP_APPS_SURFACE.json` | `resources/list` |
-| Cross-organ capital routing | ✅ WEALTH bridge — end-to-end sealed (geology → capital route → VAULT999 receipt) | OBS |
-
-> **Label key:** OBS = directly validated against test data · DER = computed from validated inputs · INT = interpreted / integration claim pending sealed evidence · SPEC = assumed, not yet tested.
+- **Well Log & Petrophysical Analytics (`OBS` / `DER`):** Automated LAS 2.0/3.0 ingestion, Archie & Simandoux water saturation, density-neutron crossplot porosity, and net-pay determination.
+- **Seismic Processing & Attribute Extraction (`OBS` / `DER`):** SEG-Y header inspection, synthetic seismogram generation (Ricker/Ormsby wavelets), AVO gradient analysis, RMS sweetness, and spectral decomposition.
+- **Structural & Basin Modeling (`DER`):** 6-point Malay Basin structural stress battery, K-DIP normal vector estimation, full-trace K-THROW fault displacement analysis, backstripping, and thermal maturity history.
+- **Geomechanics & Pore Pressure (`DER`):** Elastic moduli calculation, stress polygon estimation, and pore pressure prediction.
+- **Capital & Risk Routing (`INT`):** Automated Volumetrics (STOIIP/GIIP), Probability of Success (POS), and seamless bridging to the **WEALTH** organ for expected monetary value (EMV) analysis.
 
 ---
 
-## Live Surface
+## Enterprise Deployment & Quick Start
 
-| Metric | Value | Source of truth |
-|--------|-------|-----------------|
-| MCP tools (public canonical) | **33 canonical tools** — live-witnessed (`tools_loaded: 33`) | `curl :8081/health` + `tools/list` |
-| MCP Apps | 19 active + 3 deprecated + 1 planned (SEP-1865) — canonical source: `GEOX_MCP_APPS_SURFACE.json` | `resources/list` |
-| ui:// resources & endpoints | 9 (incl. `geox://project-state/canonical.json`) | server manifest |
-| Workbench UI | Linked 4-View Canvas (**Map, Seismic, Well, Claims**) | `workspace_v1.html` |
-| Health | `healthy` (`verified: true`) | `curl :8081/health` |
-| Port | 8081 | deployment config |
-| Deployed Version | `geox-62994c47` (v2026.07.26) | SOT-MANIFEST |
-| License | BSL-1.1 → Apache 2.0 on 2029-06-29 | [LICENSE](./LICENSE) + `pyproject.toml` |
+### Deployment Topology
 
+GEOX is deployed as a bare-metal containerized microservice or systemd daemon operating on port **8081**, exposing an MCP-compliant endpoint:
 
-> **F4 Clarity rule:** Runtime health and tool counts are witnessed live, not asserted as static prose — per the SOT truth rule, `/health` and `tools/list` are the only valid witnesses. The value 32 above is an OBS-recorded snapshot of the 2026-07-25 witness, not a standing claim. (Earlier prose citing 52 tools reflected an unconsolidated legacy list and has been retired.)
+```
+Public Endpoint: https://geox.arif-fazil.com/mcp
+Local Daemon:    http://127.0.0.1:8081
+```
 
----
-
-## Validated Datasets
-
-| Dataset | Type | Status |
-|---------|------|--------|
-| **Marmousi2** | Synthetic 2D seismic + 3 wells | ✅ Full pipeline |
-| **Volve field** | Real North Sea wells + production | ✅ Well logs ingested (12+ curves) |
-| | | ⚠️ SEG-Y pending (Equinor license required) |
-
----
-
-## MCP Apps (SEP-1865)
-
-Authoritative surface: `GEOX_MCP_APPS_SURFACE.json` — generated by `scripts/generate_mcp_apps_surface.py`. Contains 19 active, 3 deprecated, and 1 planned UI resources with bound tool contracts, CSP domains, and content hashes. Do not hand-maintain app lists in prose.
-
-Connect via: `https://geox.arif-fazil.com/mcp`
-
----
-
-## Quick Start
-
-**Prerequisites:** Python 3.11+, pip, and (for seismic workflows) write access to a data directory for LAS / SEG-Y ingestion.
+### Production Setup
 
 ```bash
-# Install
-cd /root/GEOX && pip install -e ".[dev]"
+# 1. Clone repository
+git clone https://github.com/ariffazil/GEOX.git /opt/geox/app
+cd /opt/geox/app
 
-# Run tests
+# 2. Setup environment & dependencies (Python 3.11+)
+uv sync --frozen
+
+# 3. Execute test suite (Unit & Structural Battery)
 PYTHONPATH=src pytest tests/ -q --tb=short
 
-# Start server
-python -m geox_mcp.server
-
-# Health check — the only valid health witness
-curl http://localhost:8081/health
+# 4. Deploy service via systemd
+systemctl restart geox-mcp
 ```
 
-### Ingest a well log
-```
-geox_well_ingest(mode="auto", source_uri="/data/wells/my-well.las", well_id="MY-WELL-1")
+### Health Verification
+
+To verify production operational status and active tool availability:
+
+```bash
+curl -s http://127.0.0.1:8081/health | jq .
 ```
 
-### Compute petrophysics
-```
-geox_petrophysics(mode="generate", well_id="MY-WELL-1",
-  curves={...}, matrix_density=2.65, rw=0.05)
-```
+*Expected output:* `{"status": "healthy", "tools_loaded": 33, ...}`
 
 ---
 
-## Architecture
+## Federation Integration
 
-GEOX separates four things that most subsurface software conflates:
+GEOX operates as the Earth Intelligence organ within the broader **arifOS Federation**:
 
-1. **Observation** — what was measured (log value, seismic amplitude)
-2. **Derivation** — what was computed (porosity, impedance)
-3. **Interpretation** — what was concluded (reservoir, seal, charge)
-4. **Speculation** — what was assumed (fluid phase, migration pathway)
-
-Every output carries an epistemic label (OBS / DER / INT / SPEC) and an uncertainty band.
-
-**Failure contract:** when governance checks fail, GEOX fails closed — `888_HOLD` (result generated but awaiting human ratification) for outputs needing review, `VOID` for ungrounded claims. No silent degradation, no ungoverned output.
-
-### Governance Vocabulary
-
-GEOX operates within the arifOS federation's constitutional framework. Key terms:
-
-| Term | Meaning |
-|------|---------|
-| **Physics-governed** | Where geological interpretations conflict with physical observations, observations win until falsified |
-| **F13 SOVEREIGN** | Human veto — Arif's decision is final. No agent self-authorizes |
-| **888_HOLD** | Governance state: result generated but awaiting human ratification before action |
-| **VAULT999** | Append-only, hash-chained immutable record — decisions are sealed, not overwritten |
-| **SEP-1865** | MCP Apps specification — the protocol that defines how GEOX UI apps connect to the MCP surface |
-| **SOT** | Source of Truth — the live runtime state (`/health`, `tools/list`) that beats any static claim |
+| Organ | Role | Port | Endpoint / Target |
+|:---|:---|:---:|:---|
+| **arifOS** | Constitutional Kernel & Vault Governance | 8088 | `https://mcp.arif-fazil.com/mcp` |
+| **A-FORGE** | Execution & Automated Build Shell | 7071 | `https://forge.arif-fazil.com/mcp` |
+| **AAA** | Cockpit, Control Plane & A2A Gateway | 3001 | `https://aaa.arif-fazil.com` |
+| **GEOX** | Earth Intelligence & Subsurface Coprocessor | 8081 | `https://geox.arif-fazil.com/mcp` |
+| **WEALTH** | Capital Compute & Portfolio Optimization | 18082 | `https://wealth.arif-fazil.com/mcp` |
+| **WELL** | Human Readiness & Vitality Interface | 18083 | `https://well.arif-fazil.com/mcp` |
 
 ---
 
-## Repository
+## Enterprise Licensing & Governance
 
-```
-src/geox_core/         ← Physics truth engine (NOT agent-facing)
-    engines/petrophysics/   ← PINN, Archie, Sw, net-pay
-    engines/seismic/        ← AC risk, synthetic, well-tie
-
-src/geox_mcp/          ← MCP agent surface
-    tools/                  ← Canonical public tool surface (32, live-witnessed)
-    resources/              ← 8 ui:// resources
-    prompts/                ← MCP prompt templates
-
-apps/                   ← MCP Apps registry — canonical source: GEOX_MCP_APPS_SURFACE.json
-docs/                   ← Documentation
-tests/                  ← Test suite (60+ files; 75/75 unit + 6/6 structure battery)
-GENESIS/                ← Constitutional charter
-```
+- **Licensing:** Business Source License 1.1 (**BSL-1.1**), converting to open-source **Apache 2.0** on **2029-06-29** (see [LICENSE](./LICENSE)).
+- **Governance:** Operating under F13 Sovereign Human Veto. Decisions requiring human oversight trigger `888_HOLD` status until ratified by authorized asset team members.
 
 ---
 
-## What GEOX Is Not
-
-GEOX is **not** a replacement for Petrel, DecisionSpace, PaleoScan, or OpendTect. It cannot edit horizons interactively, build geocellular grids, or run reservoir simulation.
-
-It IS a vendor-neutral layer that can:
-- Challenge interpretations from incumbent software
-- Preserve the evidence behind every geological claim
-- Compute selected subsurface workflows with full provenance
-- Route capital consequences from geology to decision frameworks
-
----
-
-## Next Horizons
-
-> Items below are **SPEC** until sealed by test evidence. This section documents what is being forged — not what is claimed.
-
-| Horizon | Blocker / dependency | Status |
-|---------|---------------------|--------|
-| Volve SEG-Y full seismic pipeline | Equinor license clearance | ⚠️ Gated |
-| WEALTH bridge integration sealing | End-to-end sealed test (geology → capital route) | ✅ OBS |
-| Expanded `ui://` resource surface | SEP-1865 spec evolution | SPEC |
-| Public tool inventory publication | `tools/list` snapshot in `docs/` per release | Planned |
-
----
-
-## Audit History
-
-> Governance record — not required for understanding GEOX. Preserved here for constitutional traceability.
-
-| Date | Milestone | Detail |
-|------|-----------|--------|
-| 2026-07-25 | **Deep MCP Readiness Audit** | FIGHT-TEST: 3-agent audit (OpenCode + Claude + ChatGPT); 8 surgical fixes deployed — session binding, false-confidence wrapper, AVO auto-compute, structure falsification auto-ID, correlation HALT-on-empty, ToAC overclaim correction, petrophysics auto-QC gate, ok:true→false on INVALID |
-
-| 2026-07-23 | **Phase C hardening** | K-DIP/K-DL/K-THROW regime aliases wired (commit `8ce723b0`); 6/6 Malay Basin test battery PASS |
-| 2026-07-23 | **Phase C Sealed State** | K-DIP arccos (SVD normal vector math), full-trace K-THROW (tip→centre→tip), zero-false-negative regime aliasing — **75/75 unit tests + 6/6 Malay Basin battery green** |
-| 2026-07-23 | **License Falsification Audit** | AGPL marking identified as drift; BSL-1.1 confirmed against LICENSE + `pyproject.toml` |
-| 2026-07-19 | **P0/P1 — MCP Restore** | FastMCP 3.4.2 kwargs fix, tools registered; `prefab-ui` installed, 6 apps LIVE, GUI-ready |
-| 2026-07-19 | **SOT Audit** | License corrected (AGPL→BSL-1.1), version aligned, tool count synced |
-| 2026-07-19 | **Gitwrap** | 4 feature branches removed, 2600+ lint errors fixed, CI advisory |
-
----
-
-
-## 🔗 Federation
-
-| Organ | Role | Repo | MCP | Health | LLMs |
-|-------|------|------|-----|--------|------|
-| **arifOS** | Kernel — judges, seals | [repo](https://github.com/ariffazil/arifos) | [mcp](https://mcp.arif-fazil.com/mcp) | [health](https://arifos.arif-fazil.com/health) | [llms.txt](https://arifos.arif-fazil.com/llms.txt) |
-| **A-FORGE** | Executor — builds, deploys | [repo](https://github.com/ariffazil/A-FORGE) | [mcp](https://forge.arif-fazil.com/mcp) | [health](https://forge.arif-fazil.com/health) | [llms.txt](https://forge.arif-fazil.com/llms.txt) |
-| **AAA** | Cockpit — displays, routes | [repo](https://github.com/ariffazil/AAA) | — | [health](https://aaa.arif-fazil.com/health) | [llms.txt](https://aaa.arif-fazil.com/llms.txt) |
-| **GEOX** | Earth intelligence | [repo](https://github.com/ariffazil/GEOX) | [mcp](https://geox.arif-fazil.com/mcp) | [health](https://geox.arif-fazil.com/health) | [llms.txt](https://geox.arif-fazil.com/llms.txt) |
-| **WEALTH** | Capital intelligence | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | [llms.txt](https://wealth.arif-fazil.com/llms.txt) |
-| **WELL** | Vitality guard | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
-| **HERMES** | Multi-modal bridge | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
-
-**Public:** [arif-fazil.com](https://arif-fazil.com) · **Federation root:** [arifos.arif-fazil.com](https://arifos.arif-fazil.com)
-**SOT:** 2026-07-28
-
-## License
-
-**BSL-1.1 (Business Source License 1.1)** — converts to **Apache 2.0 on 2029-06-29** per the Change Date in [LICENSE](./LICENSE) (confirmed against `pyproject.toml`).
-
-> **License history:** GEOX was briefly marked AGPL prior to the 2026-07-19 SOT Audit, which corrected it to BSL-1.1; a falsification audit on 2026-07-23 re-confirmed BSL-1.1 as canonical. All copies from 2026-07-19 onward are BSL-1.1.
-
----
-
-*Maintained under F13 SOVEREIGN. Built on Marmousi, validated on Volve.*
+*Maintained under F13 SOVEREIGN. Built on Marmousi, validated on Volve.*  
 *DITEMPA BUKAN DIBERI — truth must cool before it rules.*
+
