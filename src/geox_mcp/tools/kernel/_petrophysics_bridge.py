@@ -533,8 +533,24 @@ def _multi_mineral_solve(
     # Neutron porosity (limestone matrix)
     phi_n = nphi
 
-    # Average porosity (density-neutron average, standard approach)
-    phi_avg = 0.5 * (phi_d + phi_n) if (phi_d > 0 and phi_n > 0) else max(phi_d, phi_n)
+    # Lithology-dependent porosity (G6 fix — 31 Jul 2026)
+    # Clastic rocks: density porosity is more reliable (neutron reads high in sandstone).
+    # Carbonates: neutron-density average is standard (NPHI calibrated to limestone).
+    # Shale: neutron reliable, density unreliable (light minerals).
+    if vsh < 0.15:
+        # Clean formation — density-weighted
+        w_d = 0.70  # density weight
+        w_n = 0.30
+    elif vsh < 0.30:
+        # Slightly shaly — balanced
+        w_d = 0.50
+        w_n = 0.50
+    else:
+        # Shaly — neutron-weighted (density unreliable due to light clays)
+        w_d = 0.30
+        w_n = 0.70
+    
+    phi_avg = w_d * phi_d + w_n * phi_n if (phi_d > 0 and phi_n > 0) else max(phi_d, phi_n)
     phi_avg = max(0.0, min(0.50, phi_avg))
 
     # Apparent matrix density from density porosity equation
