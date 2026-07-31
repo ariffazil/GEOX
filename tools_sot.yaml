@@ -1,17 +1,214 @@
 organ: GEOX
-version: 2026.07.26
-sot_source: tools_manifest.yaml (public_tools filter)
+version: 2026.07.31
+sot_source: live_mcp_tools_list_2026-07-31
 live_port: 8081
 public_count: 33
-regenerated: '2026-07-26T11:49:20.628138Z'
+regenerated: '2026-07-31T19:21:00Z'
+regenerated_by: kimi-code/FI-008 (GEOX jam)
 tools:
-- name: geox_well_ingest
-  domain: earth.well
+- name: geox_basin
+  domain: earth.basin
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
+    mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
+    Use when: Use when you need basin evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_basin_backstrip
+  domain: earth.basin
+  axis: reason
+  lane: reasoning
+  access: public
+  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie
+    1980. Reconstruct tectonic and total subsidence through time. Use when: Use when
+    you need basin backstrip evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_claim
+  domain: earth.governance
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence,
+    consequence, optionality, cascade, feedback integrity, truth challenge. Use when:
+    Use when you need claim evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_contradiction_scan
+  domain: earth.governance
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Scan claims for contradictions using13-type ontology. Classifies severity
+    (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL
+    →888_HOLD. Use when: Use when you need contradiction scan evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_dde_reason
+  domain: earth.dde
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'DDE Ontology + Macrostrat neuro-symbolic reasoning.  Query the Deep-time
+    Digital Earth knowledge graph (62,610 physical rules) for stratigraphic reasoning,
+    infer missing geology, validate cross-sections against physical laws, and explore
+    tectonic context.  Use when: ''stratigraphy'', ''DDE'', ''Macrostrat'', ''infer
+    unit'', ''age constraints'', ''tectonic context''.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_deep_time_state
+  domain: earth.deep_time
   axis: observe
   lane: evidence
   access: public
-  description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
-    Auto-detects format.
+  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature,
+    paleogeography. Use when: Use when you need deep time state evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_evidence
+  domain: earth.governance
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict,
+    spatial_block, ingest_literature. Use when: Use when you need evidence evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_falsify
+  domain: earth.governance
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction
+    scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL
+    → rejected. All PASS → PROCEED to 888_JUDGE. Use when: Use when you need falsify
+    evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_gempy_implicit_3d
+  domain: earth.model
+  axis: compute
+  lane: reasoning
+  access: public
+  description: 'Implicit 3D structural modeling with GemPy.  Builds a 3D geological
+    volume from surface contact points and orientation measurements using universal
+    cokriging scalar potential field interpolation. Returns lithology block, scalar
+    field, section images, and uncertainty estimates.  Use when: ''3D model'', ''GemPy'',
+    ''implicit modeling'', ''structural model'', ''geological volume''.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_geological_model_generate
+  domain: earth.model
+  axis: compute
+  lane: reasoning
+  access: public
+  description: 'Deterministic geological model renderer. Generates 2D cross-sections
+    from structural parameters (dip, fault throw, strata) using matplotlib. NOT an
+    AI image generator — physics-constrained, computed output. Phase 1: 2D sections.
+    Phase 2: 3D GemPy block models. Use when: Use when you need geological model generate
+    evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_geomechanics
+  domain: earth.structure
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic
+    impedance, stress polygon. Use when: Use when you need geomechanics evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_h3_spatial_index
+  domain: earth.geo_index
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'H3 hexagonal spatial indexing for Earth intelligence.  Convert lat/lng
+    to H3 cells, aggregate points, query k-ring neighbours, fill polygons. Uniform-adjacency
+    hex grid for O(1) spatial retrieval.  Use when: ''H3 index'', ''hexagon'', ''spatial
+    index'', ''latlng to h3'', ''cell aggregate''.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_lancedb_embed_store
+  domain: earth.embeddings
+  axis: compute
+  lane: reasoning
+  access: public
+  description: 'LanceDB embedded vector store for earth embeddings.  Store and search
+    AlphaEarth (64-dim), Clay (768-dim), or custom embeddings with H3 spatial cross-reference.
+    PQ compression + refine_factor. Serverless, embedded.  Use when: ''search embeddings'',
+    ''vector store'', ''LanceDB'', ''store earth embeddings'', ''similarity search''.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_lem_predict
+  domain: earth.ml
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'LEM inference — predict rock properties (porosity, Sw, lithology)
+    from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated
+    weights deploy. Use when: Use when you need lem predict evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_map_layers_list
+  domain: earth.cartography
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'List available map layers and their spatial extents. Use when: Use
+    when you need map layers list evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_map_render_preview
+  domain: earth.cartography
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'Render preview of map scene for quality review before export. Use
+    when: Use when you need map render preview evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_map_scene_plan
+  domain: earth.cartography
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'Plan map scene composition: layer ordering, zoom, and annotation layout.
+    Use when: Use when you need map scene plan evidence.'
   annotations:
     read_only: true
     destructive: false
@@ -22,17 +219,19 @@ tools:
   lane: reasoning
   access: public
   description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM
-    inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.'
+    inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc. Use when:
+    Use when you need petrophysics evidence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-- name: geox_seismic_ingest
-  domain: earth.seismic
-  axis: observe
-  lane: evidence
+- name: geox_prospect
+  domain: earth.economics
+  axis: reason
+  lane: reasoning
   access: public
-  description: SEG-Y I/O, header inspection, export.
+  description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
+    screen, evaluate. Use when: Use when you need prospect evidence.'
   annotations:
     read_only: true
     destructive: false
@@ -42,45 +241,37 @@ tools:
   axis: compute
   lane: reasoning
   access: public
-  description: 'Seismic computation: forward model, well tie, attributes, wavelet
-    extraction, inversion.'
+  description: 'Unified seismic computation.  Modes:   synthetic          - Forward
+    model S = w * r + n   well_tie           - Seismic-to-well tie with cross-correlation   time_depth_anchor  -
+    Checkshot/VSP anchoring   anomalous_contrast - AVO class I-IV anomalous contrast
+    detection   attribute          - F1 zen: rms/coherence/discontinuity/dip on 2D
+    section   inversion          - 1D post-stack PINN seismic inversion'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_seismic_ingest
+  domain: earth.seismic
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'SEG-Y I/O, header inspection, export. Use when: Use when you need
+    seismic ingest evidence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
 - name: geox_seismic_interpret
   domain: earth.seismic
-  axis: reason
-  lane: reasoning
+  axis: observe
+  lane: evidence
   access: public
   description: 'One semantic capability — propose geometry, physics-gate, compare
     hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks,
     volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps),
     interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED
     + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE
-    — arifOS seals only.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_subsurface_model
-  domain: earth.model
-  axis: compute
-  lane: reasoning
-  access: public
-  description: 'Subsurface model building: joint inversion, gravity/magnetic forward,
-    MT forward.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_basin
-  domain: earth.basin
-  axis: reason
-  lane: reasoning
-  access: public
-  description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
-    mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+    — arifOS seals only. Use when: Use when you need seismic interpret evidence.'
   annotations:
     read_only: true
     destructive: false
@@ -91,62 +282,66 @@ tools:
   lane: reasoning
   access: public
   description: 'Unified stratigraphy: sequence analysis, biostratigraphic parsing
-    and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.'
+    and falsification. Modes: correlation, biostrat_parse, biostrat_falsify. Use when:
+    Use when you need sequence evidence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-- name: geox_geomechanics
-  domain: earth.structure
-  axis: compute
-  lane: reasoning
-  access: public
-  description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic
-    impedance, stress polygon.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_deep_time_state
-  domain: earth.time
+- name: geox_stac_discover
+  domain: earth.stac
   axis: observe
   lane: evidence
   access: public
-  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature,
-    paleogeography.'
+  description: 'STAC Catalog query for cloud-native geospatial assets.  Discover COG,
+    GeoParquet, Zarr datasets by spatial, temporal, and band filters across federated
+    STAC catalogs (Earth Search, Planetary Computer, Copernicus, USGS).  Use when:
+    ''STAC'', ''satellite imagery'', ''COG'', ''GeoParquet'', ''cloud-native geospatial'',
+    ''discover data''.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-- name: geox_claim
-  domain: governance
-  axis: reason
-  lane: judgment
-  access: public
-  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence,
-    consequence, optionality, cascade, feedback integrity, truth challenge.'
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
-- name: geox_prospect
-  domain: earth.prospect
-  axis: reason
-  lane: judgment
-  access: public
-  description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
-    screen, evaluate.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_gravmag_studio
-  domain: earth.geophysics
+- name: geox_subsurface_model
+  domain: earth.model
   axis: compute
   lane: reasoning
   access: public
-  description: 'Gravity/magnetic studio: forward modeling and screening. Modes: open,
-    screen.'
+  description: 'Subsurface model building: joint inversion, gravity/magnetic forward,
+    MT forward. Use when: Use when you need subsurface model evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_surface_status
+  domain: earth.registry
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'Federation-standard registry probe: tool discovery and health status.
+    Use when: Use when you need surface status evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_thermal_maturity_history
+  domain: earth.thermal
+  axis: compute
+  lane: reasoning
+  access: public
+  description: 'Burial + heat flow + maturity modeling through time. EasyRo + TTI.
+    Use when: Use when you need thermal maturity history evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_visual_understand
+  domain: earth.visual
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'Extract visual patterns from seismic section images using deep learning.
+    Use when: Use when you need visual understand evidence.'
   annotations:
     read_only: true
     destructive: false
@@ -157,18 +352,29 @@ tools:
   lane: evidence
   access: public
   description: 'Well desk: interactive view, publish rendered panel, render well panel.
-    Modes: open, publish, render.'
+    Modes: open, publish, render. Use when: Use when you need well desk evidence.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_well_ingest
+  domain: earth.well
+  axis: observe
+  lane: evidence
+  access: public
+  description: 'Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
+    Auto-detects format. Use when: Use when you need well ingest evidence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
 - name: geox_well_qc
   domain: earth.well
-  axis: reason
+  axis: observe
   lane: evidence
   access: public
   description: 'Quality control for well data: depth monotonicity, null %, physical
-    range checks.'
+    range checks. Use when: Use when you need well qc evidence.'
   annotations:
     read_only: true
     destructive: false
@@ -178,191 +384,20 @@ tools:
   axis: observe
   lane: evidence
   access: public
-  description: Well Witness View — hydrate real LAS curves into interactive tracks
-    for WellDesk/Well Witness widgets.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_surface_status
-  domain: earth.meta
-  axis: observe
-  lane: evidence
-  access: public
-  description: 'Federation-standard registry probe: tool discovery and health status.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_evidence
-  domain: governance.evidence
-  axis: reason
-  lane: evidence
-  access: public
-  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict,
-    spatial_block, ingest_literature.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: false
-- name: geox_basin_backstrip
-  domain: earth.basin
-  axis: compute
-  lane: reasoning
-  access: public
-  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie
-    1980. Reconstruct tectonic and total subsidence through time.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_sediment_mass_balance
-  domain: earth.basin
-  axis: compute
-  lane: reasoning
-  access: public
-  description: Source-to-sink sediment volume and mass accounting. Peters 2012 framework.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_thermal_maturity_history
-  domain: earth.basin
-  axis: compute
-  lane: reasoning
-  access: public
-  description: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_claim_graph_evaluate
-  domain: governance
-  axis: reason
-  lane: judgment
-  access: public
-  description: Evaluate parent claim validity when child claims fail. DAG evaluation
-    with AND/OR/WEIGHTED dependencies.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_falsify
-  domain: governance
-  axis: reason
-  lane: judgment
-  access: public
-  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction
-    scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL
-    → rejected. All PASS → PROCEED to 888_JUDGE.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_contradiction_scan
-  domain: governance
-  axis: reason
-  lane: judgment
-  access: public
-  description: Scan claims for contradictions using13-type ontology. Classifies severity
-    (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL
-    →888_HOLD.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_lem_predict
-  domain: earth.inference
-  axis: reason
-  lane: reasoning
-  access: public
-  description: LEM inference — predict rock properties (porosity, Sw, lithology) from
-    well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated
-    weights deploy.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_to_wealth_bridge
-  domain: governance.bridge
-  axis: reason
-  lane: evidence
-  access: public
-  description: 'Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel
-    input. F2: epistemic_source preserved. F13: blocked nodes rejected.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_map_export_package
-  domain: earth.map
-  axis: compute
-  lane: reasoning
-  access: public
-  description: 'Map export: package map layers and annotations into portable formats.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_visual_understand
-  domain: earth.seismic
-  axis: observe
-  lane: evidence
-  access: public
-  description: Extract visual patterns from seismic section images using deep learning.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_visual_generate_hypotheses
-  domain: earth.seismic
-  axis: reason
-  lane: reasoning
-  access: public
-  description: Generate geological hypotheses across discontinuity gaps in seismic
-    data.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_map_layers_list
-  domain: earth.map
-  axis: observe
-  lane: discovery
-  access: public
-  description: List available map layers and their spatial extents.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_map_scene_plan
-  domain: earth.map
-  axis: reason
-  lane: reasoning
-  access: public
-  description: 'Plan map scene composition: layer ordering, zoom, and annotation layout.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_map_render_preview
-  domain: earth.map
-  axis: compute
-  lane: reasoning
-  access: public
-  description: Render preview of map scene for quality review before export.
+  description: 'Well Witness View — hydrate real LAS curves into interactive tracks
+    for WellDesk/Well Witness widgets. Use when: Use when you need well view evidence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
 - name: geox_workspace
-  domain: earth.meta
+  domain: earth.context
   axis: observe
   lane: evidence
   access: public
   description: 'GEOX Workspace — persistent geological context across all tools. Set
     basin/play/well once; every tool inherits. Modes: set, view, history, evidence,
-    relations, reset.'
+    relations, reset. Use when: Use when you need workspace evidence.'
   annotations:
     read_only: true
     destructive: false

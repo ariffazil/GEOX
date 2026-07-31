@@ -2443,7 +2443,7 @@ class McpLifecycleMiddleware(BaseHTTPMiddleware):
             if is_lifecycle_blocked(sid):
                 logger.warning(
                     "LIFECYCLE_BLOCK_HTTP: tools/call before initialized session=%s",
-                    sid[:12],
+                    sid,
                 )
                 msg_id = msg.get("id")
                 return JSONResponse(
@@ -2513,7 +2513,7 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
             if session_id:
                 logger.debug(
                     "MCP_VERSION_MISSING: mcp-protocol-version header absent (session=%s) — allowed",
-                    session_id[:8],
+                    session_id,
                 )
             return await call_next(request)
         if version not in self.SUPPORTED_VERSIONS:
@@ -3147,7 +3147,7 @@ async def delete_mcp_handler(request: Request) -> JSONResponse:
     """
     session_id = request.headers.get("mcp-session-id", "")
     if session_id:
-        logger.info("MCP_SESSION_TERMINATE: session=%s", session_id[:8])
+        logger.info("MCP_SESSION_TERMINATE: session=%s", session_id)
     else:
         logger.info("MCP_SESSION_TERMINATE: DELETE /mcp with no session ID")
     return JSONResponse(

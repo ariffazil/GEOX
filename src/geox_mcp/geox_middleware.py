@@ -64,7 +64,7 @@ def mark_lifecycle_pending(session_id: str, source: str = "unknown") -> None:
     _LIFECYCLE_READY[session_id] = False
     logger.info(
         "lifecycle: session=%s PENDING (%s) gate=%s",
-        session_id[:12],
+        session_id,
         source,
         "on" if _LIFECYCLE_GATE_ENABLED else "off",
     )
@@ -75,7 +75,7 @@ def mark_lifecycle_ready(session_id: str, source: str = "unknown") -> None:
     if not session_id:
         return
     _LIFECYCLE_READY.pop(session_id, None)
-    logger.info("lifecycle: session=%s READY (%s)", session_id[:12], source)
+    logger.info("lifecycle: session=%s READY (%s)", session_id, source)
 
 
 def is_lifecycle_blocked(session_id: str) -> bool:
@@ -305,7 +305,7 @@ class GeoxGovernanceMiddleware(Middleware):
                 _LIFECYCLE_READY[sid] = False
                 logger.info(
                     "lifecycle: session=%s awaiting notifications/initialized (gate=%s)",
-                    sid[:12],
+                    sid,
                     "on" if _LIFECYCLE_GATE_ENABLED else "off",
                 )
         except Exception as exc:
@@ -329,7 +329,7 @@ class GeoxGovernanceMiddleware(Middleware):
                     _LIFECYCLE_READY.pop(sid, None)
                     logger.info(
                         "lifecycle: session=%s READY (notifications/initialized method=%s)",
-                        sid[:12],
+                        sid,
                         method or msg_method,
                     )
                 else:
@@ -352,7 +352,7 @@ class GeoxGovernanceMiddleware(Middleware):
             sid = _session_id_from_context(context)
             if sid:
                 _LIFECYCLE_READY.pop(sid, None)
-                logger.info("lifecycle: session=%s READY via on_message", sid[:12])
+                logger.info("lifecycle: session=%s READY via on_message", sid)
         return await call_next(context)
 
     async def on_list_tools(
@@ -705,13 +705,24 @@ class GeoxGovernanceMiddleware(Middleware):
                 lane = err_data.get("lane", "")
                 reason = err_data.get("reason", "")
                 fix = err_data.get("fix", "")
+                # DEBUG: log what we got
+                import sys as _dbg
+                print(f"DEBUG_PARTS: err_data={err_data}", file=open("/tmp/geox-debug-parts.log", "a"))
+                print(f"DEBUG_PARTS: reason={reason!r} len={len(reason)}", file=open("/tmp/geox-debug-parts.log", "a"))
                 parts = [s for s in [guard, f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
                 if lane:
                     parts.append(f"lane={lane}")
                 if reason:
-                    parts.append(reason[:120])
+                    # P3 2026-07-31 (FI-008 GEOX jam flow-restore): slice to 300
+                    # (was 120). 120 chars is enough to drop 4 chars from a
+                    # 21-char session_id like SEAL-xxxxxxxxxxxxxxxx. 300
+                    # preserves the full session_id in the error echo.
+                    # Reason itself is rarely >300 chars; if it ever is,
+                    # the fix is to format reason more compactly upstream.
+                    parts.append(reason[:300])
                 if fix:
-                    parts.append(f"fix: {fix[:120]}")
+                    # P3 (FI-008): slice to 300 for symmetry with reason.
+                    parts.append(f"fix: {fix[:300]}")
                 err_msg = " · ".join(parts)
 
                 raise ToolError(err_msg)
