@@ -3,7 +3,7 @@ owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
 last_verified: 2026-07-31T03:15:00Z
 valid_until: 2026-08-31
 federation_release: v2026.07.31
-live_commit: 28f4b0d0
+live_commit: a94962a7
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
