@@ -1,9 +1,9 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-07-31T03:15:00Z
-valid_until: 2026-08-31
-federation_release: v2026.07.31
-live_commit: a94962a7
+last_verified: 2026-08-01T00:45:00Z
+valid_until: 2026-09-01
+federation_release: v2026.08.01
+live_commit: 6d8c2009
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
@@ -13,7 +13,7 @@ epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions)
 [![GEOX MCP](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
-[![Federation](https://img.shields.io/badge/Federation-v2026.07.31-0a7b83)](https://arifos.arif-fazil.com)
+[![Federation](https://img.shields.io/badge/Federation-v2026.08.01-0a7b83)](https://arifos.arif-fazil.com)
 [![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](./LICENSE)
 
 **GEOX** is an enterprise-grade geological intelligence and subsurface coprocessor designed for modern E&P digital transformation, energy transition workflows, and automated subsurface auditing. Powered by physics-governed computation engines and strict provenance tracking, GEOX bridges raw geoscientific observation with executive capital decision-making.
