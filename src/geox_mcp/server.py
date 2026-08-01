@@ -663,6 +663,82 @@ class _McpSlashRewriteMiddleware:
         await self.app(scope, receive, send)
 
 
+# ── D7 ACCEPT-NEGOTIATION MIDDLEWARE (2026-08-01) ─────────────────────────────
+# Fix: GEOX /mcp returned 406 "Not Acceptable: Client must accept text/event-stream"
+# on plain GET (no Accept header). This broke discovery probes (the audit's
+# "storefront window cracked"). Fix: intercept GET /mcp* without SSE Accept,
+# return a graceful discovery JSON. Real MCP clients (Accept: text/event-stream)
+# pass through to FastMCP normally.
+#
+# Why middleware, not route: the FastMCP Mount is INSIDE Starlette routing.
+# A route can't reach /mcp/ before the Mount does (Starlette routes are
+# matched in order). Middleware fires before routing — sees the request first.
+class _McpAcceptNegotiationMiddleware:
+    """Negotiate Accept header on GET /mcp* — graceful discovery, not 406."""
+
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        method = scope.get("method", "GET")
+        path = scope.get("path", "")
+
+        # Only intercept GET on /mcp endpoints
+        if method != "GET" or not path.startswith("/mcp"):
+            await self.app(scope, receive, send)
+            return
+
+        # Parse Accept header (ASGI headers are list[tuple[bytes, bytes]])
+        accept_value = ""
+        for name, value in scope.get("headers", []):
+            if name == b"accept":
+                accept_value = value.decode("latin-1", "ignore").lower()
+                break
+
+        # If client accepts text/event-stream, pass through to FastMCP
+        if "text/event-stream" in accept_value:
+            await self.app(scope, receive, send)
+            return
+
+        # Otherwise: graceful discovery response
+        import json as _json
+        from starlette.responses import JSONResponse as _JSON
+
+        discovery = {
+            "mcp_endpoint": "https://geox.arif-fazil.com/mcp/",
+            "transport": "streamable-http",
+            "server": "GEOX Federated Domain",
+            "version": "v2026.07.24",
+            "discovery": (
+                "Send Accept: application/json, text/event-stream to initiate "
+                "an MCP session, then POST JSON-RPC initialize. Real MCP clients "
+                "(Claude Code, OpenCode, etc.) do this automatically."
+            ),
+            "tools": "/tools",
+            "schema": "/schemas",
+            "card": "/.well-known/mcp/server.json",
+            "health": "/health",
+            "ready": "/ready",
+            "doctrine": "DITEMPA BUKAN DIBERI — One Sovereign Kernel",
+        }
+
+        response = _JSON(
+            discovery,
+            headers={
+                # Tell clients what we DO accept (proper negotiation)
+                "Accept-Post": "application/json, text/event-stream",
+                # Help caches treat discovery differently from session
+                "Cache-Control": "no-cache, no-store, must-revalidate",
+            },
+            status_code=200,
+        )
+        await response(scope, receive, send)
+
+
 register_ui_applets(mcp)
 # ZEN-15 v0.2.1 — gravmag studio consolidated into geox_gravmag_studio(mode="open"|"screen")
 # in tools_wiring.py. Standalone registrations removed.
@@ -3533,7 +3609,11 @@ def create_app():
     app.add_middleware(McpLifecycleMiddleware)  # Phase A1: init → initialized → tools/call
     app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
     app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
-    app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard (outermost)
+    app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard
+    # D7 ACCEPT-NEGOTIATION (2026-08-01): outermost — intercept GET /mcp*
+    # without SSE Accept, return graceful discovery JSON. Real MCP clients
+    # (Accept: text/event-stream) pass through to FastMCP normally.
+    app.add_middleware(_McpAcceptNegotiationMiddleware)
 
     # Dynamic FastMCP Tool & Resource Registration
     from geox_mcp.apps.workbench import register_workbench
