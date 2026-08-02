@@ -97,3 +97,6 @@ src/geox_mcp/state/
 forge_work/
 src/geox_mcp/tools/biostrat_calibrate.py
 CONTRIBUTING.md
+data/egs/receipts/TEST-*.json
+data/atlas/cache/renders/
+__pycache__/
