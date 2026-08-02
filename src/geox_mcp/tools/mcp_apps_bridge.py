@@ -997,6 +997,14 @@ _tool_app_fallback: dict[str, str] = {
     "geox_visual_understand": "visual_hub",
     "geox_visual_generate_hypotheses": "visual_hub",
     "geox_surface_status": "catalog",
+    # P1: tools added post-PR3 — safe fallback binding
+    "geox_well_view": "well_desk",
+    "geox_geological_model_generate": "earth_volume",
+    "geox_gempy_implicit_3d": "earth_volume",
+    "geox_h3_spatial_index": "earth_map",
+    "geox_lancedb_embed_store": "visual_hub",
+    "geox_stac_discover": "earth_map",
+    "geox_dde_reason": "basin_explorer",
 }
 
 

@@ -11,8 +11,11 @@ Shared fixtures for the GEOX test suite:
 from __future__ import annotations
 
 import os
+
 # Bypass the root-owned .env file so FastMCP settings load without PermissionError in CI.
 os.environ.setdefault("FASTMCP_ENV_FILE", "")
+# Disable P0-2 authority gate for test suites (GEOX tests run without live arifOS session).
+os.environ.setdefault("GEOX_REQUIRE_SESSION_FOR_MUTATE", "0")
 
 import sys
 from pathlib import Path
@@ -132,6 +135,7 @@ except ImportError:
 # geo_request — standard Blok Selatan fixture
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def geo_request():
     """
@@ -160,6 +164,7 @@ def geo_request():
 # mock_agent — GeoXAgent with mock tools only
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 def mock_agent():
     """
@@ -171,8 +176,10 @@ def mock_agent():
       - No LLM planner (falls back to heuristic plan)
       - No audit sink
     """
-    if any(cls is None for cls in (GeoXAgent, GeoXConfig, ToolRegistry, GeoXValidator,
-                                   GeoMemoryStore, MockEarthNetTool, MockSeismicVLMTool)):
+    if any(
+        cls is None
+        for cls in (GeoXAgent, GeoXConfig, ToolRegistry, GeoXValidator, GeoMemoryStore, MockEarthNetTool, MockSeismicVLMTool)
+    ):
         pytest.skip("Legacy mock_agent fixtures not available (arifos.geox unreachable)")
 
     # Build registry with mock tools registered under production tool names
@@ -204,6 +211,7 @@ def mock_agent():
 # ---------------------------------------------------------------------------
 # Internal proxy classes — register mock tools under production names
 # ---------------------------------------------------------------------------
+
 
 class _EarthModelToolProxy(MockEarthNetTool if MockEarthNetTool else object):
     """MockEarthNetTool registered under the production name 'EarthModelTool'."""
