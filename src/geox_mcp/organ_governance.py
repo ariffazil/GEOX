@@ -421,7 +421,7 @@ MIN_AUTHORITY_FOR_TIER: dict[str, str] = {
 MUTATION_TOOLS: set[str] = {
     "geox_well_ingest",  # writes LAS files to /data/geox_las/
     "geox_seismic_ingest",  # writes SEG-Y data to disk
-    "geox_well_desk",  # mode=publish writes rendered panels
+    # "geox_well_desk",  # REMOVED — only mode=publish writes; mode=open is READONLY
     "geox_map_export_package",  # exports map packages to disk
     "geox_claim",  # mode=seal writes immutable claims
     "geox_prospect",  # mode=seal writes sealed evaluations

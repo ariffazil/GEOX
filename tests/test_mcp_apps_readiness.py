@@ -278,8 +278,8 @@ async def test_09_golden_prompts_direct_indirect_negative():
     by_name = {t.name: t for t in tools}
     petro = by_name["geox_petrophysics"]
     petro_meta = getattr(petro, "meta", None) or {}
-    assert (petro_meta.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/well-desk")
-    assert petro_meta.get("openai/outputTemplate", "").startswith("ui://geox/well-desk")
+    assert (petro_meta.get("ui") or {}).get("resourceUri", "").startswith("ui://geox/well")
+    assert petro_meta.get("openai/outputTemplate", "").startswith("ui://geox/well")
 
     # NEGATIVE — refuse without well_id, keep session alive (isError path)
     negative = await mcp.call_tool(
