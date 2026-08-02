@@ -37,8 +37,8 @@ def ensure_surface_manifest():
 async def test_01_tools_list_schema_and_ui_bindings():
     """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
     tools = await mcp.list_tools()
-    # Live public surface is 32 tools when geox_workspace registers; 31 if state import skipped in CI
-    assert len(tools) in (31, 32), f"Expected 31–32 canonical tools, got {len(tools)}"
+    # Live public surface is 33 tools
+    assert len(tools) in (33, 34), f"Expected 33–34 canonical tools, got {len(tools)}"
 
     tools_by_name = {t.name: t for t in tools}
 
@@ -152,7 +152,10 @@ async def test_06_well_witness_three_channel_return():
     from fastmcp.tools import ToolResult
 
     # DEMO-KINABALU is fixture-backed (clean clone + CI); A10 is not earth-truth LAS
-    result = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "DEMO-KINABALU"})
+    result = await mcp.call_tool(
+        "geox_well_desk",
+        {"mode": "open", "well_id": "DEMO-KINABALU", "session_id": "SEAL-test-mcp-apps", "actor_id": "TEST-AGENT"},
+    )
     assert result is not None
 
     # FastMCP ToolResult or converted CallToolResult
@@ -208,7 +211,7 @@ async def test_07_well_desk_resource_is_host_bridge_shell():
 async def test_08_all_tools_have_four_annotations_and_ui_binding():
     """PR3: 32 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
     tools = await mcp.list_tools()
-    assert len(tools) in (31, 32), f"Expected 31–32 tools, got {len(tools)}"
+    assert len(tools) in (33, 34), f"Expected 33–34 tools, got {len(tools)}"
     needed = ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
     missing_ann = []
     missing_ui = []
@@ -258,7 +261,10 @@ async def test_09_golden_prompts_direct_indirect_negative():
         return texts, sc, meta, err
 
     # DIRECT — fixture-backed demo id (works on clean clone + CI)
-    direct = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": "DEMO-KINABALU"})
+    direct = await mcp.call_tool(
+        "geox_well_desk",
+        {"mode": "open", "well_id": "DEMO-KINABALU", "session_id": "SEAL-test-golden", "actor_id": "test-runner"},
+    )
     texts, sc, meta, err = _channels(direct)
     assert not err
     assert texts
@@ -276,7 +282,9 @@ async def test_09_golden_prompts_direct_indirect_negative():
     assert petro_meta.get("openai/outputTemplate", "").startswith("ui://geox/well-desk")
 
     # NEGATIVE — refuse without well_id, keep session alive (isError path)
-    negative = await mcp.call_tool("geox_well_desk", {"mode": "open", "well_id": ""})
+    negative = await mcp.call_tool(
+        "geox_well_desk", {"mode": "open", "well_id": "", "session_id": "SEAL-test-golden", "actor_id": "test-runner"}
+    )
     texts3, sc3, meta3, err3 = _channels(negative)
     assert err3 or sc3.get("ok") is False or sc3.get("error_class")
     assert texts3, "negative path must return readable text"
