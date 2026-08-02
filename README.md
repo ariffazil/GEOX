@@ -1,11 +1,14 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-08-01T00:45:00Z
-valid_until: 2026-09-01
-federation_release: v2026.08.01
-live_commit: 6d8c2009
+last_verified: 2026-08-02T15:30:00Z
+valid_until: 2026-09-02
+federation_release: v2026.08.02
+live_commit: 1c095c21
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
+mcp_apps_registered: 18
+chatgpt_metadata: widgetCSP + widgetDescription + domain — VERIFIED
+branches_collapsed: PR #140 #141 #142 → unified main
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
@@ -131,6 +134,18 @@ curl -s http://127.0.0.1:8081/health | jq .
 ```
 
 *Expected output:* `{"status": "healthy", "tools_loaded": 33, ...}`
+
+### MCP Apps UI — 18 Interactive Widgets
+
+GEOX ships 18 SEP-1865 MCP App widgets that render directly inside ChatGPT, Claude, VS Code Copilot, and other MCP hosts. No tab-switching needed — visualizations appear inline in the conversation.
+
+```bash
+curl -s https://geox.arif-fazil.com/mcp | jq '.tools[]._meta.ui.resourceUri'
+```
+
+**Widget catalog:** WellDesk (1D logs) · Seismic Vision (2D/3D) · Earth Volume (Cesium globe) · Basin Explorer · Earth Map · Prospect Studio · Risk Console · Judge Console · GravMag Studio · Visual Hub · GeoProbe · Analog Digitizer · Well Witness · Workspace · Skills Catalog
+
+**ChatGPT-ready**: All 18 widgets include `openai/widgetCSP` (redirect_domains), `openai/widgetDescription`, and `_meta.ui.domain` — verified live 2026-08-02.
 
 ---
 
