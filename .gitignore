@@ -100,3 +100,4 @@ CONTRIBUTING.md
 data/egs/receipts/TEST-*.json
 data/atlas/cache/renders/
 __pycache__/
+uv.lock
