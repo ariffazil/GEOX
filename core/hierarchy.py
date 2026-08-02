@@ -1,1 +1,0 @@
-../src/geox_core/core/hierarchy.py
