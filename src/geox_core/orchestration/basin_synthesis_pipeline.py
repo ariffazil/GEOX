@@ -29,7 +29,7 @@ Phase 2 additions:
 F1 AMANAH: Reversible, no production push.
 F2 TRUTH: No fabricated data — flag Gap.<FIELD> instead.
 F4 CLARITY: Strict Pydantic, no drift.
-F7 HUMILITY: Confidence cap 0.90.
+F7 HUMILITY: Confidence cannot exceed 0.97; standard ceiling 0.96 (per Ω₀ band).
 F11 AUDIT: ProvenanceLedger attaches source_tool to every field.
 F13 SOVEREIGN: No self-elevation, no auto-write to resources/basins/.
 """

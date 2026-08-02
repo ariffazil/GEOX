@@ -38,7 +38,7 @@ def _compute_stress_polygon(
     forming the stress polygon in (Sh, SH) space.
 
     F2 TRUTH: All values are DERIVED from textbook rock mechanics.
-    F7 HUMILITY: Confidence cap 0.90 — lab μ may differ from in-situ.
+    F7 HUMILITY: Confidence cannot exceed 0.97; standard ceiling 0.96 (per Ω₀ band) — lab μ may differ from in-situ.
     """
     # Compute Sv if not provided
     if sv_mpa is None:
