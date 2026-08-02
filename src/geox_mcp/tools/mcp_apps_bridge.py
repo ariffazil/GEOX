@@ -47,6 +47,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/well-desk",
         "title": "GEOX WellDesk",
         "description": "1D well log viewer with petrophysics, formation tops, and physics9 integration",
+        "widget_description": "Interactive well log viewer showing depth-based curves (GR, resistivity, density, sonic), formation tops, and petrophysical analysis. Ingest LAS files, run QC, compute porosity/saturation, and visualize results.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -59,6 +60,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/seismic-vision",
         "title": "GEOX Seismic Vision",
         "description": "2D/3D seismic viewer with inline/xline, horizon picking, and attribute analysis",
+        "widget_description": "Interactive seismic viewer for 2D sections and 3D volumes. Pick horizons, interpret faults, compute attributes (RMS, coherence, sweetness), and run well ties with synthetic seismograms.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -69,6 +71,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/earth-volume",
         "title": "GEOX Earth Volume",
         "description": "3D subsurface volume renderer with Cesium globe integration",
+        "widget_description": "3D subsurface visualization with Cesium globe. Explore geological models, deep time paleogeography, GemPy implicit models, and subsurface property volumes.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -79,6 +82,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/judge-console",
         "title": "GEOX Judge Console",
         "description": "888 Judge deliberation console with claim review and falsification tracking",
+        "widget_description": "Constitutional judgment console for geological claims. Review evidence, track falsification results (K001-K007 filters), scan for contradictions, and render SEAL/HOLD/VOID verdicts.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -89,6 +93,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/geoprobe",
         "title": "GEOX GeoProbe",
         "description": "Multi-dimensional prospect evaluation with risk, volumetrics, and economics",
+        "widget_description": "Prospect evaluation dashboard. Assess geological risk (trap, reservoir, seal, charge, timing), compute P10/P50/P90 volumetrics, estimate probability of success, and bridge to WEALTH for economic analysis.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -99,6 +104,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/basin-explorer",
         "title": "GEOX Basin Explorer",
         "description": "Interactive basin analysis with maps, cross-sections, and stratigraphic columns",
+        "widget_description": "Basin analysis dashboard. Explore stratigraphy, subsidence history, thermal maturity, sediment mass balance, and petroleum systems. Includes backstripping, sequence stratigraphy, and deep-time reconstructions.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -109,6 +115,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/earth-map",
         "title": "GEOX Earth Map",
         "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list→plan→render→export.",
+        "widget_description": "Interactive geological map. Discover map layers by bounding box, compose scenes, preview rendered maps, and export governed map packages with provenance. Supports coordinate transforms and spatial indexing.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -119,6 +126,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/prospect-studio",
         "title": "GEOX Prospect Studio",
         "description": "Prospect evaluation with structure, closures, risk, and volume analysis",
+        "widget_description": "Prospect evaluation workspace. Define structural closures, assess trap integrity, compute volumetrics with uncertainty (P10/P50/P90), and evaluate risk factors for exploration decision-making.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -129,6 +137,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/risk-console",
         "title": "GEOX Risk Console",
         "description": "Decision log, evidence review, hold queue, and export for governed decisions",
+        "widget_description": "Risk and evidence console. Review claim evidence, track HOLD queues, scan for contradictions across geological claims, and prepare governed decision packages with audit trails.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -139,6 +148,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/visual-hub",
         "title": "GEOX Visual Output Hub",
         "description": "5-in-1 visual dashboard: WellDesk 1D + SeisVis 2D + CubeProbe 3D + TimeLapse 4D + PhysicCore",
+        "widget_description": "Unified visualization dashboard combining well logs, seismic sections, 3D volumes, deep-time views, and petrophysical core analysis in a single interactive workspace.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -149,6 +159,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/gravmag-studio",
         "title": "GEOX GravMag Studio",
         "description": "Gravity/magnetics studio — preview heatmaps and field interpretation",
+        "widget_description": "Gravity and magnetics interpretation studio. Visualize potential field data, forward-model subsurface bodies, and interpret basin structure from gravity/magnetic anomalies.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -159,6 +170,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/workspace-v1",
         "title": "GEOX Workspace",
         "description": "Persistent basin/play/well workspace context viewer",
+        "widget_description": "Persistent geological workspace. View and manage current basin, play, well, and prospect context across tools. Maintains state so multi-step analyses stay coherent.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -169,6 +181,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/workbench-v1",
         "title": "GEOX Workbench",
         "description": "Map/workbench shell for earth map tools",
+        "widget_description": "General-purpose earth intelligence workbench. Render geological maps, select features to inspect properties, view provenance and epistemic labels, and interact with GEOX tool results visually.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -179,6 +192,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/prospect-ui",
         "title": "GEOX Prospect UI",
         "description": "Prospect evaluation UI (alias of Prospect Studio shell)",
+        "widget_description": "Prospect evaluation interface. Quick-access view for prospect screening, risk assessment, and volumetric calculations with uncertainty quantification.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -189,6 +203,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/analog-digitizer",
         "title": "GEOX Analog Digitizer",
         "description": "Dark-data well log curve extraction — manual point-picking with LAS export",
+        "widget_description": "Digitize legacy paper well logs. Manually pick curve points from scanned log images and export as standard LAS files for use in modern petrophysical analysis.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -199,6 +214,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/well-witness",
         "title": "GEOX Well Witness",
         "description": "Consolidated well analysis pipeline: ingest → petrophysics → interactive view with provenance chain",
+        "widget_description": "End-to-end well analysis pipeline. Ingest LAS files, run petrophysical computations (Vsh, porosity, Sw, net pay), QC the results, and visualize everything with full provenance tracking.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -209,6 +225,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "uri": "ui://geox/catalog",
         "title": "GEOX Skills Catalog",
         "description": "Searchable registry of 44 earth intelligence skills across 11 domains",
+        "widget_description": "Searchable catalog of GEOX earth intelligence capabilities. Browse 33 tools across well, seismic, basin, map, prospect, and governance domains. Discover available analyses and their input/output schemas.",
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
@@ -695,13 +712,14 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
         query = "&".join(f"{k}={v}" for k, v in params.items())
         uri = f"{uri}?{query}"
 
-    return {
+    meta: dict[str, Any] = {
         "_meta": {
             "ui": {
                 "resourceUri": uri,
                 "title": app["title"],
                 "renderMode": app["render_mode"],
                 "mimeType": app["mime_type"],
+                "domain": "https://geox.arif-fazil.com",
                 "csp": {
                     "connectDomains": ["geox.arif-fazil.com", "macrostrat.org"],
                     "resourceDomains": [
@@ -721,8 +739,22 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
             "openai/outputTemplate": uri,
             "openai/toolInvocation/invoking": f"Rendering {app['title']}...",
             "openai/toolInvocation/invoked": f"{app['title']} ready",
+            "openai/widgetCSP": {
+                "connect_domains": ["geox.arif-fazil.com", "macrostrat.org"],
+                "resource_domains": [
+                    "geox.arif-fazil.com",
+                    "unpkg.com",
+                    "tile.openstreetmap.org",
+                    "cdn.jsdelivr.net",
+                    "cdn.plot.ly",
+                ],
+                "redirect_domains": ["geox.arif-fazil.com"],
+            },
         }
     }
+    if app.get("widget_description"):
+        meta["_meta"]["openai/widgetDescription"] = app["widget_description"]
+    return meta
 
 
 def enrich_response(response: dict[str, Any], app_id: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -861,10 +893,7 @@ def wrap_as_ui_tool_result(
                 or result.get("ok") is False
                 or result.get("status") in ("INVALID", "NOT_FOUND", "ERROR")
                 or result.get("execution_status") in ("ERROR", "FAILED")
-                or (
-                    isinstance(result.get("primary_artifact"), dict)
-                    and result["primary_artifact"].get("status") == "ERROR"
-                )
+                or (isinstance(result.get("primary_artifact"), dict) and result["primary_artifact"].get("status") == "ERROR")
             )
         return ui_tool_result(
             app_id=app_id,
@@ -1259,6 +1288,33 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
             if isinstance(sub_comps, dict):
                 all_components.update(sub_comps)
 
+    def _inject_widget_meta(comp: Any, app_info: dict[str, Any], uri: str) -> None:
+        """Inject ChatGPT widget metadata into a tool component's meta dict."""
+        comp.meta["ui"] = {
+            "resourceUri": uri,
+            "title": app_info["title"],
+            "renderMode": app_info["render_mode"],
+            "mimeType": app_info["mime_type"],
+            "domain": "https://geox.arif-fazil.com",
+        }
+        comp.meta["openai/outputTemplate"] = uri
+        comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
+        comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
+        comp.meta["openai/widgetCSP"] = {
+            "connect_domains": ["geox.arif-fazil.com", "macrostrat.org"],
+            "resource_domains": [
+                "geox.arif-fazil.com",
+                "unpkg.com",
+                "tile.openstreetmap.org",
+                "cdn.jsdelivr.net",
+                "cdn.plot.ly",
+            ],
+            "redirect_domains": ["geox.arif-fazil.com"],
+        }
+        wd = app_info.get("widget_description")
+        if wd:
+            comp.meta["openai/widgetDescription"] = wd
+
     count = 0
     # First: enrich tools explicitly mapped in _app_to_tool
     for app_id, tool_name in _app_to_tool.items():
@@ -1271,15 +1327,7 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
             uri = app_info["uri"]
             if not hasattr(comp, "meta") or comp.meta is None:
                 comp.meta = {}
-            comp.meta["ui"] = {
-                "resourceUri": uri,
-                "title": app_info["title"],
-                "renderMode": app_info["render_mode"],
-                "mimeType": app_info["mime_type"],
-            }
-            comp.meta["openai/outputTemplate"] = uri
-            comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
-            comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
+            _inject_widget_meta(comp, app_info, uri)
             count += 1
 
     # H1 P0: Enrich tools via fallback mapping (every tool gets a visual landing zone)
@@ -1294,15 +1342,7 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
             if not hasattr(comp, "meta") or comp.meta is None:
                 comp.meta = {}
             if "ui" not in comp.meta:  # Don't overwrite explicit mappings
-                comp.meta["ui"] = {
-                    "resourceUri": uri,
-                    "title": app_info["title"],
-                    "renderMode": app_info["render_mode"],
-                    "mimeType": app_info["mime_type"],
-                }
-                comp.meta["openai/outputTemplate"] = uri
-                comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
-                comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
+                _inject_widget_meta(comp, app_info, uri)
                 count += 1
 
     # Second: also scan all registered components across all providers/sub-servers
