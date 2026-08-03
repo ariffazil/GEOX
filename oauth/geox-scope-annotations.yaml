@@ -1,0 +1,310 @@
+# =============================================================================
+# GEOX — OAuth Scope → Tool Annotation Schema (CANONICAL)
+# P3 deliverable | T1 metadata-only | reversible | no blast radius
+# Aligned: 2026-08-03 against live registry (33 tools, git=geox-c5b9383b)
+# Baseline: MCP 2026-07-28 stateless · RFC 9728 PRM · RFC 8707 Resource Indicators
+# Ground truth: geox:8081 tools/list + arifOS kernel :8088
+# Seal: P3::GEOX_SCOPE_MAP::v1.0::CANONICAL
+# -----------------------------------------------------------------------------
+# AUTHORITY DOCTRINE (non-negotiable):
+#   OAuth scope grants ENTRY. It NEVER grants AUTHORITY.
+#   tier >= forge  => constitutional_gate: required
+#   No forge/seal executes without arif_judge(SEAL) → arif_forge → arif_seal.
+#   If the edge gateway attempts to authorize a mutation on scope alone => VOID.
+# -----------------------------------------------------------------------------
+
+version: "1.0"
+resource: "https://geox.arif-fazil.com/mcp"
+organ: GEOX
+status: CANONICAL
+aligned_against: "geox:8081 tools/list + geox-c5b9383b (2026-08-03)"
+
+# ---------------------------------------------------------------------------
+# SCOPE TAXONOMY — 4 tiers, monotonic ascent
+# Higher tier subsumes read rights of lower tiers.
+# ---------------------------------------------------------------------------
+scopes:
+  geox:observe:
+    tier: 0
+    intent: "Read-only. Return existing data/state. No compute. No side effects."
+    auth_required: false
+    constitutional_gate: false
+    reversibility: full
+    verdict_path: none
+
+  geox:interpret:
+    tier: 1
+    intent: "Compute/derive new results from inputs. Ephemeral — API response only, no durable state written."
+    auth_required: true
+    constitutional_gate: false
+    reversibility: full
+    verdict_path: none
+
+  geox:forge:
+    tier: 2
+    intent: "Mutate durable state — ingest data, create claims, write evidence, register prospects."
+    auth_required: true
+    constitutional_gate: required
+    reversibility: partial
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+
+  geox:seal:
+    tier: 3
+    intent: "Append to VAULT999 / canon-seal. Highest irreversibility. F13 sovereign lane."
+    auth_required: true
+    constitutional_gate: required
+    reversibility: none
+    verdict_path: "arif_judge(SEAL) → arif_forge → arif_seal (F13 sovereign)"
+
+# ---------------------------------------------------------------------------
+# GATE ENFORCEMENT CONTRACT (edge gateway MUST honor)
+# ---------------------------------------------------------------------------
+gate_contract:
+  entry: "Validate external JWT vs jwks_uri + RFC 8707 audience == https://geox.arif-fazil.com/mcp"
+  exchange: "Mint internal SCT via RFC 8693 token-exchange. External JWT dies at the door."
+  authority: "For tier>=2, SCT capability alone is INSUFFICIENT. Gateway MUST invoke arif_judge and forward verdict. Absence of SEAL → refuse."
+  void_condition: "Any tier>=2 execution where verdict_path was not traversed → VOID + VAULT999 log."
+  default: "fail-closed. Unknown tool or unmapped scope → deny."
+
+# ---------------------------------------------------------------------------
+# TOOL ANNOTATIONS — 33 tools, canonical names from live registry
+# Every id: matches exact tool name from geox:8081 tools/list
+# ---------------------------------------------------------------------------
+tools:
+
+  # =========================================================================
+  # TIER 0 — OBSERVE (read-only, no computation, no side effect)
+  # =========================================================================
+
+  - id: geox_surface_status
+    domain: meta
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "Registry probe — tool discovery and health status."
+
+  - id: geox_workspace
+    domain: meta
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "Persistent geological context. set/view/history/evidence/relations."
+
+  - id: geox_map_layers_list
+    domain: mapping
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "List available map layers and spatial extents."
+
+  - id: geox_stac_discover
+    domain: remote_sensing
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "STAC Catalog query for cloud-native geospatial assets."
+
+  - id: geox_deep_time_state
+    domain: chronostratigraphy
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "Earth State Vector — GPTS, CO2, sea level, temperature, paleogeography."
+
+  - id: geox_h3_spatial_index
+    domain: spatial
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "H3 hexagonal spatial indexing — lat/lng to cell, k-ring, polygon fill."
+
+  - id: geox_lancedb_embed_store
+    domain: vector_store
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "LanceDB embedded vector store search. create_if_missing flag exists but search is primary use."
+
+  - id: geox_well_view
+    domain: well
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+    notes: "Hydrate real LAS curves into interactive tracks for WellDesk."
+
+  # =========================================================================
+  # TIER 1 — INTERPRET (compute/derive, ephemeral, no durable write)
+  # =========================================================================
+
+  - id: geox_basin
+    domain: basin_analysis
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Unified basin intelligence — profile, resolve, macrostrat, backstrip, thermal."
+
+  - id: geox_basin_backstrip
+    domain: basin_analysis
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "1D Steckler & Watts 1978 + Sclater & Christie 1980 backstripping."
+
+  - id: geox_seismic_compute
+    domain: seismic
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Unified seismic: synthetic, well_tie, AVO, attribute, inversion."
+
+  - id: geox_seismic_interpret
+    domain: seismic
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Propose geometry, physics-gate, compare hypotheses. INT_SEISMIC lane."
+
+  - id: geox_petrophysics
+    domain: petrophysics
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Vsh, porosity, Sw, permeability, net pay, LEM inference, QC."
+
+  - id: geox_geomechanics
+    domain: geomechanics
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Bulk/shear/Young modulus, Poisson ratio, acoustic impedance, stress polygon."
+
+  - id: geox_thermal_maturity_history
+    domain: petroleum_system
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Burial + heat flow + maturity modeling. EasyRo + TTI."
+
+  - id: geox_geological_model_generate
+    domain: structural
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Deterministic 2D cross-section renderer from structural parameters."
+
+  - id: geox_gempy_implicit_3d
+    domain: structural
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Implicit 3D structural modeling with GemPy. Universal cokriging."
+
+  - id: geox_lem_predict
+    domain: petrophysics
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "LEM inference — predict porosity, Sw, lithology from well logs."
+
+  - id: geox_subsurface_model
+    domain: geophysics
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Joint inversion, gravity/magnetic forward, MT forward."
+
+  - id: geox_sequence
+    domain: stratigraphy
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Sequence analysis, biostratigraphic parsing and falsification."
+
+  - id: geox_dde_reason
+    domain: stratigraphy
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "DDE Ontology + Macrostrat neuro-symbolic reasoning (62,610 rules)."
+
+  - id: geox_visual_understand
+    domain: seismic
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Extract visual patterns from seismic section images via deep learning."
+
+  - id: geox_map_render_preview
+    domain: mapping
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Render preview of map scene for quality review before export."
+
+  - id: geox_map_scene_plan
+    domain: mapping
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Plan map scene composition — layer ordering, zoom, annotation layout."
+
+  - id: geox_well_desk
+    domain: well
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Interactive well view — open, publish, render well panels."
+
+  - id: geox_well_qc
+    domain: well
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+    notes: "Quality control: depth monotonicity, null%, physical range checks."
+
+  # =========================================================================
+  # TIER 2 — FORGE (durable state mutation, constitutional gate REQUIRED)
+  # =========================================================================
+
+  - id: geox_well_ingest
+    domain: well
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "Load LAS, SEG-Y, DST, deviation, tops. Writes to /data/wells/. QC gated."
+
+  - id: geox_seismic_ingest
+    domain: seismic
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "SEG-Y I/O, header inspection, export. Writes to filesystem."
+
+  - id: geox_claim
+    domain: governance
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "Create/validate/challenge/seal geological claims. Durable claim store."
+
+  - id: geox_evidence
+    domain: governance
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "Synthesize, abduct, contradict evidence. Durable evidence store."
+
+  - id: geox_contradiction_scan
+    domain: governance
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "13-type contradiction ontology. FATAL → 888_HOLD. May mutate claim states."
+
+  - id: geox_falsify
+    domain: governance
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "Popperian falsification — Kill Matrix K001-K007. ANY KILL → rejected."
+
+  - id: geox_prospect
+    domain: petroleum_system
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "Prospect evaluation — volumetrics, POS, EVOI, risk. Registers evaluation state."
+
+  # =========================================================================
+  # TIER 3 — SEAL (VAULT999 append, F13 sovereign lane)
+  # No GEOX tool currently maps to this tier directly — sealing is arifOS kernel domain.
+  # Reserved for future geox_seal_* tools that would drive canon-seal workflows.
+  # =========================================================================
+
+# ---------------------------------------------------------------------------
+# COVERAGE SUMMARY — auto-verify against live registry
+# ---------------------------------------------------------------------------
+coverage:
+  total_tools: 33
+  observe_floor: 8
+  interpret_floor: 18
+  forge_gated: 7
+  seal_gated: 0
+  ungated_mutations: 0        # INVARIANT: must remain 0. Any >0 => VOID the map.
+  note: "All 7 forge-gated tools carry constitutional_gate: required with verdict_path. No tool can mutate durable state on scope alone."
+  invariant_checked: "2026-08-03 against geox:8081 live registry (33 tools)"
+  registry_git: "geox-c5b9383b"
