@@ -99,3 +99,12 @@
 {"uri": "geox://well/TEST-WELL/mistie/ef480d0cd776", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_ef480d0cd776.json", "ts": "2026-07-31T15:50:53.072608+00:00"}
 {"uri": "geox://well/TEST-HOLD/mistie/776eea9b15ec", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_776eea9b15ec.json", "ts": "2026-07-31T15:50:53.073453+00:00"}
 {"uri": "geox://well/TEST-WAV/wavelet/c16c548a9ca6", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_c16c548a9ca6.json", "ts": "2026-07-31T15:50:53.078605+00:00"}
+{"uri": "geox://well/TEST-WELL/mistie/9e0eab6de4f6", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_9e0eab6de4f6.json", "ts": "2026-08-03T14:00:49.803160+00:00"}
+{"uri": "geox://well/TEST-HOLD/mistie/033f2b1a0921", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_033f2b1a0921.json", "ts": "2026-08-03T14:00:49.803666+00:00"}
+{"uri": "geox://well/TEST-WAV/wavelet/f63cc38347bb", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_f63cc38347bb.json", "ts": "2026-08-03T14:00:49.808688+00:00"}
+{"uri": "geox://well/TEST-WELL/mistie/7f5ba09e26c9", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_7f5ba09e26c9.json", "ts": "2026-08-03T14:03:42.576436+00:00"}
+{"uri": "geox://well/TEST-HOLD/mistie/e0f31558d901", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_e0f31558d901.json", "ts": "2026-08-03T14:03:42.577508+00:00"}
+{"uri": "geox://well/TEST-WAV/wavelet/7be7ce1cd8cd", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_7be7ce1cd8cd.json", "ts": "2026-08-03T14:03:42.580512+00:00"}
+{"uri": "geox://well/TEST-WELL/mistie/35a9e5188e07", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_35a9e5188e07.json", "ts": "2026-08-03T14:04:49.164021+00:00"}
+{"uri": "geox://well/TEST-HOLD/mistie/a65e5b90bd53", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_a65e5b90bd53.json", "ts": "2026-08-03T14:04:49.164513+00:00"}
+{"uri": "geox://well/TEST-WAV/wavelet/bc16f3292e70", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_bc16f3292e70.json", "ts": "2026-08-03T14:04:49.166954+00:00"}
