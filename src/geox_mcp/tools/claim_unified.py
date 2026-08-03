@@ -244,6 +244,22 @@ FALSIFICATION_FILTERS: list[dict[str, Any]] = [
             (r"(?:unknown|uncertain|unclear|speculative|hypothetical|unproven)", "_flag_speculative"),
         ],
     },
+    {
+        "id": "K008",
+        "name": "Thermal Maturity Bounds Check",
+        "description": "Is the claimed maturity consistent with burial depth and expected geothermal gradient?",
+        "patterns": [
+            (r"(\d+\.?\d*)\s*%\s*(?:Ro|vitrinite|matur)", "_check_maturity_depth_consistency"),
+        ],
+        "handler": "_check_maturity_claims",
+    },
+    {
+        "id": "K008b",
+        "name": "Gradient Plausibility (OCT-aware)",
+        "description": "Is the claimed gradient within expected range for the basin type?",
+        "patterns": [],
+        "handler": "_check_gradient_basin_type",
+    },
 ]
 
 
@@ -419,6 +435,122 @@ def _flag_speculative(match: re.Match, claim: str) -> dict[str, Any]:
             {"severity": "INFO", "reason": f"Speculative language: '{match.group(0)}'. Evidence strength should be verified."}
         ],
     }
+
+
+# ── K008: Thermal Maturity Checks ──────────────────────────────────────────
+
+
+def _check_maturity_depth_consistency(match: re.Match, claim: str) -> dict[str, Any]:
+    """K008: If Ro is claimed, check it's consistent with expected depth/gradient."""
+    ro = float(match.group(1))
+    findings: list[dict[str, Any]] = []
+
+    if ro > 4.5:
+        findings.append(
+            {
+                "severity": "FATAL",
+                "reason": f"Ro={ro}% exceeds physical maximum for vitrinite reflectance (~4.5%). Check calibration.",
+            }
+        )
+    elif ro < 0.2:
+        findings.append(
+            {
+                "severity": "HIGH",
+                "reason": f"Ro={ro}% is below minimum for any thermal alteration. Check measurement.",
+            }
+        )
+    elif ro > 2.0 and "oil" in claim.lower():
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": f"Ro={ro}% is in dry gas window (>2.0), yet 'oil' is claimed. Check charge timing.",
+            }
+        )
+    else:
+        findings.append(
+            {
+                "severity": "PASS",
+                "reason": f"Ro={ro}% is within physically plausible range (0.2-4.5)",
+            }
+        )
+
+    return {"filter": "K008", "findings": findings}
+
+
+def _check_maturity_claims(match: re.Match | None, claim: str) -> dict[str, Any]:
+    """K008: Check thermal maturity claims for physical consistency."""
+    findings: list[dict[str, Any]] = []
+
+    has_oil = bool(re.search(r"\boil\b", claim, re.IGNORECASE))
+    has_gas = bool(re.search(r"\bgas\b", claim, re.IGNORECASE))
+    has_immature = bool(re.search(r"\bimmatur", claim, re.IGNORECASE))
+    has_overmature = bool(re.search(r"\bovermatur", claim, re.IGNORECASE))
+
+    if has_oil and has_overmature:
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": "Claim mentions both oil and overmaturity. Oil is typically destroyed above Ro~1.3%.",
+            }
+        )
+    if has_immature and has_oil:
+        findings.append(
+            {
+                "severity": "MEDIUM",
+                "reason": "Claim mentions both immaturity and oil. Source must be mature to generate oil.",
+            }
+        )
+    if not findings:
+        findings.append({"severity": "PASS", "reason": "No maturity contradictions detected"})
+
+    return {"filter": "K008", "findings": findings}
+
+
+def _check_gradient_basin_type(match: re.Match | None, claim: str) -> dict[str, Any]:
+    """K008b: Check if claimed gradient is consistent with known basin type."""
+    findings: list[dict[str, Any]] = []
+
+    is_sabah = bool(re.search(r"\b(sabah|dangerous\s*ground|nw\s*borneo)\b", claim, re.IGNORECASE))
+    is_oct = bool(re.search(r"\b(hyperextend|oct|ocean.continent|exhum|serpentin)\b", claim, re.IGNORECASE))
+
+    grad_match = re.search(r"(\d+)\s*(?:°C/km|C/km|deg.?C.?km)", claim, re.IGNORECASE)
+    if grad_match:
+        grad = float(grad_match.group(1))
+        if is_sabah and grad < 30:
+            findings.append(
+                {
+                    "severity": "HIGH",
+                    "reason": f"Gradient {grad}°C/km is below expected for Sabah hyperextended margin (documented 50-65°C/km locally)",
+                }
+            )
+        elif is_oct and grad < 35:
+            findings.append(
+                {
+                    "severity": "MEDIUM",
+                    "reason": f"Gradient {grad}°C/km is low for OCT-influenced basin. Expect >35°C/km.",
+                }
+            )
+        elif grad > 70:
+            findings.append(
+                {
+                    "severity": "HIGH",
+                    "reason": f"Gradient {grad}°C/km exceeds crustal plausibility without active magmatism.",
+                }
+            )
+        else:
+            findings.append(
+                {
+                    "severity": "PASS",
+                    "reason": f"Gradient {grad}°C/km is plausible for the basin context",
+                }
+            )
+    else:
+        findings.append({"severity": "INFO", "reason": "No gradient value detected in claim"})
+
+    return {"filter": "K008b", "findings": findings}
+
+
+# ── geox_falsify ─────────────────────────────────────────────────────────
 
 
 async def geox_falsify(

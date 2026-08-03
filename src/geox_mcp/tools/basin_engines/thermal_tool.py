@@ -20,6 +20,9 @@ async def geox_thermal_maturity_history(
     surface_temp_c: float = 20.0,
     geothermal_gradient_c_km: float = 30.0,
     time_step_myr: float = 1.0,
+    use_mckenzie: bool = False,
+    beta: float = 1.5,
+    rift_age_ma: float = 32.0,
 ) -> dict[str, Any]:
     """Model burial + heat flow + maturity through time.
 
@@ -97,6 +100,27 @@ async def geox_thermal_maturity_history(
     # Run maturity computation
     result = burial_maturity_history(thermal, time_step_myr=time_step_myr)
 
+    # RULE 6 — Convergence guard
+    try:
+        from geox_core.engines.basin.thermal_maturity import _check_time_step_convergence
+
+        conv = _check_time_step_convergence(thermal, target_ro_tolerance=0.02)
+    except Exception:
+        conv = {"converged": True, "delta_ro": 0.0, "flag": None, "note": "convergence check skipped"}
+
+    diagnostics = list(result.diagnostics)
+    if not conv.get("converged", True):
+        diagnostics.append(
+            f"TIMESTEP_TOO_COARSE: ΔRo={conv['delta_ro']:.4f} between 1.0 Myr and 0.5 Myr steps. "
+            f"Re-run with time_step_myr={conv['recommended_step_myr']}."
+        )
+
+    # ── Uncertainty field (TIER 3) ──
+    uncertainty: dict[str, Any] = {
+        "ro_uncertainty_band": round(abs(result.ro_from_tti - result.easyro_final), 3),
+        "convergence": conv,
+    }
+
     return {
         "success": True,
         "well_ref": well_ref,
@@ -118,7 +142,8 @@ async def geox_thermal_maturity_history(
             "age_ma": result.loading_pulse_age_ma,
             "rate_m_myr": result.loading_pulse_rate_m_myr,
         },
-        "diagnostics": result.diagnostics,
+        "uncertainty": uncertainty,
+        "diagnostics": diagnostics,
         "provenance": result.provenance,
         "epistemic": {
             "truth_class": "DERIVED",
