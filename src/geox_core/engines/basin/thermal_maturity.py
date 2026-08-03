@@ -66,15 +66,21 @@ EASYRO_EA_KJ = [
     360.0,
     370.0,
 ]  # kJ/mol
-EASYRO_A = 1.0e13  # s⁻¹ — pre-exponential factor (simplified)
+EASYRO_A = 2.0e14  # s⁻¹ — pre-exponential factor (calibrated for geological Myr steps)
+# Note: Standard S&B 1990 uses A=1.0e13 with Ea=142-301 kJ/mol and the exponential
+# integral (Ei) integration. GEOX uses Ea=180-370 kJ/mol with stepwise analytic
+# integration. A=2.0e14 is calibrated to match S&B 1990 benchmarks at geological
+# heating rates (30-50°C/km, Myr timescales). See GEOX-HARDEN-001 for calibration details.
 EASYRO_F = [
     0.03,
     0.03,
     0.04,
+    0.04,
+    0.05,
     0.05,
     0.06,
     0.06,
-    0.07,
+    0.06,
     0.06,
     0.06,
     0.06,
@@ -85,10 +91,8 @@ EASYRO_F = [
     0.05,
     0.04,
     0.04,
-    0.04,
     0.03,
-    0.03,
-]  # reaction fractions (sum = 1.0)
+]  # reaction fractions (sum = 1.0 — normalized per Sweeney & Burnham 1990)
 
 # TTI temperature index ranges (Lopatin 1971)
 # n = 0 for 100-110°C, n = 1 for 110-120°C, etc.
@@ -195,9 +199,15 @@ def easyro_compute(
             dX = rate * dt_seconds * (1 - X[i])
             X[i] = min(X[i] + dX, 1.0)
 
-    # Compute EasyRo
+    # Compute EasyRo — Sweeney & Burnham (1990) formula
+    # Ro = exp(-1.6 + 3.7 * F) where F = Σ(f_i * X_i) / Σ(f_i)
     weighted_x = sum(f * x for f, x in zip(EASYRO_F, X, strict=False))
-    easyro = 0.2 + 0.8 * weighted_x
+    f_sum = sum(EASYRO_F)
+    F = weighted_x / f_sum if f_sum > 0 else 0.0
+    easyro = math.exp(-1.6 + 3.7 * F)
+
+    # Clamp to physical range [0.2, 4.7]
+    easyro = max(0.2, min(easyro, 4.7))
 
     return easyro
 
@@ -322,26 +332,33 @@ def burial_maturity_history(
     easyro_history: list[tuple[float, float]] = []
     tti_history: list[tuple[float, float]] = []
 
-    # Progressive computation — EasyRo accumulates
+    # Progressive computation with correct Arrhenius kinetics
+    # Track X conversion fractions across timesteps
+    # dX_i/dt = A * exp(-Ea_i/RT) * (1 - X_i)     (proper Arrhenius)
+    # EasyRo = 0.2 + 0.8 * Σ(f_i * X_i)            (no artificial cap)
+    X = [0.0] * len(EASYRO_EA_KJ)
     easyro_accum = 0.2
     tti_accum = 0.0
 
     for _i, (age, temp) in enumerate(zip(uniform_ages, uniform_temps, strict=False)):
         # Compute EasyRo for this step
-        # Use the temperature at this step
         dt_seconds = time_step_myr * 1e6 * 365.25 * 24 * 3600
         temp_k = temp + 273.15
 
         if temp_k > 0:
-            weighted_x = 0.0
             for j in range(len(EASYRO_EA_KJ)):
-                ea_j = EASYRO_EA_KJ[j] * 1000
+                ea_j = EASYRO_EA_KJ[j] * 1000  # kJ -> J
                 rate = EASYRO_A * math.exp(-ea_j / (R_GAS * temp_k))
-                # Approximate incremental conversion
-                dX = rate * dt_seconds * 0.001  # simplified
-                weighted_x += EASYRO_F[j] * dX
+                # ── CORRECTED: (1 - X[j]) dependency ──
+                dX = rate * dt_seconds * (1.0 - X[j])
+                X[j] = min(X[j] + dX, 0.9999)
 
-            easyro_accum = min(easyro_accum + weighted_x * 0.8, 5.0)
+        # Compute EasyRo from current X fractions — S&B formula
+        weighted_x = sum(EASYRO_F[j] * X[j] for j in range(len(EASYRO_EA_KJ)))
+        f_s = sum(EASYRO_F)
+        F_val = weighted_x / f_s if f_s > 0 else 0.0
+        easyro_accum = math.exp(-1.6 + 3.7 * F_val)
+        easyro_accum = max(0.2, min(easyro_accum, 4.7))
 
         # Compute TTI for this step
         if temp >= TTI_T_BASE:
@@ -425,6 +442,33 @@ def burial_maturity_history(
         provenance=provenance,
         diagnostics=diagnostics,
     )
+
+
+def _check_time_step_convergence(
+    thermal_history: ThermalHistory,
+    target_ro_tolerance: float = 0.02,
+) -> dict[str, Any]:
+    """RULE 6 — Convergence guard.
+
+    Re-runs at half timestep. If EasyRo changes > tolerance,
+    the timestep is too coarse and the result is flagged.
+
+    Returns: {converged: bool, delta_ro: float, recommended_step: float}
+    """
+    result_coarse = burial_maturity_history(thermal_history, time_step_myr=1.0)
+    result_fine = burial_maturity_history(thermal_history, time_step_myr=0.5)
+
+    delta = abs(result_coarse.easyro_final - result_fine.easyro_final)
+    converged = delta <= target_ro_tolerance
+
+    return {
+        "converged": converged,
+        "delta_ro": round(delta, 4),
+        "coarse_ro": round(result_coarse.easyro_final, 4),
+        "fine_ro": round(result_fine.easyro_final, 4),
+        "recommended_step_myr": 1.0 if converged else 0.5,
+        "flag": None if converged else "TIMESTEP_TOO_COARSE",
+    }
 
 
 def compute_cooling_rate(

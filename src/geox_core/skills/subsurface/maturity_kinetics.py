@@ -626,6 +626,56 @@ def compute_maturity_full(
     )
 
 
+def compute_heatflow_through_time(
+    beta: float,
+    rift_age_ma: float,
+    lithosphere_thickness_km: float = 125.0,
+    thermal_diffusivity_m2_s: float = 1e-6,
+) -> list[dict[str, float]]:
+    """McKenzie (1978) transient heat flow through time from rifting.
+
+    q(t) = q_base * [1 + 2 * Σ sin(nπ/β)/(nπ/β) * exp(-n²π²κt/a²)]
+
+    Returns: [{age_ma, heat_flow_mw_m2, gradient_c_km}, ...]
+
+    GEOX-HARDEN-001 :: Fix 1.1
+    """
+    a = lithosphere_thickness_km * 1000  # m
+    κ = thermal_diffusivity_m2_s
+    τ = a**2 / (math.pi**2 * κ)  # thermal time constant (seconds)
+
+    q_base = BASAL_HEAT_FLOW_MW_M2  # 60.0
+    k_conductivity = THERMAL_CONDUCTIVITY_DEFAULT  # 2.5
+
+    n_terms = 20
+    result: list[dict[str, float]] = []
+
+    for age_ma_int in range(int(rift_age_ma) + 1):
+        age_ma = float(age_ma_int)
+        t_myr = rift_age_ma - age_ma
+
+        if t_myr <= 0:
+            # At rift time — peak heat flow
+            q = q_base * beta
+        else:
+            t_seconds = t_myr * 1e6 * 365.25 * 24 * 3600
+            summation = 0.0
+            for n in range(1, n_terms + 1):
+                term = (math.sin(n * math.pi / beta) / (n * math.pi / beta)) * math.exp(-(n**2) * math.pi**2 * t_seconds / τ)
+                summation += term
+            q = q_base * (1 + 2 * summation)
+
+        result.append(
+            {
+                "age_ma": round(age_ma, 1),
+                "heat_flow_mw_m2": round(max(q, 20.0), 1),
+                "gradient_c_km": round(max(q, 20.0) / k_conductivity, 1),
+            }
+        )
+
+    return result
+
+
 __all__ = [
     # Enums
     "MaturityZone",
@@ -640,6 +690,7 @@ __all__ = [
     "get_charge_age",
     # New (P6)
     "compute_present_day_heat_flow",
+    "compute_heatflow_through_time",
     "compute_temperature_history",
     "build_burial_history_from_stratigraphy",
     "classify_maturity",
