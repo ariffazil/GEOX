@@ -12,8 +12,7 @@
   "scopes_supported": [
     "geox:observe",
     "geox:interpret",
-    "geox:forge",
-    "geox:seal"
+    "geox:forge"
   ],
 
   "bearer_methods_supported": ["header"],
