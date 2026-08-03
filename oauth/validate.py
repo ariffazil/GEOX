@@ -35,6 +35,54 @@ def ok(msg: str) -> None:
     print(f"✅ {msg}")
 
 
+# ---------------------------------------------------------------------------
+# Catch 1 hardening (2026-08-03) — Lexical guard against write-verbs in OBSERVE
+# The ungated_mutations check only inspects forge/seal tiers. A tool named with
+# a write-verb but classified as OBSERVE walks straight past it. This guard
+# catches that blind spot by checking tool id against a banned-in-observe
+# pattern list. Any match => HARD FAIL.
+# ---------------------------------------------------------------------------
+WRITE_VERB_PATTERNS = [
+    "ingest",
+    "store",
+    "write",
+    "seal",
+    "update",
+    "publish",
+    "forge",
+    "delete",
+    "commit",
+    "register",
+    "create",
+    "insert",
+    "drop",
+    "remove",
+    "upsert",
+    "import",
+]
+
+
+def check_write_verb_in_observe(tools: list, ci: bool = False) -> int:
+    """Return count of violations. Any tool whose id contains a write-verb
+    pattern and is classified as geox:observe => FAIL."""
+    violations = 0
+    for t in tools:
+        tid = t.get("id", "")
+        scopes = t.get("required_scopes", [])
+        if "geox:observe" not in scopes:
+            continue
+        for pat in WRITE_VERB_PATTERNS:
+            if pat in tid.lower():
+                print(f"❌ LEXICAL GUARD: {tid} contains write-verb '{pat}' but is OBSERVE (tier 0). Must be INTERPRET or FORGE.")
+                violations += 1
+                break
+    if violations:
+        fail(f"LEXICAL GUARD: {violations} write-verb tool(s) misclassified as OBSERVE. Fix tier before commit.", ci)
+    else:
+        ok("Lexical guard: 0 write-verbs in OBSERVE tier")
+    return violations
+
+
 def main() -> int:
     ci = "--ci" in sys.argv
     live = "--live" in sys.argv
@@ -69,6 +117,9 @@ def main() -> int:
         errors += 1
     else:
         ok(f"Tool count: {total} (matches coverage)")
+
+    # 3.5. Lexical guard: no write-verbs in OBSERVE tier
+    errors += check_write_verb_in_observe(tools, ci)
 
     # 4. ungated_mutations == 0 (HARD INVARIANT)
     ungated = coverage.get("ungated_mutations", -1)

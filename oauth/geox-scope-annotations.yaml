@@ -114,9 +114,10 @@ tools:
 
   - id: geox_lancedb_embed_store
     domain: vector_store
-    required_scopes: [geox:observe]
-    constitutional_gate: false
-    notes: "LanceDB embedded vector store search. create_if_missing flag exists but search is primary use."
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) → arif_forge"
+    notes: "LanceDB embedded vector store. Has WRITE modes (store, drop_table, create_if_missing). Dual-use tool — search is read-only but write path gates this at FORGE tier. Fail-closed: cannot assume search-only at edge."
 
   - id: geox_well_view
     domain: well
@@ -300,11 +301,11 @@ tools:
 # ---------------------------------------------------------------------------
 coverage:
   total_tools: 33
-  observe_floor: 8
+  observe_floor: 7
   interpret_floor: 18
-  forge_gated: 7
+  forge_gated: 8
   seal_gated: 0
   ungated_mutations: 0        # INVARIANT: must remain 0. Any >0 => VOID the map.
-  note: "All 7 forge-gated tools carry constitutional_gate: required with verdict_path. No tool can mutate durable state on scope alone."
+  note: "All 8 forge-gated tools carry constitutional_gate: required with verdict_path. No tool can mutate durable state on scope alone. lancedb_embed_store moved to FORGE (Catch 1 fix — has write modes). geox:seal removed from GEOX PRM (Catch 2 — arifOS domain)."
   invariant_checked: "2026-08-03 against geox:8081 live registry (33 tools)"
   registry_git: "geox-c5b9383b"
