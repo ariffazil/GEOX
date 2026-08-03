@@ -33,6 +33,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import httpx
+import httpx2  # FastMCP 4 migration
 
 logger = logging.getLogger("geox.services.npd")
 
@@ -102,7 +103,7 @@ class NPDClient:
                 resp = await client.get(url)
                 resp.raise_for_status()
                 text = resp.text
-        except httpx.HTTPStatusError as exc:
+        except (httpx.HTTPStatusError, httpx2.HTTPStatusError) as exc:
             logger.warning("NPD HTTP error: %s -> %s", url, exc.response.status_code)
             return {
                 "_npd_error": True,
@@ -110,7 +111,7 @@ class NPDClient:
                 "_npd_detail": exc.response.text[:500],
                 "_npd_url": url,
             }
-        except httpx.RequestError as exc:
+        except (httpx.RequestError, httpx2.RequestError) as exc:
             logger.warning("NPD request error: %s -> %s", url, exc)
             return {
                 "_npd_error": True,

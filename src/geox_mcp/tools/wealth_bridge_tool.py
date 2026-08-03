@@ -23,6 +23,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 import httpx
+import httpx2  # FastMCP 4 migration
 
 logger = logging.getLogger("geox.wealth_bridge")
 
@@ -325,10 +326,10 @@ async def geox_to_wealth_bridge(
             else:
                 wealth_error = {"message": "Unexpected WEALTH response", "raw": call_data}
 
-    except httpx.ConnectError:
+    except (httpx.ConnectError, httpx2.ConnectError):
         wealth_error = {"message": "WEALTH organ unreachable at localhost:18082"}
         logger.warning("WEALTH bridge: connection refused")
-    except httpx.TimeoutException:
+    except (httpx.TimeoutException, httpx2.TimeoutException):
         wealth_error = {"message": f"WEALTH call timed out after {TIMEOUT}s"}
         logger.warning("WEALTH bridge: timeout")
     except Exception as exc:
