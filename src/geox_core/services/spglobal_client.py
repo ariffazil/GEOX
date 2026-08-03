@@ -29,6 +29,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import httpx
+import httpx2  # FastMCP 4 migration
 
 logger = logging.getLogger("geox.services.spglobal")
 
@@ -113,7 +114,7 @@ class SPGlobalClient:
                 )
                 resp.raise_for_status()
                 data = resp.json()
-        except httpx.HTTPStatusError as exc:
+        except (httpx.HTTPStatusError, httpx2.HTTPStatusError) as exc:
             logger.warning("S&P Global HTTP error: %s %s -> %s", method, url, exc.response.status_code)
             return {
                 "_spg_error": True,
@@ -121,7 +122,7 @@ class SPGlobalClient:
                 "_spg_detail": exc.response.text[:500],
                 "_spg_url": url,
             }
-        except httpx.RequestError as exc:
+        except (httpx.RequestError, httpx2.RequestError) as exc:
             logger.warning("S&P Global request error: %s %s -> %s", method, url, exc)
             return {
                 "_spg_error": True,

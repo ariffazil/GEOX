@@ -54,6 +54,7 @@ from enum import StrEnum
 from typing import Any
 
 import httpx
+import httpx2  # FastMCP 4 migration
 
 logger = logging.getLogger("geox.integrations.arifos_governance")
 
@@ -250,7 +251,7 @@ async def call_judge(
             else:
                 return {"verdict": "HOLD", "error": "Unexpected response shape"}
 
-    except httpx.TimeoutException:
+    except (httpx.TimeoutException, httpx2.TimeoutException):
         logger.warning("arifOS judge timeout (>%dms). Degrading to HOLD.", timeout_ms)
         return {
             "verdict": "HOLD",
@@ -258,7 +259,7 @@ async def call_judge(
             "fallback": True,
         }
 
-    except httpx.ConnectError:
+    except (httpx.ConnectError, httpx2.ConnectError):
         logger.warning("Cannot connect to arifOS judge at %s. Degrading to HOLD.", endpoint)
         return {
             "verdict": "HOLD",
@@ -351,7 +352,7 @@ async def seal_to_vault(
             else:
                 return {"entry_id": None, "chain_hash": None, "error": "Unexpected response"}
 
-    except httpx.TimeoutException:
+    except (httpx.TimeoutException, httpx2.TimeoutException):
         logger.warning("arifOS vault timeout (>%dms).", timeout_ms)
         return {
             "entry_id": None,
@@ -360,7 +361,7 @@ async def seal_to_vault(
             "fallback": True,
         }
 
-    except httpx.ConnectError:
+    except (httpx.ConnectError, httpx2.ConnectError):
         logger.warning("Cannot connect to arifOS vault at %s.", endpoint)
         return {
             "entry_id": None,

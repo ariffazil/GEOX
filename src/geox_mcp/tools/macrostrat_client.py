@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any
 
 import httpx
+import httpx2  # FastMCP 4 migration
 
 logger = logging.getLogger("geox.macrostrat")
 
@@ -191,10 +192,10 @@ class MacrostratClient:
                 resp = await client.get(url, params=params)
                 resp.raise_for_status()
                 data = resp.json()
-        except httpx.HTTPStatusError as exc:
+        except (httpx.HTTPStatusError, httpx2.HTTPStatusError) as exc:
             logger.warning("Macrostrat HTTP %s: %s @ %s", exc.response.status_code, endpoint, params)
             return {"error": f"HTTP {exc.response.status_code}", "success": {"data": []}}
-        except httpx.TimeoutException:
+        except (httpx.TimeoutException, httpx2.TimeoutException):
             logger.warning("Macrostrat timeout: %s @ %s", endpoint, params)
             return {"error": "timeout", "success": {"data": []}}
         except Exception as exc:
