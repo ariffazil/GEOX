@@ -482,7 +482,7 @@ def _check_maturity_claims(match: re.Match | None, claim: str) -> dict[str, Any]
     findings: list[dict[str, Any]] = []
 
     has_oil = bool(re.search(r"\boil\b", claim, re.IGNORECASE))
-    has_gas = bool(re.search(r"\bgas\b", claim, re.IGNORECASE))
+    _has_gas = bool(re.search(r"\bgas\b", claim, re.IGNORECASE))
     has_immature = bool(re.search(r"\bimmatur", claim, re.IGNORECASE))
     has_overmature = bool(re.search(r"\bovermatur", claim, re.IGNORECASE))
 

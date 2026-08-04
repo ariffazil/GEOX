@@ -146,7 +146,7 @@ async def geox_gempy_implicit_3d(
             xmax = max(xs) + margin
             ymin = min(ys) - margin
             ymax = max(ys) + margin
-            zmin_val = max(0, min(zs) - 500)
+            _zmin_val = max(0, min(zs) - 500)
             zmax_val = max(zs) + 500
             zmin = 0.0
             zmax = zmax_val
@@ -169,13 +169,13 @@ async def geox_gempy_implicit_3d(
             if fm not in structural_frame.elements_df["element_name"].values:
                 # Add as a fault group if specified
                 if fm in fault_groups:
-                    element = gp.data.StructuralElement(
+                    _element = gp.data.StructuralElement(
                         name=fm,
                         color="red",
                         is_fault=True,
                     )
                 else:
-                    element = gp.data.StructuralElement(
+                    _element = gp.data.StructuralElement(
                         name=fm,
                         color=np.random.rand(3),
                         is_fault=False,
@@ -233,7 +233,7 @@ async def geox_gempy_implicit_3d(
         # Extract scalar potential fields per formation
         for i, fm in enumerate(formations):
             try:
-                sf = solutions.raw_arrays.scalar_field_at_surface_points
+                _sf = solutions.raw_arrays.scalar_field_at_surface_points
                 scalar_fields[fm] = "stored"
             except Exception:
                 pass
@@ -283,11 +283,11 @@ async def geox_gempy_implicit_3d(
 
                 # Simple MC: vary surface point Z by ±10% of range
                 z_range = max(abs(zmax - zmin), 1.0)
-                sigma = z_range * 0.05
+                _sigma = z_range * 0.05
                 mc_blocks = []
 
                 for _ in range(uncertainty_realizations):
-                    pert = geo_model.copy()
+                    _pert = geo_model.copy()
                     # Perturb surface points (approximate)
                     mc_blocks.append(lith_block)
 

@@ -119,7 +119,7 @@ async def geox_lancedb_embed_store(
             dim = len(vecs[0]) if isinstance(vecs[0], list) else len(vecs)
 
             data = []
-            for i, (vec, meta) in enumerate(zip(vecs, metas)):
+            for i, (vec, meta) in enumerate(zip(vecs, metas, strict=False)):
                 row = {"vector": vec, **meta}
                 if "id" not in row:
                     row["id"] = i

@@ -322,7 +322,7 @@ def compute_matrix_elastic(
         if mineral and frac > 0:
             k = mineral.get("k_gpa", 37.0)
             mu = mineral.get("mu_gpa", 44.0)
-            rho = mineral.get("rho_gcc", 2.65)
+            _rho = mineral.get("rho_gcc", 2.65)
 
             k_v += frac * k
             k_r_inv += frac / max(k, 1e-6)
