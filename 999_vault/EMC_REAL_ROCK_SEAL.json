@@ -1,0 +1,16 @@
+{
+  "seal_id": "EMC_REAL_ROCK_SEAL-2026-08-04",
+  "timestamp": "2026-08-04T04:01:02.368705+00:00",
+  "session": "SEAL-f9045f31281542f3",
+  "actor": "333-AGI",
+  "results": {
+    "L1": "ALL UNKNOWN \u2014 n=10, narrow variance, no Na/S in XRF",
+    "L2": "PASS \u2014 CLS closure exact",
+    "L3": "PASS \u2014 in-domain SEAL, cross-domain HOLD (D\u00b2=9039)",
+    "roll_up": "HOLD"
+  },
+  "key_finding": "Ca XRF dominated by plagioclase Ca, not carbonate Ca \u2014 element-privacy assumption violated in feldspar-rich marine sediment",
+  "doi_xrf": "10.1594/PANGAEA.979586",
+  "doi_xrd": "10.1594/PANGAEA.978955",
+  "licence": "CC-BY-4.0"
+}

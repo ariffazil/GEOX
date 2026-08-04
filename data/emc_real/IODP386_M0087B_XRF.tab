@@ -1,0 +1,50 @@
+/* DATA DESCRIPTION:
+Citation:	Strasser, Michael; Ikehara, Ken; Everest, Jeremy D; Maeda, Lena; Hochmuth, Katharina; Grant, Hannah; Stewart, Margaret S; Sakurai, Noriaki; Yokoyama, Takahiro; Bao, Rui; Bellanova, Piero; Brunet, Morgane; Cai, Zhirong; Cattaneo, Antonio; Hsiung, Kan-Hsi; Huang, Jyh-Jaan Steven; Ishizawa, Tahashi; Itaki, Takuya; Jitsuno, Kana; Johnson, Joel E; Kanamatsu, Toshiya; Keep, Myra; Kioka, Arata; Kölling, Martin; Luo, Min; März, Christian; McHugh, Cecilia M G; Micallef, Aaron; Nagahashi, Yoshitaka; Pandey, Dhananjai K; Proust, Jean-Noël; Rasbury, Troy; Riedinger, Natascha; Satoguchi, Yasufumi; Sawyer, Derek E; Seibert, Chloé; Silver, Maxwell; Straub, Susanne M; Virtasalo, Joonas J; Wang, Yong Hong; Wu, Ting-Wei; Zellers, Sarah D (2025): X-Ray fluorescence (XRF) of discrete samples from IODP Hole 386-M0087B [dataset]. PANGAEA, https://doi.org/10.1594/PANGAEA.979586
+Abstract:	Results of X-Ray fluorescence (XRF) on discrete samples from the above given hole of International Ocean Discovery Program (IODP) Expedition 386 (Japan Trench Paleoseismology). The offshore phase of this expedition took place between 2021-04-13 and 2021-06-01 onboard Japanese R/V Kaimei from and to Yokosuka, Japan, followed by an onshore phase onboard D/V Chikyu between 2022-02-14 – 2022-03-15. During the onshore phase a set of solid-phase samples, with a volume of approx. 10 cubic centimeters each, were taken with the purpose to be later on split into aliquots for the following three analyses: X-ray diffraction, carbon and X-ray fluorescence. The bulk solid-phase samples were taken from the work halves of core sections at about one sample per meter on average. Unprocessed samples were then shipped to the MARUM - Center for Marine Environmental Sciences of the University of Bremen (Germany), where they were freeze-dried, ground and homogenized to a fine powder by ECORD Science Operator staff using a pestle and an agate mortar. For analysis of elemental composition of the bulk sediment using energy dispersive XRF (EDXRF) 4 g (±0.2 g) aliquot of the homogenized powder was used. Elemental concentrations were determined by ED-XRF spectroscopy utilizing a PANalytical Epsilon 3-XLE benchtop ED-XRF spectrometer operated in the MARUM sediment geochemistry laboratory.
+	For further details see methods chapter in Strasser, M. et al., 2023 https://doi.org/10.14379/iodp.proc.386.102.2023
+Keyword(s):	International Ocean Discovery Program (IODP); IODP; Japan Trench; XRF data
+Related to:	Strasser, Michael; Ikehara, Ken; Everest, Jeremy D; IODP Expedition 386 Scientists (2023): Japan Trench Paleoseismology. Proceedings of the International Ocean Discovery Program, International Ocean Discovery Program, 386, https://doi.org/10.14379/iodp.proc.386.2023
+Further details:	QAQC386_Web_F_GC_7_XRF discrete (URI: https://download.pangaea.de/reference/140408/attachments/QAQC386_Web_F_GC_7_XRF%20discrete.zip)
+Project(s):	Integrated Ocean Drilling Program / International Ocean Discovery Program (IODP) (URI: https://www.iodp.org/)
+Coverage:	LATITUDE: 39.440650 * LONGITUDE: 144.216183
+	DATE/TIME START: 2021-05-03T00:00:00 * DATE/TIME END: 2021-05-03T00:00:00
+	MINIMUM DEPTH, sediment/rock: 0.56 m * MAXIMUM DEPTH, sediment/rock: 18.61 m
+Event(s):	386-M0087B (JTPN-02A) * LATITUDE: 39.440650 * LONGITUDE: 144.216183 * DATE/TIME START: 2021-05-03T00:00:00 * DATE/TIME END: 2021-05-03T00:00:00 * ELEVATION: -7520.0 m * LOCATION: Japan Trench * CAMPAIGN: Exp386 (URI: https://doi.org/10.14379/iodp.proc.386.2023) * BASIS: Kaimei (URI: https://www.jamstec.go.jp/e/about/equipment/ships/kaimei.html) * METHOD/DEVICE: Giant piston corer (GPC) * COMMENT: IGSN: IBCR0386EHU4001. Comment: 20 m
+Comment:	Data was submitted and proofread by Vera Barbara Bender, MARUM - Center for Marine Environmental Sciences (University Bremen) on behalf of ECORD Science Operator Data Management (https://www.ecord.org).
+Parameter(s):	Event label (Event)
+	Sample code/label (Sample label) * METHOD/DEVICE: DSDP/ODP/IODP sample designation (URI: hdl:10013/epic.27914.d001)
+	Proposed International Geo Sample Number (Prop IGSN)
+	DEPTH, sediment/rock [m] (Depth sed) * GEOCODE
+	Aluminium [mg/kg] (Al) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Barium [mg/kg] (Ba) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Bromine [mg/kg] (Br) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Calcium [mg/kg] (Ca) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Chromium [mg/kg] (Cr) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Copper [mg/kg] (Cu) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Iron [mg/kg] (Fe) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Potassium [mg/kg] (K) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Magnesium [mg/kg] (Mg) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Manganese [mg/kg] (Mn) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Nickel [mg/kg] (Ni) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Phosphorus [mg/kg] (P) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Silicon [mg/kg] (Si) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Strontium [mg/kg] (Sr) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Titanium [mg/kg] (Ti) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Vanadium [mg/kg] (V) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Zinc [mg/kg] (Zn) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+	Zirconium [mg/kg] (Zr) * METHOD/DEVICE: Energy-dispersive x-ray fluorescence spectrometer (ED-XRF), Malvern Panalytical, 3XLE benchtop analyzer
+License:	Creative Commons Attribution 4.0 International (CC-BY-4.0) (URI: https://creativecommons.org/licenses/by/4.0/)
+Status:	Curation Level: Enhanced curation (URI: https://wiki.pangaea.de/wiki/Curation_levels)
+Size:	200 data points
+*/
+Event	Sample label	Prop IGSN	Depth sed [m]	Al [mg/kg]	Ba [mg/kg]	Br [mg/kg]	Ca [mg/kg]	Cr [mg/kg]	Cu [mg/kg]	Fe [mg/kg]	K [mg/kg]	Mg [mg/kg]	Mn [mg/kg]	Ni [mg/kg]	P [mg/kg]	Si [mg/kg]	Sr [mg/kg]	Ti [mg/kg]	V [mg/kg]	Zn [mg/kg]	Zr [mg/kg]
+386-M0087B	386-M0087B-1H-1,56-58	IBCR0386EX7KI01	0.56	45055	553	96	11099	35.6	75.2	29143	15729	12636	532	27.1	294	274322	135	2585	92.0	83.3	84.6
+386-M0087B	386-M0087B-1H-3,77-79	IBCR0386EXRKI01	2.47	49848	597	60	8842	37.0	85.2	29283	18283	12010	626	29.1	251	301387	114	2482	87.9	82.8	86.9
+386-M0087B	386-M0087B-1H-5,90-92	IBCR0386EXCKI01	4.61	47819	488	111	8201	50.0	96.9	31318	17374	12949	491	33.4	344	312080	110	2785	94.2	90.4	77.9
+386-M0087B	386-M0087B-1H-7,90-92	IBCR0386EXHKI01	6.64	50927	527	104	10715	54.0	83.7	32268	16866	13671	523	30.0	453	313569	141	2944	99.0	90.2	98.9
+386-M0087B	386-M0087B-1H-9,90-92	IBCR0386EXMKI01	8.65	41248	509	115	13150	58.7	47.3	31179	14727	13367	497	28.6	462	295218	160	2953	85.5	88.4	114.3
+386-M0087B	386-M0087B-1H-11,90-92	IBCR0386EXWKI01	10.66	41164	475	137	12567	61.8	56.4	31745	14584	13606	497	31.4	486	300106	147	3022	91.3	91.7	106.2
+386-M0087B	386-M0087B-1H-13,90-92	IBCR0386EX1LI01	12.68	39526	484	112	13783	68.3	56.6	30642	14087	13228	529	30.1	429	280181	161	2853	88.0	88.1	95.9
+386-M0087B	386-M0087B-1H-15,90-92	IBCR0386EX6LI01	14.69	50140	609	109	9539	45.4	105.8	32937	17241	13403	486	34.6	520	289224	120	2937	108.4	94.5	79.4
+386-M0087B	386-M0087B-1H-17,90-92	IBCR0386EXBLI01	16.71	49647	562	90	7873	42.6	100.9	31117	17654	12765	532	30.9	320	312513	109	2705	105.9	88.2	74.8
+386-M0087B	386-M0087B-1H-19,78-80	IBCR0386EXGLI01	18.61	42401	596	79	9607	38.4	77.5	25845	16605	11354	486	23.0	295	290760	117	2265	80.9	74.0	80.5

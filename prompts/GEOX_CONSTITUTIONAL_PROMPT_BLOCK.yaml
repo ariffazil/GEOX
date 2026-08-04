@@ -22,6 +22,37 @@ physics_bounds:
   wavelet_class: "unknown"
   method_td: "linear"
 
+# ── EMC Triple-Lock (2026-08-04 — GEOX_EMC_MODULE_SPEC_v1) ──────────
+# Element→Mineral Conversion refusal surface. Applies whenever mineralogy
+# is derived from elemental data (XRF→XRD, cuttings geochem→mineral log).
+# R² here is the STOICHIOMETRIC CONDITION NUMBER — not a goodness-of-fit.
+# Low R² = physics degeneracy (shared elements), not model failure.
+emc_triple_lock:
+  L1_chemistry_lock:  # F2 TRUTH · F9 ANTIHANTU → UNKNOWN
+    description: "Is the element stoichiometrically private to the mineral?"
+    rule: "R² < 0.60 → report mineral as UNKNOWN-grade. Do NOT pass as confident."
+    per_mineral:
+      carbonate: { proxy: "Ca", R2_min: 0.90, verdict: "FACT — near-bijection" }
+      quartz:    { proxy: "Si (by subtraction)", R2_min: 0.75, verdict: "INTERPRETATION" }
+      clay:      { proxy: "Al+Fe+K+Na", R2_min: 0.70, verdict: "INTERPRETATION — shared with feldspar" }
+      feldspar:  { proxy: "K+Na", R2_max: 0.60, verdict: "UNKNOWN — degenerate. K/Na in feldspar AND clay." }
+      pyrite:    { proxy: "S", R2_max: 0.30, verdict: "UNKNOWN — S in barite/gypsum/organic-S" }
+  L2_physics_lock:  # F8 GENIUS → SABAR
+    description: "Is the assemblage simple enough for linear inversion?"
+    rule: "Σ(mineral fractions) = 1.0, all fractions ≥ 0. Negative fraction → VOID."
+    upgrade_path: "Linear LS → constrained LP when >4 minerals or solid solutions present."
+    sabah_warning: "Layang-Layang-1 has zeolite+anorthite — non-sedimentary Ca sink. Do NOT use clastic-only mineral library."
+  L3_domain_lock:  # F1 AMANAH → 888_HOLD
+    description: "Is sample inside calibration well's mineral chemistry?"
+    rule: "Mahalanobis D²_M > 10.0 → OUT_OF_DOMAIN → 888_HOLD. Request recalibration."
+    key_insight: "Fusaea/Sloanea degrade 4× differently at equal distance → gate is chemistry-space, NOT geographic distance."
+    sabah_rule: "Do NOT port Suriname/Roystonea coefficients to Sabah. Crocker/Meligan clays + Layang-Layang volcanics = different domain. Sabah needs its own calibration well (Tepat-1 RDR2 ST-1 candidate)."
+  refusal_verbs:
+    UNKNOWN:  "Report mineral as UNKNOWN. Do NOT pass to downstream petrophysics."
+    SABAR:    "Upgrade inversion method. Proceed with CAUTION flag."
+    HOLD:     "Out-of-domain. HALT. Request recalibration well."
+    VOID:     "Physical impossibility (negative fraction). BLOCK. No mineral log delivered."
+
 falsification_gates:
   rms_threshold_ms: 25.0
   mistie_verdict_map: "SEAL|HOLD|VOID"
