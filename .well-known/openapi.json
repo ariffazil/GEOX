@@ -2,7 +2,7 @@
   "info": {
     "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
     "title": "GEOX Earth Intelligence API",
-    "version": "2026.07.25"
+    "version": "2026.08.04"
   },
   "openapi": "3.0.0",
   "paths": {
@@ -746,6 +746,174 @@
             "domain": "earth.meta",
             "lane": "evidence",
             "name": "geox_workspace",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "Deterministic geological model renderer. Generates 2D cross-sections from structural parameters (dip, fault throw, strata) using matplotlib. NOT an AI image generator \u2014 physics-constrained, computed output. Phase 1: 2D sections. Phase 2: 3D GemPy block models.",
+            "domain": "earth.subsurface",
+            "lane": "evidence",
+            "name": "geox_geological_model_generate",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "GemPy implicit 3D structural modeling via universal cokriging scalar potential fields. Returns 3D geological volume with uncertainty. [LEM E1]",
+            "domain": "earth.subsurface",
+            "lane": "evidence",
+            "name": "geox_gempy_implicit_3d",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells, aggregate points, query k-ring neighbours. [LEM E2]",
+            "domain": "earth.spatial",
+            "lane": "evidence",
+            "name": "geox_h3_spatial_index",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "compute",
+            "description": "LanceDB embedded vector store for earth embeddings. Store/search AlphaEarth/Clay/custom embeddings with H3 cross-reference. [LEM E3]",
+            "domain": "earth.ml",
+            "lane": "evidence",
+            "name": "geox_lancedb_embed_store",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "observe",
+            "description": "STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr across federated catalogs. [LEM E4]",
+            "domain": "earth.catalog",
+            "lane": "evidence",
+            "name": "geox_stac_discover",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge graph for stratigraphic rules and physical laws. [LEM E5]",
+            "domain": "earth.knowledge",
+            "lane": "reasoning",
+            "name": "geox_dde_reason",
             "parameters": {
               "properties": {
                 "actor_id": {
