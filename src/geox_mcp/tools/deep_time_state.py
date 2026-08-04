@@ -51,6 +51,7 @@ async def geox_deep_time_state(
     query: str | None = None,
     biozone: str | None = None,
     include_pending_datasets: bool = True,
+    session_id: str | None = None,
 ) -> dict:
     """Deep Time State — returns an Earth State Vector for the requested deep time.
 
@@ -162,6 +163,7 @@ async def geox_deep_time_state(
         input_query=input_query,
         vector=vector,
         pending_datasets=pending_datasets,
+        session_id=session_id,
     )
 
     # Step 4 — Apply GEOX canonical envelope (claim_tag, claim_state, etc.)
