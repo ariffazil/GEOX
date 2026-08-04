@@ -1017,7 +1017,8 @@ def register_tools_on(mcp):
             "registered_tools": len(all_manifest),
             "callable_tools": len(canonical_list),
             "public_count": len(canonical_set),
-            "public_count_target": attestation.get("public_count_target") or 15,
+            "public_count_target": attestation.get("public_count_target")
+            or len(canonical_set),
             "phantom_tools": phantom_list,
             "internal_tools": internal_list,
             "plugin_export_public": sorted(plugin_export_public),

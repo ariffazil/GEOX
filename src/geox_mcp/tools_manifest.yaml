@@ -2,6 +2,8 @@ manifest_version: 2026.07.24-truth-loop-hardening
 generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this
   repair
 public_transport: mcp
+# Membership SOT: CANONICAL_PUBLIC_TOOLS / tools/list (not a historical 15).
+public_count_target: 33
 tools:
 - name: geox_well_ingest
   domain: earth.well
@@ -426,7 +428,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: false
+    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
@@ -1610,7 +1612,7 @@ tools:
   domain: earth.subsurface
   axis: compute
   lane: evidence
-  face: internal
+  face: surface
   visibility: public
   description: 'Deterministic geological model renderer. Generates 2D cross-sections
     from structural parameters (dip, fault throw, strata) using matplotlib. NOT an
@@ -1623,7 +1625,7 @@ tools:
     idempotent: true
   ui: null
   plugin:
-    exposed: false
+    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
