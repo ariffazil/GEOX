@@ -219,7 +219,7 @@ class GovernanceFooter(BaseModel):
     risk: str = "LOW"  # LOW | MEDIUM | HIGH
     human_review_required: bool = False
     f9_fabrication_guard_active: bool = True
-    seal: str | None = None  # populated by caller: VAULT999::DTC::<hash>::<ts>
+    seal: str | None = None  # GEOX::DTC or GEOX::CONTENT_RECEIPT::DTC — never VAULT999 (H4)
     ics_chart_hash: str | None = None
     issued_at: str | None = None
     arifos_constitution_version: str = "v2026.05.05-SSCT"

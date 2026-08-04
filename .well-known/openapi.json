@@ -349,34 +349,6 @@
             }
           },
           {
-            "axis": "compute",
-            "description": "Gravity/magnetic studio: forward modeling and screening. Modes: open, screen.",
-            "domain": "earth.geophysics",
-            "lane": "reasoning",
-            "name": "geox_gravmag_studio",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
             "axis": "observe",
             "description": "Well desk: interactive view, publish rendered panel, render well panel. Modes: open, publish, render.",
             "domain": "earth.well",
@@ -546,66 +518,10 @@
           },
           {
             "axis": "compute",
-            "description": "Source-to-sink sediment volume and mass accounting. Peters 2012 framework.",
-            "domain": "earth.basin",
-            "lane": "reasoning",
-            "name": "geox_sediment_mass_balance",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "compute",
             "description": "Burial + heat flow + maturity modeling through time. EasyRo + TTI.",
             "domain": "earth.basin",
             "lane": "reasoning",
             "name": "geox_thermal_maturity_history",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "reason",
-            "description": "Evaluate parent claim validity when child claims fail. DAG evaluation with AND/OR/WEIGHTED dependencies.",
-            "domain": "governance",
-            "lane": "judgment",
-            "name": "geox_claim_graph_evaluate",
             "parameters": {
               "properties": {
                 "actor_id": {
@@ -713,95 +629,11 @@
             }
           },
           {
-            "axis": "reason",
-            "description": "Cross-organ bridge: converts GEOX prospect economics to WEALTH score_kernel input. F2: epistemic_source preserved. F13: blocked nodes rejected.",
-            "domain": "governance.bridge",
-            "lane": "evidence",
-            "name": "geox_to_wealth_bridge",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "compute",
-            "description": "Map export: package map layers and annotations into portable formats.",
-            "domain": "earth.map",
-            "lane": "reasoning",
-            "name": "geox_map_export_package",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
             "axis": "observe",
             "description": "Extract visual patterns from seismic section images using deep learning.",
             "domain": "earth.seismic",
             "lane": "evidence",
             "name": "geox_visual_understand",
-            "parameters": {
-              "properties": {
-                "actor_id": {
-                  "description": "Calling actor identifier",
-                  "type": "string"
-                },
-                "arguments": {
-                  "description": "Tool-specific arguments",
-                  "type": "object"
-                },
-                "session_id": {
-                  "description": "arifOS constitutional session ID",
-                  "type": "string"
-                },
-                "trace_id": {
-                  "description": "Trace identifier propagated end-to-end",
-                  "type": "string"
-                }
-              },
-              "type": "object"
-            }
-          },
-          {
-            "axis": "reason",
-            "description": "Generate geological hypotheses across discontinuity gaps in seismic data.",
-            "domain": "earth.seismic",
-            "lane": "reasoning",
-            "name": "geox_visual_generate_hypotheses",
             "parameters": {
               "properties": {
                 "actor_id": {

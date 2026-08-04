@@ -1267,7 +1267,8 @@ def register_tools_on(mcp):
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
-    @mcp.tool(name="geox_visual_generate_hypotheses", annotations=_geox_annotations("geox_visual_generate_hypotheses"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_visual_generate_hypotheses", annotations=_geox_annotations("geox_visual_generate_hypotheses"))
     async def _visual_generate_hypotheses(
         arguments: dict[str, Any] | None = None,
         session_id: str | None = None,
@@ -3207,7 +3208,8 @@ def register_tools_on(mcp):
             },
         )
 
-    @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
     async def _map_export_package(
         scene_plan_id: str,
         formats: list[str] | None = None,
@@ -4213,7 +4215,8 @@ def register_tools_on(mcp):
     # DITEMPA BUKAN DIBERI.
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    @mcp.tool(name="geox_gravmag_studio", annotations=_geox_annotations("geox_gravmag_studio"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_gravmag_studio", annotations=_geox_annotations("geox_gravmag_studio"))
     async def _gravmag_studio(
         mode: str = "open",
         survey_type: str = "gravity",
@@ -4425,7 +4428,8 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-    @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_claim_graph_evaluate", annotations=_geox_annotations("geox_claim_graph_evaluate"))
     async def _claim_graph_evaluate(
         claims: list[dict[str, Any]],
         edges: list[dict[str, Any]],
@@ -4600,7 +4604,8 @@ def register_tools_on(mcp):
             text=(f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. UI: ui://geox/well-desk."),
         )
 
-    @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
     async def _sediment_mass_balance(
         basin_name: str,
         source_eroded_km3: float,
@@ -4664,7 +4669,8 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-    @mcp.tool(name="geox_to_wealth_bridge", annotations=_geox_annotations("geox_to_wealth_bridge"))
+    # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # @mcp.tool(name="geox_to_wealth_bridge", annotations=_geox_annotations("geox_to_wealth_bridge"))
     async def _to_wealth_bridge(
         prospect_ref: str,
         npv_usd: float | None = None,

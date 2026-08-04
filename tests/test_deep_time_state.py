@@ -331,7 +331,9 @@ def test_governance_footer_present():
     assert "f9_fabrication_guard_active" in gov
     assert gov["f9_fabrication_guard_active"] is True
     assert gov["seal"] is not None
-    assert gov["seal"].startswith("VAULT999::DTC::")
+    # H4 2026-08-05: GEOX must never mint VAULT999:: — content receipt only unless bound
+    assert not str(gov["seal"]).startswith("VAULT999::"), "H4: GEOX cannot mint VAULT999 seals"
+    assert str(gov["seal"]).startswith("GEOX::"), "seal must be GEOX-namespaced content receipt"
 
 
 def test_governance_verdict_HOLD_when_unknown_fields_present():
