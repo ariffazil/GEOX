@@ -48,14 +48,31 @@ def _load_generated_public_surface() -> set[str]:
 
 
 def _load_plugin_export_surface() -> set[str]:
+    """Plugin export membership.
+
+    Source of truth is the tools_manifest (plugin_export_tool_names), not the
+    generated openapi.json — that file frequently lags the live surface and
+    produced false count-equality with wrong membership (witness W-01/W-06).
+    openapi is retained as a secondary drift signal only.
+    """
     import json
 
+    from geox_mcp.surface_manifest import plugin_export_tool_names
+
+    manifest_export = set(plugin_export_tool_names())
     path = Path(__file__).resolve().parents[3] / ".well-known" / "openapi.json"
     if not path.exists():
-        return set()
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    tools = payload.get("paths", {}).get("/mcp", {}).get("post", {}).get("x-mcp-tools", [])
-    return {tool["name"] for tool in tools if isinstance(tool, dict) and tool.get("name")}
+        return manifest_export
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        tools = payload.get("paths", {}).get("/mcp", {}).get("post", {}).get("x-mcp-tools", [])
+        openapi_export = {
+            tool["name"] for tool in tools if isinstance(tool, dict) and tool.get("name")
+        }
+    except Exception:
+        return manifest_export
+    # Prefer manifest; openapi lag must not redefine the public surface
+    return manifest_export or openapi_export
 
 
 async def _load_runtime_callable_public_surface() -> set[str]:
