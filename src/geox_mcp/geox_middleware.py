@@ -674,11 +674,19 @@ class GeoxGovernanceMiddleware(Middleware):
                     is_direct_call=True,  # Raw MCP call = direct agent call
                 )
             except Exception as e:
-                # Fail-closed per F1 AMANAH: governance check itself failing → HOLD
-                logger.error(f"organ_governance check raised: {e}")
+                # G8 — Bugs don't wear robes (2026-08-04):
+                # Runtime exceptions are ERROR, not constitutional HOLD.
+                # Floors deny; exceptions crash. Mapping one onto the other
+                # trains agents to hunt for authority they already have.
+                logger.exception(
+                    "GOV_ERROR: organ_governance raised for tool=%s: %s",
+                    tool_name,
+                    e,
+                )
                 raise ToolError(
-                    f"GOV_GATE: constitutional governance check failed for '{tool_name}'. "
-                    f"F1 Amanah: no execution without verified judgment. ({type(e).__name__}: {e})"
+                    f"GOV_ERROR · tool={tool_name} · "
+                    f"{type(e).__name__}: {e} · "
+                    f"fix: runtime exception in governance path — not a floor denial. File a bug."
                 ) from e
 
             if gov_error is not None:

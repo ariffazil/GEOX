@@ -75,6 +75,16 @@ def _authority_rank(level: str) -> int:
         return -1  # Unknown authority = no trust
 
 
+def _as_mapping(value: Any) -> dict[str, Any]:
+    """Return value if dict, else {}. Prevents AttributeError on str actors.
+
+    Kernel envelopes sometimes put actor as a bare string ('arif') and
+    sometimes as a dict. Chained .get() on a str is the GOV_GATE crash
+    (AttributeError: 'str' object has no attribute 'get') observed 2026-08-04.
+    """
+    return value if isinstance(value, dict) else {}
+
+
 # ── C3 REDTEAM FIX 2026-07-18: cached kernel verification for SEAL-* paths ──
 import threading
 
@@ -406,8 +416,9 @@ def validate_session(
                 error_message=(f"arifOS rejected session_id (unknown, expired, or forged): {session_id}"),
             )
 
-        # Kernel-verified: extract actor from response
-        standing_actor = verified.get("standing", {}).get("actor", {})
+        # Kernel-verified: extract actor from response (type-safe — G8)
+        standing = _as_mapping(verified.get("standing"))
+        standing_actor = standing.get("actor")
         if isinstance(standing_actor, str):
             kernel_actor = standing_actor
         elif isinstance(standing_actor, dict):
@@ -419,9 +430,23 @@ def validate_session(
         else:
             kernel_actor = None
         if not kernel_actor:
-            kernel_actor = verified.get("actor_id") or verified.get("actor")
+            raw_actor = verified.get("actor_id") or verified.get("actor")
+            if isinstance(raw_actor, str):
+                kernel_actor = raw_actor
+            elif isinstance(raw_actor, dict):
+                kernel_actor = (
+                    raw_actor.get("actor_id")
+                    or raw_actor.get("claimed_id")
+                    or raw_actor.get("canonical_id")
+                )
+            else:
+                kernel_actor = None
         if isinstance(kernel_actor, dict):
-            kernel_actor = kernel_actor.get("actor_id") or kernel_actor.get("claimed_id") or kernel_actor.get("canonical_id")
+            kernel_actor = (
+                kernel_actor.get("actor_id")
+                or kernel_actor.get("claimed_id")
+                or kernel_actor.get("canonical_id")
+            )
 
         # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
         # The arifOS kernel `validate` mode returns the live authority band in
@@ -430,14 +455,19 @@ def validate_session(
         # the kernel doesn't always populate on validate responses).
         # Walk the canonical field paths AND the live kernel envelope so a
         # sovereign ignition is never downgraded to OBSERVE_ONLY.
+        actor_map = _as_mapping(verified.get("actor"))
+        standing_auth = _as_mapping(standing.get("authority"))
+        standing_actor_map = _as_mapping(standing.get("actor"))
+        result_map = _as_mapping(verified.get("result"))
+        result_actor_map = _as_mapping(result_map.get("actor"))
         raw_authority = (
-            verified.get("standing", {}).get("authority", {}).get("band")
+            standing_auth.get("band")
             or verified.get("authority")
-            or (verified.get("actor") or {}).get("authority_level")
-            or (verified.get("actor") or {}).get("authority")
-            or (verified.get("standing") or {}).get("actor", {}).get("authority_level")
-            or (verified.get("result") or {}).get("authority")
-            or (verified.get("result") or {}).get("actor", {}).get("authority_level")
+            or actor_map.get("authority_level")
+            or actor_map.get("authority")
+            or standing_actor_map.get("authority_level")
+            or result_map.get("authority")
+            or result_actor_map.get("authority_level")
         )
         # Normalize OBSERVER→OBSERVE_ONLY, SOVEREIGN→SOVEREIGN, etc.
         _OBSERVER_TO_CANONICAL = {
