@@ -1,2 +1,10 @@
-# This file is superseded by: /root/AAA/organ.yaml
-# Status: DERIVED — do not update this copy.
+# GEOX organ boundary contract — local mirror for CI checks.
+# Authoritative source: /root/AAA/federation/organs.yaml (geox entry).
+# This local copy carries only the fields enforced by .github/workflows/geox-ci.yml
+# (organ-boundary job). Update AAA canonical first, then mirror here.
+status: DERIVED
+authority_ceiling: COMPUTE_ONLY
+forbidden_domains:
+  - constitutional_judgment
+  - capital_allocation
+  - deployment_authorization
