@@ -18,6 +18,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Any
 
@@ -45,7 +46,15 @@ EVIDENCE_CONTRACTS: dict[str, list[str]] = {
     "geox_basin_backstrip": ["subsidence_curve", "tectonic_subsidence", "total_subsidence"],
     # ── Basin / Earth state ─────────────────────────────────────────
     "geox_basin": ["basin_profile", "tectonic_summary", "stratigraphy", "macrostrat_units"],
-    "geox_deep_time_state": ["variables", "data", "state_vector", "n_variables"],
+    "geox_deep_time_state": [
+        "variables",
+        "data",
+        "state_vector",
+        "n_variables",
+        "primary_artifact",
+        "age_resolution",
+        "execution_status",
+    ],
     "geox_contradiction_scan": ["contradictions", "findings", "severity"],
     "geox_falsify": ["kill_results", "verdict", "kill_matrix"],
     "geox_evidence": ["evidence_items", "synthesis", "sources"],
@@ -64,8 +73,18 @@ EVIDENCE_CONTRACTS: dict[str, list[str]] = {
     "geox_well_qc": ["artifact_ref", "qc_results", "issues", "grade"],
     "geox_well_desk": ["well_id", "curves", "panels", "tracks"],
     # ── Registry / bridge ───────────────────────────────────────────
-    "geox_surface_status": ["canonical_tools", "registry_truth", "tool_count"],
-    "geox_workspace": ["basin", "play", "well_id", "field"],
+    # NOTE: do not list claim-only fields (status/ok) — they are success
+    # assertions, not evidence. A payload with only status:OK is FALSE SUCCESS.
+    "geox_surface_status": [
+        "canonical_tools",
+        "registry_truth",
+        "tool_count",
+        "surface_attestation",
+        "surface_hash",
+        "callable_tools",
+        "public_count",
+    ],
+    "geox_workspace": ["basin", "play", "well_id", "field", "workspace", "context"],
     "geox_to_wealth_bridge": ["prospect_ref", "npv_usd", "score_kernel"],
     "geox_prospect": ["prospect_ref", "volumetrics", "pos", "risk"],
     # ── Geological model ─────────────────────────────────────────────
@@ -111,60 +130,236 @@ def compliance_matrix() -> dict[str, Any]:
     }
 
 
+def coerce_tool_result_to_dict(result: Any) -> dict[str, Any]:
+    """Extract a domain dict from FastMCP ToolResult / MCP CallToolResult / dict.
+
+    Runtime fact (2026-08-04): call_next(context) returns ToolResult, not dict.
+    Signature used to claim dict[str, Any] while the wire type was ToolResult —
+    .get() then AttributeError, silently swallowed → false SUCCESS (G8 variant).
+
+    Order of preference:
+      1. plain dict
+      2. ToolResult.structured_content (dict)
+      3. first text content block parsed as JSON
+      4. model_dump() / __dict__ fallback (never empty without record)
+    """
+    if result is None:
+        return {}
+    if isinstance(result, dict):
+        return result
+
+    # FastMCP ToolResult / pydantic models with structured_content
+    structured = getattr(result, "structured_content", None)
+    if isinstance(structured, dict) and structured:
+        return structured
+
+    # content: list of ContentBlock with .text
+    content = getattr(result, "content", None)
+    if content:
+        try:
+            blocks = list(content)
+        except TypeError:
+            blocks = []
+        for block in blocks:
+            text = getattr(block, "text", None)
+            if text is None and isinstance(block, dict):
+                text = block.get("text")
+            if not isinstance(text, str) or not text.strip():
+                continue
+            try:
+                parsed = json.loads(text)
+            except Exception:
+                continue
+            if isinstance(parsed, dict):
+                return parsed
+
+    # Pydantic v2 model_dump
+    if hasattr(result, "model_dump") and callable(result.model_dump):
+        try:
+            dumped = result.model_dump()
+            if isinstance(dumped, dict):
+                sc = dumped.get("structured_content")
+                if isinstance(sc, dict) and sc:
+                    return sc
+                return dumped
+        except Exception:
+            pass
+
+    # Last resort — never pretend we have a domain dict of Nothing
+    raw = getattr(result, "__dict__", None)
+    if isinstance(raw, dict) and raw:
+        return {"_raw_tool_result": True, **{k: v for k, v in raw.items() if not k.startswith("_")}}
+
+    return {"_coerce_failed": True, "_type": type(result).__name__}
+
+
+def apply_domain_dict_to_result(result: Any, domain: dict[str, Any]) -> Any:
+    """Write an updated domain dict back onto a ToolResult (or return dict).
+
+    Preserves ToolResult identity for FastMCP while reflecting evidence
+    postcondition mutations (isError, status, _evidence_postcondition).
+    """
+    if isinstance(result, dict):
+        return domain
+
+    # Mutate ToolResult in place when possible
+    is_err = bool(domain.get("isError") or domain.get("ok") is False)
+    if hasattr(result, "structured_content"):
+        try:
+            result.structured_content = domain
+        except Exception:
+            pass
+    if hasattr(result, "is_error"):
+        try:
+            result.is_error = is_err
+        except Exception:
+            pass
+    # Keep text content in sync so clients that only read content[] see the downgrade
+    if hasattr(result, "content"):
+        try:
+            from mcp.types import TextContent
+
+            result.content = [TextContent(type="text", text=json.dumps(domain, default=str))]
+        except Exception:
+            try:
+                # Minimal duck-type block
+                result.content = [{"type": "text", "text": json.dumps(domain, default=str)}]
+            except Exception:
+                pass
+    return result
+
+
+def _lookup_evidence_value(result: dict[str, Any], key: str) -> Any:
+    """Top-level key, else first nested dict that carries key (workspace.basin)."""
+    if key in result:
+        return result.get(key)
+    for val in result.values():
+        if isinstance(val, dict) and key in val:
+            return val.get(key)
+    return None
+
+
+def _is_substantive(val: Any) -> bool:
+    if val is None:
+        return False
+    if isinstance(val, bool):
+        return True
+    if isinstance(val, (int, float)):
+        return True
+    if isinstance(val, (list, tuple, dict, set, str)):
+        return len(val) > 0  # type: ignore[arg-type]
+    return bool(val)
+
+
+def ensure_fastmcp_tool_result(result: Any) -> Any:
+    """Guarantee FastMCP wire type (must expose to_mcp_result).
+
+    If a pipeline step demoted ToolResult → dict, re-wrap so the MCP
+    transport does not raise: 'dict' object has no attribute 'to_mcp_result'.
+    """
+    if result is None:
+        return result
+    if callable(getattr(result, "to_mcp_result", None)):
+        return result
+    if isinstance(result, dict):
+        try:
+            from fastmcp.tools.base import ToolResult
+
+            is_err = bool(result.get("isError") or result.get("ok") is False)
+            return ToolResult(structured_content=result, is_error=is_err)
+        except Exception as exc:
+            logger.error("ensure_fastmcp_tool_result: wrap failed: %s", exc)
+            return result
+    return result
+
+
 def check_evidence_postcondition(
     tool_name: str,
-    result: dict[str, Any],
-) -> dict[str, Any]:
+    result: Any,
+) -> Any:
     """Apply evidence post-condition check to a tool result.
 
-    Returns modified result (or original if tool is non-compliant or passes).
+    Accepts dict **or** FastMCP ToolResult. Returns the same outer type
+    with domain fields updated. SUCCESS + null evidence → FAILURE.
+
+    G8: never silently no-op on type mismatch — coerce or mark verification
+    failed on the payload.
     """
     required_keys = EVIDENCE_CONTRACTS.get(tool_name)
+    original = result
+    domain = coerce_tool_result_to_dict(result)
+
     if required_keys is None:
-        # Non-compliant tool — pass through, logged at debug
         if tool_name in NON_COMPLIANT:
             logger.debug(
                 "EVIDENCE_POST: tool=%s NON_COMPLIANT (no contract defined)",
                 tool_name,
             )
-        return result
+        return original
 
-    # Determine if the tool is claiming success
+    if domain.get("_coerce_failed"):
+        # Could not extract domain — do not claim evidence verified
+        logger.error(
+            "EVIDENCE_POST: tool=%s COERCE_FAILED type=%s — cannot verify evidence",
+            tool_name,
+            domain.get("_type"),
+        )
+        failed = {
+            "ok": False,
+            "isError": True,
+            "status": "INVALID",
+            "execution_status": "ERROR",
+            "error": (
+                f"EVIDENCE_POST_COERCE_FAILED: cannot read domain payload from "
+                f"{domain.get('_type')} for {tool_name}. Evidence verification "
+                f"did not run — refusing silent SUCCESS (G8)."
+            ),
+            "_evidence_postcondition": {
+                "applied": True,
+                "verdict": "COERCE_FAILED",
+                "result_type": domain.get("_type"),
+                "spec": "geox-evidence-postcondition-v1",
+            },
+        }
+        return apply_domain_dict_to_result(original, failed)
+
+    # Determine if the tool is claiming success.
+    # execution_status missing is NOT an automatic success claim — that
+    # previously let empty payloads pass the gate (false SUCCESS / G8).
+    # Explicit isError:false is a success claim (workspace and peers).
+    exec_st = domain.get("execution_status")
     claims_success = (
-        result.get("ok") is True
-        or result.get("status") in ("OK", "SUCCESS")
-        or result.get("execution_status") in ("SUCCESS", "COMPLETED", None)
+        domain.get("ok") is True
+        or domain.get("status") in ("OK", "SUCCESS", "healthy", "HEALTHY")
+        or exec_st in ("SUCCESS", "COMPLETED")
+        or domain.get("isError") is False
     )
     is_already_error = (
-        result.get("isError") is True or result.get("status") in ("INVALID", "ERROR", "FAILURE") or bool(result.get("error"))
+        domain.get("isError") is True
+        or domain.get("status") in ("INVALID", "ERROR", "FAILURE")
+        or bool(domain.get("error"))
     )
 
     if is_already_error or not claims_success:
-        return result  # Already honest about failure, or not claiming success
+        return original  # Already honest about failure, or not claiming success
 
-    # Check if ANY required key has substantive content
+    # Check if ANY required key has substantive content (incl. one-level nest)
     has_evidence = False
     for key in required_keys:
-        val = result.get(key)
-        if val is None:
-            continue
-        if isinstance(val, bool):
-            has_evidence = True
-            break
-        if isinstance(val, (int, float)):
-            has_evidence = True
-            break
-        if isinstance(val, (list, tuple, dict, set, str)):
-            if len(val) > 0:  # type: ignore[arg-type]
-                has_evidence = True
-                break
-        # Non-empty-ish
-        if val:
+        val = _lookup_evidence_value(domain, key)
+        if _is_substantive(val):
             has_evidence = True
             break
 
     if has_evidence:
-        return result  # Evidence present — honest success
+        # Stamp that verification actually ran (anti-silent-bypass)
+        domain = dict(domain)
+        domain["_evidence_postcondition"] = {
+            "applied": True,
+            "verdict": "PASS",
+            "spec": "geox-evidence-postcondition-v1",
+        }
+        return apply_domain_dict_to_result(original, domain)
 
     # FALSE SUCCESS: claims success but has zero evidence
     logger.warning(
@@ -174,25 +369,26 @@ def check_evidence_postcondition(
         ", ".join(required_keys[:5]),
     )
 
-    result["ok"] = False
-    result["isError"] = True
-    result["status"] = "INVALID"
-    result["execution_status"] = "ERROR"
-    result["governance_status"] = "HOLD"
-    result["confidence"] = min(result.get("confidence", 0.10), 0.10)
-    result["authority_claim"] = "ADVISORY"
-    result.setdefault(
+    domain = dict(domain)
+    domain["ok"] = False
+    domain["isError"] = True
+    domain["status"] = "INVALID"
+    domain["execution_status"] = "ERROR"
+    domain["governance_status"] = "HOLD"
+    domain["confidence"] = min(float(domain.get("confidence") or 0.10), 0.10)
+    domain["authority_claim"] = "ADVISORY"
+    domain.setdefault(
         "error",
         f"EVIDENCE_SCHEMA_VIOLATION: {tool_name} returned SUCCESS but produced "
         f"no substantive evidence. All required fields ({', '.join(required_keys[:5])}...)"
         f" are null, empty, or missing. This is a false success per Stage-1 "
         f"outputSchema enforcement (commit 80fc80fd pattern).",
     )
-    result["_evidence_postcondition"] = {
+    domain["_evidence_postcondition"] = {
         "applied": True,
         "verdict": "DOWNGRADED",
         "missing_evidence": required_keys,
         "spec": "geox-evidence-postcondition-v1",
     }
 
-    return result
+    return apply_domain_dict_to_result(original, domain)

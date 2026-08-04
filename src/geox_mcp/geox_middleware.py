@@ -769,6 +769,10 @@ class GeoxGovernanceMiddleware(Middleware):
         )
         try:
             result = await call_next(context)
+            # G8 (2026-08-04): FastMCP call_next returns ToolResult.
+            # NEVER demote ToolResult → dict here — that strips to_mcp_result
+            # and yields: 'dict' object has no attribute 'to_mcp_result'.
+            # Downstream steps must coerce for .get() then write back.
             # P0-6: Inject 5-layer evidence envelope into response
             result = self._inject_evidence_envelope(result, tool_name, _governance_envelope)
             # P3 CONFORMANCE (2026-07-26): Inject canonical ClaimState/WitnessType/OrganType
@@ -823,19 +827,28 @@ class GeoxGovernanceMiddleware(Middleware):
                 )
             # ── Stage-1 outputSchema enforcement (2026-07-25) ──────────────
             # SUCCESS with null evidence = FAILURE (commit 80fc80fd pattern).
-            # Applied to all 32 canonical tools via per-tool evidence contracts.
-            try:
-                from geox_mcp.evidence_postcondition import (
-                    check_evidence_postcondition,
-                )
+            # Coerce ToolResult inside check_evidence_postcondition; write back.
+            # G8: silent swallow is forbidden — fix input or propagate ERROR.
+            from geox_mcp.evidence_postcondition import (
+                check_evidence_postcondition,
+                ensure_fastmcp_tool_result,
+            )
 
+            try:
                 result = check_evidence_postcondition(tool_name, result)
             except Exception as _ev_exc:
-                logger.warning(
-                    "EVIDENCE_POST: failed for tool=%s: %s",
+                logger.exception(
+                    "EVIDENCE_POST: unhandled for tool=%s: %s",
                     tool_name,
                     _ev_exc,
                 )
+                raise ToolError(
+                    f"GOV_ERROR · EVIDENCE_POST · tool={tool_name} · "
+                    f"{type(_ev_exc).__name__}: {_ev_exc} · "
+                    f"fix: evidence postcondition crashed — not a silent SUCCESS (G8)."
+                ) from _ev_exc
+            # Wire-type guarantee: FastMCP requires to_mcp_result()
+            result = ensure_fastmcp_tool_result(result)
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
@@ -870,25 +883,38 @@ class GeoxGovernanceMiddleware(Middleware):
 
     @staticmethod
     def _inject_evidence_envelope(result, tool_name, gov_envelope):
-        """P0-6: Inject 5-layer evidence envelope into tool response dict."""
+        """P0-6: Inject 5-layer evidence envelope into tool response.
+
+        Preserves FastMCP ToolResult wire type (mutates structured_content).
+        """
         if not isinstance(gov_envelope, dict):
             return result
         try:
             from geox_mcp.organ_governance import build_evidence_envelope
 
+            envelope = build_evidence_envelope(
+                tool_name=tool_name,
+                transport_status="OK",
+                execution_status="COMPLETED",
+                artifact_status="CREATED" if gov_envelope.get("artifact_id") else "NONE",
+                verification_status="PENDING",
+                governance_verdict=gov_envelope.get("gate_verdict", "ADVISORY"),
+                artifact_id=gov_envelope.get("artifact_id", ""),
+                session_id=gov_envelope.get("session_id", ""),
+                actor_id=gov_envelope.get("actor_id", "anonymous"),
+            )
             if isinstance(result, dict) and not isinstance(result.get("content"), list):
-                envelope = build_evidence_envelope(
-                    tool_name=tool_name,
-                    transport_status="OK",
-                    execution_status="COMPLETED",
-                    artifact_status="CREATED" if gov_envelope.get("artifact_id") else "NONE",
-                    verification_status="PENDING",
-                    governance_verdict=gov_envelope.get("gate_verdict", "ADVISORY"),
-                    artifact_id=gov_envelope.get("artifact_id", ""),
-                    session_id=gov_envelope.get("session_id", ""),
-                    actor_id=gov_envelope.get("actor_id", "anonymous"),
-                )
                 result["_evidence_envelope"] = envelope
+                return result
+            # ToolResult path — stamp into structured_content, keep to_mcp_result
+            sc = getattr(result, "structured_content", None)
+            if isinstance(sc, dict):
+                sc = dict(sc)
+                sc["_evidence_envelope"] = envelope
+                try:
+                    result.structured_content = sc
+                except Exception:
+                    pass
             return result
         except Exception:
             return result
