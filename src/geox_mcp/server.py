@@ -74,6 +74,51 @@ GEOX_PROFILE = os.getenv("GEOX_PROFILE", "full")
 GEOX_HOST = os.getenv("GEOX_HOST", os.getenv("HOST", "0.0.0.0"))
 GEOX_PORT = int(os.getenv("GEOX_PORT", os.getenv("PORT", "8081")))
 
+# 2026-08-04 — OAuth kill-switch for Claude Apps / ChatGPT connectors (no DCR).
+# GEOX_OAUTH_ENABLED=0 → open MCP, discovery 404, auth cards report none.
+# Flip to 1 + restart to re-enable PRM/AS metadata + fixed Client ID path.
+_GEOX_OAUTH_RAW = os.getenv("GEOX_OAUTH_ENABLED", "0").strip().lower()
+GEOX_OAUTH_ENABLED = _GEOX_OAUTH_RAW in ("1", "true", "yes", "on")
+
+# Public Hostnames Caddy/Cloudflare forward (FastMCP HostOriginGuard).
+# Without these, Host: geox.arif-fazil.com → HTTP 421 Misdirected Request.
+GEOX_ALLOWED_HOSTS = [
+    h.strip()
+    for h in os.getenv(
+        "GEOX_ALLOWED_HOSTS",
+        "geox.arif-fazil.com,mcp.arif-fazil.com,*.arif-fazil.com,127.0.0.1,localhost",
+    ).split(",")
+    if h.strip()
+]
+GEOX_ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.getenv(
+        "GEOX_ALLOWED_ORIGINS",
+        ",".join(
+            [
+                "https://geox.arif-fazil.com",
+                "https://mcp.arif-fazil.com",
+                "https://arif-fazil.com",
+                "https://www.arif-fazil.com",
+                "https://claude.ai",
+                "https://www.claude.ai",
+                "https://*.claude.ai",
+                "https://*.anthropic.com",
+                "https://chatgpt.com",
+                "https://chat.openai.com",
+                "https://*.oaiusercontent.com",
+                "http://localhost",
+                "http://localhost:*",
+                "http://127.0.0.1",
+                "http://127.0.0.1:*",
+                "https://localhost",
+                "https://127.0.0.1",
+            ]
+        ),
+    ).split(",")
+    if o.strip()
+]
+
 # Earth schema directory — canonical location is /root/geox/schemas/earth/
 _GEOX_SRC_DIR = Path(__file__).parent
 _GEOX_SCHEMAS_DIR = (_GEOX_SRC_DIR.parent.parent / "schemas").resolve()
@@ -2414,7 +2459,13 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
 
     ALLOWED_ORIGIN_PREFIXES: tuple[str, ...] = (
         "https://geox.arif-fazil.com",
+        "https://mcp.arif-fazil.com",
         "https://arif-fazil.com",
+        "https://www.arif-fazil.com",
+        "https://claude.ai",
+        "https://www.claude.ai",
+        "https://chatgpt.com",
+        "https://chat.openai.com",
         "http://localhost",
         "https://localhost",
         "http://127.0.0.1",
@@ -2425,10 +2476,19 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
         if request.url.path.startswith("/mcp"):
             origin = request.headers.get("origin", "")
             if origin and not any(origin.startswith(p) for p in self.ALLOWED_ORIGIN_PREFIXES):
-                return JSONResponse(
-                    {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
-                    status_code=403,
-                )
+                # Allow anthropic / oaiusercontent subdomains without enumerating every host
+                if not (
+                    origin.startswith("https://")
+                    and (
+                        origin.endswith(".claude.ai")
+                        or ".anthropic.com" in origin
+                        or ".oaiusercontent.com" in origin
+                    )
+                ):
+                    return JSONResponse(
+                        {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
+                        status_code=403,
+                    )
         return await call_next(request)
 
 
@@ -3154,7 +3214,12 @@ async def mcp_server_card(request: Request) -> JSONResponse:
                 "logging": {},
                 "completions": {},
             },
-            "authentication": {"type": "bearer", "required": True, "header": "Authorization"},
+            "authentication": (
+                {"type": "bearer", "required": True, "header": "Authorization"}
+                if GEOX_OAUTH_ENABLED
+                else {"type": "none", "required": False}
+            ),
+            "oauth_enabled": GEOX_OAUTH_ENABLED,
         }
     )
 
@@ -3410,7 +3475,8 @@ async def contract_handler(request: Request) -> JSONResponse:
             "tool_count_declared": len(CANONICAL_PUBLIC_TOOLS),
             "tool_count_runtime": len(CANONICAL_RUNTIME_TOOLS),
             "transport": "streamable-http",
-            "auth_required": True,
+            "auth_required": GEOX_OAUTH_ENABLED,
+            "oauth_enabled": GEOX_OAUTH_ENABLED,
             "vault_connected": True,
             "adapters_loaded": 4,
             "schemas_loaded": len(schema_hashes),
@@ -3511,11 +3577,16 @@ def create_app():
     mcp.add_middleware(_build_geox_ttl_middleware())
 
     # Native FastMCP transport. path="/" so the parent Starlette controls mount point.
+    # 2026-08-04: allowed_hosts MUST include public Host (Caddy header_up Host geox...).
+    # Without it FastMCP HostOriginGuard returns 421 Misdirected Request (Claude Apps fail).
     mcp_http_handler = mcp.http_app(
         path="/",
         transport="streamable-http",
         json_response=True,
         stateless_http=False,  # Stateful: session IDs validated, 404 on stale, SSE push supported
+        host_origin_protection="auto",
+        allowed_hosts=list(GEOX_ALLOWED_HOSTS),
+        allowed_origins=list(GEOX_ALLOWED_ORIGINS),
     )
 
     # ── WebMCP routes (P2#5) ──────────────────────────────────────
@@ -3529,33 +3600,60 @@ def create_app():
 
     # 2026-06-29 — Federation-wide OAuth discovery (Hermes-flow fix).
     # Spec-compliant MCP clients (Cursor, Claude Code, MiniMax) fetch
-    # /.well-known/oauth-protected-resource first per RFC 8707. Without
-    # this, OAuth clients fail with "failed to get oauth authorization url".
-    # arifOS (port 8088) is the canonical authorization server for the
-    # whole federation; these endpoints mirror its metadata.
+    # /.well-known/oauth-protected-resource first per RFC 8707.
+    # 2026-08-04 — GEOX_OAUTH_ENABLED=0: return 404 oauth_disabled so Claude Apps
+    # does not attempt DCR / Client ID registration (ofid_* errors). Code retained.
 
     async def _geox_oauth_protected_resource(request):
+        if not GEOX_OAUTH_ENABLED:
+            return JSONResponse(
+                {
+                    "error": "oauth_disabled",
+                    "detail": (
+                        "GEOX OAuth discovery is OFF (GEOX_OAUTH_ENABLED=0). "
+                        "MCP is open without OAuth. Re-enable: GEOX_OAUTH_ENABLED=1 + restart geox-mcp."
+                    ),
+                    "oauth_enabled": False,
+                },
+                status_code=404,
+                headers={"Access-Control-Allow-Origin": "*"},
+            )
         return JSONResponse(
             {
-                "resource": "https://mcp.arif-fazil.com/mcp",
-                "authorization_servers": ["https://mcp.arif-fazil.com"],
+                "resource": "https://geox.arif-fazil.com/mcp",
+                "authorization_servers": ["https://geox.arif-fazil.com"],
                 "bearer_methods_supported": ["header"],
                 "scopes_supported": ["openid", "profile", "mcp:full", "mcp:read_only"],
+                "oauth_enabled": True,
             },
             headers={"Access-Control-Allow-Origin": "*"},
         )
 
     async def _geox_oauth_authorization_server(request):
+        if not GEOX_OAUTH_ENABLED:
+            return JSONResponse(
+                {
+                    "error": "oauth_disabled",
+                    "detail": (
+                        "GEOX OAuth AS metadata is OFF (GEOX_OAUTH_ENABLED=0). "
+                        "Code retained; flip env to re-enable."
+                    ),
+                    "oauth_enabled": False,
+                },
+                status_code=404,
+                headers={"Access-Control-Allow-Origin": "*"},
+            )
         return JSONResponse(
             {
-                "issuer": "https://mcp.arif-fazil.com",
-                "authorization_endpoint": "https://mcp.arif-fazil.com/api/auth/authorize",
-                "token_endpoint": "https://mcp.arif-fazil.com/api/auth/token",
-                "jwks_uri": "https://mcp.arif-fazil.com/.well-known/jwks.json",
+                "issuer": "https://geox.arif-fazil.com",
+                "authorization_endpoint": "https://geox.arif-fazil.com/api/auth/authorize",
+                "token_endpoint": "https://geox.arif-fazil.com/api/auth/token",
+                "jwks_uri": "https://geox.arif-fazil.com/.well-known/jwks.json",
                 "response_types_supported": ["code"],
                 "grant_types_supported": ["authorization_code", "refresh_token"],
                 "code_challenge_methods_supported": ["S256"],
                 "scopes_supported": ["openid", "profile", "mcp:full", "mcp:read_only"],
+                "oauth_enabled": True,
             },
             headers={"Access-Control-Allow-Origin": "*"},
         )
@@ -3674,6 +3772,8 @@ def main() -> None:
         logger.info(f"GEOX Unified Server starting on {args.host}:{args.port}")
         logger.info(f"  Version: {GEOX_VERSION}")
         logger.info(f"  Profile: {GEOX_PROFILE}")
+        logger.info(f"  OAuth: {'ON' if GEOX_OAUTH_ENABLED else 'OFF (GEOX_OAUTH_ENABLED=0)'}")
+        logger.info(f"  Allowed hosts: {GEOX_ALLOWED_HOSTS}")
         logger.info("  Dimensions: ['prospect', 'well', 'earth3d', 'map', 'cross']")
         logger.info(f"  MCP Apps: {'enabled' if HAS_FASTMCP_APPS else 'disabled'}")
         uvicorn.run(app, host=args.host, port=args.port, log_level="info")
