@@ -770,6 +770,19 @@ class GeoxGovernanceMiddleware(Middleware):
         )
         try:
             result = await call_next(context)
+            # M6 utilization ledger (KUTIP SAMPAH 2026-08-05) — fail-soft
+            try:
+                from geox_mcp.tool_invocation_counter import record_invocation
+
+                _args = arguments if isinstance(arguments, dict) else {}
+                record_invocation(
+                    tool_name,
+                    session_id=_args.get("session_id") if isinstance(_args.get("session_id"), str) else None,
+                    actor_id=_args.get("actor_id") if isinstance(_args.get("actor_id"), str) else None,
+                    ok=True,
+                )
+            except Exception:
+                pass
             # ═══ W-01 FIX (2026-08-05) ═══════════════════════════════════
             # FastMCP call_next returns ToolResult. Downstream processors
             # (evidence envelope, well conformance, envelope normalizer,

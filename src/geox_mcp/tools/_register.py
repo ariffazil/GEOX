@@ -440,6 +440,20 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
                 except Exception as exc:
                     logger.warning(f"Failed to inject physics manifest in post-wrap for {name}: {exc}")
 
+        # M6 utilization ledger (KUTIP SAMPAH 2026-08-05) — fail-soft
+        try:
+            from geox_mcp.tool_invocation_counter import record_invocation
+
+            record_invocation(
+                name,
+                session_id=session_id if isinstance(session_id, str) else None,
+                actor_id=actor_id if isinstance(actor_id, str) else None,
+                ok=not (isinstance(res, dict) and res.get("isError")),
+                duration_ms=locals().get("duration_ms"),
+            )
+        except Exception:
+            pass
+
         return res
 
     functools.update_wrapper(wrapper, func)

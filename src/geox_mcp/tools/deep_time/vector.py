@@ -125,17 +125,31 @@ def _mass_extinctions_in_interval(top_ma: float, base_ma: float) -> list:
     return out
 
 
-def _compute_seal(envelope_dict: dict, ics_chart_version: str) -> str:
-    """Compute a deterministic VAULT999-style seal for the envelope.
+def _compute_seal(
+    envelope_dict: dict,
+    ics_chart_version: str,
+    *,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+) -> str:
+    """Compute a content-hash receipt for the Deep Time envelope (F11 AUDIT).
 
-    Format: VAULT999::DTC::<sha256-prefix>::<timestamp>
-    The hash is over the canonical JSON of the envelope dict (excluding
-    seal/issued_at fields themselves).
+    H4 AMANAH (KUTIP SAMPAH 2026-08-05): GEOX must NEVER mint a VAULT999::
+    prefix. Only arifOS arif_seal appends to the constitutional vault.
+    Unbound / anonymous callers get an explicit CONTENT_RECEIPT, not a seal.
+
+    Format (bound session):   GEOX::DTC::<sha256-12>::<timestamp>
+    Format (anonymous/unbound): GEOX::CONTENT_RECEIPT::DTC::<sha256-12>::<timestamp>
     """
     payload = json.dumps(envelope_dict, sort_keys=True, default=str).encode()
     h = hashlib.sha256(payload).hexdigest()[:12]
     ts = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
-    return f"VAULT999::DTC::{h}::{ts}"
+    bound = bool(session_id) and session_id not in ("", "anonymous", "null", "None")
+    actor_ok = bool(actor_id) and actor_id not in ("", "anonymous", "null", "None", "unknown")
+    if bound and actor_ok:
+        return f"GEOX::DTC::{h}::{ts}"
+    # Unbound: content receipt only — never VAULT999, never forge authority
+    return f"GEOX::CONTENT_RECEIPT::DTC::{h}::{ts}"
 
 
 def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
