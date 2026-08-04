@@ -1,0 +1,68 @@
+/* DATA DESCRIPTION:
+Citation:	Strasser, Michael; Ikehara, Ken; Everest, Jeremy D; Maeda, Lena; Hochmuth, Katharina; Grant, Hannah; Stewart, Margaret S; Sakurai, Noriaki; Yokoyama, Takahiro; Bao, Rui; Bellanova, Piero; Brunet, Morgane; Cai, Zhirong; Cattaneo, Antonio; Hsiung, Kan-Hsi; Huang, Jyh-Jaan Steven; Ishizawa, Tahashi; Itaki, Takuya; Jitsuno, Kana; Johnson, Joel E; Kanamatsu, Toshiya; Keep, Myra; Kioka, Arata; Kölling, Martin; Luo, Min; März, Christian; McHugh, Cecilia M G; Micallef, Aaron; Nagahashi, Yoshitaka; Pandey, Dhananjai K; Proust, Jean-Noël; Rasbury, Troy; Riedinger, Natascha; Satoguchi, Yasufumi; Sawyer, Derek E; Seibert, Chloé; Silver, Maxwell; Straub, Susanne M; Virtasalo, Joonas J; Wang, Yong Hong; Wu, Ting-Wei; Zellers, Sarah D (2025): X-ray diffraction results from IODP Hole 386-M0087B [dataset]. PANGAEA, https://doi.org/10.1594/PANGAEA.978955
+Abstract:	Results of X-ray diffraction (XRD) analyses from the above given hole of International Ocean Discovery Program (IODP) Expedition 386 (Japan Trench Paleoseismology). The offshore phase of this expedition took place between 2021-04-13 and 2021-06-01 onboard Japanese R/V Kaimei from and to Yokosuka, Japan, followed by an onshore phase onboard D/V Chikyu between 2022-02-14 – 2022-03-15. During the onshore phase a set of solid-phase samples, with a volume of approx. 10 cubic centimeters each, were taken with the purpose to be later on split into aliquots for the following three analyses: X-ray diffraction, carbon and X-ray fluorescence. The bulk solid-phase samples were taken from the work halves of core sections at about one sample per meter on average. Unprocessed samples were then shipped to the MARUM - Center for Marine Environmental Sciences of the University of Bremen (Germany), where they were freeze-dried, ground and homogenized to a fine powder (<20 µm particle size) by ECORD Science Operator staff using a pestle and an agate mortar. The aliquots for XRD analysis were prepared with the Philips backloading system in the Crystallography and Geomaterials Research laboratories of the Geoscience Department at the University of Bremen (Germany). X-ray diffractograms were measured on a Bruker D8 Discover diffractometer. Mineral identification and semi-quantification were done using the Philips software X'Pert HighScore Version 1.2 (Degen et al., 2014, https://doi.org/10.1017/S0885715614000840) and follows concepts of Vogt (2009, https://doi.org/10.2204/iodp.proc.302.203.2009). Minimum relative errors are given based on Vogt et al., 2002 (https://doi.org/10.1346/000986002760833765). Clay Mineral groups are used as sums of multiple minerals. In many samples there is a bulb below 20-25° 2theta pointing to amorphous SiO2, which can be biogenic (e.g. diatoms etc.) or volcanic glass. The bulb size could implicate about 10-20 wt.% of amorphous SiO2. Exact quantification of this component would require more detailed XRD experiments.
+	For further methodological information see methods chapter in Strasser, M. et al., 2023 https://doi.org/10.14379/iodp.proc.386.102.2023
+Keyword(s):	International Ocean Discovery Program (IODP); IODP; Japan Trench; X-ray diffraction (XRD); XRD
+Related to:	Strasser, Michael; Ikehara, Ken; Everest, Jeremy D; IODP Expedition 386 Scientists (2023): Japan Trench Paleoseismology. Proceedings of the International Ocean Discovery Program, International Ocean Discovery Program, 386, https://doi.org/10.14379/iodp.proc.386.2023
+Further details:	QAQC386_Web_C_LITH_2_XRD (URI: https://download.pangaea.de/reference/140397/attachments/QAQC386_Web_C_LITH_2_XRD.zip)
+Project(s):	Integrated Ocean Drilling Program / International Ocean Discovery Program (IODP) (URI: https://www.iodp.org/)
+Coverage:	LATITUDE: 39.440650 * LONGITUDE: 144.216183
+	DATE/TIME START: 2021-05-03T00:00:00 * DATE/TIME END: 2021-05-03T00:00:00
+	MINIMUM DEPTH, sediment/rock: 0.56 m * MAXIMUM DEPTH, sediment/rock: 18.61 m
+Event(s):	386-M0087B (JTPN-02A) * LATITUDE: 39.440650 * LONGITUDE: 144.216183 * DATE/TIME START: 2021-05-03T00:00:00 * DATE/TIME END: 2021-05-03T00:00:00 * ELEVATION: -7520.0 m * LOCATION: Japan Trench * CAMPAIGN: Exp386 (URI: https://doi.org/10.14379/iodp.proc.386.2023) * BASIS: Kaimei (URI: https://www.jamstec.go.jp/e/about/equipment/ships/kaimei.html) * METHOD/DEVICE: Giant piston corer (GPC) * COMMENT: IGSN: IBCR0386EHU4001. Comment: 20 m
+Comment:	Data was submitted and proofread by Vera Barbara Bender, MARUM - Center for Marine Environmental Sciences (University Bremen) on behalf of ECORD Science Operator Data Management (https://www.ecord.org).
+Parameter(s):	Event label (Event)
+	Sample code/label (Sample label) * METHOD/DEVICE: DSDP/ODP/IODP sample designation (URI: hdl:10013/epic.27914.d001)
+	DEPTH, sediment/rock [m] (Depth sed) * GEOCODE
+	Proposed International Geo Sample Number (Prop IGSN)
+	Quartz [%] (Qz) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±1%
+	Cristobalite [%] (Crs) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover
+	Tridymite [%] (Trd) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover
+	Plagioclase [%] (Pl) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Kalifeldspar [%] (Kfs) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Calcite [%] (Cal) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±1%
+	High magnesium calcite [%] (HMC) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-3%
+	Aragonite [%] (Arg) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-3%
+	Dolomite [%] (Dol) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±1%
+	Ankerite [%] (Ank) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-3%
+	Siderite [%] (Sd) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Siderite/ Magnesite [±2-3%]
+	Carbonates [%] (Carb) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: other carbonate minerals
+	Gypsum [%] (Gp) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Gypsum Anhydrite Jarosites [±2-5%]
+	Apatite [%] (Ap) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Apatite and other Phosphates [±2-5%]
+	Sodium chloride [%] (NaCl) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±1%
+	Montmorillonite [%] (Mnt) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Sum of Montmorillonites & Smectites [±5-10%]
+	Mixed layer clay minerals [%] (Mix layer) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Sum of mixed layer clays [±5-10%]
+	Palygorskite [%] (Plg) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Palygorskite Attapulgite [±5%]
+	Illite [%] (Ill) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Illites [±5-10%]
+	Illite 5Å/10Å Esquevin-index (Ill EI) * METHOD/DEVICE: Calculated
+	Muscovite [%] (Ms) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±5-10%
+	Biotite [%] (Bt) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±5-10%
+	Glauconite [%] (Glt) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±5-10%
+	Kaolinite [%] (Kln) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Chlorite [%] (Chl) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Serpentine [%] (Srp) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Serpentinite Talc chrysotile [% ±2-5%]
+	Zeolite [%] (Zeo) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Pyroxene [%] (Pyrox) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Pyroxenes [±2-5%]
+	Amphibole [%] (Amp) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Amphibols Cordierite Sillimanite Andalusite [±2-5%]
+	Garnet [%] (Grt) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Garnet Olivine Corundum Spinel [±2-5%]
+	Epidote [%] (Ep) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Rutile [%] (Rt) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Rutile Anatas Zircone [±2-5%]
+	Magnetite [%] (Fe3O4) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: ±2-5%
+	Iron oxide, FeO [%] (FeO) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: other Fe-Oxides Fe-Hydroxides, Manganit [±5-10%]
+	Pyrite, FeS2 [%] (Py) * METHOD/DEVICE: X-ray diffractometer, Bruker, D8 Discover * COMMENT: Pyrites, other sulfides [±2-5%]
+	Comment (Comment)
+License:	Creative Commons Attribution 4.0 International (CC-BY-4.0) (URI: https://creativecommons.org/licenses/by/4.0/)
+Status:	Curation Level: Enhanced curation (URI: https://wiki.pangaea.de/wiki/Curation_levels)
+Size:	371 data points
+*/
+Event	Sample label	Depth sed [m]	Prop IGSN	Qz [%]	Crs [%]	Trd [%]	Pl [%]	Kfs [%]	Cal [%]	HMC [%]	Arg [%]	Dol [%]	Ank [%]	Sd [%]	Carb [%]	Gp [%]	Ap [%]	NaCl [%]	Mnt [%]	Mix layer [%]	Plg [%]	Ill [%]	Ill EI	Ms [%]	Bt [%]	Glt [%]	Kln [%]	Chl [%]	Srp [%]	Zeo [%]	Pyrox [%]	Amp [%]	Grt [%]	Ep [%]	Rt [%]	Fe3O4 [%]	FeO [%]	Py [%]	Comment
+386-M0087B	386-M0087B-1H-1_56-58	0.56	IBCR0386EX6KI01	40	0	0	16	0	0	0	0	0	0	0	0	0	0	7	0	0	0	0	0.09	25	0	0.0	0.0	7	0	0	0	2	0	0	0	3	0	0	
+386-M0087B	386-M0087B-1H-3_77-79	2.47	IBCR0386EXQKI01	43	2	0	14	0	0	0	0	0	0	0	0	0	0	4	2	0	0	0	0.18	28	0	0.0	0.0	6	0	0	0	2	0	0	0	0	0	0	
+386-M0087B	386-M0087B-1H-5_90-92	4.61	IBCR0386EXBKI01	43	0	0	18	0	0	0	0	0	0	0	0	0	0	8	0	0	2	0	0.11	17	0	0.0	0.0	10	0	0	0	0	0	0	0	0	0	2	
+386-M0087B	386-M0087B-1H-7_90-92	6.64	IBCR0386EXGKI01	38	0	0	28	0	0	0	0	0	0	0	0	0	0	6	0	0	3	0	0.17	13	0	0.0	0.0	10	0	0	0	3	0	0	0	0	0	0	
+386-M0087B	386-M0087B-1H-9_90-92	8.65	IBCR0386EXLKI01	46	0	0	19	0	0	0	0	0	0	0	0	0	0	6	0	0	3	0	0.13	10	0	0.0	0.0	7	0	0	4	2	0	0	0	0	0	0	
+386-M0087B	386-M0087B-1H-11_90-92	10.66	IBCR0386EXVKI01	47	0	0	16	0	0	0	0	0	0	0	0	0	0	7	0	0	5	0	0.09	12	0	0.0	0.0	9	0	0	0	0	0	0	0	0	0	2	
+386-M0087B	386-M0087B-1H-13_90-92	12.68	IBCR0386EX0LI01	46	0	0	20	0	0	0	0	0	0	0	0	0	0	4	1	0	0	0	0.13	15	0	0.0	0.0	9	0	0	0	5	0	0	0	0	0	0	
+386-M0087B	386-M0087B-1H-15_90-92	14.69	IBCR0386EX5LI01	44	0	0	19	0	0	0	0	0	0	0	0	0	0	9	0	0	0	0	0.14	16	0	0.0	0.0	10	0	0	0	0	0	0	0	0	0	0	sodalite
+386-M0087B	386-M0087B-1H-17_90-92	16.71	IBCR0386EXALI01	40	0	0	19	0	0	0	0	0	0	0	0	0	0	6	0	0	0	0	0.17	23	0	0.0	0.0	10	0	0	0	3	0	0	0	0	0	0	
+386-M0087B	386-M0087B-1H-19_78-80	18.61	IBCR0386EXFLI01	48	0	0	23	0	0	0	0	0	0	0	0	0	0	6	0	0	0	0	0.14	13	0	0.0	0.0	10	0	0	0	5	0	0	0	0	0	0	

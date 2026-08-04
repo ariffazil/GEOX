@@ -1,0 +1,446 @@
+# GEOX_EMC.mcp.yaml — Element→Mineral Conversion MCP Tool Surface
+# =====================================================================
+# Contract v1.0 — derived from emc_inversion.py actual function signatures.
+# This file is the SPECIFICATION. Actual code integration into
+# tools_manifest.yaml and tools_wiring.py follows this contract.
+#
+# FORGED: 2026-08-04 · 333-AGI Δ MIND under Arif F13 SOVEREIGN
+# GROUNDING: emc_inversion.py (772 lines, self-tested), physics_guard.py
+# DOCTRINE: DITEMPA BUKAN DIBERI
+
+contract_version: "1.0"
+contract_date: "2026-08-04"
+engine_path: "geox_core.inference.emc_inversion"
+gate_path: "geox_core.laws.physics_guard.PhysicsGuard"
+mcp_surface_version_target: "2026.07.24-truth-loop-hardening"
+
+# ──────────────────────────────────────────────────────────────────────
+# DOMAIN REGISTRATION
+# ──────────────────────────────────────────────────────────────────────
+domain_registration:
+  new_domain: "earth.geochemistry"
+  parent: "earth"
+  description: "Element-to-mineral stoichiometric inversion with governed confidence gates"
+  authority: "COMPUTE_ONLY — GEOX computes, arifOS judges, Arif decides"
+  requires_888_hold:
+    - "cross-basin coefficient porting"
+    - "out-of-domain mineral log delivery"
+    - "real Sabah calibration well activation"
+
+# ──────────────────────────────────────────────────────────────────────
+# 7 CANONICAL TOOLS
+# ──────────────────────────────────────────────────────────────────────
+tools:
+
+  # ── TOOL 1: emc_fit_model ──────────────────────────────────────────
+  - name: geox_emc_fit_model
+    domain: earth.geochemistry
+    axis: compute
+    lane: evidence
+    face: surface
+    visibility: public
+    description: >
+      Fit EMC (Element-to-Mineral Conversion) coefficients from calibration
+      XRF+XRD paired data. Returns per-mineral R², coefficients, residuals,
+      epistemic labels (FACT/INTERPRET/UNKNOWN), and hierarchy verification.
+
+      R² here is the STOICHIOMETRIC CONDITION NUMBER — not a goodness-of-fit.
+      Low R² = physics degeneracy (shared elements), not model failure.
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      floors:
+        - F2_TRUTH  # R² per mineral, epistemic labels enforced
+        - F9_ANTIHANTU  # No mineral delivered without label
+    parameters:
+      X:
+        type: ndarray
+        shape: [n_samples, n_elements]
+        description: "XRF elemental concentration matrix"
+      Y:
+        type: ndarray
+        shape: [n_samples, n_minerals]
+        description: "XRD mineral fraction matrix"
+      element_names:
+        type: list[str]
+        description: "Element labels in column order"
+      mineral_names:
+        type: list[str]
+        description: "Mineral labels in column order"
+      element_proxies:
+        type: dict[str, list[str]] | None
+        description: "Per-mineral element mapping (default: i-GO canonical)"
+        default: null
+    returns:
+      type: ChemistryResult
+      fields:
+        - minerals: "dict[str, MineralResult] — per-mineral R², coefficients, label"
+        - hierarchy_reproduced: "bool — R² monotonic with stoichiometric privacy"
+        - hierarchy_order: "list[str] — minerals sorted by descending R²"
+
+  # ── TOOL 2: emc_chemistry_lock ─────────────────────────────────────
+  - name: geox_emc_chemistry_lock
+    domain: earth.geochemistry
+    axis: observe
+    lane: governance
+    face: surface
+    visibility: public
+    description: >
+      L1 CHEMISTRY LOCK — F2 TRUTH · F9 ANTIHANTU.
+      
+      Evaluate stoichiometric privacy per element→mineral pair.
+      R² ≥ 0.90 → FACT (near-bijection, e.g. Ca→carbonate).
+      R² ≥ 0.60 → INTERPRET (shared elements, e.g. Si→quartz).
+      R² < 0.60 → UNKNOWN (degenerate, e.g. K+Na→feldspar).
+
+      Minerals labeled UNKNOWN are BLOCKED from downstream petrophysics.
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      floors:
+        - F2_TRUTH
+        - F9_ANTIHANTU
+    parameters:
+      chem_result:
+        type: ChemistryResult
+        description: "Output of geox_emc_fit_model"
+    returns:
+      type: ChemistryResult
+      description: "Same result with epistemic labels applied (gate hook)"
+
+  # ── TOOL 3: emc_physics_lock ───────────────────────────────────────
+  - name: geox_emc_physics_lock
+    domain: earth.geochemistry
+    axis: reason
+    lane: governance
+    face: surface
+    visibility: public
+    description: >
+      L2 PHYSICS LOCK — F8 GENIUS.
+
+      Run constrained inversion (CLS: Σx=1, x≥0) on a single XRF sample.
+      Returns mineral fractions with physical constraint validation:
+      - Negative fraction → VOID (physical impossibility)
+      - Closure residual > 0.01 → SABAR (upgrade to LP recommended)
+      - All constraints satisfied → PASS
+
+      Solvers: CLS (constrained least squares, default) | LP (L1-residual, robust).
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      floors:
+        - F8_GENIUS
+        - F1_AMANAH  # VOID on negative fractions
+    parameters:
+      xrf_sample:
+        type: ndarray
+        shape: [n_elements]
+        description: "Single sample XRF elemental concentrations"
+      chem_result:
+        type: ChemistryResult
+        description: "Output of geox_emc_fit_model"
+      element_names:
+        type: list[str]
+        description: "Element labels"
+      solver:
+        type: str
+        default: "CLS"
+        enum: ["CLS", "LP"]
+        description: "Inversion solver"
+    returns:
+      type: PhysicsResult
+      fields:
+        - fractions: "dict[str, float] — per-mineral fractions (sum≈1)"
+        - closure_sum: "float — Σ fractions"
+        - closure_residual: "float — |Σx − 1|"
+        - negative_flags: "list[str] — minerals with negative fractions"
+        - verdict: "PASS | SABAR | VOID"
+
+  # ── TOOL 4: emc_domain_lock ────────────────────────────────────────
+  - name: geox_emc_domain_lock
+    domain: earth.geochemistry
+    axis: observe
+    lane: governance
+    face: surface
+    visibility: public
+    description: >
+      L3 DOMAIN LOCK — F1 AMANAH → 888_HOLD.
+
+      Compute Mahalanobis distance of sample against calibration XRF cloud.
+      Gate operates on CHEMISTRY-SPACE position, NOT geographic distance.
+      (Fusaea/Sloanea insight: equal offset, 4× different degradation.)
+
+      D²_M < 3.0 → SEAL (in-domain, proceed).
+      3.0 ≤ D²_M < 10.0 → CAUTION (marginal, flag outputs).
+      D²_M ≥ 10.0 → HOLD (out-of-domain, request recalibration well).
+
+      Sabah rule enforced: non-Suriname chemistry fires HOLD.
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      requires_888_hold: true  # Domain HOLD must route through arif_judge
+      floors:
+        - F1_AMANAH
+        - F13_SOVEREIGN
+    parameters:
+      xrf_sample:
+        type: ndarray
+        shape: [n_elements]
+        description: "Single sample XRF"
+      X_calibration:
+        type: ndarray
+        shape: [n_samples, n_elements]
+        description: "Calibration XRF cloud"
+    returns:
+      type: DomainResult
+      fields:
+        - mahalanobis_d2: "float — Mahalanobis distance squared"
+        - in_domain: "bool — D² < 3.0"
+        - verdict: "SEAL | CAUTION | HOLD"
+        - calibration_n_samples: "int"
+        - calibration_n_elements: "int"
+
+  # ── TOOL 5: emc_verdict ────────────────────────────────────────────
+  - name: geox_emc_verdict
+    domain: earth.geochemistry
+    axis: reason
+    lane: governance
+    face: surface
+    visibility: public
+    description: >
+      FULL TRIPLE-LOCK ROLL-UP.
+
+      Weakest-verdict cascade: HOLD > VOID > SABAR > UNKNOWN > PARTIAL > SEAL.
+      Any lock failure cascades to the most severe verdict.
+
+      Returns full evidence card with per-mineral R², physics closure check,
+      domain Mahalanobis D², and list of blocked minerals.
+
+      No untagged output (F9 ANTI-HANTU enforced).
+      Emits evidence_card suitable for APEX envelope routing.
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      requires_888_hold: true
+      floors:
+        - F1_AMANAH
+        - F2_TRUTH
+        - F8_GENIUS
+        - F9_ANTIHANTU
+        - F13_SOVEREIGN
+    parameters:
+      chemistry:
+        type: ChemistryResult
+        description: "Output of geox_emc_chemistry_lock"
+      physics:
+        type: PhysicsResult
+        description: "Output of geox_emc_physics_lock"
+      domain:
+        type: DomainResult
+        description: "Output of geox_emc_domain_lock"
+    returns:
+      type: EMCVerdict
+      fields:
+        - roll_up: "SEAL | PARTIAL | UNKNOWN | SABAR | VOID | HOLD"
+        - evidence_card: "dict — full structured evidence"
+        - minerals_blocked: "list[str] — minerals tagged UNKNOWN or VOID"
+
+  # ── TOOL 6: emc_mineral_log ────────────────────────────────────────
+  - name: geox_emc_mineral_log
+    domain: earth.geochemistry
+    axis: compute
+    lane: evidence
+    face: surface
+    visibility: public
+    description: >
+      Generate continuous mineral log from XRF depth series.
+      
+      Runs Triple-Lock on every depth point: fits model, inverts via CLS,
+      checks domain per sample. Returns mineral fractions vs depth with
+      per-depth domain flags and blocked mineral masks.
+
+      Out-of-domain depths are flagged but NOT blocked — domain HOLD is
+      per-inversion, not per-depth. The caller decides whether to accept
+      marginal depths with CAUTION tags.
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+      floors:
+        - F2_TRUTH
+        - F8_GENIUS
+        - F1_AMANAH
+    parameters:
+      X_depth_series:
+        type: ndarray
+        shape: [n_depths, n_elements]
+        description: "XRF elemental concentrations at each depth"
+      depth:
+        type: ndarray
+        shape: [n_depths]
+        description: "Depth values (m MDDF)"
+      X_calibration:
+        type: ndarray
+        shape: [n_samples, n_elements]
+        description: "Calibration XRF cloud for domain lock"
+      element_names:
+        type: list[str]
+      mineral_names:
+        type: list[str]
+      element_proxies:
+        type: dict[str, list[str]] | None
+        default: null
+    returns:
+      type: dict
+      fields:
+        - mineral_log: "dict[str, ndarray] — per-mineral fraction vs depth"
+        - per_depth_verdicts: "list[dict] — domain verdict per depth"
+        - blocked_mask: "dict[str, ndarray] — True where mineral is UNKNOWN-grade"
+        - summary: "EMCVerdict — full roll-up of the worst depth"
+
+  # ── TOOL 7: emc_build_library ──────────────────────────────────────
+  - name: geox_emc_build_library
+    domain: earth.geochemistry
+    axis: observe
+    lane: evidence
+    face: surface
+    visibility: public
+    description: >
+      Build or update mineral endpoint library.
+      
+      Default library: calcite, quartz, illite, kaolinite, feldspar_K,
+      feldspar_Na, pyrite, zeolite, anorthite.
+      
+      Extended library for Sabah: adds Crocker/Meligan clay species,
+      volcanic endpoints (zeolite, anorthite, Ca-plagioclase).
+    input_schema_source: callable
+    annotations:
+      read_only: true
+      destructive: false
+      idempotent: true
+    ui: null
+    plugin:
+      exposed: true
+    governance:
+      action_class: ANALYZE
+      mutation: false
+      physics_guard_required: true
+    parameters:
+      basin:
+        type: str
+        default: "default"
+        enum: ["default", "sabah", "custom"]
+        description: "Which mineral library to use"
+      custom_endpoints:
+        type: dict[str, dict[str, float]] | None
+        default: null
+        description: "Custom mineral endpoint stoichiometry"
+    returns:
+      type: dict
+      fields:
+        - library: "dict[str, dict[str, float]] — mineral → element stoichiometry"
+        - element_proxies: "dict[str, list[str]] — mineral → proxy elements"
+        - basin: "str — which library was loaded"
+
+# ──────────────────────────────────────────────────────────────────────
+# INTEGRATION CHECKLIST — what needs to happen in code
+# ──────────────────────────────────────────────────────────────────────
+integration:
+  manifest:
+    - "Add 7 tools above to tools_manifest.yaml (append)"
+    - "Domain 'earth.geochemistry' registered"
+  registry:
+    - "CANONICAL_PUBLIC_TOOLS auto-discovers from manifest — no manual edit needed"
+    - "Verify: public_tool_names() includes all 7 geox_emc_* tools"
+  wiring:
+    - "Add wiring in tools_wiring.py: geox_emc_fit_model → emc_inversion.fit_linear_emc"
+    - "Wiring delegates to physics_guard.py methods where applicable"
+    - "Each tool wraps engine call + returns structured dict"
+  surface:
+    - "Update mcp_surface.yaml: canonical_tools += geox_emc_*"
+    - "Update authority.owns: add 'geochemistry_inversion'"
+  governance:
+    - "All 7 tools: action_class=ANALYZE, mutation=false, physics_guard_required=true"
+    - "emc_domain_lock + emc_verdict: requires_888_hold=true → routes through arif_judge"
+  test:
+    - "emc_inversion.py self-test passes (ALL ASSERTIONS PASS ✅)"
+    - "physics_guard.py import smoke test passes (ALL GATES WIRED ✅)"
+    - "Run full roundtrip: fit → lock → invert → domain → verdict"
+  visual:
+    - "emc_plots.py renders Zen All panel (GEOX_EMC_zen_all.png, 732 KB ✅)"
+
+# ──────────────────────────────────────────────────────────────────────
+# HONEST DEBTS (unchanged from spec)
+# ──────────────────────────────────────────────────────────────────────
+honest_debts:
+  - "Synthetic data only — real i-GO / Sabah XRF+XRD pairs needed for validation"
+  - "CLS closure via heavy-weight augmentation is exact in test; production-grade lsq_linear with explicit bounds preferred"
+  - "Not yet through APEX envelope — verdict routing to 10-gate path queued"
+  - "Sabah calibration plan S1-S6 specified but not yet actioned"
+  - "MCP wiring into tools_manifest.yaml and tools_wiring.py pending (this YAML is the spec)"
+
+# ──────────────────────────────────────────────────────────────────────
+# FLOOR ALIGNMENT
+# ──────────────────────────────────────────────────────────────────────
+floor_alignment:
+  F1_AMANAH: "Domain Lock fires HOLD on out-of-calibration samples. No silent extrapolation across basins."
+  F2_TRUTH: "R² per mineral is the stoichiometric condition number — visible, not hidden. Low-confidence minerals labeled UNKNOWN."
+  F3_TRI_WITNESS: "XRD calibration requires physical sample (Earth) + model (AI) + interpreter (Human)."
+  F4_CLARITY: "Per-mineral verdict replaces single aggregate R². Evidence card structured, not prose."
+  F7_HUMILITY: "Feldspar and pyrite default to UNKNOWN. Confidence cap = 0.90. Ω₀ = 0.05."
+  F8_GENIUS: "Simplest inversion that works — CLS where invertible, LP where degenerate."
+  F9_ANTIHANTU: "No mineral log delivered without per-mineral epistemic label. Anti-hallucination by construction."
+  F13_SOVEREIGN: "888_HOLD on out-of-domain. Final verdict = Arif. No auto-seal."
