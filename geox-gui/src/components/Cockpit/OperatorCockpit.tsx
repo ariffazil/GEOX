@@ -375,6 +375,7 @@ export const OperatorCockpit: React.FC = () => {
             );
           })}
           <div className="geox-nav-footer">
+            <a href="https://arif-fazil.com" target="_blank" rel="noreferrer"><Globe2 /> arif-fazil.com <ExternalLink /></a>
             <a href="/apps/" target="_blank" rel="noreferrer"><Box /> MCP App resources <ExternalLink /></a>
             <span>F2 TRUTH · F13 SOVEREIGN</span>
           </div>
