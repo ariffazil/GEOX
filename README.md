@@ -1,180 +1,111 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-08-02T15:30:00Z
-valid_until: 2026-09-02
-federation_release: v2026.08.02
-live_commit: 1c095c21
+last_verified: 2026-08-04T20:23:33Z
+federation_release: v2026.08.04
+live_commit: pending
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 mcp_apps_registered: 18
 chatgpt_metadata: widgetCSP + widgetDescription + domain — VERIFIED
-branches_collapsed: PR #140 #141 #142 → unified main
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
 -->
 
-# 🌍 GEOX — Evidence-First Subsurface Coprocessor & Geological Intelligence Engine
+# 🌍 GEOX — Earth Intelligence Organ
 
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions)
-[![GEOX MCP](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
-[![Federation](https://img.shields.io/badge/Federation-v2026.08.01-0a7b83)](https://arifos.arif-fazil.com)
+[![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
+[![Federation](https://img.shields.io/badge/Federation-v2026.08.04-0a7b83)](https://arifos.arif-fazil.com)
 [![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](./LICENSE)
 
-**GEOX** is an enterprise-grade geological intelligence and subsurface coprocessor designed for modern E&P digital transformation, energy transition workflows, and automated subsurface auditing. Powered by physics-governed computation engines and strict provenance tracking, GEOX bridges raw geoscientific observation with executive capital decision-making.
+> **GEOX is the earth witness. It computes geological evidence. It never adjudicates.**
+> **DITEMPA BUKAN DIBERI — Truth must cool before it rules.**
+
+**GEOX** is the earth intelligence organ of the arifOS Federation. It computes seismic attributes, well-log petrophysics, basin models, structural analysis, and prospect volumetrics — all under strict epistemic provenance. It bridges raw geoscientific observation to capital decision-making with cryptographic audit trails.
 
 ---
 
-## Executive Overview
+## 📐 Epistemic Layering
 
-Modern subsurface evaluation requires processing heterogeneous data (well logs, SEG-Y seismic, biostratigraphy, geomechanics) while maintaining an auditable lineage from observation to commercial decision. GEOX introduces **Epistemic Layering**, enforcing explicit segregation between empirical measurement and interpretive inference:
+GEOX enforces explicit segregation between measurement and interpretation:
 
-| Layer | Classification | Enterprise Meaning | Domain Examples |
-|:---:|:---:|:---|:---|
-| **OBS** | **Observed** | Directly measured sensor & physical data | Wireline logs (LAS), SEG-Y trace amplitudes, core measurements |
-| **DER** | **Derived** | Deterministic physical & mathematical computations | Effective porosity ($\phi$), Acoustic Impedance ($Z$), Water Saturation ($S_w$) |
-| **INT** | **Interpreted** | Synthesized geological evaluations & frameworks | Horizons, fault polygons, reservoir-seal-charge frameworks |
-| **SPEC** | **Speculated** | Unvalidated operational & fluid assumptions | Migration pathways, fluid phase boundaries, compartmentalization |
-
-### Key Enterprise Value Drivers
-
-1. **Falsification-First Subsurface Analytics:** Rather than confirming biased interpretation models, GEOX subjects all claims to rigorous physical stress-testing (falsification), reducing exploration risk and dry-hole capital wastage.
-2. **Auditability & Provenance:** Every computed attribute, horizon, or volumetric estimate generates a cryptographically sealed receipt in **VAULT999**, providing immutable audit trails for regulatory compliance and partner reviews.
-3. **Vendor-Neutral Integration:** Operates seamlessly alongside incumbent subsurface platforms (Petrel, DecisionSpace, PaleoScan) to validate interpretations and pipe results directly into financial decision engines.
+| Layer | Classification | Meaning | Examples |
+|:---:|:---|:---|:---|
+| **OBS** | Observed | Direct sensor measurement | LAS wireline logs, SEG-Y trace amplitudes, core data |
+| **DER** | Derived | Deterministic physical computation | Effective porosity (φ), Acoustic Impedance (Z), Sw |
+| **INT** | Interpreted | Synthesized geological evaluation | Horizons, fault polygons, reservoir-seal-charge |
+| **SPEC** | Speculated | Unvalidated assumption | Migration pathways, fluid boundaries, compartmentalization |
 
 ---
 
-## System Architecture
+## 🧪 Falsification-First Architecture
 
 ```mermaid
 graph TD
-    subgraph Data Layer [Data Ingestion & Support]
-        LAS[LAS 2.0/3.0 Well Logs]
-        SEGY[SEG-Y 2D/3D Seismic]
-        GEO[Geomechanical & Core Data]
-    end
-
-    subgraph Core Engine [GEOX Physics Engine]
-        OBS[OBS: Sensor Provenance]
-        DER[DER: Petrophysics & Seismic Computation]
-        INT[INT: Structural & Stratigraphic Synthesis]
-    end
-
-    subgraph Governance & Audit [arifOS Kernel Governance]
-        FALSIFY{Falsification Engine<br/>Kill Matrix K001-K007}
-        VAULT[(VAULT999<br/>Immutable Ledger)]
-        HOLD[888_HOLD<br/>Sovereign Human Review]
-    end
-
-    subgraph Output Layer [Enterprise Delivery]
-        MCP[MCP Server :8081]
-        WEALTH[WEALTH Capital Engine]
-        UI[AAA Cockpit & 4-View Canvas]
-    end
-
-    LAS --> OBS
-    SEGY --> OBS
-    GEO --> OBS
-    OBS --> DER
-    DER --> INT
-    INT --> FALSIFY
-    FALSIFY -->|PASS| VAULT
-    FALSIFY -->|REQUIRES RATIFICATION| HOLD
-    VAULT --> MCP
-    MCP --> WEALTH
-    MCP --> UI
+    LAS[LAS Well Logs] --> OBS[OBS: Sensor Provenance]
+    SEGY[SEG-Y Seismic] --> OBS
+    OBS --> DER[DER: Petrophysics & Seismic]
+    DER --> INT[INT: Structural Synthesis]
+    INT --> FALSIFY{Falsification Engine<br/>Kill Matrix K001-K007}
+    FALSIFY -->|PASS| VAULT[(VAULT999)]
+    FALSIFY -->|HOLD| HOLD[888_HOLD]
+    VAULT --> MCP[MCP Server :8081]
+    MCP --> WEALTH[WEALTH Capital Engine]
+    MCP --> UI[AAA Cockpit]
 ```
 
 ---
 
-## Core Capabilities
+## 🛠️ Core Capabilities (33 Tools)
 
-GEOX delivers 33 canonical, high-performance tools accessible via standard Model Context Protocol (MCP) and REST endpoints:
+| Domain | Capability |
+|--------|-----------|
+| **Well Logs** | LAS ingestion, Archie/Simandoux Sw, density-neutron porosity, net pay |
+| **Seismic** | SEG-Y headers, synthetic seismograms, AVO analysis, spectral decomposition |
+| **Structural** | 6-point Malay Basin stress battery, K-DIP normal vectors, fault displacement |
+| **Basin Modeling** | Backstripping, thermal maturity, subsidence history |
+| **Geomechanics** | Elastic moduli, stress polygon, pore pressure prediction |
+| **Prospect** | STOIIP/GIIP volumetrics, POS, seamless WEALTH bridge for EMV |
 
-- **Well Log & Petrophysical Analytics (`OBS` / `DER`):** Automated LAS 2.0/3.0 ingestion, Archie & Simandoux water saturation, density-neutron crossplot porosity, and net-pay determination.
-- **Seismic Processing & Attribute Extraction (`OBS` / `DER`):** SEG-Y header inspection, synthetic seismogram generation (Ricker/Ormsby wavelets), AVO gradient analysis, RMS sweetness, and spectral decomposition.
-- **Structural & Basin Modeling (`DER`):** 6-point Malay Basin structural stress battery, K-DIP normal vector estimation, full-trace K-THROW fault displacement analysis, backstripping, and thermal maturity history.
-- **Geomechanics & Pore Pressure (`DER`):** Elastic moduli calculation, stress polygon estimation, and pore pressure prediction.
-- **Capital & Risk Routing (`INT`):** Automated Volumetrics (STOIIP/GIIP), Probability of Success (POS), and seamless bridging to the **WEALTH** organ for expected monetary value (EMV) analysis.
+**Plus 18 MCP App widgets:** WellDesk · Seismic Vision · Earth Volume · Basin Explorer · Prospect Studio · Risk Console · and more — render inline in ChatGPT, Claude, VS Code.
 
 ---
 
-## Enterprise Deployment & Quick Start
-
-### Deployment Topology
-
-GEOX is deployed as a bare-metal containerized microservice or systemd daemon operating on port **8081**, exposing an MCP-compliant endpoint:
+## ⚡ Production Operations
 
 ```
-Public Endpoint: https://geox.arif-fazil.com/mcp
-Local Daemon:    http://127.0.0.1:8081
+Public MCP:    https://geox.arif-fazil.com/mcp
+Local Daemon:  http://127.0.0.1:8081
 ```
-
-### Production Setup
 
 ```bash
-# 1. Clone repository
 git clone https://github.com/ariffazil/GEOX.git /opt/geox/app
-cd /opt/geox/app
-
-# 2. Setup environment & dependencies (Python 3.11+)
-uv sync --frozen
-
-# 3. Execute test suite (Unit & Structural Battery)
+cd /opt/geox/app && uv sync --frozen
 PYTHONPATH=src pytest tests/ -q --tb=short
-
-# 4. Deploy service via systemd
 systemctl restart geox-mcp
-```
-
-### Health Verification
-
-To verify production operational status and active tool availability:
-
-```bash
 curl -s http://127.0.0.1:8081/health | jq .
 ```
 
-*Expected output:* `{"status": "healthy", "tools_loaded": 33, ...}`
-
-### MCP Apps UI — 18 Interactive Widgets
-
-GEOX ships 18 SEP-1865 MCP App widgets that render directly inside ChatGPT, Claude, VS Code Copilot, and other MCP hosts. No tab-switching needed — visualizations appear inline in the conversation.
-
-```bash
-curl -s https://geox.arif-fazil.com/mcp | jq '.tools[]._meta.ui.resourceUri'
-```
-
-**Widget catalog:** WellDesk (1D logs) · Seismic Vision (2D/3D) · Earth Volume (Cesium globe) · Basin Explorer · Earth Map · Prospect Studio · Risk Console · Judge Console · GravMag Studio · Visual Hub · GeoProbe · Analog Digitizer · Well Witness · Workspace · Skills Catalog
-
-**ChatGPT-ready**: All 18 widgets include `openai/widgetCSP` (redirect_domains), `openai/widgetDescription`, and `_meta.ui.domain` — verified live 2026-08-02.
-
 ---
 
-## 🔗 Federation Architecture & Navigation
+## 🏛️ Federation Navigation
 
-GEOX operates as an Earth Intelligence organ within the **arifOS Federation**. Every organ maintains distinct boundaries and capabilities:
-
-| Organ | Domain Role | Port | Repo | Live MCP | Health Witness | Machine Spec |
+| Organ | Role | Port | Repo | MCP | Health | LLMs |
 |:---|:---|:---:|:---|:---|:---|:---|
-| **arifOS** | Constitutional Kernel & Judge | 8088 | [repo](https://github.com/ariffazil/arifos) | [mcp](https://mcp.arif-fazil.com/mcp) | [health](https://arifos.arif-fazil.com/health) | [llms.txt](https://arifos.arif-fazil.com/llms.txt) |
-| **A-FORGE** | Governed Execution Engine | 7071 / 7072 | [repo](https://github.com/ariffazil/A-FORGE) | [mcp](https://forge.arif-fazil.com/mcp) | [health](https://forge.arif-fazil.com/health) | [llms.txt](https://forge.arif-fazil.com/llms.txt) |
-| **AAA** | Institution, Control Plane & A2A | 3001 | [repo](https://github.com/ariffazil/AAA) | — | [health](https://aaa.arif-fazil.com/health) | [llms.txt](https://aaa.arif-fazil.com/llms.txt) |
-| **GEOX** | Earth Intelligence (Subsurface) | 8081 | [repo](https://github.com/ariffazil/GEOX) | [mcp](https://geox.arif-fazil.com/mcp) | [health](https://geox.arif-fazil.com/health) | [llms.txt](https://geox.arif-fazil.com/llms.txt) |
-| **WEALTH** | Capital Intelligence (Compute) | 18082 | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | [llms.txt](https://wealth.arif-fazil.com/llms.txt) |
-| **WELL** | Vitality & Readiness Guard | 18083 | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
-| **HERMES** | Multi-Modal Bridge & Telegram Relay | 8644 | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
-
-**Public Domain:** [arif-fazil.com](https://arif-fazil.com) · **Federation Root:** [arifos.arif-fazil.com](https://arifos.arif-fazil.com)
-
----
-
-## Enterprise Licensing & Governance
-
-- **Licensing:** Business Source License 1.1 (**BSL-1.1**), converting to open-source **Apache 2.0** on **2029-06-29** (see [LICENSE](./LICENSE)).
-- **Governance:** Operating under F13 Sovereign Human Veto. Decisions requiring human oversight trigger `888_HOLD` status until ratified by authorized asset team members.
+| **⚖️ arifOS** | Constitutional Kernel — judges, seals | 8088 | [repo](https://github.com/ariffazil/arifos) | [mcp](https://mcp.arif-fazil.com/mcp) | [health](https://arifos.arif-fazil.com/health) | [llms.txt](https://arifos.arif-fazil.com/llms.txt) |
+| **⚒️ A-FORGE** | Execution Engine — builds, deploys | 7071/72 | [repo](https://github.com/ariffazil/A-FORGE) | [mcp](https://forge.arif-fazil.com/mcp) | [health](https://forge.arif-fazil.com/health) | [llms.txt](https://forge.arif-fazil.com/llms.txt) |
+| **🏛️ AAA** | Control Plane — A2A gateway, cockpit | 3001 | [repo](https://github.com/ariffazil/AAA) | — | [health](https://aaa.arif-fazil.com/health) | [llms.txt](https://aaa.arif-fazil.com/llms.txt) |
+| **🌍 GEOX** | Earth Intelligence — seismic, wells | 8081 | [repo](https://github.com/ariffazil/GEOX) | [mcp](https://geox.arif-fazil.com/mcp) | [health](https://geox.arif-fazil.com/health) | [llms.txt](https://geox.arif-fazil.com/llms.txt) |
+| **💰 WEALTH** | Capital Intelligence — NPV, risk | 18082 | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | [llms.txt](https://wealth.arif-fazil.com/llms.txt) |
+| **🫀 WELL** | Vitality Guard — human readiness | 18083 | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
+| **🔮 HERMES** | Multi-Modal Bridge — Telegram relay | 8644 | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
+| **🌐 arif-fazil.com** | Public Web Surface — one domain | 443 | [repo](https://github.com/ariffazil/arif-fazil.com) | — | [verify](https://arif-fazil.com/999/verify) | — |
 
 ---
 
-*Maintained under F13 SOVEREIGN. Built on Marmousi, validated on Volve.*  
-*DITEMPA BUKAN DIBERI — truth must cool before it rules.*
+## 📜 License & Sovereignty
 
+- **License:** Business Source License 1.1 (**BSL-1.1**), converting to Apache 2.0 on 2029-06-29
+- **Sovereign:** **Muhammad Arif bin Fazil** (F13 SOVEREIGN)
 
+> *DITEMPA BUKAN DIBERI — Forged, Not Given.*  
+> *Maintained under F13. Built on Marmousi, validated on Volve. 999 SEAL ALIVE.*
