@@ -287,9 +287,7 @@ def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
         orbital_eccentricity=ecc,
         orbital_obliquity_deg=obliquity,
         biotic_realm=biotic,
-        mass_extinction_events_in_window=_mass_extinctions_in_interval(
-            age_res.top_ma, age_res.base_ma
-        ),
+        mass_extinction_events_in_window=_mass_extinctions_in_interval(age_res.top_ma, age_res.base_ma),
         ics_chart_version=age_res.ics_chart_version,
         ics_chart_hash=None,
         n_variables_with_real_data=n_real,
@@ -313,10 +311,15 @@ def assemble_earth_state_vector(age_res: AgeResolution) -> EarthStateVector:
 def _build_governance_footer(
     vector: EarthStateVector,
     age_res: AgeResolution,
+    session_id: str | None = None,
 ) -> GovernanceFooter:
     """Build the mandatory F11 AUDIT governance footer.
 
     Lives in CORE (not adapter) so no caller can emit ungoverned output.
+
+    H4 GATE (KUTIP SAMPAH 2026-08-05): Anonymous sessions cannot receive SEAL
+    verdict. SEAL requires authenticated identity — a seal without a witness
+    is a forgery in waiting.
     """
     # Find lowest-confidence field
     all_vars_dict = {
@@ -356,7 +359,9 @@ def _build_governance_footer(
     elif vector.overall_confidence >= 0.80:
         risk = "LOW"
         human_review = False
-        verdict = "SEAL"
+        # H4: SEAL verdict requires authenticated identity
+        is_anonymous = not session_id or session_id == "anonymous" or not session_id.strip()
+        verdict = "PARTIAL" if is_anonymous else "SEAL"
     elif vector.overall_confidence >= 0.50:
         risk = "LOW"
         human_review = False
@@ -386,10 +391,14 @@ def assemble_envelope(
     input_query: dict,
     vector: EarthStateVector,
     pending_datasets: list[dict] | None = None,
+    session_id: str | None = None,
 ) -> EarthStateEnvelope:
     """Wrap an Earth State Vector into the public MCP envelope.
 
     Includes the mandatory governance footer (F11 AUDIT).
+
+    H4 (KUTIP SAMPAH 2026-08-05): VAULT999-style seals are withheld for
+    anonymous sessions. Only authenticated callers receive a computed seal.
     """
     # Determine the pending datasets from the vector
     pending = []
@@ -496,8 +505,8 @@ def assemble_envelope(
                 }
             )
 
-    # Build governance footer
-    governance = _build_governance_footer(vector, age_res)
+    # Build governance footer (H4: session_id gates SEAL verdict)
+    governance = _build_governance_footer(vector, age_res, session_id=session_id)
 
     # Epistemic summary — single source of truth for variable counts.
     # The vector model already records `n_variables_with_real_data` (line 281) using
@@ -544,8 +553,13 @@ def assemble_envelope(
     )
 
     # Compute seal from envelope content (F11 AUDIT)
+    # H4 GATE (KUTIP SAMPAH 2026-08-05): only authenticated sessions get a seal
     env_dict = env.model_dump()
-    governance.seal = _compute_seal(env_dict, age_res.ics_chart_version)
+    is_anonymous = not session_id or session_id == "anonymous" or not session_id.strip()
+    if not is_anonymous:
+        governance.seal = _compute_seal(env_dict, age_res.ics_chart_version)
+    else:
+        governance.seal = "VAULT999::WITHHELD::ANONYMOUS_SESSION"
     env.governance = governance.model_dump()
 
     return env

@@ -1004,8 +1004,15 @@ def register_tools_on(mcp):
             or not attestation.get("ok")
             or attestation.get("public_count") != len(canonical_set)
         )
+        # FAIL-CLOSED REGISTRY INVARIANT (KUTIP SAMPAH 2026-08-04):
+        # The organ CANNOT report healthy while manifests diverge or
+        # public_count exceeds public_count_target.
+        public_count_target = attestation.get("public_count_target")
+        over_target = public_count_target is not None and len(canonical_set) > public_count_target
+        status = "degraded" if (has_drift or over_target) else "healthy"
+
         return {
-            "status": "healthy",
+            "status": status,
             "organ": "GEOX",
             "surface_version": attestation.get("surface_version") or "geox-zen15-2026.07.24",
             "surface_name": attestation.get("surface_name") or "ZEN-15",
@@ -1017,8 +1024,7 @@ def register_tools_on(mcp):
             "registered_tools": len(all_manifest),
             "callable_tools": len(canonical_list),
             "public_count": len(canonical_set),
-            "public_count_target": attestation.get("public_count_target")
-            or len(canonical_set),
+            "public_count_target": attestation.get("public_count_target") or len(canonical_set),
             "phantom_tools": phantom_list,
             "internal_tools": internal_list,
             "plugin_export_public": sorted(plugin_export_public),
