@@ -715,6 +715,7 @@ class GeoxGovernanceMiddleware(Middleware):
                 fix = err_data.get("fix", "")
                 # DEBUG: log what we got
                 import sys as _dbg
+
                 print(f"DEBUG_PARTS: err_data={err_data}", file=open("/tmp/geox-debug-parts.log", "a"))
                 print(f"DEBUG_PARTS: reason={reason!r} len={len(reason)}", file=open("/tmp/geox-debug-parts.log", "a"))
                 parts = [s for s in [guard, f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
@@ -769,10 +770,24 @@ class GeoxGovernanceMiddleware(Middleware):
         )
         try:
             result = await call_next(context)
-            # G8 (2026-08-04): FastMCP call_next returns ToolResult.
-            # NEVER demote ToolResult → dict here — that strips to_mcp_result
-            # and yields: 'dict' object has no attribute 'to_mcp_result'.
-            # Downstream steps must coerce for .get() then write back.
+            # ═══ W-01 FIX (2026-08-05) ═══════════════════════════════════
+            # FastMCP call_next returns ToolResult. Downstream processors
+            # (evidence envelope, well conformance, envelope normalizer,
+            # stamp_and_gate) operate on dicts. We coerce → process → re-wrap
+            # rather than return a bare dict (which breaks the MCP wire path:
+            # 'dict' object has no attribute 'to_mcp_result').
+            # ══════════════════════════════════════════════════════════════
+            from geox_mcp.evidence_postcondition import (
+                check_evidence_postcondition,
+                coerce_tool_result_to_dict,
+                apply_domain_dict_to_result,
+            )
+
+            _is_tool_result = not isinstance(result, dict) and hasattr(result, "structured_content")
+            if _is_tool_result:
+                _original = result
+                result = coerce_tool_result_to_dict(result)
+
             # P0-6: Inject 5-layer evidence envelope into response
             result = self._inject_evidence_envelope(result, tool_name, _governance_envelope)
             # P3 CONFORMANCE (2026-07-26): Inject canonical ClaimState/WitnessType/OrganType
@@ -829,10 +844,6 @@ class GeoxGovernanceMiddleware(Middleware):
             # SUCCESS with null evidence = FAILURE (commit 80fc80fd pattern).
             # Coerce ToolResult inside check_evidence_postcondition; write back.
             # G8: silent swallow is forbidden — fix input or propagate ERROR.
-            from geox_mcp.evidence_postcondition import (
-                check_evidence_postcondition,
-                ensure_fastmcp_tool_result,
-            )
 
             try:
                 result = check_evidence_postcondition(tool_name, result)
@@ -847,8 +858,10 @@ class GeoxGovernanceMiddleware(Middleware):
                     f"{type(_ev_exc).__name__}: {_ev_exc} · "
                     f"fix: evidence postcondition crashed — not a silent SUCCESS (G8)."
                 ) from _ev_exc
-            # Wire-type guarantee: FastMCP requires to_mcp_result()
-            result = ensure_fastmcp_tool_result(result)
+
+            # ═══ W-01 FIX: re-wrap in ToolResult for FastMCP wire path ═══
+            if _is_tool_result:
+                result = apply_domain_dict_to_result(_original, result)
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
