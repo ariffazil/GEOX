@@ -260,6 +260,38 @@ FALSIFICATION_FILTERS: list[dict[str, Any]] = [
         "patterns": [],
         "handler": "_check_gradient_basin_type",
     },
+    {
+        # Session distillation 2026-08-04 (Rotan/NSPW EUREKA): pressure connectivity
+        # is a present-day snapshot; hydrocarbon migration is a multi-Ma history.
+        # Conflating the two produces overconfident charge claims (Copilot audit caught 5).
+        "id": "K009",
+        "name": "Pressure Snapshot ≠ Migration History",
+        "description": (
+            "Hard rule: present-day pressure connectivity is a snapshot; "
+            "hydrocarbon migration is a history. Claims that equate connected "
+            "pressure compartments with proven migration pathways must be "
+            "demoted unless they carry independent charge evidence (isotopes, "
+            "FIS, biomarkers, timed fill indicators)."
+        ),
+        "patterns": [
+            (
+                r"(?:pressure\s+connect|connected\s+pressure|pressure\s+communicat|"
+                r"hydrostatic\s+connect|same\s+pressure\s+regime)",
+                "_check_pressure_vs_migration",
+            ),
+            (
+                r"(?:therefore|thus|hence|proves?|implies?|confirms?).{0,40}"
+                r"(?:migrat|charge|fill|kitchen|source\s*rock)",
+                "_check_pressure_vs_migration",
+            ),
+            (
+                r"(?:migrat|charge|fill).{0,40}"
+                r"(?:because|due\s+to|from).{0,40}pressure",
+                "_check_pressure_vs_migration",
+            ),
+        ],
+        "handler": "_check_pressure_vs_migration_handler",
+    },
 ]
 
 
@@ -548,6 +580,89 @@ def _check_gradient_basin_type(match: re.Match | None, claim: str) -> dict[str, 
         findings.append({"severity": "INFO", "reason": "No gradient value detected in claim"})
 
     return {"filter": "K008b", "findings": findings}
+
+
+# ── K009: Pressure Snapshot ≠ Migration History (2026-08-04 distillation) ──
+
+
+def _check_pressure_vs_migration(match: re.Match, claim: str) -> dict[str, Any]:
+    """K009: Flag claims that treat present-day pressure connectivity as migration proof."""
+    text = (claim or "").lower()
+    findings: list[dict[str, Any]] = []
+
+    pressure_lang = any(
+        k in text
+        for k in (
+            "pressure connect",
+            "connected pressure",
+            "pressure communicat",
+            "same pressure",
+            "hydrostatic connect",
+            "pressure continuity",
+            "pressure continuity",
+            "pressure compartment",
+        )
+    )
+    migration_lang = any(
+        k in text for k in ("migrat", "charge", "fill", "kitchen", "source rock", "source-rock")
+    )
+    equates = any(
+        k in text
+        for k in (
+            "therefore",
+            "thus",
+            "hence",
+            "proves",
+            "prove",
+            "implies",
+            "imply",
+            "confirms",
+            "confirm",
+            "because of pressure",
+            "due to pressure",
+            "from pressure",
+        )
+    )
+
+    if pressure_lang and migration_lang and equates:
+        findings.append(
+            {
+                "severity": "HIGH",
+                "reason": (
+                    "K009: Claim equates present-day pressure connectivity with hydrocarbon "
+                    "migration/charge history. Pressure is a snapshot; migration is multi-Ma. "
+                    "Require independent charge evidence (isotopes/FIS/biomarkers/timed fill) "
+                    "or demote claim to INT/SPEC. epistemic→PROVISIONAL."
+                ),
+                "rule": "PRESSURE_SNAPSHOT_NE_MIGRATION_HISTORY",
+                "epistemic_action": "DOWNGRADE_TO_INT_OR_SPEC",
+            }
+        )
+    elif pressure_lang and migration_lang:
+        findings.append(
+            {
+                "severity": "INFO",
+                "reason": (
+                    "K009 advisory: claim mentions both pressure connectivity and migration. "
+                    "Keep them ontologically separate unless independent charge evidence is cited."
+                ),
+                "rule": "PRESSURE_SNAPSHOT_NE_MIGRATION_HISTORY",
+            }
+        )
+    else:
+        findings.append(
+            {
+                "severity": "PASS",
+                "reason": "No pressure-connectivity→migration conflation detected",
+            }
+        )
+
+    return {"filter": "K009", "findings": findings}
+
+
+def _check_pressure_vs_migration_handler(match: re.Match | None, claim: str) -> dict[str, Any]:
+    """Handler entry for K009 when no pattern match (full-text scan)."""
+    return _check_pressure_vs_migration(match, claim)  # type: ignore[arg-type]
 
 
 # ── geox_falsify ─────────────────────────────────────────────────────────
