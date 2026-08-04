@@ -59,36 +59,34 @@ canonical_tool_count: 33
 internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
-  # Live verification: curl -sf http://localhost:8081/health
-  # Updated: 2026-07-25 (Synchronized to 33 canonical tools from registry.py)
-  # Added: geox_well_view (P0-1 hardening 2026-07-25 · FI-008)
+  # Regenerated: 2026-08-05 KUTIP SAMPAH M3 fail-closed (no ghost leaks)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
-  - geox_claim_graph_evaluate
   - geox_contradiction_scan
+  - geox_dde_reason
   - geox_deep_time_state
   - geox_evidence
   - geox_falsify
+  - geox_gempy_implicit_3d
+  - geox_geological_model_generate
   - geox_geomechanics
-  - geox_gravmag_studio
+  - geox_h3_spatial_index
+  - geox_lancedb_embed_store
   - geox_lem_predict
-  - geox_map_export_package
   - geox_map_layers_list
   - geox_map_render_preview
   - geox_map_scene_plan
   - geox_petrophysics
   - geox_prospect
-  - geox_sediment_mass_balance
   - geox_seismic_compute
   - geox_seismic_ingest
   - geox_seismic_interpret
   - geox_sequence
+  - geox_stac_discover
   - geox_subsurface_model
   - geox_surface_status
   - geox_thermal_maturity_history
-  - geox_to_wealth_bridge
-  - geox_visual_generate_hypotheses
   - geox_visual_understand
   - geox_well_desk
   - geox_well_ingest
