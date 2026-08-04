@@ -384,9 +384,27 @@ GEOX_LANE_MAP: dict[str, str] = _load_lane_map()
 # gateway. The SCT token IS the gateway proof — arifOS is the sole issuer.
 # ALL lanes now require session (SCT); receipt generation is mandatory.
 # Discovery tools remain callable IF carrying valid SCT from arifOS.
+# 2026-08-04 — When GEOX_OAUTH_ENABLED=0 (Claude Apps / open MCP door),
+# discovery + evidence are OBSERVE-class and must not require arif_init.
+# Reasoning/judgment still require SEAL/SCT. Toggle follows OAuth kill-switch.
+_GEOX_OAUTH_ON = os.getenv("GEOX_OAUTH_ENABLED", "0").strip().lower() in (
+    "1",
+    "true",
+    "yes",
+    "on",
+)
+# Explicit override: GEOX_PUBLIC_OBSERVE=1 forces open discovery/evidence even if OAuth on.
+_GEOX_PUBLIC_OBSERVE = os.getenv("GEOX_PUBLIC_OBSERVE", "").strip().lower() in (
+    "1",
+    "true",
+    "yes",
+    "on",
+) or (not _GEOX_OAUTH_ON)
+
 LANE_REQUIRES_SESSION: dict[str, bool] = {
-    "discovery": True,  # HARDENED: SCT required — "force through arifOS gateway"
-    "evidence": True,  # HARDENED: SCT required
+    # Open observe path for Claude Apps when OAuth is OFF (default 2026-08-04).
+    "discovery": not _GEOX_PUBLIC_OBSERVE,  # False when open; True when OAuth locked
+    "evidence": not _GEOX_PUBLIC_OBSERVE,
     "reasoning": True,
     "judgment": True,
 }
