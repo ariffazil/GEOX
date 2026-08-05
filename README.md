@@ -2,7 +2,7 @@
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
 last_verified: 2026-08-04T20:23:33Z
 federation_release: v2026.08.04
-live_commit: pending
+live_commit: 8e3de899 (M6 instrumentation — per-tool invocation counters)
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 mcp_apps_registered: 18
@@ -99,6 +99,20 @@ curl -s http://127.0.0.1:8081/health | jq .
 | **🫀 WELL** | Vitality Guard — human readiness | 18083 | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
 | **🔮 HERMES** | Multi-Modal Bridge — Telegram relay | 8644 | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
 | **🌐 arif-fazil.com** | Public Web Surface — one domain | 443 | [repo](https://github.com/ariffazil/arif-fazil.com) | — | [verify](https://arif-fazil.com/999/verify) | — |
+
+---
+
+## 📡 MCP Registries
+
+GEOX is registered as an MCP server on the federation registries. Discovery metadata is exposed at each endpoint.
+
+| Registry | Server | Manifest |
+|----------|--------|----------|
+| **Glama** | [glama.ai/mcp/servers/ariffazil/geox](https://glama.ai/mcp/servers/ariffazil/geox) | `https://geox.arif-fazil.com/.well-known/glama.json` |
+| **Smithery** | [smithery.ai/server/geox](https://smithery.ai/server/geox) | `https://geox.arif-fazil.com/.well-known/smithery.yaml` |
+| **mcp.so** | [mcp.so/server/ariffazil/geox](https://mcp.so/server/ariffazil/geox) | `https://geox.arif-fazil.com/.well-known/mcp-so.json` |
+
+Discovery endpoint: `GET https://geox.arif-fazil.com/.well-known/mcp/server.json`
 
 ---
 
