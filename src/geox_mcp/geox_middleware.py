@@ -30,6 +30,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time as _time
 import uuid
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
@@ -768,8 +769,11 @@ class GeoxGovernanceMiddleware(Middleware):
                 "trace_id": arguments.get("trace_id"),
             }
         )
+        _t0 = _time.monotonic()
+        _ok = False
         try:
             result = await call_next(context)
+            _elapsed_ms = (_time.monotonic() - _t0) * 1000.0
             # M6 utilization ledger (KUTIP SAMPAH 2026-08-05) — fail-soft
             try:
                 from geox_mcp.tool_invocation_counter import record_invocation
@@ -780,9 +784,11 @@ class GeoxGovernanceMiddleware(Middleware):
                     session_id=_args.get("session_id") if isinstance(_args.get("session_id"), str) else None,
                     actor_id=_args.get("actor_id") if isinstance(_args.get("actor_id"), str) else None,
                     ok=True,
+                    duration_ms=_elapsed_ms,
                 )
             except Exception:
                 pass
+            _ok = True
             # ═══ W-01 FIX (2026-08-05) ═══════════════════════════════════
             # FastMCP call_next returns ToolResult. Downstream processors
             # (evidence envelope, well conformance, envelope normalizer,
@@ -903,6 +909,22 @@ class GeoxGovernanceMiddleware(Middleware):
                 )
             )
         finally:
+            # M6 failure-path recording (KUTIP SAMPAH 2026-08-05)
+            if not _ok:
+                try:
+                    from geox_mcp.tool_invocation_counter import record_invocation
+
+                    _args = arguments if isinstance(arguments, dict) else {}
+                    _elapsed_fail = (_time.monotonic() - _t0) * 1000.0
+                    record_invocation(
+                        tool_name,
+                        session_id=_args.get("session_id") if isinstance(_args.get("session_id"), str) else None,
+                        actor_id=_args.get("actor_id") if isinstance(_args.get("actor_id"), str) else None,
+                        ok=False,
+                        duration_ms=_elapsed_fail,
+                    )
+                except Exception:
+                    pass
             GEOX_IDENTITY_CONTEXT.reset(identity_token)
 
     # ── HELPERS ────────────────────────────────────────────────────────────────
