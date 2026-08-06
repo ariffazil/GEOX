@@ -84,8 +84,19 @@ tools:
   axis: reason
   lane: reasoning
   access: public
-  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict,
-    spatial_block, ingest_literature. Use when: Use when you need evidence evidence.'
+  description: 'Evidence lifecycle: attach, discover, summarize, cross-reference. Wire
+    form of unified evidence. For mode-driven synthesis use geox_evidence_synthesize.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_evidence_synthesize
+  domain: earth.governance
+  axis: reason
+  lane: reasoning
+  access: public
+  description: 'Mode-driven evidence synthesis: discover, synthesize, abduct, contradict,
+    spatial_block, ingest_literature. Re-registered from ZEN-15 deregistered Pattern A wrapper.'
   annotations:
     read_only: true
     destructive: false
