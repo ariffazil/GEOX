@@ -1685,8 +1685,8 @@ def register_tools_on(mcp):
             text=f"Falsify {mode}: verdict={verdict}. claim={(claim_text or '')[:60]}. UI: ui://geox/judge-console.",
         )
 
-    # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
-    async def _evidence(
+    @mcp.tool(name="geox_evidence_synthesize", annotations=_geox_annotations("geox_evidence_synthesize"))
+    async def _evidence_synthesize(
         mode: str = "synthesize",
         query: str = "",
         scope: str = "all",

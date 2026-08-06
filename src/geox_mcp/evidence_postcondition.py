@@ -30,7 +30,7 @@ logger = logging.getLogger("geox_mcp.evidence_postcondition")
 # passes the evidence gate. Only tools where ALL required keys are null/empty
 # AND the tool claims success are downgraded.
 
-EVIDENCE_CONTRACTS: dict[str, list[str]] = {
+EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     # ── Compute / petrophysics ──────────────────────────────────────
     "geox_petrophysics": ["net_pay", "curves", "curves_available", "vsh", "porosity", "sw"],
     "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute"],
@@ -57,7 +57,17 @@ EVIDENCE_CONTRACTS: dict[str, list[str]] = {
     ],
     "geox_contradiction_scan": ["contradictions", "findings", "severity"],
     "geox_falsify": ["kill_results", "verdict", "kill_matrix"],
-    "geox_evidence": ["evidence_items", "synthesis", "sources"],
+    # geox_evidence removed from EVIDENCE_CONTRACTS 2026-08-06 (geo-stable-fix).
+    # Rationale: geox_evidence is a multi-mode dispatcher (discover|synthesize|
+    # abduct|contradict|spatial_block|ingest_literature) in evidence_unified.py.
+    # Each mode returns a DIFFERENT key set; the previous contract
+    # (evidence_items/synthesis/sources) was hallucinated — no mode emits those keys.
+    # Empty contract (line was "") caused FALSE_SUCCESS downgrade because
+    # the postcondition loop iterates over an empty list and never finds evidence.
+    # Moving to NON_COMPLIANT until mode-aware contracts land (requires plumbing
+    # mode through check_evidence_postcondition call site).
+    # "geox_evidence": <placeholder — see NON_COMPLIANT.add() below>,
+    "geox_evidence_synthesize": ["evidence_items", "synthesis", "sources"],
     "geox_claim": ["claim_id", "claim_text", "verdict", "evidence_ids"],
     "geox_claim_graph_evaluate": ["claims", "edges", "verdicts", "propagation"],
     # ── Visual / map ────────────────────────────────────────────────
