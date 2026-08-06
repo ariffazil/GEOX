@@ -361,8 +361,20 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'Unified evidence synthesis: discover, synthesize, abduct, contradict,
-    spatial_block, ingest_literature.'
+  description: 'Evidence lifecycle: attach, discover, summarize, cross-reference. Wire
+    form. For mode-driven synthesis use geox_evidence_synthesize.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+- name: geox_evidence_synthesize
+  domain: governance.evidence
+  axis: reason
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Mode-driven evidence synthesis: discover, synthesize, abduct, contradict,
+    spatial_block, ingest_literature. Re-registered ZEN-15 Pattern A wrapper.'
   input_schema_source: callable
   annotations:
     read_only: true

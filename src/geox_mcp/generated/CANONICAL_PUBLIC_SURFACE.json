@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-04T22:07:25.463322+00:00",
+  "generated_at": "2026-08-06T03:09:42.431808+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 33,
+  "public_count": 34,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -22,6 +22,7 @@
     "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
+    "geox_evidence_synthesize",
     "geox_basin_backstrip",
     "geox_thermal_maturity_history",
     "geox_falsify",
@@ -261,7 +262,16 @@
       "domain": "governance.evidence",
       "axis": "reason",
       "lane": "evidence",
-      "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
+      "description": "Evidence lifecycle: attach, discover, summarize, cross-reference. Wire form. For mode-driven synthesis use geox_evidence_synthesize.",
+      "ui": null,
+      "governance": {}
+    },
+    {
+      "name": "geox_evidence_synthesize",
+      "domain": "governance.evidence",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Mode-driven evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature. Re-registered ZEN-15 Pattern A wrapper.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
