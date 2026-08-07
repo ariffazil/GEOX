@@ -7,7 +7,7 @@ validation replaces per-call arifOS kernel calls (kernel too slow for
 per-tool-call validation).
 
 Strategy:
-  1. If caller passes an SCT (sct_v1.<base64>.<hmac>) → verify it through
+  1. If caller passes an SCT (act_v1.<base64>.<hmac>) → verify it through
      the federation SCT gate backed by arifOS. Decoding is never proof.
   2. If caller passes a SEAL-* session_id (not an SCT) → accept with
      basic format check. The SCT gate in the middleware handles full
@@ -312,7 +312,7 @@ def _verify_sct_authoritatively(
     aaa_root = "/root/AAA"
     if aaa_root not in sys.path:
         sys.path.insert(0, aaa_root)
-    from governance.federation_sct import verify_federation_sct
+    from governance.federation_act import verify_federation_sct
 
     return verify_federation_sct(
         token,
@@ -355,7 +355,7 @@ def validate_session(
         )
 
     # ── PATH 1: SCT token — authoritative federation validation ────────
-    if session_id.startswith("sct_v1."):
+    if session_id.startswith("act_v1."):
         try:
             verification = _verify_sct_authoritatively(
                 session_id,

@@ -4830,7 +4830,7 @@ def register_tools_on(mcp):
 
         Args:
             params: Structured geological model parameters (see _GeologicalModelParams).
-            session_id: Governed session (SEAL-* or sct_v1.*) — required by P0-2 authority gate.
+            session_id: Governed session (SEAL-* or act_v1.*) — required by P0-2 authority gate.
             actor_id: Claiming actor (F11 non-repudiation).
             trace_id: Optional correlation id for audit chain.
 
