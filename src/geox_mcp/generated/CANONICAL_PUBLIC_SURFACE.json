@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-06T03:09:42.431808+00:00",
+  "generated_at": "2026-08-07T13:54:26.799942+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 34,
+  "public_count": 35,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -38,7 +38,8 @@
     "geox_h3_spatial_index",
     "geox_lancedb_embed_store",
     "geox_stac_discover",
-    "geox_dde_reason"
+    "geox_dde_reason",
+    "geox_dynamical_systems"
   ],
   "tools": [
     {
@@ -483,6 +484,19 @@
       "axis": "reason",
       "lane": "reasoning",
       "description": "DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge graph for stratigraphic rules and physical laws. [LEM E5]",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_dynamical_systems",
+      "domain": "earth.dynamics",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "State-space reconstruction layer. Takens delay-coordinate embedding, false-nearest-neighbors dimension, mutual-information delay, and EDM kernel regression (simplex / local-softmax). GEOX reconstructs",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",

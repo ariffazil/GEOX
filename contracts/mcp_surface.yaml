@@ -3,7 +3,7 @@ kind: arifos.mcp_surface
 owner_repo: GEOX
 status: contract
 last_verified: "2026-07-20"
-regenerated_by: forge-core-fix-2026-07-20
+regenerated_by: forge-core-fix-2026-08-07-geox-dynamical-systems
 
 runtime_surface:
   primary_transport: streamable_http
@@ -55,11 +55,11 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 33
+canonical_tool_count: 35
 internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
-  # Regenerated: 2026-08-05 KUTIP SAMPAH M3 fail-closed (no ghost leaks)
+  # Regenerated: 2026-08-07 (geox_dynamical_systems, geox_evidence_synthesize)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
@@ -93,6 +93,8 @@ canonical_tools:
   - geox_well_qc
   - geox_well_view
   - geox_workspace
+  - geox_dynamical_systems
+  - geox_evidence_synthesize
 
 mcp_conformance:
   lifecycle: initialize → initialized → tools/call (enforced by lifecycle gate)

@@ -2,13 +2,13 @@
   "info": {
     "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
     "title": "GEOX Earth Intelligence API",
-    "version": "2026.08.04"
+    "version": "2026.08.07"
   },
   "openapi": "3.0.0",
   "paths": {
     "/mcp": {
       "post": {
-        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 33 canonical plugin-exposed tools.",
+        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 35 canonical plugin-exposed tools.",
         "operationId": "mcpEndpoint",
         "summary": "MCP JSON-RPC 2.0 endpoint",
         "x-mcp-tools": [
@@ -462,10 +462,38 @@
           },
           {
             "axis": "reason",
-            "description": "Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.",
+            "description": "Evidence lifecycle: attach, discover, summarize, cross-reference. Wire form. For mode-driven synthesis use geox_evidence_synthesize.",
             "domain": "governance.evidence",
             "lane": "evidence",
             "name": "geox_evidence",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Mode-driven evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature. Re-registered ZEN-15 Pattern A wrapper.",
+            "domain": "governance.evidence",
+            "lane": "evidence",
+            "name": "geox_evidence_synthesize",
             "parameters": {
               "properties": {
                 "actor_id": {
@@ -914,6 +942,34 @@
             "domain": "earth.knowledge",
             "lane": "reasoning",
             "name": "geox_dde_reason",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "State-space reconstruction layer. Takens delay-coordinate embedding, false-nearest-neighbors dimension, mutual-information delay, and EDM kernel regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM extraction (SEAL: small extraction, HOLD: large investment).",
+            "domain": "earth.dynamics",
+            "lane": "reasoning",
+            "name": "geox_dynamical_systems",
             "parameters": {
               "properties": {
                 "actor_id": {

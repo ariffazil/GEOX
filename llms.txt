@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (33 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (35 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -20,23 +20,25 @@
 14. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
 15. **geox_well_view**: Well Witness View — hydrate real LAS curves into interactive tracks for WellDesk/Well Witness widgets.
 16. **geox_surface_status**: Federation-standard registry probe: tool discovery and health status.
-17. **geox_evidence**: Unified evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature.
-18. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
-19. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
-20. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
-21. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
-22. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
-23. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
-24. **geox_map_layers_list**: List available map layers and their spatial extents.
-25. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
-26. **geox_map_render_preview**: Render preview of map scene for quality review before export.
-27. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
-28. **geox_geological_model_generate**: Deterministic geological model renderer. Generates 2D cross-sections from structural parameters (dip, fault throw, strata) using matplotlib. NOT an AI image generator — physics-constrained, computed output. Phase 1: 2D sections. Phase 2: 3D GemPy block models.
-29. **geox_gempy_implicit_3d**: GemPy implicit 3D structural modeling via universal cokriging scalar potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
-30. **geox_h3_spatial_index**: H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells, aggregate points, query k-ring neighbours. [LEM E2]
-31. **geox_lancedb_embed_store**: LanceDB embedded vector store for earth embeddings. Store/search AlphaEarth/Clay/custom embeddings with H3 cross-reference. [LEM E3]
-32. **geox_stac_discover**: STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr across federated catalogs. [LEM E4]
-33. **geox_dde_reason**: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge graph for stratigraphic rules and physical laws. [LEM E5]
+17. **geox_evidence**: Evidence lifecycle: attach, discover, summarize, cross-reference. Wire form. For mode-driven synthesis use geox_evidence_synthesize.
+18. **geox_evidence_synthesize**: Mode-driven evidence synthesis: discover, synthesize, abduct, contradict, spatial_block, ingest_literature. Re-registered ZEN-15 Pattern A wrapper.
+19. **geox_basin_backstrip**: 1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980. Reconstruct tectonic and total subsidence through time.
+20. **geox_thermal_maturity_history**: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
+21. **geox_falsify**: Popperian falsification engine — Kill Matrix K001-K007 + contradiction scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL → rejected. All PASS → PROCEED to 888_JUDGE.
+22. **geox_contradiction_scan**: Scan claims for contradictions using13-type ontology. Classifies severity (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL →888_HOLD.
+23. **geox_lem_predict**: LEM inference — predict rock properties (porosity, Sw, lithology) from well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated weights deploy.
+24. **geox_visual_understand**: Extract visual patterns from seismic section images using deep learning.
+25. **geox_map_layers_list**: List available map layers and their spatial extents.
+26. **geox_map_scene_plan**: Plan map scene composition: layer ordering, zoom, and annotation layout.
+27. **geox_map_render_preview**: Render preview of map scene for quality review before export.
+28. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
+29. **geox_geological_model_generate**: Deterministic geological model renderer. Generates 2D cross-sections from structural parameters (dip, fault throw, strata) using matplotlib. NOT an AI image generator — physics-constrained, computed output. Phase 1: 2D sections. Phase 2: 3D GemPy block models.
+30. **geox_gempy_implicit_3d**: GemPy implicit 3D structural modeling via universal cokriging scalar potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
+31. **geox_h3_spatial_index**: H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells, aggregate points, query k-ring neighbours. [LEM E2]
+32. **geox_lancedb_embed_store**: LanceDB embedded vector store for earth embeddings. Store/search AlphaEarth/Clay/custom embeddings with H3 cross-reference. [LEM E3]
+33. **geox_stac_discover**: STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr across federated catalogs. [LEM E4]
+34. **geox_dde_reason**: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge graph for stratigraphic rules and physical laws. [LEM E5]
+35. **geox_dynamical_systems**: State-space reconstruction layer. Takens delay-coordinate embedding, false-nearest-neighbors dimension, mutual-information delay, and EDM kernel regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM extraction (SEAL: small extraction, HOLD: large investment).
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.
