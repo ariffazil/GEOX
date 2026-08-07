@@ -532,7 +532,7 @@ class GeoxGovernanceMiddleware(Middleware):
             _aaa = "/root/AAA"
             if _aaa not in _sys.path:
                 _sys.path.insert(0, _aaa)
-            from governance.federation_sct import gate_tool_ingress
+            from governance.federation_act import gate_tool_ingress
 
             _headers = None
             try:

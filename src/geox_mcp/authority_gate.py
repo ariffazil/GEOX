@@ -226,7 +226,7 @@ def enforce_authority(
     # When the caller presents a session_token (SCT), prefer the SCT path
     # so we read the real `auth` claim from the signed payload instead
     # of the kernel's downgraded validate-mode band.
-    if session_token and session_token.startswith("sct_v1."):
+    if session_token and session_token.startswith("act_v1."):
         session_id = session_token
 
     # ── Validate session (SCT or SEAL-*) ──
