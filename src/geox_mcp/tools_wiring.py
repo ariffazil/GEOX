@@ -4519,10 +4519,17 @@ def register_tools_on(mcp):
 
     @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
     async def _evidence(
+        mode: str = "synthesize",
         evidence_id: str = "",
         evidence_type: str = "supporting",
         claim_id: str = "",
         claim_text: str = "",
+        query: str = "",
+        scope: str = "all",
+        file_path: str = "",
+        basin_name: str | None = None,
+        evidence_refs: list[str] | None = None,
+        hypotheses: list[str] | None = None,
         epistemic_label: str | None = None,
         forbidden_uses: list[str] | None = None,
         source_citation: dict[str, Any] | None = None,
@@ -4531,16 +4538,32 @@ def register_tools_on(mcp):
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Unified evidence lifecycle: attach, discover, summarize, cross-reference."""
+        """Unified evidence — discover, synthesize, abduct, contradict, ingest_literature.
+
+        Modes:
+          discover          - Search SharePoint/OneDrive/local for geological evidence
+          synthesize        - Cross-domain evidence graph synthesis
+          abduct            - Generate competing geological process hypotheses
+          contradict        - Attack hypotheses and surface contradictions
+          spatial_block     - Spatial block-CV
+          ingest_literature - PDF literature ingest with claim scaffold
+        """
         from geox_mcp.tools.evidence_unified import geox_evidence as _impl
 
         args = _safe_forward(
             _impl,
             {
+                "mode": mode,
                 "evidence_id": evidence_id,
                 "evidence_type": evidence_type,
                 "claim_id": claim_id,
                 "claim_text": claim_text,
+                "query": query,
+                "scope": scope,
+                "file_path": file_path,
+                "basin_name": basin_name,
+                "evidence_refs": evidence_refs,
+                "hypotheses": hypotheses,
                 "epistemic_label": epistemic_label,
                 "forbidden_uses": forbidden_uses,
                 "source_citation": source_citation,
