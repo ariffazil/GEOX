@@ -3,7 +3,7 @@ generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction
   repair
 public_transport: mcp
 # Membership SOT: CANONICAL_PUBLIC_TOOLS / tools/list (not a historical 15).
-public_count_target: 34
+public_count_target: 35
 tools:
 - name: geox_well_ingest
   domain: earth.well
