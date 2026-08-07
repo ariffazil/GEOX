@@ -3,7 +3,7 @@ generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction
   repair
 public_transport: mcp
 # Membership SOT: CANONICAL_PUBLIC_TOOLS / tools/list (not a historical 15).
-public_count_target: 33
+public_count_target: 34
 tools:
 - name: geox_well_ingest
   domain: earth.well
@@ -1730,6 +1730,29 @@ tools:
   visibility: public
   description: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge
     graph for stratigraphic rules and physical laws. [LEM E5]
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_dynamical_systems
+  domain: earth.dynamics
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'State-space reconstruction layer. Takens delay-coordinate embedding,
+    false-nearest-neighbors dimension, mutual-information delay, and EDM kernel
+    regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH
+    interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM
+    extraction (SEAL: small extraction, HOLD: large investment).'
   input_schema_source: callable
   annotations:
     read_only: true

@@ -17,6 +17,7 @@
     "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
+    "geox_evidence_synthesize",
     "geox_basin_backstrip",
     "geox_thermal_maturity_history",
     "geox_falsify",
@@ -32,7 +33,8 @@
     "geox_h3_spatial_index",
     "geox_lancedb_embed_store",
     "geox_stac_discover",
-    "geox_dde_reason"
+    "geox_dde_reason",
+    "geox_dynamical_systems"
   ],
   "internal": [
     "geox_gravmag_studio",
@@ -91,7 +93,7 @@
     "geox_dst_ingest_test"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026-08-04T22:07:15.285232+00:00 \u2014 app_export \u2282 public (33 of 33 tools plugin-exposed)",
+  "policy": "Generated 2026-08-07T13:54:26.952422+00:00 \u2014 app_export \u2282 public (35 of 35 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -110,6 +112,7 @@
     "geox_well_view",
     "geox_surface_status",
     "geox_evidence",
+    "geox_evidence_synthesize",
     "geox_basin_backstrip",
     "geox_thermal_maturity_history",
     "geox_falsify",
@@ -125,7 +128,8 @@
     "geox_h3_spatial_index",
     "geox_lancedb_embed_store",
     "geox_stac_discover",
-    "geox_dde_reason"
+    "geox_dde_reason",
+    "geox_dynamical_systems"
   ],
-  "version": "2026.08.04"
+  "version": "2026.08.07"
 }

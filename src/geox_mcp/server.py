@@ -142,8 +142,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_seismic_interpret": 60.0,
     "geox_rsi_interpret": 120.0,  # Phase 3.0: Real seismic image interpretation — CPU-intensive
     "geox_render_audit": 30.0,  # Phase 3.0: Render-vs-amplitude validation — fast audit
-    "geox_physical_reality_interpret": 120.0,  # Phase 3.0: Full RSI pipeline — CPU-intensive
-    "geox_geological_cognition_run": 60.0,  # Phase 3.0: Geological cognition — hypothesis generation
+    "geox_physical_reality_interpret": 120.0,  # Phase 3.0: Full RSI pipeline — CPU-intensive    "geox_geological_cognition_run": 60.0,  # Phase 3.0: Geological cognition — hypothesis generation
     "geox_panel_d_render_mcp": 60.0,  # Phase 3.0: Panel D cognitive rendering
     "geox_segy_trace_audit": 120.0,  # Phase 3.0: SEG-Y trace audit — file I/O intensive
     "geox_well_tie_compute": 60.0,  # Phase 3.0: Well-tie calibration via bruges
@@ -160,6 +159,7 @@ TOOL_TIMEOUTS: dict[str, float] = {
     "geox_geomechanics": 30.0,
     "geox_basin": 60.0,
     "geox_deep_time_state": 30.0,
+    "geox_dynamical_systems": 60.0,  # 2026-08-07: Takens/EDM state-space reconstruction — CPU-numpy
     "geox_biostrat_parse": 15.0,  # Phase 2.7: Biostrat parsing — regex-only, fast.
     "geox_biostrat_nn_age": 10.0,  # Phase 2.7: NN zone age lookup — deterministic.
     "geox_biostrat_ruling_check": 10.0,  # Phase 2.7: Contradiction detection — rule-based.
@@ -1345,6 +1345,123 @@ async def _geomechanics(
         }
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# DYNAMICAL SYSTEMS LAYER — State-Space Reconstruction (Forged 2026-08-07)
+# Small extraction from DeepEDM (ICML 2025). Takens embedding + EDM kernel.
+# GEOX reconstructs the attractor; WEALTH interprets; WELL judges readiness.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+@mcp.tool(name="geox_dynamical_systems", annotations=_geox_annotations("geox_dynamical_systems"))
+async def _dynamical_systems(
+    mode: str = "auto_embed",
+    series: list[float] | None = None,
+    max_lag: int = 100,
+    delay: int = 0,
+    dim: int = 0,
+    kernel: str = "simplex",
+    k: int = 4,
+    temperature: float = 0.1,
+    library: list[list[float]] | None = None,
+    targets: list[float] | None = None,
+    query: list[list[float]] | None = None,
+) -> dict:
+    """State-space reconstruction layer for time-series analysis.
+
+    Modes:
+      auto_embed      — Auto-compute optimal τ (mutual information) and E (FNN),
+                        return Takens embedding library + targets.
+      takens_embed    — Build delay-coordinate library from series with given τ, E.
+      edm_kernel      — Local dynamics prediction via simplex or softmax kernel
+                        on a reconstructed state-space attractor.
+      test            — Self-test on Lorenz attractor (proof of primitives).
+
+    Federation contract:
+      GEOX reconstructs the attractor.
+      WEALTH interprets dynamics economically (prices, production, cashflow).
+      WELL judges human readiness to act on the regime estimate.
+
+    Epistemic: DER_TAKENS_EMBEDDING (derived from OBS_SERIES + delay + dim).
+    All outputs are OBS-level only when mode=auto_embed (parameters are derived).
+    """
+    from geox_mcp.tools.geox_dynamical_systems import (
+        geox_dynamical_test,
+        geox_edm_kernel,
+        geox_false_nearest_neighbors,
+        geox_mutual_information,
+        geox_takens_embed,
+    )
+
+    import numpy as np
+
+    if mode == "test":
+        return geox_dynamical_test()
+
+    if mode == "auto_embed":
+        if not series or len(series) < 10:
+            return {"ok": False, "error": "auto_embed requires series (min 10 values)"}
+        arr = np.array(series, dtype=np.float64)
+        tau = geox_mutual_information(arr, max_lag=max_lag)
+        E = geox_false_nearest_neighbors(arr, delay=tau, max_dim=10)
+        if E < 3:
+            E = 3
+        lib, tgt = geox_takens_embed(arr, delay=tau, dim=E)
+        return {
+            "ok": True,
+            "mode": "auto_embed",
+            "tau": int(tau),
+            "E": int(E),
+            "library_shape": list(lib.shape),
+            "library": lib.tolist(),
+            "targets": tgt.tolist(),
+            "note": (
+                "Use library + targets with geox_edm_kernel for local dynamics prediction. "
+                "GEOMETRY ONLY — this is the reconstructed state-space, not a forecast."
+            ),
+        }
+
+    if mode == "takens_embed":
+        if not series or len(series) < 10:
+            return {"ok": False, "error": "takens_embed requires series (min 10 values)"}
+        if delay < 1:
+            return {"ok": False, "error": "delay (τ) must be >= 1"}
+        if dim < 2:
+            return {"ok": False, "error": "dim (E) must be >= 2"}
+        arr = np.array(series, dtype=np.float64)
+        lib, tgt = geox_takens_embed(arr, delay=delay, dim=dim)
+        return {
+            "ok": True,
+            "mode": "takens_embed",
+            "tau": delay,
+            "E": dim,
+            "library_shape": list(lib.shape),
+            "library": lib.tolist(),
+            "targets": tgt.tolist(),
+        }
+
+    if mode == "edm_kernel":
+        if library is None or targets is None or query is None:
+            return {
+                "ok": False,
+                "error": "edm_kernel requires library, targets, and query arrays",
+            }
+        lib_arr = np.array(library, dtype=np.float64)
+        tgt_arr = np.array(targets, dtype=np.float64)
+        q_arr = np.array(query, dtype=np.float64)
+        if len(lib_arr) < k:
+            return {"ok": False, "error": f"Library size {len(lib_arr)} < k={k}"}
+        preds = geox_edm_kernel(lib_arr, tgt_arr, q_arr, kernel=kernel, k=k, temperature=temperature)
+        return {
+            "ok": True,
+            "mode": "edm_kernel",
+            "kernel": kernel,
+            "k": k,
+            "predictions": preds.tolist(),
+        }
+
+    return {"ok": False, "error": f"Unknown mode: {mode}. Use: auto_embed, takens_embed, edm_kernel, test."}
+
+
 # ── W13+ FORGE — A2 GRAVITY SCREEN (evidence lane, no judgment required) ──
 # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_gravity_screen", annotations=_geox_annotations("geox_gravity_screen"))
 async def _gravity_screen(
@@ -2479,11 +2596,7 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
                 # Allow anthropic / oaiusercontent subdomains without enumerating every host
                 if not (
                     origin.startswith("https://")
-                    and (
-                        origin.endswith(".claude.ai")
-                        or ".anthropic.com" in origin
-                        or ".oaiusercontent.com" in origin
-                    )
+                    and (origin.endswith(".claude.ai") or ".anthropic.com" in origin or ".oaiusercontent.com" in origin)
                 ):
                     return JSONResponse(
                         {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
@@ -3078,8 +3191,7 @@ async def geox_preview_handler(request: Request):
     if not os.path.isfile(resolved):
         return PlainTextResponse("File not found", status_code=404)
 
-    return FileResponse(resolved, media_type="image/png",
-                        headers={"Cache-Control": "public, max-age=60"})
+    return FileResponse(resolved, media_type="image/png", headers={"Cache-Control": "public, max-age=60"})
 
 
 async def build_info_handler(request: Request) -> JSONResponse:
@@ -3634,10 +3746,7 @@ def create_app():
             return JSONResponse(
                 {
                     "error": "oauth_disabled",
-                    "detail": (
-                        "GEOX OAuth AS metadata is OFF (GEOX_OAUTH_ENABLED=0). "
-                        "Code retained; flip env to re-enable."
-                    ),
+                    "detail": ("GEOX OAuth AS metadata is OFF (GEOX_OAUTH_ENABLED=0). Code retained; flip env to re-enable."),
                     "oauth_enabled": False,
                 },
                 status_code=404,
