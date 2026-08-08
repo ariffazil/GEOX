@@ -3133,6 +3133,10 @@ async def health_handler(request: Request) -> JSONResponse:
             # ── GEOX identity anchor (NATURAL_LAW, not constitutional) ───
             "domain_law": _domain_law,
             "physics_manifest_hash": _physics_hash,
+            # ── F2-fidelity fix (MCP-PROBE-2026-08-08) ─────────────────
+            # Per ORGAN.md, GEOX authority_ceiling = COMPUTE_ONLY (555).
+            # Was previously ABSENT. See R2-CONTRADICTION-REGISTER C13.
+            "authority_ceiling": "555_COMPUTE_ONLY",
             # ── Canonical 7-field health schema (per federation convention) ───
             "identity_hash": _GIT_VERSION,  # git SHA = identity proof
             # ── Tool surface visibility (T₁ audit fix 2026-07-19) ───
