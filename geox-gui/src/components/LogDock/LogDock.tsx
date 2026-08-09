@@ -18,9 +18,10 @@ import * as d3 from 'd3';
 import {
   ZoomIn, ZoomOut, MoveVertical, Eye, EyeOff,
   Activity, AlignLeft, ChevronDown, ChevronUp,
-  FlaskConical, Gauge, Droplets, Layers
+  FlaskConical, Gauge, Droplets, Layers, Zap
 } from 'lucide-react';
 import { demoWellData } from './data/demoWellData';
+import { PetrophysicalTracks } from './PetrophysicalTracks';
 import type { LogCurve, WellLogData, TrackConfig } from './types';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -539,6 +540,7 @@ export const LogDock: React.FC = () => {
   const [cursorDepth, setCursorDepth] = useState<number | null>(null);
   const [showSidebar, setShowSidebar] = useState(true);
   const [tracks] = useState<TrackConfig[]>(DEFAULT_TRACKS);
+  const [mode, setMode] = useState<'demo' | 'mcp'>('demo');
 
   const trackHeight = 600;
 
@@ -610,7 +612,20 @@ export const LogDock: React.FC = () => {
           </>
         )}
 
-        <div className="flex-1" />
+          <div className="flex-1" />
+
+        <button
+          onClick={() => setMode('demo')}
+          className={`px-3 py-1 rounded text-xs font-bold transition-all ${mode === 'demo' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+        >
+          Demo Mode
+        </button>
+        <button
+          onClick={() => setMode('mcp')}
+          className={`px-3 py-1 rounded text-xs font-bold transition-all flex items-center gap-1 ${mode === 'mcp' ? 'bg-amber-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+        >
+          <Zap className="w-3 h-3" /> MCP Live
+        </button>
 
         <button
           onClick={() => setShowSidebar(!showSidebar)}
@@ -622,6 +637,9 @@ export const LogDock: React.FC = () => {
       </div>
 
       {/* Main Content */}
+      {mode === 'mcp' ? (
+        <PetrophysicalTracks />
+      ) : (
       <div className="flex-1 flex overflow-hidden">
         {/* Track Canvas Area */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
@@ -669,6 +687,7 @@ export const LogDock: React.FC = () => {
         <div className="flex-1" />
         <span className="text-amber-500/70">DITEMPA BUKAN DIBERI</span>
       </div>
+      )}
     </div>
   );
 };
