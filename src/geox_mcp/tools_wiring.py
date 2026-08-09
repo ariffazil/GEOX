@@ -5281,6 +5281,15 @@ def register_tools_on(mcp):
     except Exception as e:
         logger.warning("LEM E5: geox_dde_reason skipped: %s", e)
 
+    # ── EGS Temporal tools (geox_temporal_decline/rrr/basin_lifecycle/cadence) ──
+    try:
+        from geox.egs.tools.temporal import register_temporal_tools
+
+        register_temporal_tools(mcp)
+        logger.info("TEMPORAL: geox_temporal_* tools registered")
+    except Exception as e:
+        logger.warning("TEMPORAL: geox_temporal_* tools skipped: %s", e)
+
     # ═══════════════════════════════════════════════════════════════════
     try:
         from geox_mcp.tools_manifest import CANONICAL_TOOLS as _manifest
