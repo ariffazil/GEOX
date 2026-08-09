@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/specification/main/schema/mcp-server.json",
   "name": "GEOX — Earth Intelligence",
-  "version": "v2026.07.27",
-  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, and 9 interactive MCP Apps. 32 canonical public tools, 16 MCP prompts, 42 MCP resources.",
+  "version": "v2026.08.09",
+  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, and 9 interactive MCP Apps. 39 canonical public tools, 16 MCP prompts, 42 MCP resources.",
   "repository": "https://github.com/ariffazil/GEOX",
   "license": "BSL-1.1",
   "author": {
@@ -10,8 +10,9 @@
     "url": "https://arif-fazil.com"
   },
   "endpoint": "https://geox.arif-fazil.com/mcp",
-  "transport": ["streamable-http", "sse"],
-  "protocolVersion": "2025-06-18",
+  "protocolVersion": "2026-07-28",
+  "transport": ["streamable-http"],
+  "protocolVersions": ["2026-07-28", "2025-06-18"],
   "capabilities": {
     "tools": true,
     "resources": true,
@@ -47,18 +48,21 @@
     "publicCount": 32,
     "categories": {
       "basin": ["geox_basin", "geox_basin_backstrip", "geox_sediment_mass_balance", "geox_thermal_maturity_history"],
-      "seismic": ["geox_seismic_compute", "geox_seismic_ingest", "geox_seismic_interpret", "geox_visual_understand", "geox_visual_generate_hypotheses"],
+      "basin": ["geox_basin", "geox_basin_backstrip"],
+      "seismic": ["geox_seismic_compute", "geox_seismic_ingest", "geox_seismic_interpret", "geox_visual_understand"],
       "petrophysics": ["geox_petrophysics"],
       "well": ["geox_well_desk", "geox_well_ingest", "geox_well_qc", "geox_well_view"],
       "prospect": ["geox_prospect"],
-      "geophysics": ["geox_gravmag_studio", "geox_geomechanics", "geox_subsurface_model"],
-      "stratigraphy": ["geox_sequence"],
-      "deep_time": ["geox_deep_time_state"],
-      "map": ["geox_map_scene_plan", "geox_map_layers_list", "geox_map_render_preview", "geox_map_export_package"],
-      "governance": ["geox_claim", "geox_claim_graph_evaluate", "geox_contradiction_scan", "geox_evidence", "geox_falsify"],
-      "bridge": ["geox_to_wealth_bridge"],
-      "inference": ["geox_lem_predict"],
-      "meta": ["geox_surface_status", "geox_workspace"]
+      "geophysics": ["geox_geomechanics", "geox_subsurface_model", "geox_gempy_implicit_3d"],
+      "stratigraphy": ["geox_sequence", "geox_dde_reason"],
+      "deep_time": ["geox_deep_time_state", "geox_thermal_maturity_history"],
+      "temporal": ["geox_temporal_decline", "geox_temporal_rrr", "geox_temporal_basin_lifecycle", "geox_temporal_cadence"],
+      "dynamics": ["geox_dynamical_systems"],
+      "map": ["geox_map_scene_plan", "geox_map_layers_list", "geox_map_render_preview"],
+      "spatial": ["geox_h3_spatial_index", "geox_lancedb_embed_store", "geox_stac_discover"],
+      "governance": ["geox_claim", "geox_contradiction_scan", "geox_evidence", "geox_evidence_synthesize", "geox_falsify", "geox_surface_status"],
+      "inference": ["geox_lem_predict", "geox_geological_model_generate"],
+      "meta": ["geox_workspace"]
     }
   },
   "mcpApps": {
