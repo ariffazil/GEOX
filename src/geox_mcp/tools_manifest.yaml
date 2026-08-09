@@ -2,8 +2,7 @@ manifest_version: 2026.07.24-truth-loop-hardening
 generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this
   repair
 public_transport: mcp
-# Membership SOT: CANONICAL_PUBLIC_TOOLS / tools/list (not a historical 15).
-public_count_target: 39
+public_count_target: 20
 tools:
 - name: geox_well_ingest
   domain: earth.well
@@ -108,26 +107,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_subsurface_model
-  domain: earth.model
-  axis: compute
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Subsurface model building: joint inversion, gravity/magnetic forward,
-    MT forward.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_basin
   domain: earth.basin
   axis: reason
@@ -136,26 +115,6 @@ tools:
   visibility: public
   description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
     mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_sequence
-  domain: earth.stratigraphy
-  axis: reason
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Unified stratigraphy: sequence analysis, biostratigraphic parsing
-    and falsification. Modes: correlation, biostrat_parse, biostrat_falsify.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -188,46 +147,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_deep_time_state
-  domain: earth.time
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Earth State Vector through deep time: GPTS, CO2, sea level, temperature,
-    paleogeography.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_claim
-  domain: governance
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: 'Unified claim lifecycle: create, validate, challenge, seal, evidence,
-    consequence, optionality, cascade, feedback integrity, truth challenge.'
-  input_schema_source: callable
-  annotations:
-    read_only: false
-    destructive: false
-    idempotent: false
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: MUTATE
-    mutation: true
-    physics_guard_required: false
 - name: geox_prospect
   domain: earth.prospect
   axis: reason
@@ -270,28 +189,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_well_desk
-  domain: earth.well
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Well desk: interactive view, publish rendered panel, render well panel.
-    Modes: open, publish, render.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/well-desk
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
 - name: geox_well_qc
   domain: earth.well
   axis: reason
@@ -300,101 +197,6 @@ tools:
   visibility: public
   description: 'Quality control for well data: depth monotonicity, null %, physical
     range checks.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_well_view
-  domain: earth.well
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: Well Witness View — hydrate real LAS curves into interactive tracks
-    for WellDesk/Well Witness widgets.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/well-desk
-    title: GEOX WellDesk
-    render_mode: panel
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_surface_status
-  domain: earth.meta
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Federation-standard registry probe: tool discovery and health status.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_evidence
-  domain: governance.evidence
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Evidence lifecycle: attach, discover, summarize, cross-reference. Wire
-    form. For mode-driven synthesis use geox_evidence_synthesize.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-- name: geox_evidence_synthesize
-  domain: governance.evidence
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Mode-driven evidence synthesis: discover, synthesize, abduct, contradict,
-    spatial_block, ingest_literature. Re-registered ZEN-15 Pattern A wrapper.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: false
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_basin_backstrip
-  domain: earth.basin
-  axis: compute
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: '1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie
-    1980. Reconstruct tectonic and total subsidence through time.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -426,25 +228,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_thermal_maturity_history
-  domain: earth.basin
-  axis: compute
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: Burial + heat flow + maturity modeling through time. EasyRo + TTI.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_claim_graph_evaluate
   domain: governance
   axis: reason
@@ -465,69 +248,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
-- name: geox_falsify
-  domain: governance
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: 'Popperian falsification engine — Kill Matrix K001-K007 + contradiction
-    scan. GENESIS/015 architecture: physics must prove the claim is right. ANY KILL
-    → rejected. All PASS → PROCEED to 888_JUDGE.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_contradiction_scan
-  domain: governance
-  axis: reason
-  lane: judgment
-  face: surface
-  visibility: public
-  description: Scan claims for contradictions using13-type ontology. Classifies severity
-    (FATAL/HIGH/MEDIUM/LOW) and resolution path (VOID/HOLD/DEMOTE/ESCALATE). FATAL
-    →888_HOLD.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
-- name: geox_lem_predict
-  domain: earth.inference
-  axis: reason
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: LEM inference — predict rock properties (porosity, Sw, lithology) from
-    well log curves. Physics-prior mode (Archie, Gardner, Wyllie) until federated
-    weights deploy.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_to_wealth_bridge
   domain: governance.bridge
   axis: reason
@@ -1074,25 +794,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_visual_understand
-  domain: earth.seismic
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: Extract visual patterns from seismic section images using deep learning.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
 - name: geox_visual_enhance
   domain: earth.seismic
   axis: compute
@@ -1265,63 +966,6 @@ tools:
   ui: null
   plugin:
     exposed: false
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_map_layers_list
-  domain: earth.map
-  axis: observe
-  lane: discovery
-  face: surface
-  visibility: public
-  description: List available map layers and their spatial extents.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_map_scene_plan
-  domain: earth.map
-  axis: reason
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: 'Plan map scene composition: layer ordering, zoom, and annotation layout.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_map_render_preview
-  domain: earth.map
-  axis: compute
-  lane: reasoning
-  face: surface
-  visibility: public
-  description: Render preview of map scene for quality review before export.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
@@ -1620,294 +1264,123 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_geological_model_generate
-  domain: earth.subsurface
+- name: geox_temporal
+  domain: earth.temporal
   axis: compute
-  lane: evidence
+  lane: compute
   face: surface
   visibility: public
-  description: 'Deterministic geological model renderer. Generates 2D cross-sections
-    from structural parameters (dip, fault throw, strata) using matplotlib. NOT an
-    AI image generator — physics-constrained, computed output. Phase 1: 2D sections.
-    Phase 2: 3D GemPy block models.'
-  input_schema_source: callable
+  description: 'Temporal analytics: decline curve, RRR, basin lifecycle, cadence.
+    Modes: decline, rrr, basin_lifecycle, cadence.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: true
-- name: geox_gempy_implicit_3d
-  domain: earth.subsurface
-  axis: compute
-  lane: evidence
-  face: surface
-  visibility: public
-  description: GemPy implicit 3D structural modeling via universal cokriging scalar
-    potential fields. Returns 3D geological volume with uncertainty. [LEM E1]
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_h3_spatial_index
+- name: geox_map
   domain: earth.spatial
   axis: compute
-  lane: evidence
+  lane: compute
   face: surface
   visibility: public
-  description: H3 hexagonal spatial indexing toolkit. Convert lat/lng to H3 cells,
-    aggregate points, query k-ring neighbours. [LEM E2]
-  input_schema_source: callable
+  description: 'Map intelligence: layer discovery, scene composition, preview. Modes:
+    layers_list, scene_plan, render_preview.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: false
-- name: geox_lancedb_embed_store
-  domain: earth.ml
+- name: geox_source
+  domain: earth.source
   axis: compute
-  lane: evidence
+  lane: compute
   face: surface
   visibility: public
-  description: LanceDB embedded vector store for earth embeddings. Store/search AlphaEarth/Clay/custom
-    embeddings with H3 cross-reference. [LEM E3]
-  input_schema_source: callable
+  description: 'Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes:
+    source_rock, diagenesis.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: false
-- name: geox_stac_discover
-  domain: earth.catalog
-  axis: observe
-  lane: evidence
+- name: geox_spatial
+  domain: earth.spatial
+  axis: compute
+  lane: compute
   face: surface
   visibility: public
-  description: STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr
-    across federated catalogs. [LEM E4]
-  input_schema_source: callable
+  description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
+    stac_discover.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: false
-- name: geox_dde_reason
-  domain: earth.knowledge
+- name: geox_deep_time
+  domain: earth.time
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+- name: geox_claim
+  domain: earth.governance
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge
-    graph for stratigraphic rules and physical laws. [LEM E5]
-  input_schema_source: callable
+  description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
+    synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
+    discover, synthesize, abduct, contradict, scan.'
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: false
+  governance:
+    action_class: LIMITED_MUTATE
+    mutation: true
+- name: geox_model
+  domain: earth.model
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
+    3D. Modes: subsurface, geological_generate, gempy_3d.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: true
-- name: geox_dynamical_systems
-  domain: earth.dynamics
+- name: geox_well
+  domain: earth.well
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: 'State-space reconstruction layer. Takens delay-coordinate embedding,
-    false-nearest-neighbors dimension, mutual-information delay, and EDM kernel
-    regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH
-    interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM
-    extraction (SEAL: small extraction, HOLD: large investment).'
-  input_schema_source: callable
+  description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
+    desk.'
   annotations:
     read_only: true
     destructive: false
     idempotent: true
-  ui: null
-  plugin:
-    exposed: true
   governance:
     action_class: OBSERVE
     mutation: false
-    physics_guard_required: true
-- name: geox_temporal_decline
-  domain: earth.temporal
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: Fit exponential decline curve to production history and forecast future
-    rates. Computes annual decline rate, trend (growth/stable/decline), forecast trajectory,
-    and years-to-threshold crossing.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_temporal_rrr
-  domain: earth.temporal
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: Compute Reserve Replacement Ratio (RRR = additions / production). RRR
-    >= 1.0 means replacing reserves; < 1.0 means consuming. Includes end-reserves and
-    years-at-current-rate estimate.
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_temporal_basin_lifecycle
-  domain: earth.temporal
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: 'Classify basin lifecycle stage: growth (current > peak), plateau (>90%
-    peak), decline (<60% peak), or mature (60-90% peak). Outputs remaining potential
-    percentage and decline rate.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_temporal_cadence
-  domain: earth.temporal
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: 'Analyse exploration licensing cadence: award rate (%), pipeline lag
-    (years), production impact projection, and capacity gap assessment (tight/moderate/extended/critical).'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_source_rock
-  domain: earth.petroleum
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: 'Source rock evaluation: TOC classification (Peters-Cassa 1994), kerogen
-    typing (van Krevelen), maturity windows, ΔlogR TOC estimation. Modes: toc, kerogen,
-    maturity, delalogr, full. OBS-derived petroleum system assessment.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_avo_forward
-  domain: earth.seismic
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: 'AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term linearized,
-    Lambda-Mu-Rho decomposition (Goodway 1997), Castagna mudrock line. Modes: zoeppritz,
-    shuey, lmr, castagna, full. OBS — physics-based fluid/lithology indicator.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_diagenesis
-  domain: earth.diagenesis
-  axis: compute
-  lane: compute
-  face: surface
-  visibility: public
-  description: 'Diagenesis analysis: mechanical compaction models (Athy 1930, Sclater
-    & Christie 1980), compaction correction, overpressure detection. Modes: compaction,
-    full. OBS — post-depositional process assessment.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
