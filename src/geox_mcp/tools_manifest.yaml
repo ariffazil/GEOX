@@ -1848,3 +1848,66 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+- name: geox_source_rock
+  domain: earth.petroleum
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Source rock evaluation: TOC classification (Peters-Cassa 1994), kerogen
+    typing (van Krevelen), maturity windows, ΔlogR TOC estimation. Modes: toc, kerogen,
+    maturity, delalogr, full. OBS-derived petroleum system assessment.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_avo_forward
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term linearized,
+    Lambda-Mu-Rho decomposition (Goodway 1997), Castagna mudrock line. Modes: zoeppritz,
+    shuey, lmr, castagna, full. OBS — physics-based fluid/lithology indicator.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_diagenesis
+  domain: earth.diagenesis
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Diagenesis analysis: mechanical compaction models (Athy 1930, Sclater
+    & Christie 1980), compaction correction, overpressure detection. Modes: compaction,
+    full. OBS — post-depositional process assessment.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true

@@ -34,7 +34,11 @@
     "geox_lancedb_embed_store",
     "geox_stac_discover",
     "geox_dde_reason",
-    "geox_dynamical_systems"
+    "geox_dynamical_systems",
+    "geox_temporal_decline",
+    "geox_temporal_rrr",
+    "geox_temporal_basin_lifecycle",
+    "geox_temporal_cadence"
   ],
   "internal": [
     "geox_gravmag_studio",
@@ -93,7 +97,7 @@
     "geox_dst_ingest_test"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026-08-07T13:54:26.952422+00:00 \u2014 app_export \u2282 public (35 of 35 tools plugin-exposed)",
+  "policy": "Generated 2026-08-09T20:32:57.549920+00:00 \u2014 app_export \u2282 public (39 of 39 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -129,7 +133,11 @@
     "geox_lancedb_embed_store",
     "geox_stac_discover",
     "geox_dde_reason",
-    "geox_dynamical_systems"
+    "geox_dynamical_systems",
+    "geox_temporal_decline",
+    "geox_temporal_rrr",
+    "geox_temporal_basin_lifecycle",
+    "geox_temporal_cadence"
   ],
-  "version": "2026.08.07"
+  "version": "2026.08.09"
 }
