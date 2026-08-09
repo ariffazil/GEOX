@@ -3,7 +3,7 @@ generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction
   repair
 public_transport: mcp
 # Membership SOT: CANONICAL_PUBLIC_TOOLS / tools/list (not a historical 15).
-public_count_target: 35
+public_count_target: 39
 tools:
 - name: geox_well_ingest
   domain: earth.well
@@ -1753,6 +1753,89 @@ tools:
     regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH
     interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM
     extraction (SEAL: small extraction, HOLD: large investment).'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_temporal_decline
+  domain: earth.temporal
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: Fit exponential decline curve to production history and forecast future
+    rates. Computes annual decline rate, trend (growth/stable/decline), forecast trajectory,
+    and years-to-threshold crossing.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_temporal_rrr
+  domain: earth.temporal
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: Compute Reserve Replacement Ratio (RRR = additions / production). RRR
+    >= 1.0 means replacing reserves; < 1.0 means consuming. Includes end-reserves and
+    years-at-current-rate estimate.
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_temporal_basin_lifecycle
+  domain: earth.temporal
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Classify basin lifecycle stage: growth (current > peak), plateau (>90%
+    peak), decline (<60% peak), or mature (60-90% peak). Outputs remaining potential
+    percentage and decline rate.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+- name: geox_temporal_cadence
+  domain: earth.temporal
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Analyse exploration licensing cadence: award rate (%), pipeline lag
+    (years), production impact projection, and capacity gap assessment (tight/moderate/extended/critical).'
   input_schema_source: callable
   annotations:
     read_only: true
