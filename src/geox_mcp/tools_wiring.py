@@ -5283,12 +5283,265 @@ def register_tools_on(mcp):
 
     # ── EGS Temporal tools (geox_temporal_decline/rrr/basin_lifecycle/cadence) ──
     try:
-        from geox.egs.tools.temporal import register_temporal_tools
+        from geox.egs.tools.temporal import (
+            temporal_basin_lifecycle,
+            temporal_cadence,
+            temporal_decline,
+            temporal_rrr,
+        )
 
-        register_temporal_tools(mcp)
-        logger.info("TEMPORAL: geox_temporal_* tools registered")
+        @mcp.tool(
+            name="geox_temporal_decline",
+            annotations=_geox_annotations("geox_temporal_decline"),
+        )
+        async def _temporal_decline(
+            production_data: list[dict[str, Any]],
+            forecast_years: int = 5,
+            threshold_bpd: float = 250000.0,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ) -> dict[str, Any]:
+            """Fit exponential decline curve to production history and forecast future rates."""
+            args = _safe_forward(
+                temporal_decline,
+                {
+                    "production_data": production_data,
+                    "forecast_years": forecast_years,
+                    "threshold_bpd": threshold_bpd,
+                },
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return await temporal_decline(**args)
+
+        @mcp.tool(
+            name="geox_temporal_rrr",
+            annotations=_geox_annotations("geox_temporal_rrr"),
+        )
+        async def _temporal_rrr(
+            reserves_start: float,
+            additions: float,
+            production: float,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ) -> dict[str, Any]:
+            """Compute Reserve Replacement Ratio (RRR = additions / production)."""
+            args = _safe_forward(
+                temporal_rrr,
+                {
+                    "reserves_start": reserves_start,
+                    "additions": additions,
+                    "production": production,
+                },
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return await temporal_rrr(**args)
+
+        @mcp.tool(
+            name="geox_temporal_basin_lifecycle",
+            annotations=_geox_annotations("geox_temporal_basin_lifecycle"),
+        )
+        async def _temporal_basin_lifecycle(
+            basin_name: str,
+            peak_production: float,
+            current_production: float,
+            discovery_year: int,
+            peak_year: int,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ) -> dict[str, Any]:
+            """Classify basin lifecycle stage: growth, plateau, decline, or mature."""
+            args = _safe_forward(
+                temporal_basin_lifecycle,
+                {
+                    "basin_name": basin_name,
+                    "peak_production": peak_production,
+                    "current_production": current_production,
+                    "discovery_year": discovery_year,
+                    "peak_year": peak_year,
+                },
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return await temporal_basin_lifecycle(**args)
+
+        @mcp.tool(
+            name="geox_temporal_cadence",
+            annotations=_geox_annotations("geox_temporal_cadence"),
+        )
+        async def _temporal_cadence(
+            blocks_offered: int,
+            blocks_awarded: int,
+            years_span: int,
+            average_cycle_time_years: float,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ) -> dict[str, Any]:
+            """Analyse exploration licensing cadence: award rate, pipeline lag, and production impact."""
+            args = _safe_forward(
+                temporal_cadence,
+                {
+                    "blocks_offered": blocks_offered,
+                    "blocks_awarded": blocks_awarded,
+                    "years_span": years_span,
+                    "average_cycle_time_years": average_cycle_time_years,
+                },
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return await temporal_cadence(**args)
+
+        logger.info("TEMPORAL: 4 geox_temporal_* tools registered")
     except Exception as e:
         logger.warning("TEMPORAL: geox_temporal_* tools skipped: %s", e)
+
+    # ── Additional core tools (source_rock, avo, diagenesis) ──
+    try:
+        from geox_core.source_rock.parameters import (
+            classify_toc, classify_kerogen, classify_maturity, estimate_toc_deltalogr,
+        )
+
+        @mcp.tool(
+            name="geox_source_rock",
+            description="Source rock evaluation: TOC classification (Peters-Cassa 1994), kerogen typing (van Krevelen), maturity windows, ΔlogR TOC estimation. Modes: toc, kerogen, maturity, delalogr, full.",
+            annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True},
+        )
+        async def _source_rock(
+            mode: str = "full",
+            toc_wt_pct: float | None = None,
+            hydrogen_index: float | None = None,
+            oxygen_index: float | None = None,
+            tmax_c: float | None = None,
+            kerogen_type: str = "II",
+            depth_m: float | None = None,
+            resistivity_ohm_m: float | None = None,
+            sonic_us_ft: float | None = None,
+            density_gcc: float | None = None,
+            lom: float = 7.0,
+            baseline_resistivity: float = 2.0,
+            baseline_sonic: float = 90.0,
+        ) -> dict[str, Any]:
+            results: dict[str, Any] = {"mode": mode}
+            try:
+                if mode in ("toc", "full") and toc_wt_pct is not None:
+                    results["toc"] = classify_toc(toc_wt_pct)
+                if mode in ("kerogen", "full") and hydrogen_index is not None:
+                    results["kerogen"] = classify_kerogen(hydrogen_index, oxygen_index, tmax_c)
+                if mode in ("maturity", "full") and tmax_c is not None:
+                    results["maturity"] = classify_maturity(tmax_c, kerogen_type)
+                if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
+                    results["deltalogr"] = estimate_toc_deltalogr(
+                        depth_m, resistivity_ohm_m, sonic_us_ft, density_gcc,
+                        lom, baseline_resistivity, baseline_sonic,
+                    )
+                if len(results) == 1:
+                    results["error"] = f"mode={mode} requires specific parameters (see description)"
+                return results
+            except Exception as e:
+                return {"error": str(e), "mode": mode}
+
+        logger.info("CORE: geox_source_rock registered")
+    except Exception as e:
+        logger.warning("CORE: geox_source_rock skipped: %s", e)
+
+    try:
+        from geox_core.avo.avo_forward import zoeppritz_rpp, shuey_avo, lmr_decompose
+        from geox_core.avo.castagna import castagna_mudrock_vp_to_vs, castagna_mudrock_fallback
+
+        @mcp.tool(
+            name="geox_avo_forward",
+            description="AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term, Lambda-Mu-Rho (Goodway 1997), Castagna mudrock. Modes: zoeppritz, shuey, lmr, castagna, full.",
+            annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
+        )
+        async def _avo_forward(
+            mode: str = "zoeppritz",
+            vp1: float = 3.0,
+            vs1: float = 1.5,
+            rho1: float = 2.3,
+            vp2: float = 2.5,
+            vs2: float = 1.2,
+            rho2: float = 2.1,
+            theta_deg: list[float] | None = None,
+            theta_max: float = 30.0,
+            vp: float = 3.0,
+            vs: float = 1.5,
+            rho: float = 2.3,
+            fluid_zone: str = "brine",
+            unit: str = "m/s",
+        ) -> dict[str, Any]:
+            import numpy as np
+            results: dict[str, Any] = {"mode": mode}
+            try:
+                thetas = np.array(theta_deg if theta_deg else [0, 5, 10, 15, 20, 25, 30])
+                if mode in ("zoeppritz", "full"):
+                    rpp = zoeppritz_rpp(vp1, vs1, rho1, vp2, vs2, rho2, thetas)
+                    results["zoeppritz"] = {"theta_deg": thetas.tolist(), "rpp": rpp.tolist()}
+                if mode in ("shuey", "full"):
+                    sh = shuey_avo(vp1, vs1, rho1, vp2, vs2, rho2, theta_max)
+                    sd = sh.to_dict() if hasattr(sh, 'to_dict') else {}
+                    results["shuey"] = {"intercept_R0": sd.get("intercept_R0"), "gradient_G": sd.get("gradient_G"), "avo_class": sd.get("avo_class")}
+                if mode in ("lmr", "full"):
+                    vpp = np.array([vp]) if isinstance(vp, (int, float)) else np.array(vp)
+                    vss = np.array([vs]) if isinstance(vs, (int, float)) else np.array(vs)
+                    rr = np.array([rho]) if isinstance(rho, (int, float)) else np.array(rho)
+                    lmr = lmr_decompose(vpp, vss, rr)
+                    results["lmr"] = {"lambda_rho": [float(x) for x in lmr.lambda_rho], "mu_rho": [float(x) for x in lmr.mu_rho], "fluid_indicator": getattr(lmr, 'fluid_indicator', None)}
+                if mode in ("castagna", "full"):
+                    vs_est = castagna_mudrock_vp_to_vs(vp, unit=unit)
+                    fallback = castagna_mudrock_fallback(vp, fluid_zone=fluid_zone, unit=unit)
+                    results["castagna"] = {"vp_to_vs": float(vs_est) if not hasattr(vs_est, '__len__') else vs_est.tolist(), "fallback": fallback}
+                if len(results) == 1:
+                    results["error"] = f"mode={mode} not recognized"
+                return results
+            except Exception as e:
+                return {"error": str(e), "mode": mode}
+
+        logger.info("CORE: geox_avo_forward registered")
+    except Exception as e:
+        logger.warning("CORE: geox_avo_forward skipped: %s", e)
+
+    try:
+        from geox_core.diagenesis.compaction import (
+            athy_porosity, sclater_christie_porosity, compaction_correction,
+        )
+
+        @mcp.tool(
+            name="geox_diagenesis",
+            description="Diagenesis analysis: mechanical compaction models (Athy 1930, Sclater & Christie 1980), compaction correction, overpressure detection. Modes: compaction, full.",
+            annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
+        )
+        async def _diagenesis(
+            mode: str = "compaction",
+            depth_m: float = 2000.0,
+            measured_porosity: float | None = None,
+            lithology: str = "sandstone",
+            surface_porosity: float = 0.45,
+            compaction_coeff: float = 0.0004,
+        ) -> dict[str, Any]:
+            results: dict[str, Any] = {"mode": mode, "depth_m": depth_m, "lithology": lithology}
+            try:
+                athy = athy_porosity(depth_m, surface_porosity, compaction_coeff)
+                sc = sclater_christie_porosity(lithology, depth_m)
+                results["athy_porosity"] = round(athy, 4)
+                results["sclater_christie_porosity"] = round(sc, 4)
+                if measured_porosity is not None:
+                    results["correction"] = compaction_correction(measured_porosity, depth_m, lithology)
+                return results
+            except Exception as e:
+                return {"error": str(e), "mode": mode}
+
+        logger.info("CORE: geox_diagenesis registered")
+    except Exception as e:
+        logger.warning("CORE: geox_diagenesis skipped: %s", e)
 
     # ═══════════════════════════════════════════════════════════════════
     try:

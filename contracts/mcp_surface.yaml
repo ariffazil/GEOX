@@ -55,11 +55,11 @@ authority:
     - deployment_substrate
     - final_seal
 
-canonical_tool_count: 35
+canonical_tool_count: 39
 internal_tool_count: 30
 canonical_tools:
   # Source of truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
-  # Regenerated: 2026-08-07 (geox_dynamical_systems, geox_evidence_synthesize)
+  # Regenerated: 2026-08-09 (geox_temporal_*)
   - geox_basin
   - geox_basin_backstrip
   - geox_claim
@@ -86,6 +86,10 @@ canonical_tools:
   - geox_stac_discover
   - geox_subsurface_model
   - geox_surface_status
+  - geox_temporal_basin_lifecycle
+  - geox_temporal_cadence
+  - geox_temporal_decline
+  - geox_temporal_rrr
   - geox_thermal_maturity_history
   - geox_visual_understand
   - geox_well_desk
