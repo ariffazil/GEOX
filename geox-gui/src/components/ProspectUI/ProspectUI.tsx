@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Target, MapPin, Layers, Info, CheckCircle, Crosshair, ChevronRight } from 'lucide-react';
+import { Target, MapPin, Layers, Info, CheckCircle, Crosshair, ChevronRight, Zap } from 'lucide-react';
 import { useMcpTool } from '../../hooks/useMcpTool';
 import { useGEOXStore } from '../../store/geoxStore';
+import { RiskDashboard } from './RiskDashboard';
 
 /**
  * ProspectUI — Geofabric visualization.
@@ -10,6 +11,7 @@ import { useGEOXStore } from '../../store/geoxStore';
 export const ProspectUI: React.FC = () => {
     const { selectedWell, selectedProspect, updateFloorStatus } = useGEOXStore();
     const [projectedPath, setProjectedPath] = useState<any[]>([]);
+    const [mode, setMode] = useState<'map' | 'risk'>('map');
 
     // MCP Tools
     const projectWellTool = useMcpTool<{ well_id: string; target_epsg: number }, any>(
@@ -42,6 +44,8 @@ export const ProspectUI: React.FC = () => {
         }
     }, [selectedWell, handleProjectWell]);
 
+    if (mode === 'risk') return <RiskDashboard />;
+
     return (
         <div className="h-full flex flex-col bg-slate-950 text-slate-200 geox-root">
             {/* Toolbar */}
@@ -50,6 +54,13 @@ export const ProspectUI: React.FC = () => {
                 <h2 className="text-sm font-black tracking-widest uppercase italic font-ui">Prospect UI</h2>
                 
                 <div className="flex-1" />
+                
+                <button
+                    onClick={() => setMode('risk')}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition-colors"
+                >
+                    <Zap className="w-3 h-3" /> Risk Dashboard
+                </button>
                 
                 <div className="flex items-center gap-2">
                     <span className="text-[10px] font-mono text-slate-500 uppercase">Selected:</span>
