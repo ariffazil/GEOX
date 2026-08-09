@@ -7,6 +7,8 @@
   "authorization_servers": [
     "https://auth.arif-fazil.com/realms/arifos"
   ],
+  "authorization_servers_status": "P3_DRAFT — NOT YET DEPLOYED. Use static client_id (P3_AUTH_LITE) for early access.",
+
   "jwks_uri": "https://auth.arif-fazil.com/realms/arifos/protocol/openid-connect/certs",
 
   "scopes_supported": [
@@ -16,17 +18,45 @@
   ],
 
   "bearer_methods_supported": ["header"],
+
   "resource_signing_alg_values_supported": ["RS256", "ES256"],
   "authorization_details_types_supported": ["arifos_verdict_gated"],
 
+  "client_registration_supported": false,
+  "registration_endpoint": null,
+  "client_id_required": true,
+
+  "_arifos_p3_auth_lite": {
+    "status": "P3_DEPLOYED_AUTH_LITE — 2026-08-04",
+    "purpose": "Pre-P4 OAuth deployment: enable connectors (Claude.ai, ChatGPT, Cloudflare Workers AI) that cannot perform full OAuth 2.1 + DPoP against the not-yet-deployed AS",
+    "mechanism": "Static client_id checked at edge (Caddy X-MCP-Client-Id header) BEFORE arifOS forward_auth /gate/check. Static Client ID is a CONNECTOR IDENTIFICATION token — NOT an authority grant. Scope authority remains at arifOS constitutional kernel.",
+    "static_client_ids": [
+      {
+        "client_id": "geox-claude-conn-20260804-a01",
+        "connector": "claude.ai",
+        "scopes": ["geox:observe", "geox:interpret"],
+        "scopes_excluded": ["geox:forge"],
+        "expires_at": "2026-09-04T10:15:00Z",
+        "registry": "https://geox.arif-fazil.com/.well-known/static_clients.yaml"
+      }
+    ],
+    "how_to_use": "Configure your MCP connector (Claude.ai, ChatGPT, etc.) with these two fields: (1) Endpoint URL = https://geox.arif-fazil.com/mcp, (2) Custom header X-MCP-Client-Id = geox-claude-conn-20260804-a01. The connector's MCP implementation should send the client_id as the X-MCP-Client-Id HTTP header on every request. Caddy will bypass forward_auth and route directly to GEOX :8081 with X-Static-Client-Id header preserved for audit.",
+    "security_model": "Static client_id = USABILITY bypass, not security boundary. Scope authority (geox:observe / interpret / forge) still flows through arifOS MCP authority_gate.py. Geox:forge requires additional sovereign ACK regardless of client_id.",
+    "rotation_policy": "30-day TTL with 7-day overlap. Edit /root/GEOX/oauth/static_clients.yaml + reload Caddy. No arifOS restart.",
+    "deprecation_trigger": "When https://auth.arif-fazil.com/realms/arifos reaches P4_STABLE, this static-auth mode enters 30-day deprecation grace. All clients migrate to OAuth 2.1 Client Credentials + DPoP.",
+    "audit": "Every static-auth request is logged with client_id + connector + path + timestamp to /var/log/caddy/geox-static-auth.log. Promote to VAULT999 when P3 → P4."
+  },
+
   "_arifos_meta": {
     "doctrine": "OAuth scope grants ENTRY, never AUTHORITY. geox:forge and geox:seal MUST traverse arif_judge(F13/888) → arif_forge → arif_seal. Scope alone NEVER authorizes mutation. If the edge gateway attempts to authorize a forge/seal action on scope alone → VOID and VAULT999 log.",
-    "membrane": "External JWT terminates at edge gateway. Gateway validates against JWKS, maps identity → actor_id, mints internal SCT (HMAC-SHA256) via RFC 8693 token-exchange. No external party ever receives or can mint an SCT.",
+    "membrane": "External JWT terminates at edge gateway. Gateway validates against JWKS, maps identity → actor_id, mints internal SCT (HMAC-SHA256) via RFC 8693 token-exchange. No external party ever receives or can mint an SCT. In P3_AUTH_LITE mode, the X-MCP-Client-Id header substitutes for the JWT identity claim — IDENTIFICATION only, not authentication.",
     "resource_indicators": "Clients MUST set resource=https://geox.arif-fazil.com/mcp per RFC 8707 (anti-confused-deputy). Token minted for GEOX cannot replay at WEALTH/WELL/arifOS.",
     "pkce": "S256 mandatory. Implicit grant forbidden. Exact redirect URI matching (OAuth 2.1).",
     "spec_baseline": "MCP 2026-07-28 stateless — every request self-authorizes; no session trust.",
-    "status": "P3_DRAFT — Authorization Server (auth.arif-fazil.com) NOT YET DEPLOYED. This document authored ahead of P1. DO NOT serve this /.well-known/ until AS is live. authorization_servers URL will yield 404/NXDOMAIN if probed now.",
-    "live_registry": "33 tools probed from geox:8081/tools/list on 2026-08-03. git_version=geox-c5b9383b, version=v2026.07.24.",
-    "seal": "P3::WELL_KNOWN_PRM::v1.0::ALIGNED-2026-08-03"
+    "status": "P3_DEPLOYED_AUTH_LITE — Static client_id mode live; full OAuth AS pending P4 deployment.",
+    "live_registry": "42 tools probed from geox:8081/tools/list on 2026-08-04. git_version=geox-07878b5b, version=v2026.07.24.",
+    "seal": "P3::WELL_KNOWN_PRM::v1.0::ALIGNED-2026-08-04",
+    "previous_status": "P3_DRAFT — pre-2026-08-04",
+    "trigger_event": "Claude.ai MCP connector error: 'Automatic client registration isn't supported by GEOX MCP' (ref ofid_ca10349aa319689a)."
   }
 }

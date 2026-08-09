@@ -27,12 +27,12 @@ GHOST_TOOLS: set[str] = {
     "geox_biostrat_nn_age",
     "geox_biostrat_ruling_check",
     "geox_cognitive_rank_hypotheses",
-    "geox_forbidden_claims_scan",
+    # "geox_forbidden_claims_scan",  # RESURRECTED 2026-08-04 — GEOX-ZEN M3 surfacing (333-AGI)
     "geox_geological_cognition_run",
     "geox_macrostrat_calibrate",
     "geox_panel_d_render",
     "geox_panel_d_render_mcp",
-    "geox_physical_reality_interpret",
+    # "geox_physical_reality_interpret",  # RESURRECTED 2026-08-04 — GEOX-ZEN M2 surfacing (333-AGI)
     "geox_render_audit",
     "geox_rsi_interpret",
     "geox_segy_audit",

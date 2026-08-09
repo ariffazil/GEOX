@@ -1312,7 +1312,8 @@ def register_tools_on(mcp):
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
+    # GEOX-ZEN 2026-08-04 — RE-REGISTERED (M2 — Stage 444 compare)
+    @mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
     async def _physical_reality_interpret(
         arguments: dict[str, Any] | None = None,
         session_id: str | None = None,
@@ -2442,7 +2443,8 @@ def register_tools_on(mcp):
     # OBS_IMAGE ≠ OBS_GEOLOGY. Pixels are observed. Geology requires calibration.
     # ═══════════════════════════════════════════════════════════════════════════════
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
+    # GEOX-ZEN 2026-08-04 — RE-REGISTERED (M2 — Stage 444 compare)
+    @mcp.tool(name="geox_physical_reality_interpret", annotations=_geox_annotations("geox_physical_reality_interpret"))
     async def _geox_physical_reality_interpret(
         image_path: str,
         output_dir: str | None = None,
@@ -2630,7 +2632,8 @@ def register_tools_on(mcp):
         except Exception as e:
             return classify_error(e, source_tool="geox_segy_trace_audit", source_organ="geox")
 
-    # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_well_tie_compute", annotations=_geox_annotations("geox_well_tie_compute"))
+    # GEOX-ZEN 2026-08-04 — RE-REGISTERED (M1 — Stage 222 forward)
+    @mcp.tool(name="geox_well_tie_compute", annotations=_geox_annotations("geox_well_tie_compute"))
     async def _geox_well_tie_compute(
         las_path: str,
         segy_path: str | None = None,
@@ -2831,7 +2834,8 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_time_depth_calibrate", source_organ="geox")
 
-    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode — geox_well_seismic_mistie_rms
+    # GEOX-ZEN 2026-08-04 — RE-REGISTERED (M2 — Stage 444 compare)
+    @mcp.tool(name="geox_well_seismic_mistie_rms", annotations=_geox_annotations("geox_well_seismic_mistie_rms"))
     async def _geox_well_seismic_mistie_rms(
         synthetic_trace: list[float],
         seismic_trace: list[float],
@@ -2864,7 +2868,8 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_seismic_mistie_rms", source_organ="geox")
 
-    # ZEN 2026-07-11 G1: merged into geox_seismic_compute mode — geox_wavelet_extract_least_squares
+    # GEOX-ZEN 2026-08-04 — RE-REGISTERED (M1 — Stage 222 forward)
+    @mcp.tool(name="geox_wavelet_extract_least_squares", annotations=_geox_annotations("geox_wavelet_extract_least_squares"))
     async def _geox_wavelet_extract_least_squares(
         reflectivity_series: list[float],
         seismic_trace: list[float],
