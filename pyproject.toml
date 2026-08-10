@@ -146,7 +146,7 @@ dev = [
     # Property-based fuzzing — closes WAJIB #4 (Claude-fable 2026-07-13).
     # The class of bug the _evidence.py type-guard prevents is exactly what
     # hypothesis exists to kill — random shapes, deep invariants, no false PASS.
-    "hypothesis>=6.156.0",
+    "hypothesis>=6.165.2",
 ]
 pinn = [
     "torch>=2.12.1",
