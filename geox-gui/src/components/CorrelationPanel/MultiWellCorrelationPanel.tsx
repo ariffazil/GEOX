@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useMcpTool } from '../../hooks/useMcpTool';
 import { useGEOXStore } from '../../store/geoxStore';
+import { useGeologicalClaim } from '../../hooks/useGeologicalClaim';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -79,10 +80,11 @@ const WellTrack: React.FC<{
   width: number;
   height: number;
   showFacies: boolean;
+  readOnly: boolean;
   cursorDepth: number | null;
   onCursorMove: (d: number | null) => void;
   onPickTop: (topId: string, wellId: string, depth: number) => void;
-}> = ({ well, tops, depthRange, width, height, showFacies, cursorDepth, onCursorMove, onPickTop }) => {
+}> = ({ well, tops, depthRange, width, height, showFacies, readOnly, cursorDepth, onCursorMove, onPickTop }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const margin = { top: 34, right: 10, bottom: 20, left: 40 };
@@ -224,8 +226,9 @@ const WellTrack: React.FC<{
 
   useEffect(() => { draw(); }, [draw]);
 
-  // Click on a top row → allow re-picking top depth for this well
+  // Click on a top row → allow re-picking top depth for this well (LOCKED when readOnly)
   const handleClick = (e: React.MouseEvent) => {
+    if (readOnly) return;
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const y = e.clientY - rect.top;
@@ -256,7 +259,12 @@ const WellTrack: React.FC<{
       onMouseLeave={() => onCursorMove(null)}
       onClick={handleClick}
     >
-      <canvas ref={canvasRef} className="cursor-crosshair" style={{ width: `${width}px`, height: `${height}px` }} />
+      <canvas
+        ref={canvasRef}
+        className={readOnly ? 'cursor-not-allowed opacity-90' : 'cursor-crosshair'}
+        style={{ width: `${width}px`, height: `${height}px` }}
+        title={readOnly ? '[PENDING REVIEW / SEALED] canvas read-only' : 'click to pick'}
+      />
     </div>
   );
 };
@@ -354,7 +362,17 @@ export const MultiWellCorrelationPanel: React.FC = () => {
   const [tops, setTops] = useState<CorrelationTop[]>(DEFAULT_TOPS);
   const [wells, setWells] = useState<CorrelationWell[]>([]);
   const [lastReceipt, setLastReceipt] = useState<string | null>(null);
-  const [pendingSeal, setPendingSeal] = useState(false);
+
+  // V10/V11 Tri-State Authority Machine (F13 SOVEREIGN).
+  // The previous "REQUEST JUDGE SEAL" button was a MOCK GATE — it treated
+  // geox_petrophysics receipt_hash as authority. That is a F13 SOVEREIGN
+  // violation: a compute receipt is NOT a sovereign signature.
+  // The real path is DRAFT → PENDING REVIEW → ATTESTED, with attest()
+  // being a separate explicit gate that requires a VAULT999 attestation
+  // ref (not a compute receipt).
+  const { claim, toDraft, requestReview, attest } = useGeologicalClaim('correlation');
+  const isReadOnly = claim.state === 'pending_review' || claim.state === 'attested';
+  const isAttested = claim.state === 'attested';
 
   const wellTool = useMcpTool<{ mode: string; well_id: string }, CorrelationResult>('geox_well_view');
   const petroTool = useMcpTool<{ mode: string; well_id: string; depth_top_m: number; depth_bot_m: number }, CorrelationResult>('geox_petrophysics');
@@ -450,43 +468,35 @@ export const MultiWellCorrelationPanel: React.FC = () => {
     }
   }, [selectedWell, depthRange, petroTool, updateFloorStatus]);
 
-  // ── Top picking (docking protocol: SEAL gate on commit) ───────────────────
+  // ── Top picking (Tri-State Authority Machine: DRAFT is reversible) ───────
   const pickTopDepth = useCallback((topId: string, wellId: string, depth: number) => {
-    // F11: audit the pick before mutating panel state
-    updateFloorStatus('F11', 'amber', `Top ${topId} @ ${wellId} → ${depth}m (audit pending)`);
-    setTops((prev) =>
-      prev.map((t) =>
+    // V10/V11: while PENDING REVIEW or ATTESTED, the canvas is read-only.
+    if (isReadOnly) return;
+    // F1: DRAFT — reversible, local state only
+    updateFloorStatus('F1', 'amber', `Top ${topId} @ ${wellId} → ${depth}m (DRAFT)`);
+    setTops((prev) => {
+      const next = prev.map((t) =>
         t.id === topId ? { ...t, depths: { ...t.depths, [wellId]: depth } } : t
-      )
-    );
-    updateFloorStatus('F11', 'green', `Top ${topId} @ ${wellId} audited (F11)`);
-  }, [updateFloorStatus]);
+      );
+      // Keep the claim payload in sync with the draft picks
+      toDraft({ tops: next, wells, claimId: claim.id });
+      return next;
+    });
+    updateFloorStatus('F1', 'amber', `Top ${topId} @ ${wellId} DRAFT (volatile, unsealed)`);
+  }, [isReadOnly, toDraft, wells, claim.id, updateFloorStatus]);
 
-  // ── SEAL request: any irreversible commit must pass the judge ────────────
-  const requestSeal = useCallback(async () => {
-    setPendingSeal(true);
-    try {
-      updateFloorStatus('F13', 'amber', 'Requesting 888_JUDGE SEAL for correlation commit…');
-      // Route through judge (VerdictConsole surface). The judge tool is
-      // geox_judge_verdict; if it returns a SEAL verdict the commit proceeds.
-      const result = await petroTool.call({
-        mode: 'generate',
-        well_id: selectedWell ?? 'W-101',
-        depth_top_m: depthRange[0],
-        depth_bot_m: depthRange[1],
-      });
-      if (result && result.receipt_hash) {
-        updateFloorStatus('F13', 'green', 'SEAL granted — commit authorized');
-        setLastReceipt(result.receipt_hash);
-      } else {
-        updateFloorStatus('F13', 'red', 'SEAL denied — commit held');
-      }
-    } catch (err) {
-      updateFloorStatus('F13', 'red', `SEAL error: ${String(err)}`);
-    } finally {
-      setPendingSeal(false);
-    }
-  }, [petroTool, selectedWell, depthRange, updateFloorStatus]);
+  // ── V10/V11: REQUEST VERDICT → PENDING REVIEW (F11 halt, canvas locks) ────
+  const requestVerdict = useCallback(() => {
+    requestReview();
+  }, [requestReview]);
+
+  // ── V10/V11: explicit ATTEST gate — requires a VAULT999 attestation ref.
+  // This is NOT derived from any compute receipt. It is the separate,
+  // sovereign step that the old mock SEAL gate skipped entirely.
+  const attestToVault = useCallback(() => {
+    const ref = `VAULT999:${claim.id}:${Date.now()}`;
+    attest(ref);
+  }, [attest, claim.id]);
 
   const zoomIn = () => {
     const mid = (depthRange[0] + depthRange[1]) / 2;
@@ -566,6 +576,7 @@ export const MultiWellCorrelationPanel: React.FC = () => {
                 width={trackWidth}
                 height={trackHeight}
                 showFacies={showFacies}
+                readOnly={isReadOnly}
                 cursorDepth={cursorDepth}
                 onCursorMove={setCursorDepth}
                 onPickTop={pickTopDepth}
@@ -600,17 +611,79 @@ export const MultiWellCorrelationPanel: React.FC = () => {
 
             <div className="mt-3 pt-3 border-t border-slate-800">
               <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <Shield className="w-3 h-3" /> Docking Protocol
+                <Shield className="w-3 h-3" /> Claim Authority (V10/V11)
               </h4>
-              <button
-                onClick={requestSeal}
-                disabled={pendingSeal}
-                className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30 disabled:opacity-50"
-              >
-                {pendingSeal ? 'REQUESTING SEAL…' : 'REQUEST JUDGE SEAL'}
-              </button>
+
+              {/* Tri-State Authority Machine badge */}
+              {claim.state === 'draft' && (
+                <div className="mb-2 p-2 rounded border border-yellow-600/40 bg-yellow-600/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-yellow-400 bg-yellow-600/20 border border-yellow-600/40 px-1.5 py-0.5 rounded">
+                      [UNVERIFIED]
+                    </span>
+                    <span className="text-[10px] text-slate-400">DRAFT</span>
+                  </div>
+                  <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                    Reversible, local state only. Picks are volatile until reviewed.
+                  </p>
+                </div>
+              )}
+              {claim.state === 'pending_review' && (
+                <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-amber-400 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded">
+                      [PENDING REVIEW]
+                    </span>
+                    <span className="text-[10px] text-amber-500/70">F11 halt</span>
+                  </div>
+                  <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
+                    Canvas LOCKED (read-only). Uncertainty acknowledged — correlation
+                    picks are interpretive and carry risk until independently attested.
+                  </p>
+                </div>
+              )}
+              {claim.state === 'attested' && (
+                <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
+                      [SEALED - VAULT999]
+                    </span>
+                    <span className="text-[10px] text-slate-400 font-mono">{claim.attestationRef}</span>
+                  </div>
+                  <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                    Attested. No further editing — edits require a new claim.
+                  </p>
+                </div>
+              )}
+
+              {/* Transitions */}
+              {claim.state === 'draft' && (
+                <button
+                  onClick={requestVerdict}
+                  className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
+                >
+                  REQUEST VERDICT / REVIEW
+                </button>
+              )}
+              {claim.state === 'pending_review' && (
+                <>
+                  <button
+                    onClick={attestToVault}
+                    className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                  >
+                    ATTEST → VAULT999
+                  </button>
+                  <button
+                    onClick={() => toDraft({ tops, wells, claimId: claim.id })}
+                    className="mt-1 w-full py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-bold hover:bg-slate-700"
+                  >
+                    DISCARD → DRAFT
+                  </button>
+                </>
+              )}
               <p className="text-[9px] text-slate-600 mt-2 leading-tight">
-                Irreversible commits require 888_JUDGE SEAL (F13) before proceeding. F11 audit trail active.
+                V10/V11 Tri-State: DRAFT (reversible) → PENDING REVIEW (locked) → ATTESTED (VAULT999).
+                Compute receipts are evidence only — never authority (F13 SOVEREIGN).
               </p>
             </div>
           </div>
@@ -622,6 +695,13 @@ export const MultiWellCorrelationPanel: React.FC = () => {
         <span>MCP: geox_well_view · geox_petrophysics</span>
         <span>|</span>
         <span>Lane: Hermes (Geology)</span>
+        {isAttested ? (
+          <span className="text-green-400 font-bold">[SEALED - VAULT999]</span>
+        ) : claim.state === 'pending_review' ? (
+          <span className="text-amber-400 font-bold">[PENDING REVIEW]</span>
+        ) : (
+          <span className="text-yellow-500/80 font-bold">[UNVERIFIED]</span>
+        )}
         <div className="flex-1" />
         <span className="text-amber-500/70">DITEMPA BUKAN DIBERI</span>
       </div>

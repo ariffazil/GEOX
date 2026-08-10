@@ -23,7 +23,7 @@ import {
 } from 'lucide-react';
 import { useMcpTool } from '../../hooks/useMcpTool';
 import { useGEOXStore } from '../../store/geoxStore';
-import { geoxMcpClient } from '../../lib/geoxMcpClient';
+import { useGeologicalClaim } from '../../hooks/useGeologicalClaim';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -78,7 +78,8 @@ const SeismicSectionRenderer: React.FC<{
   onCanvasClick: (trace: number, time: number) => void;
   showHorizons: boolean;
   showFaults: boolean;
-}> = ({ picks, pickMode, onCanvasClick, showHorizons, showFaults }) => {
+  readOnly: boolean;
+}> = ({ picks, pickMode, onCanvasClick, showHorizons, showFaults, readOnly }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const width = 700;
   const height = 450;
@@ -180,7 +181,7 @@ const SeismicSectionRenderer: React.FC<{
     }
 
     // Draw picks
-    picks.forEach((pick, pi) => {
+    picks.forEach((pick, _pi) => {
       if ((pick.type === 'horizon' && !showHorizons) || (pick.type === 'fault' && !showFaults)) return;
 
       ctx.strokeStyle = pick.color;
@@ -213,17 +214,21 @@ const SeismicSectionRenderer: React.FC<{
     });
 
     // Pick mode indicator
-    if (pickMode !== 'none') {
+    if (readOnly) {
+      ctx.fillStyle = '#d4af37';
+      ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText('🔒 LOCKED — PENDING REVIEW / SEALED', margin.left + 4, margin.top + 14);
+    } else if (pickMode !== 'none') {
       ctx.fillStyle = pickMode === 'horizon' ? '#22c55e' : '#ef4444';
       ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
       ctx.fillText(`MODE: ${pickMode.toUpperCase()} — Click to pick`, margin.left + 4, margin.top + 14);
     }
-  }, [picks, pickMode, showHorizons, showFaults]);
+  }, [picks, pickMode, showHorizons, showFaults, readOnly, margin.left, margin.top, plotW, plotH]);
 
   useEffect(() => { draw(); }, [draw]);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (pickMode === 'none') return;
+    if (readOnly || pickMode === 'none') return;
     const rect = e.currentTarget.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -239,9 +244,10 @@ const SeismicSectionRenderer: React.FC<{
   return (
     <canvas
       ref={canvasRef}
-      className="cursor-crosshair border border-slate-800 rounded"
+      className={`border border-slate-800 rounded ${readOnly ? 'cursor-not-allowed opacity-90' : 'cursor-crosshair'}`}
       style={{ width: `${width}px`, height: `${height}px` }}
       onClick={handleClick}
+      title={readOnly ? '[PENDING REVIEW / SEALED] canvas read-only' : 'click to pick'}
     />
   );
 };
@@ -257,10 +263,19 @@ export const SeismicInterpretationCanvas: React.FC = () => {
   const [showHorizons, setShowHorizons] = useState(true);
   const [showFaults, setShowFaults] = useState(true);
   const [activeHorizonIdx, setActiveHorizonIdx] = useState(0);
-  // F13 SOVEREIGN gate: irreversible interpretation commits are held here
-  // pending 888_JUDGE SEAL (see requestSeal below).
-  const [pendingSeal, setPendingSeal] = useState<LocalPick | null>(null);
-  const [sealRequesting, setSealRequesting] = useState(false);
+  // V10/V11 Tri-State Authority Machine (F13 SOVEREIGN).
+  // Two claim instances — one per pick family — replace the single
+  // "REQUEST JUDGE SEAL" mock gate that called geox_judge_verdict and
+  // treated the verdict as authority. A compute receipt is NOT a sovereign
+  // signature. The real path is DRAFT → PENDING REVIEW → ATTESTED, with
+  // attest() being a separate explicit gate requiring a VAULT999 ref.
+  const horizon = useGeologicalClaim('horizon');
+  const fault = useGeologicalClaim('fault');
+  // Canvas is locked if EITHER claim is non-DRAFT — interpretive commits
+  // are not the only concern; the operator must be able to attest cleanly.
+  const horizonReadOnly = horizon.claim.state !== 'draft';
+  const faultReadOnly = fault.claim.state !== 'draft';
+  const anyReadOnly = horizonReadOnly || faultReadOnly;
   const nextPickId = useRef(1);
 
   const interpretTool = useMcpTool<{
@@ -289,12 +304,16 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: h.points?.map(([t, time]) => ({ trace: t, time })) ?? [],
           color: seismicColors[i % seismicColors.length],
         }));
-        setPicks((prev) => [...prev, ...newPicks]);
+        setPicks((prev) => {
+          const next = [...prev, ...newPicks];
+          horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
+          return next;
+        });
       }
     } catch (err) {
       updateFloorStatus('F2', 'red', `Horizon pick failed: ${String(err)}`);
     }
-  }, [interpretTool, updateFloorStatus]);
+  }, [interpretTool, updateFloorStatus, horizon]);
 
   const runFaultDetection = useCallback(async () => {
     try {
@@ -313,105 +332,97 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: f.points?.map(([t, time]) => ({ trace: t, time })) ?? [],
           color: faultColors[i % faultColors.length],
         }));
-        setPicks((prev) => [...prev, ...newPicks]);
+        setPicks((prev) => {
+          const next = [...prev, ...newPicks];
+          fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
+          return next;
+        });
       }
     } catch (err) {
       updateFloorStatus('F2', 'red', `Fault detection failed: ${String(err)}`);
     }
-  }, [interpretTool, updateFloorStatus]);
+  }, [interpretTool, updateFloorStatus, fault]);
 
   const handleCanvasClick = useCallback((trace: number, time: number) => {
-    // F13 SOVEREIGN: while a pick is held for 888_JUDGE SEAL, do not accept
-    // further picks — the user must REQUEST or DISCARD first.
-    if (pendingSeal) return;
+    // V10/V11 Tri-State: while the relevant claim is PENDING REVIEW or
+    // ATTESTED, the canvas is read-only. No picks are accepted.
+    if (pickMode === 'horizon' && horizonReadOnly) return;
+    if (pickMode === 'fault' && faultReadOnly) return;
+    if (pickMode === 'none') return;
 
     if (pickMode === 'horizon') {
       const existing = picks.filter((p) => p.type === 'horizon');
       if (existing.length === 0) {
-        // F13 SOVEREIGN gate: new horizon creation is an irreversible
-        // interpretation commit. Hold in pendingSeal until 888_JUDGE
-        // SEAL is granted (see requestSeal).
-        setPendingSeal({
+        // V10/V11: first horizon creation is a DRAFT-level action.
+        // No more pendingSeal holding — the user freely creates picks in DRAFT,
+        // then explicitly REQUESTS VERDICT when ready to lock.
+        const newPick: LocalPick = {
           id: `h-${nextPickId.current++}`,
           name: `Horizon-${nextPickId.current}`,
           type: 'horizon',
           points: [{ trace, time }],
           color: seismicColors[0],
+        };
+        setPicks((prev) => {
+          const next = [...prev, newPick];
+          horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
+          return next;
         });
         return;
       }
-      // Continuation of an already-committed horizon — direct update.
+      // Continuation of an already-existing horizon — direct update.
       const target = existing[activeHorizonIdx % existing.length];
-      setPicks((prev) =>
-        prev.map((p) =>
+      setPicks((prev) => {
+        const next = prev.map((p) =>
           p.id === target.id ? { ...p, points: [...p.points, { trace, time }].sort((a, b) => a.trace - b.trace) } : p
-        )
-      );
+        );
+        horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
+        return next;
+      });
     } else if (pickMode === 'fault') {
       const existing = picks.filter((p) => p.type === 'fault');
       if (existing.length === 0) {
-        setPendingSeal({
+        const newPick: LocalPick = {
           id: `f-${nextPickId.current++}`,
           name: `Fault-${nextPickId.current}`,
           type: 'fault',
           points: [{ trace, time }],
           color: faultColors[0],
+        };
+        setPicks((prev) => {
+          const next = [...prev, newPick];
+          fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
+          return next;
         });
         return;
       }
       const lastFault = existing[existing.length - 1];
-      setPicks((prev) =>
-        prev.map((p) =>
+      setPicks((prev) => {
+        const next = prev.map((p) =>
           p.id === lastFault.id ? { ...p, points: [...p.points, { trace, time }] } : p
-        )
-      );
-    }
-  }, [pickMode, activeHorizonIdx, picks, pendingSeal]);
-
-  // ── F13 SOVEREIGN: request 888_JUDGE SEAL for the held pick ──────────────
-  const requestSeal = useCallback(async () => {
-    if (!pendingSeal) return;
-    setSealRequesting(true);
-    try {
-      updateFloorStatus('F13', 'amber', 'Requesting 888_JUDGE SEAL for seismic pick…');
-      const raw = await geoxMcpClient.callTool({
-        tool: 'geox_judge_verdict',
-        arguments: { subject: 'seismic_pick', data: pendingSeal },
+        );
+        fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
+        return next;
       });
-      // geoxMcpClient wraps parsed result as { result: <parsed> }, but the
-      // shape may also be the verdict directly. Be defensive.
-      const verdict = (raw as { result?: Record<string, unknown> })?.result
-        ?? (raw as Record<string, unknown>);
-      const granted =
-        verdict?.status === 'SEAL' ||
-        verdict?.verdict === 'SEAL' ||
-        verdict?.sealed === true ||
-        verdict?.granted === true ||
-        verdict?.decision === 'grant';
-      if (granted) {
-        updateFloorStatus('F13', 'green', 'SEAL granted');
-        setPicks((prev) => [...prev, pendingSeal]);
-        setPendingSeal(null);
-      } else {
-        updateFloorStatus('F13', 'red', 'SEAL denied — pick held');
-        setPendingSeal(null);
-      }
-    } catch (err) {
-      updateFloorStatus('F13', 'red', `SEAL denied — pick held (${String(err).slice(0, 60)})`);
-      setPendingSeal(null);
-    } finally {
-      setSealRequesting(false);
     }
-  }, [pendingSeal, updateFloorStatus]);
+  }, [pickMode, activeHorizonIdx, picks, horizonReadOnly, faultReadOnly, horizon, fault]);
 
-  const discardPendingSeal = useCallback(() => {
-    if (!pendingSeal) return;
-    updateFloorStatus('F13', 'amber', 'Pending seismic pick discarded by operator');
-    setPendingSeal(null);
-  }, [pendingSeal, updateFloorStatus]);
+  // ── V10/V11: Tri-State transitions for horizon and fault claims ──────────────
+  const requestHorizonReview = useCallback(() => horizon.requestReview(), [horizon]);
+  const requestFaultReview = useCallback(() => fault.requestReview(), [fault]);
+  const attestHorizon = useCallback(() => {
+    const ref = `VAULT999:${horizon.claim.id}:${Date.now()}`;
+    horizon.attest(ref);
+  }, [horizon]);
+  const attestFault = useCallback(() => {
+    const ref = `VAULT999:${fault.claim.id}:${Date.now()}`;
+    fault.attest(ref);
+  }, [fault]);
 
   const clearPicks = () => {
     setPicks([]);
+    horizon.toDraft({ picks: [] });
+    fault.toDraft({ picks: [] });
     nextPickId.current = 1;
   };
 
@@ -419,8 +430,12 @@ export const SeismicInterpretationCanvas: React.FC = () => {
     setPicks((prev) => {
       if (prev.length === 0) return prev;
       const last = prev[prev.length - 1];
-      if (last.points.length <= 1) return prev.slice(0, -1);
-      return prev.map((p) => (p.id === last.id ? { ...p, points: p.points.slice(0, -1) } : p));
+      const next = last.points.length <= 1
+        ? prev.slice(0, -1)
+        : prev.map((p) => (p.id === last.id ? { ...p, points: p.points.slice(0, -1) } : p));
+      if (last.type === 'horizon') horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
+      else fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
+      return next;
     });
   };
 
@@ -443,17 +458,19 @@ export const SeismicInterpretationCanvas: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setPickMode('horizon')}
+            disabled={horizonReadOnly}
             className={`px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1.5 transition-all
-              ${pickMode === 'horizon' ? 'bg-green-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+              ${pickMode === 'horizon' && !horizonReadOnly ? 'bg-green-600 text-white' : horizonReadOnly ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
           >
-            <MousePointer2 className="w-3 h-3" /> Horizon
+            <MousePointer2 className="w-3 h-3" /> Horizon{horizonReadOnly ? ' 🔒' : ''}
           </button>
           <button
             onClick={() => setPickMode('fault')}
+            disabled={faultReadOnly}
             className={`px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1.5 transition-all
-              ${pickMode === 'fault' ? 'bg-red-600 text-white' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+              ${pickMode === 'fault' && !faultReadOnly ? 'bg-red-600 text-white' : faultReadOnly ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
           >
-            <PenTool className="w-3 h-3" /> Fault
+            <PenTool className="w-3 h-3" /> Fault{faultReadOnly ? ' 🔒' : ''}
           </button>
           <button onClick={() => setPickMode('none')}
             className="px-3 py-1.5 rounded text-xs font-bold bg-slate-800 text-slate-400 hover:text-white">
@@ -504,6 +521,7 @@ export const SeismicInterpretationCanvas: React.FC = () => {
               onCanvasClick={handleCanvasClick}
               showHorizons={showHorizons}
               showFaults={showFaults}
+              readOnly={anyReadOnly}
             />
           </div>
         </div>
@@ -547,38 +565,148 @@ export const SeismicInterpretationCanvas: React.FC = () => {
             </button>
           )}
 
-          {/* F13 Docking Protocol — 888_JUDGE SEAL gate for new picks */}
-          {pendingSeal && (
-            <div className="mt-3 pt-3 border-t border-slate-800">
-              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3 text-emerald-400" /> F13 Docking Protocol
-              </h4>
+          {/* V10/V11 Tri-State Authority Machine — Horizon */}
+          <div className="mt-3 pt-3 border-t border-slate-800">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-green-400" /> Horizon Claim (V10/V11)
+            </h4>
+            {horizon.claim.state === 'draft' && (
+              <div className="mb-2 p-2 rounded border border-yellow-600/40 bg-yellow-600/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-yellow-400 bg-yellow-600/20 border border-yellow-600/40 px-1.5 py-0.5 rounded">
+                    [UNVERIFIED]
+                  </span>
+                  <span className="text-[10px] text-slate-400">DRAFT</span>
+                </div>
+                <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                  {horizonPicks.length} horizon(s) · {horizonPicks.reduce((s, p) => s + p.points.length, 0)} pts · volatile
+                </p>
+              </div>
+            )}
+            {horizon.claim.state === 'pending_review' && (
               <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-0.5 rounded" style={{ backgroundColor: pendingSeal.color }} />
-                  <span className="text-xs font-bold text-amber-400">{pendingSeal.name}</span>
+                  <span className="text-[10px] font-bold text-amber-400 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded">
+                    [PENDING REVIEW]
+                  </span>
+                  <span className="text-[10px] text-amber-500/70">F11 halt</span>
                 </div>
-                <span className="text-[10px] text-amber-500/70">Held for 888_JUDGE SEAL — irreversible commit</span>
+                <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
+                  Canvas LOCKED. Uncertainty acknowledged — horizon picks are
+                  interpretive and carry risk until independently attested.
+                </p>
               </div>
+            )}
+            {horizon.claim.state === 'attested' && (
+              <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
+                    [SEALED - VAULT999]
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">{horizon.claim.attestationRef?.slice(0, 20)}…</span>
+                </div>
+              </div>
+            )}
+            {horizon.claim.state === 'draft' && (
               <button
-                onClick={requestSeal}
-                disabled={sealRequesting}
-                className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30 disabled:opacity-50"
+                onClick={requestHorizonReview}
+                className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
               >
-                {sealRequesting ? 'REQUESTING SEAL…' : 'REQUEST JUDGE SEAL'}
+                REQUEST VERDICT / REVIEW
               </button>
+            )}
+            {horizon.claim.state === 'pending_review' && (
+              <>
+                <button
+                  onClick={attestHorizon}
+                  className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                >
+                  ATTEST → VAULT999
+                </button>
+                <button
+                  onClick={() => horizon.toDraft({ picks: horizonPicks })}
+                  className="mt-1 w-full py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-bold hover:bg-slate-700"
+                >
+                  DISCARD → DRAFT
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* V10/V11 Tri-State Authority Machine — Fault */}
+          <div className="mt-3 pt-3 border-t border-slate-800">
+            <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-red-400" /> Fault Claim (V10/V11)
+            </h4>
+            {fault.claim.state === 'draft' && (
+              <div className="mb-2 p-2 rounded border border-yellow-600/40 bg-yellow-600/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-yellow-400 bg-yellow-600/20 border border-yellow-600/40 px-1.5 py-0.5 rounded">
+                    [UNVERIFIED]
+                  </span>
+                  <span className="text-[10px] text-slate-400">DRAFT</span>
+                </div>
+                <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                  {faultPicks.length} fault(s) · {faultPicks.reduce((s, p) => s + p.points.length, 0)} pts · volatile
+                </p>
+              </div>
+            )}
+            {fault.claim.state === 'pending_review' && (
+              <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-amber-400 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded">
+                    [PENDING REVIEW]
+                  </span>
+                  <span className="text-[10px] text-amber-500/70">F11 halt</span>
+                </div>
+                <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
+                  Canvas LOCKED. Uncertainty acknowledged — fault picks are
+                  interpretive and carry risk until independently attested.
+                </p>
+              </div>
+            )}
+            {fault.claim.state === 'attested' && (
+              <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
+                    [SEALED - VAULT999]
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">{fault.claim.attestationRef?.slice(0, 20)}…</span>
+                </div>
+              </div>
+            )}
+            {fault.claim.state === 'draft' && (
               <button
-                onClick={discardPendingSeal}
-                disabled={sealRequesting}
-                className="mt-1 w-full py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-bold hover:bg-slate-700 disabled:opacity-50"
+                onClick={requestFaultReview}
+                className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
               >
-                DISCARD
+                REQUEST VERDICT / REVIEW
               </button>
-              <p className="text-[9px] text-slate-600 mt-2 leading-tight">
-                Irreversible interpretation commits require 888_JUDGE SEAL (F13) before proceeding. F11 audit trail active.
-              </p>
-            </div>
-          )}
+            )}
+            {fault.claim.state === 'pending_review' && (
+              <>
+                <button
+                  onClick={attestFault}
+                  className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                >
+                  ATTEST → VAULT999
+                </button>
+                <button
+                  onClick={() => fault.toDraft({ picks: faultPicks })}
+                  className="mt-1 w-full py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-bold hover:bg-slate-700"
+                >
+                  DISCARD → DRAFT
+                </button>
+              </>
+            )}
+          </div>
+
+          <div className="mt-3 pt-3 border-t border-slate-800">
+            <p className="text-[9px] text-slate-600 leading-tight">
+              V10/V11 Tri-State: DRAFT → PENDING REVIEW (locked) → ATTESTED (VAULT999).
+              Compute receipts are evidence only — never authority (F13 SOVEREIGN).
+            </p>
+          </div>
 
           {/* Status */}
           <div className="mt-4 pt-3 border-t border-slate-800">
@@ -608,6 +736,21 @@ export const SeismicInterpretationCanvas: React.FC = () => {
         <span>Picks: {picks.length} ({horizonPicks.length}H, {faultPicks.length}F)</span>
         <span>|</span>
         <span>Mode: {pickMode}</span>
+        <span>|</span>
+        <span className={
+          horizon.claim.state === 'attested' ? 'text-green-400' :
+          horizon.claim.state === 'pending_review' ? 'text-amber-400' :
+          'text-yellow-500/70'
+        }>
+          H:{horizon.claim.state.toUpperCase()}
+        </span>
+        <span className={
+          fault.claim.state === 'attested' ? 'text-green-400' :
+          fault.claim.state === 'pending_review' ? 'text-amber-400' :
+          'text-yellow-500/70'
+        }>
+          F:{fault.claim.state.toUpperCase()}
+        </span>
         <div className="flex-1" />
         <span className="text-amber-500/70">DITEMPA BUKAN DIBERI</span>
       </div>
