@@ -22,6 +22,9 @@ import {
   type GeoxSurfaceStatus,
   type GeoxToolInvocation,
 } from '../../lib/geoxMcpClient';
+import { SeismicInterpretationCanvas } from '../SectionCanvas/SeismicInterpretationCanvas';
+import { PetrophysicalTracks } from '../LogDock/PetrophysicalTracks';
+import { LogDock } from '../LogDock/LogDock';
 import './OperatorCockpit.css';
 
 type ViewId = 'overview' | 'well' | 'seismic' | 'volume' | 'workflow' | 'risk';
@@ -58,7 +61,7 @@ const VIEWS: CockpitView[] = [
     label: 'Well Witness',
     shortLabel: 'X1D',
     description: 'Logs, petrophysics, tie preflight, and evidence receipts',
-    src: '/gui/well_context_desk/index.html',
+    src: 'react:well',
     icon: Database,
   },
   {
@@ -66,7 +69,7 @@ const VIEWS: CockpitView[] = [
     label: 'Seismic',
     shortLabel: 'X2D',
     description: 'Section cognition, visual interpretation, and hypotheses',
-    src: '/gui/seismic_viewer/index.html',
+    src: 'react:seismic',
     icon: Radar,
   },
   {
@@ -392,14 +395,25 @@ export const OperatorCockpit: React.FC = () => {
               <Activity /> Activity {activity.length > 0 ? `(${activity.length})` : ''}
             </button>
           </div>
-          <iframe
-            ref={iframeRef}
-            key={currentView.id}
-            src={currentView.src}
-            title={currentView.label}
-            className="geox-workspace-frame"
-            sandbox="allow-scripts allow-forms allow-same-origin allow-downloads"
-          />
+          {currentView.id === 'seismic' ? (
+            <div className="geox-panel">
+              <SeismicInterpretationCanvas />
+            </div>
+          ) : currentView.id === 'well' ? (
+            <div className="geox-panel geox-panel-split">
+              <div className="geox-panel-left"><LogDock /></div>
+              <div className="geox-panel-right"><PetrophysicalTracks /></div>
+            </div>
+          ) : (
+            <iframe
+              ref={iframeRef}
+              key={currentView.id}
+              src={currentView.src}
+              title={currentView.label}
+              className="geox-workspace-frame"
+              sandbox="allow-scripts allow-forms allow-same-origin allow-downloads"
+            />
+          )}
         </main>
 
         <aside className={`geox-activity-rail ${showActivity ? 'is-open' : ''}`} aria-label="Tool activity">
