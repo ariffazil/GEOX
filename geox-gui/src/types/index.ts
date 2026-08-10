@@ -429,6 +429,10 @@ export interface GEOXState {
   groundingStatus: GroundingStatus;
   uncertainty: UncertaintyState;
 
+  // Identity (F2 / P0_IDENTITY_PROPAGATION — injected into every MCP call)
+  sessionToken: string | null;
+  actorId: string | null;
+
   // Connection
   geoxConnected: boolean;
   geoxUrl: string;

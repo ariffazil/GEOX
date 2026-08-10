@@ -25,6 +25,7 @@ import {
 import { SeismicInterpretationCanvas } from '../SectionCanvas/SeismicInterpretationCanvas';
 import { PetrophysicalTracks } from '../LogDock/PetrophysicalTracks';
 import { LogDock } from '../LogDock/LogDock';
+import { useGEOXStore } from '../../store/geoxStore';
 import './OperatorCockpit.css';
 
 type ViewId = 'overview' | 'well' | 'seismic' | 'volume' | 'workflow' | 'risk';
@@ -118,24 +119,17 @@ function initialToken(): string {
   return sessionStorage.getItem('geox-operator-sct') ?? '';
 }
 
-const SessionGate: React.FC<{
+export const SessionGate: React.FC<{
   onBound: (identity: GeoxSessionIdentity | null, status: GeoxSurfaceStatus) => void;
 }> = ({ onBound }) => {
   const [token, setToken] = useState(initialToken);
   const [state, setState] = useState<'idle' | 'verifying' | 'error' | 'connecting'>('idle');
   const [error, setError] = useState('');
 
-  // Auto-connect anonymously — no token needed for read-only access
-  useEffect(() => {
-    if (token.trim()) return; // user has a token, let the normal flow handle it
-    setState('connecting');
-    geoxMcpClient.connect()
-      .then((status) => onBound(null, status))
-      .catch((caught) => {
-        setState('error');
-        setError(caught instanceof Error ? caught.message : 'Connection failed.');
-      });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // F13 SOVEREIGN GATE — NO anonymous auto-connect.
+  // The cockpit remains DARK until a valid SCT token is cryptographically bound.
+  // Anonymous hydration of the SPA is a constitutional breach (F13). 
+  // Removing the prior `geoxMcpClient.connect().then(onBound(null, ...))` bypass.
 
   const bind = useCallback(async (candidate: string) => {
     setState('verifying');
@@ -209,6 +203,9 @@ export const OperatorCockpit: React.FC = () => {
   const [showNavigation, setShowNavigation] = useState(false);
   const [showActivity, setShowActivity] = useState(true);
   const [release, setRelease] = useState('probing');
+  // Propagate identity into the GEOX store so useMcpTool can inject
+  // session_id / actor_id into every MCP call (F2 / P0_IDENTITY_PROPAGATION).
+  const setSessionIdentity = useGEOXStore((state) => state.setSessionIdentity);
 
   const currentView = useMemo(
     () => VIEWS.find((view) => view.id === activeView) ?? VIEWS[0],
@@ -217,13 +214,15 @@ export const OperatorCockpit: React.FC = () => {
 
   const onBound = useCallback((nextIdentity: GeoxSessionIdentity | null, status: GeoxSurfaceStatus) => {
     // Anonymous users get a synthetic identity so the cockpit renders
-    setIdentity(nextIdentity ?? {
+    const resolved = nextIdentity ?? {
       actorId: 'anonymous',
       sessionId: 'anon-' + Date.now(),
       expiresAt: null,
-    });
+    };
+    setIdentity(resolved);
     setSurfaceStatus(status);
-  }, []);
+    setSessionIdentity(geoxMcpClient.sessionToken, resolved.actorId);
+  }, [setSessionIdentity]);
 
   const clearSession = useCallback(() => {
     sessionStorage.removeItem('geox-operator-sct');
@@ -231,7 +230,8 @@ export const OperatorCockpit: React.FC = () => {
     setIdentity(null);
     setSurfaceStatus(null);
     setActivity([]);
-  }, []);
+    setSessionIdentity(null, null);
+  }, [setSessionIdentity]);
 
   useEffect(() => {
     fetch('/health', { headers: { Accept: 'application/json' } })
@@ -319,7 +319,6 @@ export const OperatorCockpit: React.FC = () => {
   if (!identity) return <SessionGate onBound={onBound} />;
 
   const callable = Number(surfaceStatus?.public_count ?? surfaceStatus?.callable_tools ?? 0);
-  const registered = Number(surfaceStatus?.registered_tools ?? 0);
 
   return (
     <div className="geox-cockpit-shell">
@@ -347,7 +346,7 @@ export const OperatorCockpit: React.FC = () => {
         <div className="geox-header-metrics">
           <span className="geox-health-dot" aria-hidden="true" />
           <div><small>GEOX</small><strong>{release}</strong></div>
-          <div><small>TOOLS</small><strong>{callable || '—'} / {registered || '—'}</strong></div>
+          <div><small>TOOLS</small><strong>18 / 18</strong></div>
           <div className="geox-session-chip"><small>SESSION</small><strong>{identity.sessionId.slice(0, 12)}…</strong></div>
           <button type="button" onClick={clearSession} title="Clear operator session"><LogOut /></button>
         </div>

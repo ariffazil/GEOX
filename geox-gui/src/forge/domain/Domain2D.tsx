@@ -32,6 +32,7 @@ import {
   FileDown,
   Scan,
 } from 'lucide-react';
+import { SeismicInterpretationCanvas } from '../../components/SectionCanvas/SeismicInterpretationCanvas';
 
 /**
  * Seismic data structure
@@ -650,6 +651,11 @@ export const Domain2D: React.FC<Domain2DProps> = ({
             />
             {/* Scanline overlay */}
             <div className="geox-radar-sweep" />
+          </div>
+
+          {/* Phase 1 — SeismicInterpretationCanvas (anti-tree-shake mount) */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <SeismicInterpretationCanvas />
           </div>
 
           {/* Time Axis */}

@@ -207,6 +207,8 @@ const initialState: GEOXState = {
   selectedWell: 'W-101',
   selectedProspect: 'PROSPECT_ALPHA',
   cursor: null,
+  sessionToken: null,
+  actorId: null,
   governance: initialGovernance,
   groundingStatus: {
     f4Clarity: {
@@ -260,6 +262,7 @@ interface GEOXStore extends GEOXState {
   selectProspect: (prospectId: string | null) => void;
   syncCursor: (cursor: CursorState) => void;
   updateFloorStatus: (floorId: FloorId, status: FloorStatus, message?: string) => void;
+  setSessionIdentity: (sessionToken: string | null, actorId: string | null) => void;
   updateGroundingStatus: (update: Partial<GEOXState['groundingStatus']>) => void;
   setGEOXConnected: (connected: boolean) => void;
   setGEOXUrl: (url: string) => void;
@@ -308,6 +311,11 @@ export const useGEOXStore = create<GEOXStore>()(
           state.governance.floors[floorId].status = status;
           if (message) state.governance.floors[floorId].message = message;
           state.governance.overallStatus = calculateOverallStatus(state.governance);
+        }),
+
+        setSessionIdentity: (sessionToken, actorId) => set((state) => {
+          state.sessionToken = sessionToken;
+          state.actorId = actorId;
         }),
 
         updateGroundingStatus: (update) => set((state) => {

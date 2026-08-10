@@ -18,10 +18,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import {
   Layout, MousePointer2, PenTool, Trash2, Layers,
-  RefreshCw, CheckCircle, AlertTriangle, Target, Eye, EyeOff
+  RefreshCw, CheckCircle, AlertTriangle, Target, Eye, EyeOff,
+  ShieldCheck,
 } from 'lucide-react';
 import { useMcpTool } from '../../hooks/useMcpTool';
 import { useGEOXStore } from '../../store/geoxStore';
+import { geoxMcpClient } from '../../lib/geoxMcpClient';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -255,6 +257,10 @@ export const SeismicInterpretationCanvas: React.FC = () => {
   const [showHorizons, setShowHorizons] = useState(true);
   const [showFaults, setShowFaults] = useState(true);
   const [activeHorizonIdx, setActiveHorizonIdx] = useState(0);
+  // F13 SOVEREIGN gate: irreversible interpretation commits are held here
+  // pending 888_JUDGE SEAL (see requestSeal below).
+  const [pendingSeal, setPendingSeal] = useState<LocalPick | null>(null);
+  const [sealRequesting, setSealRequesting] = useState(false);
   const nextPickId = useRef(1);
 
   const interpretTool = useMcpTool<{
@@ -315,42 +321,94 @@ export const SeismicInterpretationCanvas: React.FC = () => {
   }, [interpretTool, updateFloorStatus]);
 
   const handleCanvasClick = useCallback((trace: number, time: number) => {
+    // F13 SOVEREIGN: while a pick is held for 888_JUDGE SEAL, do not accept
+    // further picks — the user must REQUEST or DISCARD first.
+    if (pendingSeal) return;
+
     if (pickMode === 'horizon') {
-      setPicks((prev) => {
-        const existing = prev.filter((p) => p.type === 'horizon');
-        if (existing.length === 0) {
-          return [...prev, {
-            id: `h-${nextPickId.current++}`,
-            name: `Horizon-${nextPickId.current}`,
-            type: 'horizon',
-            points: [{ trace, time }],
-            color: seismicColors[0],
-          }];
-        }
-        const target = existing[activeHorizonIdx % existing.length];
-        return prev.map((p) =>
+      const existing = picks.filter((p) => p.type === 'horizon');
+      if (existing.length === 0) {
+        // F13 SOVEREIGN gate: new horizon creation is an irreversible
+        // interpretation commit. Hold in pendingSeal until 888_JUDGE
+        // SEAL is granted (see requestSeal).
+        setPendingSeal({
+          id: `h-${nextPickId.current++}`,
+          name: `Horizon-${nextPickId.current}`,
+          type: 'horizon',
+          points: [{ trace, time }],
+          color: seismicColors[0],
+        });
+        return;
+      }
+      // Continuation of an already-committed horizon — direct update.
+      const target = existing[activeHorizonIdx % existing.length];
+      setPicks((prev) =>
+        prev.map((p) =>
           p.id === target.id ? { ...p, points: [...p.points, { trace, time }].sort((a, b) => a.trace - b.trace) } : p
-        );
-      });
+        )
+      );
     } else if (pickMode === 'fault') {
-      setPicks((prev) => {
-        const existing = prev.filter((p) => p.type === 'fault');
-        if (existing.length === 0) {
-          return [...prev, {
-            id: `f-${nextPickId.current++}`,
-            name: `Fault-${nextPickId.current}`,
-            type: 'fault',
-            points: [{ trace, time }],
-            color: faultColors[0],
-          }];
-        }
-        const lastFault = existing[existing.length - 1];
-        return prev.map((p) =>
+      const existing = picks.filter((p) => p.type === 'fault');
+      if (existing.length === 0) {
+        setPendingSeal({
+          id: `f-${nextPickId.current++}`,
+          name: `Fault-${nextPickId.current}`,
+          type: 'fault',
+          points: [{ trace, time }],
+          color: faultColors[0],
+        });
+        return;
+      }
+      const lastFault = existing[existing.length - 1];
+      setPicks((prev) =>
+        prev.map((p) =>
           p.id === lastFault.id ? { ...p, points: [...p.points, { trace, time }] } : p
-        );
-      });
+        )
+      );
     }
-  }, [pickMode, activeHorizonIdx]);
+  }, [pickMode, activeHorizonIdx, picks, pendingSeal]);
+
+  // ── F13 SOVEREIGN: request 888_JUDGE SEAL for the held pick ──────────────
+  const requestSeal = useCallback(async () => {
+    if (!pendingSeal) return;
+    setSealRequesting(true);
+    try {
+      updateFloorStatus('F13', 'amber', 'Requesting 888_JUDGE SEAL for seismic pick…');
+      const raw = await geoxMcpClient.callTool({
+        tool: 'geox_judge_verdict',
+        arguments: { subject: 'seismic_pick', data: pendingSeal },
+      });
+      // geoxMcpClient wraps parsed result as { result: <parsed> }, but the
+      // shape may also be the verdict directly. Be defensive.
+      const verdict = (raw as { result?: Record<string, unknown> })?.result
+        ?? (raw as Record<string, unknown>);
+      const granted =
+        verdict?.status === 'SEAL' ||
+        verdict?.verdict === 'SEAL' ||
+        verdict?.sealed === true ||
+        verdict?.granted === true ||
+        verdict?.decision === 'grant';
+      if (granted) {
+        updateFloorStatus('F13', 'green', 'SEAL granted');
+        setPicks((prev) => [...prev, pendingSeal]);
+        setPendingSeal(null);
+      } else {
+        updateFloorStatus('F13', 'red', 'SEAL denied — pick held');
+        setPendingSeal(null);
+      }
+    } catch (err) {
+      updateFloorStatus('F13', 'red', `SEAL denied — pick held (${String(err).slice(0, 60)})`);
+      setPendingSeal(null);
+    } finally {
+      setSealRequesting(false);
+    }
+  }, [pendingSeal, updateFloorStatus]);
+
+  const discardPendingSeal = useCallback(() => {
+    if (!pendingSeal) return;
+    updateFloorStatus('F13', 'amber', 'Pending seismic pick discarded by operator');
+    setPendingSeal(null);
+  }, [pendingSeal, updateFloorStatus]);
 
   const clearPicks = () => {
     setPicks([]);
@@ -487,6 +545,39 @@ export const SeismicInterpretationCanvas: React.FC = () => {
             <button onClick={clearPicks} className="mt-3 w-full text-xs bg-red-900/30 text-red-400 py-1.5 rounded hover:bg-red-900/50 border border-red-900/50">
               Clear All Picks
             </button>
+          )}
+
+          {/* F13 Docking Protocol — 888_JUDGE SEAL gate for new picks */}
+          {pendingSeal && (
+            <div className="mt-3 pt-3 border-t border-slate-800">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-400" /> F13 Docking Protocol
+              </h4>
+              <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-0.5 rounded" style={{ backgroundColor: pendingSeal.color }} />
+                  <span className="text-xs font-bold text-amber-400">{pendingSeal.name}</span>
+                </div>
+                <span className="text-[10px] text-amber-500/70">Held for 888_JUDGE SEAL — irreversible commit</span>
+              </div>
+              <button
+                onClick={requestSeal}
+                disabled={sealRequesting}
+                className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30 disabled:opacity-50"
+              >
+                {sealRequesting ? 'REQUESTING SEAL…' : 'REQUEST JUDGE SEAL'}
+              </button>
+              <button
+                onClick={discardPendingSeal}
+                disabled={sealRequesting}
+                className="mt-1 w-full py-1.5 rounded bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-bold hover:bg-slate-700 disabled:opacity-50"
+              >
+                DISCARD
+              </button>
+              <p className="text-[9px] text-slate-600 mt-2 leading-tight">
+                Irreversible interpretation commits require 888_JUDGE SEAL (F13) before proceeding. F11 audit trail active.
+              </p>
+            </div>
           )}
 
           {/* Status */}

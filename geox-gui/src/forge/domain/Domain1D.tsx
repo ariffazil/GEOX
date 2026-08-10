@@ -27,6 +27,8 @@ import {
   Download,
   Database,
 } from 'lucide-react';
+import { LogDock } from '../../components/LogDock/LogDock';
+import { PetrophysicalTracks } from '../../components/LogDock/PetrophysicalTracks';
 
 /**
  * Well log curve definition
@@ -607,6 +609,14 @@ export const Domain1D: React.FC<Domain1DProps> = ({
                 onDepthClick={handleDepthClick}
               />
             ))}
+          </div>
+
+          {/* Phase 1 — LogDock + PetrophysicalTracks (anti-tree-shake mount) */}
+          <div className="flex-1 min-h-0">
+            <div className="grid grid-cols-2 gap-2 h-full p-2">
+              <div className="h-full overflow-auto"><LogDock /></div>
+              <div className="h-full overflow-auto"><PetrophysicalTracks /></div>
+            </div>
           </div>
         </div>
       </div>
