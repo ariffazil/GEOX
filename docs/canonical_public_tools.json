@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-07T13:54:26.799942+00:00",
+  "generated_at": "2026-08-09T20:32:57.399030+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 35,
+  "public_count": 39,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -39,7 +39,11 @@
     "geox_lancedb_embed_store",
     "geox_stac_discover",
     "geox_dde_reason",
-    "geox_dynamical_systems"
+    "geox_dynamical_systems",
+    "geox_temporal_decline",
+    "geox_temporal_rrr",
+    "geox_temporal_basin_lifecycle",
+    "geox_temporal_cadence"
   ],
   "tools": [
     {
@@ -497,6 +501,58 @@
       "axis": "reason",
       "lane": "reasoning",
       "description": "State-space reconstruction layer. Takens delay-coordinate embedding, false-nearest-neighbors dimension, mutual-information delay, and EDM kernel regression (simplex / local-softmax). GEOX reconstructs",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_temporal_decline",
+      "domain": "earth.temporal",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Fit exponential decline curve to production history and forecast future rates. Computes annual decline rate, trend (growth/stable/decline), forecast trajectory, and years-to-threshold crossing.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_temporal_rrr",
+      "domain": "earth.temporal",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Compute Reserve Replacement Ratio (RRR = additions / production). RRR >= 1.0 means replacing reserves; < 1.0 means consuming. Includes end-reserves and years-at-current-rate estimate.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_temporal_basin_lifecycle",
+      "domain": "earth.temporal",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Classify basin lifecycle stage: growth (current > peak), plateau (>90% peak), decline (<60% peak), or mature (60-90% peak). Outputs remaining potential percentage and decline rate.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_temporal_cadence",
+      "domain": "earth.temporal",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Analyse exploration licensing cadence: award rate (%), pipeline lag (years), production impact projection, and capacity gap assessment (tight/moderate/extended/critical).",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",

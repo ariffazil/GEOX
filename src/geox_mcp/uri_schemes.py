@@ -549,9 +549,9 @@ def fixed_only() -> tuple[UriTemplate, ...]:
     return tuple(t for t in REGISTRY if not t.template)
 
 
-# ── 7. JSON-RPC error codes (per MCP spec 2025-11-25) ────────────────────────
+# ── 7. JSON-RPC error codes (per MCP spec 2026-07-28, SEP-2164) ─────────────
 class JsonRpcError:
-    RESOURCE_NOT_FOUND = -32002  # URI not in registry or params unresolved
+    RESOURCE_NOT_FOUND = -32602  # Invalid Params — URI not in registry or params unresolved (was -32002 pre-2026-07-28)
     FORBIDDEN = -32003  # F13 gate denied (operator-private / SOVEREIGN tier)
     URI_INVALID = -32602  # malformed URI
     METHOD_NOT_FOUND = -32601  # subscribe not declared

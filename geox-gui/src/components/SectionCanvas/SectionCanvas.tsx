@@ -1,7 +1,12 @@
-import React from 'react';
-import { Layout, Maximize2, Download, Layers } from 'lucide-react';
+import React, { useState } from 'react';
+import { Layout, Maximize2, Download, Layers, Zap } from 'lucide-react';
+import { SeismicInterpretationCanvas } from './SeismicInterpretationCanvas';
 
 export const SectionCanvas: React.FC = () => {
+  const [mode, setMode] = useState<'static' | 'mcp'>('mcp');
+
+  if (mode === 'mcp') return <SeismicInterpretationCanvas />;
+
   return (
     <div className="h-full flex flex-col bg-[#0f172a] text-slate-300 font-sans overflow-hidden">
       {/* Toolbar */}
@@ -68,6 +73,16 @@ export const SectionCanvas: React.FC = () => {
            {[1, 2, 3, 4, 5].map(i => (
              <div key={i} className="w-2 h-12 bg-slate-800/50 rounded-full hover:bg-blue-500/50 cursor-pointer transition-colors" />
            ))}
+        </div>
+
+        {/* MCP switch */}
+        <div className="absolute bottom-4 left-4">
+          <button
+            onClick={() => setMode('mcp')}
+            className="bg-amber-900/50 border border-amber-700/50 text-amber-400 text-[10px] font-bold px-3 py-1.5 rounded hover:bg-amber-900/70 flex items-center gap-1.5"
+          >
+            <Zap className="w-3 h-3" /> Open MCP Interpretation Canvas
+          </button>
         </div>
       </div>
       

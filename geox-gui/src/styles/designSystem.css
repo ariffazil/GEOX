@@ -606,6 +606,77 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
+   Tension Visual Channels — UNMEASURED vs None
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* No tension = cool green — solid, calm, measured and zero */
+.tension-none {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: #10b981;
+}
+
+/* UNMEASURED = RED hatched pattern — NOT green, NOT absence of tension.
+   This is the visual signature of "we haven't checked." Dashed border +
+   diagonal stripe background makes it unmistakable from .tension-none. */
+.tension-unmeasured {
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(239, 68, 68, 0.15),
+    rgba(239, 68, 68, 0.15) 10px,
+    rgba(239, 68, 68, 0.05) 10px,
+    rgba(239, 68, 68, 0.05) 20px
+  );
+  border-color: #ef4444;
+  border-style: dashed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   Attestation Confirmation Panel
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.attestation-confirmation {
+  border: 2px solid #d4af37;
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(212, 175, 57, 0.1);
+}
+
+.attestation-confirmation h4 {
+  color: #d4af37;
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+}
+
+.attestation-confirmation p {
+  margin: 4px 0;
+  font-size: 0.75rem;
+  color: var(--geox-void-100);
+}
+
+.attestation-confirmation code {
+  font-family: var(--geox-font-mono);
+  color: var(--geox-amber-400);
+  font-size: 0.6875rem;
+}
+
+.attestation-confirmation button {
+  margin-top: 12px;
+  padding: 6px 16px;
+  border: 1px solid rgba(212, 175, 57, 0.4);
+  border-radius: 6px;
+  background: rgba(212, 175, 57, 0.15);
+  color: #d4af37;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.attestation-confirmation button:hover {
+  background: rgba(212, 175, 57, 0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
    Utility Classes
    ═══════════════════════════════════════════════════════════════════════════════ */
 

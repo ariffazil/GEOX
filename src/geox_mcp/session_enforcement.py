@@ -341,12 +341,27 @@ def validate_session(
     Returns:
         ValidationResult with .ok=True if all checks pass.
     """
-    if not session_id:
-        return ValidationResult(
-            ok=False,
-            error_code="SESSION_MISSING",
-            error_message="session_id is required (F11 — audit compliance)",
+    # ── Auto-mint ANON-xxx for empty/None session_id ────────────────────
+    # GEOX generates its own session for callers with no token.
+    # Zero config. Works on every platform. No cross-server dependency.
+    if not session_id or session_id.strip() == "":
+        import uuid
+        anon_id = f"ANON-{uuid.uuid4().hex[:16]}"
+        result = ValidationResult(
+            ok=True,
+            actor=actor_id or "anon",
+            authority="OBSERVE_ONLY",
+            session={"type": "anon", "session_id": anon_id, "auto_minted": True},
         )
+        # ── Rate limit check for auto-minted anon sessions ──────────
+        from geox_mcp.rate_limiter import rate_limiter
+        if not rate_limiter.check(anon_id, "anon"):
+            return ValidationResult(
+                ok=False,
+                error_code="RATE_LIMITED",
+                error_message="Rate limit exceeded for anon tier (max 30/min)",
+            )
+        return result
     if not actor_id:
         return ValidationResult(
             ok=False,
@@ -380,12 +395,23 @@ def validate_session(
             verification.actor,
             verification.authority,
         )
-        return ValidationResult(
+        result = ValidationResult(
             ok=True,
             session=verification.claims,
             actor=verification.actor or actor_id,
             authority=verification.authority or required_authority,
         )
+        # ── Rate limit check (no-op for SCT sessions without typed tiers) ──
+        if result.session and result.session.get("type") in ("anon", "session"):
+            from geox_mcp.rate_limiter import rate_limiter
+            tier = "anon" if result.session["type"] == "anon" else "session"
+            if not rate_limiter.check(session_id, tier):
+                return ValidationResult(
+                    ok=False,
+                    error_code="RATE_LIMITED",
+                    error_message=f"Rate limit exceeded for {tier} tier (max {'30' if tier == 'anon' else '100'}/min)",
+                )
+        return result
 
     # ── PATH 2: SEAL-* session ID — must be verified against arifOS kernel ──
     # C3 REDTEAM FIX 2026-07-18: Format-only check was the leak. Any SEAL-<8+>
@@ -513,12 +539,45 @@ def validate_session(
             kernel_authority,
         )
 
-        return ValidationResult(
+        result = ValidationResult(
             ok=True,
             session=verified,
             actor=kernel_actor or actor_id,
             authority=kernel_authority,
         )
+        # ── Rate limit check (no-op for SEAL sessions without typed tiers) ──
+        if result.session and result.session.get("type") in ("anon", "session"):
+            from geox_mcp.rate_limiter import rate_limiter
+            tier = "anon" if result.session["type"] == "anon" else "session"
+            if not rate_limiter.check(session_id, tier):
+                return ValidationResult(
+                    ok=False,
+                    error_code="RATE_LIMITED",
+                    error_message=f"Rate limit exceeded for {tier} tier (max {'30' if tier == 'anon' else '100'}/min)",
+                )
+        return result
+
+    # ── PATH 4: Auto-mint ANON-xxx for platform-agnostic access ──────────
+    # GEOX generates its own session for callers with no token.
+    # Zero config. Works on every platform. No cross-server dependency.
+    if session_id.startswith("ANON-") or session_id == "__auto_mint__":
+        import uuid
+        anon_id = session_id if session_id.startswith("ANON-") else f"ANON-{uuid.uuid4().hex[:16]}"
+        result = ValidationResult(
+            ok=True,
+            actor=actor_id or "anon",
+            authority="OBSERVE_ONLY",
+            session={"type": "anon", "session_id": anon_id, "auto_minted": True},
+        )
+        # ── Rate limit check for anon sessions ──────────────────────
+        from geox_mcp.rate_limiter import rate_limiter
+        if not rate_limiter.check(anon_id, "anon"):
+            return ValidationResult(
+                ok=False,
+                error_code="RATE_LIMITED",
+                error_message="Rate limit exceeded for anon tier (max 30/min)",
+            )
+        return result
 
     # ── PATH 3: Unknown format ─────────────────────────────────────────
     # P4 2026-07-31 (Stage 0.1, FI-008 GEOX public-launch hardening):
@@ -548,6 +607,9 @@ def _error_code_to_http_status(error_code: str | None) -> int:
     # 400 — missing or malformed client input
     if error_code in ("SESSION_MISSING", "ACTOR_MISSING"):
         return 400
+    # 429 — rate limit exceeded
+    if error_code == "RATE_LIMITED":
+        return 429
     # 403 — valid identity but insufficient authority
     if error_code in ("INSUFFICIENT_AUTHORITY",):
         return 403

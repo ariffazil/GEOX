@@ -1,7 +1,12 @@
-import React from 'react';
-import { Clock, Play, SkipBack, SkipForward, BarChart2, Activity } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, Play, SkipBack, SkipForward, BarChart2, Activity, Zap } from 'lucide-react';
+import { TemporalAnimation } from './TemporalAnimation';
 
 export const ChronosHistory: React.FC = () => {
+  const [mode, setMode] = useState<'static' | 'mcp'>('mcp');
+
+  if (mode === 'mcp') return <TemporalAnimation />;
+
   return (
     <div className="h-full flex flex-col bg-[#020617] text-slate-300 font-sans overflow-hidden">
       {/* Timeline Header */}
@@ -70,6 +75,12 @@ export const ChronosHistory: React.FC = () => {
          <StatCard label="Phase" value="Calibrating" />
          <StatCard label="Drift" value="0.04s" />
          <StatCard label="Samples" value="1.2M" />
+         <button
+           onClick={() => setMode('mcp')}
+           className="bg-amber-900/50 border border-amber-700/50 text-amber-400 text-[10px] font-bold px-2 py-1 rounded hover:bg-amber-900/70 flex items-center gap-1 mt-2"
+         >
+           <Zap className="w-3 h-3" /> Switch to MCP Live
+         </button>
       </div>
     </div>
   );

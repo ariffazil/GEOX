@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (35 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (39 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from src/geox_mcp/tools_manifest.yaml
 
@@ -39,6 +39,10 @@
 33. **geox_stac_discover**: STAC catalog discovery for cloud-native geospatial assets. Query COG/GeoParquet/Zarr across federated catalogs. [LEM E4]
 34. **geox_dde_reason**: DDE Ontology + Macrostrat neuro-symbolic reasoner. Query knowledge graph for stratigraphic rules and physical laws. [LEM E5]
 35. **geox_dynamical_systems**: State-space reconstruction layer. Takens delay-coordinate embedding, false-nearest-neighbors dimension, mutual-information delay, and EDM kernel regression (simplex / local-softmax). GEOX reconstructs the attractor; WEALTH interprets economics; WELL judges readiness. Forged 2026-08-07 from DeepEDM extraction (SEAL: small extraction, HOLD: large investment).
+36. **geox_temporal_decline**: Fit exponential decline curve to production history and forecast future rates. Computes annual decline rate, trend (growth/stable/decline), forecast trajectory, and years-to-threshold crossing.
+37. **geox_temporal_rrr**: Compute Reserve Replacement Ratio (RRR = additions / production). RRR >= 1.0 means replacing reserves; < 1.0 means consuming. Includes end-reserves and years-at-current-rate estimate.
+38. **geox_temporal_basin_lifecycle**: Classify basin lifecycle stage: growth (current > peak), plateau (>90% peak), decline (<60% peak), or mature (60-90% peak). Outputs remaining potential percentage and decline rate.
+39. **geox_temporal_cadence**: Analyse exploration licensing cadence: award rate (%), pipeline lag (years), production impact projection, and capacity gap assessment (tight/moderate/extended/critical).
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.

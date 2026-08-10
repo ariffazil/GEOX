@@ -115,11 +115,26 @@ def _session_id_from_context(context: MiddlewareContext[Any]) -> str | None:
     return None
 
 
+def _ensure_session_header(headers: dict, tool_name: str) -> str:
+    """Auto-mint ANON-xxx if no session header present. Platform-agnostic."""
+    import uuid
+
+    sid = headers.get("mcp-session-id") or headers.get("Mcp-Session-Id")
+    if sid:
+        return str(sid)
+    # No session header — auto-mint ANON-xxx
+    anon_id = f"ANON-{uuid.uuid4().hex[:16]}"
+    # Inject into headers for downstream middleware
+    headers["mcp-session-id"] = anon_id
+    headers["Mcp-Session-Id"] = anon_id
+    return anon_id
+
+
 # ── Governed rejection envelope schema (P0 #1 fix, 2026-07-10) ─────────────
 # Every error path produces this structured envelope. Never bare strings.
 GOVERNED_ERROR_CODES: dict[str, dict] = {
     "SCHEMA_REJECTION": {
-        "code": -32002,
+        "code": -32602,  # Invalid Params — schema validation failure (was -32002 pre-2026-07-28)
         "http_status": 422,
         "message_template": "Schema validation failed for '{tool}': {detail}",
     },
@@ -462,6 +477,43 @@ class GeoxGovernanceMiddleware(Middleware):
                 arguments = {}
         else:
             arguments = raw_arguments
+
+        # ── HTTP-level auto-mint (2026-08-10) ────────────────────────────
+        # External clients with no Mcp-Session-Id header must not be
+        # rejected by FastMCP transport / downstream validators. Mint an
+        # ANON-xxx session at the middleware layer and inject it into
+        # headers + arguments so every downstream gate sees a session.
+        #
+        # NOTE: FastMCP-issued session IDs (raw hex) are NOT in
+        # GEOX-recognized format (SCT/SEAL/ANON). When we detect a
+        # header SID that isn't GEOX-valid, we mint a fresh ANON-* for
+        # the arguments (preserving the header SID for FastMCP transport).
+        try:
+            fctx = context.fastmcp_context
+            rc = getattr(fctx, "request_context", None) if fctx else None
+            req = getattr(rc, "request", None) if rc else None
+            headers = getattr(req, "headers", {}) or {}
+            hdr_sid = _ensure_session_header(headers, tool_name)
+            # Decide the effective SID for GEOX validators
+            _GEOX_PREFIXES = ("act_v1.", "SEAL-", "ANON-")
+            if hdr_sid and any(hdr_sid.startswith(p) for p in _GEOX_PREFIXES):
+                effective_sid = hdr_sid
+            else:
+                # FastMCP-generated or unrecognized → mint fresh ANON-*
+                effective_sid = f"ANON-{uuid.uuid4().hex[:16]}"
+            # Also inject into arguments for downstream validators
+            if "session_id" not in arguments:
+                arguments["session_id"] = effective_sid
+            if "actor_id" not in arguments:
+                arguments["actor_id"] = "auto-anon"
+            logger.debug(
+                "AUTO_MINT: hdr=%s effective=%s tool=%s",
+                hdr_sid,
+                effective_sid,
+                tool_name,
+            )
+        except Exception as e:
+            logger.warning(f"AUTO_MINT: failed to inject session: {e}")
 
         # ── P0-2 authority gate (2026-07-25 · FI-008) ────────────────────
         # Admit-or-reject at the gateway. Replaces the pre-P0-2 behavior
