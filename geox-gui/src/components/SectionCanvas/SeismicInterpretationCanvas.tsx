@@ -459,13 +459,11 @@ export const SeismicInterpretationCanvas: React.FC = () => {
   const requestHorizonReview = useCallback(() => horizon.requestReview(), [horizon]);
   const requestFaultReview = useCallback(() => fault.requestReview(), [fault]);
   const attestHorizon = useCallback(() => {
-    const ref = `VAULT999:${horizon.claim.id}:${Date.now()}`;
-    horizon.attest(ref);
-  }, [horizon]);
+    horizon.attest({ claimId: horizon.claim.id, picks: picks.filter(p => p.type === 'horizon') });
+  }, [horizon, picks]);
   const attestFault = useCallback(() => {
-    const ref = `VAULT999:${fault.claim.id}:${Date.now()}`;
-    fault.attest(ref);
-  }, [fault]);
+    fault.attest({ claimId: fault.claim.id, picks: picks.filter(p => p.type === 'fault') });
+  }, [fault, picks]);
 
   // V11: clearPicks and undoLast also go through commitPick for audit trail
   const clearPicks = () => {
@@ -628,6 +626,7 @@ export const SeismicInterpretationCanvas: React.FC = () => {
                     [UNVERIFIED]
                   </span>
                   <span className="text-[10px] text-slate-400">DRAFT</span>
+                  <span className="ml-auto text-[9px] font-bold text-gray-400 bg-gray-800/60 px-1.5 py-0.5 rounded border border-gray-700/60">DRAFT</span>
                 </div>
                 <p className="text-[9px] text-slate-500 mt-1 leading-tight">
                   {horizonPicks.length} horizon(s) · {horizonPicks.reduce((s, p) => s + p.points.length, 0)} pts · volatile
@@ -641,6 +640,7 @@ export const SeismicInterpretationCanvas: React.FC = () => {
                     [PENDING REVIEW]
                   </span>
                   <span className="text-[10px] text-amber-500/70">F11 halt</span>
+                  <span className="ml-auto text-[9px] font-bold text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30">APPROVED</span>
                 </div>
                 <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
                   Canvas LOCKED. Uncertainty acknowledged — horizon picks are
@@ -649,30 +649,31 @@ export const SeismicInterpretationCanvas: React.FC = () => {
               </div>
             )}
             {horizon.claim.state === 'attested' && (
-              <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
-                    [SEALED - VAULT999]
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">{horizon.claim.attestationRef?.slice(0, 20)}…</span>
-                </div>
+              <div className="attestation-confirmation mb-2">
+                <h4>🔒 Attestation Confirmed — Horizon</h4>
+                <p>Receipt: <code>{horizon.claim.attestationRef}</code></p>
+                <p>Timestamp: {horizon.claim.attestedAt}</p>
+                <p>Type: {horizon.claim.type}</p>
+                <button onClick={() => horizon.resetToReality()}>
+                  Return to Reality
+                </button>
               </div>
             )}
             {horizon.claim.state === 'draft' && (
               <button
                 onClick={requestHorizonReview}
-                className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
+                className="w-full py-2 rounded bg-[#3b82f6]/20 border border-[#3b82f6]/40 text-[#3b82f6] text-xs font-bold hover:bg-[#3b82f6]/30"
               >
-                REQUEST VERDICT / REVIEW
+                ▶ Review Delta
               </button>
             )}
             {horizon.claim.state === 'pending_review' && (
               <>
                 <button
                   onClick={attestHorizon}
-                  className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                  className="w-full py-2 rounded bg-[#f59e0b]/20 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold hover:bg-[#f59e0b]/30"
                 >
-                  ATTEST → VAULT999
+                  ✓ Approve & Request Judge
                 </button>
                 <button
                   onClick={() => horizon.toDraft({ picks: horizonPicks })}
@@ -690,57 +691,60 @@ export const SeismicInterpretationCanvas: React.FC = () => {
               <ShieldCheck className="w-3 h-3 text-red-400" /> Fault Claim (V10/V11)
             </h4>
             {fault.claim.state === 'draft' && (
-              <div className="mb-2 p-2 rounded border border-yellow-600/40 bg-yellow-600/10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-yellow-400 bg-yellow-600/20 border border-yellow-600/40 px-1.5 py-0.5 rounded">
-                    [UNVERIFIED]
-                  </span>
-                  <span className="text-[10px] text-slate-400">DRAFT</span>
+                <div className="mb-2 p-2 rounded border border-yellow-600/40 bg-yellow-600/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-yellow-400 bg-yellow-600/20 border border-yellow-600/40 px-1.5 py-0.5 rounded">
+                      [UNVERIFIED]
+                    </span>
+                    <span className="text-[10px] text-slate-400">DRAFT</span>
+                    <span className="ml-auto text-[9px] font-bold text-gray-400 bg-gray-800/60 px-1.5 py-0.5 rounded border border-gray-700/60">DRAFT</span>
+                  </div>
+                  <p className="text-[9px] text-slate-500 mt-1 leading-tight">
+                    {faultPicks.length} fault(s) · {faultPicks.reduce((s, p) => s + p.points.length, 0)} pts · volatile
+                  </p>
                 </div>
-                <p className="text-[9px] text-slate-500 mt-1 leading-tight">
-                  {faultPicks.length} fault(s) · {faultPicks.reduce((s, p) => s + p.points.length, 0)} pts · volatile
-                </p>
-              </div>
-            )}
-            {fault.claim.state === 'pending_review' && (
-              <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-amber-400 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded">
-                    [PENDING REVIEW]
-                  </span>
-                  <span className="text-[10px] text-amber-500/70">F11 halt</span>
+              )}
+              {fault.claim.state === 'pending_review' && (
+                <div className="mb-2 p-2 rounded border border-amber-500/40 bg-amber-500/10">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-amber-400 bg-amber-500/20 border border-amber-500/40 px-1.5 py-0.5 rounded">
+                      [PENDING REVIEW]
+                    </span>
+                    <span className="text-[10px] text-amber-500/70">F11 halt</span>
+                    <span className="ml-auto text-[9px] font-bold text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30">APPROVED</span>
+                  </div>
+                  <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
+                    Canvas LOCKED. Uncertainty acknowledged — fault picks are
+                    interpretive and carry risk until independently attested.
+                  </p>
                 </div>
-                <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
-                  Canvas LOCKED. Uncertainty acknowledged — fault picks are
-                  interpretive and carry risk until independently attested.
-                </p>
-              </div>
-            )}
-            {fault.claim.state === 'attested' && (
-              <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
-                    [SEALED - VAULT999]
-                  </span>
-                  <span className="text-[10px] text-slate-400 font-mono">{fault.claim.attestationRef?.slice(0, 20)}…</span>
-                </div>
-              </div>
-            )}
+              )}
+              {fault.claim.state === 'attested' && (
+                 <div className="attestation-confirmation mb-2">
+                   <h4>🔒 Attestation Confirmed — Fault</h4>
+                   <p>Receipt: <code>{fault.claim.attestationRef}</code></p>
+                   <p>Timestamp: {fault.claim.attestedAt}</p>
+                   <p>Type: {fault.claim.type}</p>
+                   <button onClick={() => fault.resetToReality()}>
+                     Return to Reality
+                   </button>
+                 </div>
+              )}
             {fault.claim.state === 'draft' && (
               <button
                 onClick={requestFaultReview}
-                className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
+                className="w-full py-2 rounded bg-[#3b82f6]/20 border border-[#3b82f6]/40 text-[#3b82f6] text-xs font-bold hover:bg-[#3b82f6]/30"
               >
-                REQUEST VERDICT / REVIEW
+                ▶ Review Delta
               </button>
             )}
             {fault.claim.state === 'pending_review' && (
               <>
                 <button
                   onClick={attestFault}
-                  className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                  className="w-full py-2 rounded bg-[#f59e0b]/20 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold hover:bg-[#f59e0b]/30"
                 >
-                  ATTEST → VAULT999
+                  ✓ Approve & Request Judge
                 </button>
                 <button
                   onClick={() => fault.toDraft({ picks: faultPicks })}
