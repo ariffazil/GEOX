@@ -46,7 +46,7 @@ export interface CorrelationWell {
   /** facies per depth sample: sand | shale | coal | limestone | unknown */
   facies: Array<{ depth: number; lithology: string }>;
   tops: Record<string, number>;
-  /** MCP receipt hash from the originating tool call */
+  /** MCP receipt hash — read-only evidence, NEVER authority (V10 F13 SOVEREIGN) */
   receiptHash?: string;
 }
 
@@ -361,7 +361,8 @@ export const MultiWellCorrelationPanel: React.FC = () => {
   const [wellIds, setWellIds] = useState<string[]>(['W-101', 'W-102', 'W-103']);
   const [tops, setTops] = useState<CorrelationTop[]>(DEFAULT_TOPS);
   const [wells, setWells] = useState<CorrelationWell[]>([]);
-  const [lastReceipt, setLastReceipt] = useState<string | null>(null);
+  // V10: lastReceipt intentionally REMOVED — receipt_hash is evidence only,
+  // never authority. The approval flow uses VAULT999 attestation, NOT receipts.
 
   // V10/V11 Tri-State Authority Machine (F13 SOVEREIGN).
   // The previous "REQUEST JUDGE SEAL" button was a MOCK GATE — it treated
@@ -434,12 +435,12 @@ export const MultiWellCorrelationPanel: React.FC = () => {
       const result = await wellTool.call({ mode: 'view', well_id: wellId });
       updateFloorStatus('F2', 'green', `${wellId} loaded`);
 
-      if (result && result.wells && result.wells.length > 0) {
+      if (result.wells && result.wells.length > 0) {
         setWells((prev) => {
           const others = prev.filter((w) => w.id !== wellId);
           return [...others, ...result.wells!.map((w) => ({ ...w, id: wellId, name: wellId }))];
         });
-        if (result.receipt_hash) setLastReceipt(result.receipt_hash);
+        // V10: receipt_hash is evidence only — NEVER captured as authority
       }
     } catch (err) {
       updateFloorStatus('F2', 'red', `geox_well_view failed: ${String(err)}`);
@@ -462,7 +463,7 @@ export const MultiWellCorrelationPanel: React.FC = () => {
         depth_bot_m: depthRange[1],
       });
       updateFloorStatus('F9', 'green', 'Petrophysics computed');
-      if (result.receipt_hash) setLastReceipt(result.receipt_hash);
+      // V10: receipt_hash is evidence only — NEVER captured as authority
     } catch (err) {
       updateFloorStatus('F9', 'red', `geox_petrophysics failed: ${String(err)}`);
     }
@@ -536,10 +537,6 @@ export const MultiWellCorrelationPanel: React.FC = () => {
         {petroTool.status === 'loading' || wellTool.status === 'loading' ? (
           <span className="text-xs text-amber-400 flex items-center gap-1">
             <Loader2 className="w-3 h-3 animate-spin" /> MCP…
-          </span>
-        ) : lastReceipt ? (
-          <span className="text-xs text-green-400 flex items-center gap-1">
-            <CheckCircle className="w-3 h-3" /> Receipt {lastReceipt.slice(0, 10)}…
           </span>
         ) : null}
 
