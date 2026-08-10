@@ -640,6 +640,7 @@ export const LogDock: React.FC = () => {
       {mode === 'mcp' ? (
         <PetrophysicalTracks />
       ) : (
+      <>
       <div className="flex-1 flex overflow-hidden">
         {/* Track Canvas Area */}
         <div className="flex-1 overflow-x-auto overflow-y-hidden">
@@ -687,6 +688,7 @@ export const LogDock: React.FC = () => {
         <div className="flex-1" />
         <span className="text-amber-500/70">DITEMPA BUKAN DIBERI</span>
       </div>
+      </>
       )}
     </div>
   );

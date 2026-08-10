@@ -160,6 +160,11 @@
 .geox-workspace-titlebar button svg { width: 13px; }
 .geox-workspace-frame { flex: 1; width: 100%; min-height: 0; border: 0; background: #080c11; }
 
+/* Phase 1 — React component panels (non-iframe views) */
+.geox-panel { flex: 1; overflow: auto; background: #0a0a0f; }
+.geox-panel-split { display: grid; grid-template-columns: 1fr 1fr; }
+.geox-panel-left, .geox-panel-right { overflow: auto; }
+
 .geox-activity-rail { display: flex; flex-direction: column; min-width: 0; border-left: 1px solid var(--geox-border); background: var(--geox-panel); }
 .geox-activity-heading { height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid var(--geox-border); }
 .geox-activity-heading > div { display: grid; gap: 4px; }
