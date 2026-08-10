@@ -66,7 +66,7 @@ dependencies = [
     "pyproj>=3.7.2",
     # ─── P1 CRITICAL: Seismic (2026-06-25 FORGE batch embed) ─────────────────
     # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
-    "obspy>=1.4.0",
+    "obspy>=1.5.0",
     # Bruges — rock physics: Gardner, AI, EI, Vp/Vs, AVO, anisotropy
     "bruges>=0.4.0",
     # pyGeoPressure — Eaton + Bowers pore pressure prediction (⚠️ 888_HOLD gate required)
