@@ -134,7 +134,7 @@ def _ensure_session_header(headers: dict, tool_name: str) -> str:
 # Every error path produces this structured envelope. Never bare strings.
 GOVERNED_ERROR_CODES: dict[str, dict] = {
     "SCHEMA_REJECTION": {
-        "code": -32002,
+        "code": -32602,  # Invalid Params — schema validation failure (was -32002 pre-2026-07-28)
         "http_status": 422,
         "message_template": "Schema validation failed for '{tool}': {detail}",
     },
@@ -508,7 +508,9 @@ class GeoxGovernanceMiddleware(Middleware):
                 arguments["actor_id"] = "auto-anon"
             logger.debug(
                 "AUTO_MINT: hdr=%s effective=%s tool=%s",
-                hdr_sid, effective_sid, tool_name,
+                hdr_sid,
+                effective_sid,
+                tool_name,
             )
         except Exception as e:
             logger.warning(f"AUTO_MINT: failed to inject session: {e}")
