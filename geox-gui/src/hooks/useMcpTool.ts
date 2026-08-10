@@ -47,6 +47,11 @@ function isInIframe(): boolean {
 /**
  * Direct HTTP call to GEOX MCP server via fetch.
  * Used in standalone mode (not in iframe).
+ *
+ * Receives already-enriched args (session_id / actor_id injected by the
+ * caller per F2 / P0_IDENTITY_PROPAGATION). The MCP server enforces
+ * LANE_ENFORCEMENT and identity propagation, so every argument payload
+ * MUST carry session_id and actor_id — see useMcpTool.call below.
  */
 async function directMcpCall<TResult>(
   toolName: string,
@@ -133,6 +138,19 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
         pendingRef.current = null;
       }
 
+      // ─── F2 / P0_IDENTITY_PROPAGATION ─────────────────────────────────────
+      // Inject session_id and actor_id from the GEOX store so the MCP server
+      // can enforce LANE_ENFORCEMENT and identity attribution. The store is
+      // populated by OperatorCockpit when a session token is bound; for
+      // anonymous users the fallbacks (`anon-…`, `'anonymous'`) are used.
+      const { sessionToken, actorId } = useGEOXStore.getState();
+      const argsRecord = args as Record<string, unknown>;
+      const enrichedArgs: Record<string, unknown> = {
+        ...argsRecord,
+        session_id: sessionToken || argsRecord.session_id || `anon-${Date.now()}`,
+        actor_id: actorId || argsRecord.actor_id || 'anonymous',
+      };
+
       return new Promise<TResult>((resolve, reject) => {
         setState({
           data: null,
@@ -151,7 +169,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
             reject(msg);
           }, TIMEOUT_MS);
 
-          directMcpCall<TResult>(toolName, args as Record<string, unknown>, geoxUrl)
+          directMcpCall<TResult>(toolName, enrichedArgs, geoxUrl)
             .then((result) => {
               clearTimeout(timer);
               setState(prev => ({ ...prev, data: result, status: 'success', error: null }));
@@ -242,7 +260,7 @@ export function useMcpTool<TArgs = Record<string, unknown>, TResult = unknown>(
           {
             jsonrpc: '2.0',
             method: 'tool.request',
-            params: { tool: toolName, arguments: args },
+            params: { tool: toolName, arguments: enrichedArgs },
             id: callId,
             timestamp: new Date().toISOString(),
           },

@@ -27,6 +27,11 @@ import {
   Database,
   Lock,
 } from 'lucide-react';
+import { LogDock } from '../LogDock/LogDock';
+import { PetrophysicalTracks } from '../LogDock/PetrophysicalTracks';
+import { SeismicInterpretationCanvas } from '../SectionCanvas/SeismicInterpretationCanvas';
+import { MultiWellCorrelationPanel } from '../CorrelationPanel/MultiWellCorrelationPanel';
+import { Layers as LayersIcon, GitBranch } from 'lucide-react';
 import * as Tabs from '@radix-ui/react-tabs';
 import { DomainVoid } from '../../forge/domain/DomainVoid';
 import { Domain1D } from '../../forge/domain/Domain1D';
@@ -72,6 +77,14 @@ const DOMAIN_TABS = [
     icon: Globe,
     description: 'Volume & Basin',
     color: 'emerald',
+  },
+  {
+    id: 'cross',
+    label: 'DomainCross',
+    range: '900-999',
+    icon: GitBranch,
+    description: 'Multi-Well Correlation',
+    color: 'cyan',
   },
 ] as const;
 
@@ -390,6 +403,9 @@ const DomainWorkspace: React.FC = () => {
           </Tabs.Content>
           <Tabs.Content value="3d" className="h-full">
             <Domain3D />
+          </Tabs.Content>
+          <Tabs.Content value="cross" className="h-full">
+            <MultiWellCorrelationPanel />
           </Tabs.Content>
         </div>
       </Tabs.Root>
