@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   witness:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: External Witness Check (W³ channel)
     runs-on: ubuntu-latest
     steps:

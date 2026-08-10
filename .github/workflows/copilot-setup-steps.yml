@@ -18,6 +18,7 @@ concurrency:
 
 jobs:
   copilot-setup-steps:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "GEOX — Pre-install earth intelligence dependencies"
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -38,10 +39,13 @@ jobs:
       - name: Install GEOX dependencies
         run: pip install -e ".[dev]" -q
       - name: Verify MCP surface loads
-        run: PYTHONPATH=src python3 -c "from geox_mcp import server; print('[PASS] GEOX MCP surface loaded')" || echo "[WARN] check PYTHONPATH=src"
+        run: PYTHONPATH=src python3 -c "from geox_mcp import server; 
+          print('[PASS] GEOX MCP surface loaded')" || echo "[WARN] check 
+          PYTHONPATH=src"
         env:
           ARIFOS_ENV: ci
       - name: Run fast physics tests
-        run: PYTHONPATH=src python3 -m pytest tests/ -q --tb=short -x -m "not slow" --ignore=tests/e2e || true
+        run: PYTHONPATH=src python3 -m pytest tests/ -q --tb=short -x -m "not 
+          slow" --ignore=tests/e2e || true
         env:
           ARIFOS_ENV: ci
