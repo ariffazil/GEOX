@@ -149,7 +149,7 @@ dev = [
     "hypothesis>=6.156.0",
 ]
 pinn = [
-    "torch>=2.12.1",
+    "torch>=2.13.0",
 ]
 seismic = [
     # Devito — FWI engine. Requires numpy<=2.4.3, conflicts with arifOS numpy==2.5.0
