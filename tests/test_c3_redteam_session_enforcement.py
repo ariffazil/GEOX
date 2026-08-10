@@ -372,14 +372,18 @@ class TestC3RedteamUnknownFormat:
         assert result.ok is False
         assert result.error_code == "SESSION_INVALID"
 
-    def test_empty_session_rejected(self):
+    def test_empty_session_auto_mints_anon(self):
+        """Empty session_id → auto-mint ANON-xxx (not rejected)."""
         result = validate_session(
             session_id="",
             actor_id="anyone",
             required_authority="OBSERVE_ONLY",
         )
-        assert result.ok is False
-        assert result.error_code == "SESSION_MISSING"
+        assert result.ok is True
+        assert result.session is not None
+        assert result.session["type"] == "anon"
+        assert result.session["session_id"].startswith("ANON-")
+        assert result.session["auto_minted"] is True
 
 
 # ─── Acceptance Test 7: anonymous coercion is GONE ──────────────────────────

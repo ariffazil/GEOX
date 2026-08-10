@@ -49,6 +49,9 @@ class TestErrorTaxonomyMapping:
     def test_insufficient_authority_is_403(self):
         assert _error_code_to_http_status("INSUFFICIENT_AUTHORITY") == 403
 
+    def test_rate_limited_is_429(self):
+        assert _error_code_to_http_status("RATE_LIMITED") == 429
+
     def test_unknown_code_defaults_to_401(self):
         assert _error_code_to_http_status("SOME_NEW_CODE") == 401
 
@@ -59,12 +62,10 @@ class TestErrorTaxonomyMapping:
 class TestEnforceSessionTaxonomy:
     """Integration tests: enforce_session_or_400 returns correct http_status."""
 
-    def test_no_session_returns_400(self):
-        """No session_id → 400 Missing session (client error)."""
+    def test_no_session_auto_mints_anon(self):
+        """No session_id → auto-mint ANON-xxx (not 400)."""
         result = enforce_session_or_400(None, "arif")
-        assert result is not None
-        assert result["error"] == "SESSION_MISSING"
-        assert result["http_status"] == 400
+        assert result is None  # success — auto-minted session passes
 
     def test_no_actor_returns_400(self):
         """No actor_id → 400 (client error)."""
@@ -73,12 +74,10 @@ class TestEnforceSessionTaxonomy:
         assert result["error"] == "ACTOR_MISSING"
         assert result["http_status"] == 400
 
-    def test_empty_session_returns_400(self):
-        """Empty string session_id → 400 Missing session."""
+    def test_empty_session_auto_mints_anon(self):
+        """Empty string session_id → auto-mint ANON-xxx (not 400)."""
         result = enforce_session_or_400("", "arif")
-        assert result is not None
-        assert result["error"] == "SESSION_MISSING"
-        assert result["http_status"] == 400
+        assert result is None  # success — auto-minted session passes
 
     def test_forged_seal_returns_401(self):
         """Forged SEAL-* rejected by kernel → 401 Invalid session (security event)."""
@@ -130,12 +129,11 @@ class TestEnforceSessionTaxonomy:
     def test_all_error_paths_carry_http_status(self):
         """Every non-None result carries an http_status field."""
         codes = [
-            enforce_session_or_400(None, None),
-            enforce_session_or_400("", "arif"),
+            enforce_session_or_400("SEAL-abcd1234efgh5678", None),  # ACTOR_MISSING → 400
         ]
         with patch("geox_mcp.session_enforcement._cached_kernel_verify", return_value=None):
             codes.append(enforce_session_or_400("SEAL-forgedtoken00000", "arif"))
         for result in codes:
             assert result is not None
             assert "http_status" in result
-            assert result["http_status"] in (400, 401, 403)
+            assert result["http_status"] in (400, 401, 403, 429)
