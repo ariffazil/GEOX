@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   federation-check:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: 🗺️ Federation Check
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -29,6 +30,7 @@ jobs:
           echo "✅ GEOX FEDERATION.md valid — L3 DOMAIN"
 
   standard:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Lane 1 — Standard CI"
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -49,6 +51,7 @@ jobs:
             tests/alignment/
 
   bijaksana:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Lane 2 — BIJAKSANA ΔS Φ Ψ Ω"
     runs-on: ubuntu-latest
     timeout-minutes: 10
