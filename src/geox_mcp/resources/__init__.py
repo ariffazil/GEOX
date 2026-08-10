@@ -1198,7 +1198,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
     #   - size field on blob returns
     #   - annotations: audience / priority / lastModified
     #   - file:// not required — geox:// is sovereign
-    #   - error data echoes URI on -32002
+    #   - error data echoes URI on -32602 (SEP-2164, was -32002 pre-2026-07-28)
     #   - bundling: read may return multiple contents
     #   - subscribe omitted (not yet implemented; see server.json)
     # =====================================================================
@@ -1216,7 +1216,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             "contract_version": "geox.resource.v2",
             "geox_seal": "DITEMPA BUKAN DIBERI",
             "forged_at": "2026-07-10",
-            "spec_conformance": "MCP-2025-11-25",
+            "spec_conformance": "MCP-2026-07-28",
             "tier": t.tier.value,
             "access_class": t.access.value,
             "max_size_bytes": t.max_size_bytes,
@@ -1251,7 +1251,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
 
         F1 AMANAH: this resource NEVER exists without a provenance receipt.
         If the paper store can't produce a `_meta` envelope, this read
-        MUST return -32002 (RESOURCE_NOT_FOUND) — not silent fallback.
+        MUST return -32602 (RESOURCE_NOT_FOUND, per SEP-2164) — not silent fallback.
         """
         canonical = full_uri("literature_paper", basin=basin, paper_id=paper_id)
         # Stub body — production reads go through paper store adapter.
