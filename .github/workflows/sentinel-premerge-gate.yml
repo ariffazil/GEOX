@@ -25,6 +25,7 @@ concurrency:
 jobs:
   # ─── Q1: Critical path changes? ────────────────────────────────────────
   q1-critical-paths:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Q1 — Critical Paths"
     runs-on: ubuntu-latest
     outputs:
@@ -65,6 +66,7 @@ jobs:
 
   # ─── Q2: README SOT + authenticated tools/list parity ────────────────
   q2-readme-parity:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Q2 — README SOT Parity"
     runs-on: ubuntu-latest
     env:
@@ -195,6 +197,7 @@ jobs:
 
   # ─── Q3: Tests pass? ───────────────────────────────────────────────────
   q3-tests:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Q3 — Tests"
     runs-on: ubuntu-latest
     steps:
@@ -226,6 +229,7 @@ jobs:
 
   # ─── Q4: Registry truth? ────────────────────────────────────────────────
   q4-registry-truth:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Q4 — Registry Truth"
     runs-on: ubuntu-latest
     steps:
@@ -244,10 +248,11 @@ jobs:
 
   # ─── Final gate ────────────────────────────────────────────────────────
   sentinel-gate:
+    if: (always()) && (github.actor != 'dependabot[bot]' && github.actor != 
+      'app/dependabot')
     name: "✅ Sentinel Gate"
     needs: [q1-critical-paths, q2-readme-parity, q3-tests, q4-registry-truth]
     runs-on: ubuntu-latest
-    if: always()
     steps:
       - name: Gate verdict
         run: |
