@@ -57,6 +57,15 @@ interface SeismicInterpretResult {
 
 type PickMode = 'horizon' | 'fault' | 'none';
 
+/** V11: Audit trail entry for every state mutation */
+interface AuditEntry {
+  timestamp: string;
+  action: 'add_pick' | 'add_point' | 'clear' | 'undo' | 'mcp_horizon' | 'mcp_fault';
+  pickType: 'horizon' | 'fault' | 'both';
+  claimState: string;
+  detail: string;
+}
+
 interface LocalPick {
   id: string;
   name: string;
@@ -278,6 +287,44 @@ export const SeismicInterpretationCanvas: React.FC = () => {
   const anyReadOnly = horizonReadOnly || faultReadOnly;
   const nextPickId = useRef(1);
 
+  // ─── V11: Audit trail — every mutation is logged with timestamp ────────
+  const [auditLog, setAuditLog] = useState<AuditEntry[]>([]);
+  const logMutation = useCallback((
+    action: AuditEntry['action'],
+    pickType: AuditEntry['pickType'],
+    claimState: string,
+    detail: string,
+  ) => {
+    setAuditLog((prev) => [...prev.slice(-49), { // keep last 50 entries
+      timestamp: new Date().toISOString(),
+      action, pickType, claimState, detail,
+    }]);
+  }, []);
+
+  // ─── V11: commitPick — the ONLY way to mutate picks state ──────────────
+  // Every setPicks call MUST go through this function to ensure:
+  // 1. The mutation is logged in the audit trail
+  // 2. The geological claim state machine is synced via toDraft()
+  const commitPick = useCallback((
+    updater: (prev: LocalPick[]) => LocalPick[],
+    action: AuditEntry['action'],
+    pickType: AuditEntry['pickType'],
+    detail: string,
+  ) => {
+    setPicks((prev) => {
+      const next = updater(prev);
+      // Sync claim state machine — picks are ALWAYS in DRAFT after mutation
+      if (pickType === 'horizon' || pickType === 'both') {
+        horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
+      }
+      if (pickType === 'fault' || pickType === 'both') {
+        fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
+      }
+      return next;
+    });
+    logMutation(action, pickType, horizon.claim.state, detail);
+  }, [horizon, fault, logMutation]);
+
   const interpretTool = useMcpTool<{
     mode: string;
     geological_query?: string;
@@ -295,7 +342,7 @@ export const SeismicInterpretationCanvas: React.FC = () => {
       });
       updateFloorStatus('F2', 'green', 'Horizon candidates returned');
 
-      // Convert server horizons to local picks
+      // Convert server horizons to local picks — V11: ALL mutations via commitPick
       if (result.horizons) {
         const newPicks: LocalPick[] = result.horizons.map((h, i) => ({
           id: `h-${nextPickId.current++}`,
@@ -304,16 +351,17 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: h.points?.map(([t, time]) => ({ trace: t, time })) ?? [],
           color: seismicColors[i % seismicColors.length],
         }));
-        setPicks((prev) => {
-          const next = [...prev, ...newPicks];
-          horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
-          return next;
-        });
+        commitPick(
+          (prev) => [...prev, ...newPicks],
+          'mcp_horizon',
+          'horizon',
+          `MCP horizon_contrast: ${newPicks.length} horizons added`,
+        );
       }
     } catch (err) {
       updateFloorStatus('F2', 'red', `Horizon pick failed: ${String(err)}`);
     }
-  }, [interpretTool, updateFloorStatus, horizon]);
+  }, [interpretTool, updateFloorStatus, commitPick]);
 
   const runFaultDetection = useCallback(async () => {
     try {
@@ -332,16 +380,18 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: f.points?.map(([t, time]) => ({ trace: t, time })) ?? [],
           color: faultColors[i % faultColors.length],
         }));
-        setPicks((prev) => {
-          const next = [...prev, ...newPicks];
-          fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
-          return next;
-        });
+        // V11: ALL mutations via commitPick
+        commitPick(
+          (prev) => [...prev, ...newPicks],
+          'mcp_fault',
+          'fault',
+          `MCP fault_sticks: ${newPicks.length} faults added`,
+        );
       }
     } catch (err) {
       updateFloorStatus('F2', 'red', `Fault detection failed: ${String(err)}`);
     }
-  }, [interpretTool, updateFloorStatus, fault]);
+  }, [interpretTool, updateFloorStatus, commitPick]);
 
   const handleCanvasClick = useCallback((trace: number, time: number) => {
     // V10/V11 Tri-State: while the relevant claim is PENDING REVIEW or
@@ -353,9 +403,7 @@ export const SeismicInterpretationCanvas: React.FC = () => {
     if (pickMode === 'horizon') {
       const existing = picks.filter((p) => p.type === 'horizon');
       if (existing.length === 0) {
-        // V10/V11: first horizon creation is a DRAFT-level action.
-        // No more pendingSeal holding — the user freely creates picks in DRAFT,
-        // then explicitly REQUESTS VERDICT when ready to lock.
+        // V11: first horizon creation — commitPick routes through audit trail + state machine
         const newPick: LocalPick = {
           id: `h-${nextPickId.current++}`,
           name: `Horizon-${nextPickId.current}`,
@@ -363,22 +411,22 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: [{ trace, time }],
           color: seismicColors[0],
         };
-        setPicks((prev) => {
-          const next = [...prev, newPick];
-          horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
-          return next;
-        });
+        commitPick(
+          (prev) => [...prev, newPick],
+          'add_pick', 'horizon',
+          `New horizon created at trace=${trace} time=${time}`,
+        );
         return;
       }
-      // Continuation of an already-existing horizon — direct update.
+      // Continuation of an already-existing horizon — V11: commitPick for audit
       const target = existing[activeHorizonIdx % existing.length];
-      setPicks((prev) => {
-        const next = prev.map((p) =>
+      commitPick(
+        (prev) => prev.map((p) =>
           p.id === target.id ? { ...p, points: [...p.points, { trace, time }].sort((a, b) => a.trace - b.trace) } : p
-        );
-        horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
-        return next;
-      });
+        ),
+        'add_point', 'horizon',
+        `Point added to ${target.name} at trace=${trace} time=${time}`,
+      );
     } else if (pickMode === 'fault') {
       const existing = picks.filter((p) => p.type === 'fault');
       if (existing.length === 0) {
@@ -389,23 +437,23 @@ export const SeismicInterpretationCanvas: React.FC = () => {
           points: [{ trace, time }],
           color: faultColors[0],
         };
-        setPicks((prev) => {
-          const next = [...prev, newPick];
-          fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
-          return next;
-        });
+        commitPick(
+          (prev) => [...prev, newPick],
+          'add_pick', 'fault',
+          `New fault created at trace=${trace} time=${time}`,
+        );
         return;
       }
       const lastFault = existing[existing.length - 1];
-      setPicks((prev) => {
-        const next = prev.map((p) =>
+      commitPick(
+        (prev) => prev.map((p) =>
           p.id === lastFault.id ? { ...p, points: [...p.points, { trace, time }] } : p
-        );
-        fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
-        return next;
-      });
+        ),
+        'add_point', 'fault',
+        `Point added to ${lastFault.name} at trace=${trace} time=${time}`,
+      );
     }
-  }, [pickMode, activeHorizonIdx, picks, horizonReadOnly, faultReadOnly, horizon, fault]);
+  }, [pickMode, activeHorizonIdx, picks, horizonReadOnly, faultReadOnly, commitPick]);
 
   // ── V10/V11: Tri-State transitions for horizon and fault claims ──────────────
   const requestHorizonReview = useCallback(() => horizon.requestReview(), [horizon]);
@@ -419,24 +467,27 @@ export const SeismicInterpretationCanvas: React.FC = () => {
     fault.attest(ref);
   }, [fault]);
 
+  // V11: clearPicks and undoLast also go through commitPick for audit trail
   const clearPicks = () => {
-    setPicks([]);
-    horizon.toDraft({ picks: [] });
-    fault.toDraft({ picks: [] });
-    nextPickId.current = 1;
+    commitPick(
+      () => [],
+      'clear', 'both',
+      `All picks cleared`,
+    );
   };
 
   const undoLast = () => {
-    setPicks((prev) => {
-      if (prev.length === 0) return prev;
-      const last = prev[prev.length - 1];
-      const next = last.points.length <= 1
-        ? prev.slice(0, -1)
-        : prev.map((p) => (p.id === last.id ? { ...p, points: p.points.slice(0, -1) } : p));
-      if (last.type === 'horizon') horizon.toDraft({ picks: next.filter((p) => p.type === 'horizon') });
-      else fault.toDraft({ picks: next.filter((p) => p.type === 'fault') });
-      return next;
-    });
+    commitPick(
+      (prev) => {
+        if (prev.length === 0) return prev;
+        const last = prev[prev.length - 1];
+        return last.points.length <= 1
+          ? prev.slice(0, -1)
+          : prev.map((p) => (p.id === last.id ? { ...p, points: p.points.slice(0, -1) } : p));
+      },
+      'undo', 'both',
+      `Undo last action`,
+    );
   };
 
   const horizonPicks = picks.filter((p) => p.type === 'horizon');
@@ -707,6 +758,32 @@ export const SeismicInterpretationCanvas: React.FC = () => {
               Compute receipts are evidence only — never authority (F13 SOVEREIGN).
             </p>
           </div>
+
+          {/* V11: Audit Trail — every mutation logged */}
+          {auditLog.length > 0 && (
+            <div className="mt-3 pt-3 border-t border-slate-800">
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
+                Audit Trail ({auditLog.length})
+              </h4>
+              <div className="max-h-32 overflow-y-auto space-y-1">
+                {auditLog.slice().reverse().map((entry, i) => (
+                  <div key={i} className="text-[8px] text-slate-600 font-mono leading-tight">
+                    <span className="text-slate-500">{new Date(entry.timestamp).toLocaleTimeString()}</span>
+                    {' '}
+                    <span className={
+                      entry.action.includes('add') ? 'text-green-500/70' :
+                      entry.action === 'clear' ? 'text-red-500/70' :
+                      entry.action === 'undo' ? 'text-amber-500/70' :
+                      'text-blue-500/70'
+                    }>
+                      {entry.action}
+                    </span>
+                    {' '}<span className="text-slate-500">{entry.detail}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Status */}
           <div className="mt-4 pt-3 border-t border-slate-800">

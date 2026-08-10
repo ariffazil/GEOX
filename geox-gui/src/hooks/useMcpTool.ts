@@ -33,6 +33,24 @@ const TIMEOUT_MS = 30_000;
 const GEOX_MCP_ENDPOINT = '/mcp/';
 
 /**
+ * V8: Read-only tools that do NOT require sovereign session tokens.
+ * All other tools are state mutations and MUST carry a valid session_id.
+ */
+const READ_ONLY_TOOLS = new Set(['geox_claim', 'geox_prospect']);
+
+/**
+ * V8: Determine routing lane from tool name prefix.
+ * - geox_seismic*, geox_avo* → geophysics lane
+ * - geox_petrophysics*, geox_well*, geox_sequence* → geology lane
+ * - everything else → general lane
+ */
+function resolveRoutingLane(toolName: string): string {
+  if (toolName.startsWith('geox_seismic') || toolName.startsWith('geox_avo')) return 'geophysics';
+  if (toolName.startsWith('geox_petrophysics') || toolName.startsWith('geox_well') || toolName.startsWith('geox_sequence')) return 'geology';
+  return 'general';
+}
+
+/**
  * Detect if we're running in an iframe (ChatGPT/Claude plugin mode)
  * vs standalone (browser direct). Uses same logic as useGeoxBridge.
  */
@@ -59,6 +77,20 @@ async function directMcpCall<TResult>(
   baseUrl: string,
 ): Promise<TResult> {
   const url = `${baseUrl}${GEOX_MCP_ENDPOINT}`;
+
+  // ─── V8: Sovereign session validation for state mutations ──────────────
+  // Read-only tools (geox_claim, geox_prospect) may run anonymous.
+  // Every other tool is a state mutation and MUST carry a valid SCT token.
+  if (!READ_ONLY_TOOLS.has(toolName)) {
+    const sessionId = args.session_id as string | undefined;
+    if (!sessionId || sessionId.startsWith('anon-')) {
+      throw new Error('F13 SOVEREIGN VIOLATION: state mutation requires valid SCT token');
+    }
+  }
+
+  // ─── V8: Dynamic lane routing ──────────────────────────────────────────
+  const lane = resolveRoutingLane(toolName);
+
   const body = JSON.stringify({
     jsonrpc: '2.0',
     id: `${toolName}-${Date.now()}`,
@@ -71,6 +103,9 @@ async function directMcpCall<TResult>(
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json, text/event-stream',
+      'X-Sovereign-Session': String(args.session_id ?? ''),
+      'X-Actor-Id': String(args.actor_id ?? ''),
+      'X-Routing-Lane': lane,
     },
     body,
   });
