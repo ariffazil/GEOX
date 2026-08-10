@@ -371,7 +371,7 @@ export const MultiWellCorrelationPanel: React.FC = () => {
   // The real path is DRAFT → PENDING REVIEW → ATTESTED, with attest()
   // being a separate explicit gate that requires a VAULT999 attestation
   // ref (not a compute receipt).
-  const { claim, toDraft, requestReview, attest } = useGeologicalClaim('correlation');
+  const { claim, toDraft, requestReview, attest, resetToReality } = useGeologicalClaim('correlation');
   const isReadOnly = claim.state === 'pending_review' || claim.state === 'attested';
   const isAttested = claim.state === 'attested';
 
@@ -495,9 +495,8 @@ export const MultiWellCorrelationPanel: React.FC = () => {
   // This is NOT derived from any compute receipt. It is the separate,
   // sovereign step that the old mock SEAL gate skipped entirely.
   const attestToVault = useCallback(() => {
-    const ref = `VAULT999:${claim.id}:${Date.now()}`;
-    attest(ref);
-  }, [attest, claim.id]);
+    attest({ claimId: claim.id, tops, wells });
+  }, [attest, claim.id, tops, wells]);
 
   const zoomIn = () => {
     const mid = (depthRange[0] + depthRange[1]) / 2;
@@ -619,6 +618,7 @@ export const MultiWellCorrelationPanel: React.FC = () => {
                       [UNVERIFIED]
                     </span>
                     <span className="text-[10px] text-slate-400">DRAFT</span>
+                    <span className="ml-auto text-[9px] font-bold text-gray-400 bg-gray-800/60 px-1.5 py-0.5 rounded border border-gray-700/60">DRAFT</span>
                   </div>
                   <p className="text-[9px] text-slate-500 mt-1 leading-tight">
                     Reversible, local state only. Picks are volatile until reviewed.
@@ -632,6 +632,7 @@ export const MultiWellCorrelationPanel: React.FC = () => {
                       [PENDING REVIEW]
                     </span>
                     <span className="text-[10px] text-amber-500/70">F11 halt</span>
+                    <span className="ml-auto text-[9px] font-bold text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/30">APPROVED</span>
                   </div>
                   <p className="text-[9px] text-amber-500/70 mt-1 leading-tight">
                     Canvas LOCKED (read-only). Uncertainty acknowledged — correlation
@@ -640,16 +641,14 @@ export const MultiWellCorrelationPanel: React.FC = () => {
                 </div>
               )}
               {claim.state === 'attested' && (
-                <div className="mb-2 p-2 rounded border border-green-600/40 bg-green-600/10">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-green-400 bg-green-600/20 border border-green-600/40 px-1.5 py-0.5 rounded">
-                      [SEALED - VAULT999]
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-mono">{claim.attestationRef}</span>
-                  </div>
-                  <p className="text-[9px] text-slate-500 mt-1 leading-tight">
-                    Attested. No further editing — edits require a new claim.
-                  </p>
+                <div className="attestation-confirmation mb-2">
+                  <h4>🔒 Attestation Confirmed — Correlation</h4>
+                  <p>Receipt: <code>{claim.attestationRef}</code></p>
+                  <p>Timestamp: {claim.attestedAt}</p>
+                  <p>Type: {claim.type}</p>
+                  <button onClick={resetToReality}>
+                    Return to Reality
+                  </button>
                 </div>
               )}
 
@@ -657,18 +656,18 @@ export const MultiWellCorrelationPanel: React.FC = () => {
               {claim.state === 'draft' && (
                 <button
                   onClick={requestVerdict}
-                  className="w-full py-2 rounded bg-amber-600/20 border border-amber-600/40 text-amber-400 text-xs font-bold hover:bg-amber-600/30"
+                  className="w-full py-2 rounded bg-[#3b82f6]/20 border border-[#3b82f6]/40 text-[#3b82f6] text-xs font-bold hover:bg-[#3b82f6]/30"
                 >
-                  REQUEST VERDICT / REVIEW
+                  ▶ Review Delta
                 </button>
               )}
               {claim.state === 'pending_review' && (
                 <>
                   <button
                     onClick={attestToVault}
-                    className="w-full py-2 rounded bg-emerald-600/20 border border-emerald-600/40 text-emerald-400 text-xs font-bold hover:bg-emerald-600/30"
+                    className="w-full py-2 rounded bg-[#f59e0b]/20 border border-[#f59e0b]/40 text-[#f59e0b] text-xs font-bold hover:bg-[#f59e0b]/30"
                   >
-                    ATTEST → VAULT999
+                    ✓ Approve & Request Judge
                   </button>
                   <button
                     onClick={() => toDraft({ tops, wells, claimId: claim.id })}
