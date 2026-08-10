@@ -140,7 +140,7 @@ dependencies = [
 dev = [
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "ruff>=0.15.18",
+    "ruff>=0.16.1",
     "mypy>=2.1.0",
     "fastmcp[apps,tasks]>=3.4.2,<4.0",  # server bootstrap registers apps+tasks tools (geox_data_ingest_bundle)
     # Property-based fuzzing — closes WAJIB #4 (Claude-fable 2026-07-13).
