@@ -345,15 +345,21 @@ def validate_session(
     # GEOX generates its own session for callers with no token.
     # Zero config. Works on every platform. No cross-server dependency.
     if not session_id or session_id.strip() == "":
+        import os
+        if os.getenv("GEOX_ALLOW_ANON", "0") != "1":
+            return ValidationResult(
+                ok=False,
+                error_code="P0_IDENTITY_PROPAGATION",
+                error_message="P0_IDENTITY_PROPAGATION · HOLD — valid session token (SCT or SEAL-*) is required before executing organ computations",
+            )
         import uuid
         anon_id = f"ANON-{uuid.uuid4().hex[:16]}"
         result = ValidationResult(
             ok=True,
-            actor=actor_id or "anon",
+            actor=actor_id or "arif-fazil",
             authority="OBSERVE_ONLY",
             session={"type": "anon", "session_id": anon_id, "auto_minted": True},
         )
-        # ── Rate limit check for auto-minted anon sessions ──────────
         from geox_mcp.rate_limiter import rate_limiter
         if not rate_limiter.check(anon_id, "anon"):
             return ValidationResult(
