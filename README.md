@@ -37,7 +37,7 @@ GEOX enforces explicit segregation between measurement and interpretation:
 
 ---
 
-## 🧪 Falsification-First Architecture
+## 🧪 Falsification-First Architecture — Inner Loop
 
 ```mermaid
 graph TD
@@ -51,7 +51,48 @@ graph TD
     VAULT --> MCP[MCP Server :8081]
     MCP --> WEALTH[WEALTH Capital Engine]
     MCP --> UI[AAA Cockpit]
+    HOLD -.->|resolved| LAS
 ```
+
+---
+
+## 🌐 Federation — Outer Loop
+
+GEOX's pipeline above is a witness loop — it computes evidence, never a verdict. The
+evidence feeds the federation's outer loop, the whole linked state, one diagram:
+
+```mermaid
+flowchart TB
+    ARIF["👑 ARIF — F13 SOVEREIGN<br/>purpose, irreversible consent, final veto"]
+    ARIFOS["⚖️ arifOS :8088<br/>judges — never executes"]
+    AAA["🏛️ AAA :3001<br/>routes & displays — never adjudicates"]
+    GEOX["🌍 GEOX :8081<br/>earth evidence"]
+    WEALTH["💰 WEALTH :18082<br/>capital evidence"]
+    WELL["🫀 WELL :18083<br/>vitality mirror"]
+    FORGE["⚒️ A-FORGE :7071/72<br/>executes — only after SEAL"]
+    VAULT["💀 VAULT999<br/>immutable seal chain"]
+
+    ARIF -->|purpose, veto| ARIFOS
+    ARIFOS -->|444 route| AAA
+    AAA --> GEOX
+    AAA --> WEALTH
+    AAA --> WELL
+    GEOX -->|evidence| ARIFOS
+    WEALTH -->|evidence| ARIFOS
+    WELL -->|readiness mirror| ARIFOS
+    ARIFOS -->|888 SEAL/HOLD/VOID → 777 forge| FORGE
+    FORGE -->|999 receipt| VAULT
+    VAULT -->|immutable record| ARIF
+
+    classDef here fill:#0a7b83,color:#fff,stroke:#063f43,stroke-width:2px
+    class GEOX here
+```
+
+**Linked state:** [arifOS](https://github.com/ariffazil/arifos#-federation--outer-loop) ·
+[A-FORGE](https://github.com/ariffazil/A-FORGE#-federation--outer-loop) ·
+[WEALTH](https://github.com/ariffazil/WEALTH#-federation--outer-loop) ·
+[WELL](https://github.com/ariffazil/WELL#-federation--outer-loop) ·
+full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 
 ---
 
