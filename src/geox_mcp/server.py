@@ -2749,6 +2749,7 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
 
     SUPPORTED_VERSIONS: frozenset[str] = frozenset(
         {
+            "2026-07-28",  # Stateless MCP 2.0 (MCPJam Inspector default)
             "2025-11-25",  # Streamable HTTP + outputSchema (GEOX canonical)
             "2025-06-18",  # transitional canonical
             "2024-11-25",  # FastMCP legacy — in active use across federation
