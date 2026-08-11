@@ -990,7 +990,18 @@ class GeoxGovernanceMiddleware(Middleware):
         if not isinstance(gov_envelope, dict):
             return result
         try:
+            import hashlib
+            import json as _json
+
             from geox_mcp.organ_governance import build_evidence_envelope
+
+            # MANDATORY content_sha256 — never empty (F11 AUDITABILITY).
+            # Compute deterministic SHA256 of canonical envelope payload so
+            # every receipt has a verifiable hash even when no artifact exists.
+            _envelope_for_hash = _json.dumps(
+                gov_envelope, sort_keys=True, default=str
+            )
+            content_sha256 = hashlib.sha256(_envelope_for_hash.encode()).hexdigest()
 
             envelope = build_evidence_envelope(
                 tool_name=tool_name,
@@ -1002,6 +1013,7 @@ class GeoxGovernanceMiddleware(Middleware):
                 artifact_id=gov_envelope.get("artifact_id", ""),
                 session_id=gov_envelope.get("session_id", ""),
                 actor_id=gov_envelope.get("actor_id", "anonymous"),
+                content_sha256=content_sha256,
             )
             if isinstance(result, dict) and not isinstance(result.get("content"), list):
                 result["_evidence_envelope"] = envelope
