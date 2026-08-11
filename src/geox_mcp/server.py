@@ -2583,6 +2583,10 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
         "https://www.claude.ai",
         "https://chatgpt.com",
         "https://chat.openai.com",
+        # MCPJam Inspector — official MCP dev tool
+        "https://app.mcpjam.com",
+        "https://mcpjam.com",
+        "https://*.mcpjam.com",
         "http://localhost",
         "https://localhost",
         "http://127.0.0.1",
@@ -2593,10 +2597,10 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
         if request.url.path.startswith("/mcp"):
             origin = request.headers.get("origin", "")
             if origin and not any(origin.startswith(p) for p in self.ALLOWED_ORIGIN_PREFIXES):
-                # Allow anthropic / oaiusercontent subdomains without enumerating every host
+                # Allow anthropic / oaiusercontent / mcpjam subdomains without enumerating every host
                 if not (
                     origin.startswith("https://")
-                    and (origin.endswith(".claude.ai") or ".anthropic.com" in origin or ".oaiusercontent.com" in origin)
+                    and (origin.endswith(".claude.ai") or ".anthropic.com" in origin or ".oaiusercontent.com" in origin or origin.endswith(".mcpjam.com"))
                 ):
                     return JSONResponse(
                         {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
