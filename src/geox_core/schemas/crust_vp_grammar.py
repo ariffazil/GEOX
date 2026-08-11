@@ -487,6 +487,21 @@ def classify_column(column: CrustColumn) -> CrustColumn:
     return column.model_copy(update={"classifications": classifications})
 
 
+# Re-export Hasterok provenance map so callers can do:
+#   from geox_core.schemas.crust_vp_grammar import CRUST_PROVENANCE_MAP, lookup
+# Circular import is safe here — CrustZone is fully defined before
+# crust_provenance_map.py imports it, and crust_provenance_map is only
+# imported at module level after CrustZone class body is complete.
+from geox_core.schemas.crust_provenance_map import (
+    CRUST_PROVENANCE_MAP,
+    ProvenanceEntry,
+    lookup,
+    all_labels,
+    reversible_calls,
+    crust_zone_map,
+    WILSON_FIVE_COLLAPSE,
+)
+
 __all__ = [
     "CrustZone",
     "VpObservation",
@@ -507,4 +522,12 @@ __all__ = [
     "SERPENTINIZED_HEATFLOW_MW_M2",
     "HVL_VP_THRESHOLD",
     "LOWER_CRUST_VP_MAX",
+    # Hasterok provenance map (Hasterok et al. 2022 → CrustZone)
+    "CRUST_PROVENANCE_MAP",
+    "ProvenanceEntry",
+    "lookup",
+    "all_labels",
+    "reversible_calls",
+    "crust_zone_map",
+    "WILSON_FIVE_COLLAPSE",
 ]

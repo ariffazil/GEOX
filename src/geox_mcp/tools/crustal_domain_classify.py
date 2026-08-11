@@ -26,6 +26,13 @@ REFERENCE:
   Deformation in the Northwestern Margin of the South China Sea
   (the Vp grammar that powers this tool).
 
+PROVENANCE VOCABULARY (Hasterok → CrustZone):
+  For tectonic provenance labels (Relic CV/OV/PM suites, etc.), use the
+  canonical CRUST_PROVENANCE_MAP from geox_core.schemas.crust_provenance_map.
+  All 40 Hasterok et al. (2022) provenance labels are mapped to CrustZone.
+  Reversible calls (8 entries) are marked with reversible_call=True.
+  See: geox_core.schemas.crust_provenance_map.lookup(hasterok_label) → ProvenanceEntry.
+
 USAGE:
   from geox_mcp.tools.crustal_domain_classify import (
       geox_crustal_domain_classify,
@@ -63,6 +70,12 @@ from geox_core.schemas.crust_vp_grammar import (
     CrustClassification,
     CrustZone,
     vp_zone_classify,
+)
+from geox_core.schemas.crust_provenance_map import (
+    CRUST_PROVENANCE_MAP,  # Hasterok 40-row → CrustZone canonical map
+    ProvenanceEntry,
+    lookup,
+    reversible_calls,
 )
 
 logger = logging.getLogger("geox.crustal_domain")
