@@ -1,13 +1,16 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-08-10T12:10:00Z
+last_verified: 2026-08-11T05:58:51Z
 federation_release: v2026.08.09
-live_commit: 8e3de899 (M6 instrumentation — per-tool invocation counters)
+live_commit: d79a9b59 (chore(GEOX): ignore pyproject.toml backup files)
 truth_rule: live :8081/health + tools/list beat any static count in prose
 mcp_tools_live: 33
 mcp_apps_registered: 18
 chatgpt_metadata: widgetCSP + widgetDescription + domain — VERIFIED
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
+symlink_alias: /root/geox (lowercase) → /root/GEOX (canonical, this file)
+infra_organs: arifFlow:7073 METABOLISM, FED:7074 ADVISORY, FLAME:18901 ADVISORY, FRAME:frame-organ.service OBSERVE
+audit_basis: 333-AGI Δ MIND session (2026-08-11) — 19-repo README audit
 -->
 
 # 🌍 GEOX — Earth Intelligence Organ
@@ -107,6 +110,73 @@ full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 | **Geomechanics** | Elastic moduli, stress polygon, pore pressure prediction |
 | **Prospect** | STOIIP/GIIP volumetrics, POS, seamless WEALTH bridge for EMV |
 
+---
+
+## 🗺️ Where GEOX Sits in the Federation
+
+```mermaid
+flowchart LR
+  subgraph Witness["🔬 Witness Plane (read-only)"]
+    GEOX[("🌍 GEOX :8081<br/>Earth evidence<br/>33 MCP tools")]
+  end
+
+  subgraph Governance["⚖️ Governance"]
+    ARIFOS["arifOS :8088<br/>F1-F13 · 888 JUDGE"]
+  end
+
+  subgraph Execution["⚒️ Execution"]
+    AFORGE["A-FORGE :7071/72"]
+  end
+
+  subgraph Truth["💀 Truth"]
+    VAULT["VAULT999"]
+  end
+
+  subgraph Sibling["Sibling witness organs"]
+    WEALTH["💰 WEALTH"]
+    WELL["🫀 WELL"]
+  end
+
+  GEOX ==>|geox_evidence<br/>epistemic label OBS/DER/INT/SPEC| ARIFOS
+  WEALTH <-->|"capital bridge<br/>(EMV, NPV)"| GEOX
+  WELL -.->|"no cross-talk<br/>(independent witness)"| GEOX
+
+  ARIFOS ==>|"SEAL verdict"| AFORGE
+  AFORGE ==>|"plan · apply · verify"| VAULT
+  VAULT ==>|"sealed receipt<br/>with GEOX evidence citation"| GEOX
+
+  classDef witness fill:#4285F4,stroke:#000,color:#fff
+  classDef governance fill:#A42E2E,stroke:#000,color:#fff
+  classDef execution fill:#2E7D32,stroke:#000,color:#fff
+  classDef truth fill:#000,stroke:#000,color:#fff
+  class GEOX witness
+  class ARIFOS governance
+  class AFORGE execution
+  class VAULT truth
+```
+
+**GEOX internal loop (claim engine):**
+
+```
+observe ───▶ geox_evidence (epistemic label) ───▶ geox_claim (create)
+                                                       │
+              geox_falsify (Popperian attack)  ◀────────┤
+                       │                              │
+                       ▼                              ▼
+              geox_claim (challenge)        geox_claim (seal candidate)
+                                                       │
+                                                       ▼
+                                              arifOS 888 JUDGE
+                                                       │
+                                                       ▼
+                                              A-FORGE execute → VAULT999
+```
+
+**Hard rules:**
+- GEOX never adjudicates. Every claim is a **candidate** until arifOS JUDGE renders a verdict.
+- GEOX never executes. All mutations flow through A-FORGE under SEAL.
+- GEOX never self-cites. Witness organs stay independent — no cross-talk except WEALTH bridge.
+
 **Plus 18 MCP App widgets:** WellDesk · Seismic Vision · Earth Volume · Basin Explorer · Prospect Studio · Risk Console · and more — render inline in ChatGPT, Claude, VS Code.
 
 ---
@@ -136,8 +206,12 @@ curl -s http://127.0.0.1:8081/health | jq .
 | **⚒️ A-FORGE** | Execution Engine — builds, deploys | 7071/72 | [repo](https://github.com/ariffazil/A-FORGE) | [mcp](https://forge.arif-fazil.com/mcp) | [health](https://forge.arif-fazil.com/health) | [llms.txt](https://forge.arif-fazil.com/llms.txt) |
 | **🏛️ AAA** | Control Plane — A2A gateway, cockpit | 3001 | [repo](https://github.com/ariffazil/AAA) | — | [health](https://aaa.arif-fazil.com/health) | [llms.txt](https://aaa.arif-fazil.com/llms.txt) |
 | **🌍 GEOX** | Earth Intelligence — seismic, wells | 8081 | [repo](https://github.com/ariffazil/GEOX) | [mcp](https://geox.arif-fazil.com/mcp) | [health](https://geox.arif-fazil.com/health) | [llms.txt](https://geox.arif-fazil.com/llms.txt) |
-| **💰 WEALTH** | Capital Intelligence — NPV, risk | 18082 | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | [llms.txt](https://wealth.arif-fazil.com/llms.txt) |
+| **💰 WEALTH** | Capital Intelligence — NPV, risk | 18082 | [repo](https://github.com/ariffazil/WEALTH) | [mcp](https://wealth.arif-fazil.com/mcp) | [health](https://wealth.arif-fazil.com/health) | (llms.txt pending) |
 | **🫀 WELL** | Vitality Guard — human readiness | 18083 | [repo](https://github.com/ariffazil/WELL) | [mcp](https://well.arif-fazil.com/mcp) | [health](https://well.arif-fazil.com/health) | [llms.txt](https://well.arif-fazil.com/llms.txt) |
+| **🫀 arifFlow** | Metabolism — FQ pulse, receipts | 7073 | [repo](https://github.com/ariffazil/arifFlow) | — | [health](https://arifflow.arif-fazil.com/health) | — |
+| **🧭 FED** | Route Advisor — model/provider ranking | 7074 | private (internal) | — | [health](https://fed.arif-fazil.com/health) | — |
+| **🔥 FLAME** | RM0 Inference — free-loop model mesh | 18901 | private (internal) | — | [health](https://flame.arif-fazil.com/health) | — |
+| **🧱 FRAME** | Substrate — federation scaffolding | frame-organ.service | private (internal) | — | — | — |
 | **🔮 HERMES** | Multi-Modal Bridge — Telegram relay | 8644 | [repo](https://github.com/ariffazil/HERMES) | — | — | — |
 | **🌐 arif-fazil.com** | Public Web Surface — one domain | 443 | [repo](https://github.com/ariffazil/arif-fazil.com) | — | [verify](https://arif-fazil.com/999/verify) | — |
 
@@ -149,9 +223,8 @@ GEOX is registered as an MCP server on the federation registries. Discovery meta
 
 | Registry | Server | Manifest |
 |----------|--------|----------|
-| **Glama** | [glama.ai/mcp/servers/ariffazil/geox](https://glama.ai/mcp/servers/ariffazil/geox) | `https://geox.arif-fazil.com/.well-known/glama.json` |
-| **Smithery** | [smithery.ai/server/geox](https://smithery.ai/server/geox) | `https://geox.arif-fazil.com/.well-known/smithery.yaml` |
-| **mcp.so** | [mcp.so/server/ariffazil/geox](https://mcp.so/server/ariffazil/geox) | `https://geox.arif-fazil.com/.well-known/mcp-so.json` |
+| **Glama** | ⚠️ 301 → [glama.ai/mcp/servers/ariffazil/arifos](https://glama.ai/mcp/servers/ariffazil/arifos) | GEOX uses arifOS umbrella |
+| **TurboMCP** | ❌ 404 (2026-08-11) | Federation-wide entry — was `turbomcp.ai/server/ariffazil/arifos`, now dead |
 
 Discovery endpoint: `GET https://geox.arif-fazil.com/.well-known/mcp/server.json`
 
@@ -164,30 +237,3 @@ Discovery endpoint: `GET https://geox.arif-fazil.com/.well-known/mcp/server.json
 
 > *DITEMPA BUKAN DIBERI — Forged, Not Given.*  
 > *Maintained under F13. Built on Marmousi, validated on Volve. 999 SEAL ALIVE.*
-
----
-
-## 🛡️ CI Governance (F13 verdict 2026-08-10)
-
-This repo follows the federation's CI governance pattern (replicated from `ariffazil/arifOS` PR #683). The pattern ensures Dependabot PRs receive a real, reproducible unprivileged verdict — no more all-red check rolls from structurally-incompatible gates.
-
-**Per-repo adapter** (see `.github/workflows/` for the actual files):
-
-- `.github/dependabot.yml` — `uv` (Python) / `cargo` (Rust) / `npm` (TypeScript) ecosystem; cooldown 3d; open-PRs 5; constitutional packages un-grouped (no `ignore:` — visibility preserved)
-- `.github/workflows/dependabot-ci.yml` — unprivileged gate; runs ONLY on Dependabot PRs; SHA-bound probes
-- `.github/workflows/{ci-uv-lock-invariant|cargo-lock-invariant|npm-lock-invariant}.yml` — universal `{uv lock --check && uv sync --frozen | cargo check --locked && cargo build --locked | npm ci}` invariant on every PR + push to main
-- `.github/workflows/auto-merge-dependabot.yml` — constitutional package denylist (per-language); F13 review the only merge path
-- Privileged workflows gated with `if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'` — so they SKIP for Dependabot PRs where their inputs cannot be satisfied
-
-**Constitutional packages** (denied auto-merge, require F13 review):
-
-| Language | Denylist |
-|---|---|
-| Python | `protobuf`, `cryptography`, `fastmcp-slim`, `fastmcp`, `caio`, `sentence-transformers`, `pynacl`, `blake3` |
-| Rust    | `serde`, `tokio`, `hyper`, `axum`, `reqwest`, `rustls`, `async-trait`, `clap`, `tracing` |
-| TypeScript | `zod`, `@modelcontextprotocol/sdk`, `fastmcp`, `mcp-sdk`, `tsx`, `vitest`, `@types/node`, `typescript`, `ts-node` |
-| Static site | `vite`, `react`, `react-dom`, `react-router`, `@tanstack/react-query`, `tailwindcss` |
-
-**Reference:** [`/root/AGENTS.md`](/root/AGENTS.md) — canonical federation doctrine. `AAA/docs/ORGAN.md` — topology.
-
-DITEMPA BUKAN DIBERI — governance is forged, not given.
