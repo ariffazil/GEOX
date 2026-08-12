@@ -39,3 +39,76 @@ states:
       - "Repeat formation tests show declining pressure over time"
       - "Production history matches pressure decline"
     claim_limit: "Depletion requires production data — cannot be inferred from logs alone."
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Component #36 — UNKNOWN-SPACE MAPPING (Coverage-Aware Epistemic Engine)
+# Forged: 2026-08-13 F13 SOVEREIGN directive after Bekok Deep-1 coverage analysis
+# DITEMPA BUKAN DIBERI
+# ═══════════════════════════════════════════════════════════════════════════════
+
+coverage_engine:
+  description: >
+    Coverage is not uncertainty. Coverage is the ability to SEE.
+    A model can be confident but blind. Coverage measures observation density,
+    not statistical spread. Every Pp prediction MUST report coverage alongside
+    confidence.
+  
+  coverage_scores:
+    OBSERVED:
+      score: 1.0
+      meaning: "Direct measurement present (RFT/MDT/DST/LOT/FIT)"
+      epistemic_default: "OBS"
+    CALIBRATED:
+      score: 0.8
+      meaning: "Model fitted to nearby observations, not this interval"
+      epistemic_default: "DER"
+    EXTRAPOLATED:
+      score: 0.4
+      meaning: "Borrowed from adjacent interval depth; interval itself unsampled"
+      epistemic_default: "INT"
+    ANALOG:
+      score: 0.25
+      meaning: "Borrowed from offset well or analog field (>5km)"
+      epistemic_default: "INT"
+    UNKNOWN:
+      score: 0.0
+      meaning: "No observation in interval AND no applicable analog"
+      epistemic_default: "HYPOTHESIS"
+  
+  fail_closed_rules:
+    - rule: "coverage_zero_cap"
+      condition: "coverage_score = 0.0"
+      effect: "confidence_cap = 0.50 regardless of model output"
+      epistemic_downgrade: "HYPOTHESIS"
+      hold_reason: "insufficient_observational_coverage"
+      
+    - rule: "bright_spot_absent_with_no_seismic"
+      condition: "no seismic survey AND coverage_score = 0.0 AND target interval"
+      effect: "epistemic = UNKNOWN"
+      note: "Bright spot cannot exist without seismic. Absence of seismic = epistemic darkness."
+      
+    - rule: "platform_slot_shallow_hazard"
+      condition: "drilling_from_platform AND shallow_interval AND no_site_survey"
+      effect: "coverage_score = 0.0 for shallow section until explicit site survey"
+      note: "Bekok Deep-1 root cause: platform slot assumed sub-seabed known."
+      
+    - rule: "architectural_lie_detection"
+      condition: "confidence_reported AND coverage_score NOT_reported"
+      effect: "F9 ANTIHANTU flag raised"
+      note: "Confidence without coverage provenance is narrative, not engineering."
+  
+  bright_spot_as_coverage_witness:
+    description: "Bright spot = direct hydrocarbon indicator on seismic = geophysical evidence of subsurface fluid"
+    rules:
+      - "Bright spot presence = coverage EXISTS at that location"
+      - "Absence of seismic = bright spot CANNOT exist, not 'not detected'"
+      - "Platform wells need SEPARATE shallow gas assessment from exploration seismic"
+      - "Exploration seismic resolution insufficient for shallow hazards at platform slots"
+  
+  reporting_obligation:
+    every_prediction_must_include:
+      - "confidence (Bayesian)"
+      - "coverage_score (observational density)"
+      - "epistemic_label (OBS/DER/INT/HYPOTHESIS/UNKNOWN)"
+      - "hold_reason if coverage_score < threshold"
+    format: "confidence: X | coverage: Y | epistemic: LABEL | what_was_NOT_sampled: [list]"

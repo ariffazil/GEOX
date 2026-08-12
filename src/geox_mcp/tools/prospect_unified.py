@@ -141,8 +141,16 @@ async def geox_prospect(
         falsified = len(contradictions) > 0
         gals_check = 0.50 if falsified else 0.85
 
+        # Coverage-aware epistemic fields (Component #36 — pressure_states.yaml)
+        # coverage_score: observation density (0.0 = unknown, 1.0 = direct measurement)
+        # epistemic_label: OBS/DER/INT/HYPOTHESIS/UNKNOWN per coverage engine
+        coverage_score = 0.0  # default: UNKNOWN — no calibration data supplied
+        epistemic_label = "HYPOTHESIS"  # default: uncalibrated hypothesis
+
         return {
             "apex_score": {"G": gals_check, "C_dark": 0.50 if falsified else 0.15},
+            "coverage_score": coverage_score,
+            "epistemic_label": epistemic_label,
             "witness_chain": {
                 "W3": 0.40 if falsified else 0.90,
                 "human_ack": not falsified,

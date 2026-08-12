@@ -6,3 +6,98 @@ tectonic_setting: "Cenozoic failed rift / pull-apart basin"
 stratigraphic_framework: "Group A (youngest) to Group M (oldest, syn-rift)"
 status: "Mature oil and gas province"
 primary_hydrocarbon: "Gas-prone, significant oil in Group H and I"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Stratigraphy — complete Malay Basin groups (EPMI nomenclature, no Group C)
+# Sources: Madon et al. 1999 (kinematic evolution & petroleum system),
+#          USGS Open-File Report 99-50-T (Province 3703),
+#          Madon 2010 GSM Bulletin (Organic facies variation in lacustrine
+#          source rocks), Madon 2004 SPE 88455 (Overpressure History),
+#          Knova Universiti Malaya student thesis (2020s) — confirms Group G
+#          present in the stratigraphic column.
+# ─────────────────────────────────────────────────────────────────────────────
+stratigraphy:
+  groups:
+    - id: "A"
+      age: "Pliocene – Recent"
+      environment: "shallow marine / fluvial"
+      role: "overburden"
+      notes: "Youngest sequence; seals shallow section."
+      source: "Madon et al. 1999; USGS OF99-50-T"
+
+    - id: "B"
+      age: "Late Miocene"
+      environment: "shallow marine"
+      role: "minor reservoir"
+      notes: "Sandy facies of limited extent and reserve contribution."
+      source: "Madon et al. 1999; USGS OF99-50-T"
+
+    - id: "D"
+      age: "Middle – Late Miocene"
+      environment: "marine sandstone"
+      role: "reservoir"
+      notes: "Coarse clastic input; together with Group H holds ~38% of basin reserves."
+      source: "Madon et al. 1999; USGS OF99-50-T"
+
+    - id: "E"
+      age: "Middle Miocene"
+      environment: "lower coastal plain"
+      role: "major reservoir + overpressure transition"
+      notes: "Top of overpressure occurs in lower Group E in basin centre (1900–2000 m). Lacustrine shale source facies also present."
+      source: "Madon et al. 1999; Madon 2004 SPE 88455"
+
+    - id: "F"
+      age: "Middle Miocene (~15–12 Ma)"
+      environment: "marine shale"
+      role: "regional seal for basin-centre overpressure compartment"
+      notes: "Marine shale that breaks down pressure between normally-pressured Groups A–E and the deep overpressured compartment (K, L, M)."
+      source: "Madon et al. 1999; Madon 2004 SPE 88455"
+
+    - id: "G"
+      age: "Middle Miocene"
+      environment: "marine-influenced transition"
+      role: "transition unit between F (regional seal) and H (HPHT reservoir)"
+      notes: "Often missed in stratigraphic summaries; documented as a distinct lithostratigraphic unit between the F shale seal and the H deltaic reservoir. Confirmed by Knova UM thesis 2020s and well penetrations in the basin centre."
+      source: "Knova Universiti Malaya thesis 2020s; USGS OF99-50-T; Madon et al. 1999"
+
+    - id: "H"
+      age: "Middle Miocene"
+      environment: "marine deltaic"
+      role: "HPHT reservoir"
+      notes: "Classic HPHT deltaic sandstone target of the Malay Basin; together with Group I contributes most of the basin's oil and gas production."
+      source: "Madon et al. 1999; USGS OF99-50-T"
+
+    - id: "I"
+      age: "Lower – Middle Miocene"
+      environment: "fluvio-deltaic"
+      role: "major reservoir"
+      notes: "Together with Groups J and K contributes ~60% of basin reserves."
+      source: "Madon et al. 1999; Madon 2021 GSM bgsm72"
+
+    - id: "J"
+      age: "Early Miocene (~23 Ma)"
+      environment: "fluvial-estuarine-transgressive"
+      role: "major reservoir (>20% of reserves)"
+      notes: "Major producing interval in many Malay Basin fields."
+      source: "Madon et al. 1999; Madon 2021 GSM bgsm72"
+
+    - id: "K"
+      age: "Late Oligocene – Early Miocene"
+      environment: "fluvial sandstone + lacustrine source facies"
+      role: "dual reservoir + source (~16% of reserves; K-Source Facies)"
+      notes: "Group K is BOTH a fluvial sandstone reservoir (~16% reserves, 10–30% porosity, up to 3000 mD perm) AND a lacustrine source-rock interval (K-Source Facies, TOC 0.35–2.0 wt%, HI 137–403, mixed Type II/III). Distinguishable by biomarker signature (high Pr/Ph, high C29 steranes, oxidising environment)."
+      source: "Madon 2010 GSM Bulletin — Organic facies variation in lacustrine source rocks; Madon et al. 1999"
+
+    - id: "L"
+      age: "Late Oligocene"
+      environment: "lacustrine + transgressive shale"
+      role: "BEST lacustrine source rock (HI 300–400, Type II) + regional seal on basin flank"
+      notes: "Often missed in regional summaries. Group L is the highest-quality lacustrine source rock in the Malay Basin (HI 300–400, primarily Type II oil-prone). On the basin flanks the L shale acts as a regional seal for the second overpressure compartment (top OP 2600–3000 m)."
+      source: "Madon 2010 GSM Bulletin; Madon 2004 SPE 88455; Madon et al. 1999"
+
+    - id: "M"
+      age: "Early Oligocene"
+      environment: "syn-rift lacustrine"
+      role: "primary source rock"
+      notes: "Syn-rift lacustrine shale; the deepest, oldest proven source interval in the basin. AVO anomalies in Group M remain a frontier play."
+      source: "Madon et al. 1999; USGS OF99-50-T"

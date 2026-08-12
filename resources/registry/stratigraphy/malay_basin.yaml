@@ -1,0 +1,152 @@
+# Malay Basin Stratigraphy Registry
+# DITEMPA BUKAN DIBERI — Forged, not given
+# Provenance: Literature-grounded from Madon 2006, USGS OF-99-50T, Tjia 1994, Madon 1997
+
+basin: Malay_Basin
+provenance:
+  primary_source: "Madon, M., 2006. Overpressure history of the Malay Basin. GSM Bull. 49:135-144."
+  secondary_sources:
+    - "Tjia, H.D., 1994. Inversion tectonics in the Malay Basin. GSM Bull. 36:119-126."
+    - "USGS Open-File Report 99-50T, Malay Basin Province 3703"
+    - "Madon, M., 1997. Analysis of tectonic subsidence and heat flow. GSM Bull. 41:95-108."
+    - "Madon, M. & Watts, A.B., 1998. Gravity anomalies, subsidence history. Basin Research 10:375-392."
+    - "Khalid Ngah et al., 1996. Role of pre-Tertiary basement faults. GSL Spec. Publ. 106:281-289."
+  confidence: 0.95
+
+groups:
+  - letter: A
+    age: Plio-Pleistocene
+    lithology: Claystone with lignite, sandstone interbeds, dolomite
+    typical_depth_m: [0, 1500]
+    depositional_environment: Shallow marine
+
+  - letter: B
+    age: Pliocene
+    lithology: Claystone dominant, similar to A
+    typical_depth_m: [300, 2000]
+    depositional_environment: Shallow marine
+
+  - letter: D
+    age: Upper Miocene
+    lithology: Offshore marine sand bars (basin center); coastal plain sands (flanks)
+    typical_depth_m: [1200, 2800]
+    depositional_environment: Shallow marine / offshore bar
+    hc_role: Major reservoir (38% reserves combined with H)
+    hc_type: Condensate and gas
+
+  - letter: E
+    age: Lower-Upper Miocene
+    lithology: Estuarine / fluvial channel sands
+    typical_depth_m: [1500, 3300]
+    depositional_environment: Estuarine
+    hc_role: Reservoir (gas-prone basin center, oil-prone flanks)
+    note: "Bekok field produces from Unit IVA (Bekok Formation) — Khalid 2002"
+
+  - letter: F
+    age: Middle Miocene
+    lithology: REGIONAL TRANSGRESSIVE SHALE
+    typical_depth_m: [1800, 3500]
+    depositional_environment: Marine transgression
+    hc_role: REGIONAL TOP SEAL
+    overpressure_top_seal: true
+    overpressure_compartments: [basin_central]
+    confidence: 0.97
+    note: "Madon 2006: 'Group F shale unit has a strong influence on the depth to top of overpressure in the basin centre'"
+
+  - letter: H
+    age: Middle-Upper Miocene
+    lithology: Deltaic shallow-marine sands + coals + glauconitic sandstones
+    typical_depth_m: [2200, 4000]
+    depositional_environment: Deltaic / coastal plain / tidal channel
+    hc_role: Reservoir + coaly source rock (38% reserves combined with D)
+    hc_type: Condensate and gas (coaly sourced)
+    note: "Madon 1994: Jerneh field reservoir sandstones deposited in mangrove swamps and tidal channels"
+
+  - letter: I
+    age: Lower-Middle Miocene
+    lithology: Shallow marine sandstones; first marine incursion in basin
+    typical_depth_m: [2400, 4500]
+    depositional_environment: Shallow marine
+    hc_role: Reservoir (9% reserves), source rock kitchen (gas, basin center)
+    hc_type: Mixed lacustrine and coaly sourced condensate/oil
+    porosity_pct: [25, 30]
+    permeability_mD_max: 1000
+
+  - letter: J
+    age: Early Miocene
+    lithology: Fluvial / shoreline sandstones (quartzose, medium-grained)
+    typical_depth_m: [2700, 5000]
+    depositional_environment: Fluvial / shoreface / stacked offshore bars
+    hc_role: Major reservoir (>20% reserves)
+    porosity_pct: [11, 30]
+    permeability_mD_max: 2000
+    note: "Nik Ramli 1986: J sandstone = shoreface barred wave- and storm-dominated"
+
+  - letter: K
+    age: Late Oligocene - Early Miocene
+    lithology: Fluvial sandstone with secondary porosity from feldspar dissolution
+    typical_depth_m: [3000, 5500]
+    depositional_environment: Fluvial
+    hc_role: Reservoir (16% reserves, lacustrine sourced)
+    porosity_pct: [10, 30]
+    permeability_mD_max: 3000
+    note: "Known oil source rock in southern Malay Basin. Post-mature in basin center. L and K shales are earliest post-rift sag-phase transgressive units."
+
+  - letter: L
+    age: Late Oligocene
+    lithology: Lacustrine syn-rift / early post-rift shale (transgressive)
+    typical_depth_m: [3500, 9000]
+    depositional_environment: Lacustrine / sag phase
+    hc_role: Source rock + basin margin overpressure seal
+    note: "Madon 2006: Group L shale caps basin margin overpressure compartment"
+
+  - letter: M
+    age: Middle-Late Oligocene (main syn-rift)
+    lithology: Lacustrine syn-rift sediments
+    typical_depth_m: [4000, 14000]
+    depositional_environment: Lacustrine rift fill
+    hc_role: Main syn-rift package, primary lacustrine source rock
+
+overpressure:
+  basin_central:
+    depth_top_m: [1900, 2000]
+    stratigraphic_interval: "lower part of Group E, slightly above top of Group F marker"
+    controlling_seal: F
+    shape: "convex-upward (dome)"
+    mechanism: "disequilibrium compaction"
+    note: "Madon 2006: 'The top of overpressure surface thus appears to mimic the structural sag of the post-rift stratigraphic units'"
+  basin_margin:
+    depth_top_m: [2600, 3000]
+    stratigraphic_interval: "Group L"
+    controlling_seal: L
+    separate_compartment: true
+    mechanism: "lateral transfer from main compartment + secondary origin"
+    note: "Madon 2006: Two distinct overpressure compartments controlled by Group F (center) and Group L (margin)"
+
+geothermal:
+  surface_heat_flow_mw_m2: [33, 42]
+  source: "Madon 1997: heat flow anomaly from lithospheric thinning"
+  stretching_factor_beta:
+    basin_center: 4.0
+    basin_flank: 1.2
+  geothermal_gradient_c_per_km: [32, 38]
+  thermal_state: "Still undergoing thermal subsidence (basin ~35 Ma, anomaly not fully dissipated)"
+
+tectonic_phases:
+  - phase: "Syn-rift extension"
+    age: "Late Eocene - Late Oligocene"
+    mechanism: "Sinistral transtension along NW-SE axial shear zone"
+    reference: "Madon 1997 GSM Bull 41:127-138"
+  - phase: "Basin inversion"
+    age: "Middle-Late Miocene"
+    mechanism: "Dextral transpression (shear reversal), anticline formation"
+    reference: "Madon 1997; Tjia 1994"
+  - phase: "Post-inversion subsidence"
+    age: "Pliocene - Recent"
+    mechanism: "Gentle subsidence, marine transgression"
+    reference: "Ngah et al. 1996"
+
+# WARNING: Group C and Group G are NOT universally recognized in the central Malay Basin.
+# Do NOT create entries for them unless region-specific data confirms their presence.
+# The absence of Group C and G is NORMAL — the sequence skips from B to D, and from F to H.
+# This is not an error. Fabricating these groups would violate F2 TRUTH.

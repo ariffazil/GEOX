@@ -699,7 +699,9 @@ async def geox_basin_profile(
             governance_status=gov_status,
             claim_tag="HYPOTHESIS" if not refs else "CLAIM",
             claim_state=claim_state,
-            evidence_refs=[f"basins/{normalized}/{f}" for f in evidence_loaded],
+            evidence_refs=[f"basins/{normalized}/{f}" for f in evidence_loaded] +
+            # Component #36 — coverage engine reference (pressure_states.yaml)
+            ["ontology/pressure_states.yaml"],
             session_id=session_id,
             actor_id=actor_id,
             tool_name="geox_basin_profile",
@@ -947,9 +949,11 @@ async def geox_literature_ingest(
             {
                 "claim_id": "clm_317a7c30873e40b7",
                 "type": "other",
-                "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia’s hydrocarbon resources in the review period.",
+                "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia's hydrocarbon resources in the review period.",
                 "evidence_ref": lit_ref,
                 "confidence": "HIGH",
+                # Component #36 — coverage_model: OBSERVED/CALIBRATED/EXTRAPOLATED/ANALOG/UNKNOWN
+                "coverage_model": "OBSERVED",
             },
             {
                 "claim_id": "clm_878a99cc8cc84177",
@@ -957,6 +961,7 @@ async def geox_literature_ingest(
                 "claim": "Exploration history shows mature-basin creaming behavior: early giant discoveries, later smaller incremental additions.",
                 "evidence_ref": lit_ref,
                 "confidence": "HIGH",
+                "coverage_model": "CALIBRATED",
             },
             {
                 "claim_id": "clm_4c04b8f277854aba",
@@ -964,6 +969,7 @@ async def geox_literature_ingest(
                 "claim": "Malay Basin initiated by Late Eocene–Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
                 "evidence_ref": lit_ref,
                 "confidence": "HIGH",
+                "coverage_model": "CALIBRATED",
             },
             {
                 "claim_id": "clm_db822655c84b43ac",
@@ -971,6 +977,7 @@ async def geox_literature_ingest(
                 "claim": "Stratigraphy uses groups A–P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
                 "evidence_ref": lit_ref,
                 "confidence": "HIGH",
+                "coverage_model": "OBSERVED",
             },
             {
                 "claim_id": "clm_64bd3be4f6fb471c",
@@ -978,6 +985,7 @@ async def geox_literature_ingest(
                 "claim": "Main resources are reported from Groups J, I, K, E, D; I/J/K contribute about 60%, and D/E plus those contribute about 85%; deltaic sands dominate.",
                 "evidence_ref": lit_ref,
                 "confidence": "HIGH",
+                "coverage_model": "CALIBRATED",
             },
             {
                 "claim_id": "clm_ca5a5ef4c80544ff",
@@ -985,6 +993,7 @@ async def geox_literature_ingest(
                 "claim": "Oils/condensates derive mainly from lower coastal plain fluvio-deltaic coal/coaly shale and lacustrine syn-rift shales; northwest is gas-prone, southeast more oil-prone.",
                 "evidence_ref": lit_ref,
                 "confidence": "MEDIUM",
+                "coverage_model": "EXTRAPOLATED",
             },
             {
                 "claim_id": "clm_78c4535ee5764c10",
@@ -992,6 +1001,7 @@ async def geox_literature_ingest(
                 "claim": "Remaining potential is not zero; paper estimates roughly 2 bboe yet to discover by 2020, but requires new play concepts.",
                 "evidence_ref": lit_ref,
                 "confidence": "MEDIUM",
+                "coverage_model": "ANALOG",
             },
         ]
     else:
