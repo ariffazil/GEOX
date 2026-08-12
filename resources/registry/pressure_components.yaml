@@ -1,0 +1,240 @@
+# GEOX Pressure Components - Source of Truth
+# DITEMPA BUKAN DIBERI - Forged, not given
+#
+# Provenance: Arif Fazil (F13 SOVEREIGN) + Hermes audit 2026-08-13
+# Literature: Madon 2006, Eaton 1969, Bowers 1995, Terzaghi 1936, Matthews-Kelly 1967
+# Epistemic axiom: "Confidence calibrated to data is engineering. Confidence detached from calibration is narrative."
+# Coverage axiom: "Disasters begin when confidence outruns evidence."
+#
+# 36 components across 4 domains + 1 agent layer
+# Component #36 (UNKNOWN_SPACE_MAPPING) is the constitutional keystone.
+
+version: "1.0.0"
+sealed: "2026-08-13"
+owner: "ARIF (F13 SOVEREIGN)"
+architect: "Hermes (AAA Edge Bridge)"
+
+physics:
+  fundamental_pressures:
+    - id: 1
+      name: hydrostatic_pressure
+      symbol: Ph
+      formula: "depth times fluid_density times g"
+      unit: MPa
+      status: CORE
+      source: "Fowler 1982; Terzaghi 1936"
+    - id: 2
+      name: overburden_pressure
+      symbol: Sv
+      formula: "integral of rho(z)*g*dz from surface to depth"
+      unit: MPa
+      status: CORE
+      source: "Athy 1930; Terzaghi 1936"
+    - id: 3
+      name: pore_pressure
+      symbol: Pp
+      formula: "Eaton / Bowers / Effective Stress method"
+      unit: MPa
+      status: CORE
+      source: "Eaton 1969; Bowers 1995"
+    - id: 4
+      name: fracture_gradient
+      symbol: FG
+      formula: "Phillips / Matthews-Kelly / Eaton FG"
+      unit: MPa
+      status: CORE
+      source: "Matthews & Kelly 1967; Phillips 1972"
+      note: "Sanity-fuse FG less than Sv. FG greater than Sv equals unphysical equals 888_HOLD."
+    - id: 5
+      name: effective_stress
+      symbol: sigma
+      formula: "Sv minus Pp"
+      unit: MPa
+      status: CORE
+      source: "Terzaghi 1936"
+
+  generation_mechanisms:
+    - id: 6
+      name: compaction_disequilibrium
+      status: HIGH
+      source: "Madon 2006 GSM Bull 49:135-144"
+      note: "Primary mechanism in Malay Basin. Sealed by Group F shale."
+    - id: 7
+      name: fluid_expansion_thermal_diagenetic
+      status: HIGH
+      source: "Bruce 1984"
+    - id: 8
+      name: tectonic_lateral_transfer
+      status: HIGH
+      source: "Yassir & Bell 1996"
+    - id: 9
+      name: hydrocarbon_buoyancy
+      status: MEDIUM
+      source: "Bekele 2014"
+    - id: 10
+      name: osmosis_chemical_compaction
+      status: MEDIUM
+      source: "Marine & Fritz 2011"
+
+  measured_vs_predicted:
+    - id: 11
+      name: rft_mdt_pressure_points
+      status: HIGH
+      source: "Industry standard"
+      note: "Each point adds observational coverage at its depth."
+    - id: 12
+      name: dst_production_test
+      status: HIGH
+      source: "Industry standard"
+    - id: 13
+      name: lot_xlot_leakoff
+      status: HIGH
+      source: "Industry standard"
+    - id: 14
+      name: mwd_lwd_pressure_while_drilling
+      status: CORE_DRILLING
+      source: "Industry standard"
+    - id: 15
+      name: sonic_log_dt
+      status: CORE
+      source: "Eaton 1969"
+      note: "Without this, prediction equals HYPOTHESIS."
+    - id: 16
+      name: density_log
+      status: CORE_IF_AVAILABLE
+      source: "Industry standard"
+
+calibration:
+  - id: 17
+    name: eaton_exponent_calibration
+    status: HIGH
+    source: "Eaton 1969"
+  - id: 18
+    name: bowers_coefficients
+    status: HIGH
+    source: "Bowers 1995"
+  - id: 19
+    name: phillips_fg_coefficient
+    status: HIGH
+    source: "Phillips 1972"
+  - id: 20
+    name: offset_well_ensemble
+    status: HIGH
+    source: "Industry practice"
+    note: "Minimum 3 offset wells for PARTIAL calibration within 10km."
+
+uncertainty:
+  - id: 21
+    name: bayesian_uncertainty_envelope
+    status: HIGH
+    source: "Tarantola 2005"
+    note: "Return distribution P10/P50/P90, never point estimate alone."
+  - id: 22
+    name: method_ensemble_range
+    status: HIGH
+    source: "Industry practice"
+    note: "Run Eaton plus Bowers plus Effective Stress. Report range."
+  - id: 23
+    name: confidence_from_calibration_density
+    status: HIGH
+    source: "F7 HUMILITY"
+    note: "Confidence is function of calibration density, not model elegance."
+  - id: 24
+    name: perturbation_variance_audit
+    status: MEDIUM
+    source: "Hermes audit 2026-08-13"
+    note: "Run prediction with 5 percent input perturbations. Variance above 10 percent drops label."
+  - id: 25
+    name: geothermal_coupling
+    status: HIGH
+    source: "Madon 1997; Deming 1994"
+
+coverage:
+  - id: 26
+    name: pressure_compartment_mapping
+    status: HIGH
+    source: "Madon 2006"
+    note: "Group F seal equals central. Group L seal equals margin."
+  - id: 27
+    name: fault_seal_analysis
+    status: MEDIUM
+    source: "Yielding 1997"
+  - id: 28
+    name: lateral_transfer_detection
+    status: HIGH
+    source: "Madon 2006"
+  - id: 36
+    name: unknown_space_mapping
+    status: CORE
+    source: "Arif Fazil (F13 SOVEREIGN), 2026-08-13"
+    axiom: "Confidence calibrated to data is engineering. Confidence detached from calibration is narrative."
+    coverage_score_formula: "count_of_observations_in_interval divided by total_interval_thickness_in_100m_bins"
+    coverage_levels:
+      SUFFICIENT:
+        score_range: [0.7, 1.0]
+        effect: "Observational density supports interpolation"
+      PARTIAL:
+        score_range: [0.3, 0.69]
+        effect: "Interpolation possible. Extrapolation flagged."
+      SPARSE:
+        score_range: [0.1, 0.29]
+        effect: "Label drops to HYPOTHESIS regardless of confidence."
+      VOID:
+        score_range: [0.0, 0.09]
+        effect: "888_HOLD. No observational basis for any claim."
+    override_rules:
+      - rule: "coverage less than 0.30"
+        action: "epistemic_label equals HYPOTHESIS"
+        reason: "insufficient_observational_coverage"
+      - rule: "coverage less than 0.10"
+        action: "status equals 888_HOLD"
+        reason: "void_coverage_no_observational_basis"
+      - rule: "confidence greater than coverage plus 0.30"
+        action: "downgrade epistemic_label"
+        reason: "confidence_outruns_evidence"
+    bekok_deep_1_example: "Pre-drill confidence high. Shallow gas coverage equals zero. LOPC Tier 1."
+    coverage_note: "Coverage is not uncertainty. Coverage is WHERE the map ends. A model can be confident about places it has never looked. That is not uncertainty. That is hallucination with a number."
+
+agent_governance:
+  - id: 29
+    name: literature_grounded_stratigraphy
+    status: CORE
+  - id: 30
+    name: calibration_manifest_preflight
+    status: CORE
+  - id: 31
+    name: epistemic_label_auto_derivation
+    status: CORE
+  - id: 32
+    name: hold_gate
+    status: CORE
+  - id: 33
+    name: provenance_hash
+    status: HIGH
+  - id: 34
+    name: vault999_emission
+    status: MEDIUM
+  - id: 35
+    name: visual_epistemic_enforcement
+    status: HIGH
+
+constitutional_minimum:
+  - id: 3
+    name: pore_pressure
+    reason: "The prediction itself"
+  - id: 4
+    name: fracture_gradient
+    reason: "The safety boundary"
+  - id: 11
+    name: measured_calibration_points
+    reason: "Ground truth anchor"
+  - id: 21
+    name: bayesian_uncertainty_envelope
+    reason: "How wide is the range?"
+  - id: 36
+    name: unknown_space_mapping
+    reason: "Where does the map end?"
+
+co2_consideration:
+  source: "Nayak et al. 2023 IPTC-22832"
+  note: "CO2 above 50 mol percent in Groups I and older. Inorganic origin. Seismic fault conduits."

@@ -24,10 +24,19 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import numpy as np
+
+from geox_core.gates.calibration_gate import (
+    CalibrationLevel,
+    CalibrationManifest,
+    check_calibration_gate,
+    get_confidence_cap,
+    get_epistemic_label,
+    requires_calibration,
+)
 
 logger = logging.getLogger("geox.engines.pygeopressure_adapter")
 
@@ -68,6 +77,9 @@ class GeopressureResult:
     library_version: str | None
     params_hash: str
     caveats: list[str]
+    # NEW: Literature grounding fields
+    basin_context_ref: str | None = None
+    literature_citation: str | None = None
 
 
 # ─── Adapter ───────────────────────────────────────────────────────────────────
@@ -101,6 +113,7 @@ class PyGeoPressureAdapter:
                 "pygeopressure>=0.4.0 is required for geopressure prediction. Install with: pip install pygeopressure"
             )
 
+    @requires_calibration(min_level=CalibrationLevel.UNCALIBRATED)
     def predict_eaton(
         self,
         depth_m: np.ndarray,
@@ -108,7 +121,8 @@ class PyGeoPressureAdapter:
         overburden_kg_m3: float = 2300.0,
         hydrostatic_gradient: float = 9.81 * 1000.0,
         eaton_exponent: float = 3.0,
-        calibration_data: dict[str, Any] | None = None,
+        calibration_manifest: CalibrationManifest | None = None,
+        basin_context_ref: str | None = None,
     ) -> dict[str, Any]:
         """
         Eaton pore pressure prediction.
@@ -119,10 +133,22 @@ class PyGeoPressureAdapter:
             overburden_kg_m3: Average overburden density [kg/m³].
             hydrostatic_gradient: Hydrostatic pressure gradient [Pa/m].
             eaton_exponent: n (Eaton exponent, typically 1.2–3.0 for shale).
-            calibration_data: Offset well data for calibration {depth, pp_measured}.
+            calibration_manifest: Calibration manifest with calibration data.
+            basin_context_ref: Reference to basin context registry.
 
-        ⚠️ 888_HOLD: If calibration_data is None → UNC ALIBRATED → route to 888_JUDGE.
+        ⚠️ 888_HOLD: If calibration_manifest is None → UNCALIBRATED → route to 888_JUDGE.
         """
+        # Check calibration gate result (injected by decorator)
+        calibration_check = check_calibration_gate(calibration_manifest, CalibrationLevel.UNCALIBRATED)
+
+        # Use legacy calibration_data field for backward compatibility
+        calibration_data = None
+        if calibration_manifest:
+            if calibration_manifest.sonic_log:
+                calibration_data = {"well_id": "sonic_log"}
+            if calibration_manifest.offset_wells:
+                calibration_data = {"well_id": calibration_manifest.offset_wells[0]}
+
         depth_m = np.asarray(depth_m, dtype=np.float64)
         velocity_m_s = np.asarray(velocity_m_s, dtype=np.float64)
 
@@ -169,8 +195,18 @@ class PyGeoPressureAdapter:
             "Eaton exponent n is empirical — regional calibration required",
             "Velocity must be from processed sonic log, not from seismic velocity",
         ]
+
+        # Get calibration level and adjust epistemic label
+        calib_level = calibration_check.level
+        confidence = get_confidence_cap(calib_level)
+        epistemic_label = get_epistemic_label(calib_level)
+
         if not is_calibrated:
             caveats.append("⚠️ UNCALIBRATED — 888_HOLD required before drill planning use")
+
+        # Add caveat if no basin context
+        if basin_context_ref is None:
+            caveats.append("⚠️ No literature-grounded basin context — results may contain fabricated stratigraphy.")
 
         return {
             "status": "COMPUTED",
@@ -179,9 +215,9 @@ class PyGeoPressureAdapter:
             "effective_stress_mpa": es.tolist(),
             "overburden_mpa": ob.tolist(),
             "hydrostatic_mpa": hp.tolist(),
-            "calibration_status": calibration_status,
+            "calibration_status": calibration_check.level.value,
             "offset_well_id": calibration_data.get("well_id") if calibration_data else None,
-            "epistemic_label": "CLAIM" if is_calibrated else "ESTIMATE",
+            "epistemic_label": epistemic_label,
             "confidence": confidence,
             "eaton_exponent": n,
             "units": {"depth": "m", "pressure": "MPa", "velocity": "m/s"},
@@ -189,8 +225,12 @@ class PyGeoPressureAdapter:
             "library_version": _PYGEO_VERSION,
             "params_hash": params_hash,
             "caveats": caveats,
+            # NEW: Literature grounding fields
+            "basin_context_ref": basin_context_ref,
+            "literature_citation": "Madon 2006; USGS OF-99-50T" if basin_context_ref else None,
         }
 
+    @requires_calibration(min_level=CalibrationLevel.UNCALIBRATED)
     def predict_bowers(
         self,
         depth_m: np.ndarray,
@@ -200,7 +240,8 @@ class PyGeoPressureAdapter:
         a_bowers: float = 1500.0,
         b_bowers: float = 0.5,
         c_bowers: float = 1000.0,
-        calibration_data: dict[str, Any] | None = None,
+        calibration_manifest: CalibrationManifest | None = None,
+        basin_context_ref: str | None = None,
     ) -> dict[str, Any]:
         """
         Bowers pore pressure prediction.
@@ -215,10 +256,22 @@ class PyGeoPressureAdapter:
             a_bowers: Velocity at zero effective stress [m/s].
             b_bowers: Compaction constant.
             c_bowers: Unloading coefficient.
-            calibration_data: Offset well data for calibration.
+            calibration_manifest: Calibration manifest with calibration data.
+            basin_context_ref: Reference to basin context registry.
 
-        ⚠️ 888_HOLD: If calibration_data is None → UNC ALIBRATED.
+        ⚠️ 888_HOLD: If calibration_manifest is None → UNCALIBRATED.
         """
+        # Check calibration gate result (injected by decorator)
+        calibration_check = check_calibration_gate(calibration_manifest, CalibrationLevel.UNCALIBRATED)
+
+        # Use legacy calibration_data field for backward compatibility
+        calibration_data = None
+        if calibration_manifest:
+            if calibration_manifest.sonic_log:
+                calibration_data = {"well_id": "sonic_log"}
+            if calibration_manifest.offset_wells:
+                calibration_data = {"well_id": calibration_manifest.offset_wells[0]}
+
         depth_m = np.asarray(depth_m, dtype=np.float64)
         velocity_m_s = np.asarray(velocity_m_s, dtype=np.float64)
 
@@ -251,8 +304,18 @@ class PyGeoPressureAdapter:
             "Bowers coefficients A, B, C are basin-specific",
             "Unloading detection requires RFT/MDT or Repeat Formation Tester data",
         ]
+
+        # Get calibration level and adjust epistemic label
+        calib_level = calibration_check.level
+        confidence = get_confidence_cap(calib_level)
+        epistemic_label = get_epistemic_label(calib_level)
+
         if not is_calibrated:
             caveats.append("⚠️ UNCALIBRATED — 888_HOLD required before drill planning use")
+
+        # Add caveat if no basin context
+        if basin_context_ref is None:
+            caveats.append("⚠️ No literature-grounded basin context — results may contain fabricated stratigraphy.")
 
         return {
             "status": "COMPUTED",
@@ -261,15 +324,18 @@ class PyGeoPressureAdapter:
             "effective_stress_mpa": (ob - pp_bowers).tolist(),
             "overburden_mpa": ob.tolist(),
             "hydrostatic_mpa": hp.tolist(),
-            "calibration_status": "CALIBRATED" if is_calibrated else "UNCALIBRATED",
+            "calibration_status": calibration_check.level.value,
             "offset_well_id": calibration_data.get("well_id") if calibration_data else None,
-            "epistemic_label": "CLAIM" if is_calibrated else "ESTIMATE",
-            "confidence": 0.85 if is_calibrated else 0.72,
+            "epistemic_label": epistemic_label,
+            "confidence": confidence,
             "units": {"depth": "m", "pressure": "MPa", "velocity": "m/s"},
             "library": "pygeopressure",
             "library_version": _PYGEO_VERSION,
             "params_hash": params_hash,
             "caveats": caveats,
+            # NEW: Literature grounding fields
+            "basin_context_ref": basin_context_ref,
+            "literature_citation": "Madon 2006; USGS OF-99-50T" if basin_context_ref else None,
         }
 
 

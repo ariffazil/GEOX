@@ -58,7 +58,7 @@
   },
   {
     "claim_id": "clm_317a7c30873e40b7",
-    "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia’s hydrocarbon resources in the review period.",
+    "claim": "Malay Basin is offshore east of Peninsular Malaysia and contributes about 40% of Malaysia\u2019s hydrocarbon resources in the review period.",
     "claim_type": "observed",
     "evidence_refs": [
       "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
@@ -86,7 +86,7 @@
   },
   {
     "claim_id": "clm_4c04b8f277854aba",
-    "claim": "Malay Basin initiated by Late Eocene–Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
+    "claim": "Malay Basin initiated by Late Eocene\u2013Early Oligocene extension, high post-rift subsidence, >14 km sediment in deepest centre, E-W half-grabens influenced by Pre-Tertiary faults.",
     "claim_type": "observed",
     "evidence_refs": [
       "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
@@ -100,7 +100,7 @@
   },
   {
     "claim_id": "clm_db822655c84b43ac",
-    "claim": "Stratigraphy uses groups A–P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
+    "claim": "Stratigraphy uses groups A\u2013P; drilling reaches at least Group M; fill transitions from lacustrine/non-marine to coastal plain and shallow marine; K shale marks key transition.",
     "claim_type": "derived",
     "evidence_refs": [
       "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf"
@@ -153,5 +153,88 @@
     "forbidden_uses": [
       "site_specific_drilling"
     ]
+  },
+  {
+    "claim_id": "clm_strat_complete",
+    "claim": "Malay Basin stratigraphy includes Groups A, B, D, E, F, G, H, I, J, K, L, M (Group C absent \u2014 EPMI nomenclature). Group G is a marine-influenced transition unit between F and H. Group L is a regional seal for basin flank overpressure and the best lacustrine source rock.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "geox://resource/basins/malay_basin/basin_profile.yaml#stratigraphy"
+    ],
+    "source": "Madon 2004, Madon 2010 GSM, Knova UM 2020, USGS OF99-50-T",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_group_k_source",
+    "claim": "Group K is BOTH a fluvial reservoir (~16% of reserves) AND a lacustrine source rock (K-Source Facies, TOC 0.35-2.0 wt%, HI 137-403 with mixed Type II/III). Group L is best source (HI 300-400, lacustrine).",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "geox://resource/basins/malay_basin/basin_profile.yaml#stratigraphy.groups[K]",
+      "geox://resource/basins/malay_basin/basin_profile.yaml#stratigraphy.groups[L]"
+    ],
+    "source": "Madon 2010 GSM Bulletin \u2014 Organic facies variation in lacustrine source rocks",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "direct_pos_calculation"
+    ]
+  },
+  {
+    "claim_id": "clm_overpressure_dual_compartment",
+    "claim": "Two overpressure compartments in Malay Basin: (1) Basin centre \u2014 top of OP at 1900-2000m in lower Group E, sealed by Group F shale, deeper compartment extends through Groups K, L, M; (2) Basin flank \u2014 top of OP at 2600-3000m, sealed by Group L shale.",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "geox://resource/basins/malay_basin/basin_profile.yaml#stratigraphy"
+    ],
+    "source": "Madon 2004 SPE 88455 \u2014 Overpressure History of Malay Basin",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling"
+    ]
+  },
+  {
+    "claim_id": "clm_coverage_doctrine",
+    "claim": "Component 36 - Unknown-Space Mapping. Coverage is not uncertainty, coverage is not confidence. Coverage measures observational density, not statistical spread. Every pore pressure prediction MUST report coverage_score alongside confidence. Confidence=0.81 with coverage_score=0.0 = INVALID (HYPOTHESIS, not DERIVED).",
+    "claim_type": "derived",
+    "evidence_refs": [
+      "pressure_states.yaml",
+      "SCAR-6 Bekok Deep-1"
+    ],
+    "source": "F13 SOVEREIGN directive 2026-08-13 - Bekok Deep-1 coverage doctrine",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": [
+      "site_specific_drilling_without_coverage_verification"
+    ]
+  },
+  {
+    "claim_id": "clm_bright_spot_coverage",
+    "claim": "Bright spot = direct hydrocarbon indicator on 3D seismic = geophysical evidence of subsurface fluid. Presence = coverage EXISTS at that location. Absence of seismic = bright spot CANNOT exist (not not-detected). Platform wells need SEPARATE shallow gas assessment from exploration seismic.",
+    "claim_type": "observed",
+    "evidence_refs": [
+      "SCAR-6 Bekok Deep-1"
+    ],
+    "source": "F13 SOVEREIGN 2026-08-13 - bright spot as coverage witness",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": []
+  },
+  {
+    "claim_id": "clm_architectural_lie",
+    "claim": "Institutional narrative that attributes well incident to well-collision or formation-issue while omitting absence of pre-drill site survey or coverage gap = architectural lie. Any epistemic claim omitting what was NOT sampled is incomplete. F9 ANTIHANTU flag raised.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "SCAR-6 Bekok Deep-1",
+      "coverage_engine"
+    ],
+    "source": "F13 SOVEREIGN 2026-08-13 - coverage-based lie detection",
+    "confidence": "MEDIUM",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": []
   }
 ]

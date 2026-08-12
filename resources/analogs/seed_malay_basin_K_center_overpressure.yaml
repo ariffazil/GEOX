@@ -1,0 +1,263 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# Seed Analog Factsheet — Malay Basin Group K pre-drill pore pressure model,
+# basin centre anticline crest (Cendor-Jambu-Kiang structure analogue)
+# ═══════════════════════════════════════════════════════════════════════════════
+# Provenance: corrected Group K pre-drill pressure model at basin centre,
+# anticline crest (Cendor-Jambu-Kiang structure analogue). Compiled from
+# Madon 2004 (SPE 88455 — Overpressure History of Malay Basin),
+# Madon 2010 (GSM Bulletin — Organic facies variation in lacustrine source
+# rocks), Durham thesis on Malay Basin HPHT geomechanics, and
+# USGS Open-File Report 99-50-T (Province 3703, Malay Basin).
+#
+# Purpose: back-fill the corrected stratigraphy (Groups G + L present) into
+# the pre-drill pressure model for Group K targets at ~4200 m TVDSS.
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+# ═══════════════════════════════════════════════════════════════════════════════
+
+analog_id: "MALAY_BASIN_GroupK_basincentre_overpressure"
+basin_id: "MALAY_BASIN"
+play_name: "Group K fluvial sandstone + lacustrine source facies (dual play)"
+play_type: "structural_stratigraphic"
+discovery_status: "producing_with_HPHT_extensions"
+prospect_status: "pre_drill_model"
+# ─────────────────────────────────────────────────────────────────────────────
+# Location context
+# ─────────────────────────────────────────────────────────────────────────────
+structural_setting: "Cendor-Jambu-Kiang anticline centre (basin centre)"
+target_interval: "Group K base (~4200 m TVDSS)"
+# ─────────────────────────────────────────────────────────────────────────────
+# Geologic axes (7 dimensions used in similarity + contrast scoring)
+# ─────────────────────────────────────────────────────────────────────────────
+tectonic_setting: "Cenozoic failed rift / pull-apart basin"
+basin_age: "Oligocene-Miocene"
+lithology_primary: "fluvial sandstone (reservoir) + lacustrine shale (source)"
+lithology_secondary: "interbedded lacustrine/transgressive shale seals (Group F, Group L)"
+depth_range_m: [3000, 4500]
+trap_style: "tilted fault block + roll-over anticline (basin-centre inversion)"
+source_rock: "Group K (K-Source Facies, lacustrine, mixed Type II/III) + Group L (lacustrine Type II, HI 300-400)"
+reservoir_rock: "Group K fluvial sandstone + Group J fluvial-estuarine sandstone"
+seal: "Group F marine shale (basin centre) / Group L lacustrine + transgressive shale (basin flank)"
+# ─────────────────────────────────────────────────────────────────────────────
+# Pre-drill pressure model (basin centre anticline crest)
+# ─────────────────────────────────────────────────────────────────────────────
+pressure_model:
+  hydrostatic_gradient_psi_m: 0.465
+  top_overpressure:
+    depth_m: 1950
+    location: "lower Group E"
+    seal: "Group F marine shale"
+    source: "Madon 2004 SPE 88455"
+  pressure_at_K_base_4200m:
+    gradient_psi_m: 0.520
+    pore_pressure_estimate_MPa: 62
+    source: "Madon 2004 SPE 88455; Durham thesis"
+  pressure_at_K_base_4200m_high_case:
+    gradient_psi_m: 0.560
+    note: "High-case scenario for flank-proximal wells where L seal is breached"
+    source: "Madon 2004 SPE 88455"
+  overpressure_compartments:
+    compartment_1:
+      name: "Basin centre"
+      top_OP_depth_m: [1900, 2000]
+      sealing_unit: "Group F marine shale"
+      deeper_extent: "through Groups K, L, M"
+    compartment_2:
+      name: "Basin flank"
+      top_OP_depth_m: [2600, 3000]
+      sealing_unit: "Group L lacustrine + transgressive shale"
+  secondary_overpressure_drivers_T_gt_120C:
+    drivers:
+      - "Aquathermal pressuring (Barker 1972) — thermal expansion of pore fluid"
+      - "Smectite-to-illite diagenesis — fluid release plus framework weakening"
+      - "Framework weakening / grain-scale dilation at HPHT conditions"
+      - "Compaction disequilibrium during rapid Plio-Pleistocene sedimentation"
+    source: "Madon 2004 SPE 88455; Durham thesis"
+# ─────────────────────────────────────────────────────────────────────────────
+# Temperature model
+# ─────────────────────────────────────────────────────────────────────────────
+temperature_model:
+  surface_temp_C: 27
+  thermal_gradient_C_km: 48
+  temperature_at_K_base_4200m:
+    mid_case_C: 227
+    high_case_C: 259
+    source: "Durham thesis; Madon 2010 GSM"
+# ─────────────────────────────────────────────────────────────────────────────
+# Casing program — standard Malay Basin HPHT pattern
+# ─────────────────────────────────────────────────────────────────────────────
+casing_program:
+  pattern: "Standard Malay Basin HPHT"
+  strings:
+    - stage: "Conductor"
+      depth_in_m: 0
+      depth_out_m: 80
+      grade: "B"
+    - stage: "Surface"
+      depth_in_m: 0
+      depth_out_m: 500
+      grade: "K-55"
+    - stage: "Intermediate 1 (Group F seal protection)"
+      depth_in_m: 0
+      depth_out_m: 1700
+      grade: "L-80"
+    - stage: "Intermediate 2 (Group E top OP isolation)"
+      depth_in_m: 0
+      depth_out_m: 2300
+      grade: "L-80"
+    - stage: "Production liner (Group K target)"
+      depth_in_m: 2300
+      depth_out_m: 4250
+      grade: "L-80 / modified for H2S/CO2 if present"
+  mud_weight_window_ppg:
+    fracture_gradient_psi_m: 0.78
+    pore_pressure_psi_m: 0.520
+    min_mud_weight_ppg: 9.5
+    max_mud_weight_ppg: 13.5
+    kick_tolerance_psi: 800
+    source: "Standard Malay Basin HPHT casing design (operator public domain)"
+# ─────────────────────────────────────────────────────────────────────────────
+# Epistemic labels per claim (F2 TRUTH + F3 WITNESS)
+# ─────────────────────────────────────────────────────────────────────────────
+epistemic_rung: "INTERPRETATION"
+epistemic_labels:
+  pressure_at_K_base_4200m:
+    status: "derived"
+    confidence: "HIGH"
+    confidence_basis: "Madon 2004 SPE 88455 documents basin-centre pressure model; calibrated against Cendor/Jambu/Kiang discovery wells"
+  top_overpressure_depth:
+    status: "observed"
+    confidence: "HIGH"
+    confidence_basis: "MDT/RFT pressure points from multiple basin-centre wells"
+  seal_Group_F:
+    status: "observed"
+    confidence: "HIGH"
+    confidence_basis: "Regional mapping plus leak-off test data"
+  seal_Group_L_flank:
+    status: "interpreted"
+    confidence: "MEDIUM"
+    confidence_basis: "Flank seal integrity less well constrained than centre"
+  temperature_model:
+    status: "derived"
+    confidence: "HIGH"
+    confidence_basis: "BHT-corrected log data plus Madon 2010 GSM"
+  casing_program:
+    status: "semi_empirical"
+    confidence: "MEDIUM"
+    confidence_basis: "Pattern from analogous HPHT fields; site-specific adjustments required"
+  secondary_OP_drivers:
+    status: "interpreted"
+    confidence: "MEDIUM"
+    confidence_basis: "Madon 2004 attributes overpressure to disequilibrium compaction plus aquathermal; smectite-illite contribution supported by Durham thesis"
+evidence_refs:
+  - "geox://resource/basins/malay_basin/basin_profile.yaml"
+  - "geox://resource/basins/malay_basin/claims.json#clm_overpressure_dual_compartment"
+  - "lit://spe/88455/madon-2004-overpressure-malay-basin/pdf"
+  - "lit://gsm/bulletin/madon-2010-organic-facies-lacustrine/pdf"
+  - "lit://usgs/of99-50T/malay-basin-province-3703/pdf"
+  - "thesis://durham/malay-basin-hpht-geomechanics"
+data_quality: "HIGH"
+# ─────────────────────────────────────────────────────────────────────────────
+# Contrast dimensions (ToAC) — verify before substituting for a new prospect
+# ─────────────────────────────────────────────────────────────────────────────
+contrast_dimensions:
+  - dimension: "tectonic_setting"
+    observation: "basin-centre inversion anticline (Cendor-Jambu-Kiang analogue)"
+    expected_in_query: "passive margin | foreland | other"
+    delta_if_query_differs: 0.7
+    implication: "Different stress history means fracture orientation and seal breach risk differ"
+  - dimension: "overpressure_compartment"
+    observation: "Basin centre — Group F seal, top OP 1900-2000 m"
+    expected_in_query: "basin flank | platform | other"
+    delta_if_query_differs: 0.8
+    implication: "Flank prospects encounter second OP compartment sealed by Group L — top OP deeper (2600-3000 m) and seal lithology differs"
+  - dimension: "source_rock_quality"
+    observation: "Mixed Type II/III in Group K (HI 137-403), Type II in Group L (HI 300-400)"
+    expected_in_query: "any"
+    delta_if_query_differs: 0.5
+    implication: "Charge type (oil vs gas vs mixed) and API gravity differ"
+  - dimension: "depth_burial_history"
+    observation: "Deep basin centre, 3.0-4.5 km, HPHT (T 227-259 degC)"
+    expected_in_query: "any"
+    delta_if_query_differs: 0.6
+    implication: "Reservoir quality, cementation, and secondary porosity creation differ with depth"
+  - dimension: "structural_style"
+    observation: "Inversion anticline with growth-faulted flanks"
+    expected_in_query: "compressive | strike-slip | other"
+    delta_if_query_differs: 0.8
+    implication: "Trap geometry and seal integrity fundamentally different"
+# ─────────────────────────────────────────────────────────────────────────────
+# Forensic notes (the dangerous-similarity warning)
+# ─────────────────────────────────────────────────────────────────────────────
+notes:
+  - "This model REQUIRES Groups F (basin-centre seal) and L (flank seal plus best source) to be honored — earlier analyses that skipped G and L produced an incomplete pressure model."
+  - "Group G is a marine-influenced transition between F and H; it is NOT a regional seal, but its absence from prior models produced wrong lithology proportions in the overburden."
+  - "Pressure gradient 0.520 psi/m at 4200 m TVDSS is HIGH overpressure; assumes hydrostatic to ~1900 m, then sharp transition into OP compartment sealed by Group F."
+  - "Aquathermal plus smectite-illite plus framework weakening drive secondary OP above ~120 degC — critical for Group K where T approaches 230-260 degC."
+  - "Source: Madon 2004 SPE 88455, Madon 2010 GSM Bulletin, Durham thesis, USGS OF99-50-T."
+# ─────────────────────────────────────────────────────────────────────────────
+# Coverage-scored pressure model (Coverage Doctrine #36 — F13 SOVEREIGN
+# directive 2026-08-13, Bekok Deep-1)
+# ─────────────────────────────────────────────────────────────────────────────
+coverage_model:
+  doctrine: "Coverage Doctrine #36 — Bekok Deep-1"
+  source: "F13 SOVEREIGN directive 2026-08-13"
+  depth_intervals:
+    interval_0_1500m:
+      top_depth_m: 0
+      base_depth_m: 1500
+      coverage_score: 0.55
+      epistemic_label: "INTERPRETATION"
+      what_was_sampled:
+        - "Offset well logs (Cendor/Jambu/Kiang) constrain overburden lithology proportions"
+        - "Regional stratigraphic framework (Groups A-H) from basin mapping"
+        - "Hydrostatic gradient baseline (0.465 psi/m) held to ~1900 m"
+      what_was_NOT_sampled:
+        - "Site survey / shallow hazards (shallow gas, H2S, boulders) not acquired for this crest slot"
+        - "3D seismic over the shallow section not verified at the prospect location"
+        - "No shallow velocity / amplitude-anomaly (bright-spot) screening"
+    interval_1500_2200m:
+      top_depth_m: 1500
+      base_depth_m: 2200
+      coverage_score: 0.75
+      epistemic_label: "OBSERVED"
+      what_was_sampled:
+        - "MDT/RFT pressure points across top overpressure from multiple basin-centre wells"
+        - "Group F marine shale seal mapped regionally with leak-off test (LOT) data"
+        - "Top overpressure depth (~1950 m, lower Group E) observed"
+      what_was_NOT_sampled:
+        - "No direct pressure probe inside the Group F seal interval at this crest"
+        - "Seal continuity at prospect scale inferred from regional mapping, not local 3D"
+    interval_2200_4200m:
+      top_depth_m: 2200
+      base_depth_m: 4200
+      coverage_score: 0.70
+      epistemic_label: "DERIVED"
+      what_was_sampled:
+        - "Basin-centre pressure model (0.520 psi/m) calibrated to Cendor/Jambu/Kiang discovery wells"
+        - "Madon 2004 SPE 88455 compartment pressure history"
+        - "BHT-corrected temperature data (227-259 degC at K base)"
+      what_was_NOT_sampled:
+        - "No direct Group K pressure points at 4200 m TVDSS in this crest"
+        - "Secondary overpressure drivers (aquathermal, smectite-illite) interpreted, not measured"
+        - "Deep HPHT rock strength / fracture gradient inferred from analogue, not offset core"
+
+  bekok_deep_1_coverage_failure:
+    summary: "Bekok Deep-1 shallow gas (300-700 m) went undetected because no site survey and no 3D seismic existed over the platform slot."
+    shallow_gas_300_700m:
+      site_survey: "N/A"
+      seismic_3d_over_shallow_section: "N/A"
+      coverage_score: 0.0
+    why_hse_reported_well_collision:
+      - "With zero coverage over the shallow section there was no shallow-gas hazard flag to raise"
+      - "The only failure mode visible to the system was physical collision at the slot, so HSE recorded 'well collision'"
+      - "The true cause — 'no shallow gas survey' — was invisible to the reporting path because coverage_score was 0.0"
+    bright_spot:
+      note: "A shallow-gas bright spot would have been visible on 3D seismic, but no seismic existed over the platform slot"
+      implication: "Coverage gap, not interpretation error — the data simply did not exist to see the hazard"
+
+  fail_closed_rule:
+    condition: "confidence > 0.70 AND coverage_score == 0.0"
+    action: "override epistemic label to HYPOTHESIS"
+    confidence_cap: 0.50
+
+  reporting_format: "confidence: X | coverage: Y | epistemic: LABEL | what_was_NOT_sampled: [list]"

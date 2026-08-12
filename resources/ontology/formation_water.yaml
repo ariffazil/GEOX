@@ -141,6 +141,9 @@ region:
           - "Lacustrine environment — low salinity due to meteoric recharge"
           - "High clay content in seal units — watch for Sw anomalies"
           - "CO2 flooding in some fields — check ionic composition before applying Rw"
+          - "Group K contains both reservoir sandstones (fluvial, 10-30% porosity, up to 3000 mD perm) and lacustrine source rock intervals (TOC 0.35-2.0 wt%, HI 137-403). K-Source Facies distinguishable by biomarker (high Pr/Ph, high C29 steranes, oxidising environment)."
+          - "Group L (not in this yaml file) is the BEST lacustrine source rock in Malay Basin — HI 300-400, primarily Type II oil-prone, sealed by regional shale."
+          - "COVERAGE NOTE: Pre-drill pressure prediction for Group K base requires offset well calibration (RFT/MDT/DST) within 5km. Without offset wells: coverage_score=0, epistemic_label=HYPOTHESIS. Shallow gas hazard assessment requires separate site survey (UHR). Platform-slot wells: no site survey = coverage zero for shallow section."
       - name: M Sands
         age: "Late Oligocene"
         depth_range_m: [3000, 5000]
