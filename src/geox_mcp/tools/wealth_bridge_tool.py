@@ -156,7 +156,11 @@ async def geox_to_wealth_bridge(
         wealth_result = None
         wealth_error = None
         try:
-            async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+            async with httpx.AsyncClient(
+                timeout=TIMEOUT,
+                # MCP Streamable HTTP (2025-11-25+): server 406s without this Accept pair
+                headers={"Accept": "application/json, text/event-stream"},
+            ) as client:
                 init_resp = await client.post(
                     WEALTH_MCP_URL,
                     json={
@@ -250,6 +254,31 @@ async def geox_to_wealth_bridge(
     mod_penalty = mod_count * 0.05
     maruah = max(0.0, 1.0 - sigma_policy - mod_penalty)
 
+    # Canonical WealthInput contract (F2 epistemic preserved, F1 reversible)
+    wealth_input = {
+        "base_rate": discount_rate,
+        "d_s": d_s,
+        "peace2": peace2,
+        "maruah_score": round(maruah, 4),
+        "epistemic_source": epistemic_source,  # F2: never upgraded
+        "wealth_signals": {
+            "npv_usd": npv_usd,
+            "irr": irr,
+            "breakeven": breakeven_usd,
+            "sigma_geo": risk_geo,
+            "sigma_market": sigma_market,
+            "sigma_policy": sigma_policy,
+        },
+        "extractive_signals": {
+            "admissibility": admissibility,
+            "penalty_inf": penalty_infinite,
+            "carbon_cost": carbon_cost_usd,
+            "delay_risk": delay_risk,
+        },
+        "task_definition": f"score_resource_node:{prospect_id}",
+        "irreversible": False,  # F1: bridge is read-only
+    }
+
     # GEOX evidence payload (preserved verbatim)
     geox_evidence = {
         "prospect_id": prospect_id,
@@ -270,7 +299,11 @@ async def geox_to_wealth_bridge(
     wealth_error = None
 
     try:
-        async with httpx.AsyncClient(timeout=TIMEOUT) as client:
+        async with httpx.AsyncClient(
+            timeout=TIMEOUT,
+            # MCP Streamable HTTP (2025-11-25+): server 406s without this Accept pair
+            headers={"Accept": "application/json, text/event-stream"},
+        ) as client:
             # Step 1: Initialize MCP session with WEALTH
             init_req = {
                 "jsonrpc": "2.0",
@@ -339,6 +372,7 @@ async def geox_to_wealth_bridge(
     # ── Build federation response ─────────────────────────────────────
     result = {
         "tool": "geox_to_wealth_bridge",
+        "prospect_id": prospect_id,
         "trace_id": trace_id,
         "invocation_id": invocation_id,
         "session_id": geo_session,
@@ -346,6 +380,9 @@ async def geox_to_wealth_bridge(
         "source_organ": "GEOX",
         "destination_organ": "WEALTH",
         "epistemic_tag": epistemic_source,
+        "epistemic_source_preserved": epistemic_source,  # F2 contract
+        "admissibility_check": "PASSED",  # reached only when not blocked (888_HOLD path returns earlier)
+        "wealth_input": wealth_input,
         "bridged": wealth_error is None,
         "geox_evidence": geox_evidence,
     }
