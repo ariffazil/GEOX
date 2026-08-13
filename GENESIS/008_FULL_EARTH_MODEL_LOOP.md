@@ -60,6 +60,6 @@ This loop is explicitly engineered as a **governed reality circuit**, preventing
 
 1. **Anti-Gödel Trap:** Gödel's incompleteness warns against systems that pretend internal completeness. The Earth Model Loop is explicitly incomplete by design. By embedding `uncertainty_band`, `AC Risk`, and `federation usage policy` directly into schemas, the system refuses to self-certify its own truth and routes undecidable contradictions to human F13 governance.
 2. **Open Strange Loop:** While it resembles a Hofstadter strange loop (Seismic → Stratigraphy → Flow → 4D → Seismic), it never spirals into self-reference because every leg is anchored to *external physical observations* (new checkshots, well logs, production rates).
-3. **Anti-Behavioral Sink (Universe 25):** Calhoun's behavioral sink occurred in a closed, over-coupled system with no escape valve. The arifOS/GEOX architecture surfaces stress rather than burying it. An AC Risk spike is an alarm that forces a redesign of the hypothesis or acquisition strategy, halting the pipeline before pathology compounds. 
+3. **Anti-Governance Drift (Universe 25):** Calhoun's governance drift occurred in a closed, over-coupled system with no escape valve. The arifOS/GEOX architecture surfaces stress rather than burying it. An AC Risk spike is an alarm that forces a redesign of the hypothesis or acquisition strategy, halting the pipeline before pathology compounds. 
 
 **DITEMPA BUKAN DIBERI.**
