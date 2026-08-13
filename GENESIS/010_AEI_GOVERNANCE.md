@@ -291,7 +291,7 @@ That is how you avoid hantu intelligence.
 Self-critique without new information = self-paraphrase.
 The Gap Elicitor (S5) prevents this by forcing new evidence at every re-questioning cycle.
 
-### The Behavioral Sink
+### The Governance Drift
 
 A closed, over-coupled system with no escape valve collapses into pathological behavior.
 GEOX surfaces stress rather than burying it. An AC Risk spike is an alarm that forces redesign.
