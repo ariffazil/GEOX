@@ -1,8 +1,14 @@
 """
 GEOX Phase 2 — Backward Compatibility Wrappers
 ═══════════════════════════════════════════════
-Thin wrappers mapping old tool names → new 15-tool surface.
-These survive for 1 release cycle then are deleted.
+Thin wrappers mapping old tool names → new 18-tool surface.
+
+DEPRECATION POLICY (SEP-2596 compliant, 2026-08-13):
+  Shims survive for a minimum of 12 months from consolidation date (2026-08-09).
+  Earliest removal: 2027-08-09. Removal requires:
+    1. No external caller references the old name (probe-verified)
+    2. A deprecation notice in the tool description for ≥90 days prior
+    3. F13 SOVEREIGN ratification
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
