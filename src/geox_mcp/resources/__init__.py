@@ -174,6 +174,7 @@ def _geox_tree777_index() -> dict[str, Any]:
 
     return {
         "domain": "geox",
+        "_supersession": "tree777:// namespace is owned by tree777-service v2.0 (port 18077). GEOX geo/* grammar retained as alias for one deprecation window per DECISION_TREE777_GO_2026-08-14.",
         "skills": skills,
         "concepts": concepts,
         "scars": scars,
