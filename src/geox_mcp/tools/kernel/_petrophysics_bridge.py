@@ -829,7 +829,7 @@ def _multi_mineral_zone(
     warnings: set[str] = set()
 
     for i in range(n):
-        d = float(depth_m[i])
+        _d = float(depth_m[i])
         r = float(rhob[i])
         np_val = float(nphi[i])
         g = float(gr[i])
@@ -1308,7 +1308,7 @@ def _compute_sw_dual_water(
 
     # Conductivities
     cw = 1.0 / rw if rw > 0 else 0.0  # S/m equivalent for Ω·m
-    ct = 1.0 / rt if rt > 0 else 0.0
+    _ct = 1.0 / rt if rt > 0 else 0.0
 
     # B — equivalent counterion conductance (S·m²/meq)
     # Waxman-Smits empirical fit
