@@ -23,11 +23,6 @@ audit_basis: 333-AGI Δ MIND session (2026-08-11) — 19-repo README audit
 > **GEOX is the earth witness. It computes geological evidence. It never adjudicates.**
 > **DITEMPA BUKAN DIBERI — Truth must cool before it rules.**
 
-<!-- RULE-5 First Fold -->
-> **What?** Earth intelligence organ — physics-gated geoscience from basin analysis to prospect evaluation.
-> **Why?** Exploration decisions need evidence anchored in physics, not vibes or pattern matching.
-> **Care?** Every geological claim carries OBS/DER/INT/SPEC labels and uncertainty bounds — you always know what's measured vs inferred.
-
 **GEOX** is the earth intelligence organ of the arifOS Federation. It computes seismic attributes, well-log petrophysics, basin models, structural analysis, and prospect volumetrics — all under strict epistemic provenance. It bridges raw geoscientific observation to capital decision-making with cryptographic audit trails.
 
 ---

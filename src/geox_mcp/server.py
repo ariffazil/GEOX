@@ -3721,7 +3721,7 @@ def create_app():
 
     # 2026-06-29 — Federation-wide OAuth discovery (Hermes-flow fix).
     # Spec-compliant MCP clients (Cursor, Claude Code, MiniMax) fetch
-    # /.well-known/oauth-protected-resource first per RFC 9728.
+    # /.well-known/oauth-protected-resource first per RFC 8707.
     # 2026-08-04 — GEOX_OAUTH_ENABLED=0: return 404 oauth_disabled so Claude Apps
     # does not attempt DCR / Client ID registration (ofid_* errors). Code retained.
 
