@@ -125,7 +125,7 @@ dependencies = [
     # numcodecs — pluggable codecs for zarr (Blosc, Zstd, Delta, etc.)
     "numcodecs>=0.13",
     # pint — unit safety on every curve/attribute (Stage 2 enforces units)
-    "pint>=0.24",
+    "pint>=0.25.3",
     # fsspec — filesystem abstraction (s3://, gs://, file://, in-memory)
     # Already transitive; declare explicitly so artifacts can be passed
     # by URI consistently.
