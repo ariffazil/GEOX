@@ -100,7 +100,7 @@ dependencies = [
     # GemPy v3 — implicit 3D geological modeling (GPU-accelerated, stochastic)
     "gempy>=2.0.0",
     # LoopStructural — time-aware structural geology (faults, folds, surfaces)
-    "loopstructural>=1.6.27",
+    "loopstructural>=1.7.0",
     # ─── P1 CRITICAL: Hydrology & Climate ───────────────────────────────────
     # FloPy — MODFLOW 6/2000/2005 Python interface (USGS groundwater)
     "flopy>=3.10.0",
