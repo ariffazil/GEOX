@@ -1,9 +1,9 @@
 ---
 type: Well
 title: BEKANTAN-1
-description: NW Sabah deep-water discovery. Penetrated turbidite reservoir section with oil shows. Key calibration point for basin model.
+description: Malay Basin appraisal and exploration well (Block PM304 / Cendor Graben flank). Tested shallow Group E and H15 clastic reservoirs, proving shallowest flowing oil discovery in the Malay Basin.
 resource: geox://well/bekantan-1
-tags: [sabah, well, discovery, turbidite]
+tags: [malay-basin, well, discovery, clastics, shallow-pay]
 timestamp: 2026-07-20T00:00:00Z
 arifos:
   verdict: SEAL
@@ -14,18 +14,18 @@ arifos:
 
 ## Well Data
 
-- Water depth: ~1200m
-- TD: ~3500m MD
-- Reservoir: Stage IVC turbidite sands
-- Shows: Oil fluorescence in upper reservoir interval
+- Basin: Malay Basin (Block PM304, Cendor Graben flank)
+- Reservoirs: Group E & H15 clastic sandstones
+- Significance: Shallowest flowing oil in the Malay Basin
+- Results: Wireline logs and production test confirmed flowing oil in shallow clastics
 
 ## Key Learnings
 
-- Confirms presence of reservoir-quality turbidite sands in distal setting.
-- Oil shows indicate active petroleum system in NW Sabah.
-- Pressure data suggests overpressure ramp below 2800m.
+- Confirms bypassed shallow clastic oil potential in mature basin settings.
+- Calibrates fault-sealing and stratigraphic trapping models along the Cendor Graben margin.
+- Demonstrates that shallow reservoirs deliver commercial pay when correctly bounded.
 
 ## Citations
 
-[1] Internal well completion report.
-[2] NW Sabah basin [basin model](../basins/nw-sabah.md).
+[1] Internal well completion and post-drill summary reports.
+[2] Malay Basin Regional Synthesis.

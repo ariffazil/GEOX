@@ -4,7 +4,7 @@ last_verified: 2026-08-11T05:58:51Z
 federation_release: v2026.08.09
 live_commit: d79a9b59 (chore(GEOX): ignore pyproject.toml backup files)
 truth_rule: live :8081/health + tools/list beat any static count in prose
-mcp_tools_live: 33
+mcp_tools_live: 19
 mcp_apps_registered: 18
 chatgpt_metadata: widgetCSP + widgetDescription + domain — VERIFIED
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
@@ -104,7 +104,7 @@ full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 
 ---
 
-## 🛠️ Core Capabilities (33 Tools)
+## 🛠️ Core Capabilities (19 Tools)
 
 | Domain | Capability |
 |--------|-----------|
@@ -122,7 +122,7 @@ full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 ```mermaid
 flowchart LR
   subgraph Witness["🔬 Witness Plane (read-only)"]
-    GEOX[("🌍 GEOX :8081<br/>Earth evidence<br/>33 MCP tools")]
+    GEOX[("🌍 GEOX :8081<br/>Earth evidence<br/>19 MCP tools")]
   end
 
   subgraph Governance["⚖️ Governance"]
