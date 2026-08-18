@@ -4,7 +4,7 @@ last_verified: 2026-08-11T05:58:51Z
 federation_release: v2026.08.09
 live_commit: d79a9b59 (chore(GEOX): ignore pyproject.toml backup files)
 truth_rule: live :8081/health + tools/list beat any static count in prose
-mcp_tools_live: 19
+mcp_tools_live: 21
 mcp_apps_registered: 18
 chatgpt_metadata: widgetCSP + widgetDescription + domain — VERIFIED
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
@@ -16,7 +16,7 @@ audit_basis: 333-AGI Δ MIND session (2026-08-11) — 19-repo README audit
 # 🌍 GEOX — Earth Intelligence Organ
 
 [![Agentic CI](https://github.com/ariffazil/GEOX/actions/workflows/agentic-ci.yml/badge.svg?branch=main)](https://github.com/ariffazil/GEOX/actions)
-[![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-33%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
+[![🌍 GEOX](https://img.shields.io/badge/%F0%9F%8C%8D%20GEOX-21%20Canonical%20Tools-1f6feb)](https://geox.arif-fazil.com/mcp)
 [![Federation](https://img.shields.io/badge/Federation-v2026.08.04-0a7b83)](https://arifos.arif-fazil.com)
 [![License: BSL-1.1](https://img.shields.io/badge/License-BSL--1.1-blue.svg)](./LICENSE)
 
@@ -104,7 +104,7 @@ full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 
 ---
 
-## 🛠️ Core Capabilities (19 Tools)
+## 🛠️ Core Capabilities (21 Tools)
 
 | Domain | Capability |
 |--------|-----------|
@@ -122,7 +122,7 @@ full contract: [`FEDERATION_CONTRACT.md`](./FEDERATION_CONTRACT.md)
 ```mermaid
 flowchart LR
   subgraph Witness["🔬 Witness Plane (read-only)"]
-    GEOX[("🌍 GEOX :8081<br/>Earth evidence<br/>19 MCP tools")]
+    GEOX[("🌍 GEOX :8081<br/>Earth evidence<br/>21 MCP tools")]
   end
 
   subgraph Governance["⚖️ Governance"]
