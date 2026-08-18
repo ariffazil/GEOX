@@ -86,7 +86,7 @@ dependencies = [
     # SimPEG — gravity, magnetics, EM, DC resistivity inversion
     "simpeg>=0.25.2",
     # PyGIMLi — ERT, induced polarization, traveltime tomography, joint inversion
-    "pygimli>=1.4.0",
+    "pygimli>=1.6.0",
     # ─── P1 CRITICAL: Geospatial & Satellite ────────────────────────────────
     # GDAL — raster/vector geospatial. The Python GDAL binding version must
     # match the system libgdal exactly, which differs across environments
