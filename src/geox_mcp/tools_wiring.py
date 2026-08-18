@@ -4795,6 +4795,48 @@ def register_tools_on(mcp):
         logger.warning("H2: geox_workspace registration skipped: %s", e)
 
     # ═══════════════════════════════════════════════════════════════════
+    # H3 — geox_contrast_metabolize (Eureka 2026-08-13)
+    # Unified anomalous-contrast metabolic pipeline:
+    #   ISOLATE → MEASURE → CLASSIFY (≥3 stratigraphic trap hypotheses)
+    # substrate_class=INERT · authority_ceiling=COMPUTE_ONLY
+    # local_verdict=QUALIFIED_CANDIDATE — arifOS seals only.
+    # Closes the 1-tool surface gap kept /health in status=degraded.
+    # ═══════════════════════════════════════════════════════════════════
+    try:
+        @mcp.tool(name="geox_contrast_metabolize", annotations=_geox_annotations("geox_contrast_metabolize"))
+        async def _contrast_metabolize(
+            arguments: dict[str, Any] | None = None,
+            session_id: str | None = None,
+            actor_id: str | None = None,
+            trace_id: str | None = None,
+        ) -> dict[str, Any]:
+            """Unified anomalous contrast metabolic pipeline (Eureka 2026-08-13).
+
+            Binds three stages into one call:
+              1. ISOLATE — deterministic acoustic impedance contrast detection
+              2. MEASURE — AVO gradient + LMR estimates at contrast points
+              3. CLASSIFY — ≥3 stratigraphic trap hypotheses for LLM handoff
+
+            substrate_class: INERT
+            authority_ceiling: COMPUTE_ONLY
+            local_verdict: QUALIFIED_CANDIDATE (arifOS seals)
+            """
+            from geox_mcp.tools.contrast_metabolize import geox_contrast_metabolize as _impl
+
+            args = _safe_forward(
+                _impl,
+                arguments or {},
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
+            )
+            return await _impl(**args)
+
+        logger.info("H3: geox_contrast_metabolize tool registered")
+    except Exception as e:
+        logger.warning("H3: geox_contrast_metabolize registration skipped: %s", e)
+
+    # ═══════════════════════════════════════════════════════════════════
     # PHASE 1 — deterministic 2D geological model renderer
     # Arif directive 2026-07-29: F2 TRUTH — computed, not hallucinated.
     # Pure matplotlib rendering. Zero external I/O. Zero hallucination.
