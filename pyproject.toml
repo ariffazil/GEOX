@@ -169,7 +169,7 @@ all = [
     "panel>=1.9.3",
     "hvplot>=0.12.2",
     "holoviews>=1.23.0",
-    "bokeh>=3.9.1",
+    "bokeh>=3.9.2",
     "datashader>=0.19.1",
 ]
 
