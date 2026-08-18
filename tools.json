@@ -5,6 +5,7 @@
     "geox_contrast_metabolize",
     "geox_deep_time",
     "geox_geomechanics",
+    "geox_las_curve_inventory",
     "geox_map",
     "geox_model",
     "geox_petrophysics",
@@ -16,6 +17,7 @@
     "geox_spatial",
     "geox_temporal",
     "geox_well",
+    "geox_well_correlation_panel",
     "geox_well_ingest",
     "geox_well_qc",
     "geox_workspace"
@@ -83,6 +85,7 @@
     "geox_contrast_metabolize",
     "geox_deep_time",
     "geox_geomechanics",
+    "geox_las_curve_inventory",
     "geox_map",
     "geox_model",
     "geox_petrophysics",
@@ -94,10 +97,11 @@
     "geox_spatial",
     "geox_temporal",
     "geox_well",
+    "geox_well_correlation_panel",
     "geox_well_ingest",
     "geox_well_qc",
     "geox_workspace"
   ],
   "version": "2026.08.18",
-  "policy": "Generated 2026-08-18T07:20:36.505195+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (19 tools)"
+  "policy": "Generated 2026-08-18T07:41:08.200912+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (21 tools)"
 }
