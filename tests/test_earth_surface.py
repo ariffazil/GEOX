@@ -125,7 +125,9 @@ class TestETOPOFetcher:
 
     def test_offline_bbox_returns_stub(self):
         fetcher = ETOPOFetcher()
-        request = ETOPOExtractRequest(west=100.0, east=110.0, south=0.0, north=10.0)
+        request = ETOPOExtractRequest(
+            west=100.0, east=110.0, south=0.0, north=10.0
+        )
         result = fetcher.fetch_bbox(request)
         assert result.ok is True
         assert result.mode == "offline_stub"
@@ -154,7 +156,10 @@ class TestETOPOFetcher:
         assert "grid_extract_api" in ETOPO_2022_SOURCES
 
     def test_extract_request_validates(self):
-        req = ETOPOExtractRequest(west=95.0, east=105.0, south=-5.0, north=5.0, resolution=30, version="ice_surface")
+        req = ETOPOExtractRequest(
+            west=95.0, east=105.0, south=-5.0, north=5.0,
+            resolution=30, version="ice_surface"
+        )
         assert req.west == 95.0
         assert req.resolution == 30
         assert req.version == "ice_surface"
@@ -177,7 +182,9 @@ class TestGEBCOFetcher:
 
     def test_offline_bbox_returns_stub(self):
         fetcher = GEBCOFetcher()
-        request = GEBCOExtractRequest(west=100.0, east=110.0, south=0.0, north=10.0)
+        request = GEBCOExtractRequest(
+            west=100.0, east=110.0, south=0.0, north=10.0
+        )
         result = fetcher.fetch_bbox(request)
         assert result.ok is True
         assert result.mode == "offline_stub"
@@ -192,7 +199,9 @@ class TestGEBCOFetcher:
 
     def test_opendap_url_generation(self):
         fetcher = GEBCOFetcher()
-        request = GEBCOExtractRequest(west=100.0, east=105.0, south=0.0, north=5.0)
+        request = GEBCOExtractRequest(
+            west=100.0, east=105.0, south=0.0, north=5.0
+        )
         # OPeNDAP URL is only generated in live mode, but we can test the method
         url = fetcher._build_opendap_url(request)
         # In offline mode this may return None depending on env
@@ -208,7 +217,10 @@ class TestGEBCOFetcher:
         assert "download_app" in GEBCO_2026_SOURCES
 
     def test_extract_request_validates(self):
-        req = GEBCOExtractRequest(west=95.0, east=105.0, south=-5.0, north=5.0, variant="sub_ice")
+        req = GEBCOExtractRequest(
+            west=95.0, east=105.0, south=-5.0, north=5.0,
+            variant="sub_ice"
+        )
         assert req.west == 95.0
         assert req.variant == "sub_ice"
 
@@ -223,7 +235,6 @@ class TestEarthSurfaceMCPTools:
             geox_earthquake_catalog,
             EarthquakeCatalogRequest,
         )
-
         request = EarthquakeCatalogRequest()
         result = await geox_earthquake_catalog(request)
         assert result.ok is True
@@ -237,7 +248,6 @@ class TestEarthSurfaceMCPTools:
             geox_relief_ingest,
             ReliefIngestRequest,
         )
-
         request = ReliefIngestRequest()
         result = await geox_relief_ingest(request)
         assert result.ok is True
@@ -251,7 +261,6 @@ class TestEarthSurfaceMCPTools:
             geox_bathymetry_ingest,
             BathymetryIngestRequest,
         )
-
         request = BathymetryIngestRequest()
         result = await geox_bathymetry_ingest(request)
         assert result.ok is True
@@ -265,8 +274,9 @@ class TestEarthSurfaceMCPTools:
             geox_relief_ingest,
             ReliefIngestRequest,
         )
-
-        request = ReliefIngestRequest(mode="bbox", west=100, east=110, south=0, north=10)
+        request = ReliefIngestRequest(
+            mode="bbox", west=100, east=110, south=0, north=10
+        )
         result = await geox_relief_ingest(request)
         assert result.ok is True
         assert result.meta is not None
@@ -277,8 +287,9 @@ class TestEarthSurfaceMCPTools:
             geox_bathymetry_ingest,
             BathymetryIngestRequest,
         )
-
-        request = BathymetryIngestRequest(mode="bbox", west=100, east=110, south=0, north=10)
+        request = BathymetryIngestRequest(
+            mode="bbox", west=100, east=110, south=0, north=10
+        )
         result = await geox_bathymetry_ingest(request)
         assert result.ok is True
         assert result.meta is not None
@@ -296,26 +307,21 @@ class TestEarthSurfaceMCPTools:
 @pytest.mark.skipif(
     True,  # Phase 3 deferred — set to False when 33-tool expansion is restored
     reason="Phase 3 deferred: 33-tool Earth Dimensions expansion requires 888_HOLD. "
-    "See geox/AGENTS.md. Fetcher-level coverage continues in classes above.",
+           "See geox/AGENTS.md. Fetcher-level coverage continues in classes above.",
 )
 class TestCanonicalRegistry19:
     def test_19_canonical_tools(self):
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
-
-        expected = len(CANONICAL_PUBLIC_TOOLS)
-        assert expected > 0
-        assert len(CANONICAL_PUBLIC_TOOLS) == expected
+        assert len(CANONICAL_PUBLIC_TOOLS) == 33
 
     def test_surface_earth_tools_present(self):
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
-
         assert "geox_earthquake_catalog" in CANONICAL_PUBLIC_TOOLS
         assert "geox_relief_ingest" in CANONICAL_PUBLIC_TOOLS
         assert "geox_bathymetry_ingest" in CANONICAL_PUBLIC_TOOLS
 
     def test_surface_earth_in_manifest(self):
         from geox_mcp.registry import GEOX_TOOL_MANIFEST
-
         names = [t["name"] for t in GEOX_TOOL_MANIFEST]
         assert "geox_earthquake_catalog" in names
         assert "geox_relief_ingest" in names

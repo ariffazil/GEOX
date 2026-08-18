@@ -1,7 +1,7 @@
 manifest_version: 2026.07.24-truth-loop-hardening
 generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this repair
 public_transport: mcp
-public_count_target: 21
+public_count_target: 20
 tools:
 - name: geox_well_ingest
   domain: earth.well
@@ -189,44 +189,6 @@ tools:
   face: surface
   visibility: public
   description: 'Quality control for well data: depth monotonicity, null %, physical range checks.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_well_correlation_panel
-  domain: earth.well
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Generate a multi-well log correlation panel PNG from LAS files.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: true
-- name: geox_las_curve_inventory
-  domain: earth.well
-  axis: reason
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Inspect a LAS file and return its curve inventory without loading full curves.'
   input_schema_source: callable
   annotations:
     read_only: true
