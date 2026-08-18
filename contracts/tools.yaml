@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-08-18T07:20:36.505195+00:00
+# Regenerated: 2026-08-18T07:41:08.200912+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 19
-contract_epoch: 2026-08-18-GEOX-19TOOLS-ZEN
+canonical_tool_count: 21
+contract_epoch: 2026-08-18-GEOX-21TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -57,6 +57,12 @@ tools:
     risk_tier: readonly
     description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio,
       acoustic impedance, stress polygon.'
+  geox_las_curve_inventory:
+    category: earth.well
+    lane: evidence
+    risk_tier: readonly
+    description: Inspect a LAS file and return its curve inventory without loading
+      full curves.
   geox_map:
     category: earth.spatial
     lane: compute
@@ -126,6 +132,11 @@ tools:
     risk_tier: readonly
     description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
       desk.'
+  geox_well_correlation_panel:
+    category: earth.well
+    lane: evidence
+    risk_tier: readonly
+    description: Generate a multi-well log correlation panel PNG from LAS files.
   geox_well_ingest:
     category: earth.well
     lane: evidence
