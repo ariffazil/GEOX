@@ -208,7 +208,7 @@ def check_readme_badge(strict: bool) -> None:
 
     text = path.read_text()
     # Match badge: %20GEOX-NN%20Canonical%20Tools or similar patterns
-    badge_match = re.search(r"GEOX-(\d+)(?:\s|%20)Canonical(?:\s|%20)Tools", text)
+    badge_match = re.search(r"GEOX-(\d+)\s+Canonical\s+Tools", text)
     if badge_match:
         badge_count = int(badge_match.group(1))
         if badge_count != TRUTH_COUNT:
