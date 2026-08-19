@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-18T07:20:36.505195+00:00",
+  "generated_at": "2026-08-18T07:41:08.200912+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
-  "public_count": 19,
+  "public_count": 21,
   "internal_count": 22,
   "public_tools": [
     "geox_basin",
@@ -10,6 +10,7 @@
     "geox_contrast_metabolize",
     "geox_deep_time",
     "geox_geomechanics",
+    "geox_las_curve_inventory",
     "geox_map",
     "geox_model",
     "geox_petrophysics",
@@ -21,6 +22,7 @@
     "geox_spatial",
     "geox_temporal",
     "geox_well",
+    "geox_well_correlation_panel",
     "geox_well_ingest",
     "geox_well_qc",
     "geox_workspace"
@@ -83,6 +85,19 @@
       "axis": "compute",
       "lane": "reasoning",
       "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_las_curve_inventory",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Inspect a LAS file and return its curve inventory without loading full curves.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -225,6 +240,19 @@
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false
+      }
+    },
+    {
+      "name": "geox_well_correlation_panel",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Generate a multi-well log correlation panel PNG from LAS files.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
       }
     },
     {
