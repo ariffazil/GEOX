@@ -285,15 +285,15 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
-    @mcp.tool(name="geox_well_view", annotations=_geox_annotations("geox_well_view"))
-    async def _well_view(
-        well_id: str | None = None,
-        source_uri: str | None = None,
-        session_id: str | None = None,
-        actor_id: str | None = None,
-        trace_id: str | None = None,
-        max_samples: int = 2000,
-    ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_well_view", annotations=_geox_annotations("geox_well_view"))
+    # ZEN-CONSOLIDATED — async def _well_view(
+        # ZEN-CONSOLIDATED — well_id: str | None = None,
+        # ZEN-CONSOLIDATED — source_uri: str | None = None,
+        # ZEN-CONSOLIDATED — session_id: str | None = None,
+        # ZEN-CONSOLIDATED — actor_id: str | None = None,
+        # ZEN-CONSOLIDATED — trace_id: str | None = None,
+        # ZEN-CONSOLIDATED — max_samples: int = 2000,
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Well Witness View — hydrate LAS curves into interactive tracks.
 
         Prompt B (2026-07-25):
@@ -816,8 +816,8 @@ def register_tools_on(mcp):
 
             return classify_error(e, source_tool="geox_petrophysics", source_organ="geox")
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_sequence", annotations=_geox_annotations("geox_sequence"))
-        # ZEN-CONSOLIDATED — async def _sequence(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_sequence", annotations=_geox_annotations("geox_sequence"))
+    # ZEN-CONSOLIDATED — async def _sequence(
         # ZEN-CONSOLIDATED — workflow: str = "single_well",
         # ZEN-CONSOLIDATED — source: str | None = None,
         # ZEN-CONSOLIDATED — zone_top: float | None = None,
@@ -847,7 +847,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Sequence stratigraphy, correlation. Pattern A wrapper — see sequence_unified.geox_sequence."""
         from geox_mcp.tools.sequence_unified import geox_sequence as _impl
 
@@ -887,21 +887,21 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-        # ── SURFACE DISCOVERY — Federation Standard Registry Tool ────────────────────
-        # GAP-1 FIX (2026-06-27): Every organ MUST expose <organ>_surface_status.
-        # This is the non-judgment-lane discovery tool. Any MCP client can call it.
-        # Returns canonical surface — 16 tools, not the 47 registered ghosts.
-        # Mode registry: tool list + domains
-        # Mode health: service status
-        # DITEMPA BUKAN DIBERI.
+    # ── SURFACE DISCOVERY — Federation Standard Registry Tool ────────────────────
+    # GAP-1 FIX (2026-06-27): Every organ MUST expose <organ>_surface_status.
+    # This is the non-judgment-lane discovery tool. Any MCP client can call it.
+    # Returns canonical surface — 16 tools, not the 47 registered ghosts.
+    # Mode registry: tool list + domains
+    # Mode health: service status
+    # DITEMPA BUKAN DIBERI.
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
-        # ZEN-CONSOLIDATED — async def geox_surface_status(  # noqa: PLR0915 — surface probe
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
+    # ZEN-CONSOLIDATED — async def geox_surface_status(  # noqa: PLR0915 — surface probe
         # ZEN-CONSOLIDATED — mode: str = "registry",
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Federation-standard registry probe for GEOX.
 
         Use this to discover what GEOX actually exposes.
@@ -1227,17 +1227,17 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-        # ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ────────────────────
-        # Cognitive visual AI taxonomy: OBS_IMAGE / DER_RENDER_ENHANCEMENT / GEN_HYPOTHESIS / DER_COGNITIVE_RENDER
+    # ── SEISMIC VISION AI — 4 modes (Phase 3.2, 2026-07-06) ────────────────────
+    # Cognitive visual AI taxonomy: OBS_IMAGE / DER_RENDER_ENHANCEMENT / GEN_HYPOTHESIS / DER_COGNITIVE_RENDER
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
-        # ZEN-CONSOLIDATED — async def _visual_understand(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_visual_understand", annotations=_geox_annotations("geox_visual_understand"))
+    # ZEN-CONSOLIDATED — async def _visual_understand(
         # ZEN-CONSOLIDATED — image_path: str = "",
         # ZEN-CONSOLIDATED — mode: str = "full",
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """OBS_IMAGE perception assist. Without VLM backend returns HOLD (no fabricated structure).
 
         image_path: absolute path to seismic image on the host.
@@ -1391,8 +1391,8 @@ def register_tools_on(mcp):
         args = _safe_forward(_impl, arguments or {}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
-        # ZEN-CONSOLIDATED — async def _subsurface_model(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
+    # ZEN-CONSOLIDATED — async def _subsurface_model(
         # ZEN-CONSOLIDATED — mode: str = "joint_inversion",
         # ZEN-CONSOLIDATED — survey_type: str = "gravity",
         # ZEN-CONSOLIDATED — easting_m: tuple[float, ...] | None = None,
@@ -1410,7 +1410,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Joint inversion, gravity/mag, MT forward."""
         from geox_mcp.tools.subsurface_model import geox_subsurface_model as _impl
 
@@ -1552,8 +1552,8 @@ def register_tools_on(mcp):
             text=f"Basin {mode}: {_bname or 'unspecified'}. UI: ui://geox/basin-explorer.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_claim", annotations=_geox_annotations("geox_claim"))
-        # ZEN-CONSOLIDATED — async def _claim(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_claim", annotations=_geox_annotations("geox_claim"))
+    # ZEN-CONSOLIDATED — async def _claim(
         # ZEN-CONSOLIDATED — mode: str = "create",
         # ZEN-CONSOLIDATED — claim_id: str = "",
         # ZEN-CONSOLIDATED — claim_text: str = "",
@@ -1585,7 +1585,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Create, validate, challenge, seal, attach."""
         from geox_mcp.tools.claim_unified import geox_claim as _impl
 
@@ -1642,8 +1642,8 @@ def register_tools_on(mcp):
             text=f"Claim {mode}: {(claim_id or claim_text or '')[:80]}. UI: ui://geox/risk-console.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
-        # ZEN-CONSOLIDATED — async def _falsify(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
+    # ZEN-CONSOLIDATED — async def _falsify(
         # ZEN-CONSOLIDATED — claim_text: str = "",
         # ZEN-CONSOLIDATED — claim_type: str = "general",
         # ZEN-CONSOLIDATED — mode: str = "full",
@@ -1652,7 +1652,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Popperian falsification engine. Tests a geological claim against physical, stratigraphic, and logical constraints. Any check FALSIFIED → overall FALSIFIED. Science advances by eliminating what CANNOT be true. DITEMPA BUKAN DIBERI."""
         from geox_mcp.tools.claim_unified import geox_falsify as _impl
 
@@ -1686,8 +1686,8 @@ def register_tools_on(mcp):
             text=f"Falsify {mode}: verdict={verdict}. claim={(claim_text or '')[:60]}. UI: ui://geox/judge-console.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence_synthesize", annotations=_geox_annotations("geox_evidence_synthesize"))
-        # ZEN-CONSOLIDATED — async def _evidence_synthesize(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence_synthesize", annotations=_geox_annotations("geox_evidence_synthesize"))
+    # ZEN-CONSOLIDATED — async def _evidence_synthesize(
         # ZEN-CONSOLIDATED — mode: str = "synthesize",
         # ZEN-CONSOLIDATED — query: str = "",
         # ZEN-CONSOLIDATED — scope: str = "all",
@@ -1708,7 +1708,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Discover, synthesize, abduct, contradict, literature. Pattern A wrapper."""
         from geox_mcp.tools.evidence_unified import geox_evidence as _impl
 
@@ -3146,24 +3146,24 @@ def register_tools_on(mcp):
         except Exception as e:
             return classify_error(e, source_tool="geox_wealth_bridge_run", source_organ="geox")
 
-        # ── GEOLOGICAL MAP PIPELINE — 4-Verb Chain (2026-07-02 FORGE) ────────────
+    # ── GEOLOGICAL MAP PIPELINE — 4-Verb Chain (2026-07-02 FORGE) ────────────
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
-        # ZEN-CONSOLIDATED — async def _map_layers_list(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
+    # ZEN-CONSOLIDATED — async def _map_layers_list(
         # ZEN-CONSOLIDATED — bbox: list[float],
         # ZEN-CONSOLIDATED — theme: str | None = None,
         # ZEN-CONSOLIDATED — include_unavailable: bool = False,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """List available GEOX map layers for a bounding box. Returns layer catalogue with metadata, truth classes, and availability."""
         from geox_mcp.tools.earth_map import geox_map_layers_list as _impl
 
         return await _auto_call(_impl, {"bbox": bbox, "theme": theme, "include_unavailable": include_unavailable})
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
-        # ZEN-CONSOLIDATED — async def _map_scene_plan(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
+    # ZEN-CONSOLIDATED — async def _map_scene_plan(
         # ZEN-CONSOLIDATED — bbox: list[float],
         # ZEN-CONSOLIDATED — layer_ids: list[str] | None = None,
         # ZEN-CONSOLIDATED — theme: str | None = None,
@@ -3173,7 +3173,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Create a deterministic visual recipe for a geological map scene. No image rendered yet — inspect this plan before rendering."""
         from geox_mcp.tools.earth_map import geox_map_scene_plan as _impl
 
@@ -3189,8 +3189,8 @@ def register_tools_on(mcp):
             },
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
-        # ZEN-CONSOLIDATED — async def _map_render_preview(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
+    # ZEN-CONSOLIDATED — async def _map_render_preview(
         # ZEN-CONSOLIDATED — scene_id: str | None = None,
         # ZEN-CONSOLIDATED — bbox: list[float] | None = None,
         # ZEN-CONSOLIDATED — layer_ids: list[str] | None = None,
@@ -3202,27 +3202,27 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Render a static map preview from a scene plan or bbox. Images <300KB returned as inline base64."""
         # ZEN-CONSOLIDATED — from geox_mcp.tools.earth_map import geox_map_render_preview as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
-        # ZEN-CONSOLIDATED — _impl,
-        # ZEN-CONSOLIDATED — {
-        # ZEN-CONSOLIDATED — "scene_id": scene_id,
-        # ZEN-CONSOLIDATED — "bbox": bbox,
-        # ZEN-CONSOLIDATED — "layer_ids": layer_ids,
-        # ZEN-CONSOLIDATED — "theme": theme,
-        # ZEN-CONSOLIDATED — "width_px": width_px,
-        # ZEN-CONSOLIDATED — "height_px": height_px,
-        # ZEN-CONSOLIDATED — "style_profile": style_profile,
-        # ZEN-CONSOLIDATED — "format": format,
-        # ZEN-CONSOLIDATED — },
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
+            # ZEN-CONSOLIDATED — _impl,
+            # ZEN-CONSOLIDATED — {
+                # ZEN-CONSOLIDATED — "scene_id": scene_id,
+                # ZEN-CONSOLIDATED — "bbox": bbox,
+                # ZEN-CONSOLIDATED — "layer_ids": layer_ids,
+                # ZEN-CONSOLIDATED — "theme": theme,
+                # ZEN-CONSOLIDATED — "width_px": width_px,
+                # ZEN-CONSOLIDATED — "height_px": height_px,
+                # ZEN-CONSOLIDATED — "style_profile": style_profile,
+                # ZEN-CONSOLIDATED — "format": format,
+            # ZEN-CONSOLIDATED — },
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
-        # ZEN-CONSOLIDATED — # @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
-        # ZEN-CONSOLIDATED — async def _map_export_package(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # KUTIP SAMPAH 2026-08-05 H1/W5 — deregistered public leak
+    # ZEN-CONSOLIDATED — # @mcp.tool(name="geox_map_export_package", annotations=_geox_annotations("geox_map_export_package"))
+    # ZEN-CONSOLIDATED — async def _map_export_package(
         # ZEN-CONSOLIDATED — scene_plan_id: str,
         # ZEN-CONSOLIDATED — formats: list[str] | None = None,
         # ZEN-CONSOLIDATED — include_sources: bool = False,
@@ -3232,51 +3232,51 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Create a governed export package with map assets, metadata, and provenance sidecars. Final step of the map verb chain."""
         # ZEN-CONSOLIDATED — from geox_mcp.tools.earth_map import geox_map_export_package as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
-        # ZEN-CONSOLIDATED — _impl,
-        # ZEN-CONSOLIDATED — {
-        # ZEN-CONSOLIDATED — "scene_plan_id": scene_plan_id,
-        # ZEN-CONSOLIDATED — "formats": formats,
-        # ZEN-CONSOLIDATED — "include_sources": include_sources,
-        # ZEN-CONSOLIDATED — "include_provenance": include_provenance,
-        # ZEN-CONSOLIDATED — "review_mode": review_mode,
-        # ZEN-CONSOLIDATED — "output_dir": output_dir,
-        # ZEN-CONSOLIDATED — },
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
+            # ZEN-CONSOLIDATED — _impl,
+            # ZEN-CONSOLIDATED — {
+                # ZEN-CONSOLIDATED — "scene_plan_id": scene_plan_id,
+                # ZEN-CONSOLIDATED — "formats": formats,
+                # ZEN-CONSOLIDATED — "include_sources": include_sources,
+                # ZEN-CONSOLIDATED — "include_provenance": include_provenance,
+                # ZEN-CONSOLIDATED — "review_mode": review_mode,
+                # ZEN-CONSOLIDATED — "output_dir": output_dir,
+            # ZEN-CONSOLIDATED — },
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── BID ROUND SCREENER — MBR 2026 (2026-07-09) ─────────────────────────
-        # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_bid_round_screener", annotations=_geox_annotations("geox_bid_round_screener"))
-        # ZEN-CONSOLIDATED — async def _bid_round_screener(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── BID ROUND SCREENER — MBR 2026 (2026-07-09) ─────────────────────────
+    # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_bid_round_screener", annotations=_geox_annotations("geox_bid_round_screener"))
+    # ZEN-CONSOLIDATED — async def _bid_round_screener(
         # ZEN-CONSOLIDATED — arguments: dict[str, Any] | str | None = None,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """MBR 2026 Multi-Block Bid Round Screener — rank N blocks into BID/PARTNER/NO_BID matrix.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Takes all block opportunities at once, scores each on geological risk,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Takes all block opportunities at once, scores each on geological risk,
         # ZEN-CONSOLIDATED — capital requirement, evidence strength, and fiscal attractiveness.
         # ZEN-CONSOLIDATED — F1-F13 floor compliance inline. Advisory only (F13 SOVEREIGN).
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.bid_round_screener import geox_bid_round_screener as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
-        # ZEN-CONSOLIDATED — _impl,
-        # ZEN-CONSOLIDATED — dict(_parse_str_arguments(arguments) or {}),
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _auto_call(
+            # ZEN-CONSOLIDATED — _impl,
+            # ZEN-CONSOLIDATED — dict(_parse_str_arguments(arguments) or {}),
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── COLLISION ZONE — Two Oceanics Physics (Phase Zen, 2026-07-10) ────────
-        # ZEN-CONSOLIDATED — # Implements collision zone physics from Arif's Sabah Eureka Ledger v1.0.
-        # ZEN-CONSOLIDATED — # Two blocks (accretionary + rifted), suture, accommodation ratio, loading ratio.
-        # ZEN-CONSOLIDATED — # Detects 6 Eureka signatures. Margin Principle embedded.
-        # ZEN-CONSOLIDATED — # DITEMPA BUKAN DIBERI.
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── COLLISION ZONE — Two Oceanics Physics (Phase Zen, 2026-07-10) ────────
+    # ZEN-CONSOLIDATED — # Implements collision zone physics from Arif's Sabah Eureka Ledger v1.0.
+    # ZEN-CONSOLIDATED — # Two blocks (accretionary + rifted), suture, accommodation ratio, loading ratio.
+    # ZEN-CONSOLIDATED — # Detects 6 Eureka signatures. Margin Principle embedded.
+    # ZEN-CONSOLIDATED — # DITEMPA BUKAN DIBERI.
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_collision_zone", annotations=_geox_annotations("geox_collision_zone"))
-        # ZEN-CONSOLIDATED — async def _collision_zone(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_collision_zone", annotations=_geox_annotations("geox_collision_zone"))
+    # ZEN-CONSOLIDATED — async def _collision_zone(
         # ZEN-CONSOLIDATED — domain_a: dict[str, Any],
         # ZEN-CONSOLIDATED — domain_b: dict[str, Any],
         # ZEN-CONSOLIDATED — suture_name: str = "Suture",
@@ -3284,60 +3284,60 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — bypass_fraction: float = 0.0,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Analyze a collision zone using Two Oceanics physics.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Computes accommodation_ratio, loading_ratio, mass_deficit_pct from
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Computes accommodation_ratio, loading_ratio, mass_deficit_pct from
         # ZEN-CONSOLIDATED — two lithospheric blocks with different subsidence physics.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Detects Eureka signatures: TWO_OCEANICS, MFS_ASYMMETRY, LOADING_PULSE,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Detects Eureka signatures: TWO_OCEANICS, MFS_ASYMMETRY, LOADING_PULSE,
         # ZEN-CONSOLIDATED — MASS_DEFICIT, SUTURE_SINK, PROSPECT_BIFURCATION.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Example (Sabah):
-        # ZEN-CONSOLIDATED — domain_a = {"name": "Kinabalu", "initial_subsidence_km": 4.0,
-        # ZEN-CONSOLIDATED — "loading_rate_m_myr": 400.0, "has_mfs": true}
-        # ZEN-CONSOLIDATED — domain_b = {"name": "Layang-Layang", "initial_subsidence_km": 2.0,
-        # ZEN-CONSOLIDATED — "thermal_rate_mm_yr": 0.20, "has_mfs": false}
-        # ZEN-CONSOLIDATED — suture_name = "Sabah Trough"
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Example (Sabah):
+          # ZEN-CONSOLIDATED — domain_a = {"name": "Kinabalu", "initial_subsidence_km": 4.0,
+                      # ZEN-CONSOLIDATED — "loading_rate_m_myr": 400.0, "has_mfs": true}
+          # ZEN-CONSOLIDATED — domain_b = {"name": "Layang-Layang", "initial_subsidence_km": 2.0,
+                      # ZEN-CONSOLIDATED — "thermal_rate_mm_yr": 0.20, "has_mfs": false}
+          # ZEN-CONSOLIDATED — suture_name = "Sabah Trough"
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.collision_zone import compute_collision
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return compute_collision(
-        # ZEN-CONSOLIDATED — domain_a=domain_a,
-        # ZEN-CONSOLIDATED — domain_b=domain_b,
-        # ZEN-CONSOLIDATED — suture_name=suture_name,
-        # ZEN-CONSOLIDATED — duration_ma=duration_ma,
-        # ZEN-CONSOLIDATED — bypass_fraction=bypass_fraction,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return compute_collision(
+            # ZEN-CONSOLIDATED — domain_a=domain_a,
+            # ZEN-CONSOLIDATED — domain_b=domain_b,
+            # ZEN-CONSOLIDATED — suture_name=suture_name,
+            # ZEN-CONSOLIDATED — duration_ma=duration_ma,
+            # ZEN-CONSOLIDATED — bypass_fraction=bypass_fraction,
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_collision_chronology", annotations=_geox_annotations("geox_collision_chronology"))
-        # ZEN-CONSOLIDATED — async def _collision_chronology(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_collision_chronology", annotations=_geox_annotations("geox_collision_chronology"))
+    # ZEN-CONSOLIDATED — async def _collision_chronology(
         # ZEN-CONSOLIDATED — events: list[dict[str, Any]],
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Compute collision chronology from a sequence of tectonic events.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Takes a list of {age_ma, event_name, description} and computes
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Takes a list of {age_ma, event_name, description} and computes
         # ZEN-CONSOLIDATED — collision duration, event ordering, and the key insight:
         # ZEN-CONSOLIDATED — "The collision is not an event. It is a 15 Myr sequence, still finishing."
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Example:
-        # ZEN-CONSOLIDATED — events = [{"age_ma": 65, "event_name": "DG Rift", "description": "..."},
-        # ZEN-CONSOLIDATED — {"age_ma": 21, "event_name": "Collision", "description": "..."},
-        # ZEN-CONSOLIDATED — {"age_ma": 7,  "event_name": "Kinabalu Granite", "description": "..."}]
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Example:
+          # ZEN-CONSOLIDATED — events = [{"age_ma": 65, "event_name": "DG Rift", "description": "..."},
+                    # ZEN-CONSOLIDATED — {"age_ma": 21, "event_name": "Collision", "description": "..."},
+                    # ZEN-CONSOLIDATED — {"age_ma": 7,  "event_name": "Kinabalu Granite", "description": "..."}]
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.collision_zone import compute_collision_chronology
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return compute_collision_chronology(events)
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return compute_collision_chronology(events)
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── DOMAIN EVIDENCE GATE — geox_diagnose (Phase Zen, 2026-07-10) ──────────
-        # ZEN-CONSOLIDATED — # Pre-flight check: "Does GEOX have evidence for this question?"
-        # ZEN-CONSOLIDATED — # Returns NO_DOMAIN_EVIDENCE / PARTIAL / READY.
-        # ZEN-CONSOLIDATED — # When NO_DOMAIN_EVIDENCE: use ChatGPT, not GEOX.
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── DOMAIN EVIDENCE GATE — geox_diagnose (Phase Zen, 2026-07-10) ──────────
+    # ZEN-CONSOLIDATED — # Pre-flight check: "Does GEOX have evidence for this question?"
+    # ZEN-CONSOLIDATED — # Returns NO_DOMAIN_EVIDENCE / PARTIAL / READY.
+    # ZEN-CONSOLIDATED — # When NO_DOMAIN_EVIDENCE: use ChatGPT, not GEOX.
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_diagnose", annotations=_geox_annotations("geox_diagnose"))
-        # ZEN-CONSOLIDATED — async def _diagnose(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_diagnose", annotations=_geox_annotations("geox_diagnose"))
+    # ZEN-CONSOLIDATED — async def _diagnose(
         # ZEN-CONSOLIDATED — query: str = "",
         # ZEN-CONSOLIDATED — domain: str = "",
         # ZEN-CONSOLIDATED — location: str = "",
@@ -3345,37 +3345,37 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — required_evidence: list[str] | None = None,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Check if GEOX has domain evidence for a question.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Routes questions to either GEOX (evidence analysis) or ChatGPT (general knowledge).
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Routes questions to either GEOX (evidence analysis) or ChatGPT (general knowledge).
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Returns NO_DOMAIN_EVIDENCE when GEOX has no relevant basin profiles,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Returns NO_DOMAIN_EVIDENCE when GEOX has no relevant basin profiles,
         # ZEN-CONSOLIDATED — literature, or well data — use ChatGPT for general knowledge questions.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Returns READY when evidence is sufficient for geox_basin, geox_evidence,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Returns READY when evidence is sufficient for geox_basin, geox_evidence,
         # ZEN-CONSOLIDATED — or geox_contrast_detect analysis.
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.diagnose import diagnose
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return diagnose(
-        # ZEN-CONSOLIDATED — query=query,
-        # ZEN-CONSOLIDATED — domain=domain,
-        # ZEN-CONSOLIDATED — location=location,
-        # ZEN-CONSOLIDATED — basin=basin,
-        # ZEN-CONSOLIDATED — required_evidence=required_evidence,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return diagnose(
+            # ZEN-CONSOLIDATED — query=query,
+            # ZEN-CONSOLIDATED — domain=domain,
+            # ZEN-CONSOLIDATED — location=location,
+            # ZEN-CONSOLIDATED — basin=basin,
+            # ZEN-CONSOLIDATED — required_evidence=required_evidence,
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── EARTH OBSERVE — 24-in-1 consolidated surface (Zen, 2026-07-10) ──────
-        # ZEN-CONSOLIDATED — # One tool. 24 modes. Replaces 24 individual Earth data fetchers.
-        # ZEN-CONSOLIDATED — # earthquake, relief, bathymetry, heatflow, stress, geochem,
-        # ZEN-CONSOLIDATED — # plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
-        # ZEN-CONSOLIDATED — # hydrology, satellite, uk_petroleum, geology_map, space_weather,
-        # ZEN-CONSOLIDATED — # nsta, context_at_location, isitwater, gravity_screen,
-        # ZEN-CONSOLIDATED — # judgment_preflight, interpolate_grid, report_to_workflow
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ── EARTH OBSERVE — 24-in-1 consolidated surface (Zen, 2026-07-10) ──────
+    # ZEN-CONSOLIDATED — # One tool. 24 modes. Replaces 24 individual Earth data fetchers.
+    # ZEN-CONSOLIDATED — # earthquake, relief, bathymetry, heatflow, stress, geochem,
+    # ZEN-CONSOLIDATED — # plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
+    # ZEN-CONSOLIDATED — # hydrology, satellite, uk_petroleum, geology_map, space_weather,
+    # ZEN-CONSOLIDATED — # nsta, context_at_location, isitwater, gravity_screen,
+    # ZEN-CONSOLIDATED — # judgment_preflight, interpolate_grid, report_to_workflow
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_observe", annotations=_geox_annotations("geox_observe"))
-        # ZEN-CONSOLIDATED — async def _observe(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED 2026-07-10 — @mcp.tool(name="geox_observe", annotations=_geox_annotations("geox_observe"))
+    # ZEN-CONSOLIDATED — async def _observe(
         # ZEN-CONSOLIDATED — mode: str,
         # ZEN-CONSOLIDATED — query: str = "",
         # ZEN-CONSOLIDATED — lat: float | None = None,
@@ -3384,10 +3384,10 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — limit: int = 10,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Unified Earth observation — 24 data dimensions in one tool.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Modes: earthquake, relief, bathymetry, heatflow, stress, geochem,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Modes: earthquake, relief, bathymetry, heatflow, stress, geochem,
         # ZEN-CONSOLIDATED — plate_reconstruct, paleomag, gravity, ocean, erddap, climate,
         # ZEN-CONSOLIDATED — hydrology, satellite, uk_petroleum, geology_map, space_weather,
         # ZEN-CONSOLIDATED — nsta, context_at_location, isitwater, gravity_screen,
@@ -3395,23 +3395,23 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.observe import geox_observe as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
-        # ZEN-CONSOLIDATED — mode=mode,
-        # ZEN-CONSOLIDATED — query=query,
-        # ZEN-CONSOLIDATED — lat=lat,
-        # ZEN-CONSOLIDATED — lng=lng,
-        # ZEN-CONSOLIDATED — bbox=bbox,
-        # ZEN-CONSOLIDATED — limit=limit,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
+            # ZEN-CONSOLIDATED — mode=mode,
+            # ZEN-CONSOLIDATED — query=query,
+            # ZEN-CONSOLIDATED — lat=lat,
+            # ZEN-CONSOLIDATED — lng=lng,
+            # ZEN-CONSOLIDATED — bbox=bbox,
+            # ZEN-CONSOLIDATED — limit=limit,
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ═══════════════════════════════════════════════════════════════════════════════
-        # ZEN-CONSOLIDATED — # BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10)
-        # ZEN-CONSOLIDATED — # Physics-first basin analysis: backstripping, mass balance, thermal maturity,
-        # ZEN-CONSOLIDATED — # claim graph evaluation. Complements simulate_* with backward reconstruction.
-        # ZEN-CONSOLIDATED — # ═══════════════════════════════════════════════════════════════════════════════
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # ═══════════════════════════════════════════════════════════════════════════════
+    # ZEN-CONSOLIDATED — # BASIN ANALYSIS ENGINES (4) — Phase 0 (2026-07-10)
+    # ZEN-CONSOLIDATED — # Physics-first basin analysis: backstripping, mass balance, thermal maturity,
+    # ZEN-CONSOLIDATED — # claim graph evaluation. Complements simulate_* with backward reconstruction.
+    # ZEN-CONSOLIDATED — # ═══════════════════════════════════════════════════════════════════════════════
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
-        # ZEN-CONSOLIDATED — async def _basin_backstrip(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    # ZEN-CONSOLIDATED — async def _basin_backstrip(
         # ZEN-CONSOLIDATED — well_ref: str,
         # ZEN-CONSOLIDATED — stratigraphic_ages: list[dict[str, Any]],
         # ZEN-CONSOLIDATED — lithology_model: dict[str, Any] | None = None,
@@ -3422,26 +3422,26 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — uncertainty_realizations: int = 1000,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Reconstruct tectonic and total subsidence through time from validated well stratigraphy.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Uses Steckler & Watts (1978) Airy isostasy + Sclater & Christie (1980) decompaction.
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Uses Steckler & Watts (1978) Airy isostasy + Sclater & Christie (1980) decompaction.
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
-        # ZEN-CONSOLIDATED — well_ref=well_ref,
-        # ZEN-CONSOLIDATED — stratigraphic_ages=stratigraphic_ages,
-        # ZEN-CONSOLIDATED — lithology_model=lithology_model or {},
-        # ZEN-CONSOLIDATED — palaeobathymetry_model=palaeobathymetry_model or {},
-        # ZEN-CONSOLIDATED — sea_level_model_ref=sea_level_model_ref,
-        # ZEN-CONSOLIDATED — water_density_kg_m3=water_density_kg_m3,
-        # ZEN-CONSOLIDATED — mantle_density_kg_m3=mantle_density_kg_m3,
-        # ZEN-CONSOLIDATED — uncertainty_realizations=uncertainty_realizations,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
+            # ZEN-CONSOLIDATED — well_ref=well_ref,
+            # ZEN-CONSOLIDATED — stratigraphic_ages=stratigraphic_ages,
+            # ZEN-CONSOLIDATED — lithology_model=lithology_model or {},
+            # ZEN-CONSOLIDATED — palaeobathymetry_model=palaeobathymetry_model or {},
+            # ZEN-CONSOLIDATED — sea_level_model_ref=sea_level_model_ref,
+            # ZEN-CONSOLIDATED — water_density_kg_m3=water_density_kg_m3,
+            # ZEN-CONSOLIDATED — mantle_density_kg_m3=mantle_density_kg_m3,
+            # ZEN-CONSOLIDATED — uncertainty_realizations=uncertainty_realizations,
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
-        # ZEN-CONSOLIDATED — async def _sediment_mass_balance(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_sediment_mass_balance", annotations=_geox_annotations("geox_sediment_mass_balance"))
+    # ZEN-CONSOLIDATED — async def _sediment_mass_balance(
         # ZEN-CONSOLIDATED — basin_name: str,
         # ZEN-CONSOLIDATED — source_eroded_km3: float,
         # ZEN-CONSOLIDATED — source_density_kg_m3: float = 2650.0,
@@ -3451,25 +3451,25 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — routing_efficiency: float | None = None,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         # ZEN-CONSOLIDATED — """Compute source-to-sink sediment mass balance with uncertainty.
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Physics: Peters (2012) sediment cycling framework.
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — Physics: Peters (2012) sediment cycling framework.
         # ZEN-CONSOLIDATED — """
         # ZEN-CONSOLIDATED — from geox_mcp.tools.basin_engines.mass_balance_tool import geox_sediment_mass_balance as _impl
 
-        # ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
-        # ZEN-CONSOLIDATED — basin_name=basin_name,
-        # ZEN-CONSOLIDATED — source_eroded_km3=source_eroded_km3,
-        # ZEN-CONSOLIDATED — source_density_kg_m3=source_density_kg_m3,
-        # ZEN-CONSOLIDATED — preserved_volumes=preserved_volumes,
-        # ZEN-CONSOLIDATED — bypassed_km3=bypassed_km3,
-        # ZEN-CONSOLIDATED — dissolved_km3=dissolved_km3,
-        # ZEN-CONSOLIDATED — routing_efficiency=routing_efficiency,
+# ZEN-CONSOLIDATED —         # ZEN-CONSOLIDATED — return await _impl(
+            # ZEN-CONSOLIDATED — basin_name=basin_name,
+            # ZEN-CONSOLIDATED — source_eroded_km3=source_eroded_km3,
+            # ZEN-CONSOLIDATED — source_density_kg_m3=source_density_kg_m3,
+            # ZEN-CONSOLIDATED — preserved_volumes=preserved_volumes,
+            # ZEN-CONSOLIDATED — bypassed_km3=bypassed_km3,
+            # ZEN-CONSOLIDATED — dissolved_km3=dissolved_km3,
+            # ZEN-CONSOLIDATED — routing_efficiency=routing_efficiency,
         # ZEN-CONSOLIDATED — )
 
-        # ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
-        # ZEN-CONSOLIDATED — async def _thermal_maturity_history(
+# ZEN-CONSOLIDATED —     # ZEN-CONSOLIDATED — # DEREGISTERED ZEN-15 — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    # ZEN-CONSOLIDATED — async def _thermal_maturity_history(
         # ZEN-CONSOLIDATED — well_ref: str,
         # ZEN-CONSOLIDATED — burial_history: dict[str, Any],
         # ZEN-CONSOLIDATED — heat_flow_history: dict[str, Any] | None = None,
@@ -3478,7 +3478,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — time_step_myr: float = 1.0,
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Model burial + heat flow + maturity through time.
 
         Uses EasyRo (Sweeney & Burnham 1990) + TTI (Lopatin 1971).
@@ -4281,8 +4281,8 @@ def register_tools_on(mcp):
             trace_id=trace_id,
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
-        # ZEN-CONSOLIDATED — async def _well_desk(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
+    # ZEN-CONSOLIDATED — async def _well_desk(
         # ZEN-CONSOLIDATED — mode: str = "open",
         # ZEN-CONSOLIDATED — well_id: str = "",
         # ZEN-CONSOLIDATED — depth_top: float | None = None,
@@ -4294,7 +4294,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Well desk: interactive view, publish, render. Modes: open, publish, render.
 
         open    — interactive well-desk view (MCP App)
@@ -4400,13 +4400,13 @@ def register_tools_on(mcp):
             },
         }
 
-        # ═══════════════════════════════════════════════════════════════════════════════
-        # P0 REGISTRY DRIFT FIX — 8 manifest-only tools wired to callable surface
-        # Forged 2026-07-20. These had implementations but no @mcp.tool decorators.
-        # ═══════════════════════════════════════════════════════════════════════════════
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # P0 REGISTRY DRIFT FIX — 8 manifest-only tools wired to callable surface
+    # Forged 2026-07-20. These had implementations but no @mcp.tool decorators.
+    # ═══════════════════════════════════════════════════════════════════════════════
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
-        # ZEN-CONSOLIDATED — async def _basin_backstrip(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
+    # ZEN-CONSOLIDATED — async def _basin_backstrip(
         # ZEN-CONSOLIDATED — well_ref: str,
         # ZEN-CONSOLIDATED — stratigraphic_ages: list[dict[str, Any]],
         # ZEN-CONSOLIDATED — lithology_model: dict[str, Any],
@@ -4418,7 +4418,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """1D basin backstripping: Steckler & Watts 1978 + Sclater & Christie 1980."""
         from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
 
@@ -4480,8 +4480,8 @@ def register_tools_on(mcp):
             text="Claim graph evaluate complete. UI: ui://geox/risk-console.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
-        # ZEN-CONSOLIDATED — async def _contradiction_scan(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
+    # ZEN-CONSOLIDATED — async def _contradiction_scan(
         # ZEN-CONSOLIDATED — claim_text: str = "",
         # ZEN-CONSOLIDATED — claim_type: str = "general",
         # ZEN-CONSOLIDATED — mode: str = "full",
@@ -4490,7 +4490,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Popperian falsification: scan claims for internal contradictions."""
         from geox_mcp.tools.contradiction_scan import geox_contradiction_scan as _impl
 
@@ -4522,8 +4522,8 @@ def register_tools_on(mcp):
             text=f"Contradiction scan {mode}: {(claim_text or '')[:60]}. UI: ui://geox/judge-console.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
-        # ZEN-CONSOLIDATED — async def _evidence(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
+    # ZEN-CONSOLIDATED — async def _evidence(
         # ZEN-CONSOLIDATED — mode: str = "synthesize",
         # ZEN-CONSOLIDATED — evidence_id: str = "",
         # ZEN-CONSOLIDATED — evidence_type: str = "supporting",
@@ -4542,7 +4542,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Unified evidence — discover, synthesize, abduct, contradict, ingest_literature.
 
         Modes:
@@ -4593,8 +4593,8 @@ def register_tools_on(mcp):
             text=f"Evidence {evidence_type}: claim={claim_id or 'n/a'}. UI: ui://geox/judge-console.",
         )
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
-        # ZEN-CONSOLIDATED — async def _lem_predict(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
+    # ZEN-CONSOLIDATED — async def _lem_predict(
         # ZEN-CONSOLIDATED — target_depth_m: float | None = None,
         # ZEN-CONSOLIDATED — basin_context: str | None = None,
         # ZEN-CONSOLIDATED — cube_inline: dict[str, Any] | None = None,
@@ -4605,7 +4605,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Litho-Elastic prediction via LEM inference engine.
 
         Simplified surface: accepts target depth + basin context.
@@ -4673,8 +4673,8 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
-        # ZEN-CONSOLIDATED — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
-        # ZEN-CONSOLIDATED — async def _thermal_maturity_history(
+    # ZEN-CONSOLIDATED — @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
+    # ZEN-CONSOLIDATED — async def _thermal_maturity_history(
         # ZEN-CONSOLIDATED — well_ref: str,
         # ZEN-CONSOLIDATED — burial_history: dict[str, Any],
         # ZEN-CONSOLIDATED — heat_flow_history: dict[str, Any] | None = None,
@@ -4684,7 +4684,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — session_id: str | None = None,
         # ZEN-CONSOLIDATED — actor_id: str | None = None,
         # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+    # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
         """Burial + heat flow + maturity modelling (EasyRo + TTI)."""
         from geox_mcp.tools.basin_engines.thermal_tool import geox_thermal_maturity_history as _impl
 
@@ -4803,7 +4803,6 @@ def register_tools_on(mcp):
     # Closes the 1-tool surface gap kept /health in status=degraded.
     # ═══════════════════════════════════════════════════════════════════
     try:
-
         @mcp.tool(name="geox_contrast_metabolize", annotations=_geox_annotations("geox_contrast_metabolize"))
         async def _contrast_metabolize(
             arguments: dict[str, Any] | None = None,
@@ -4884,8 +4883,8 @@ def register_tools_on(mcp):
         title: str = Field("Geological Cross-Section", description="Plot title")
 
     # ZEN-CONSOLIDATED — @mcp.tool(
-    # ZEN-CONSOLIDATED — name="geox_geological_model_generate",
-    # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_geological_model_generate"),
+        # ZEN-CONSOLIDATED — name="geox_geological_model_generate",
+        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_geological_model_generate"),
     # ZEN-CONSOLIDATED — )
     async def _geological_model_generate(
         params: _GeologicalModelParams,
@@ -5073,8 +5072,8 @@ def register_tools_on(mcp):
         from geox_mcp.tools.gempy_implicit_3d import geox_gempy_implicit_3d
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_gempy_implicit_3d",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_gempy_implicit_3d"),
+            # ZEN-CONSOLIDATED — name="geox_gempy_implicit_3d",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_gempy_implicit_3d"),
         # ZEN-CONSOLIDATED — )
         async def _gempy_implicit_3d(
             surface_points: list | str | None = None,
@@ -5122,8 +5121,8 @@ def register_tools_on(mcp):
         from geox_mcp.tools.h3_spatial_index import geox_h3_spatial_index
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_h3_spatial_index",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_h3_spatial_index"),
+            # ZEN-CONSOLIDATED — name="geox_h3_spatial_index",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_h3_spatial_index"),
         # ZEN-CONSOLIDATED — )
         async def _h3_spatial_index(
             mode: str = "latlng_to_cell",
@@ -5170,8 +5169,8 @@ def register_tools_on(mcp):
         from geox_mcp.tools.lancedb_embed_store import geox_lancedb_embed_store
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_lancedb_embed_store",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_lancedb_embed_store"),
+            # ZEN-CONSOLIDATED — name="geox_lancedb_embed_store",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_lancedb_embed_store"),
         # ZEN-CONSOLIDATED — )
         async def _lancedb_embed_store(
             mode: str = "search",
@@ -5224,8 +5223,8 @@ def register_tools_on(mcp):
         from geox_mcp.tools.stac_discover import geox_stac_discover
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_stac_discover",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_stac_discover"),
+            # ZEN-CONSOLIDATED — name="geox_stac_discover",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_stac_discover"),
         # ZEN-CONSOLIDATED — )
         async def _stac_discover(
             mode: str = "search",
@@ -5276,8 +5275,8 @@ def register_tools_on(mcp):
         from geox_mcp.tools.dde_reason import geox_dde_reason
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_dde_reason",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_dde_reason"),
+            # ZEN-CONSOLIDATED — name="geox_dde_reason",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_dde_reason"),
         # ZEN-CONSOLIDATED — )
         async def _dde_reason(
             mode: str = "query_stratigraphy",
@@ -5334,8 +5333,8 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_temporal_decline",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_decline"),
+            # ZEN-CONSOLIDATED — name="geox_temporal_decline",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_decline"),
         # ZEN-CONSOLIDATED — )
         async def _temporal_decline(
             production_data: list[dict[str, Any]],
@@ -5360,8 +5359,8 @@ def register_tools_on(mcp):
             return await temporal_decline(**args)
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_temporal_rrr",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_rrr"),
+            # ZEN-CONSOLIDATED — name="geox_temporal_rrr",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_rrr"),
         # ZEN-CONSOLIDATED — )
         async def _temporal_rrr(
             reserves_start: float,
@@ -5386,8 +5385,8 @@ def register_tools_on(mcp):
             return await temporal_rrr(**args)
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_temporal_basin_lifecycle",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_basin_lifecycle"),
+            # ZEN-CONSOLIDATED — name="geox_temporal_basin_lifecycle",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_basin_lifecycle"),
         # ZEN-CONSOLIDATED — )
         async def _temporal_basin_lifecycle(
             basin_name: str,
@@ -5416,8 +5415,8 @@ def register_tools_on(mcp):
             return await temporal_basin_lifecycle(**args)
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_temporal_cadence",
-        # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_cadence"),
+            # ZEN-CONSOLIDATED — name="geox_temporal_cadence",
+            # ZEN-CONSOLIDATED — annotations=_geox_annotations("geox_temporal_cadence"),
         # ZEN-CONSOLIDATED — )
         async def _temporal_cadence(
             blocks_offered: int,
@@ -5450,16 +5449,13 @@ def register_tools_on(mcp):
     # ── Additional core tools (source_rock, avo, diagenesis) ──
     try:
         from geox_core.source_rock.parameters import (
-            classify_toc,
-            classify_kerogen,
-            classify_maturity,
-            estimate_toc_deltalogr,
+            classify_toc, classify_kerogen, classify_maturity, estimate_toc_deltalogr,
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_source_rock",
-        # ZEN-CONSOLIDATED — description="Source rock evaluation: TOC classification (Peters-Cassa 1994), kerogen typing (van Krevelen), maturity windows, ΔlogR TOC estimation. Modes: toc, kerogen, maturity, delalogr, full.",
-        # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True},
+            # ZEN-CONSOLIDATED — name="geox_source_rock",
+            # ZEN-CONSOLIDATED — description="Source rock evaluation: TOC classification (Peters-Cassa 1994), kerogen typing (van Krevelen), maturity windows, ΔlogR TOC estimation. Modes: toc, kerogen, maturity, delalogr, full.",
+            # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True},
         # ZEN-CONSOLIDATED — )
         async def _source_rock(
             mode: str = "full",
@@ -5486,13 +5482,8 @@ def register_tools_on(mcp):
                     results["maturity"] = classify_maturity(tmax_c, kerogen_type)
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
                     results["deltalogr"] = estimate_toc_deltalogr(
-                        depth_m,
-                        resistivity_ohm_m,
-                        sonic_us_ft,
-                        density_gcc,
-                        lom,
-                        baseline_resistivity,
-                        baseline_sonic,
+                        depth_m, resistivity_ohm_m, sonic_us_ft, density_gcc,
+                        lom, baseline_resistivity, baseline_sonic,
                     )
                 if len(results) == 1:
                     results["error"] = f"mode={mode} requires specific parameters (see description)"
@@ -5509,9 +5500,9 @@ def register_tools_on(mcp):
         from geox_core.avo.castagna import castagna_mudrock_vp_to_vs, castagna_mudrock_fallback
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_avo_forward",
-        # ZEN-CONSOLIDATED — description="AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term, Lambda-Mu-Rho (Goodway 1997), Castagna mudrock. Modes: zoeppritz, shuey, lmr, castagna, full.",
-        # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
+            # ZEN-CONSOLIDATED — name="geox_avo_forward",
+            # ZEN-CONSOLIDATED — description="AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term, Lambda-Mu-Rho (Goodway 1997), Castagna mudrock. Modes: zoeppritz, shuey, lmr, castagna, full.",
+            # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
         # ZEN-CONSOLIDATED — )
         async def _avo_forward(
             mode: str = "zoeppritz",
@@ -5530,7 +5521,6 @@ def register_tools_on(mcp):
             unit: str = "m/s",
         ) -> dict[str, Any]:
             import numpy as np
-
             results: dict[str, Any] = {"mode": mode}
             try:
                 thetas = np.array(theta_deg if theta_deg else [0, 5, 10, 15, 20, 25, 30])
@@ -5539,29 +5529,18 @@ def register_tools_on(mcp):
                     results["zoeppritz"] = {"theta_deg": thetas.tolist(), "rpp": rpp.tolist()}
                 if mode in ("shuey", "full"):
                     sh = shuey_avo(vp1, vs1, rho1, vp2, vs2, rho2, theta_max)
-                    sd = sh.to_dict() if hasattr(sh, "to_dict") else {}
-                    results["shuey"] = {
-                        "intercept_R0": sd.get("intercept_R0"),
-                        "gradient_G": sd.get("gradient_G"),
-                        "avo_class": sd.get("avo_class"),
-                    }
+                    sd = sh.to_dict() if hasattr(sh, 'to_dict') else {}
+                    results["shuey"] = {"intercept_R0": sd.get("intercept_R0"), "gradient_G": sd.get("gradient_G"), "avo_class": sd.get("avo_class")}
                 if mode in ("lmr", "full"):
                     vpp = np.array([vp]) if isinstance(vp, (int, float)) else np.array(vp)
                     vss = np.array([vs]) if isinstance(vs, (int, float)) else np.array(vs)
                     rr = np.array([rho]) if isinstance(rho, (int, float)) else np.array(rho)
                     lmr = lmr_decompose(vpp, vss, rr)
-                    results["lmr"] = {
-                        "lambda_rho": [float(x) for x in lmr.lambda_rho],
-                        "mu_rho": [float(x) for x in lmr.mu_rho],
-                        "fluid_indicator": getattr(lmr, "fluid_indicator", None),
-                    }
+                    results["lmr"] = {"lambda_rho": [float(x) for x in lmr.lambda_rho], "mu_rho": [float(x) for x in lmr.mu_rho], "fluid_indicator": getattr(lmr, 'fluid_indicator', None)}
                 if mode in ("castagna", "full"):
                     vs_est = castagna_mudrock_vp_to_vs(vp, unit=unit)
                     fallback = castagna_mudrock_fallback(vp, fluid_zone=fluid_zone, unit=unit)
-                    results["castagna"] = {
-                        "vp_to_vs": float(vs_est) if not hasattr(vs_est, "__len__") else vs_est.tolist(),
-                        "fallback": fallback,
-                    }
+                    results["castagna"] = {"vp_to_vs": float(vs_est) if not hasattr(vs_est, '__len__') else vs_est.tolist(), "fallback": fallback}
                 if len(results) == 1:
                     results["error"] = f"mode={mode} not recognized"
                 return results
@@ -5574,15 +5553,13 @@ def register_tools_on(mcp):
 
     try:
         from geox_core.diagenesis.compaction import (
-            athy_porosity,
-            sclater_christie_porosity,
-            compaction_correction,
+            athy_porosity, sclater_christie_porosity, compaction_correction,
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(
-        # ZEN-CONSOLIDATED — name="geox_diagenesis",
-        # ZEN-CONSOLIDATED — description="Diagenesis analysis: mechanical compaction models (Athy 1930, Sclater & Christie 1980), compaction correction, overpressure detection. Modes: compaction, full.",
-        # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
+            # ZEN-CONSOLIDATED — name="geox_diagenesis",
+            # ZEN-CONSOLIDATED — description="Diagenesis analysis: mechanical compaction models (Athy 1930, Sclater & Christie 1980), compaction correction, overpressure detection. Modes: compaction, full.",
+            # ZEN-CONSOLIDATED — annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False},
         # ZEN-CONSOLIDATED — )
         async def _diagenesis(
             mode: str = "compaction",
@@ -5677,18 +5654,14 @@ def register_tools_on(mcp):
                 production_data=production_data or [],
                 forecast_years=forecast_years,
                 threshold_bpd=threshold_bpd,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "rrr":
             return await _temporal_rrr(
                 reserves_start=reserves_start or 0.0,
                 additions=additions or 0.0,
                 production=production or 1.0,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "basin_lifecycle":
             return await _temporal_basin_lifecycle(
@@ -5697,9 +5670,7 @@ def register_tools_on(mcp):
                 current_production=current_production or 0.0,
                 discovery_year=discovery_year or 1970,
                 peak_year=peak_year or 2000,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "cadence":
             return await _temporal_cadence(
@@ -5707,74 +5678,31 @@ def register_tools_on(mcp):
                 blocks_awarded=blocks_awarded or 0,
                 years_span=years_span or 1,
                 average_cycle_time_years=average_cycle_time_years or 1.0,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: decline, rrr, basin_lifecycle, cadence"}
 
     # GROUP 1 shims — backwards-compat: old names call new tool with right mode
     @mcp.tool(name="geox_temporal_decline", annotations=_geox_annotations("geox_temporal_decline"))
-    async def _shim_temporal_decline(
-        production_data, forecast_years=5, threshold_bpd=250000.0, session_id=None, actor_id=None, trace_id=None
-    ):
+    async def _shim_temporal_decline(production_data, forecast_years=5, threshold_bpd=250000.0, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_temporal(mode=decline)]"""
-        return await _temporal_unified(
-            mode="decline",
-            production_data=production_data,
-            forecast_years=forecast_years,
-            threshold_bpd=threshold_bpd,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _temporal_unified(mode="decline", production_data=production_data, forecast_years=forecast_years, threshold_bpd=threshold_bpd, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_temporal_rrr", annotations=_geox_annotations("geox_temporal_rrr"))
     async def _shim_temporal_rrr(reserves_start, additions, production, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_temporal(mode=rrr)]"""
-        return await _temporal_unified(
-            mode="rrr",
-            reserves_start=reserves_start,
-            additions=additions,
-            production=production,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _temporal_unified(mode="rrr", reserves_start=reserves_start, additions=additions, production=production, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_temporal_basin_lifecycle", annotations=_geox_annotations("geox_temporal_basin_lifecycle"))
-    async def _shim_temporal_basin_lifecycle(
-        basin_name, peak_production, current_production, discovery_year, peak_year, session_id=None, actor_id=None, trace_id=None
-    ):
+    async def _shim_temporal_basin_lifecycle(basin_name, peak_production, current_production, discovery_year, peak_year, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_temporal(mode=basin_lifecycle)]"""
-        return await _temporal_unified(
-            mode="basin_lifecycle",
-            basin_name=basin_name,
-            peak_production=peak_production,
-            current_production=current_production,
-            discovery_year=discovery_year,
-            peak_year=peak_year,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _temporal_unified(mode="basin_lifecycle", basin_name=basin_name, peak_production=peak_production, current_production=current_production, discovery_year=discovery_year, peak_year=peak_year, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_temporal_cadence", annotations=_geox_annotations("geox_temporal_cadence"))
-    async def _shim_temporal_cadence(
-        blocks_offered, blocks_awarded, years_span, average_cycle_time_years, session_id=None, actor_id=None, trace_id=None
-    ):
+    async def _shim_temporal_cadence(blocks_offered, blocks_awarded, years_span, average_cycle_time_years, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_temporal(mode=cadence)]"""
-        return await _temporal_unified(
-            mode="cadence",
-            blocks_offered=blocks_offered,
-            blocks_awarded=blocks_awarded,
-            years_span=years_span,
-            average_cycle_time_years=average_cycle_time_years,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _temporal_unified(mode="cadence", blocks_offered=blocks_offered, blocks_awarded=blocks_awarded, years_span=years_span, average_cycle_time_years=average_cycle_time_years, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 2: geox_map — absorbs map_layers_list/scene_plan/render_preview ──
     @mcp.tool(
@@ -5809,113 +5737,30 @@ def register_tools_on(mcp):
         if mode == "layers_list":
             if bbox is None:
                 return {"error": "layers_list mode requires bbox parameter"}
-            return await _map_layers_list(
-                bbox=bbox,
-                theme=theme,
-                include_unavailable=include_unavailable,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
-            )
+            return await _map_layers_list(bbox=bbox, theme=theme, include_unavailable=include_unavailable, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         elif mode == "scene_plan":
             if bbox is None:
                 return {"error": "scene_plan mode requires bbox parameter"}
-            return await _map_scene_plan(
-                bbox=bbox,
-                layer_ids=layer_ids,
-                theme=theme,
-                map_purpose=map_purpose,
-                style_profile=style_profile,
-                crs=crs,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
-            )
+            return await _map_scene_plan(bbox=bbox, layer_ids=layer_ids, theme=theme, map_purpose=map_purpose, style_profile=style_profile, crs=crs, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         elif mode == "render_preview":
-            return await _map_render_preview(
-                scene_id=scene_id,
-                bbox=bbox,
-                layer_ids=layer_ids,
-                theme=theme,
-                width_px=width_px,
-                height_px=height_px,
-                style_profile=style_profile,
-                format=format,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
-            )
+            return await _map_render_preview(scene_id=scene_id, bbox=bbox, layer_ids=layer_ids, theme=theme, width_px=width_px, height_px=height_px, style_profile=style_profile, format=format, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         else:
             return {"error": f"Unknown mode: {mode}. Valid: layers_list, scene_plan, render_preview"}
 
     @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
     async def _shim_map_layers_list(bbox, theme=None, include_unavailable=False, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_map(mode=layers_list)]"""
-        return await _map_unified(
-            mode="layers_list",
-            bbox=bbox,
-            theme=theme,
-            include_unavailable=include_unavailable,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _map_unified(mode="layers_list", bbox=bbox, theme=theme, include_unavailable=include_unavailable, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_map_scene_plan", annotations=_geox_annotations("geox_map_scene_plan"))
-    async def _shim_map_scene_plan(
-        bbox,
-        layer_ids=None,
-        theme=None,
-        map_purpose="context",
-        style_profile="geox_regional_clean_v1",
-        crs="EPSG:4326",
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_map_scene_plan(bbox, layer_ids=None, theme=None, map_purpose="context", style_profile="geox_regional_clean_v1", crs="EPSG:4326", session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_map(mode=scene_plan)]"""
-        return await _map_unified(
-            mode="scene_plan",
-            bbox=bbox,
-            layer_ids=layer_ids,
-            theme=theme,
-            map_purpose=map_purpose,
-            style_profile=style_profile,
-            crs=crs,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _map_unified(mode="scene_plan", bbox=bbox, layer_ids=layer_ids, theme=theme, map_purpose=map_purpose, style_profile=style_profile, crs=crs, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_map_render_preview", annotations=_geox_annotations("geox_map_render_preview"))
-    async def _shim_map_render_preview(
-        scene_id=None,
-        bbox=None,
-        layer_ids=None,
-        theme=None,
-        width_px=1024,
-        height_px=768,
-        style_profile="geox_regional_clean_v1",
-        format="image/png",
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_map_render_preview(scene_id=None, bbox=None, layer_ids=None, theme=None, width_px=1024, height_px=768, style_profile="geox_regional_clean_v1", format="image/png", session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_map(mode=render_preview)]"""
-        return await _map_unified(
-            mode="render_preview",
-            scene_id=scene_id,
-            bbox=bbox,
-            layer_ids=layer_ids,
-            theme=theme,
-            width_px=width_px,
-            height_px=height_px,
-            style_profile=style_profile,
-            format=format,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _map_unified(mode="render_preview", scene_id=scene_id, bbox=bbox, layer_ids=layer_ids, theme=theme, width_px=width_px, height_px=height_px, style_profile=style_profile, format=format, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 3: geox_source — absorbs source_rock/diagenesis ──
     @mcp.tool(
@@ -5955,83 +5800,30 @@ def register_tools_on(mcp):
         """
         if mode == "source_rock":
             return await _source_rock(
-                mode="full",
-                toc_wt_pct=toc_wt_pct,
-                hydrogen_index=hydrogen_index,
-                oxygen_index=oxygen_index,
-                tmax_c=tmax_c,
-                kerogen_type=kerogen_type,
-                depth_m=depth_m,
-                resistivity_ohm_m=resistivity_ohm_m,
-                sonic_us_ft=sonic_us_ft,
-                density_gcc=density_gcc,
-                lom=lom,
-                baseline_resistivity=baseline_resistivity,
-                baseline_sonic=baseline_sonic,
+                mode="full", toc_wt_pct=toc_wt_pct, hydrogen_index=hydrogen_index,
+                oxygen_index=oxygen_index, tmax_c=tmax_c, kerogen_type=kerogen_type,
+                depth_m=depth_m, resistivity_ohm_m=resistivity_ohm_m,
+                sonic_us_ft=sonic_us_ft, density_gcc=density_gcc, lom=lom,
+                baseline_resistivity=baseline_resistivity, baseline_sonic=baseline_sonic,
             )
         elif mode == "diagenesis":
             return await _diagenesis(
-                mode="compaction",
-                depth_m=depth_m or 2000.0,
-                measured_porosity=measured_porosity,
-                lithology=lithology,
-                surface_porosity=surface_porosity,
-                compaction_coeff=compaction_coeff,
+                mode="compaction", depth_m=depth_m or 2000.0,
+                measured_porosity=measured_porosity, lithology=lithology,
+                surface_porosity=surface_porosity, compaction_coeff=compaction_coeff,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: source_rock, diagenesis"}
 
     @mcp.tool(name="geox_source_rock", annotations=_geox_annotations("geox_source_rock"))
-    async def _shim_source_rock(
-        mode="full",
-        toc_wt_pct=None,
-        hydrogen_index=None,
-        oxygen_index=None,
-        tmax_c=None,
-        kerogen_type="II",
-        depth_m=None,
-        resistivity_ohm_m=None,
-        sonic_us_ft=None,
-        density_gcc=None,
-        lom=7.0,
-        baseline_resistivity=2.0,
-        baseline_sonic=90.0,
-    ):
+    async def _shim_source_rock(mode="full", toc_wt_pct=None, hydrogen_index=None, oxygen_index=None, tmax_c=None, kerogen_type="II", depth_m=None, resistivity_ohm_m=None, sonic_us_ft=None, density_gcc=None, lom=7.0, baseline_resistivity=2.0, baseline_sonic=90.0):
         """[SHIM→geox_source(mode=source_rock)]"""
-        return await _source_unified(
-            mode="source_rock",
-            toc_wt_pct=toc_wt_pct,
-            hydrogen_index=hydrogen_index,
-            oxygen_index=oxygen_index,
-            tmax_c=tmax_c,
-            kerogen_type=kerogen_type,
-            depth_m=depth_m,
-            resistivity_ohm_m=resistivity_ohm_m,
-            sonic_us_ft=sonic_us_ft,
-            density_gcc=density_gcc,
-            lom=lom,
-            baseline_resistivity=baseline_resistivity,
-            baseline_sonic=baseline_sonic,
-        )
+        return await _source_unified(mode="source_rock", toc_wt_pct=toc_wt_pct, hydrogen_index=hydrogen_index, oxygen_index=oxygen_index, tmax_c=tmax_c, kerogen_type=kerogen_type, depth_m=depth_m, resistivity_ohm_m=resistivity_ohm_m, sonic_us_ft=sonic_us_ft, density_gcc=density_gcc, lom=lom, baseline_resistivity=baseline_resistivity, baseline_sonic=baseline_sonic)
 
     @mcp.tool(name="geox_diagenesis", annotations=_geox_annotations("geox_diagenesis"))
-    async def _shim_diagenesis(
-        mode="compaction",
-        depth_m=2000.0,
-        measured_porosity=None,
-        lithology="sandstone",
-        surface_porosity=0.45,
-        compaction_coeff=0.0004,
-    ):
+    async def _shim_diagenesis(mode="compaction", depth_m=2000.0, measured_porosity=None, lithology="sandstone", surface_porosity=0.45, compaction_coeff=0.0004):
         """[SHIM→geox_source(mode=diagenesis)]"""
-        return await _source_unified(
-            mode="diagenesis",
-            depth_m=depth_m,
-            measured_porosity=measured_porosity,
-            lithology=lithology,
-            surface_porosity=surface_porosity,
-            compaction_coeff=compaction_coeff,
-        )
+        return await _source_unified(mode="diagenesis", depth_m=depth_m, measured_porosity=measured_porosity, lithology=lithology, surface_porosity=surface_porosity, compaction_coeff=compaction_coeff)
 
     # ── GROUP 4: geox_spatial — absorbs h3_spatial_index/lancedb_embed_store/stac_discover ──
     @mcp.tool(
@@ -6082,150 +5874,43 @@ def register_tools_on(mcp):
         """
         if mode == "h3_index":
             return await _h3_spatial_index(
-                mode="latlng_to_cell",
-                lat=lat,
-                lng=lng,
-                resolution=resolution,
-                h3_cell=h3_cell,
-                points=points,
-                k=k,
-                polygon=polygon,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode="latlng_to_cell", lat=lat, lng=lng, resolution=resolution,
+                h3_cell=h3_cell, points=points, k=k, polygon=polygon,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "lancedb_store":
             return await _lancedb_embed_store(
-                mode="search",
-                table_name=table_name,
-                embeddings=embeddings,
-                metadata=metadata,
-                k=k,
-                refine_factor=refine_factor,
-                filter_expr=filter_expr,
-                h3_cell=h3_cell,
-                h3_radius=h3_radius,
-                create_if_missing=create_if_missing,
-                drop_table=drop_table,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode="search", table_name=table_name, embeddings=embeddings,
+                metadata=metadata, k=k, refine_factor=refine_factor,
+                filter_expr=filter_expr, h3_cell=h3_cell, h3_radius=h3_radius,
+                create_if_missing=create_if_missing, drop_table=drop_table,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "stac_discover":
             return await _stac_discover(
-                mode="search",
-                catalog=catalog,
-                bbox=bbox,
-                datetime_range=datetime_range,
-                collections=collections,
-                max_items=max_items,
-                item_id=item_id,
-                collection_id=collection_id,
-                query_bands=query_bands,
-                limit=limit,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode="search", catalog=catalog, bbox=bbox,
+                datetime_range=datetime_range, collections=collections,
+                max_items=max_items, item_id=item_id, collection_id=collection_id,
+                query_bands=query_bands, limit=limit,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: h3_index, lancedb_store, stac_discover"}
 
     @mcp.tool(name="geox_h3_spatial_index", annotations=_geox_annotations("geox_h3_spatial_index"))
-    async def _shim_h3_spatial_index(
-        mode="latlng_to_cell",
-        lat=None,
-        lng=None,
-        resolution=7,
-        h3_cell=None,
-        points=None,
-        k=1,
-        polygon=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_h3_spatial_index(mode="latlng_to_cell", lat=None, lng=None, resolution=7, h3_cell=None, points=None, k=1, polygon=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_spatial(mode=h3_index)]"""
-        return await _spatial_unified(
-            mode="h3_index",
-            lat=lat,
-            lng=lng,
-            resolution=resolution,
-            h3_cell=h3_cell,
-            points=points,
-            k=k,
-            polygon=polygon,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _spatial_unified(mode="h3_index", lat=lat, lng=lng, resolution=resolution, h3_cell=h3_cell, points=points, k=k, polygon=polygon, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_lancedb_embed_store", annotations=_geox_annotations("geox_lancedb_embed_store"))
-    async def _shim_lancedb_embed_store(
-        mode="search",
-        table_name="geo_embeddings",
-        embeddings=None,
-        metadata=None,
-        k=10,
-        refine_factor=None,
-        filter_expr=None,
-        h3_cell=None,
-        h3_radius=1,
-        create_if_missing=True,
-        drop_table=False,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_lancedb_embed_store(mode="search", table_name="geo_embeddings", embeddings=None, metadata=None, k=10, refine_factor=None, filter_expr=None, h3_cell=None, h3_radius=1, create_if_missing=True, drop_table=False, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_spatial(mode=lancedb_store)]"""
-        return await _spatial_unified(
-            mode="lancedb_store",
-            table_name=table_name,
-            embeddings=embeddings,
-            metadata=metadata,
-            k=k,
-            refine_factor=refine_factor,
-            filter_expr=filter_expr,
-            h3_cell=h3_cell,
-            h3_radius=h3_radius,
-            create_if_missing=create_if_missing,
-            drop_table=drop_table,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _spatial_unified(mode="lancedb_store", table_name=table_name, embeddings=embeddings, metadata=metadata, k=k, refine_factor=refine_factor, filter_expr=filter_expr, h3_cell=h3_cell, h3_radius=h3_radius, create_if_missing=create_if_missing, drop_table=drop_table, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_stac_discover", annotations=_geox_annotations("geox_stac_discover"))
-    async def _shim_stac_discover(
-        mode="search",
-        catalog="earthsearch",
-        bbox=None,
-        datetime_range=None,
-        collections=None,
-        max_items=20,
-        item_id=None,
-        collection_id=None,
-        query_bands=None,
-        limit=1,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_stac_discover(mode="search", catalog="earthsearch", bbox=None, datetime_range=None, collections=None, max_items=20, item_id=None, collection_id=None, query_bands=None, limit=1, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_spatial(mode=stac_discover)]"""
-        return await _spatial_unified(
-            mode="stac_discover",
-            catalog=catalog,
-            bbox=bbox,
-            datetime_range=datetime_range,
-            collections=collections,
-            max_items=max_items,
-            item_id=item_id,
-            collection_id=collection_id,
-            query_bands=query_bands,
-            limit=limit,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _spatial_unified(mode="stac_discover", catalog=catalog, bbox=bbox, datetime_range=datetime_range, collections=collections, max_items=max_items, item_id=item_id, collection_id=collection_id, query_bands=query_bands, limit=limit, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 5: geox_deep_time — absorbs dde_reason ──
     @mcp.tool(
@@ -6256,55 +5941,18 @@ def register_tools_on(mcp):
         """
         if mode == "dde_reason":
             return await _dde_reason(
-                mode="query_stratigraphy",
-                bbox=bbox,
-                lat=lat,
-                lng=lng,
-                formation=formation,
-                known_units=known_units,
-                ontology_term=ontology_term,
-                section_params=section_params,
-                delta_age_ma=delta_age_ma,
-                limit=limit,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode="query_stratigraphy", bbox=bbox, lat=lat, lng=lng,
+                formation=formation, known_units=known_units, ontology_term=ontology_term,
+                section_params=section_params, delta_age_ma=delta_age_ma, limit=limit,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: dde_reason"}
 
     @mcp.tool(name="geox_dde_reason", annotations=_geox_annotations("geox_dde_reason"))
-    async def _shim_dde_reason(
-        mode="query_stratigraphy",
-        bbox=None,
-        lat=None,
-        lng=None,
-        formation=None,
-        known_units=None,
-        ontology_term=None,
-        section_params=None,
-        delta_age_ma=None,
-        limit=10,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_dde_reason(mode="query_stratigraphy", bbox=None, lat=None, lng=None, formation=None, known_units=None, ontology_term=None, section_params=None, delta_age_ma=None, limit=10, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_deep_time(mode=dde_reason)]"""
-        return await _deep_time_unified(
-            mode="dde_reason",
-            bbox=bbox,
-            lat=lat,
-            lng=lng,
-            formation=formation,
-            known_units=known_units,
-            ontology_term=ontology_term,
-            section_params=section_params,
-            delta_age_ma=delta_age_ma,
-            limit=limit,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _deep_time_unified(mode="dde_reason", bbox=bbox, lat=lat, lng=lng, formation=formation, known_units=known_units, ontology_term=ontology_term, section_params=section_params, delta_age_ma=delta_age_ma, limit=limit, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 6: geox_claim — absorbs evidence/evidence_synthesize/falsify/contradiction_scan ──
     @mcp.tool(
@@ -6378,222 +6026,70 @@ def register_tools_on(mcp):
         """
         if mode in ("create", "validate", "challenge", "seal", "attach"):
             return await _claim(
-                mode=mode,
-                claim_id=claim_id,
-                claim_text=claim_text,
-                claim_type=claim_type,
-                truth_class=truth_class,
-                evidence_ids=evidence_ids,
-                uncertainty_p10=uncertainty_p10,
-                uncertainty_p50=uncertainty_p50,
-                uncertainty_p90=uncertainty_p90,
+                mode=mode, claim_id=claim_id, claim_text=claim_text,
+                claim_type=claim_type, truth_class=truth_class,
+                evidence_ids=evidence_ids, uncertainty_p10=uncertainty_p10,
+                uncertainty_p50=uncertainty_p50, uncertainty_p90=uncertainty_p90,
                 uncertainty_distribution=uncertainty_distribution,
-                alternatives=alternatives,
-                provenance=provenance,
-                authority=authority,
+                alternatives=alternatives, provenance=provenance, authority=authority,
                 challenge_text=challenge_text,
                 alternative_claim_text=alternative_claim_text,
                 alternative_evidence_ids=alternative_evidence_ids,
                 challenge_evidence_ids=challenge_evidence_ids,
                 alternative_uncertainty=alternative_uncertainty,
                 challenger_provenance=challenger_provenance,
-                ack_irreversible=ack_irreversible,
-                seal_verdict=seal_verdict,
-                voxel_state=voxel_state,
-                evidence_id=evidence_id,
-                evidence_type=evidence_type,
-                epistemic_label=epistemic_label,
-                forbidden_uses=forbidden_uses,
-                source_citation=source_citation,
+                ack_irreversible=ack_irreversible, seal_verdict=seal_verdict,
+                voxel_state=voxel_state, evidence_id=evidence_id,
+                evidence_type=evidence_type, epistemic_label=epistemic_label,
+                forbidden_uses=forbidden_uses, source_citation=source_citation,
                 category=category,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "falsify":
             return await _falsify(
-                claim_text=claim_text,
-                claim_type=claim_type,
-                mode="full",
-                context=context,
-                evidence=evidence,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                claim_text=claim_text, claim_type=claim_type, mode="full",
+                context=context, evidence=evidence,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode in ("discover", "synthesize", "abduct", "contradict", "spatial_block", "ingest_literature"):
             return await _evidence(
-                mode=mode,
-                evidence_id=evidence_id,
-                evidence_type=evidence_type,
-                claim_id=claim_id,
-                claim_text=claim_text,
-                query=query,
-                scope=scope,
-                file_path=file_path,
-                basin_name=basin_name,
-                evidence_refs=evidence_refs,
-                hypotheses=hypotheses,
-                epistemic_label=epistemic_label,
-                forbidden_uses=forbidden_uses,
-                source_citation=source_citation,
-                category=category,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode=mode, evidence_id=evidence_id, evidence_type=evidence_type,
+                claim_id=claim_id, claim_text=claim_text, query=query, scope=scope,
+                file_path=file_path, basin_name=basin_name,
+                evidence_refs=evidence_refs, hypotheses=hypotheses,
+                epistemic_label=epistemic_label, forbidden_uses=forbidden_uses,
+                source_citation=source_citation, category=category,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "scan":
             return await _contradiction_scan(
-                claim_text=claim_text,
-                claim_type=claim_type,
-                mode="full",
-                context=context,
-                evidence=evidence,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                claim_text=claim_text, claim_type=claim_type, mode="full",
+                context=context, evidence=evidence,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
-            return {
-                "error": f"Unknown mode: {mode}. Valid: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan, spatial_block, ingest_literature"
-            }
+            return {"error": f"Unknown mode: {mode}. Valid: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan, spatial_block, ingest_literature"}
 
     # GROUP 6 shims
     @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
-    async def _shim_falsify(
-        claim_text="",
-        claim_type="general",
-        mode="full",
-        context=None,
-        evidence=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_falsify(claim_text="", claim_type="general", mode="full", context=None, evidence=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_claim(mode=falsify)]"""
-        return await _claim_unified(
-            mode="falsify",
-            claim_text=claim_text,
-            claim_type=claim_type,
-            context=context,
-            evidence=evidence,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _claim_unified(mode="falsify", claim_text=claim_text, claim_type=claim_type, context=context, evidence=evidence, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_evidence_synthesize", annotations=_geox_annotations("geox_evidence_synthesize"))
-    async def _shim_evidence_synthesize(
-        mode="synthesize",
-        query="",
-        scope="all",
-        permission_level="authorized",
-        file_path="",
-        basin_name=None,
-        evidence_refs=None,
-        hypotheses=None,
-        scale="parasequence",
-        depo_context="unknown",
-        claim_strictness="screen",
-        reasoning_mode="default",
-        samples=None,
-        block_size_km=5.0,
-        n_folds=5,
-        target_key="value",
-        feature_keys=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_evidence_synthesize(mode="synthesize", query="", scope="all", permission_level="authorized", file_path="", basin_name=None, evidence_refs=None, hypotheses=None, scale="parasequence", depo_context="unknown", claim_strictness="screen", reasoning_mode="default", samples=None, block_size_km=5.0, n_folds=5, target_key="value", feature_keys=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_claim(mode=synthesize)]"""
-        return await _claim_unified(
-            mode="synthesize",
-            query=query,
-            scope=scope,
-            permission_level=permission_level,
-            file_path=file_path,
-            basin_name=basin_name,
-            evidence_refs=evidence_refs,
-            hypotheses=hypotheses,
-            scale=scale,
-            depo_context=depo_context,
-            claim_strictness=claim_strictness,
-            reasoning_mode=reasoning_mode,
-            samples=samples,
-            block_size_km=block_size_km,
-            n_folds=n_folds,
-            target_key=target_key,
-            feature_keys=feature_keys,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _claim_unified(mode="synthesize", query=query, scope=scope, permission_level=permission_level, file_path=file_path, basin_name=basin_name, evidence_refs=evidence_refs, hypotheses=hypotheses, scale=scale, depo_context=depo_context, claim_strictness=claim_strictness, reasoning_mode=reasoning_mode, samples=samples, block_size_km=block_size_km, n_folds=n_folds, target_key=target_key, feature_keys=feature_keys, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
-    async def _shim_contradiction_scan(
-        claim_text="",
-        claim_type="general",
-        mode="full",
-        context=None,
-        evidence=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_contradiction_scan(claim_text="", claim_type="general", mode="full", context=None, evidence=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_claim(mode=scan)]"""
-        return await _claim_unified(
-            mode="scan",
-            claim_text=claim_text,
-            claim_type=claim_type,
-            context=context,
-            evidence=evidence,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _claim_unified(mode="scan", claim_text=claim_text, claim_type=claim_type, context=context, evidence=evidence, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
-    async def _shim_evidence(
-        mode="synthesize",
-        evidence_id="",
-        evidence_type="supporting",
-        claim_id="",
-        claim_text="",
-        query="",
-        scope="all",
-        file_path="",
-        basin_name=None,
-        evidence_refs=None,
-        hypotheses=None,
-        epistemic_label=None,
-        forbidden_uses=None,
-        source_citation=None,
-        category=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_evidence(mode="synthesize", evidence_id="", evidence_type="supporting", claim_id="", claim_text="", query="", scope="all", file_path="", basin_name=None, evidence_refs=None, hypotheses=None, epistemic_label=None, forbidden_uses=None, source_citation=None, category=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_claim(mode=evidence)]"""
-        return await _claim_unified(
-            mode=mode,
-            evidence_id=evidence_id,
-            evidence_type=evidence_type,
-            claim_id=claim_id,
-            claim_text=claim_text,
-            query=query,
-            scope=scope,
-            file_path=file_path,
-            basin_name=basin_name,
-            evidence_refs=evidence_refs,
-            hypotheses=hypotheses,
-            epistemic_label=epistemic_label,
-            forbidden_uses=forbidden_uses,
-            source_citation=source_citation,
-            category=category,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _claim_unified(mode=mode, evidence_id=evidence_id, evidence_type=evidence_type, claim_id=claim_id, claim_text=claim_text, query=query, scope=scope, file_path=file_path, basin_name=basin_name, evidence_refs=evidence_refs, hypotheses=hypotheses, epistemic_label=epistemic_label, forbidden_uses=forbidden_uses, source_citation=source_citation, category=category, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 7: geox_model — absorbs subsurface_model/geological_model_generate/gempy_implicit_3d ──
     @mcp.tool(
@@ -6642,23 +6138,14 @@ def register_tools_on(mcp):
         """
         if mode == "subsurface":
             return await _subsurface_model(
-                mode="joint_inversion",
-                survey_type=survey_type,
-                easting_m=easting_m,
-                northing_m=northing_m,
-                prisms=prisms,
+                mode="joint_inversion", survey_type=survey_type,
+                easting_m=easting_m, northing_m=northing_m, prisms=prisms,
                 magnetization_a_m=magnetization_a_m,
                 field_declination_deg=field_declination_deg,
-                field_inclination_deg=field_inclination_deg,
-                layers=layers,
-                frequencies_hz=frequencies_hz,
-                observations=observations,
-                prior=prior,
-                max_iter=max_iter,
-                tolerance=tolerance,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                field_inclination_deg=field_inclination_deg, layers=layers,
+                frequencies_hz=frequencies_hz, observations=observations,
+                prior=prior, max_iter=max_iter, tolerance=tolerance,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "geological_generate":
             if geological_params is not None:
@@ -6666,109 +6153,34 @@ def register_tools_on(mcp):
             else:
                 params = _GeologicalModelParams()
             return await _geological_model_generate(
-                params=params,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                params=params, session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "gempy_3d":
             return await _gempy_implicit_3d(
-                surface_points=surface_points,
-                orientations=orientations,
-                grid_resolution=grid_resolution,
-                model_extent=model_extent,
+                surface_points=surface_points, orientations=orientations,
+                grid_resolution=grid_resolution, model_extent=model_extent,
                 compute_uncertainty=compute_uncertainty,
                 uncertainty_realizations=uncertainty_realizations,
-                fault_groups=fault_groups,
-                output_format=output_format,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                fault_groups=fault_groups, output_format=output_format,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: subsurface, geological_generate, gempy_3d"}
 
     @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
-    async def _shim_subsurface_model(
-        mode="joint_inversion",
-        survey_type="gravity",
-        easting_m=None,
-        northing_m=None,
-        prisms=None,
-        magnetization_a_m=0.0,
-        field_declination_deg=0.0,
-        field_inclination_deg=0.0,
-        layers=None,
-        frequencies_hz=None,
-        observations=None,
-        prior=None,
-        max_iter=50,
-        tolerance=0.001,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_subsurface_model(mode="joint_inversion", survey_type="gravity", easting_m=None, northing_m=None, prisms=None, magnetization_a_m=0.0, field_declination_deg=0.0, field_inclination_deg=0.0, layers=None, frequencies_hz=None, observations=None, prior=None, max_iter=50, tolerance=0.001, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_model(mode=subsurface)]"""
-        return await _model_unified(
-            mode="subsurface",
-            survey_type=survey_type,
-            easting_m=easting_m,
-            northing_m=northing_m,
-            prisms=prisms,
-            magnetization_a_m=magnetization_a_m,
-            field_declination_deg=field_declination_deg,
-            field_inclination_deg=field_inclination_deg,
-            layers=layers,
-            frequencies_hz=frequencies_hz,
-            observations=observations,
-            prior=prior,
-            max_iter=max_iter,
-            tolerance=tolerance,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _model_unified(mode="subsurface", survey_type=survey_type, easting_m=easting_m, northing_m=northing_m, prisms=prisms, magnetization_a_m=magnetization_a_m, field_declination_deg=field_declination_deg, field_inclination_deg=field_inclination_deg, layers=layers, frequencies_hz=frequencies_hz, observations=observations, prior=prior, max_iter=max_iter, tolerance=tolerance, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_geological_model_generate", annotations=_geox_annotations("geox_geological_model_generate"))
     async def _shim_geological_model_generate(geological_params=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_model(mode=geological_generate)]"""
-        return await _model_unified(
-            mode="geological_generate",
-            geological_params=geological_params,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _model_unified(mode="geological_generate", geological_params=geological_params, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_gempy_implicit_3d", annotations=_geox_annotations("geox_gempy_implicit_3d"))
-    async def _shim_gempy_implicit_3d(
-        surface_points=None,
-        orientations=None,
-        grid_resolution=None,
-        model_extent=None,
-        compute_uncertainty=True,
-        uncertainty_realizations=10,
-        fault_groups=None,
-        output_format="json",
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_gempy_implicit_3d(surface_points=None, orientations=None, grid_resolution=None, model_extent=None, compute_uncertainty=True, uncertainty_realizations=10, fault_groups=None, output_format="json", session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_model(mode=gempy_3d)]"""
-        return await _model_unified(
-            mode="gempy_3d",
-            surface_points=surface_points,
-            orientations=orientations,
-            grid_resolution=grid_resolution,
-            model_extent=model_extent,
-            compute_uncertainty=compute_uncertainty,
-            uncertainty_realizations=uncertainty_realizations,
-            fault_groups=fault_groups,
-            output_format=output_format,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _model_unified(mode="gempy_3d", surface_points=surface_points, orientations=orientations, grid_resolution=grid_resolution, model_extent=model_extent, compute_uncertainty=compute_uncertainty, uncertainty_realizations=uncertainty_realizations, fault_groups=fault_groups, output_format=output_format, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 8: geox_well — absorbs well_view/well_desk ──
     @mcp.tool(
@@ -6802,194 +6214,52 @@ def register_tools_on(mcp):
         """
         if mode == "view":
             return await _well_view(
-                well_id=well_id,
-                source_uri=source_uri,
-                max_samples=max_samples,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                well_id=well_id, source_uri=source_uri, max_samples=max_samples,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         elif mode == "desk":
             return await _well_desk(
-                mode="open",
-                well_id=well_id,
-                depth_top=depth_top,
-                depth_base=depth_base,
-                curves=curves,
-                las_path=las_path,
-                interpret=interpret,
-                rw=rw,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode="open", well_id=well_id, depth_top=depth_top,
+                depth_base=depth_base, curves=curves, las_path=las_path,
+                interpret=interpret, rw=rw,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
         else:
             return await _well_desk(
-                mode=mode,
-                well_id=well_id,
-                depth_top=depth_top,
-                depth_base=depth_base,
-                curves=curves,
-                las_path=las_path,
-                interpret=interpret,
-                rw=rw,
-                session_id=session_id,
-                actor_id=actor_id,
-                trace_id=trace_id,
+                mode=mode, well_id=well_id, depth_top=depth_top,
+                depth_base=depth_base, curves=curves, las_path=las_path,
+                interpret=interpret, rw=rw,
+                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
             )
 
     @mcp.tool(name="geox_well_view", annotations=_geox_annotations("geox_well_view"))
     async def _shim_well_view(well_id=None, source_uri=None, session_id=None, actor_id=None, trace_id=None, max_samples=2000):
         """[SHIM→geox_well(mode=view)]"""
-        return await _well_unified(
-            mode="view",
-            well_id=well_id,
-            source_uri=source_uri,
-            max_samples=max_samples,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _well_unified(mode="view", well_id=well_id, source_uri=source_uri, max_samples=max_samples, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
-    async def _shim_well_desk(
-        mode="open",
-        well_id="",
-        depth_top=None,
-        depth_base=None,
-        curves=None,
-        las_path=None,
-        interpret=True,
-        rw=0.03,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_well_desk(mode="open", well_id="", depth_top=None, depth_base=None, curves=None, las_path=None, interpret=True, rw=0.03, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_well(mode=desk)]"""
-        return await _well_unified(
-            mode=mode,
-            well_id=well_id,
-            depth_top=depth_top,
-            depth_base=depth_base,
-            curves=curves,
-            las_path=las_path,
-            interpret=interpret,
-            rw=rw,
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        return await _well_unified(mode=mode, well_id=well_id, depth_top=depth_top, depth_base=depth_base, curves=curves, las_path=las_path, interpret=interpret, rw=rw, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     # ── GROUP 9: geox_petrophysics absorbs sequence/lem_predict ──
     # (geox_petrophysics already exists with mode parameter — shims only)
     @mcp.tool(name="geox_sequence", annotations=_geox_annotations("geox_sequence"))
-    async def _shim_sequence(
-        workflow="single_well",
-        source=None,
-        zone_top=None,
-        zone_base=None,
-        depo_env_code="FLUVIAL",
-        bin_size_m=10.0,
-        min_package_thickness_m=20.0,
-        p50_shift_api=15.0,
-        gr_cutoff_api=75.0,
-        detail_level="full",
-        project_yaml=None,
-        output_dir=None,
-        section_ref=None,
-        well_refs=None,
-        mode="correlation",
-        well_las_paths=None,
-        tops=None,
-        zone_definitions=None,
-        strat_standard=None,
-        paleoenvironment_input=None,
-        checkshot_ref=None,
-        wavelet_mode="ricker",
-        wavelet_freq_hz=None,
-        phase_degrees=0.0,
-        polarity="SEG_NORMAL",
-        synthetics_output=False,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_sequence(workflow="single_well", source=None, zone_top=None, zone_base=None, depo_env_code="FLUVIAL", bin_size_m=10.0, min_package_thickness_m=20.0, p50_shift_api=15.0, gr_cutoff_api=75.0, detail_level="full", project_yaml=None, output_dir=None, section_ref=None, well_refs=None, mode="correlation", well_las_paths=None, tops=None, zone_definitions=None, strat_standard=None, paleoenvironment_input=None, checkshot_ref=None, wavelet_mode="ricker", wavelet_freq_hz=None, phase_degrees=0.0, polarity="SEG_NORMAL", synthetics_output=False, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_petrophysics] Sequence stratigraphy wrapper."""
         from geox_mcp.tools.sequence_unified import geox_sequence as _impl
-
-        args = _safe_forward(
-            _impl,
-            {
-                "workflow": workflow,
-                "source": source,
-                "zone_top": zone_top,
-                "zone_base": zone_base,
-                "depo_env_code": depo_env_code,
-                "bin_size_m": bin_size_m,
-                "min_package_thickness_m": min_package_thickness_m,
-                "p50_shift_api": p50_shift_api,
-                "gr_cutoff_api": gr_cutoff_api,
-                "detail_level": detail_level,
-                "project_yaml": project_yaml,
-                "output_dir": output_dir,
-                "section_ref": section_ref,
-                "well_refs": well_refs,
-                "mode": mode,
-                "well_las_paths": well_las_paths,
-                "tops": tops,
-                "zone_definitions": zone_definitions,
-                "strat_standard": strat_standard,
-                "paleoenvironment_input": paleoenvironment_input,
-                "checkshot_ref": checkshot_ref,
-                "wavelet_mode": wavelet_mode,
-                "wavelet_freq_hz": wavelet_freq_hz,
-                "phase_degrees": phase_degrees,
-                "polarity": polarity,
-                "synthetics_output": synthetics_output,
-            },
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        args = _safe_forward(_impl, {"workflow": workflow, "source": source, "zone_top": zone_top, "zone_base": zone_base, "depo_env_code": depo_env_code, "bin_size_m": bin_size_m, "min_package_thickness_m": min_package_thickness_m, "p50_shift_api": p50_shift_api, "gr_cutoff_api": gr_cutoff_api, "detail_level": detail_level, "project_yaml": project_yaml, "output_dir": output_dir, "section_ref": section_ref, "well_refs": well_refs, "mode": mode, "well_las_paths": well_las_paths, "tops": tops, "zone_definitions": zone_definitions, "strat_standard": strat_standard, "paleoenvironment_input": paleoenvironment_input, "checkshot_ref": checkshot_ref, "wavelet_mode": wavelet_mode, "wavelet_freq_hz": wavelet_freq_hz, "phase_degrees": phase_degrees, "polarity": polarity, "synthetics_output": synthetics_output}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
     @mcp.tool(name="geox_lem_predict", annotations=_geox_annotations("geox_lem_predict"))
-    async def _shim_lem_predict(
-        target_depth_m=None,
-        basin_context=None,
-        cube_inline=None,
-        lmr_inline=None,
-        use_synth_cube=True,
-        candidate_ref=None,
-        domain=None,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_lem_predict(target_depth_m=None, basin_context=None, cube_inline=None, lmr_inline=None, use_synth_cube=True, candidate_ref=None, domain=None, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_petrophysics] Litho-Elastic prediction wrapper."""
         from geox_mcp.tools.lem_predict import LEMPredictRequest, geox_lem_predict as _impl
-
-        req = LEMPredictRequest(
-            well_id=candidate_ref or "lem-synthetic",
-            curves={"GR": [75.0], "RT": [5.0], "RHOB": [2.35]},
-            depth_m=[target_depth_m] if target_depth_m else [1500.0],
-            depth_top_m=target_depth_m,
-            depth_bot_m=target_depth_m,
-            basin=basin_context,
-            session_id=session_id,
-            actor_id=actor_id,
-        )
+        req = LEMPredictRequest(well_id=candidate_ref or "lem-synthetic", curves={"GR": [75.0], "RT": [5.0], "RHOB": [2.35]}, depth_m=[target_depth_m] if target_depth_m else [1500.0], depth_top_m=target_depth_m, depth_bot_m=target_depth_m, basin=basin_context, session_id=session_id, actor_id=actor_id)
         result = await _impl(req)
         payload = result if isinstance(result, dict) else result.model_dump(mode="json")
         from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
-
-        return wrap_as_ui_tool_result(
-            payload,
-            app_id="well_desk",
-            params={"mode": "lem", "depth_m": target_depth_m},
-            structured_override=compact_structured_for_ui(payload, tool="geox_lem_predict", app_id="well_desk"),
-            text=(f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. UI: ui://geox/well-desk."),
-        )
+        return wrap_as_ui_tool_result(payload, app_id="well_desk", params={"mode": "lem", "depth_m": target_depth_m}, structured_override=compact_structured_for_ui(payload, tool="geox_lem_predict", app_id="well_desk"), text=(f"LEM predict depth={target_depth_m} basin={basin_context or 'n/a'}. UI: ui://geox/well-desk."))
 
     # ── GROUP 10: geox_seismic_interpret absorbs visual_understand ──
     # (geox_seismic_interpret already exists with mode parameter — shim only)
@@ -6998,17 +6268,10 @@ def register_tools_on(mcp):
         """[SHIM→geox_seismic_interpret] OBS_IMAGE perception assist."""
         from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
         from geox_mcp.tools.seismic_vision_ai_async import geox_visual_understand_async as _impl
-
         result = await _impl(image_path=image_path or "", mode=mode or "full")
         is_hold = isinstance(result, dict) and (result.get("status") in ("HOLD", "VOID") or result.get("ok") is False)
-        text = (
-            f"Visual understand HOLD: {result.get('error') or result.get('reason') or 'no backend'}"
-            if is_hold
-            else "Visual understand complete (OBS_IMAGE only). UI: ui://geox/visual-hub."
-        )
-        return wrap_as_ui_tool_result(
-            result, app_id="visual_hub", structured_override=result if isinstance(result, dict) else {"data": result}, text=text
-        )
+        text = (f"Visual understand HOLD: {result.get('error') or result.get('reason') or 'no backend'}" if is_hold else "Visual understand complete (OBS_IMAGE only). UI: ui://geox/visual-hub.")
+        return wrap_as_ui_tool_result(result, app_id="visual_hub", structured_override=result if isinstance(result, dict) else {"data": result}, text=text)
 
     # ── GROUP 11: geox_seismic_compute absorbs avo_forward ──
     @mcp.tool(
@@ -7044,125 +6307,32 @@ def register_tools_on(mcp):
         """
         if mode == "avo_forward":
             return await _avo_forward(
-                mode="zoeppritz",
-                vp1=vp1,
-                vs1=vs1,
-                rho1=rho1,
-                vp2=vp2,
-                vs2=vs2,
-                rho2=rho2,
-                theta_deg=theta_deg,
-                theta_max=theta_max,
-                vp=vp,
-                vs=vs,
-                rho=rho,
-                fluid_zone=fluid_zone,
-                unit=unit,
+                mode="zoeppritz", vp1=vp1, vs1=vs1, rho1=rho1, vp2=vp2, vs2=vs2, rho2=rho2,
+                theta_deg=theta_deg, theta_max=theta_max, vp=vp, vs=vs, rho=rho,
+                fluid_zone=fluid_zone, unit=unit,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: avo_forward"}
 
     @mcp.tool(name="geox_avo_forward", annotations=_geox_annotations("geox_avo_forward"))
-    async def _shim_avo_forward(
-        mode="zoeppritz",
-        vp1=3.0,
-        vs1=1.5,
-        rho1=2.3,
-        vp2=2.5,
-        vs2=1.2,
-        rho2=2.1,
-        theta_deg=None,
-        theta_max=30.0,
-        vp=3.0,
-        vs=1.5,
-        rho=2.3,
-        fluid_zone="brine",
-        unit="m/s",
-    ):
+    async def _shim_avo_forward(mode="zoeppritz", vp1=3.0, vs1=1.5, rho1=2.3, vp2=2.5, vs2=1.2, rho2=2.1, theta_deg=None, theta_max=30.0, vp=3.0, vs=1.5, rho=2.3, fluid_zone="brine", unit="m/s"):
         """[SHIM→geox_seismic_compute(mode=avo_forward)]"""
-        return await _seismic_compute_unified(
-            mode="avo_forward",
-            vp1=vp1,
-            vs1=vs1,
-            rho1=rho1,
-            vp2=vp2,
-            vs2=vs2,
-            rho2=rho2,
-            theta_deg=theta_deg,
-            theta_max=theta_max,
-            vp=vp,
-            vs=vs,
-            rho=rho,
-            fluid_zone=fluid_zone,
-            unit=unit,
-        )
+        return await _seismic_compute_unified(mode="avo_forward", vp1=vp1, vs1=vs1, rho1=rho1, vp2=vp2, vs2=vs2, rho2=rho2, theta_deg=theta_deg, theta_max=theta_max, vp=vp, vs=vs, rho=rho, fluid_zone=fluid_zone, unit=unit)
 
     # ── GROUP 12: geox_basin absorbs basin_backstrip/thermal_maturity_history ──
     # (geox_basin already exists with mode parameter — shims only)
     @mcp.tool(name="geox_basin_backstrip", annotations=_geox_annotations("geox_basin_backstrip"))
-    async def _shim_basin_backstrip(
-        well_ref,
-        stratigraphic_ages,
-        lithology_model,
-        palaeobathymetry_model,
-        sea_level_model_ref="",
-        water_density_kg_m3=1030.0,
-        mantle_density_kg_m3=3300.0,
-        uncertainty_realizations=1000,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_basin_backstrip(well_ref, stratigraphic_ages, lithology_model, palaeobathymetry_model, sea_level_model_ref="", water_density_kg_m3=1030.0, mantle_density_kg_m3=3300.0, uncertainty_realizations=1000, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_basin] 1D basin backstripping."""
         from geox_mcp.tools.basin_engines.backstrip_tool import geox_basin_backstrip as _impl
-
-        args = _safe_forward(
-            _impl,
-            {
-                "well_ref": well_ref,
-                "stratigraphic_ages": stratigraphic_ages,
-                "lithology_model": lithology_model,
-                "palaeobathymetry_model": palaeobathymetry_model,
-                "sea_level_model_ref": sea_level_model_ref,
-                "water_density_kg_m3": water_density_kg_m3,
-                "mantle_density_kg_m3": mantle_density_kg_m3,
-                "uncertainty_realizations": uncertainty_realizations,
-            },
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        args = _safe_forward(_impl, {"well_ref": well_ref, "stratigraphic_ages": stratigraphic_ages, "lithology_model": lithology_model, "palaeobathymetry_model": palaeobathymetry_model, "sea_level_model_ref": sea_level_model_ref, "water_density_kg_m3": water_density_kg_m3, "mantle_density_kg_m3": mantle_density_kg_m3, "uncertainty_realizations": uncertainty_realizations}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
     @mcp.tool(name="geox_thermal_maturity_history", annotations=_geox_annotations("geox_thermal_maturity_history"))
-    async def _shim_thermal_maturity_history(
-        well_ref,
-        burial_history,
-        heat_flow_history=None,
-        surface_temp_c=20.0,
-        geothermal_gradient_c_km=30.0,
-        time_step_myr=1.0,
-        session_id=None,
-        actor_id=None,
-        trace_id=None,
-    ):
+    async def _shim_thermal_maturity_history(well_ref, burial_history, heat_flow_history=None, surface_temp_c=20.0, geothermal_gradient_c_km=30.0, time_step_myr=1.0, session_id=None, actor_id=None, trace_id=None):
         """[SHIM→geox_basin] Burial + heat flow + maturity modelling."""
         from geox_mcp.tools.basin_engines.thermal_tool import geox_thermal_maturity_history as _impl
-
-        args = _safe_forward(
-            _impl,
-            {
-                "well_ref": well_ref,
-                "burial_history": burial_history,
-                "heat_flow_history": heat_flow_history,
-                "surface_temp_c": surface_temp_c,
-                "geothermal_gradient_c_km": geothermal_gradient_c_km,
-                "time_step_myr": time_step_myr,
-            },
-            session_id=session_id,
-            actor_id=actor_id,
-            trace_id=trace_id,
-        )
+        args = _safe_forward(_impl, {"well_ref": well_ref, "burial_history": burial_history, "heat_flow_history": heat_flow_history, "surface_temp_c": surface_temp_c, "geothermal_gradient_c_km": geothermal_gradient_c_km, "time_step_myr": time_step_myr}, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
         return await _impl(**args)
 
     # ── GROUP 13: geox_workspace absorbs surface_status ──
@@ -7173,6 +6343,7 @@ def register_tools_on(mcp):
         return await geox_workspace(mode=mode, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
 
     logger.info("ZEN CONSOLIDATION: merged tools + shims registered")
+
 
     # ═══════════════════════════════════════════════════════════════════════════════
     # H1 P1.1: Evidence-Chain Enforcement — wraps every tool handler with

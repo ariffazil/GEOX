@@ -71,7 +71,6 @@ class TestPlateReconstruction:
     def test_offline_velocities(self):
         f = GPlatesFetcher()
         from geox_core.io.gplates_fetcher import PlateVelocityRequest
-
         r = f.velocity(PlateVelocityRequest(latitude=4.0, longitude=112.0, age_ma=50))
         assert r.ok is True
         assert r.velocity_cm_yr > 0
@@ -217,7 +216,6 @@ class TestEarthSurface2MCPTools:
     @pytest.mark.asyncio
     async def test_heatflow(self):
         from geox_mcp.tools.earth_surface_2 import geox_heatflow_query, HeatFlowRequest
-
         r = await geox_heatflow_query(HeatFlowRequest())
         assert r["ok"] is True
         assert r["tool"] == "geox_heatflow_query"
@@ -225,93 +223,78 @@ class TestEarthSurface2MCPTools:
     @pytest.mark.asyncio
     async def test_stress(self):
         from geox_mcp.tools.earth_surface_2 import geox_stress_query, StressRequest
-
         r = await geox_stress_query(StressRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_plate_reconstruct(self):
         from geox_mcp.tools.earth_surface_2 import geox_plate_reconstruct, PlateReconstructRequest
-
         r = await geox_plate_reconstruct(PlateReconstructRequest(latitude=4, longitude=112, age_ma=50))
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_geochem(self):
         from geox_mcp.tools.earth_surface_2 import geox_geochem_query, GeochemRequest
-
         r = await geox_geochem_query(GeochemRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_uk_petroleum(self):
         from geox_mcp.tools.earth_surface_2 import geox_uk_petroleum_query, UKPetroleumRequest
-
         r = await geox_uk_petroleum_query(UKPetroleumRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_ocean(self):
         from geox_mcp.tools.earth_surface_2 import geox_ocean_query, OceanRequest
-
         r = await geox_ocean_query(OceanRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_erddap(self):
         from geox_mcp.tools.earth_surface_2 import geox_erddap_query, ERDDAPRequest
-
         r = await geox_erddap_query(ERDDAPRequest(dataset_id="test"))
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_geology_map(self):
         from geox_mcp.tools.earth_surface_2 import geox_geology_map_query, GeologyMapRequest
-
         r = await geox_geology_map_query(GeologyMapRequest(minlatitude=4, maxlatitude=5, minlongitude=112, maxlongitude=113))
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_paleomag(self):
         from geox_mcp.tools.earth_surface_2 import geox_paleomag_query, PaleomagRequest
-
         r = await geox_paleomag_query(PaleomagRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_grace(self):
         from geox_mcp.tools.earth_surface_2 import geox_gravity_change_query, GraceRequest
-
         r = await geox_gravity_change_query(GraceRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_climate(self):
         from geox_mcp.tools.earth_surface_2 import geox_climate_reanalysis, ClimateReanalysisRequest
-
         r = await geox_climate_reanalysis(ClimateReanalysisRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_hydrology(self):
         from geox_mcp.tools.earth_surface_2 import geox_hydrology_query, HydrologyRequest
-
         r = await geox_hydrology_query(HydrologyRequest())
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_satellite(self):
         from geox_mcp.tools.earth_surface_2 import geox_satellite_catalog, SatelliteCatalogRequest
-
-        r = await geox_satellite_catalog(
-            SatelliteCatalogRequest(minlatitude=4, maxlatitude=5, minlongitude=112, maxlongitude=113)
-        )
+        r = await geox_satellite_catalog(SatelliteCatalogRequest(minlatitude=4, maxlatitude=5, minlongitude=112, maxlongitude=113))
         assert r["ok"] is True
 
     @pytest.mark.asyncio
     async def test_space_weather(self):
         from geox_mcp.tools.earth_surface_2 import geox_space_weather, SpaceWeatherRequest
-
         r = await geox_space_weather(SpaceWeatherRequest())
         assert r["ok"] is True
 
@@ -325,19 +308,16 @@ class TestEarthSurface2MCPTools:
 # tests/test_canonical_public_surface.py.
 @pytest.mark.skipif(
     True,  # Phase 3 deferred
-    reason="Phase 3 deferred: 33-tool Earth Dimensions expansion requires 888_HOLD. See geox/AGENTS.md.",
+    reason="Phase 3 deferred: 33-tool Earth Dimensions expansion requires 888_HOLD. "
+           "See geox/AGENTS.md.",
 )
 class TestCanonicalRegistry33:
     def test_33_canonical_tools(self):
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
-
-        expected = len(CANONICAL_PUBLIC_TOOLS)
-        assert expected > 0
-        assert len(CANONICAL_PUBLIC_TOOLS) == expected
+        assert len(CANONICAL_PUBLIC_TOOLS) == 33
 
     def test_extended_dimensions_present(self):
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
-
         assert "geox_heatflow_query" in CANONICAL_PUBLIC_TOOLS
         assert "geox_stress_query" in CANONICAL_PUBLIC_TOOLS
         assert "geox_plate_reconstruct" in CANONICAL_PUBLIC_TOOLS
