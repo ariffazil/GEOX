@@ -2,8 +2,8 @@ organ: GEOX
 version: 2026.08.18
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 21
-regenerated: '2026-08-18T07:41:08.200912+00:00'
+public_count: 19
+regenerated: '2026-08-18T07:20:36.505195+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 tools:
 - name: geox_basin
@@ -59,17 +59,6 @@ tools:
   access: public
   description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic
     impedance, stress polygon.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_las_curve_inventory
-  domain: earth.well
-  axis: reason
-  lane: evidence
-  access: public
-  description: Inspect a LAS file and return its curve inventory without loading full
-    curves.
   annotations:
     read_only: true
     destructive: false
@@ -194,16 +183,6 @@ tools:
   access: public
   description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
     desk.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_well_correlation_panel
-  domain: earth.well
-  axis: reason
-  lane: evidence
-  access: public
-  description: Generate a multi-well log correlation panel PNG from LAS files.
   annotations:
     read_only: true
     destructive: false

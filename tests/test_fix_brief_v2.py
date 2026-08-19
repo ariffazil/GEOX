@@ -11,21 +11,20 @@ import pytest
 
 
 def test_p0_surface_attestation_public_32():
-    """Surface attestation public count must match registry — no hardcoded drift."""
-    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+    """MASTER FORGE W8: do not reduce surface this repair — 32 public tools."""
     from geox_mcp.surface_manifest import load_surface_manifest, public_tool_names, surface_attestation
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
     att = surface_attestation()
-    expected = len(CANONICAL_PUBLIC_TOOLS)
     assert att["ok"] is True
-    assert att["public_count"] == expected
-    assert att["public_count_target"] == expected
-    assert len(names) == expected
+    assert att["public_count"] == 32
+    assert att["public_count_target"] == 32
+    assert len(names) == 32
     assert "geox_seismic_interpret" in names
     assert "geox_claim" in names
     assert "geox_workspace" in names
+    assert "geox_falsify" in names
 
 
 def test_p1_anonymous_geometry_rejected():
@@ -118,14 +117,7 @@ async def test_p1_p2_sticks_reach_gates_and_cutoffs():
     assert "F1_south" in senses and "F2_north" in senses
     # K-DIP alone must not be the only kill path for polarity
     if r["gates"]["K-DIP"]["status"] == "KILL":
-        assert (
-            any(
-                f.get("status") == "KILL"
-                for f in (r["gates"]["K-DIP"].get("findings") or [])
-                if f.get("reason", "").find("strict") >= 0
-            )
-            or True
-        )
+        assert any(f.get("status") == "KILL" for f in (r["gates"]["K-DIP"].get("findings") or []) if f.get("reason", "").find("strict") >= 0) or True
 
 
 @pytest.mark.asyncio
