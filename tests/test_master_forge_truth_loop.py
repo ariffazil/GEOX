@@ -116,21 +116,15 @@ async def test_t3_ve_only_no_true_subsurface_dip_kill_from_kdip_alone():
     assert r["gates"]["K-DIP"]["status"] in ("PASS", "WARN", "UNMEASURED", "KILL")
     if r["gates"]["K-DIP"]["status"] == "KILL":
         # only allowed under strict_andersonian
-        assert (
-            r.get("strict_andersonian")
-            or any("strict" in str(f.get("reason", "")).lower() for f in (r["gates"]["K-DIP"].get("findings") or []))
-            or True
-        )  # filter demotion preferred
+        assert r.get("strict_andersonian") or any(
+            "strict" in str(f.get("reason", "")).lower() for f in (r["gates"]["K-DIP"].get("findings") or [])
+        ) or True  # filter demotion preferred
     # Without strike/azimuth true dip claim remains limited
     findings = r["gates"]["K-DIP"].get("findings") or []
     for f in findings:
         meta = f.get("dip_meta") or {}
         # image or ve_corrected is ok; must not invent strike-corrected true without azimuth
-        assert (
-            meta.get("domain")
-            in (None, "image", "ve_corrected", "calibrated_image", "depth_from_td", "image_uncalibrated", "subsurface")
-            or True
-        )
+        assert meta.get("domain") in (None, "image", "ve_corrected", "calibrated_image", "depth_from_td", "image_uncalibrated", "subsurface") or True
 
 
 # ── T4 checkshot begins measured gates ──────────────────────────────────────
@@ -177,7 +171,11 @@ async def test_t4_checkshot_enables_measured_gates():
         },
         emit_bundle=False,
     )
-    measured = sum(1 for g in r["gates"].values() if isinstance(g, dict) and (g.get("status") in ("PASS", "WARN", "KILL")))
+    measured = sum(
+        1
+        for g in r["gates"].values()
+        if isinstance(g, dict) and (g.get("status") in ("PASS", "WARN", "KILL"))
+    )
     assert measured >= 3
     # still cannot claim four-way
     assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
@@ -214,7 +212,9 @@ async def test_t5_impossible_fault_rejected():
     assert r["combined_gate_verdict"] == "KILL"
     assert len(r["kills"]) >= 1
     # hypothesis aggregation
-    matrix_status = r.get("hypothesis_status") or ("REJECTED" if r["kills"] else "UNTESTED")
+    matrix_status = r.get("hypothesis_status") or (
+        "REJECTED" if r["kills"] else "UNTESTED"
+    )
     assert matrix_status == "REJECTED" or r["combined_gate_verdict"] == "KILL"
 
 
@@ -276,15 +276,13 @@ async def test_t6_independent_witnesses_no_averaging():
 
 
 def test_t9_surface_truth_32():
-    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
     from geox_mcp.surface_manifest import load_surface_manifest, public_tool_names
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
-    expected = len(CANONICAL_PUBLIC_TOOLS)
-    assert len(names) == expected
+    assert len(names) == 32
     snap = json.loads(Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json").read_text())
-    assert snap["public_count"] == expected
+    assert snap["public_count"] == 32
     assert set(snap["public_tools"]) == set(names)
     # ZEN_15 archived
     zen = Path("/root/GEOX/docs/ZEN_15_SURFACE.md").read_text()
@@ -371,5 +369,5 @@ def test_w9_session_identity_fields_distinct():
 
 def test_w9_session_expired_structured():
     src = Path("/root/arifOS/arifosmcp/runtime/session_auth.py").read_text()
-    assert "SESSION_EXPIRED" in src
+    assert 'SESSION_EXPIRED' in src
     assert "Call arif_init and replay" in src

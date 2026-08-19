@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (21 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (19 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
 
@@ -9,22 +9,20 @@
 3. **geox_contrast_metabolize**: Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS seals.
 4. **geox_deep_time**: Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.
 5. **geox_geomechanics**: Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.
-6. **geox_las_curve_inventory**: Inspect a LAS file and return its curve inventory without loading full curves.
-7. **geox_map**: Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.
-8. **geox_model**: Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.
-9. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
-10. **geox_prospect**: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
-11. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
-12. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
-13. **geox_seismic_interpret**: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
-14. **geox_source**: Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.
-15. **geox_spatial**: Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.
-16. **geox_temporal**: Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.
-17. **geox_well**: Well intelligence: view curves, open desk, desurvey. Modes: view, desk.
-18. **geox_well_correlation_panel**: Generate a multi-well log correlation panel PNG from LAS files.
-19. **geox_well_ingest**: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
-20. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
-21. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
+6. **geox_map**: Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.
+7. **geox_model**: Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.
+8. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
+9. **geox_prospect**: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
+10. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
+11. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
+12. **geox_seismic_interpret**: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
+13. **geox_source**: Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.
+14. **geox_spatial**: Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.
+15. **geox_temporal**: Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.
+16. **geox_well**: Well intelligence: view curves, open desk, desurvey. Modes: view, desk.
+17. **geox_well_ingest**: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
+18. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
+19. **geox_workspace**: GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.
 
 ## 2. Agent Reasoning Logic
 - Evidence before interpretation.
