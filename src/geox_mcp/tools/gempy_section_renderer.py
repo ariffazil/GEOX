@@ -117,7 +117,11 @@ def render_gempy_section(
         return {"ok": False, "error": f"section_axis must be x or y, got {section_axis}"}
 
     if section_index is None:
-        section_index = (nx if section_axis == "y" else ny) // 2
+        # Default: middle of the sliced axis
+        if section_axis == "y":
+            section_index = ny // 2
+        else:
+            section_index = nx // 2  # when slicing x, index is over nx
 
     if section_axis == "y":
         section = lithology_block[:, section_index, :]
