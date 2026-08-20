@@ -161,73 +161,68 @@ async def geox_gempy_implicit_3d(
         if not formations:
             formations = ["Layer_1", "Layer_2", "Basement"]
 
-        # ── Build structural frame ──────────────────────────────────────
-        structural_frame = gp.data.StructuralFrame.initialize_default_structure()
+        # ── Build model via ImporterHelper CSV path (GemPy 2026.x) ──────
+        # Verified working path on gempy 2026.0.3: write picks to temp CSVs,
+        # construct ImporterHelper, create + compute. Manual StructuralFrame
+        # construction is NOT supported by the current API (elements_df and
+        # constructor-only StructuralElement paths were removed/changed).
+        import pandas as pd
 
-        # Add elements for each formation
-        for fm in formations:
-            if fm not in structural_frame.elements_df["element_name"].values:
-                # Add as a fault group if specified
-                if fm in fault_groups:
-                    _element = gp.data.StructuralElement(
-                        name=fm,
-                        color="red",
-                        is_fault=True,
-                    )
-                else:
-                    _element = gp.data.StructuralElement(
-                        name=fm,
-                        color=np.random.rand(3),
-                        is_fault=False,
-                    )
-                structural_frame.elements_df = structural_frame.elements_df._append(
-                    {"element_name": fm, "is_fault": fm in fault_groups}, ignore_index=True
-                )
-
-        # ── Create GeoModel ─────────────────────────────────────────────
         model_id = uuid.uuid4().hex[:8]
+
+        sp_df = pd.DataFrame(surface_points).rename(
+            columns={"formation": "formation"}
+        )
+        sp_df.to_csv(TMP_OUT / f"gempy_sp_{model_id}.csv", index=False)
+
+        ori_records = []
+        for o in orientations:
+            dx, dy, dz = _dip_to_pole_vector(
+                o.get("dip", 2.0), o.get("azimuth", 90.0)
+            )
+            ori_records.append({
+                "X": o["x"], "Y": o["y"], "Z": o["z"],
+                "dip": o.get("dip", 2.0), "azimuth": o.get("azimuth", 90.0),
+                "polarity": 1.0,
+                "G_x": dx, "G_y": dy, "G_z": dz,
+                "formation": o.get("formation", formations[0]),
+            })
+        ori_df = pd.DataFrame(ori_records)
+        ori_df.to_csv(TMP_OUT / f"gempy_ori_{model_id}.csv", index=False)
+
+        helper = gp.data.ImporterHelper(
+            path_to_surface_points=str(TMP_OUT / f"gempy_sp_{model_id}.csv"),
+            path_to_orientations=str(TMP_OUT / f"gempy_ori_{model_id}.csv"),
+        )
+
         geo_model = gp.create_geomodel(
             project_name=f"gempy_lem_{model_id}",
             extent=[xmin, xmax, ymin, ymax, zmin, zmax],
             resolution=[nx, ny, nz],
-            structural_frame=structural_frame,
+            importer_helper=helper,
         )
-
-        # ── Add surface points ──────────────────────────────────────────
-        for pt in surface_points:
-            fm = pt.get("formation", formations[0])
-            gp.add_surface_points(
-                geo_model=geo_model,
-                x=[pt["x"]],
-                y=[pt["y"]],
-                z=[pt["z"]],
-                elements_names=[fm],
-            )
-
-        # ── Add orientations ────────────────────────────────────────────
-        for orient in orientations:
-            fm = orient.get("formation", formations[0])
-            dip = orient.get("dip", 45.0)
-            az = orient.get("azimuth", 0.0)
-            dx, dy, dz = _dip_to_pole_vector(dip, az)
-            gp.add_orientations(
-                geo_model=geo_model,
-                x=[orient["x"]],
-                y=[orient["y"]],
-                z=[orient["z"]],
-                elements_names=[fm],
-                pole_vector=[[dx, dy, dz]],
-            )
 
         # ── Compute model ───────────────────────────────────────────────
-        geo_model = gp.compute_model(
+        # gempy 2026.x: compute_model returns the Solutions object directly.
+        solutions = gp.compute_model(
             gempy_model=geo_model,
-            engine_config=gp.data.GemPyEngineConfig(backend=gp.data.AvailableBackends.numpy),
+            engine_config=gp.data.GemPyEngineConfig(
+                backend=gp.data.AvailableBackends.numpy
+            ),
         )
-
-        # ── Extract results ─────────────────────────────────────────────
-        solutions = geo_model.solutions
         lith_block = solutions.raw_arrays.lith_block
+        # gempy 2026.x octree outputs may deliver lith_block flattened (1-D).
+        # Reshape to the requested regular grid when sizes match so section
+        # slicing works.
+        if getattr(lith_block, "ndim", 1) == 1:
+            _expected = int(np.prod([nx, ny, nz]))
+            if int(lith_block.size) == _expected:
+                lith_block = lith_block.reshape(nx, ny, nz)
+            else:
+                logger.warning(
+                    f"lith_block size {lith_block.size} != grid {_expected}; "
+                    "section rendering will be skipped"
+                )
         scalar_fields = {}
 
         # Extract scalar potential fields per formation
@@ -325,6 +320,7 @@ async def geox_gempy_implicit_3d(
             "n_orientations": len(orientations),
             "lithology_block_shape": list(lith_block.shape),
             "lithology_unique": _safe_np_conversion(np.unique(lith_block).tolist()),
+            "lithology_block": _safe_np_conversion(lith_block),
             "volume_stats": {
                 "n_voxels": int(np.prod(lith_block.shape)),
                 "non_zero_voxels": int(np.count_nonzero(lith_block)),
