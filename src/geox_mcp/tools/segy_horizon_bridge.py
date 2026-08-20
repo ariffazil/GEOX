@@ -210,6 +210,32 @@ async def geox_segy_horizon_bridge(
             ),
         }
 
+    # Auto-derive extent from picks if not provided, so the GemPy compute
+    # has a z-range that actually contains the input surface points.
+    # Without this, the federation tool's auto-extent treats zmin=0,
+    # zmax = max(z)+500 — which fails for elevation-mode picks (negative z).
+    if model_extent is None:
+        xs = [p["x"] for p in picks]
+        ys = [p["y"] for p in picks]
+        zs = [p["z"] for p in picks]
+        # Detect convention: positive z values = depth, negative = elevation
+        max_z = max(zs); min_z = min(zs)
+        if max_z > 0:
+            # depth_positive_down — picks are positive; convert to elevation
+            # and build extent covering [min elev - margin, max elev + margin]
+            elev_min = -max_z - 1000
+            elev_max = -min_z + 1000
+            if elev_min > elev_max: elev_min, elev_max = elev_max, elev_min
+        else:
+            elev_min = min_z - 1000
+            elev_max = max_z + 1000
+        margin = max(100.0, (max(xs) - min(xs)) * 0.2)
+        model_extent = [
+            min(xs) - margin, max(xs) + margin,
+            min(ys) - margin, max(ys) + margin,
+            elev_min, elev_max,
+        ]
+
     surface_points, orientations = picks_to_gempy_inputs(
         picks, z_convention=z_convention,
         dip_hint_deg=dip_hint_deg, azimuth_hint_deg=azimuth_hint_deg,

@@ -217,16 +217,20 @@ def render_gempy_section(
                     break
         sg_yy, sg_xx = np.where(section == sang_id)
         if len(sg_yy) > 5:
+            sg_yy = np.clip(sg_yy, 0, len(z_arr) - 1)
+            sg_xx = np.clip(sg_xx, 0, len(x_arr) - 1)
             sang_x_world = float(np.mean(x_arr[sg_xx])) / 1000
             sang_z_world = float(np.mean(z_arr[sg_yy])) / 1000
-            ax.scatter(sang_x_world, sang_z_world, s=350, c="#3fb950", edgecolors="white",
-                       linewidths=2, marker="*", zorder=20)
-            ax.annotate("SANGOMAR FIELD\n~560 MMbo (2C)",
-                        (sang_x_world, sang_z_world),
-                        xytext=(sang_x_world - 25, sang_z_world + 1.0), fontsize=9,
-                        color="#3fb950", fontweight="bold",
-                        bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#3fb950", alpha=0.95),
-                        arrowprops=dict(arrowstyle="->", color="#3fb950", lw=1.5))
+            if (z_arr.min() / 1000 - 0.5 <= sang_z_world <= z_arr.max() / 1000 + 0.5 and
+                    x_arr.min() / 1000 <= sang_x_world <= x_arr.max() / 1000):
+                ax.scatter(sang_x_world, sang_z_world, s=350, c="#3fb950", edgecolors="white",
+                           linewidths=2, marker="*", zorder=20)
+                ax.annotate("SANGOMAR FIELD\n~560 MMbo (2C)",
+                            (sang_x_world, sang_z_world),
+                            xytext=(sang_x_world - 25, sang_z_world + 1.0), fontsize=9,
+                            color="#3fb950", fontweight="bold",
+                            bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#3fb950", alpha=0.95),
+                            arrowprops=dict(arrowstyle="->", color="#3fb950", lw=1.5))
 
     # True SCALE watermark
     ax.text(0.5, 0.02, "TRUE SCALE 1:1 · Lithology IDs from implicit-field cokriging (Mallet 1992)",
