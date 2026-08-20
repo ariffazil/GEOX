@@ -172,22 +172,26 @@ def render_gempy_section(
     ax.set_xticks(np.linspace(x_arr.min() / 1000, x_arr.max() / 1000, 6))
     ax.set_yticks(np.linspace(z_arr.min() / 1000, z_arr.max() / 1000, 6))
 
-    # Formation labels (centroids)
+    # Formation labels (centroids in screen space)
     for lid in range(1, n_lith):
         if formations and lid - 1 < len(formations):
             name = formations[lid - 1]
         else:
             name = f"ID{lid}"
+        # Section shape: (nx, nz) — index 0 = nx-axis (x_arr), index 1 = z-axis (z_arr)
         yy, xx = np.where(section == lid)
         if len(yy) > 20:
             yy = np.clip(yy, 0, len(z_arr) - 1)
             xx = np.clip(xx, 0, len(x_arr) - 1)
             cy = float(np.mean(z_arr[yy])) / 1000  # km
             cx = float(np.mean(x_arr[xx])) / 1000  # km
-            color_short = layer_color_map.get(lid, "#3d4a52")
-            ax.text(cx, cy, name, fontsize=9, color=color_short, fontweight="bold",
-                    ha="center", va="center",
-                    bbox=dict(boxstyle="round,pad=0.25", fc="#161b22", ec=color_short, alpha=0.92))
+            # Avoid labeling layer if its centroid is outside plot extent
+            if (z_arr.min() / 1000 - 0.5 <= cy <= z_arr.max() / 1000 + 0.5 and
+                    x_arr.min() / 1000 <= cx <= x_arr.max() / 1000):
+                color_short = layer_color_map.get(lid, "#3d4a52")
+                ax.text(cx, cy, name, fontsize=9, color=color_short, fontweight="bold",
+                        ha="center", va="center",
+                        bbox=dict(boxstyle="round,pad=0.25", fc="#161b22", ec=color_short, alpha=0.92))
 
     # Domain labels (Senegal Basin context)
     x_max = x_arr.max() / 1000
