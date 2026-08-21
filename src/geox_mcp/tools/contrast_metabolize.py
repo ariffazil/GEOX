@@ -414,9 +414,10 @@ async def geox_contrast_metabolize(
     )
     receipt_hash = hashlib.sha256(receipt_data.encode()).hexdigest()[:16]
 
-    return {
+    result = {
         "ok": True,
         "tool": "geox_contrast_metabolize",
+        "mode": mode,
         "substrate_class": SUBSTRATE_CLASS,
         "authority_ceiling": AUTHORITY_CEILING,
         "local_verdict": "QUALIFIED_CANDIDATE",
@@ -445,3 +446,16 @@ async def geox_contrast_metabolize(
             "conformant": True,
         },
     }
+
+    # ── Auto-mint flywheel (2026-08-21): gate-pass → DRAFT claim → earth_memory ──
+    # DRAFT only — arifOS seals. Fail-open: never breaks this tool. GEOX_AUTO_MINT=0 kills.
+    try:
+        from geox_mcp.services.auto_mint import mint_from_gate_pass
+
+        mint = await mint_from_gate_pass("geox_contrast_metabolize", result, session_id=session_id, actor_id=actor_id)
+        if mint:
+            result["_auto_mint"] = mint
+    except Exception as exc:  # noqa: BLE001 — flywheel must never break the tool
+        logger.warning(f"auto-mint wiring failed (fail-open): {exc}")
+
+    return result
