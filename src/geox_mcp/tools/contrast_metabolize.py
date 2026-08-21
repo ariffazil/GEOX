@@ -340,6 +340,7 @@ async def geox_contrast_metabolize(
     stages: list[str] | None = None,
     session_id: str | None = None,
     actor_id: str | None = None,
+    **kwargs: Any,  # swallow gateway-injected params (session_token etc.) — repo convention
 ) -> dict[str, Any]:
     """Unified anomalous contrast metabolic pipeline.
 
