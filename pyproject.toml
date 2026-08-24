@@ -62,7 +62,7 @@ dependencies = [
     # geox_data_qc_bundle(qc_mode='feature_info')
     "scikit-learn>=1.9.0",
     # welly requires pkg_resources from older setuptools (setuptools 70+ removed it)
-    "setuptools<70",
+    "setuptools<85",
     "pyproj>=3.7.2",
     # ─── P1 CRITICAL: Seismic (2026-06-25 FORGE batch embed) ─────────────────
     # ObsPy — adapter exists in engines/seismic/obspy_adapter.py
