@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-07-16 (zen consolidation)
+# Regenerated: 2026-08-18T07:20:36.505195+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: "2026.07.16"
+schema_version: 2026.08.18
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,110 +17,131 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-
-canonical_tool_count: 15
-contract_epoch: "2026-07-16-GEOX-15TOOLS-ZEN"
+canonical_tool_count: 19
+contract_epoch: 2026-08-18-GEOX-19TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
-
 tools:
-  # ── WELL DOMAIN ──────────────────────────────────────────────────────────────
-  geox_well_ingest:
-    category: earth.well
-    lane: evidence
-    risk_tier: readonly
-    description: LAS, SEG-Y, DST, deviation, tops ingest
-
-  geox_petrophysics:
-    category: earth.petrophysics
-    lane: reasoning
-    risk_tier: readonly
-    description: Vsh, porosity, Sw, perm, net pay, LEM, QC
-
-  # ── SEISMIC DOMAIN ───────────────────────────────────────────────────────────
-  geox_seismic_ingest:
-    category: earth.seismic
-    lane: evidence
-    risk_tier: readonly
-    description: SEG-Y I/O, header inspection, export
-
-  geox_seismic_compute:
-    category: earth.seismic
-    lane: reasoning
-    risk_tier: readonly
-    description: Synthetic, well-tie, attribute, inversion, AVO
-
-  geox_seismic_interpret:
-    category: earth.seismic
-    lane: reasoning
-    risk_tier: readonly
-    description: Horizon/fault picking, RSI pipeline, vision, contrast
-
-  # ── MODEL DOMAIN ─────────────────────────────────────────────────────────────
-  geox_subsurface_model:
-    category: earth.model
-    lane: reasoning
-    risk_tier: c1
-    description: Joint inversion, gravity/magnetic forward, MT forward
-
-  # ── BASIN DOMAIN ─────────────────────────────────────────────────────────────
   geox_basin:
     category: earth.basin
     lane: reasoning
     risk_tier: readonly
-    description: Profile, resolve, macrostrat, backstrip, mass balance, thermal
-
-  geox_sequence:
-    category: earth.stratigraphy
+    description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
+      mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+  geox_claim:
+    category: earth.governance
     lane: reasoning
     risk_tier: readonly
-    description: Sequence analysis, biostratigraphic parsing and falsification
-
-  # ── GEOMECHANICS ─────────────────────────────────────────────────────────────
+    description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
+      synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
+      discover, synthesize, abduct, contradict, scan.'
+  geox_contrast_metabolize:
+    category: earth.seismic
+    lane: reasoning
+    risk_tier: readonly
+    description: 'Unified anomalous contrast metabolic pipeline. Binds three stages
+      into one call: ISOLATE (deterministic acoustic impedance contrast detection)
+      then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic
+      trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS
+      seals.'
+  geox_deep_time:
+    category: earth.time
+    lane: compute
+    risk_tier: readonly
+    description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes:
+      dde_reason.'
   geox_geomechanics:
     category: earth.structure
     lane: reasoning
     risk_tier: readonly
-    description: Bulk/shear/young modulus, poisson ratio, AI, stress polygon
-
-  # ── DEEP TIME ────────────────────────────────────────────────────────────────
-  geox_deep_time_state:
-    category: earth.time
-    lane: evidence
+    description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio,
+      acoustic impedance, stress polygon.'
+  geox_map:
+    category: earth.spatial
+    lane: compute
     risk_tier: readonly
-    description: GPTS, CO2, sea level, temperature, paleogeography
-
-  # ── GOVERNANCE ───────────────────────────────────────────────────────────────
-  geox_claim:
-    category: governance
-    lane: judgment
-    risk_tier: c2
-    description: "Claim lifecycle: create, validate, challenge, seal, evidence"
-
+    description: 'Map intelligence: layer discovery, scene composition, preview. Modes:
+      layers_list, scene_plan, render_preview.'
+  geox_model:
+    category: earth.model
+    lane: compute
+    risk_tier: readonly
+    description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
+      3D. Modes: subsurface, geological_generate, gempy_3d.'
+  geox_petrophysics:
+    category: earth.petrophysics
+    lane: reasoning
+    risk_tier: readonly
+    description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay,
+      LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.'
   geox_prospect:
     category: earth.prospect
     lane: judgment
-    risk_tier: c1
-    description: Volumetrics, POS, EVOI, risk assessment
-
-  # ── GEOPHYSICS ───────────────────────────────────────────────────────────────
-  geox_gravmag_studio:
-    category: earth.geophysics
+    risk_tier: readonly
+    description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
+      screen, evaluate.'
+  geox_seismic_compute:
+    category: earth.seismic
     lane: reasoning
     risk_tier: readonly
-    description: Gravity/magnetic forward modeling and screening
-
-  # ── WELL DESK ────────────────────────────────────────────────────────────────
-  geox_well_desk:
+    description: 'Seismic computation: forward model, well tie, attributes, wavelet
+      extraction, inversion.'
+  geox_seismic_ingest:
+    category: earth.seismic
+    lane: evidence
+    risk_tier: readonly
+    description: SEG-Y I/O, header inspection, export.
+  geox_seismic_interpret:
+    category: earth.seismic
+    lane: reasoning
+    risk_tier: readonly
+    description: 'One semantic capability — propose geometry, physics-gate, compare
+      hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks,
+      volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3
+      hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return
+      PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from
+      GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.'
+  geox_source:
+    category: earth.source
+    lane: compute
+    risk_tier: readonly
+    description: 'Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes:
+      source_rock, diagenesis.'
+  geox_spatial:
+    category: earth.spatial
+    lane: compute
+    risk_tier: readonly
+    description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
+      stac_discover.'
+  geox_temporal:
+    category: earth.temporal
+    lane: compute
+    risk_tier: readonly
+    description: 'Temporal analytics: decline curve, RRR, basin lifecycle, cadence.
+      Modes: decline, rrr, basin_lifecycle, cadence.'
+  geox_well:
+    category: earth.well
+    lane: reasoning
+    risk_tier: readonly
+    description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
+      desk.'
+  geox_well_ingest:
     category: earth.well
     lane: evidence
     risk_tier: readonly
-    description: Interactive view, publish rendered panel, render well panel
-
-  # ── META ─────────────────────────────────────────────────────────────────────
-  geox_surface_status:
-    category: earth.meta
-    lane: discovery
+    description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
+      Auto-detects format.
+  geox_well_qc:
+    category: earth.well
+    lane: evidence
     risk_tier: readonly
-    description: "Federation-standard registry probe: tool discovery and health"
+    description: 'Quality control for well data: depth monotonicity, null %, physical
+      range checks.'
+  geox_workspace:
+    category: earth.meta
+    lane: evidence
+    risk_tier: readonly
+    description: 'GEOX Workspace — persistent geological context across all tools.
+      Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence,
+      relations, reset.'
