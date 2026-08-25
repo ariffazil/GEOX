@@ -222,6 +222,27 @@ def enforce_authority(
         )
         return
 
+    # ── C3 FIX: check validated SCT context from middleware ──
+    # The SCT gate in geox_middleware validates the token and stores the
+    # authority in thread-local context before stripping the SCT from
+    # arguments. Use it here to avoid the kernel's downgraded validate path.
+    try:
+        from geox_mcp.geox_middleware import _validated_sct_context
+
+        _ctx_authority = getattr(_validated_sct_context, "authority", None)
+        _ctx_actor = getattr(_validated_sct_context, "actor", None)
+        if _ctx_authority and _authority_rank(_ctx_authority) >= _authority_rank(required):
+            logger.info(
+                "AUTH_OK (SCT_CONTEXT): tool=%s actor=%s authority=%s required=%s",
+                tool_name,
+                _ctx_actor or actor_id or "unknown",
+                _ctx_authority,
+                required,
+            )
+            return
+    except (ImportError, AttributeError):
+        pass
+
     # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
     # When the caller presents a session_token (SCT), prefer the SCT path
     # so we read the real `auth` claim from the signed payload instead
