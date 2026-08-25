@@ -102,3 +102,4 @@ data/atlas/cache/renders/
 __pycache__/
 uv.lock
 *.bak.*
+sessions/
