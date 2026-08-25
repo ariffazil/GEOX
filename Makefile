@@ -17,8 +17,15 @@ install:
 install-dev:
 	$(UV) sync --frozen
 
+# Default gate: fast suite. slow-marked tests (e.g. biharmonic 2048² inpaint,
+# >10 min compute) deselected — run explicitly via `make test-slow`.
+# Proven 2026-08-25: test_max_dim_exactly_2048_accepted hung the whole suite
+# at 24% identically on pre-merge main (72494c67) — pre-existing since 14939f70.
 test:
-	PYTHONPATH=src $(PYTHON) -m pytest tests/ -q --tb=short
+	PYTHONPATH=src $(PYTHON) -m pytest tests/ -q --tb=short -m "not slow"
+
+test-slow:
+	PYTHONPATH=src $(PYTHON) -m pytest tests/ -q --tb=short -m "slow"
 
 smoke:
 	PYTHONPATH=src $(PYTHON) scripts/smoke_test.py
