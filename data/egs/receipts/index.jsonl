@@ -150,3 +150,9 @@
 {"uri": "geox://well/TEST-WELL/mistie/432f53b1db47", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_432f53b1db47.json", "ts": "2026-08-25T04:02:45.728658+00:00"}
 {"uri": "geox://well/TEST-HOLD/mistie/3e183a329218", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_3e183a329218.json", "ts": "2026-08-25T04:02:45.729364+00:00"}
 {"uri": "geox://well/TEST-WAV/wavelet/e7e66ec5a8e8", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_e7e66ec5a8e8.json", "ts": "2026-08-25T04:02:45.732981+00:00"}
+{"uri": "geox://well/TEST-WELL/mistie/18e21f1283e3", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_18e21f1283e3.json", "ts": "2026-08-25T04:07:54.440350+00:00"}
+{"uri": "geox://well/TEST-HOLD/mistie/807e9e373c3e", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_807e9e373c3e.json", "ts": "2026-08-25T04:07:54.441600+00:00"}
+{"uri": "geox://well/TEST-WAV/wavelet/d7d7b81f3301", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_d7d7b81f3301.json", "ts": "2026-08-25T04:07:54.448399+00:00"}
+{"uri": "geox://well/TEST-WELL/mistie/b9aaed7f16a5", "path": "/root/geox/data/egs/receipts/TEST-WELL_mistie_b9aaed7f16a5.json", "ts": "2026-08-25T04:13:18.996157+00:00"}
+{"uri": "geox://well/TEST-HOLD/mistie/82f5f97eee68", "path": "/root/geox/data/egs/receipts/TEST-HOLD_mistie_82f5f97eee68.json", "ts": "2026-08-25T04:13:18.998955+00:00"}
+{"uri": "geox://well/TEST-WAV/wavelet/73bc0c6c39fc", "path": "/root/geox/data/egs/receipts/TEST-WAV_wavelet_73bc0c6c39fc.json", "ts": "2026-08-25T04:13:19.005503+00:00"}
