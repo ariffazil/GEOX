@@ -43,6 +43,11 @@ GEOX enforces explicit segregation between measurement and interpretation:
 | **INT** | Interpreted | Synthesized geological evaluation | Horizons, fault polygons, reservoir-seal-charge |
 | **SPEC** | Speculated | Unvalidated assumption | Migration pathways, fluid boundaries, compartmentalization |
 
+> **The Promotion Guard (2026-08-25):** GEOX never promotes INT or SPEC into OBS.
+> Epistemic labels only move *down* the chain (INT may be relabeled SPEC when doubt grows);
+> they never move *up*. This is the geological form of F1 TRUTH — once labels blur, every
+> downstream volumetric, POS estimate, and EMV inherits the blur.
+
 ---
 
 ## 🧪 Falsification-First Architecture — Inner Loop
