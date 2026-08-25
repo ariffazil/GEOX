@@ -30,10 +30,16 @@ from __future__ import annotations
 import json
 import logging
 import os
+import threading
 import time as _time
 import uuid
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
+
+# C3 FIX: thread-local context to carry validated SCT authority through
+# to the authority gate. The SCT gate validates the token, but strips it
+# from arguments before enforce_authority runs. This context bridges the gap.
+_validated_sct_context = threading.local()
 
 from fastmcp.exceptions import ToolError
 from fastmcp.server.middleware import Middleware
@@ -615,6 +621,34 @@ class GeoxGovernanceMiddleware(Middleware):
                     _sct_rej.get("error"),
                 )
                 raise ToolError(f"SCT_GATE: {_sct_rej.get('error')}: {_sct_rej.get('message')}")
+            # C3 FIX: capture validated SCT authority before stripping.
+            # The authority gate needs this because the SCT is stripped next.
+            if isinstance(arguments, dict):
+                _sct_token = (
+                    arguments.get("session_token")
+                    or arguments.get("sct")
+                    or arguments.get("arifos_sct")
+                )
+                if _sct_token and isinstance(_sct_token, str) and _sct_token.startswith("act_v1."):
+                    try:
+                        import base64 as _b64
+                        _payload_b64 = _sct_token.split(".", 1)[1]
+                        # Pad for base64 decode
+                        _payload_b64 += "=" * (-len(_payload_b64) % 4)
+                        _sct_payload = json.loads(_b64.urlsafe_b64decode(_payload_b64))
+                        _validated_sct_context.authority = _sct_payload.get("auth", "OBSERVE_ONLY")
+                        _validated_sct_context.actor = _sct_payload.get("actor", "")
+                        _validated_sct_context.session_id = _sct_payload.get("sid", "")
+                        logger.debug(
+                            "SCT_CONTEXT: stored authority=%s actor=%s for tool=%s",
+                            _validated_sct_context.authority,
+                            _validated_sct_context.actor,
+                            tool_name,
+                        )
+                    except Exception:
+                        _validated_sct_context.authority = None
+                else:
+                    _validated_sct_context.authority = None
             # Strip SCT transport fields so tool Pydantic schemas don't reject them
             if isinstance(arguments, dict):
                 for _sk in ("session_token", "sct", "arifos_sct"):
@@ -977,6 +1011,10 @@ class GeoxGovernanceMiddleware(Middleware):
                     )
                 except Exception:
                     pass
+            # C3 FIX: clear validated SCT context after tool call
+            _validated_sct_context.authority = None
+            _validated_sct_context.actor = None
+            _validated_sct_context.session_id = None
             GEOX_IDENTITY_CONTEXT.reset(identity_token)
 
     # ── HELPERS ────────────────────────────────────────────────────────────────
