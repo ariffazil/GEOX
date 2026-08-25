@@ -1,22 +1,25 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-last_verified: 2026-08-25T04:55:00Z
 federation_release: v2026.08.25
-live_commit: fcb0f184 (fix(gui): last stale arifosmcp link → mcp.arif-fazil.com/mcp door)
+last_verified: 2026-08-25T04:30:00Z
+live_commit: 6fa76d02 (fix(test): default gate deselects slow marker)
+tools_live: 19 (canonical, live-witnessed 2026-08-25 via :8081/health)
+apps_registered: 18
+authority_ceiling: 555_COMPUTE_ONLY
 truth_rule: live :8081/health + tools/list beat any static count in prose
-mcp_tools_live: 19 (live-witnessed 2026-08-25 via geox.arif-fazil.com/mcp tools/list)
-mcp_apps_registered: 18
 epistemic_standard: OBS / DER / INT / SPEC labels apply to this document itself
-symlink_alias: /root/geox (lowercase) → /root/GEOX (canonical, this file)
-infra_organs: arifFlow:7073 METABOLISM, FED:7074 ADVISORY, FLAME:18901 ADVISORY, FRAME:frame-organ.service OBSERVE
-readme_note: ZEN outcome-first rewrite 2026-08-25 (F13 GO 'audit and zen all'); full technical README preserved at docs/README-FULL.md
+infra_organs: arifFlow:7073 METABOLISM, FED:7074 ADVISORY, FLAME:18901 ADVISORY
+readme_note: ZEN outcome-first — full technical README preserved at docs/README-FULL.md
 -->
 
-# 🌍 GEOX — Earth Intelligence Engine
+# GEOX — Earth Intelligence Engine
 
 ## Turn seismic, wells, and basin data into auditable geological intelligence.
 
-GEOX is a physics-grounded Earth Intelligence Engine for humans, AI agents, and institutions. It transforms subsurface data into auditable geological evidence while explicitly separating observation, interpretation, and speculation. **Every claim remains traceable. Every uncertainty remains visible.**
+GEOX is a physics-grounded Earth Intelligence Engine for humans, AI agents, and institutions.
+It transforms subsurface data into auditable geological evidence while explicitly separating
+observation, interpretation, and speculation.
+**Every claim remains traceable. Every uncertainty remains visible.**
 
 Built for:
 
@@ -27,12 +30,6 @@ Built for:
 
 > **GEOX is the earth witness. It computes geological evidence. It never adjudicates.**
 > **DITEMPA BUKAN DIBERI — Truth must cool before it rules.**
-
-Unlike conventional AI systems, GEOX separates:
-
-**Observation → Computation → Interpretation → Speculation**
-
-so every geological claim remains traceable to its evidence.
 
 ---
 
@@ -49,7 +46,7 @@ so every geological claim remains traceable to its evidence.
 
 Outcomes first. Tools support — 19 live-witnessed via [tools/list](https://geox.arif-fazil.com/mcp).
 
-## 🤖 Why AI agents connect
+## Why AI agents connect
 
 Agents don't care about tools. They care about **what decision improves** by connecting.
 
@@ -65,7 +62,7 @@ Every output carries explicit epistemic labels — **OBS → DER → INT → SPE
 
 **GEOX supplies evidence. It never supplies authority.**
 
-## 🏢 Why institutions use GEOX
+## Why institutions use GEOX
 
 Exploration decisions routinely involve multi-million-dollar capital exposure, incomplete subsurface information, competing interpretations, and high uncertainty.
 
