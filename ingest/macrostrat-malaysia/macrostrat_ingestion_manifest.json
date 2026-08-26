@@ -1,0 +1,84 @@
+{
+  "source": {
+    "source_id": "jmg_malaysia_1_500k",
+    "name": "Geological Map of Malaysia (JMG 1:500k Series)",
+    "primary_table": "jmg_malaysia_bedrock",
+    "url": "https://mygems.jmg.gov.my/portal/apps/webappviewer/index.html?id=90702a483ab6489bbaab210e038c2ed9",
+    "service_url": "https://mygems.jmg.gov.my/server/rest/services/Demarcation/Litology_by_Negeri/MapServer",
+    "ref_title": "Geological Map of Peninsular Malaysia (1:500,000) and Geological Map of Sabah and Sarawak (1:500,000)",
+    "authors": "Department of Mineral and Geoscience Malaysia (Jabatan Mineral dan Geosains Malaysia - JMG)",
+    "ref_year": 2024,
+    "ref_source": "JMG MyGEMS National Geoscience Spatial Infrastructure",
+    "scale": "medium",
+    "nominal_scale": 500000,
+    "licence": "Open Government Data (Malaysia) / Educational & Scientific Research",
+    "coverage_note": "National terrestrial coverage across 14 states (approx. 330,803 km²); per-state polygons served by JMG MyGEMS ArcGIS MapServer",
+    "bbox": [99.5, 0.8, 119.5, 7.5],
+    "coordinate_system": "EPSG:4326 (WGS84) / Web Mercator EPSG:3857",
+    "contact": {
+      "name": "Muhammad Arif bin Fazil (Exploration Geoscientist)",
+      "email": "arif@arif-fazil.com",
+      "affiliation": "arifOS Federation / GEOX Earth Intelligence"
+    },
+    "upstream_target": {
+      "repository": "https://github.com/UW-Macrostrat/macrostrat",
+      "submission_track": "Macrostrat Map Ingestion / Maps Pipeline"
+    }
+  },
+  "layers": [
+    {
+      "layer_id": "jmg_bedrock_lithology",
+      "type": "polygons",
+      "description": "Bedrock lithology units covering Peninsular Malaysia, Sabah, and Sarawak across all 14 states",
+      "service_url": "https://mygems.jmg.gov.my/server/rest/services/Demarcation/Litology_by_Negeri/MapServer",
+      "attribute_mapping": {
+        "unit_name": "LITHOLOGY",
+        "strat_name": "FORMATION",
+        "age": "ROCK_AGE",
+        "lith": "ROCK_TYPE",
+        "descrip": "DESCRIPTION",
+        "state": "NEGERI",
+        "source_id": "JMG_MYGEMS_2024"
+      }
+    },
+    {
+      "layer_id": "jmg_major_faults",
+      "type": "lines",
+      "description": "Major structural fault systems, suture zones, and tectonic lineaments of Malaysia",
+      "service_url": "https://mygems.jmg.gov.my/server/rest/services/GeologiAsas/Major_Fault/MapServer/5",
+      "attribute_mapping": {
+        "name": "NAME",
+        "type": "FAULT_TYPE",
+        "direction": "TREND",
+        "comments": "TECTONIC_ZONE"
+      }
+    }
+  ],
+  "stratigraphic_domains": [
+    {
+      "domain": "Western Belt (Sibumasu Terrane)",
+      "key_units": ["Machinchang Formation", "Singa Formation", "Chuping Limestone", "Main Range Granite"],
+      "age_range": "Cambrian to Triassic"
+    },
+    {
+      "domain": "Central Belt & Bentong-Raub Suture",
+      "key_units": ["Bentong-Raub Suture Ophiolites", "Semantan Formation", "Raub Group"],
+      "age_range": "Devonian to Jurassic"
+    },
+    {
+      "domain": "Eastern Belt (East Malaya Block)",
+      "key_units": ["Kuantan Basalt", "Kenyir Granite", "Tembeling Group"],
+      "age_range": "Carboniferous to Cretaceous"
+    },
+    {
+      "domain": "Northwest Borneo & Sabah",
+      "key_units": ["Crocker Formation", "Trusmadi Formation", "Dent Group", "Kinabalu Pluton"],
+      "age_range": "Eocene to Pliocene"
+    },
+    {
+      "domain": "Sarawak & Rajang Group",
+      "key_units": ["Belaga Formation", "Lupar Melange", "Balingian Coal Beds", "Luconia Carbonates"],
+      "age_range": "Cretaceous to Miocene"
+    }
+  ]
+}
