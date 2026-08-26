@@ -45,7 +45,11 @@ EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     "geox_thermal_maturity_history": ["maturity", "ro", "tti", "burial_curve"],
     "geox_basin_backstrip": ["subsidence_curve", "tectonic_subsidence", "total_subsidence"],
     # ── Basin / Earth state ─────────────────────────────────────────
-    "geox_basin": ["basin_profile", "tectonic_summary", "stratigraphy", "macrostrat_units"],
+    # C1 FIX (2026-08-26): keys must match actual result structure from
+    # geox_basin_profile → get_standard_envelope. Data lives inside
+    # primary_artifact as observed/derived/interpreted/process_hypotheses.
+    # _lookup_evidence_value searches top-level + one nested dict level.
+    "geox_basin": ["observed", "derived", "interpreted", "process_hypotheses"],
     "geox_deep_time_state": [
         "variables",
         "data",

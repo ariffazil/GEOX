@@ -1026,6 +1026,14 @@ def compact_structured_for_ui(
         base["data_type"] = type(result).__name__
         return base
 
+    # C1 FIX (2026-08-26): look inside primary_artifact for preferred keys.
+    # get_standard_envelope wraps domain data as primary_artifact, but the
+    # prefer list expects keys at top level. Check both levels.
+    source = result
+    _pa = result.get("primary_artifact")
+    if isinstance(_pa, dict):
+        source = _pa
+
     prefer = keys or [
         "status",
         "mode",
@@ -1051,9 +1059,9 @@ def compact_structured_for_ui(
         "ok",
     ]
     for k in prefer:
-        if k not in result:
+        if k not in source:
             continue
-        v = result[k]
+        v = source[k]
         if isinstance(v, str) and len(v) > max_str:
             base[k] = v[:max_str] + "…"
         elif isinstance(v, list) and len(v) > max_list:
@@ -1067,7 +1075,7 @@ def compact_structured_for_ui(
         else:
             base[k] = v
 
-    if result.get("ok") is False:
+    if result.get("ok") is False or source.get("ok") is False:
         base["ok"] = False
     base.setdefault("ui", {"resourceUri": GEOX_APPS.get(app_id, {}).get("uri", f"ui://geox/{app_id}")})
     return base
