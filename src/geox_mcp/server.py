@@ -64,7 +64,7 @@ logger = logging.getLogger("geox.unified")
 # GEOX Identity & Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-GEOX_VERSION = "v2026.07.24"
+GEOX_VERSION = "v2026.08.26"
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.
@@ -3269,8 +3269,12 @@ async def discovery_handler(request: Request) -> JSONResponse:
             "version": GEOX_VERSION,
             "description": (
                 "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. "
+                f"Live counts: {len(CANONICAL_PUBLIC_TOOLS)} governed tools, "
+                f"{len(INTERNAL_TOOLS)} internal. "
+                "Canonical registry includes forge-scope tools filtered per oauth.scopes_excluded. "
                 "Evidence-only earth intelligence: basin analysis, seismic interpretation, "
-                "petrophysics, prospect evaluation, deep-time paleogeography, and interactive MCP Apps."
+                "petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, "
+                "and 9 interactive MCP Apps."
             ),
             "repository": "https://github.com/ariffazil/GEOX",
             "license": "BSL-1.1",
