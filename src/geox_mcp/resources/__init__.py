@@ -645,6 +645,30 @@ async def geox_data_sources_malaysia() -> str:
         return json.dumps({"error": f"Failed to read catalog: {e}"}, indent=2)
 
 
+async def geox_data_sources_paleobiodb() -> str:
+    """Fetch the Paleobiology Database (PBDB v1.2) data-source catalog.
+
+    Resource: geox://data-sources/paleobiodb
+
+    Endpoints, supported scales (1=ICS, 5=nanno, 24=foram), rate-limit notes,
+    and a Tier-A falsification audit. Substrate for geox_paleobiodb_query,
+    geox_biostrat_calibrate, and geox_basin macrostrat_fossils mode.
+
+    Compiled 2026-08-26 alongside the new geox_paleobiodb_query tool.
+    """
+    path = RESOURCES_DIR / "data_sources" / "paleobiodb_catalog.json"
+    if not path.exists():
+        return json.dumps({
+            "error": "Catalog not found",
+            "expected_path": str(path),
+            "hint": "Run geox_workspace check or re-verify after VPS sync.",
+        }, indent=2)
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception as e:
+        return json.dumps({"error": f"Failed to read catalog: {e}"}, indent=2)
+
+
 async def geox_claims_index() -> str:
     """Fetch the index of all claims (draft, validated, sealed)."""
     claims_path = Path("/root/geox/resources/basins/malay_basin/claims.json")
@@ -942,6 +966,17 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         ),
         mime_type="application/json",
     )(geox_data_sources_malaysia)
+    mcp.resource(
+        "geox://data-sources/paleobiodb",
+        description=(
+            "Paleobiology Database (PBDB v1.2) data-source catalog: endpoints for taxa, "
+            "occurrences, biozones, and ICS chronostratigraphy. CC-BY 4.0 license; attribution "
+            "required. Anonymous tier with ~10 req/s sustained, throttled beyond. GEOX adds a "
+            "24h in-process TTL cache to stay well under the limit. Substrate for "
+            "geox_paleobiodb_query, geox_biostrat_calibrate, and geox_basin macrostrat_fossils mode."
+        ),
+        mime_type="application/json",
+    )(geox_data_sources_paleobiodb)
     mcp.resource(
         "geox://claims/index",
         description="Index of all claims (draft, validated, sealed).",
