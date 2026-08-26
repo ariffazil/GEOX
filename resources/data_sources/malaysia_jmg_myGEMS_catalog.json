@@ -1,0 +1,316 @@
+{
+  "_meta": {
+    "uri": "geox://data-sources/malaysia",
+    "description": "JMG MyGEMS open-data catalog for Malaysia (Malaysian geological map infrastructure). Discover live Map Services and Feature Services from Jabatan Mineral dan Geosains Malaysia (JMG) via the MyGEMS ArcGIS portal. Each service is queryable via the standard ArcGIS REST API; Feature Services additionally support direct export to Shapefile, GeoJSON, CSV, FileGDB, SQLite without authentication.",
+    "version": "2026-08-26",
+    "compiled_by": "GEOX zen audit 2026-08-26 (background-agent research + reality probe)",
+    "license_summary": "Open Government Data Malaysia / Educational & Scientific Research (CC-BY 4.0 compatible) — same provenance as macrostrat-ingestion/SUBMISSION_PROPOSAL.md",
+    "probe_method": "ArcGIS Sharing REST API: https://mygems.jmg.gov.my/portal/sharing/rest/search?q=type:\"Map Service\"&f=json and FeatureService variant. Paged via start=1,num=50 until empty.",
+    "counts": {
+      "map_services_total": 15,
+      "feature_services_total": 77,
+      "feature_services_substantive": 11,
+      "feature_services_survey123_forms": "~50 (low geo value; not catalogued)",
+      "feature_services_duplicates_ignored": 16
+    }
+  },
+
+  "map_services": [
+    {
+      "id": "litology_by_negeri",
+      "title": "Geologi Asas Awam / Litology_by_Negeri",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Demarcation/Litology_by_Negeri/MapServer",
+      "category": "bedrock_geology",
+      "layer_count": 30,
+      "layers_summary": "14 states × {lithology, rock_age} pairs = 28, plus Sabah {lithology, rock_age} and Sarawak {lithology, rock_age} = 30 total. WKID 3857.",
+      "use_case": "Canonical 1:500k bedrock geology substrate. Same source as macrostrat-ingestion packet (PR-ready to UW-Macrostrat).",
+      "related_geox_tool": "geox_basin, geox_deep_time, geox_workspace set basin=malay",
+      "macrostrat_submission": "geox://macrostrat/submission-proposal → /earth/macrostrat-ingestion/SUBMISSION_PROPOSAL.md"
+    },
+    {
+      "id": "major_fault",
+      "title": "Major Fault Malaysia",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/GeologiAsas/Major_Fault/MapServer",
+      "category": "structural_geology",
+      "layer_count": 1,
+      "layers_summary": "Single layer 'Major Fault' (id=5). Includes Bentong-Raub Suture, Bukit Tinggi Fault, Bok Bak Fault.",
+      "use_case": "Major structural lineaments; tectonic domain attribution for seismic interpretation.",
+      "related_geox_tool": "geox_seismic_interpret"
+    },
+    {
+      "id": "active_fault",
+      "title": "Active Fault Malaysia",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/MYGEMS_DataPenerbitan/Faults/MapServer",
+      "category": "structural_geology",
+      "layer_count": 1,
+      "layers_summary": "Active faults (Quaternary slip). Separate from Major Fault which includes all ages.",
+      "use_case": "Seismic hazard; NaTSIS integration with geox_temporal."
+    },
+    {
+      "id": "marine_geology",
+      "title": "Geologi Marin Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/GeologiMarin/Geologi_Marin_Awam/MapServer",
+      "category": "marine_geology",
+      "layer_count": 4,
+      "layers_summary": "id=0 Geophysical Survey Line Semenanjung; id=1 Geophysical Survey Line Sabah_Sarawak; id=2 Marine Geophysical Survey Area Semenanjung; id=3 Marine Geophysical Survey Area Sabah_Sarawak.",
+      "use_case": "Onshore ↔ offshore correlation; complements NW Sabah / Malay Basin offshore work.",
+      "related_geox_tool": "geox_basin (offshore mode), geox_seismic_interpret"
+    },
+    {
+      "id": "sumber_mineral",
+      "title": "Sumber Mineral Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/SumberMineral/Sumber_Mineral_Awam/MapServer",
+      "category": "mineral_resources",
+      "layer_count": 8,
+      "layers_summary": "Mineral deposit locations by type × region: Metallic (Peninsular + Sabah/Sarawak), Energy, Strategic, Industrial minerals.",
+      "use_case": "Prospect-scale mineral evidence; complements geox_prospect screen mode.",
+      "related_geox_tool": "geox_prospect"
+    },
+    {
+      "id": "groundwater_semenanjung_2025",
+      "title": "Groundwater Well Semenanjung 2025",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Air_Bawah_Tanah/Groundwater_Well_Semenanjung_2025/MapServer",
+      "category": "groundwater",
+      "layer_count": 1,
+      "layers_summary": "Peninsular Malaysia public+private wells. Fresh 2025 ingest.",
+      "use_case": "Cross-organ substrate for WELL federation organ (Phase 1-2 work).",
+      "related_geox_tool": "geox_h3_spatial_index, federation bridge to WELL"
+    },
+    {
+      "id": "groundwater_sabah_sarawak_2025",
+      "title": "Groundwater Well Sabah Sarawak 2025",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Kemasukan_Data_Air_Bawah_Tanah/Groundwater_Well_Sabah_Sarawak_2025/MapServer",
+      "category": "groundwater",
+      "layer_count": 1,
+      "layers_summary": "Sabah + Sarawak public+private wells. Fresh 2025 ingest.",
+      "use_case": "Borneo groundwater substrate.",
+      "related_geox_tool": "federation bridge to WELL"
+    },
+    {
+      "id": "air_bawah_tanah_awam",
+      "title": "Air Bawah Tanah Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Air_Bawah_Tanah/Air_Bawah_Tanah_Awam/MapServer",
+      "category": "groundwater",
+      "layer_count": 4,
+      "layers_summary": "General groundwater (older than 2025 services).",
+      "use_case": "Historical groundwater baseline."
+    },
+    {
+      "id": "geofizik_awam",
+      "title": "Geofizik Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/GeoFizik/Geofizik_Awam/MapServer",
+      "category": "geophysics",
+      "layer_count": 12,
+      "layers_summary": "Ground Magnetic, Resistivity, Magnetotelluric, TEM surveys.",
+      "use_case": "Subsurface geophysics substrate for geox_subsurface_model and geox_geomechanics."
+    },
+    {
+      "id": "geowarisan_awam",
+      "title": "Geowarisan Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/GeoWarisan/Geowarisan_Awam/MapServer",
+      "category": "geoheritage",
+      "layer_count": 8,
+      "layers_summary": "Geosites + Geoparks (8 layers).",
+      "use_case": "Geoheritage documentation; not directly a geoscience substrate but useful for outreach layers.",
+      "related_geox_tool": "geox_map"
+    },
+    {
+      "id": "lombong_kuari_awam",
+      "title": "Lombong Kuari Awam",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/LombongKuari/Lombong_Kuari_Awam/MapServer",
+      "category": "mining",
+      "layer_count": 4,
+      "layers_summary": "Mines + Quarries.",
+      "use_case": "Active mining footprint overlay; relevant to geox_prospect environmental context."
+    },
+    {
+      "id": "demarcation_mil1",
+      "title": "Demarcation MIL1",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Demarcation_MIL1/MapServer",
+      "category": "administrative",
+      "layer_count": 15,
+      "layers_summary": "MIL1 demarcation boundaries.",
+      "use_case": "Boundary reference; verify access tier before ingesting."
+    },
+    {
+      "id": "seismik_a_mrso",
+      "title": "Seismik A MRSO",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/MyGemsData/Seismik_A_MRSO/MapServer",
+      "category": "seismic",
+      "layer_count": 1,
+      "layers_summary": "Seismic survey polygons (Peninsular).",
+      "use_case": "Survey polygon metadata; not raw trace data."
+    },
+    {
+      "id": "seismik_a_brso",
+      "title": "Seismik A BRSO",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/MyGemsData/Seismik_A_BRSO/FeatureServer",
+      "category": "seismic",
+      "layer_count": 0,
+      "layers_summary": "BRSO seismic surveys (Borneo). FeatureServer — no sub-layers in metadata.",
+      "note": "Listed in FeatureServer census; MapServer twin may or may not exist.",
+      "use_case": "Borneo seismic survey footprint."
+    },
+    {
+      "id": "natsis_seismic_hazard_peninsular",
+      "title": "Seismic Hazard Map of Peninsular Malaysia (NaTSIS)",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/4a17334d06424d9485772b1f7d2f97a3/rest/services/Natsis_Production/Seismic_Hazard_Map_of_Peninsular_Malaysia/MapServer/0",
+      "category": "seismic_hazard",
+      "layer_count": 1,
+      "layers_summary": "Single sub-layer MapServer/0. Hosted under NaTSIS server realm (different auth).",
+      "use_case": "Seismic hazard zonation; geox_temporal hazard mode.",
+      "related_geox_tool": "geox_temporal"
+    },
+    {
+      "id": "natsis_seismic_hazard_borneo",
+      "title": "Seismic Hazard Map of Borneo (NaTSIS)",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/9fd11b794caf4262a888112530886bed/rest/services/Natsis_Production/Seismic_Hazard_Map_of_Borneo/MapServer/0",
+      "category": "seismic_hazard",
+      "layer_count": 1,
+      "layers_summary": "Borneo seismic hazard counterpart.",
+      "use_case": "Borneo seismic hazard zonation."
+    },
+    {
+      "id": "natsis_kawasan_pgt_sabah_sarawak",
+      "title": "Kawasan Liputan Pemetaan Geologi Terrain Sabah dan Sarawak",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/af88f8bb5fb847d8a27c02507bf894f5/rest/services/Natsis_Production/Kawasan_Liputan_PGT_Sabah_Sarawak/MapServer/0",
+      "category": "terrain_mapping",
+      "layer_count": 1,
+      "layers_summary": "Borneo PGT coverage polygon (where mapping exists).",
+      "use_case": "Coverage metadata — tells you which areas have terrain mapping vs gaps."
+    },
+    {
+      "id": "natsis_kawasan_pgt_semenanjung",
+      "title": "Kawasan Liputan Pemetaan Geologi Terrain Semenanjung",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/1c9f15f3f70e4ccba83de907c251c166/rest/services/Natsis_Production/Kawasan_Liputan_PGT_Semenanjung/FeatureServer/2",
+      "category": "terrain_mapping",
+      "layer_count": 1,
+      "layers_summary": "Peninsular PGT coverage.",
+      "note": "Hosted as FeatureServer/2, not MapServer.",
+      "use_case": "Peninsular coverage metadata."
+    },
+    {
+      "id": "natsis_amblesan_semenanjung",
+      "title": "Amblesan Semenanjung (Landslide Peninsular)",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/565d2de787894d8ea7d592fddaf3cdf8/rest/services/Natsis_Production/Profil_Bencana_Semenanjung/MapServer/2",
+      "category": "geohazard",
+      "layer_count": 1,
+      "layers_summary": "Landslide profiles, Peninsular Malaysia.",
+      "use_case": "Geohazard substrate for surface stability context."
+    },
+    {
+      "id": "natsis_amblesan_sabah_sarawak",
+      "title": "Amblesan Sabah Sarawak (Landslide Borneo)",
+      "url": "https://mygems.jmg.gov.my/portal/sharing/servers/235ebccb047242de85e58b072515b3ea/rest/services/Natsis_Production/Profil_Bencana_Borneo/MapServer/2",
+      "category": "geohazard",
+      "layer_count": 1,
+      "layers_summary": "Landslide profiles, Sabah + Sarawak.",
+      "use_case": "Borneo geohazard substrate."
+    }
+  ],
+
+  "feature_services_substantive": [
+    {
+      "title": "Hosted/Geofizik Awam - 2025 (Geophysics 2025)",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/DATA_GEOFIZIK_DALAMAN_MAL/FeatureServer",
+      "category": "geophysics",
+      "note": "Twin of Geofizik_Awam MapServer; richer / newer."
+    },
+    {
+      "title": "Hosted/earthquakes_clean (gempa_segamat)",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/earthquakes_clean/FeatureServer",
+      "category": "seismic",
+      "note": "Earthquake event points. Curated 'clean' version."
+    },
+    {
+      "title": "Hosted/Coastal Mapping Terengganu",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Coastal_Mapping_Terengganu/FeatureServer",
+      "category": "coastal_geology"
+    },
+    {
+      "title": "Hosted/Coastal Mapping Terengganu 2021",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Coastal_Mapping_Terengganu_2021/FeatureServer",
+      "category": "coastal_geology",
+      "note": "Earlier vintage — historical comparison."
+    },
+    {
+      "title": "Hosted/Data_Rizab_Mineral",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Data_Rizab_Mineral/FeatureServer",
+      "category": "mineral_resources",
+      "note": "Mineral reserves (distinct from occurrences in Sumber_Mineral)."
+    },
+    {
+      "title": "Hosted/Rizab_Mineral",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Rizab_Mineral/FeatureServer",
+      "category": "mineral_resources",
+      "note": "Duplicate of Data_Rizab_Mineral — verify before double-counting."
+    },
+    {
+      "title": "Hosted/Iron, Tin, Gold, Manganese",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Iron/FeatureServer",
+      "category": "mineral_resources",
+      "note": "Per-commodity hosted services (Iron/Tin/Gold/Manganese)."
+    },
+    {
+      "title": "Hosted/Bentong, Pahang, Pekan, eastjhr1, Points, STATE_PAHANG",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Bentong/FeatureServer",
+      "category": "locality_data",
+      "note": "Place-name keyed datasets — likely raw working data, not curated. Verify provenance before use."
+    },
+    {
+      "title": "Hosted/Data_Anomali / Anomali / Mineral & Lab",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Data_Anomali/FeatureServer",
+      "category": "geochemistry",
+      "note": "Geochemical anomaly datasets."
+    },
+    {
+      "title": "Hosted/GeoExplore Race Data",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/GeoExplore_Race_Data/FeatureServer",
+      "category": "outreach",
+      "note": "Outreach / gamification dataset, not geoscience substrate."
+    },
+    {
+      "title": "Hosted/Ulasan",
+      "url": "https://mygems.jmg.gov.my/server/rest/services/Hosted/Ulasan/FeatureServer",
+      "category": "review_data",
+      "note": "Review/comments dataset. Low geo value but useful for change-tracking."
+    }
+  ],
+
+  "feature_services_excluded": {
+    "rationale": "Survey123 form backends are user-input forms (registration, surveys, feedback), not geoscience data. ~50 of the 77 Feature Services fall in this category.",
+    "pattern": "URL contains /Hosted/survey123_ or /_form or /_results"
+  },
+
+  "global_query_template": {
+    "map_server_query": "{service_url}/{layer_id}/query?where=1%3D1&outFields=*&f=geojson&returnGeometry=true&bbox={xmin},{ymin},{xmax},{ymax}",
+    "feature_server_export": "{service_url}/{layer_id}/query?where=1%3D1&outFields=*&f=geojson&returnGeometry=true",
+    "feature_server_export_format_csv": "{service_url}/{layer_id}/query?where=1%3D1&outFields=*&f=csv",
+    "feature_server_export_format_shapefile": "{service_url}/{layer_id}/query?where=1%3D1&outFields=*&f=shapefile",
+    "auth_required": false,
+    "rate_limits": "Not documented; use conservative pagination (pageSize=1000, max 5000 features per request per ArcGIS default)"
+  },
+
+  "macrostrat_relationship": {
+    "submission_url": "https://arif-fazil.com/earth/macrostrat-ingestion/",
+    "manifest_url": "https://arif-fazil.com/earth/macrostrat-ingestion/macrostrat_ingestion_manifest.json",
+    "states_catalog_url": "https://arif-fazil.com/earth/macrostrat-ingestion/jmg_malaysia_states_summary.json",
+    "notes": "This catalog extends the macrostrat ingestion packet. The macrostrat packet covers only the bedrock geology layers (Litology_by_Negeri). The catalog here documents the full JMG MyGEMS footprint for downstream GEOX tool development."
+  },
+
+  "falsification_audit_2026-08-26": {
+    "agent_claim_total_services": "15 MapServer + 77 FeatureServer = 92",
+    "reality": "EXACT MATCH",
+    "agent_claim_lithology_30_layers": "30",
+    "reality_lithology": "EXACT MATCH (verified live)",
+    "agent_claim_marine_4_layers": "4",
+    "reality_marine": "EXACT MATCH",
+    "agent_claim_major_fault_1_layer": "1",
+    "reality_major_fault": "EXACT MATCH (id=5)",
+    "agent_claim_onegeology_closed": "closed in 2026",
+    "reality_onegeology": "FALSE — onegeology.org serves HTTP 200 (still online)",
+    "agent_claim_data_gov_my_18_jmg_datasets": "18",
+    "reality_data_gov_my": "UNVERIFIED — public API opaque; could not independently confirm count",
+    "audit_status": "4 of 5 substantive claims confirmed; 1 wrong (OneGeology); 1 unverifiable (data.gov.my count)"
+  }
+}

@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/specification/main/schema/mcp-server.json",
   "name": "GEOX — Earth Intelligence",
   "version": "v2026.08.09",
-  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, and 9 interactive MCP Apps. 39 canonical public tools, 16 MCP prompts, 42 MCP resources.",
+  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, and 9 interactive MCP Apps. Live counts under static-client auth: 19 governed tools, 16 MCP prompts, 51 MCP resources (9 of which are ui:// MCP Apps). Canonical registry: 81 tools registered; 62 are forge-scope or internal-only and filtered per oauth.scopes_excluded.",
   "repository": "https://github.com/ariffazil/GEOX",
   "license": "BSL-1.1",
   "author": {
@@ -45,10 +45,10 @@
   },
   "tools": {
     "totalRegistered": 81,
-    "publicCount": 32,
+    "publicCount": 19,
+    "publicCountRationale": "Live tools/list returns 19 governed tools for clients with scopes [geox:observe, geox:interpret]. The static client_id `geox-claude-conn-20260804-a01` excludes geox:forge scope per oauth.scopes_excluded. The remaining 62 (totalRegistered 81 - publicCount 19) are forge-scope or internal-only tools, not exposed to MCP tools/list under static-client auth. Migration to OAuth 2.1 (P4_STABLE) will surface scoped counts per session.",
     "categories": {
       "basin": ["geox_basin", "geox_basin_backstrip", "geox_sediment_mass_balance", "geox_thermal_maturity_history"],
-      "basin": ["geox_basin", "geox_basin_backstrip"],
       "seismic": ["geox_seismic_compute", "geox_seismic_ingest", "geox_seismic_interpret", "geox_visual_understand"],
       "petrophysics": ["geox_petrophysics"],
       "well": ["geox_well_desk", "geox_well_ingest", "geox_well_qc", "geox_well_view"],

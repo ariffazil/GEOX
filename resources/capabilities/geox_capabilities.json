@@ -5,6 +5,28 @@
   "canonical_tool_count": 68,
   "canonical_source": "src/geox_mcp/registry.py \u2192 CANONICAL_PUBLIC_TOOLS (Phase 2.1 + EGS)",
   "contract_epoch": "2026-07-06-GEOX-68TOOLS-PHASE33",
+  "zen_surface": {
+    "_note": "Zen verb-noun map per GEOX_ZEN_ROADMAP.md \u00a72 (target ~8 capability verbs). Modes live inside verbs. Design law A1: unknown mode = error, never silent fallback. This map is forward-looking; current tool surface (68 registered) is in the 'tools' array below.",
+    "_source": "GEOX_ZEN_ROADMAP.md \u00a72 Zen surface",
+    "verbs": {
+      "ingest":     {"absorbs": ["well_ingest", "seismic_ingest", "image", "LAS/SEG-Y"], "role": "One door for data"},
+      "interpret":  {"absorbs": ["seismic_interpret", "visual_* propose"], "role": "Section / well / map propose"},
+      "validate":   {"absorbs": ["structure_validate", "falsify", "contradiction"], "role": "All gates, any geometry"},
+      "compute":    {"absorbs": ["petrophysics", "geomech", "seismic_compute", "synthetics"], "role": "Numbers"},
+      "render":     {"absorbs": ["NEW section overlay", "map_render_preview (later)"], "role": "Human-loop image", "status": "PENDING"},
+      "basin":      {"absorbs": ["basin", "backstrip", "thermal", "sequence"], "role": "Basin story"},
+      "prospect":   {"absorbs": ["prospect"], "role": "Screen / evaluate"},
+      "workspace":  {"absorbs": ["workspace (exists)"], "role": "Inherit basin/session once"}
+    },
+    "noun_set": ["Section", "Horizon", "Fault", "Calibration", "Bundle"],
+    "design_law": "Unknown mode = error, never silent fallback. Until full collapse: prefer modes on existing tools over new public tools.",
+    "zen_audit_2026-08-26": {
+      "preferred_hypothesis_discipline": "PASS \u2014 every preferred_hypothesis reference in src/ is None/null (see test_zen_no_double_use_when.py regression guard).",
+      "tool_description_discipline": "PASS \u2014 duplicate 'Use when: Use when...' pattern fixed in tools_manifest.py; 10 tools were emitting twice. Regression test added.",
+      "verb_count_progress": "0/8 verbs collapsed from tool list (forward-looking map only). Actual collapse (81 \u2192 ~8 verbs) deferred to Tier 2.",
+      "manifest_reconciliation": "PASS \u2014 .well-known/mcp/server.json publicCount corrected from 32 to 19 with publicCountRationale field; duplicate 'basin' key removed."
+    }
+  },
   "tools": [
     {
       "name": "geox_well_ingest",

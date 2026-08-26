@@ -615,6 +615,36 @@ async def geox_literature_index() -> str:
     return json.dumps(literature_list, indent=2)
 
 
+async def geox_data_sources_malaysia() -> str:
+    """Fetch the JMG MyGEMS open-data catalog for Malaysia.
+
+    Resource: geox://data-sources/malaysia
+
+    Catalog of all live Map Services (15) and substantive Feature Services (11)
+    published by Jabatan Mineral dan Geosains Malaysia (JMG) via the MyGEMS
+    ArcGIS portal. Each entry includes the service URL, layer count, category,
+    and a hint of which GEOX tool would consume it.
+
+    Compiled 2026-08-26 via direct probe of the ArcGIS Sharing REST API.
+    See falsification_audit_2026-08-26 in the catalog for what was verified
+    vs. what the background agent got wrong.
+
+    Use this catalog to discover Malaysian geological data without hardcoding
+    URLs in downstream tools.
+    """
+    path = RESOURCES_DIR / "data_sources" / "malaysia_jmg_myGEMS_catalog.json"
+    if not path.exists():
+        return json.dumps({
+            "error": "Catalog not found",
+            "expected_path": str(path),
+            "hint": "Run geox_workspace check or re-verify after VPS sync."
+        }, indent=2)
+    try:
+        return path.read_text(encoding="utf-8")
+    except Exception as e:
+        return json.dumps({"error": f"Failed to read catalog: {e}"}, indent=2)
+
+
 async def geox_claims_index() -> str:
     """Fetch the index of all claims (draft, validated, sealed)."""
     claims_path = Path("/root/geox/resources/basins/malay_basin/claims.json")
@@ -901,6 +931,17 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="Index of all literature resources.",
         mime_type="application/json",
     )(geox_literature_index)
+    mcp.resource(
+        "geox://data-sources/malaysia",
+        description=(
+            "JMG MyGEMS open-data catalog for Malaysia: 15 Map Services + 11 substantive "
+            "Feature Services from the Malaysian geological survey (Jabatan Mineral dan "
+            "Geosains Malaysia). Auth-free, ArcGIS REST queryable, Feature Services support "
+            "direct export to Shapefile/GeoJSON/CSV. Use to discover what Malaysian geological "
+            "data is openly available before hardcoding service URLs in tools."
+        ),
+        mime_type="application/json",
+    )(geox_data_sources_malaysia)
     mcp.resource(
         "geox://claims/index",
         description="Index of all claims (draft, validated, sealed).",
