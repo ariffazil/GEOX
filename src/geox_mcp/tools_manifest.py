@@ -38,7 +38,15 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         domain_verb=_domain_verb(tool.name, tool.domain),
         domain=tool.domain,
         description=tool.description or f"{tool.name} — GEOX canonical surface tool.",
-        use_when=f"Use when you need {tool.name.replace('geox_', '').replace('_', ' ')} evidence.",
+        # Zen §6: one trigger phrase, not two. If the upstream description already
+        # embeds a "Use when" phrase, suppress the synthesized fallback to avoid
+        # the duplicated "Use when: Use when you need ..." pattern that surfaced
+        # in tools/list for 10 tools during the 2026-08-26 zen audit.
+        use_when=(
+            ""
+            if (tool.description or "").lstrip().lower().startswith("use when")
+            else f"Use when you need {tool.name.replace('geox_', '').replace('_', ' ')} evidence."
+        ),
         acrisk=_acrisk(tool.name, tool.lane),
         is_888_hold=tool.lane == "judgment",
     )

@@ -23,6 +23,14 @@ from pathlib import Path
 import pytest
 import pytest_asyncio
 
+
+def pytest_configure(config):
+    """Register custom markers used across the GEOX test suite."""
+    config.addinivalue_line(
+        "markers",
+        "network: marks tests as requiring live network access (deselect with '-m \"not network\"')",
+    )
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
