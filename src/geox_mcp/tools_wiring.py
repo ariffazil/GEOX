@@ -122,6 +122,39 @@ def register_tools_on(mcp):
             sample_type=sample_type,
         )
 
+    @mcp.tool(name="geox_paleobiodb_query", annotations=_geox_annotations("geox_paleobiodb_query"))
+    async def _paleobiodb_query(
+        mode: str = "taxa",
+        name: str = "",
+        taxon: str = "",
+        rank: str | None = None,
+        interval: str | None = None,
+        cc: str | None = None,
+        fossil_group: str = "calcareous_nannofossil",
+        limit: int = 50,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones.
+
+        Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones),
+        age_intervals (ICS chronostratigraphy). Read-only, public-domain fossil data, cached 24h
+        to be a good PBDB citizen.
+        """
+        from geox_mcp.tools.geox_paleobiodb_query import geox_paleobiodb_query as _impl
+
+        return await _impl(
+            mode=mode,
+            name=name,
+            taxon=taxon,
+            rank=rank,
+            interval=interval,
+            cc=cc,
+            fossil_group=fossil_group,
+            limit=limit,
+        )
+
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
     async def _well_ingest(
         mode: str = "auto",
