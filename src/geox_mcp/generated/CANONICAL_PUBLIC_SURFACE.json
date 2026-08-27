@@ -1,97 +1,31 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-26T09:42:15.099410+00:00",
-  "source": "tools_manifest.yaml",
-  "public_count": 20,
-  "internal_count": 54,
+  "generated_at": "2026-08-18T07:20:36.505195+00:00",
+  "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
+  "public_count": 19,
+  "internal_count": 22,
   "public_tools": [
-    "geox_well_ingest",
-    "geox_petrophysics",
-    "geox_seismic_ingest",
-    "geox_seismic_compute",
-    "geox_seismic_interpret",
     "geox_basin",
-    "geox_paleobiodb_query",
+    "geox_claim",
+    "geox_contrast_metabolize",
+    "geox_deep_time",
     "geox_geomechanics",
-    "geox_prospect",
-    "geox_well_qc",
-    "geox_workspace",
-    "geox_temporal",
     "geox_map",
+    "geox_model",
+    "geox_petrophysics",
+    "geox_prospect",
+    "geox_seismic_compute",
+    "geox_seismic_ingest",
+    "geox_seismic_interpret",
     "geox_source",
     "geox_spatial",
-    "geox_deep_time",
-    "geox_claim",
-    "geox_model",
+    "geox_temporal",
     "geox_well",
-    "geox_contrast_metabolize"
+    "geox_well_ingest",
+    "geox_well_qc",
+    "geox_workspace"
   ],
   "tools": [
-    {
-      "name": "geox_well_ingest",
-      "domain": "earth.well",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_petrophysics",
-      "domain": "earth.petrophysics",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_ingest",
-      "domain": "earth.seismic",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "SEG-Y I/O, header inspection, export.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_compute",
-      "domain": "earth.seismic",
-      "axis": "compute",
-      "lane": "reasoning",
-      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_interpret",
-      "domain": "earth.seismic",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "One semantic capability \u2014 propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (inte",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
     {
       "name": "geox_basin",
       "domain": "earth.basin",
@@ -106,16 +40,41 @@
       }
     },
     {
-      "name": "geox_paleobiodb_query",
-      "domain": "earth.paleobiology",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / n",
+      "name": "geox_claim",
+      "domain": "earth.governance",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.",
+      "ui": null,
+      "governance": {
+        "action_class": "LIMITED_MUTATE",
+        "mutation": true
+      }
+    },
+    {
+      "name": "geox_contrast_metabolize",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS seals.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": false
+        "physics_guard_required": true,
+        "substrate_class": "INERT"
+      }
+    },
+    {
+      "name": "geox_deep_time",
+      "domain": "earth.time",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
       }
     },
     {
@@ -124,6 +83,43 @@
       "axis": "compute",
       "lane": "reasoning",
       "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_map",
+      "domain": "earth.spatial",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_model",
+      "domain": "earth.model",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_petrophysics",
+      "domain": "earth.petrophysics",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -145,11 +141,11 @@
       }
     },
     {
-      "name": "geox_well_qc",
-      "domain": "earth.well",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "name": "geox_seismic_compute",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -158,43 +154,29 @@
       }
     },
     {
-      "name": "geox_workspace",
-      "domain": "earth.meta",
+      "name": "geox_seismic_ingest",
+      "domain": "earth.seismic",
       "axis": "observe",
       "lane": "evidence",
-      "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
-      "ui": {
-        "resource_uri": "ui://geox/visual-hub",
-        "mime_type": "text/html;profile=mcp-app"
-      },
+      "description": "SEG-Y I/O, header inspection, export.",
+      "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": false
+        "physics_guard_required": true
       }
     },
     {
-      "name": "geox_temporal",
-      "domain": "earth.temporal",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.",
+      "name": "geox_seismic_interpret",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
-        "mutation": false
-      }
-    },
-    {
-      "name": "geox_map",
-      "domain": "earth.spatial",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false
+        "mutation": false,
+        "physics_guard_required": true
       }
     },
     {
@@ -222,35 +204,11 @@
       }
     },
     {
-      "name": "geox_deep_time",
-      "domain": "earth.time",
+      "name": "geox_temporal",
+      "domain": "earth.temporal",
       "axis": "compute",
       "lane": "compute",
-      "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false
-      }
-    },
-    {
-      "name": "geox_claim",
-      "domain": "earth.governance",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan",
-      "ui": null,
-      "governance": {
-        "action_class": "LIMITED_MUTATE",
-        "mutation": true
-      }
-    },
-    {
-      "name": "geox_model",
-      "domain": "earth.model",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.",
+      "description": "Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -270,17 +228,45 @@
       }
     },
     {
-      "name": "geox_contrast_metabolize",
-      "domain": "earth.seismic",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY",
+      "name": "geox_well_ingest",
+      "domain": "earth.well",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": true,
-        "substrate_class": "INERT"
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_well_qc",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_workspace",
+      "domain": "earth.meta",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
+      "ui": {
+        "resource_uri": "ui://geox/visual-hub",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": false
       }
     }
   ],

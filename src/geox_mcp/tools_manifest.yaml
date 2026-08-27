@@ -122,27 +122,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_paleobiodb_query
-  domain: earth.paleobiology
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones.
-    Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale),
-    age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui: null
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
 - name: geox_geomechanics
   domain: earth.structure
   axis: compute
