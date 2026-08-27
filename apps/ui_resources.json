@@ -216,7 +216,7 @@
       "app_id": "earth_map",
       "uri": "ui://geox/earth-map",
       "title": "GEOX Earth Map",
-      "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list→plan→render→export.",
+      "description": "Interactive geological map with layer discovery, scene planning, preview rendering, and governed export. 4-verb chain: list\u2192plan\u2192render\u2192export.",
       "external_url": "https://geox.arif-fazil.com/earth",
       "resource_type": "externalUrl",
       "mime_type": "text/html;profile=mcp-app"
@@ -317,6 +317,47 @@
       "external_url": "https://geox.arif-fazil.com/apps/site/catalog.html",
       "resource_type": "rawHtml",
       "mime_type": "text/html;profile=mcp-app"
+    },
+    {
+      "app_id": "glof_substrate",
+      "uri": "ui://geox/glof-substrate",
+      "title": "GEOX GLOF Cascade Substrate",
+      "description": "Interactive 9-property GLOF geomechanical simulator with F-I-M loop, phase-aware canvas, real-time hydro-geomechanical gauges",
+      "external_url": "https://geox.arif-fazil.com/apps/glof-substrate/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "theta_hat": {
+            "type": "object",
+            "description": "Inferred 9-property material state"
+          },
+          "forward_prediction": {
+            "type": "object",
+            "description": "Forward simulation output"
+          },
+          "G_score": {
+            "type": "number",
+            "description": "Tri-witness geometric-mean G-score 0..1"
+          },
+          "phase_id": {
+            "type": "string",
+            "enum": [
+              "solid",
+              "granular",
+              "fluid",
+              "unknown"
+            ]
+          }
+        }
+      },
+      "bound_tools": [
+        "geox_glof_cascade_initialize",
+        "geox_glof_cascade_phase",
+        "geox_glof_cascade_inverse",
+        "geox_glof_cascade_metabolize"
+      ]
     }
   ],
   "tool_to_app": {
