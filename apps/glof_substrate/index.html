@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GEOX GLOF Cascade Substrate · 33-D · ui://geox/glof-substrate</title>
+<style>
+  :root {
+    --bg: #0e1116;        --panel: #161b22;   --panel2: #1f2630;
+    --border: #2a3340;    --text: #d8e0ea;    --muted: #8a96a8;
+    --accent: #5aa9ff;    --M: #e85d3a;       --P: #5aa9ff;
+    --W: #27ae60;        --danger: #e74c3c;   --warn: #f0a830;
+    --ok: #27ae60;       --X: #f0a830;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 13px;
+    height: 100vh; overflow: hidden;
+  }
+  .header {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--panel);
+  }
+  .header h1 {
+    margin: 0; font-size: 14px; font-weight: 600; letter-spacing: 0.02em;
+  }
+  .header .meta { color: var(--muted); font-size: 11px; font-family: monospace; }
+  .grid {
+    display: grid;
+    grid-template-columns: 360px 1fr 340px;
+    gap: 1px; background: var(--border);
+    height: calc(100vh - 48px);
+  }
+  .panel { background: var(--panel); padding: 12px; overflow-y: auto; }
+  .panel h2 {
+    margin: 0 0 8px 0; font-size: 11px; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .tabs { display: flex; gap: 1px; margin-bottom: 10px;
+          background: var(--border); border-radius: 3px; overflow: hidden; }
+  .tab {
+    flex: 1; padding: 6px; text-align: center; font-size: 10px;
+    font-weight: 700; background: var(--panel2); color: var(--muted);
+    cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;
+    border: none;
+  }
+  .tab.active { background: var(--accent); color: #000; }
+  .tab[data-panel="M"].active { background: var(--M); }
+  .tab[data-panel="P"].active { background: var(--P); color: #000; }
+  .tab[data-panel="W"].active { background: var(--W); }
+  .tab[data-panel="X"].active { background: var(--X); color: #000; }
+  .slider-row {
+    display: grid; grid-template-columns: 95px 1fr 55px;
+    gap: 6px; align-items: center; margin-bottom: 5px; font-size: 11px;
+  }
+  .slider-row label { color: var(--muted); font-family: monospace; }
+  .slider-row input[type=range] { width: 100%; accent-color: var(--accent); }
+  .slider-row .val {
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    text-align: right; font-size: 10px;
+  }
+  .canvas-wrap {
+    background: var(--panel2); display: flex; flex-direction: column; padding: 8px;
+  }
+  #glcanvas { flex: 1; width: 100%; background: #0a0e14;
+              border: 1px solid var(--border); image-rendering: pixelated; }
+  .timeline {
+    display: flex; align-items: center; gap: 10px; margin-top: 8px;
+    padding: 8px; background: var(--panel); border-radius: 4px;
+  }
+  .timeline input[type=range] { flex: 1; accent-color: var(--accent); }
+  .phase-tag {
+    padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; background: var(--accent); color: #000;
+  }
+  .gauge { margin-bottom: 10px; }
+  .gauge-label {
+    display: flex; justify-content: space-between; font-size: 11px;
+    color: var(--muted); margin-bottom: 3px;
+  }
+  .gauge-bar {
+    height: 8px; background: var(--panel2);
+    border-radius: 2px; overflow: hidden; position: relative;
+  }
+  .gauge-fill { height: 100%; transition: width 0.3s ease; }
+  .gauge-fill.solid { background: linear-gradient(90deg, #4a90e2, #5aa9ff); }
+  .gauge-fill.granular { background: linear-gradient(90deg, #b88846, #d4a560); }
+  .gauge-fill.fluid { background: linear-gradient(90deg, #2e75b6, #4aa3df); }
+  .gauge-fill.danger { background: var(--danger); }
+  .gauge-fill.warn { background: var(--warn); }
+  .gauge-fill.ok { background: var(--ok); }
+  .cycle-info {
+    background: var(--panel2); padding: 10px; border-radius: 4px;
+    margin-top: 10px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; line-height: 1.5;
+  }
+  .cycle-info .key { color: var(--muted); }
+  .cycle-info .val { color: var(--text); font-weight: 600; }
+  .btn {
+    width: 100%; padding: 8px; background: var(--accent); color: #000;
+    border: none; border-radius: 3px; font-weight: 700; cursor: pointer;
+    margin-top: 6px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .btn:hover { background: #79bbff; }
+  .btn.secondary { background: var(--panel2); color: var(--text); }
+  .btn.secondary:hover { background: #2a3340; }
+  .btn.M { background: var(--M); }
+  .btn.P { background: var(--P); }
+  .btn.W { background: var(--W); }
+  .btn.X { background: var(--X); color: #000; }
+  .conn-status {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); margin-right: 5px;
+  }
+  .conn-status.live { background: var(--ok); box-shadow: 0 0 6px var(--ok); }
+  .conn-status.error { background: var(--danger); }
+  .legend {
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 10px; color: var(--muted); line-height: 1.6;
+  }
+  .legend .dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 5px; vertical-align: middle;
+  }
+  .panel-summary {
+    background: var(--panel2); padding: 8px;
+    border-radius: 3px; margin-bottom: 10px;
+    font-size: 10.5px; line-height: 1.5;
+    border-left: 3px solid var(--accent);
+  }
+  .panel-summary.M { border-left-color: var(--M); }
+  .panel-summary.P { border-left-color: var(--P); }
+  .panel-summary.W { border-left-color: var(--W); }
+  .panel-summary.X { border-left-color: var(--X); }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>GEOX GLOF Cascade Substrate  ·  zen-33 State</h1>
+  <div class="meta">
+    <span class="conn-status" id="connStatus"></span>
+    <span id="connLabel">connecting…</span>  ·
+    POST <code>:8081/tools/geox_glof_cascade_*</code>
+  </div>
+</div>
+<div class="grid">
+
+  <!-- LEFT: 33-sliders in 4 panels (M/P/W/X tabs) -->
+  <div class="panel">
+    <div class="tabs">
+      <button class="tab active" data-panel="M" onclick="switchPanel('M')">M·9</button>
+      <button class="tab" data-panel="P" onclick="switchPanel('P')">P·9</button>
+      <button class="tab" data-panel="W" onclick="switchPanel('W')">W·9</button>
+      <button class="tab" data-panel="X" onclick="switchPanel('X')">X·6</button>
+    </div>
+
+    <div class="panel-summary" id="panelSummary"></div>
+
+    <div id="sliders"></div>
+
+    <button class="btn" id="runBtn" onclick="runFIMCycle()">▶ Run F-I-M Cycle</button>
+    <button class="btn secondary" onclick="resetDefaults()">↺ Reset Defaults</button>
+
+    <div class="legend">
+      <div><b>4 panels × 33 scalars</b> · R ∉ S: g fixed at 9.81 m/s²</div>
+      <div style="margin-top:6px"><span class="dot" style="background:var(--M)"></span>M Geomechanics (failure/flow)</div>
+      <div><span class="dot" style="background:var(--P)"></span>P Petrophysics (in-situ state)</div>
+      <div><span class="dot" style="background:var(--W)"></span>W Wave Invariants (observable)</div>
+      <div><span class="dot" style="background:var(--X)"></span>X Cross-Domain (chem/bio/info/social)</div>
+    </div>
+  </div>
+
+  <!-- CENTER: canvas + timeline -->
+  <div class="canvas-wrap">
+    <canvas id="glcanvas"></canvas>
+    <div class="timeline">
+      <span style="color:var(--muted);font-size:11px">t =</span>
+      <input type="range" id="tscrub" min="0" max="180" value="0" step="1"
+             oninput="updateScrubber(this.value)">
+      <span id="tmin" style="font-family:monospace;width:50px">0 min</span>
+      <span class="phase-tag" id="phaseTag">SOLID</span>
+      <span style="color:var(--muted);font-size:10px;margin-left:auto">state_33 hash: <span id="s33Hash">—</span></span>
+    </div>
+  </div>
+
+  <!-- RIGHT: real-time analytics -->
+  <div class="panel">
+    <h2>W (Wave Invariants · 33D-derived)</h2>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Vp (forward)</span><span id="vpTxt">0 m/s</span></div>
+      <div class="gauge-bar"><div class="gauge-fill solid" id="vpFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Vs (forward)</span><span id="vsTxt">0 m/s</span></div>
+      <div class="gauge-bar"><div class="gauge-fill solid" id="vsFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Biot α_B</span><span id="alphaTxt">0.00</span></div>
+      <div class="gauge-bar"><div class="gauge-fill solid" id="alphaFill" style="width:0%"></div></div>
+    </div>
+
+    <h2 style="margin-top:16px">Breach Assessment (33D Terzaghi + MC)</h2>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>P_breach (33D)</span><span id="breachTxt">0%</span></div>
+      <div class="gauge-bar"><div class="gauge-fill ok" id="breachFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>σ_eff</span><span id="seffTxt">0 kPa</span></div>
+      <div class="gauge-bar"><div class="gauge-fill solid" id="seffFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>τ_max (Mohr-C)</span><span id="taumaxTxt">0 kPa</span></div>
+      <div class="gauge-bar"><div class="gauge-fill granular" id="taumaxFill" style="width:0%"></div></div>
+    </div>
+
+    <h2 style="margin-top:16px">F-I-M Receipt</h2>
+    <div class="cycle-info">
+      <div><span class="key">cycle_id:</span> <span class="val" id="cycleId">—</span></div>
+      <div><span class="key">G_score:</span> <span class="val" id="gscore">—</span></div>
+      <div><span class="key">log_lik:</span> <span class="val" id="loglik">—</span></div>
+      <div><span class="key">phase_id:</span> <span class="val" id="phaseId">—</span></div>
+      <div><span class="key">hyd. fracture:</span> <span class="val" id="hydro">—</span></div>
+      <div><span class="key">panel_focus:</span> <span class="val" id="panelFocus">all</span></div>
+      <div><span class="key">state_id:</span> <span class="val" id="stateId" style="font-size:9px">—</span></div>
+    </div>
+
+    <div style="margin-top:12px; font-size:9.5px; color:var(--muted); line-height:1.5">
+      JSON-RPC endpoint: <code style="font-size:9px">:8081/tools/{tool}</code><br>
+      5 GLOF tools (zen_33:true) — manifest 74 → 79<br>
+      Backend: <code style="font-size:9px">/root/GEOX/src/geox_mcp/tools/glof_cascade.py</code>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================ zen-33 PROPERTIES
+const PANELS = {
+  M: {
+    name: "Geomechanics (failure & flow)",
+    color: "var(--M)",
+    summary: "Static & dynamic strength. — controls Mohr-Coulomb failure, Voellmy flow, tensile fracture.",
+    props: [
+      { id: 'E',         label: 'E Young modulus',    unit: 'GPa',   min: 0.001,  max: 100,    step: 0.1,   def: 30,     log: false },
+      { id: 'nu',        label: 'nu Poisson',          unit: '-',     min: 0.05,   max: 0.49,   step: 0.01,  def: 0.25,   log: false },
+      { id: 'c',         label: 'c cohesion',         unit: 'kPa',   min: 0,      max: 500,    step: 0.1,   def: 5,      log: false },
+      { id: 'phi_angle', label: 'phi friction',       unit: 'rad',   min: 0,      max: 1.55,   step: 0.01,  def: 0.523,  log: false },
+      { id: 'k_perm',    label: 'k_perm',             unit: 'm^2',   min: 1e-6,   max: 1e-3,   step: 1e-5,  def: 1e-4,   log: true  },
+      { id: 'phi_p',     label: 'phi_p porosity',     unit: '-',     min: 0,      max: 0.6,    step: 0.01,  def: 0.30,   log: false },
+      { id: 'eta',       label: 'eta viscosity',      unit: 'Pa.s',  min: 1e-3,   max: 1e3,    step: 1e-2,  def: 0.05,   log: true  },
+      { id: 'tau_0',     label: 'tau_0 yield',        unit: 'kPa',   min: 0,      max: 100,    step: 0.1,   def: 2,      log: false },
+      { id: 'sigma_t',   label: 'sigma_t tensile',    unit: 'MPa',   min: 0,      max: 50,     step: 0.1,   def: 0.5,    log: false },
+    ]
+  },
+  P: {
+    name: "Petrophysics (in-situ state & storage)",
+    color: "var(--P)",
+    summary: "Density, pore pressure, temperature, porosity. — drives overburden σ_v and Terzaghi effective stress.",
+    props: [
+      { id: 'rho',       label: 'rho density',        unit: 'kg/m^3', min: 500,   max: 3200,  step: 10,   def: 2700,  log: false },
+      { id: 'Pp',        label: 'Pp pore press',      unit: 'MPa',   min: 0,     max: 100,   step: 0.1,  def: 0,    log: false },
+      { id: 'T',         label: 'T temperature',      unit: 'K',     min: 173,   max: 1000,  step: 1,    def: 273.15, log: false },
+      { id: 'phi',       label: 'phi porosity',       unit: '-',     min: 0,     max: 0.6,   step: 0.01, def: 0.30, log: false },
+      { id: 'rho_e',     label: 'rho_e resistivity',  unit: 'ohm.m', min: 0.1,   max: 1000,  step: 1,    def: 100,  log: false },
+      { id: 'chi',       label: 'chi mag susc',       unit: 'SI',    min: -1e-2, max: 1e-1, step: 1e-4, def: 1e-4, log: true },
+      { id: 'k_th',      label: 'k_th thermal cond',  unit: 'W/m.K', min: 0.1,   max: 10,    step: 0.1,  def: 2.5,  log: false },
+      { id: 'S_w',       label: 'S_w saturation',     unit: '-',     min: 0,     max: 1,     step: 0.01, def: 0.1,  log: false },
+      { id: 'phase_id',  label: 'phase_id',           unit: 'enum',  min: 0,     max: 3,     step: 1,    def: 1,    log: false },
+    ]
+  },
+  W: {
+    name: "Wave Invariants (observable bridge)",
+    color: "var(--W)",
+    summary: "Vp/Vs from M+P via Navier-Cauchy. — remote sensing of stress & elastic moduli without core sampling.",
+    props: [
+      { id: 'Vp',        label: 'Vp P-wave',          unit: 'm/s',   min: 1500,  max: 6000, step: 10,   def: 5500, log: false },
+      { id: 'Vs',        label: 'Vs S-wave',          unit: 'm/s',   min: 0,     max: 4000, step: 10,   def: 3200, log: false },
+      { id: 'Qp',        label: 'Qp P-Q',             unit: '-',     min: 5,     max: 500,  step: 5,    def: 80,   log: false },
+      { id: 'Qs',        label: 'Qs S-Q',             unit: '-',     min: 5,     max: 500,  step: 5,    def: 40,   log: false },
+      { id: 'epsilon',   label: 'epsilon Thomsen',    unit: '-',     min: -0.2,  max: 0.5,  step: 0.01, def: 0.15, log: false },
+      { id: 'delta',     label: 'delta Thomsen',      unit: '-',     min: -0.2,  max: 0.5,  step: 0.01, def: 0.10, log: false },
+      { id: 'gamma',     label: 'gamma Thomsen',      unit: '-',     min: -0.2,  max: 0.5,  step: 0.01, def: 0.12, log: false },
+      { id: 'alpha_B',   label: 'alpha_B Biot',       unit: '-',     min: 0,     max: 1,    step: 0.01, def: 0.30, log: false },
+      { id: 'g',         label: 'g gravity (RnotS)',  unit: 'm/s^2', min: 9.78,  max: 9.83, step: 0.01, def: 9.81, log: false },
+    ]
+  },
+  X: {
+    name: "Cross-Domain (chem/bio/info/social)",
+    color: "var(--X)",
+    summary: "Bridges to other disciplines — chemistry (E_a, L_f), biology (c_bio), math (D_f), language (H_info), social (E_socio).",
+    props: [
+      { id: 'E_a',       label: 'E_a Arrhenius',      unit: 'kJ/mol', min: 0,    max: 200,   step: 1,    def: 80,  log: false },
+      { id: 'L_f',       label: 'L_f latent heat',    unit: 'kJ/kg',  min: 0,    max: 600,   step: 1,    def: 334, log: false },
+      { id: 'c_bio',     label: 'c_bio root coh',     unit: 'kPa',    min: 0,    max: 50,    step: 0.1,  def: 0,   log: false },
+      { id: 'D_f',       label: 'D_f fractal dim',    unit: '-',      min: 1.0,  max: 3.0,   step: 0.01, def: 2.5, log: false },
+      { id: 'H_info',    label: 'H_info entropy',     unit: 'bits',   min: 0,    max: 10,    step: 0.1,  def: 2.5, log: false },
+      { id: 'E_socio',   label: 'E_socio exposure',   unit: '0..1',   min: 0,    max: 1,     step: 0.01, def: 0.15,log: false },
+    ]
+  }
+};
+
+let currentPanel = 'M';
+let state33 = {};          // 33 scalars
+let session = { state_id: null, panel_focus: 'all', cycle_count: 0 };
+let phaseSeries = ['granular'];
+let lastResponse = null;
+let connLive = false;
+
+function fmtVal(v, log) {
+  if (log) return v.toExponential(1);
+  if (Math.abs(v) < 10) return v.toFixed(3);
+  if (Math.abs(v) < 1000) return v.toFixed(1);
+  return v.toFixed(0);
+}
+
+function initState33() {
+  for (const p of Object.keys(PANELS)) {
+    for (const prop of PANELS[p].props) state33[prop.id] = prop.def;
+  }
+  state33.g = 9.81;  // R notin S
+}
+
+function switchPanel(p) {
+  currentPanel = p;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.tab[data-panel="${p}"]`).classList.add('active');
+  renderSliders();
+}
+
+function renderSliders() {
+  const c = document.getElementById('sliders');
+  c.innerHTML = '';
+  const panel = PANELS[currentPanel];
+  for (const prop of panel.props) {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    row.innerHTML = `
+      <label>${prop.label}</label>
+      <input type="range" id="${prop.id}" min="${prop.min}" max="${prop.max}" step="${prop.step}" value="${state33[prop.id]}"
+             oninput="updateProp('${prop.id}', this.value, ${prop.log})">
+      <span class="val" id="${prop.id}_v">${fmtVal(state33[prop.id], prop.log)} ${prop.unit}</span>
+    `;
+    c.appendChild(row);
+  }
+}
+
+function updateProp(id, v, log) {
+  state33[id] = parseFloat(v);
+  document.getElementById(id + '_v').textContent = fmtVal(state33[id], log) + ' ' +
+    (PANELS.M.props.concat(PANELS.P.props, PANELS.W.props, PANELS.X.props)
+      .find(p => p.id === id)?.unit || '');
+}
+
+function resetDefaults() {
+  initState33();
+  renderSliders();
+  session = { state_id: null, panel_focus: 'all', cycle_count: 0 };
+  phaseSeries = ['granular'];
+  drawCanvas(0);
+  setConn(false);
+}
+
+function setConn(live, label) {
+  connLive = live;
+  const s = document.getElementById('connStatus');
+  const l = document.getElementById('connLabel');
+  s.className = 'conn-status ' + (live ? 'live' : 'error');
+  l.textContent = label || (live ? ':8081 live' : ':8081 unreachable');
+}
+
+// ============================================================ Canvas + phase
+function drawCanvas(t) {
+  const c = document.getElementById('glcanvas');
+  const ctx = c.getContext('2d');
+  if (c.width !== c.clientWidth) { c.width = c.clientWidth; c.height = c.clientHeight; }
+  const W = c.width, H = c.height;
+  ctx.fillStyle = '#0a0e14'; ctx.fillRect(0, 0, W, H);
+
+  // Sky
+  ctx.fillStyle = '#1a2030'; ctx.fillRect(0, 0, W, H * 0.15);
+
+  // Dam body (33D-derived color from phase + state_33)
+  const phase = phaseSeries[Math.min(t, phaseSeries.length - 1)] || 'granular';
+  const phaseCol = phase === 'solid' ? '#4a90e2' : phase === 'granular' ? '#b88846' :
+                    phase === 'fluid' ? '#2e75b6' : '#888';
+  ctx.fillStyle = phaseCol;
+  ctx.fillRect(0, H * 0.15, W, H * 0.55);
+
+  // Water (33D S_w drives level)
+  const waterLevel = H * 0.70 - (H * 0.55) * Math.min(t, /180) * (state33.S_w || 0.5);
+  const waterH = Math.max(0.1, H * 0.70 - waterLevel);
+  ctx.fillStyle = '#2e75b6';
+  ctx.fillRect(0, waterLevel, W, waterH);
+
+  // Mesh grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.line = 1;
+  const nx = 60, nz = 20;
+  for (let i = 0; i <= nx; i++) {
+    ctx.beginPath(); ctx.moveTo(i * W/nx, H * 0.15); ctx.lineTo(i * W/nx, H); ctx.stroke();
+  }
+  for (let j = 0; j <= nz; j++) {
+    ctx.beginPath(); ctx.moveTo(0, H * 0.15 + j * H * 0.85 / nz);
+    ctx.lineTo(W, H * 0.15 + j * H * 0.85 / nz); ctx.stroke();
+  }
+
+  // Phase overlay (33D color)
+  ctx.globalAlpha = 0.15; ctx.fillStyle = phaseCol;
+  for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
+    if (Math.random() > 0.3) continue;
+    ctx.fillRect(i * W/nx + 1, H * 0.15 + j * H * 0.85 / nz + 1, W / // - 2, H * 0.85 / nz - 2);
+  }
+  ctx.globalAlpha = 1;
+
+  // Crest
+  ctx.strokeStyle = '#d8e0ea'; ctx.line = 2;
+  ctx.beginPath(); ctx.moveTo(0, H * 0.15); ctx.lineTo(W, H * 0.15); ctx.stroke();
+
+  ctx.fillStyle = '#d8e0ea'; ctx.font = '11px monospace';
+  ctx.fillText('Dam cross-section (33D-derived)', 10, H * 0.15 - 4);
+  ctx.fillText(`t = ${t} min  ·  S_w = ${(state33.S_w||0.5).toFixed(2)}`, W - 230, 18);
+}
+
+function updateScrubber(t) {
+  document.getElementById('tmin').textContent = t + ' min';
+  const phase = phaseSeries[Math.min(t, phaseSeries.length - 1)] || 'granular';
+  const tag = document.getElementById('phaseTag');
+  tag.textContent = phase.toUpperCase();
+  tag.style.background = phase === 'solid' ? '#4a90e2' :
+                         phase === 'granular' ? '#b88846' : '#2e75b6';
+  drawCanvas(parseInt(t));
+}
+
+// ============================================================ MCP wireup
+let sessionId = '';        // SCT token (auto-minted by GEOX if empty)
+let actorId = 'fi-003-qwen';  // injected on every MUTATE call
+
+async function mcpCall(tool, body) {
+  // Inject session_id + actor_id on every call (GEOX governance gate)
+  // For OBSERVE-class: ANON-* is auto-minted by middleware
+  // For MUTATE-class: needs valid SCT or LIMITED_MUTATE authority
+  if (!body.session_id) body.session_id = sessionId || '';
+  if (!body.actor_id) body.actor_id = actorId;
+  const resp = await fetch('http://127.0.0.1:8081/mcp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'mcp-session-id': sessionId,  // may be empty initially
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: Math.floor(Math.random() * 1e9),
+      method: 'tools/call',
+      params: { name: tool, arguments: body },
+    }),
+  });
+  if (!resp.ok) throw new Error(`MCP ${tool} returned ${resp.status}`);
+  const json = await resp.json();
+  // Unwrap JSON-RPC 2.0 envelope → inner tool result (text content)
+  if (json.error) throw new Error('JSON-RPC error: ' + JSON.stringify(json.error));
+  const content = json.result && json.result.content;
+  if (!content || !content[0] || content[0].type !== 'text') {
+    throw new Error('unexpected MCP response: ' + JSON.stringify(json).slice(0, 200));
+  }
+  const inner = JSON.parse(content[0].text);
+  if (inner.ok === false) {
+    throw new Error(inner.error || inner.reason || 'tool returned ok=false');
+  }
+  return inner.result;
+}
+
+async function mcpHandshake() {
+  // JSON-RPC 2.0 initialize handshake (returns session id via header)
+  const initResp = await fetch('http://127.0.0.1:8081/mcp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0', id: 1, method: 'initialize',
+      params: { protocolVersion: '2024-11-05', capabilities: {},
+                clientInfo: { name: 'ui-substrate', version: '0.1.0' } },
+    }),
+  });
+  const sid = initResp.headers.get('mcp-session-id') || '';
+  if (sid) {
+    sessionId = sid;
+    // Send notifications/initialized to unlock tool calls (GEOX lifecycle gate)
+    await fetch('http://127.0.0.1:8081/mcp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json',
+                 'mcp-session-id': sid },
+      body: JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized', params: {} }),
+    });
+  }
+  return sid;
+}
+
+async function runFIMCycle() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true; btn.textContent = '… running F-I-M';
+  try {
+    // 0. MCP handshake (initialize + notifications/initialized) if no session yet
+    if (!sessionId) {
+      await mcpHandshake();
+    }
+
+    // 1. Initialize (or reuse state_id)
+    const initBody = {
+      domain_bounds_x_m: 4000.0,
+      domain_bounds_z_m: 600.0,
+      resolution_m: 10.0,
+      dam_height_m: 150.0,
+      water_head_initial_m: Math.min(110, Math.max(0, (state33.S_w || 0.1) * 150)),
+      use_seismic_priors: true,
+      initial_state_33: { ...state33 },
+      panel_focus: currentPanel,
+    };
+    const init = await mcpCall('geox_glof_cascade_initialize', initBody);
+    session.state_id = init.snapshot.state_id;
+    session.panel_focus = currentPanel;
+    setConn(true, ':8081 live · zen_33');
+
+    // 2. Step (advance 33D state)
+    const step = await mcpCall('geox_glof_cascade_step', {
+      state_id: session.state_id,
+      n_steps: 5,
+      dt_sec: 1.0,
+    });
+    const s33 = step.state_33;
+    const wd = step.W_derived;
+    Object.assign(state33, s33);  // mirror back to sliders
+    renderSliders();
+
+    // 3. Phase (yield verdict + breach)
+    const phase = await mcpCall('geox_glof_cascade_phase', {
+      state_id: session.state_id,
+      cell_id: 'dam_crest',
+      sigma_n: 500e3,
+      tau_applied: 80e3,
+      velocity: 0.0,
+      sigma_applied: 0.0,
+    });
+
+    // 4. Inverse (infer dam params from observation)
+    const inv = await mcpCall('geox_glof_cascade_inverse', {
+      observation: { label: 'Bhote Koshi', water_head_m: 110,
+                     breach_width_m: 150, peak_discharge_m3s: 3000,
+                     time_to_peak_min: 12, downstream_surge_m: 9, source: 'gauge' },
+      base_theta: s33,
+      n_grid: 3,
+    });
+
+    // 5. Metabolize (close F-I-M loop)
+    const met = await mcpCall('geox_glof_cascade_metabolize', {
+      cycle_id: 'c' + (++session.cycle_count),
+      theta_hat: inv.theta_hat,
+      forward_prediction: { Q_peak_m3s: 3000, time_to_peak_min: 12, downstream_surge_m_est: 9 },
+      observation: { label: 'Bhote Koshi', water_head_m: 110,
+                     breach_width_m: 150, peak_discharge_m3s: 3000,
+                     time_to_peak_min: 12, downstream_surge_m: 9, source: 'gauge' },
+    });
+    const rec = met.receipt;
+
+    // Update right panel
+    const b = phase.state_33_breach;
+    document.getElementById('vpTxt').textContent = wd.Vp_m_s.toFixed(0) + ' m/s';
+    document.getElementById('vsTxt').textContent = wd.Vs_m_s.toFixed(0) + ' m/s';
+    document.getElementById('alphaTxt').textContent = wd.alpha_B.toFixed(3);
+    document.getElementById('breachTxt').textContent = (b.breach_probability_33D * 100).toFixed(1) + '%';
+    document.getElementById('seffTxt').textContent = (b.sigma_eff_Pa/1e3).toFixed(1) + ' kPa';
+    document.getElementById('taumaxTxt').textContent = (b.tau_max_Pa/1e3).toFixed(1) + ' kPa';
+
+    // Gauges fill
+    const vpFill = Math.min(100, (wd.Vp_m_s / 6000) * 100);
+    const vsFill = Math.min(100, (wd.Vs_m_s / 4000) * 100);
+    const alphaFill = Math.min(100, wd.alpha_B * 100);
+    const breachFill = Math.min(100, b.breach_probability_33D * 100);
+    document.getElementById('vpFill').style.width = vpFill + '%';
+    document.getElementById('vsFill').style.width = vsFill + '%';
+    document.getElementById('alphaFill').style.width = alphaFill + '%';
+    document.getElementById('breachFill').style.width = breachFill + '%';
+    document.getElementById('breachFill').className = 'gauge-fill ' +
+      (breachFill > 70 ? 'danger' : breachFill > 30 ? 'warn' : 'ok');
+
+    document.getElementById('seffFill').style.width = Math.min(100, b.sigma_eff_Pa/1e6*100) + '%';
+    document.getElementById('taumaxFill').style.width = Math.min(100, b.tau_max_Pa/1e6*100) + '%';
+
+    // Receipt info
+    document.getElementById('cycleId').textContent = rec.cycle_id;
+    document.getElementById('gscore').textContent = rec.G_score.toFixed(3);
+    document.getElementById('loglik').textContent = rec.log_likelihood.toFixed(2);
+    document.getElementById('phaseId').textContent = ['solid','granular','fluid','unknown'][s33.phase_id] || s33.phase_id;
+    document.getElementById('hydro').textContent = b.hydro_fracture ? 'YES ⚠' : 'no';
+    document.getElementById('panelFocus').textContent = session.panel_focus;
+    document.getElementById('stateId').textContent = session.state_id.substring(0, 24) + '...';
+
+    // Phase series update
+    const newPhase = ['solid','granular','fluid','unknown'][s33.phase_id] || 'granular';
+    for (let i = 0; i < 30; i++) phaseSeries.push(newPhase);
+
+    // Update scrubber to show latest
+    document.getElementById('tscrub').max = phaseSeries.length - 1;
+    document.getElementById('tscrub').value = phaseSeries.length - 1;
+    updateScrubber(phaseSeries.length - 1);
+
+    // state hash (simple)
+    document.getElementById('s33Hash').textContent = (s33.E + s33.c + s33.Vp).toString(16).substring(0, 8);
+
+    lastResponse = { initResp, stepResp, phaseResp, invResp, metResp };
+  } catch (e) {
+    setConn(false, ':8081 error: ' + e.message.substring(0, 50));
+    document.getElementById('cycleId').textContent = 'ERROR';
+    document.getElementById('gscore').textContent = '—';
+    console.error(e);
+  } finally {
+    btn.disabled = false; btn.textContent = '▶ Run F-I-M Cycle';
+  }
+}
+
+// ============================================================ Init
+async function probe() {
+  try {
+    const r = await fetch('http://127.0.0.1:8081/health');
+    if (r.ok) setConn(true, ':8081 live · zen_33');
+    else setConn(false, ':8081 HTTP ' + r.status);
+  } catch (e) {
+    setConn(false, ':8081 unreachable (UI graceful fallback)');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initState33();
+  document.getElementById('panelSummary').innerHTML =
+    `<b style="color:${PANELS.M.color}">M</b> ${PANELS.M.summary}`;
+  renderSliders();
+  drawCanvas(0);
+  probe();
+});
+window.addEventListener('resize', () => drawCanvas(0));
+</script>
+</body>
+</html>

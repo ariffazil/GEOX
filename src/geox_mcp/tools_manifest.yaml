@@ -1394,3 +1394,173 @@ tools:
   plugin:
     exposed: true
   ui: null
+- name: geox_glof_cascade_initialize
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.'
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: true
+    zen_33: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.1.0
+- name: geox_glof_cascade_step
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.'
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: true
+    zen_33: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.1.0
+- name: geox_glof_cascade_phase
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+    zen_33: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.1.0
+- name: geox_glof_cascade_inverse
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+    zen_33: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.1.0
+- name: geox_glof_cascade_metabolize
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.'
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: true
+    zen_33: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.1.0
+- name: geox_glof_cascade_mcmc_inverse
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+    zen_33: true
+    phase_c: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.2.0
+- name: geox_glof_cascade_propagate
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  face: surface
+  visibility: public
+  description: 'Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+    zen_33: true
+    phase_c: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 0.2.0

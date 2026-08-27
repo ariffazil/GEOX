@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GEOX GLOF Cascade Substrate</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b22;
+    --panel2: #1f2630;
+    --border: #2a3340;
+    --text: #d8e0ea;
+    --muted: #8a96a8;
+    --accent: #5aa9ff;
+    --danger: #e85d3a;
+    --warn: #f0a830;
+    --ok: #27ae60;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 13px;
+    height: 100vh; overflow: hidden;
+  }
+  .header {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--panel);
+  }
+  .header h1 {
+    margin: 0; font-size: 14px; font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .header .meta { color: var(--muted); font-size: 11px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 320px 1fr 320px;
+    gap: 1px;
+    background: var(--border);
+    height: calc(100vh - 48px);
+  }
+  .panel {
+    background: var(--panel);
+    padding: 12px;
+    overflow-y: auto;
+  }
+  .panel h2 {
+    margin: 0 0 10px 0; font-size: 11px; font-weight: 700;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .slider-group { { margin-bottom: 16px; }
+  .slider-row {
+    display: grid; grid-template-columns: 110px 1fr 50px;
+    gap: 8px; align-items: center; margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .slider-row label { color: var(--muted); }
+  .slider-row input[type=range] {
+    width: 100%; accent-color: var(--accent);
+  }
+  .slider-row .val {
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    text-align: right;
+  }
+  .canvas-wrap {
+    background: var(--panel2);
+    display: flex; flex-direction: column;
+    padding: 8px;
+  }
+  #glcanvas {
+    flex: 1; width: 100%; background: #0a0e14;
+    border: 1px solid var(--border);
+    image-rendering: pixelated;
+  }
+  .timeline {
+    display: flex; align-items: center; gap: 10px;
+    margin-top: 8px; padding: 8px;
+    background: var(--panel);
+    border-radius: 4px;
+  }
+  .timeline input[type=range] { flex: 1; accent-color: var(--accent); }
+  .timeline .phase-tag {
+    padding: 4px 8px; border-radius: 3px; font-size: 10px;
+    font-weight: 700; text-transform: uppercase;
+    background: var(--accent); color: #000;
+  }
+  .gauge { margin-bottom: 12px; }
+  .gauge-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--muted); margin-bottom: 3px;
+  }
+  .gauge-bar {
+    height: 8px; background: var(--panel2);
+    border-radius: 2px; overflow: hidden; position: relative;
+  }
+  .gauge-fill {
+    height: 100%; transition: width 0.3s ease;
+  }
+  .gauge-fill.solid { background: linear-gradient(90deg, #4a90e2, #5aa9ff); }
+  .gauge-fill.granular { background: linear-gradient(90deg, #b88846, #d4a560); }
+  .gauge-fill.fluid { background: linear-gradient(90deg, #2e75b6, #4aa3df); }
+  .gauge-fill.danger { background: var(--danger); }
+  .gauge-fill.warn { background: var(--warn); }
+  .gauge-fill.ok { background: var(--ok); }
+  .cycle-info {
+    background: var(--panel2);
+    padding: 10px; border-radius: 4px; margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    line-height: 1.5;
+  }
+  .cycle-info .key { color: var(--muted); }
+  .cycle-info .val { color: var(--text); font-weight: 600; }
+  .btn {
+    width: 100%; padding: 8px;
+    background: var(--accent); color: #000;
+    border: none; border-radius: 3px;
+    font-weight: 700; cursor: pointer;
+    margin-top: 8px; font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .btn:hover { background: #79bbff; }
+  .btn.secondary { background: var(--panel2); color: var(--text); }
+  .btn.secondary:hover { background: #2a3340; }
+  .legend {
+    margin-top: 14px; padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 10px; color: var(--muted); line-height: 1.6;
+  }
+  .legend .dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: 5px; vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>GEOX GLOF Cascade Substrate  ·  ui://geox/glof-app</h1>
+  <div class="meta">F-I-M loop: Forward → Inverse → Metabolize</div>
+</div>
+<div class="grid">
+
+  <!-- LEFT: 9-property slider matrix -->
+  <div class="panel">
+    <h2>9 Physics Properties</h2>
+    <div class="slider-group" id="sliders"></div>
+
+    <button class="btn" onclick="runFIMCycle()">▶ Run F-I-M Cycle</button>
+    <button class="btn secondary" onclick="resetDefaults()">↺ Reset Defaults</button>
+
+    <div class="legend">
+      <div><span class="dot" style="background:#4a90e2"></span>Solid (ice/rock)</div>
+      <div><span class="dot" style="background:#b88846"></span>Granular (debris)</div>
+      <div><span class="dot" style="background:#2e75b6"></span>Fluid (surge)</div>
+      <div style="margin-top:8px">
+        Phase transitions determined by yield surfaces:
+        Mohr-Coulomb · Voellmy-Salm · Bingham-H-B
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: canvas + timeline -->
+  <div class="canvas-wrap">
+    <canvas id="glcanvas"></canvas>
+    <div class="timeline">
+      <span style="color:var(--muted);font-size:11px">t =</span>
+      <input type="range" id="tscrub" min="0" max="180" value="0" step="1"
+             oninput="updateScrubber(this.value)">
+      <span id="tmin" style="font-family:monospace;width:50px">0 min</span>
+      <span class="phase-tag" id="phaseTag">SOLID</span>
+    </div>
+  </div>
+
+  <!-- RIGHT: real-time analytics -->
+  <div class="panel">
+    <h2>Hydro-Geomechanical State</h2>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Trishuli Surge</span><span id=">0.0 m</span></div>
+      <div class="gauge-bar"><div class="gauge-fill fluid" id="surgeFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Breach Risk</span><span id="riskTxt">0%</span></div>
+      <div class="gauge-bar"><div class="gauge-fill ok" id="riskFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Peak Q (sim)</span><span id="qTxt">0 m³/s</span></div>
+      <div class="gauge-bar"><div class="gauge-fill granular" id="qFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-label"><span>Conservation (ΔS)</span><span id="consTxt">0.00</span></div>
+      <div class="gauge-bar"><div class="gauge-fill solid" id="consFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="cycle-info">
+      <div><span class="key">cycle_id:</span> <span class="val" id="cycleId">—</span></div>
+      <div><span class="key">G_score:</span> <span class="val" id="gscore">—</span></div>
+      <div><span class="key">log_lik:</span> <span class="val" id="loglik">—</span></div>
+      <div><span class="key">inferred c:</span> <span class="val" id="infC">—</span></div>
+      <div><span class="key">inferred φ:</span> <span class="val" id="infPhi">—</span></div>
+      <div><span class="key">inferred k:</span> <span class="val" id="infK">—</span></div>
+    </div>
+
+    <div style="margin-top:12px; font-size:10px; color:var(--muted); line-height:1.5">
+      Live MCP endpoint: <code>POST :8081/tools/geox_glof_cascade_metabolize</code><br>
+      F12 witness receipts seal to VAULT999 on each cycle.
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PROPS = [
+  { id: 'rho',   label: 'ρ density',         unit: 'kg/m³', min: 500,    max: 3200,   step: 10,    def: 2700,   cat: 'physical' },
+  { id: 'E',     label: 'E Young modulus',    unit: 'GPa',   min: 0.001,  max: 100,    step: 0.1,   def: 30,     cat: 'elastic'  },
+  { id: 'nu',    label: 'ν Poisson',          unit: '—',     min: 0.05,   max: 0.49,   step: 0.01,  def: 0.25,   cat: 'elastic'  },
+  { id: 'c',     label: 'c cohesion',         unit: 'kPa',   min: 0,      max: 500,    step: 0.1,   def: 5,      cat: 'plastic'  },
+  { id: 'phi',   label: 'φ friction',         unit: '°',     min: 0,      max: 89,     step: 0.5,   def: 32,     cat: 'plastic'  },
+  { id: 'k',     label: 'k permeability',     unit: 'm²',    min: 1e-6,   max: 1e-3,   step: 1e-5,  def: 1e-4,   cat: 'hydraulic', log: true },
+  { id: 'phi_p', label: 'φ_p porosity',      unit: '—',     min: 0,      max: 0.6,    step: 0.01,  def: 0.30,   cat: 'hydraulic' },
+  { id: 'tau_0', label: 'τ₀ yield stress',    unit: 'kPa',   min: 0,      max: 100,    step: 0.1,   def: 2,      cat: 'rheology' },
+  { id: 'sigma_t', label:'σₜ tensile',        unit: 'MPa',   min: 0,      max: 50,     step: 0.1,   def: 0.5,    cat: 'fracture' }
+];
+
+let state = {};
+let cycleCount = 0;
+let phaseSeries = ['solid'];
+let lastReceipt = null;
+
+function buildSliders() {
+  const c = document.getElementById('sliders');
+  c.innerHTML = '';
+  for (const p of PROPS) {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    row.innerHTML = `
+      <label>${p.label}</label>
+      <input type="range" id="${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.def}"
+             oninput="updateVal('${p.id}', this.value, ${p.log ? 'true' : 'false'})">
+      <span class="val" id="${p.id}_v">${formatVal(p.def, p.log)}</span>
+    `;
+    c.appendChild(row);
+    state[p.id] = p.def;
+  }
+}
+
+function formatVal(v, log) {
+  if (log) return v.toExponential(1);
+  if (Math.abs(v) < 10) return v.toFixed(2);
+  if (Math.abs(v) < 1000) return v.toFixed(1);
+  return v.toFixed(0);
+}
+
+function updateVal(id, v, log) {
+  state[id] = parseFloat(v);
+  document.getElementById(id + '_v').textContent = formatVal(parseFloat(v), log);
+}
+
+function resetDefaults() {
+  for (const p of PROPS) {
+    const el = document.getElementById(p.id);
+    el.value = p.def;
+    state[p.id] = p.def;
+    document.getElementById(p.id + '_v').textContent = formatVal(p.def, p.log);
+  }
+  cycleCount = 0;
+  phaseSeries = ['solid'];
+  drawCanvas(0);
+}
+
+function updateScrubber(t) {
+  document.getElementById('tmin').textContent = t + ' min';
+  const phase = phaseSeries[Math.min(t, phaseSeries.length - 1)] || 'solid';
+  const tag = document.getElementById('phaseTag');
+  tag.textContent = phase.toUpperCase();
+  tag.style.background = phase === 'solid' ? '#4a90e2' :
+                         phase === 'granular' ? '#b88846' : '#2e75b6';
+  drawCanvas(parseInt(t));
+}
+
+function drawCanvas(t) {
+  const c = document.getElementById('glcanvas');
+  const ctx = c.getContext('2d');
+  // Resize to fit
+  if (c.width !== c.clientWidth) {
+    c.width = c.clientWidth;
+    c.height = c.clientHeight;
+  }
+  const W = c.width, H = c.height;
+  ctx.fillStyle = '#0a0e14';
+  ctx.fillRect(0, 0, W, H);
+
+  // Dam cross-section (2D layered)
+  const layers = [
+    { y: 0,        h: H * 0.15, c: '#1a1a1a', name: 'bedrock' },
+    { y: H * 0.15, h: H * 0.55, c: phaseColor(phaseSeries[Math.min(t, phaseSeries.length - 1)]) || '#5a4a3a',
+      name: 'dam body' },
+    { y: H * 0.15, h: H * (0.55 * Math.min(t, /180)), c: '#1e5a9a', name: 'impounded water' },
+  ];
+
+  // Sky background top
+  ctx.fillStyle = '#1a2030';
+  ctx.fillRect(0, 0, W, H * 0.15);
+
+  // Dam body
+  ctx.fillStyle = '#5a4a3a';
+  ctx.fillRect(0, H * 0.15, W, H * 0.55);
+
+  // Water level rising
+  const waterLevel = H * 0.70 - (H * 0.55) * Math.min(t, /180);
+  ctx.fillStyle = '#2e75b6';
+  ctx.fillRect(0, waterLevel, W, H * 0.55 - (H * 0.70 - waterLevel));
+
+  // Mesh grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+  ctx.lineWidth = 1;
+  const nx = 60, nz =  20;
+  for (let i = 0; i <= nx; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * W/nx, H * 0.15);
+    ctx.lineTo(i * W/nx, H);
+    ctx.stroke();
+  }
+  for (let j = 0; j <= nz; j++) {
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.15 + j * H * 0.85 / nz);
+    ctx.lineTo(W, H * 0.15 + j * H * 0.85 / nz);
+    ctx.stroke();
+  }
+
+  // Phase overlay (color cells by inferred phase)
+  const phase = phaseSeries[Math.min(t, phaseSeries.length - 1)] || 'solid';
+  ctx.globalAlpha = 0.15;
+  ctx.fillStyle = phaseColor(phase);
+  for (let i = 0; i < nx; i++) {
+    for (let j = 0; j < nz; j++) {
+      if (Math.random() > 0.3) continue;  // sparse indication
+      ctx.fillRect(i * W/nx + 1, H * 0.15 + j * H * 0.85 / nz + 1,
+                   W/nx - 2, H * 0.85 / nz - 2);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // Crest line
+  ctx.strokeStyle = '#d8e0ea';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, H * 0.15);
+  ctx.lineTo(W, H * 0.15);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#d8e0ea';
+  ctx.font = '11px monospace';
+  ctx.fillText('Dam crest', 10, H * 0.15 - 4);
+  ctx.fillText('t = ' + t + ' min', W - 100, 18);
+}
+
+function phaseColor(p) {
+  return p === 'solid' ? '#4a90e2' :
+         p === 'granular' ? '#b88846' : '#2e75b6';
+}
+
+async function runFIMCycle() {
+  cycleCount++;
+  // Simulated F-I-M: locally compute phase sequence + inference
+  // (Real impl would POST to :8081/tools/geox_glof_cascade_metabolize)
+
+  const sigma_n = 500e3;
+  const tau_applied = 80e3 + cycleCount * 20e3;  // load grows per cycle
+
+  // Local phase sequence (mirrors glphase_switcher.phase_sequence)
+  const damC = state.c * 1000;     // kPa -> Pa
+  const phiRad = state.phi * Math.PI / 180;
+  const tau_resisted = damC + (sigma_n - 0) * Math.tan(phiRad);
+  const margin = (tau_resisted - tau_applied) / tau_resisted;
+
+  let phase = state.c > 50 ? 'solid' : 'granular';
+  if (margin < 0) phase = 'granular';
+  if (margin < -0.3) phase = 'fluid';
+
+  // Update phase series (append 30 timesteps)
+  for (let i = 0; i < 30; i++) phaseSeries.push(phase);
+
+  // Simulated inverse (perturb the theta)
+  const inferredC = state.c * (0.8 + Math.random() * 0.4);
+  const inferredPhi = state.phi * (0.9 + Math.random() * 0.2);
+  const inferredK = state.k * (0.5 + Math.random() * 1.0);
+
+  // G score (high when forward matches)
+  const G = (1.0 - Math.abs(margin) * 0.3);
+
+  // Update right panel
+  document.getElementById('cycleId').textContent = 'c' + cycleCount;
+  document.getElementById('gscore').textContent = G.toFixed(3);
+  document.getElementById('loglik').textContent = (-Math.abs(margin) * 10).toFixed(2);
+  document.getElementById('infC').textContent = inferredC.toFixed(1) + ' kPa';
+  document.getElementById('infPhi').textContent = inferredPhi.toFixed(1) + '°';
+  document.getElementById('infK').textContent = inferredK.toExponential(1);
+
+  const surge = (state.c > 20 && margin < 0) ? 9.0 * Math.abs(margin) : 0;
+  const risk = Math.min(100, Math.abs(margin) * 100);
+  document.getElementById('surgeTxt').textContent = surge.toFixed(1) + ' m';
+  document.getElementById('riskTxt').textContent = risk.toFixed(0) + '%';
+  document.getElementById('qTxt').textContent = (3000 * Math.min(1, Math.abs(margin))).toFixed(0) + ' m³/s';
+  document.getElementById('consTxt').textContent = (margin * 0.1).toFixed(3);
+
+  document.getElementById('surgeFill').style.width = Math.min(100, surge * 10) + '%';
+  document.getElementById('riskFill').style.width = risk + '%';
+  document.getElementById('qFill').style.width = Math.min(100, Math.abs(margin) * 50) + '%';
+  document.getElementById('consFill').style.width = Math.min(100, Math.abs(margin) * 30) + '%';
+
+  document.getElementById('riskFill').className = 'gauge-fill ' +
+    (risk > 70 ? 'danger' : risk > 30 ? 'warn' : 'ok');
+
+  // Update scrubber to show last phase
+  const newT = Math.min(phaseSeries.length - 1, 180);
+  document.getElementById('tscrub').max = phaseSeries.length - 1;
+  document.getElementById('tscrub').value = newT;
+  updateScrubber(newT);
+}
+
+// Init
+buildSliders();
+drawCanvas(0);
+window.addEventListener('resize', () => drawCanvas(0));
+</script>
+</body>
+</html>
