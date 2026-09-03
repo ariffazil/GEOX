@@ -288,7 +288,13 @@ if not GEOX_SECRET_TOKEN:
 
 # ─── Git SHA version (K8: no silent version drift) ───────────────────────────
 def _get_git_version() -> str:
-    """Return geox-<short-sha> from git, or 'geox-unknown' if not a git repo."""
+    """Return geox-<short-sha> from git, or the deploy-time frozen marker.
+
+    FHS-promoted runtime (/opt/geox) carries no .git — the deploy marker
+    (repo-root .git_commit, full SHA written at rsync time) is the honest
+    frozen identity there. Falls back to 'geox-unknown' only when neither
+    source exists.
+    """
     try:
         sha = (
             subprocess.check_output(
@@ -301,7 +307,16 @@ def _get_git_version() -> str:
         )
         return f"geox-{sha}"
     except Exception:
-        return "geox-unknown"
+        pass
+    try:
+        marker = (
+            Path(__file__).resolve().parents[2] / ".git_commit"
+        ).read_text(encoding="utf-8").strip()
+        if marker:
+            return f"geox-{marker[:7]}"
+    except Exception:
+        pass
+    return "geox-unknown"
 
 
 _GIT_VERSION = _get_git_version()
