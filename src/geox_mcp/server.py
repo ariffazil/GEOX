@@ -2767,6 +2767,7 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
             "2026-07-28",  # Stateless MCP 2.0 (MCPJam Inspector default)
             "2025-11-25",  # Streamable HTTP + outputSchema (GEOX canonical)
             "2025-06-18",  # transitional canonical
+            "2025-03-26",  # TS SDK default (Kimi Code 0.40.x pins this) — added 2026-09-04 under F13 auth-A
             "2024-11-25",  # FastMCP legacy — in active use across federation
             "2024-11-05",  # old SSE transport — backwards compat for Claude Desktop
         }
