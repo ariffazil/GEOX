@@ -1,15 +1,33 @@
 # Deployment — GEOX (Earth Sciences)
 
-## Prerequisites
+## Live VPS (KVM8) — this is how GEOX actually runs
+
+- Unit: `geox-mcp.service`
+- Runtime: `/opt/geox`
+- Source: `/root/GEOX` (`github.com/ariffazil/GEOX`)
+- Bind: `127.0.0.1:8081`
+- Entry: `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081`
+
+```bash
+# After gitwrap on /root/GEOX:
+git -C /opt/geox fetch origin
+git -C /opt/geox reset --hard origin/main
+systemctl restart geox-mcp.service
+curl -sf http://127.0.0.1:8081/health
+```
+
+Do not treat Docker Compose as the live path on this host.
+
+## Prerequisites (portable / Docker)
 
 - Docker 24+ and Docker Compose v2
 - 8 CPU cores, 16GB RAM (seismic processing is compute-intensive)
 - Ports: `8081` (GEOX organ)
 
-## Quick Start
+## Quick Start (Docker — not KVM8 live)
 
 ```bash
-git clone https://github.com/arif-fazil/GEOX.git
+git clone https://github.com/ariffazil/GEOX.git
 cd GEOX
 docker compose up -d
 
