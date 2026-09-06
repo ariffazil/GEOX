@@ -5560,10 +5560,13 @@ def register_tools_on(mcp):
                 if mode in ("zoeppritz", "full"):
                     rpp = zoeppritz_rpp(vp1, vs1, rho1, vp2, vs2, rho2, thetas)
                     results["zoeppritz"] = {"theta_deg": thetas.tolist(), "rpp": rpp.tolist()}
+                    results["reflectivity"] = rpp.tolist()
                 if mode in ("shuey", "full"):
                     sh = shuey_avo(vp1, vs1, rho1, vp2, vs2, rho2, theta_max)
                     sd = sh.to_dict() if hasattr(sh, 'to_dict') else {}
                     results["shuey"] = {"intercept_R0": sd.get("intercept_R0"), "gradient_G": sd.get("gradient_G"), "avo_class": sd.get("avo_class")}
+                    if sd.get("intercept_R0") is not None:
+                        results["amplitude"] = [sd.get("intercept_R0")]
                 if mode in ("lmr", "full"):
                     vpp = np.array([vp]) if isinstance(vp, (int, float)) else np.array(vp)
                     vss = np.array([vs]) if isinstance(vs, (int, float)) else np.array(vs)

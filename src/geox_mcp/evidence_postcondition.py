@@ -33,7 +33,7 @@ logger = logging.getLogger("geox_mcp.evidence_postcondition")
 EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     # ── Compute / petrophysics ──────────────────────────────────────
     "geox_petrophysics": ["net_pay", "curves", "curves_available", "vsh", "porosity", "sw"],
-    "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute"],
+    "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute", "zoeppritz", "rpp", "shuey", "lmr", "castagna"],
     "geox_seismic_interpret": ["horizons", "faults", "interpretation_bundle", "geometry"],
     "geox_seismic_ingest": ["volume_ref", "headers", "trace_count", "sample_count"],
     "geox_sequence": ["correlation", "zones", "tops", "strat_column"],
