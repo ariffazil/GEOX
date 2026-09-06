@@ -1,33 +1,56 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-federation_release: v2026.08.25
-last_verified: 2026-08-25T04:30:00Z
-live_commit: 6fa76d02
-tools_live: 19 (canonical, live-witnessed via :8081/health)
-apps_registered: 18
+federation_release: v2026.08.26
+last_verified: 2026-09-06T15:05:00Z
+source_commit: e16c95cb+ (this README commit supersedes)
+live_runtime: /opt/geox · systemd geox-mcp.service · 127.0.0.1:8081
+tools_live: 26 (canonical, live-witnessed via :8081/health)
+mcp_apps_ui: 12 (GEOX_APPS keys well_desk…workspace_v1)
 authority_ceiling: 555_COMPUTE_ONLY
-truth_rule: live :8081/health + tools/list beat any static count in prose
+domain_law: NATURAL_LAW
+truth_rule: live :8081/health beats any static count in this file
 -->
 
 # GEOX — Earth Intelligence Engine
 
-## Physics-grounded geological intelligence for exploration, hazard assessment, and earth science.
+Physics-grounded geological intelligence for exploration, hazard assessment, and earth science.
 
-GEOX is an AI-powered earth science platform that transforms subsurface data — seismic, wells, basin models — into auditable geological evidence. Every claim is traceable, every uncertainty is visible, and every result separates observation from interpretation.
+GEOX transforms subsurface data — seismic, wells, basin models — into auditable geological evidence. Every claim is traceable. Observation, derivation, and interpretation stay separate. **GEOX computes. It does not adjudicate. It does not seal.**
 
 **Licensed under the Business Source License 1.1 (BSL-1.1).** Production use requires a license from the author.
 
 ---
 
+## Live reality (probe this, do not trust prose)
+
+| Fact | Live 2026-09-06 |
+|---|---|
+| Health | `GET http://127.0.0.1:8081/health` → `healthy` |
+| Process | `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081` |
+| Unit | `geox-mcp.service` |
+| Source repo | `/root/GEOX` → `github.com/ariffazil/GEOX` |
+| Runtime | `/opt/geox` (FHS). Source ≠ runtime until deploy. |
+| Canonical MCP tools | **26** (`tools_loaded` / `canonical_tools` on `/health`) |
+| Ghost / internal names | 22 ghosted in `geox_mcp.registry` — not on the public surface |
+| Authority | `555_COMPUTE_ONLY` — Earth evidence only. Judgment is arifOS. Mutation is A-FORGE. |
+| Domain law | `NATURAL_LAW` |
+| Public MCP | `https://geox.arif-fazil.com/mcp` |
+
+Stale counts still circulating in other repos (AAA `ORGAN.md` / `organs.yaml` snapshot 2026-07-30 said **33** tools; this README previously said **19**). **Live health wins.**
+
+---
+
 ## The Problem
 
-Traditional earth science workflows are slow, siloed, and dependent on scarce domain expertise. A senior geologist's intuition about seismic patterns, reservoir quality, or basin maturity cannot scale. GEOX encodes this expertise into a system that can:
+Traditional earth science workflows are slow, siloed, and dependent on scarce domain expertise. GEOX encodes that work into a system that can:
 
-- Process seismic data and interpret structures at machine speed
-- Run petrophysical analysis across well logs consistently
-- Model basin evolution and charge systems quantitatively
-- Assess geohazards (GLOF, fault activation) with physics-grounded reasoning
-- Query paleobiological databases with spatial-temporal context
+- Process seismic and interpret structures with physics guards
+- Run petrophysics on LAS consistently
+- Profile basins from local evidence (Malay Basin is the richest local pack)
+- Assess geohazards (GLOF cascade family) without pretending to be a court
+- Query paleobiology with spatial-temporal context
+
+It will also **refuse**. A 33° map bbox is too big — that is a design constraint, not a crash. Macrostrat 500 is “no data,” not a fabricated column. Empty SUCCESS is a lie; GEOX is not allowed to stamp `ok: true` on an empty basin envelope.
 
 ---
 
@@ -35,167 +58,115 @@ Traditional earth science workflows are slow, siloed, and dependent on scarce do
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│                      GEOX Earth Intelligence                 │
-│  Port :8081  ·  MCP Interface  ·  19 Tools  ·  18 Apps     │
+│ GEOX Earth Intelligence                                      │
+│ :8081  ·  MCP  ·  26 public tools  ·  555_COMPUTE_ONLY       │
 ├──────────────────────────────────────────────────────────────┤
+│  Well / Petrophysics │ Seismic │ Basin │ Map │ Deep time     │
+│  Geomechanics        │ Source  │ Claim │ GLOF cascade        │
 │                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐ │
-│  │   Seismic    │  │Petrophysics  │  │   Basin Modeling   │ │
-│  │ Interpret    │  │  Net Pay     │  │   Charge System    │ │
-│  │   Compute    │  │  Quality     │  │   Volumetrics      │ │
-│  └──────┬───────┘  └──────┬───────┘  └─────────┬──────────┘ │
-│         │                 │                     │           │
-│  ┌──────▼─────────────────▼─────────────────────▼──────────┐│
-│  │           GEOX Witness Layer (Δ·Ω·Ψ)                     ││
-│  │  OBS (Observed) → DER (Derived) → INT (Interpreted)     ││
-│  └──────────────────────────┬──────────────────────────────┘│
-│                             │                               │
-│  ┌──────────────┐  ┌───────▼───────┐  ┌──────────────────┐ │
-│  │  Paleobiology │  │ Spatial-Temp  │  │  Geohazard/GLOF  │ │
-│  │  (PaleoDB)   │  │   Reasoning   │  │   Cascade Model  │ │
-│  └──────────────┘  └───────────────┘  └──────────────────┘ │
-│                                                              │
+│  Witness layer (Δ·Ω·Ψ)                                       │
+│  OBS (observed) → DER (derived) → INT (interpreted)          │
 └──────────────────────────┬───────────────────────────────────┘
-                           │ MCP
+                           │ MCP (evidence only)
                     ┌──────▼──────┐
-                    │  arifOS FED  │
-                    │  :7080 MCP   │
+                    │ arifOS      │  :8088  JUDGE_ONLY
+                    │ A-FORGE     │  :7071/:7072  execute after seal
                     └─────────────┘
 ```
+
+APEX `G = (A·P·E·X)^(1/4)` is the federation feasibility envelope. GEOX feeds **Earth evidence** into that envelope. It is not APEX. A false SUCCESS from GEOX contaminates the E-dial.
 
 ---
 
 ## Quick Start
 
-### Docker
+### Live VPS (this machine — truth)
 
 ```bash
-git clone https://github.com/arif-fazil/GEOX.git
-cd GEOX
-docker compose up -d
-
-# Verify
-curl http://localhost:8081/health
-curl http://localhost:8081/tools/list
+systemctl status geox-mcp.service
+curl -sf http://127.0.0.1:8081/health
 ```
 
-### Local Development
+Entry point is `python3 -m geox_mcp.server`, **not** `geox.server`.
+
+### Local development
 
 ```bash
+git clone https://github.com/ariffazil/GEOX.git
 cd GEOX
 pip install -e .
-python -m geox.server --port 8081
+python -m geox_mcp.server --host 127.0.0.1 --port 8081
 ```
 
----
-
-## Domain Capabilities
-
-### Seismic Interpretation
-- SEG-Y processing and visualization
-- Structural validation gates (G0–G10)
-- Fault analysis and geomechanics
-- Seismic attribute computation
-
-### Petrophysics
-- Well log analysis (LAS format)
-- Net pay determination
-- Porosity, permeability, saturation
-- Rock physics transforms
-
-### Basin Modeling
-- Charge system analysis
-- Thermal history modeling
-- Migration pathway analysis
-- STOIIP / GIIP volumetrics
-
-### Geohazard Assessment
-- GLOF (Glacial Lake Outburst Flood) cascade analysis
-- Fault activation risk
-- Landslide and subsidence modeling
-- Real-time hazard monitoring
-
-### Paleobiology
-- PaleoDB integration for fossil record queries
-- Biostratigraphic correlation
-- Paleoenvironmental reconstruction
-
-### Spatial-Temporal Reasoning
-- Geological time-scale aware analysis
-- Multi-scale spatial reasoning
-- Provenance tracking for all claims
+Docker Compose exists for portable builds. **It is not how KVM8 runs GEOX.** Live is systemd + `/opt/geox`.
 
 ---
 
-## Epistemic Transparency
+## Canonical public tools (26)
 
-Every GEOX output carries an epistemic label:
+`geox_well_ingest` · `geox_well_qc` · `geox_well` · `geox_petrophysics` · `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_basin` · `geox_map` · `geox_deep_time` · `geox_geomechanics` · `geox_source` · `geox_spatial` · `geox_temporal` · `geox_model` · `geox_claim` · `geox_prospect` · `geox_paleobiodb_query` · `geox_contrast_metabolize` · `geox_glof_cascade_{initialize,step,phase,inverse,metabolize,mcmc_inverse,propagate}`
+
+`geox_workspace` was removed from the public manifest (2026-09-06 Z2). Do not document it as live.
+
+### 2026-09-06 surface repair (witness, not theatre)
+
+| Tool | Failure | Live after repair |
+|---|---|---|
+| `geox_map` | `NameError: _map_layers_list` | layers_list returns catalogue |
+| `geox_basin` | `ok: true` on empty envelope | Malay Basin PASS with observed/derived/interpreted; unknown basin is honest ERROR |
+| `geox_deep_time` | nested kwargs / empty | `tectonic_context` returns Sunda Arc plate setting; Macrostrat 500 is `ok: false` |
+| `geox_geomechanics` | hard-fail / moduli buried | Physics9 moduli at top-level; missing state + `depth_m` → Zoback polygon, labelled |
+
+---
+
+## Malay Basin (what GEOX actually holds)
+
+Local pack under `resources/basins/malay_basin/` (Madon 1999/2004/2010/2021): rift-to-sag, Groups A–M, dual overpressure compartments (centre ~1900–2000 m Group E/F; flank ~2600–3000 m Group L), ~40% of Malaysia hydrocarbons in the review period.
+
+**Not in this organ:** Malay LAS time-series, live GNSS strain, QC’d pre-eruptive thermal. Demo LAS on disk is Volve / Sandakan, not Malay. Coverage 0 is not a pressure correlation.
+
+Arc volcanism (Sunda) and back-arc petroleum (Malay) share a plate family and **do not share a magma kitchen**. Elevated arc activity is not a drill trigger.
+
+---
+
+## Epistemic labels
 
 | Label | Meaning |
-|-------|---------|
+|---|---|
 | **OBS** | Directly observed from data |
 | **DER** | Derived via known physical laws |
-| **INT** | Interpreted (expert-level inference) |
-| **SPEC** | Speculative (hypothesis, needs validation) |
+| **INT** | Interpreted |
+| **SPEC** | Hypothesis, needs validation |
 
-This is not a feature — it is a requirement. In exploration, the cost of confusing speculation with observation can be hundreds of millions of dollars.
-
----
-
-## MCP Interface
-
-GEOX exposes 19 canonical tools via MCP (Model Context Protocol):
-
-`geox_basin` · `geox_geomechanics` · `geox_glof_cascade_*` · `geox_map` · `geox_model` · `geox_paleobiodb_query` · `geox_petrophysics` · `geox_prospect` · `geox_seismic_*` · `geox_source` · `geox_spatial` · `geox_temporal` · `geox_well_*`
-
-Full tool list: `curl http://localhost:8081/tools/list`
+Confusing speculation with observation is how dry holes and fake seals are born.
 
 ---
 
-## Use Cases
+## Federation role
 
-| Industry | Application | Value |
-|----------|-------------|-------|
-| Oil & Gas | Prospect evaluation | Reduce dry well risk |
-| Mining | Resource estimation | Faster target generation |
-| Geological Survey | Regional assessment | Scale expert analysis |
-| Insurance | Geohazard modeling | Quantify exposure |
-| Academia | Research reproducibility | Open, auditable earth science |
+GEOX is the **earth witness**. Outputs are evidence for arifOS (F1–F13). Sister repos:
 
----
+- [arifOS](https://github.com/ariffazil/arifOS) — kernel / judgment
+- [AAA](https://github.com/ariffazil/AAA) — control plane / routing
+- [A-FORGE](https://github.com/ariffazil/A-FORGE) — execution
+- [WEALTH](https://github.com/ariffazil/WEALTH) — capital compute
+- [WELL](https://github.com/ariffazil/WELL) — vitality mirror
+- [arifFlow](https://github.com/ariffazil/arifFlow) — metabolism
 
-## Federation Role
-
-GEOX is the earth witness in the arifOS federation. It computes geological evidence — it never adjudicates. All outputs flow through the arifOS constitutional kernel (F1–F13) before becoming sealed decisions.
-
-**Sister Repos:**
-- [arifOS](https://github.com/arif-fazil/arifOS) — Constitutional kernel (judgment)
-- [AAA](https://github.com/arif-fazil/AAA) — Intelligence routing
-- [A-FORGE](https://github.com/arif-fazil/A-FORGE) — Execution engine
-- [WEALTH](https://github.com/arif-fazil/WEALTH) — Capital management
-- [WELL](https://github.com/arif-fazil/WELL) — Biometric monitoring
-- [arifFlow](https://github.com/arif-fazil/arifFlow) — Workflow orchestration
+Topology SOT: `/root/AAA/federation/organs.yaml` (machine) and `/root/AAA/docs/ORGAN.md` (human). **Live `/health` still beats both.**
 
 ---
 
 ## Documentation
 
-- [Full Technical README](docs/README-FULL.md)
+- [SOT audit 2026-09-06](docs/SOT_AUDIT_2026-09-06.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [Earth Intelligence Core Design](docs/ARCHITECTURE-EARTH-OS.md)
-- [Deployment Guide](DEPLOYMENT.md)
+- [Deployment](DEPLOYMENT.md)
 - [Changelog](CHANGELOG.md)
-- [Security Policy](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
 
 ## License
 
-**Business Source License 1.1 (BSL-1.1)**
-
-Licensed under the BSL-1.1 with production use restrictions. Non-production, evaluation, testing, personal development, and academic research use is permitted. For production licensing, contact arifbfazil@gmail.com.
-
-See [LICENSE](LICENSE) for the full text.
-
----
+**Business Source License 1.1 (BSL-1.1)** — see [LICENSE](LICENSE). Production licensing: arifbfazil@gmail.com.
 
 **DITEMPA BUKAN DIBERI** — Forged, Not Given.
