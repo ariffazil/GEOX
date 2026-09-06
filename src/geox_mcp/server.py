@@ -309,9 +309,7 @@ def _get_git_version() -> str:
     except Exception:
         pass
     try:
-        marker = (
-            Path(__file__).resolve().parents[2] / ".git_commit"
-        ).read_text(encoding="utf-8").strip()
+        marker = (Path(__file__).resolve().parents[2] / ".git_commit").read_text(encoding="utf-8").strip()
         if marker:
             return f"geox-{marker[:7]}"
     except Exception:
@@ -2615,7 +2613,12 @@ class OriginValidationMiddleware(BaseHTTPMiddleware):
                 # Allow anthropic / oaiusercontent / mcpjam subdomains without enumerating every host
                 if not (
                     origin.startswith("https://")
-                    and (origin.endswith(".claude.ai") or ".anthropic.com" in origin or ".oaiusercontent.com" in origin or origin.endswith(".mcpjam.com"))
+                    and (
+                        origin.endswith(".claude.ai")
+                        or ".anthropic.com" in origin
+                        or ".oaiusercontent.com" in origin
+                        or origin.endswith(".mcpjam.com")
+                    )
                 ):
                     return JSONResponse(
                         {"error": "Invalid Origin", "detail": "DNS rebinding protection"},
@@ -3176,8 +3179,10 @@ async def health_handler(request: Request) -> JSONResponse:
             "apex_scalars": _apex_scalars,
             "freshness": {
                 "status": "fresh",
-                "checked_at_utc": _GIT_VERSION,
-                "source_timestamp_utc": _GIT_VERSION,
+                # Z2 fix 2026-09-06: was _GIT_VERSION (identity hash string) —
+                # falsified by audit; timestamps must be timestamps.
+                "checked_at_utc": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
+                "source_timestamp_utc": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
                 "age_seconds": 0,
                 "max_fresh_age_seconds": 60,
                 "stale_after_seconds": 300,
@@ -3701,14 +3706,17 @@ from geox_mcp.tools.glof_cascade import (
     geox_glof_cascade_metabolize as _glofm,
     geox_glof_cascade_mcmc_inverse as _glof_mcmc,
     geox_glof_cascade_propagate as _glof_prop,
-    GLOFCascadeInitRequest, GLOFCascadeStepRequest, GLOFCascadePhaseRequest,
-    GLOFCascadeInverseRequest, GLOFCascadeMetabolizeRequest,
-    GLOFCascadeMCMCRequest, GLOFCascadePropagateRequest,
+    GLOFCascadeInitRequest,
+    GLOFCascadeStepRequest,
+    GLOFCascadePhaseRequest,
+    GLOFCascadeInverseRequest,
+    GLOFCascadeMetabolizeRequest,
+    GLOFCascadeMCMCRequest,
+    GLOFCascadePropagateRequest,
 )
 
 
-@mcp.tool(name="geox_glof_cascade_initialize",
-          annotations=_geox_annotations("geox_glof_cascade_initialize"))
+@mcp.tool(name="geox_glof_cascade_initialize", annotations=_geox_annotations("geox_glof_cascade_initialize"))
 async def _glof_cascade_initialize_tool(
     domain_bounds_x_m: float = 4000.0,
     domain_bounds_z_m: float = 600.0,
@@ -3718,23 +3726,24 @@ async def _glof_cascade_initialize_tool(
     use_seismic_priors: bool = True,
     initial_state_33: dict | None = None,
     panel_focus: str = "all",
-    session_id: str = "",       # injected by GEOX governance middleware
-    actor_id: str = "",         # injected by GEOX governance middleware
+    session_id: str = "",  # injected by GEOX governance middleware
+    actor_id: str = "",  # injected by GEOX governance middleware
 ):
-    return await _glofi(GLOFCascadeInitRequest(
-        domain_bounds_x_m=domain_bounds_x_m,
-        domain_bounds_z_m=domain_bounds_z_m,
-        resolution_m=resolution_m,
-        dam_height_m=dam_height_m,
-        water_head_initial_m=water_head_initial_m,
-        use_seismic_priors=use_seismic_priors,
-        initial_state_33=initial_state_33,
-        panel_focus=panel_focus,
-    ))
+    return await _glofi(
+        GLOFCascadeInitRequest(
+            domain_bounds_x_m=domain_bounds_x_m,
+            domain_bounds_z_m=domain_bounds_z_m,
+            resolution_m=resolution_m,
+            dam_height_m=dam_height_m,
+            water_head_initial_m=water_head_initial_m,
+            use_seismic_priors=use_seismic_priors,
+            initial_state_33=initial_state_33,
+            panel_focus=panel_focus,
+        )
+    )
 
 
-@mcp.tool(name="geox_glof_cascade_step",
-          annotations=_geox_annotations("geox_glof_cascade_step"))
+@mcp.tool(name="geox_glof_cascade_step", annotations=_geox_annotations("geox_glof_cascade_step"))
 async def _glof_cascade_step_tool(
     state_id: str,
     n_steps: int = 10,
@@ -3743,16 +3752,17 @@ async def _glof_cascade_step_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glofs(GLOFCascadeStepRequest(
-        state_id=state_id,
-        n_steps=n_steps,
-        dt_sec=dt_sec,
-        boundary_conditions=boundary_conditions or {},
-    ))
+    return await _glofs(
+        GLOFCascadeStepRequest(
+            state_id=state_id,
+            n_steps=n_steps,
+            dt_sec=dt_sec,
+            boundary_conditions=boundary_conditions or {},
+        )
+    )
 
 
-@mcp.tool(name="geox_glof_cascade_phase",
-          annotations=_geox_annotations("geox_glof_cascade_phase"))
+@mcp.tool(name="geox_glof_cascade_phase", annotations=_geox_annotations("geox_glof_cascade_phase"))
 async def _glof_cascade_phase_tool(
     state_id: str,
     cell_id: str,
@@ -3764,19 +3774,20 @@ async def _glof_cascade_phase_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glofp(GLOFCascadePhaseRequest(
-        state_id=state_id,
-        cell_id=cell_id,
-        sigma_n=sigma_n,
-        tau_applied=tau_applied,
-        velocity=velocity,
-        sigma_applied=sigma_applied,
-        saturation=saturation,
-    ))
+    return await _glofp(
+        GLOFCascadePhaseRequest(
+            state_id=state_id,
+            cell_id=cell_id,
+            sigma_n=sigma_n,
+            tau_applied=tau_applied,
+            velocity=velocity,
+            sigma_applied=sigma_applied,
+            saturation=saturation,
+        )
+    )
 
 
-@mcp.tool(name="geox_glof_cascade_inverse",
-          annotations=_geox_annotations("geox_glof_cascade_inverse"))
+@mcp.tool(name="geox_glof_cascade_inverse", annotations=_geox_annotations("geox_glof_cascade_inverse"))
 async def _glof_cascade_inverse_tool(
     observation: dict,
     base_theta: dict | None = None,
@@ -3784,15 +3795,16 @@ async def _glof_cascade_inverse_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glofv(GLOFCascadeInverseRequest(
-        observation=observation,
-        base_theta=base_theta,
-        n_grid=n_grid,
-    ))
+    return await _glofv(
+        GLOFCascadeInverseRequest(
+            observation=observation,
+            base_theta=base_theta,
+            n_grid=n_grid,
+        )
+    )
 
 
-@mcp.tool(name="geox_glof_cascade_metabolize",
-          annotations=_geox_annotations("geox_glof_cascade_metabolize"))
+@mcp.tool(name="geox_glof_cascade_metabolize", annotations=_geox_annotations("geox_glof_cascade_metabolize"))
 async def _glof_cascade_metabolize_tool(
     theta_hat: dict,
     forward_prediction: dict,
@@ -3801,17 +3813,18 @@ async def _glof_cascade_metabolize_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glofm(GLOFCascadeMetabolizeRequest(
-        cycle_id=cycle_id,
-        theta_hat=theta_hat,
-        forward_prediction=forward_prediction,
-        observation=observation,
-    ))
+    return await _glofm(
+        GLOFCascadeMetabolizeRequest(
+            cycle_id=cycle_id,
+            theta_hat=theta_hat,
+            forward_prediction=forward_prediction,
+            observation=observation,
+        )
+    )
 
 
 # ── Phase C — MCMC + Saint-Venant (2026-08-27) ─────────────────────────────
-@mcp.tool(name="geox_glof_cascade_mcmc_inverse",
-          annotations=_geox_annotations("geox_glof_cascade_mcmc_inverse"))
+@mcp.tool(name="geox_glof_cascade_mcmc_inverse", annotations=_geox_annotations("geox_glof_cascade_mcmc_inverse"))
 async def _glof_cascade_mcmc_inverse_tool(
     observation: dict,
     base_theta: dict | None = None,
@@ -3822,18 +3835,19 @@ async def _glof_cascade_mcmc_inverse_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glof_mcmc(GLOFCascadeMCMCRequest(
-        observation=observation,
-        base_theta=base_theta,
-        n_warmup=n_warmup,
-        n_iter=n_iter,
-        n_chains=n_chains,
-        seed=seed,
-    ))
+    return await _glof_mcmc(
+        GLOFCascadeMCMCRequest(
+            observation=observation,
+            base_theta=base_theta,
+            n_warmup=n_warmup,
+            n_iter=n_iter,
+            n_chains=n_chains,
+            seed=seed,
+        )
+    )
 
 
-@mcp.tool(name="geox_glof_cascade_propagate",
-          annotations=_geox_annotations("geox_glof_cascade_propagate"))
+@mcp.tool(name="geox_glof_cascade_propagate", annotations=_geox_annotations("geox_glof_cascade_propagate"))
 async def _glof_cascade_propagate_tool(
     breach_Q_profile: str = "costa1985",
     length_m: float = 60_000.0,
@@ -3845,15 +3859,17 @@ async def _glof_cascade_propagate_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
-    return await _glof_prop(GLOFCascadePropagateRequest(
-        breach_Q_profile=breach_Q_profile,
-        length_m=length_m,
-        nx=nx,
-        manning_n=manning_n,
-        bed_slope=bed_slope,
-        duration_s=duration_s,
-        output_interval_s=output_interval_s,
-    ))
+    return await _glof_prop(
+        GLOFCascadePropagateRequest(
+            breach_Q_profile=breach_Q_profile,
+            length_m=length_m,
+            nx=nx,
+            manning_n=manning_n,
+            bed_slope=bed_slope,
+            duration_s=duration_s,
+            output_interval_s=output_interval_s,
+        )
+    )
 
 
 def create_app():
