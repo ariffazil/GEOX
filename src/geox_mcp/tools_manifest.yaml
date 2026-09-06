@@ -965,28 +965,6 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
-- name: geox_workspace
-  domain: earth.meta
-  axis: observe
-  lane: evidence
-  face: surface
-  visibility: public
-  description: 'GEOX Workspace — persistent geological context across all tools. Set basin/play/well once; every tool inherits.
-    Modes: set, view, history, evidence, relations, reset.'
-  input_schema_source: callable
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-  ui:
-    resource_uri: ui://geox/visual-hub
-    mime_type: text/html;profile=mcp-app
-  plugin:
-    exposed: true
-  governance:
-    action_class: OBSERVE
-    mutation: false
-    physics_guard_required: false
 - name: geox_simulate_accommodation
   domain: earth.stratigraphy
   axis: reason
