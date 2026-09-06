@@ -146,9 +146,9 @@ async def geox_dde_reason(
                 return result
             except requests.RequestException as e:
                 return {
-                    "ok": True,
+                    "ok": False,
                     "n_units": 0,
-                    "warning": f"Macrostrat API unavailable: {e}",
+                    "error": f"Macrostrat API unavailable: {e}",
                     "units": [],
                     "source": "Macrostrat (offline)",
                 }
@@ -411,19 +411,60 @@ async def geox_dde_reason(
 
         # ── Tectonic Context ─────────────────────────────────────────────
         if mode == "tectonic_context":
-            if not lat or not lng:
+            if lat is None or lng is None:
                 return {"ok": False, "error": "lat and lng required"}
 
-            # Simple heuristic: determine tectonic regime from plate boundaries
-            # In production, this would use GPlates API for deep-time reconstruction
-            return {
+            age = float(delta_age_ma or 0.0)
+            out: dict[str, Any] = {
                 "ok": True,
                 "lat": lat,
                 "lng": lng,
-                "note": "Tectonic context requires GPlates integration (Phase 2). Returning spatial info only.",
-                "nearest_units": [],
-                "source": "GPlates static model (placeholder)",
+                "age_ma": age,
+                "gplates": None,
+                "source": "GEOX tectonic_context",
             }
+
+            # Sunda Arc / Sunda Shelf — DERIVED from standard plate geometry.
+            # Not a live GPS inversion. Labelled so it cannot be sealed as OBS.
+            if 95.0 <= float(lng) <= 135.0 and -11.0 <= float(lat) <= 8.0:
+                out["arc"] = "Sunda Arc"
+                out["plate_setting"] = {
+                    "overriding_plate": "Eurasia / Sunda Block",
+                    "subducting_plate": "Indo-Australian",
+                    "trench": "Sunda Trench",
+                    "regime": "oceanic-continental subduction (oblique in Sumatra, frontal in Java)",
+                    "backarc_basins": ["Malay", "Penyu", "West Natuna", "Sunda", "North Sumatra"],
+                }
+                out["epistemic"] = (
+                    "DERIVED from standard plate-boundary geometry "
+                    "(Bird 2003; USGS Sunda Arc). Not a live GNSS inversion."
+                )
+
+            try:
+                from geox_core.io.gplates_fetcher import GPlatesFetcher, ReconstructionRequest
+
+                fetcher = GPlatesFetcher()
+                rec = fetcher.reconstruct(
+                    ReconstructionRequest(
+                        latitude=float(lat),
+                        longitude=float(lng),
+                        age_ma=age,
+                        model="Merdith2021",
+                    )
+                )
+                out["gplates"] = {
+                    "paleo_lat": getattr(rec, "reconstructed_lat", None),
+                    "paleo_lon": getattr(rec, "reconstructed_lon", None),
+                    "plate_id": getattr(rec, "plate_id", None),
+                    "model": getattr(rec, "model", "Merdith2021"),
+                    "note": getattr(rec, "note", None),
+                    "citation": getattr(rec, "citation", None),
+                }
+            except Exception as exc:
+                out["gplates_status"] = "UNAVAILABLE"
+                out["gplates_error"] = str(exc)
+
+            return out
 
         # ── Lithology at Point ───────────────────────────────────────────
         if mode == "lithology_at_point":

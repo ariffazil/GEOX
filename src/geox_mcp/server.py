@@ -1331,13 +1331,35 @@ async def _geomechanics(
         except (ValueError, TypeError):
             return {"ok": False, "error": f"state is a string but not valid JSON: {state[:200]}"}
 
-    # Guard: derive_moduli requires state with rho, vp, vs
+    # Guard: derive_moduli requires state with rho, vp, vs.
+    # If the caller gave depth/Sv (typical volcano or well query) but no
+    # elastic state, compute the Zoback stress polygon instead of a hard fail.
     if not state or not isinstance(state, dict):
+        if depth_m is not None or sv_mpa is not None:
+            from geox_mcp.tools.geomechanics_unified import _compute_stress_polygon
+
+            poly = _compute_stress_polygon(
+                depth_m=depth_m,
+                sv_mpa=sv_mpa,
+                pp_mpa=pp_mpa,
+                friction_coefficient=friction_coefficient,
+                avg_density_kg_m3=avg_density_kg_m3,
+                water_depth_m=water_depth_m,
+            )
+            poly["mode_requested"] = "derive_moduli"
+            poly["mode_executed"] = "stress_polygon"
+            poly["stress_polygon"] = poly.get("stress_polygon_vertices")
+            poly["note"] = (
+                "derive_moduli needs state {rho, vp, vs}. "
+                "depth_m/sv_mpa was provided so GEOX computed the Zoback "
+                "stress polygon instead."
+            )
+            return poly
         return {
             "ok": False,
             "tool": "geox_geomechanics",
             "error": "derive_moduli requires state dict with rho, vp, vs.",
-            "hint": 'Provide state as {"rho": 2300, "vp": 3500, "vs": 2000} for typical sandstone.',
+            "hint": 'Provide state as {"rho": 2300, "vp": 3500, "vs": 2000} for typical sandstone. Or pass depth_m for a Zoback stress polygon.',
         }
 
     try:
@@ -1348,7 +1370,13 @@ async def _geomechanics(
                 rho_fluid=rho_fluid if rho_fluid is not None else 1025.0,
             )
         )
-        return result.model_dump(mode="json")
+        dumped = result.model_dump(mode="json")
+        nested = dumped.get("result") if isinstance(dumped.get("result"), dict) else {}
+        derived = nested.get("derived") if isinstance(nested, dict) else None
+        if derived:
+            dumped["moduli"] = derived
+            dumped["elastic_properties"] = derived
+        return dumped
     except Exception as e:
         return {
             "ok": False,
