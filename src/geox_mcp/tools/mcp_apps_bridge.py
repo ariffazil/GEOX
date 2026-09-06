@@ -1057,6 +1057,27 @@ def compact_structured_for_ui(
         "error",
         "error_class",
         "ok",
+        # 2026-09-06: evidence-contract keys must survive UI compact or
+        # postcondition treats a real Malay Basin profile as FALSE_SUCCESS.
+        "observed",
+        "derived",
+        "interpreted",
+        "process_hypotheses",
+        "play_fairways",
+        "unit_count",
+        "coverage",
+        "sample_units",
+        "centroid",
+        "stratigraphic_range_ma",
+        "stress_polygon",
+        "stress_polygon_vertices",
+        "moduli",
+        "sv_mpa",
+        "layers",
+        "layer_count",
+        "arc",
+        "plate_setting",
+        "gplates",
     ]
     for k in prefer:
         if k not in source:
@@ -1068,15 +1089,36 @@ def compact_structured_for_ui(
             base[k] = v[:max_list]
             base[f"{k}_truncated"] = True
             base[f"{k}_total"] = len(v)
-        elif isinstance(v, dict) and len(json_dumps_len(v)) > 4000:
+        elif isinstance(v, dict) and json_dumps_len(v) > 4000:
             # keep only shallow keys
             base[k] = {sk: sv for sk, sv in list(v.items())[:15] if not isinstance(sv, (list, dict))}
             base[f"{k}_compacted"] = True
         else:
             base[k] = v
 
-    if result.get("ok") is False or source.get("ok") is False:
-        base["ok"] = False
+    # 2026-09-06 F2: never stamp ok:true on an error envelope. Previous code
+    # only checked `ok is False`, so get_standard_envelope(ERROR) + error
+    # string inside primary_artifact was compacted as SUCCESS-with-empty.
+    try:
+        from geox_mcp.result_truth import result_is_error, truthy_error
+
+        if result_is_error(result) or result_is_error(source):
+            base["ok"] = False
+        elif truthy_error(result.get("error")) or truthy_error(source.get("error")):
+            base["ok"] = False
+    except Exception:
+        if result.get("ok") is False or source.get("ok") is False:
+            base["ok"] = False
+        if result.get("error") or source.get("error"):
+            base["ok"] = False
+        if result.get("execution_status") in ("ERROR", "FAILED", "REJECTED"):
+            base["ok"] = False
+        if result.get("status") in ("INVALID", "ERROR", "FAILED", "NOT_FOUND"):
+            base["ok"] = False
+    if "error" not in base:
+        err = source.get("error") or result.get("error")
+        if err:
+            base["error"] = err
     base.setdefault("ui", {"resourceUri": GEOX_APPS.get(app_id, {}).get("uri", f"ui://geox/{app_id}")})
     return base
 
