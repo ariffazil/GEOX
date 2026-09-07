@@ -1,0 +1,158 @@
+{
+  "wells": {
+    "BARTON-2": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 3000,
+      "twt_at_td_ms": 2620,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2249.7,
+        2319.0
+      ],
+      "v_avg_at_td_ms": 2290.1
+    },
+    "ROTAN-1": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 3200,
+      "twt_at_td_ms": 2810,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2235.9,
+        2335.1
+      ],
+      "v_avg_at_td_ms": 2277.6
+    },
+    "BUNGA LILI-1": {
+      "type": "measured",
+      "deviated": true,
+      "max_incl_deg": 45.0,
+      "td_tvdss_m": 3500,
+      "twt_at_td_ms": 3050,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2261.0,
+        2354.6
+      ],
+      "v_avg_at_td_ms": 2295.1
+    },
+    "BULUH-1": {
+      "type": "synthetic",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 2800,
+      "twt_at_td_ms": 2480,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2223.9,
+        2317.1
+      ],
+      "v_avg_at_td_ms": 2258.1
+    },
+    "MALIGAN-1": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 2900,
+      "twt_at_td_ms": 2540,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2260.0,
+        2306.2
+      ],
+      "v_avg_at_td_ms": 2283.5
+    },
+    "PEKAKA-1": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 3100,
+      "twt_at_td_ms": 2700,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2260.9,
+        2332.6
+      ],
+      "v_avg_at_td_ms": 2296.3
+    },
+    "SUGUT": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 2700,
+      "twt_at_td_ms": 2370,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2215.9,
+        2330.2
+      ],
+      "v_avg_at_td_ms": 2278.5
+    },
+    "SOLISIP-1": {
+      "type": "measured",
+      "deviated": false,
+      "max_incl_deg": null,
+      "td_tvdss_m": 3300,
+      "twt_at_td_ms": 2900,
+      "n_checkshot": 12,
+      "v_int_range": [
+        2225.2,
+        2340.2
+      ],
+      "v_avg_at_td_ms": 2275.9
+    }
+  },
+  "qc": {
+    "BARTON-2": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "ROTAN-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "BUNGA LILI-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "BULUH-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "MALIGAN-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "PEKAKA-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "SUGUT": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    },
+    "SOLISIP-1": {
+      "depth_monotonic": true,
+      "twt_monotonic": true,
+      "v_int_within_1500_5000": true,
+      "v_avg_within_1800_3500": true
+    }
+  }
+}
