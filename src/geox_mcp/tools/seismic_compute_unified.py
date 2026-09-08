@@ -245,6 +245,48 @@ async def geox_seismic_compute(
                             "method": "Bortfeld-Zoeppritz",
                         },
                     )
+                    # D2 (2026-09-09, sovereign residual delta): AVO gradient +
+                    # Rutherford-Williams class, computed from the SAME R_PP(θ)
+                    # curve — Shuey two-term fit R(θ) = R0 + G·sin²θ via linear
+                    # least squares (no new engine). R0 = R_PP(0°) when 0° is
+                    # in the sweep, else the fit intercept (disclosed).
+                    _sin2 = [round(float(_np.sin(_np.deg2rad(t)) ** 2), 8) for t in _thetas]
+                    _xs = _np.asarray(_sin2)
+                    _ys = _np.asarray(_rpp_curve, dtype=float)
+                    _xm, _ym = float(_xs.mean()), float(_ys.mean())
+                    _den = float(((_xs - _xm) ** 2).sum())
+                    _G = float(((_xs - _xm) * (_ys - _ym)).sum() / _den) if _den > 1e-12 else 0.0
+                    if 0.0 in _thetas:
+                        _R0 = float(_rpp_curve[_thetas.index(0.0)])
+                        _r0_src = "R_PP(0deg) measured"
+                    else:
+                        _R0 = _ym - _G * _xm
+                        _r0_src = "Shuey fit intercept (0deg not in sweep)"
+                    # Rutherford-Williams classification (spec order, computed):
+                    if _R0 > 0 and _G > 0:
+                        _cls = "Class I"    # high-impedance, brightening
+                    elif abs(_R0) < 0.02:
+                        _cls = "Class II"   # near-zero intercept, polarity flip
+                    elif _R0 > 0 and _G < 0:
+                        _cls = "Class IIp"  # small positive intercept, dimming
+                    elif _R0 < 0 and _G < 0:
+                        _cls = "Class III"  # low impedance, bright negative
+                    elif _R0 < 0 and _G > 0:
+                        _cls = "Class IV"   # negative intercept, dimming with offset
+                    else:
+                        _cls = "UNCLASSIFIED"
+                    result["attributes"] = {
+                        **result["attributes"],
+                        "avo_intercept": round(_R0, 6),
+                        "avo_gradient": round(_G, 6),
+                        "avo_class": _cls,
+                        "avo_fit": {
+                            "model": "R(theta) = R0 + G*sin^2(theta)",
+                            "theta_deg": _thetas,
+                            "rpp": _rpp_curve,
+                            "intercept_source": _r0_src,
+                        },
+                    }
                 except Exception as _avo_wrap_exc:  # never mask compute with wrap failure
                     result["avo_wrap_warning"] = f"field-lift partial: {_avo_wrap_exc}"
             # Stamps

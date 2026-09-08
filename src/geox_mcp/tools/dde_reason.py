@@ -99,6 +99,38 @@ async def geox_dde_reason(
     try:
         # ── Query Stratigraphy ───────────────────────────────────────────
         if mode == "query_stratigraphy":
+            # D3 (2026-09-09, sovereign residual delta): an unfiltered query
+            # dumped the whole Macrostrat catalog (35,481 units) while the
+            # caller's ontology_term was silently dropped and echoed as null.
+            # Honest gate: require at least ONE filter; plumb ontology_term
+            # into the Macrostrat lith filter; echo the full query.
+            if bbox is None and (lat is None or lng is None) and not formation and not ontology_term:
+                return {
+                    "ok": False,
+                    "isError": True,
+                    "execution_status": "ERROR",
+                    "governance_status": "HOLD",
+                    "tool": "geox_deep_time",
+                    "mode": mode,
+                    "mode_echo": mode,
+                    "error": "MISSING_REQUIRED_FILTER",
+                    "message": (
+                        "query_stratigraphy requires at least one filter — "
+                        "bbox, lat+lng, formation, or ontology_term. An "
+                        "unfiltered call returns the entire Macrostrat catalog "
+                        "(35k+ units), which is a catalog dump, not a "
+                        "stratigraphic answer."
+                    ),
+                    "accepted_filters": ["bbox", "lat+lng", "formation", "ontology_term"],
+                    "hint": "e.g. ontology_term='Carbonate' filters units by lithology.",
+                    "_evidence_postcondition": {
+                        "applied": True,
+                        "verdict": "DOWNGRADED",
+                        "reason": "no filter provided; returning the full catalog would present unfiltered bulk data as a reasoned answer (F2)",
+                        "spec": "geox-evidence-postcondition-v1",
+                    },
+                }
+
             params: dict[str, Any] = {"format": "json", "limit": limit}
             if bbox:
                 params["bbox"] = ",".join(str(x) for x in bbox)
@@ -107,8 +139,12 @@ async def geox_dde_reason(
                 params["lat"] = lat
             if formation:
                 params["strat_name"] = formation
+            # D3: ontology_term is a lithology-class DDE term (Carbonate,
+            # Siliciclastic, …) — Macrostrat /units accepts `lith` for this.
+            if ontology_term:
+                params["lith"] = ontology_term
 
-            ck = _cache_key("strat", bbox, lat, lng, formation, limit)
+            ck = _cache_key("strat", bbox, lat, lng, formation, ontology_term, limit)
             cached = _cache_load(ck)
             if cached:
                 return cached
@@ -137,9 +173,18 @@ async def geox_dde_reason(
 
                 result = {
                     "ok": True,
-                    "n_units": len(units),
-                    "query": {"bbox": bbox, "lat": lat, "lng": lng, "formation": formation},
-                    "units": units,
+                    "n_units": min(len(units), limit),
+                    "n_units_total": len(units),
+                    "limit_applied": limit if len(units) > limit else None,
+                    "query": {
+                        "bbox": bbox,
+                        "lat": lat,
+                        "lng": lng,
+                        "formation": formation,
+                        "ontology_term": ontology_term,
+                        "limit": limit,
+                    },
+                    "units": units[:limit],
                     "source": "Macrostrat v2 API",
                 }
                 _cache_save(ck, result)
