@@ -319,14 +319,21 @@ def register_tools_on(mcp):
             return classify_error(e, source_tool="geox_well_ingest", source_organ="geox")
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_well_view", annotations=_geox_annotations("geox_well_view"))
-        # ZEN-CONSOLIDATED — async def _well_view(
-        # ZEN-CONSOLIDATED — well_id: str | None = None,
-        # ZEN-CONSOLIDATED — source_uri: str | None = None,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — max_samples: int = 2000,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: public name registered via _shim_well_view → geox_well(mode=view).
+        # af-fix #4b (2026-09-09, F4 FATAL): ZEN-CONSOLIDATION (83816a88)
+        # commented out ONLY the def header, orphaning the entire function
+        # body as dead code inside geox_well_ingest's except-block. The name
+        # _well_view was never defined, so geox_well(mode=view) raised
+        #   NameError: name '_well_view' is not defined   (tools_wiring.py:6309).
+        # Restored the header verbatim (pre-ZEN 83816a88~1:289).
+    async def _well_view(
+        well_id: str | None = None,
+        source_uri: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+        max_samples: int = 2000,
+    ) -> dict[str, Any]:
         """Well Witness View — hydrate LAS curves into interactive tracks.
 
         Prompt B (2026-07-25):
@@ -1425,25 +1432,28 @@ def register_tools_on(mcp):
         return await _impl(**args)
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_subsurface_model", annotations=_geox_annotations("geox_subsurface_model"))
-        # ZEN-CONSOLIDATED — async def _subsurface_model(
-        # ZEN-CONSOLIDATED — mode: str = "joint_inversion",
-        # ZEN-CONSOLIDATED — survey_type: str = "gravity",
-        # ZEN-CONSOLIDATED — easting_m: tuple[float, ...] | None = None,
-        # ZEN-CONSOLIDATED — northing_m: tuple[float, ...] | None = None,
-        # ZEN-CONSOLIDATED — prisms: list[dict[str, Any]] | None = None,
-        # ZEN-CONSOLIDATED — magnetization_a_m: float = 0.0,
-        # ZEN-CONSOLIDATED — field_declination_deg: float = 0.0,
-        # ZEN-CONSOLIDATED — field_inclination_deg: float = 0.0,
-        # ZEN-CONSOLIDATED — layers: list[dict[str, Any]] | None = None,
-        # ZEN-CONSOLIDATED — frequencies_hz: list[float] | None = None,
-        # ZEN-CONSOLIDATED — observations: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — prior: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — max_iter: int = 50,
-        # ZEN-CONSOLIDATED — tolerance: float = 0.001,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: mode routed via geox_model(mode=subsurface).
+        # af-fix #4b (2026-09-09, F4-class): ZEN header restore — _model_unified
+        # (mode=subsurface) called the undefined name _subsurface_model.
+    async def _subsurface_model(
+        mode: str = "joint_inversion",
+        survey_type: str = "gravity",
+        easting_m: tuple[float, ...] | None = None,
+        northing_m: tuple[float, ...] | None = None,
+        prisms: list[dict[str, Any]] | None = None,
+        magnetization_a_m: float = 0.0,
+        field_declination_deg: float = 0.0,
+        field_inclination_deg: float = 0.0,
+        layers: list[dict[str, Any]] | None = None,
+        frequencies_hz: list[float] | None = None,
+        observations: dict[str, Any] | None = None,
+        prior: dict[str, Any] | None = None,
+        max_iter: int = 50,
+        tolerance: float = 0.001,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Joint inversion, gravity/mag, MT forward."""
         from geox_mcp.tools.subsurface_model import geox_subsurface_model as _impl
 
@@ -1586,39 +1596,42 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_claim", annotations=_geox_annotations("geox_claim"))
-        # ZEN-CONSOLIDATED — async def _claim(
-        # ZEN-CONSOLIDATED — mode: str = "create",
-        # ZEN-CONSOLIDATED — claim_id: str = "",
-        # ZEN-CONSOLIDATED — claim_text: str = "",
-        # ZEN-CONSOLIDATED — claim_type: str = "other",
-        # ZEN-CONSOLIDATED — truth_class: str = "INTERPRETATION",
-        # ZEN-CONSOLIDATED — evidence_ids: list[str] | None = None,
-        # ZEN-CONSOLIDATED — uncertainty_p10: float | None = None,
-        # ZEN-CONSOLIDATED — uncertainty_p50: float | None = None,
-        # ZEN-CONSOLIDATED — uncertainty_p90: float | None = None,
-        # ZEN-CONSOLIDATED — uncertainty_distribution: str = "lognormal",
-        # ZEN-CONSOLIDATED — alternatives: list[dict[str, Any]] | None = None,
-        # ZEN-CONSOLIDATED — provenance: str = "GEOX Claim Engine",
-        # ZEN-CONSOLIDATED — authority: str = "GEOX_CLAIM_WORKER",
-        # ZEN-CONSOLIDATED — challenge_text: str = "",
-        # ZEN-CONSOLIDATED — alternative_claim_text: str = "",
-        # ZEN-CONSOLIDATED — alternative_evidence_ids: list[str] | None = None,
-        # ZEN-CONSOLIDATED — challenge_evidence_ids: list[str] | None = None,
-        # ZEN-CONSOLIDATED — alternative_uncertainty: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — challenger_provenance: str = "GEOX Claim Engine",
-        # ZEN-CONSOLIDATED — ack_irreversible: bool = False,
-        # ZEN-CONSOLIDATED — seal_verdict: str = "SEAL",
-        # ZEN-CONSOLIDATED — voxel_state: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — evidence_id: str = "",
-        # ZEN-CONSOLIDATED — evidence_type: str = "supporting",
-        # ZEN-CONSOLIDATED — epistemic_label: str | None = None,
-        # ZEN-CONSOLIDATED — forbidden_uses: list[str] | None = None,
-        # ZEN-CONSOLIDATED — source_citation: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — category: str | None = None,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: public name registered via _claim_unified (geox_claim).
+        # af-fix #4b (2026-09-09, F4-class): ZEN header restore — _claim_unified
+        # calls the undefined names _claim/_falsify/_evidence/_contradiction_scan.
+    async def _claim(
+        mode: str = "create",
+        claim_id: str = "",
+        claim_text: str = "",
+        claim_type: str = "other",
+        truth_class: str = "INTERPRETATION",
+        evidence_ids: list[str] | None = None,
+        uncertainty_p10: float | None = None,
+        uncertainty_p50: float | None = None,
+        uncertainty_p90: float | None = None,
+        uncertainty_distribution: str = "lognormal",
+        alternatives: list[dict[str, Any]] | None = None,
+        provenance: str = "GEOX Claim Engine",
+        authority: str = "GEOX_CLAIM_WORKER",
+        challenge_text: str = "",
+        alternative_claim_text: str = "",
+        alternative_evidence_ids: list[str] | None = None,
+        challenge_evidence_ids: list[str] | None = None,
+        alternative_uncertainty: dict[str, Any] | None = None,
+        challenger_provenance: str = "GEOX Claim Engine",
+        ack_irreversible: bool = False,
+        seal_verdict: str = "SEAL",
+        voxel_state: dict[str, Any] | None = None,
+        evidence_id: str = "",
+        evidence_type: str = "supporting",
+        epistemic_label: str | None = None,
+        forbidden_uses: list[str] | None = None,
+        source_citation: dict[str, Any] | None = None,
+        category: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Create, validate, challenge, seal, attach."""
         from geox_mcp.tools.claim_unified import geox_claim as _impl
 
@@ -1676,16 +1689,18 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
-        # ZEN-CONSOLIDATED — async def _falsify(
-        # ZEN-CONSOLIDATED — claim_text: str = "",
-        # ZEN-CONSOLIDATED — claim_type: str = "general",
-        # ZEN-CONSOLIDATED — mode: str = "full",
-        # ZEN-CONSOLIDATED — context: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — evidence: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: public name registered via _shim_falsify → geox_claim(mode=falsify).
+        # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+    async def _falsify(
+        claim_text: str = "",
+        claim_type: str = "general",
+        mode: str = "full",
+        context: dict[str, Any] | None = None,
+        evidence: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Popperian falsification engine. Tests a geological claim against physical, stratigraphic, and logical constraints. Any check FALSIFIED → overall FALSIFIED. Science advances by eliminating what CANNOT be true. DITEMPA BUKAN DIBERI."""
         from geox_mcp.tools.claim_unified import geox_falsify as _impl
 
@@ -4315,19 +4330,22 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_well_desk", annotations=_geox_annotations("geox_well_desk"))
-        # ZEN-CONSOLIDATED — async def _well_desk(
-        # ZEN-CONSOLIDATED — mode: str = "open",
-        # ZEN-CONSOLIDATED — well_id: str = "",
-        # ZEN-CONSOLIDATED — depth_top: float | None = None,
-        # ZEN-CONSOLIDATED — depth_base: float | None = None,
-        # ZEN-CONSOLIDATED — curves: list[str] | None = None,
-        # ZEN-CONSOLIDATED — las_path: str | None = None,
-        # ZEN-CONSOLIDATED — interpret: bool = True,
-        # ZEN-CONSOLIDATED — rw: float = 0.03,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: public name registered via _shim_well_desk → geox_well(mode=desk).
+        # af-fix #4b (2026-09-09, F4 FATAL, same class as _well_view): ZEN
+        # header restore — _well_unified(mode=desk) called the undefined name.
+    async def _well_desk(
+        mode: str = "open",
+        well_id: str = "",
+        depth_top: float | None = None,
+        depth_base: float | None = None,
+        curves: list[str] | None = None,
+        las_path: str | None = None,
+        interpret: bool = True,
+        rw: float = 0.03,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Well desk: interactive view, publish, render. Modes: open, publish, render.
 
         open    — interactive well-desk view (MCP App)
@@ -4514,16 +4532,18 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
-        # ZEN-CONSOLIDATED — async def _contradiction_scan(
-        # ZEN-CONSOLIDATED — claim_text: str = "",
-        # ZEN-CONSOLIDATED — claim_type: str = "general",
-        # ZEN-CONSOLIDATED — mode: str = "full",
-        # ZEN-CONSOLIDATED — context: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — evidence: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: routed via geox_claim(mode=scan).
+        # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+    async def _contradiction_scan(
+        claim_text: str = "",
+        claim_type: str = "general",
+        mode: str = "full",
+        context: dict[str, Any] | None = None,
+        evidence: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Popperian falsification: scan claims for internal contradictions."""
         from geox_mcp.tools.contradiction_scan import geox_contradiction_scan as _impl
 
@@ -4556,26 +4576,28 @@ def register_tools_on(mcp):
         )
 
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
-        # ZEN-CONSOLIDATED — async def _evidence(
-        # ZEN-CONSOLIDATED — mode: str = "synthesize",
-        # ZEN-CONSOLIDATED — evidence_id: str = "",
-        # ZEN-CONSOLIDATED — evidence_type: str = "supporting",
-        # ZEN-CONSOLIDATED — claim_id: str = "",
-        # ZEN-CONSOLIDATED — claim_text: str = "",
-        # ZEN-CONSOLIDATED — query: str = "",
-        # ZEN-CONSOLIDATED — scope: str = "all",
-        # ZEN-CONSOLIDATED — file_path: str = "",
-        # ZEN-CONSOLIDATED — basin_name: str | None = None,
-        # ZEN-CONSOLIDATED — evidence_refs: list[str] | None = None,
-        # ZEN-CONSOLIDATED — hypotheses: list[str] | None = None,
-        # ZEN-CONSOLIDATED — epistemic_label: str | None = None,
-        # ZEN-CONSOLIDATED — forbidden_uses: list[str] | None = None,
-        # ZEN-CONSOLIDATED — source_citation: dict[str, Any] | None = None,
-        # ZEN-CONSOLIDATED — category: str | None = None,
-        # ZEN-CONSOLIDATED — session_id: str | None = None,
-        # ZEN-CONSOLIDATED — actor_id: str | None = None,
-        # ZEN-CONSOLIDATED — trace_id: str | None = None,
-        # ZEN-CONSOLIDATED — ) -> dict[str, Any]:
+        #   ^ decorator stays retired: routed via geox_claim(mode=evidence).
+        # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+    async def _evidence(
+        mode: str = "synthesize",
+        evidence_id: str = "",
+        evidence_type: str = "supporting",
+        claim_id: str = "",
+        claim_text: str = "",
+        query: str = "",
+        scope: str = "all",
+        file_path: str = "",
+        basin_name: str | None = None,
+        evidence_refs: list[str] | None = None,
+        hypotheses: list[str] | None = None,
+        epistemic_label: str | None = None,
+        forbidden_uses: list[str] | None = None,
+        source_citation: dict[str, Any] | None = None,
+        category: str | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
         """Unified evidence — discover, synthesize, abduct, contradict, ingest_literature.
 
         Modes:
