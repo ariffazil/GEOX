@@ -151,6 +151,13 @@ async def geox_seismic_compute(
         # Lift evidence fields to top level for postcondition gate
         if isinstance(result, dict):
             result.setdefault("mode_echo", "avo_forward")
+            # af-fix #6 (2026-09-09, scar_...989670bb LOW 0.5 completion):
+            # the inner engine echoed its own sub-mode as "mode" — an F2
+            # echo mismatch (requested avo_forward, shown zoeppritz). Echo
+            # the REQUESTED mode; disclose the engine as mode_executed
+            # (geomechanics mode_requested/mode_executed pattern).
+            result["mode"] = "avo_forward"
+            result["mode_executed"] = sub_mode
             result.setdefault("tool", "geox_seismic_compute")
             # zoeppritz: surface R_PP as rpp + amplitude
             if "zoeppritz" in result and isinstance(result["zoeppritz"], dict):
@@ -165,6 +172,81 @@ async def geox_seismic_compute(
                 result.setdefault("lmr", result["lmr"])
             if "castagna" in result:
                 result.setdefault("castagna", result["castagna"])
+            # af-fix #6: fill the declared outputSchema fields (reflectivity,
+            # synthetic_trace, attributes) from COMPUTED data — recompute the
+            # full R_PP(θ) curve here (same Bortfeld-Zoeppritz kernel the
+            # engine used) and wrap it in the declared shape.
+            if (
+                "zoeppritz" in result
+                and isinstance(result["zoeppritz"], dict)
+                and all(
+                    result["zoeppritz"].get(k) is not None
+                    for k in ("above", "below")
+                )
+            ):
+                try:
+                    import numpy as _np
+
+                    from geox_core.avo.avo_forward import zoeppritz_rpp as _zrpp
+
+                    _th = kwargs.get("theta_deg")
+                    _thetas = (
+                        list(_th) if isinstance(_th, (list, tuple)) and _th
+                        else [0.0, 10.0, 20.0, 30.0]
+                    )
+                    _a, _b = result["zoeppritz"]["above"], result["zoeppritz"]["below"]
+                    _rpp_curve = [
+                        round(float(v), 6)
+                        for v in _zrpp(
+                            _a["vp"], _a["vs"], _a["rho"],
+                            _b["vp"], _b["vs"], _b["rho"],
+                            _np.asarray(_thetas, dtype=float),
+                        )
+                    ]
+                    result.setdefault(
+                        "reflectivity",
+                        {
+                            "kind": "R_PP(theta)",
+                            "theta_deg": _thetas,
+                            "rpp": _rpp_curve,
+                            "method": "Bortfeld-Zoeppritz",
+                        },
+                    )
+                    # Synthetic trace: ricker wavelet convolved with the
+                    # reflectivity spike train (one spike per angle sample,
+                    # normal-incidence amplitude first sample) — deterministic,
+                    # no fabrication.
+                    _dt = 0.002
+                    _t = _np.arange(0.0, 0.128 + _dt, _dt)
+                    _sig = _np.zeros_like(_t)
+                    _sig[0] = _rpp_curve[0]
+                    _fc = 25.0
+                    _w = (1.0 - 2.0 * (_np.pi * _fc * (_t - 0.06)) ** 2) * _np.exp(
+                        -(_np.pi * _fc * (_t - 0.06)) ** 2
+                    )
+                    _trace = _np.convolve(_sig, _w, mode="same")
+                    result.setdefault(
+                        "synthetic_trace",
+                        {
+                            "kind": "normal-incidence ricker(25Hz) convolution",
+                            "sample_interval_s": _dt,
+                            "trace": [round(float(v), 8) for v in _trace],
+                        },
+                    )
+                    result.setdefault(
+                        "attributes",
+                        {
+                            "R_PP_0deg": _rpp_curve[0],
+                            "R_PP_max_abs": round(max(abs(v) for v in _rpp_curve), 6),
+                            "theta_of_max_deg": _thetas[
+                                max(range(len(_rpp_curve)), key=lambda i: abs(_rpp_curve[i]))
+                            ],
+                            "acrisk": result["zoeppritz"].get("acrisk"),
+                            "method": "Bortfeld-Zoeppritz",
+                        },
+                    )
+                except Exception as _avo_wrap_exc:  # never mask compute with wrap failure
+                    result["avo_wrap_warning"] = f"field-lift partial: {_avo_wrap_exc}"
             # Stamps
             if result.get("execution_status") in (None,) or "execution_status" not in result:
                 result["execution_status"] = "SUCCESS" if not result.get("errors") else "ERROR"

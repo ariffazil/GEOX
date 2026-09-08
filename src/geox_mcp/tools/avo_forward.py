@@ -78,15 +78,18 @@ async def geox_avo_forward(
         if missing:
             errors.append(f"mode=zoeppritz missing: {missing}")
             return None
-        theta_arr = np.asarray([theta_deg], dtype=float)
+        # af-fix #6: accept scalar or list theta_deg (the unified wiring
+        # declares theta_deg: list[float] — a list previously raised
+        # TypeError('only 0-dimensional arrays...') inside this kernel).
+        theta_arr = np.asarray(theta_deg, dtype=float).ravel()
         rpp = zoeppritz_rpp(vp1, vs1, rho1, vp2, vs2, rho2, theta_arr)
         return {
             "R_PP": float(rpp[0]),
-            "theta_deg": theta_deg,
+            "theta_deg": theta_arr.tolist(),
             "above": {"vp": vp1, "vs": vs1, "rho": rho1},
             "below": {"vp": vp2, "vs": vs2, "rho": rho2},
             "method": "Bortfeld-Zoeppritz",
-            "acrisk": 0.05 if theta_deg <= 30 else 0.10,
+            "acrisk": 0.05 if max(theta_arr) <= 30 else 0.10,
             "reference": "Bortfeld-1961",
         }
 
