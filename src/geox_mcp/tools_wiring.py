@@ -7194,12 +7194,7 @@ def register_tools_on(mcp):
                 vs2=vs2,
                 rho2=rho2,
                 theta_deg=theta_deg,
-                theta_max=theta_max,
-                vp=vp,
-                vs=vs,
-                rho=rho,
                 fluid_zone=fluid_zone,
-                unit=unit,
             )
         else:
             return {"error": f"Unknown mode: {mode}. Valid: avo_forward"}
