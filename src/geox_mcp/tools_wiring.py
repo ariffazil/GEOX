@@ -5092,8 +5092,36 @@ def register_tools_on(mcp):
         fig.savefig(out_path, dpi=150, bbox_inches="tight")
         plt.close(fig)
 
-        # F2: return only the absolute path — Hermes handles display
-        return out_path
+        # af-fix #4a (2026-09-09, scar_...80a6d07a MEDIUM 0.6): previously
+        # returned the bare path string. FastMCP requires structured_content
+        # to be a dict — a str raised
+        #   ValueError: structured_content must be a dict or None.
+        #   Got str: '/tmp/geox/geox_model_<uuid>.png'
+        # on EVERY call, killing the cross-section builder (F1 transport
+        # fault). Return a structured envelope; the PNG path stays
+        # first-class under "image_path" for Hermes display.
+        return {
+            "tool": "geox_model",
+            "mode": "geological_generate",
+            "mode_echo": "geological_generate",
+            "ok": True,
+            "isError": False,
+            "execution_status": "OK",
+            "image_path": out_path,
+            "image_format": "png",
+            "render": {
+                "dpi": 150,
+                "figsize": [12.0, 6.0],
+                "width_px": 12 * 150,
+                "height_px": 6 * 150,
+            },
+            "params": params.model_dump(),
+            "generated_at": datetime.now(UTC).isoformat(),
+            "note": (
+                "Deterministic numpy/matplotlib cross-section (Agg, no network, "
+                "no diffusion model). Open image_path to view."
+            ),
+        }
 
     # ═══════════════════════════════════════════════════════════════════
     # PHASE 2 — LEM Tools (E1-E5) — LEM Agentic Substrate
