@@ -64,17 +64,41 @@ class GLOFCascadePhaseRequest(BaseModel):
 
 
 class GLOFCascadeInverseRequest(BaseModel):
-    observation: dict = Field(..., description="GLOFObservation dict: {water_head_m, Q_peak, t_peak, surge}")
-    base_theta: Optional[dict] = Field(default=None,
-                                       description="Seed theta dict (9 fields) — defaults to himalayan_defaults")
+    # af-fix #5 (2026-09-09): description previously advertised WRONG keys
+    # ({water_head_m, Q_peak, t_peak, surge}) — exactly what misled callers
+    # into `peak_Q_m3s` TypeErrors. Now documents the true GLOFObservation fields.
+    observation: dict = Field(
+        ...,
+        description="GLOFObservation dict. REQUIRED: label (str), water_head_m, "
+                    "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
+                    "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
+    )
+    base_theta: Optional[dict] = Field(
+        default=None,
+        description="Seed GLOFMaterialState dict (9 required scalars: rho, E, nu, c, "
+                    "phi [rad], k, phi_p, tau_0, sigma_t; optional: T, Pp, sigma_v, "
+                    "saturation, velocity, strain, cell_id, phase_id, timestamp_ns, "
+                    "bounds) — defaults to himalayan_defaults()",
+    )
     n_grid: int = Field(default=4, description="Grid resolution per dimension")
 
 
 class GLOFCascadeMetabolizeRequest(BaseModel):
     cycle_id: str = Field(default="", description="F-I-M cycle identifier")
-    theta_hat: dict = Field(..., description="Inferred 9-field theta dict")
+    theta_hat: dict = Field(
+        ...,
+        description="Inferred GLOFMaterialState dict (9 required scalars: rho, E, nu, c, "
+                    "phi [rad], k, phi_p, tau_0, sigma_t; optional dynamic/meta fields "
+                    "accepted). Output of geox_glof_cascade_inverse.result.theta_hat "
+                    "validates as-is.",
+    )
     forward_prediction: dict = Field(..., description="Forward sim output")
-    observation: dict = Field(..., description="Field observation dict")
+    observation: dict = Field(
+        ...,
+        description="GLOFObservation dict. REQUIRED: label, water_head_m, "
+                    "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
+                    "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
+    )
 
 
 class GLOFCascadeResponse(BaseModel):
@@ -148,6 +172,134 @@ class GLOFSimSession:
             "cycle_count": self.cycle_count,
             "grid_shape": list(self.grid_shape),
         }
+
+
+# ──────────────────────────────────────────────────────────────── F5 input gate
+# af-fix #5 (2026-09-09): the inverse/metabolize tools accepted free-form dicts
+# and splatted them straight into dataclasses whose signatures were undocumented
+# in the tool schema — callers got raw TypeError/`__init__() got an unexpected
+# keyword argument` exceptions instead of a structured, self-describing error.
+# This gate validates keys BEFORE dataclass construction and emits a
+# MISSING_REQUIRED_FIELD-style envelope (pattern: geox_seismic_interpret).
+# Field lists are introspected from the REAL dataclasses — they cannot drift.
+
+def _glof_field_contract(kind: str) -> tuple[list[str], list[str], list[str]]:
+    """(required_fields, optional_fields, all_fields) from the source dataclass."""
+    import dataclasses as _dc
+
+    if kind == "observation":
+        from geox_core.physics.gl_forward_inverse_loop import GLOFObservation as _cls
+    elif kind == "material":
+        from geox_core.physics.glgeomaterial import GLOFMaterialState as _cls
+    elif kind == "forward_pred":
+        # Not a dataclass: producer = forward_glof() return dict, consumer =
+        # tri_witness_score() which reads exactly these three keys.
+        return (
+            ["Q_peak_m3s", "time_to_peak_min", "downstream_surge_m_est"],
+            ["Pp_series", "phase_series", "breach_step", "breach_time_min"],
+            ["Q_peak_m3s", "time_to_peak_min", "downstream_surge_m_est",
+             "Pp_series", "phase_series", "breach_step", "breach_time_min"],
+        )
+    else:  # pragma: no cover - programming error
+        raise ValueError(f"unknown contract kind: {kind}")
+
+    required, optional = [], []
+    for f in _dc.fields(_cls):
+        (optional if f.default is not _dc.MISSING or f.default_factory is not _dc.MISSING else required).append(f.name)
+    return required, optional, required + optional
+
+
+# Common wrong names seen in the wild → the true field. Used for HINTS only —
+# never for silent coercion (renaming a physical quantity silently = F2 violation).
+_GLOF_ALIAS_HINTS = {
+    "peak_Q_m3s": "peak_discharge_m3s",
+    "Q_peak": "peak_discharge_m3s",
+    "peak_q_m3s": "peak_discharge_m3s",
+    "q_peak_m3s": "peak_discharge_m3s",
+    "t_peak": "time_to_peak_min",
+    "t_peak_min": "time_to_peak_min",
+    "time_to_peak": "time_to_peak_min",
+    "surge": "downstream_surge_m",
+    "downstream_surge": "downstream_surge_m",
+    "breach_width": "breach_width_m",
+    "water_head": "water_head_m",
+    "youngs_modulus": "E",
+    "youngs_modulus_pa": "E",
+    "poissons_ratio": "nu",
+    "cohesion": "c",
+    "cohesion_pa": "c",
+    "friction_angle": "phi",
+    "friction_angle_deg": "phi (radians!)",
+    "permeability": "k",
+    "porosity": "phi_p",
+    "yield_stress": "tau_0",
+    "tensile_strength": "sigma_t",
+}
+
+
+def _validate_glof_payload(
+    tool: str,
+    kind: str,
+    payload: object,
+    param_name: str,
+) -> dict | None:
+    """Return a structured error envelope if payload keys don't match the dataclass.
+
+    None = valid. Never raises, never coerces — the caller must fix the call.
+    """
+    required, optional, all_fields = _glof_field_contract(kind)
+
+    if not isinstance(payload, dict):
+        return {
+            "ok": False,
+            "isError": True,
+            "tool": tool,
+            "error": "MISSING_REQUIRED_FIELD",
+            "message": f"{param_name} must be a dict with keys {required}; got {type(payload).__name__}.",
+            "required_params": required,
+            "accepted_keys": {"required": required, "optional": optional},
+            "hint": f"Pass {param_name} as an object, e.g. {param_name}={{{', '.join(required[:2])}, ...}}",
+            "governance_status": "HOLD",
+            "execution_status": "ERROR",
+        }
+
+    missing = [k for k in required if k not in payload]
+    unknown = {}
+    for k in payload:
+        if k not in all_fields:
+            unknown[k] = _GLOF_ALIAS_HINTS.get(k, None)
+
+    if not missing and not unknown:
+        return None
+
+    if missing:
+        error_code = "MISSING_REQUIRED_FIELD"
+        message = f"{param_name} is missing required field(s): {missing}."
+    else:
+        error_code = "UNKNOWN_FIELD"
+        message = f"{param_name} contains unknown field(s): {sorted(unknown)}."
+
+    alias_notes = [f"'{k}' → '{v}'" for k, v in unknown.items() if v]
+    parts = [f"{param_name} accepted keys — required: {required}, optional: {optional}."]
+    if alias_notes:
+        parts.append("Known-alias correction (rename; no silent coercion is performed): " + "; ".join(alias_notes) + ".")
+    elif unknown:
+        parts.append(f"Unknown keys (no dataclass counterpart): {sorted(unknown)}.")
+    hint = " ".join(parts)
+
+    return {
+        "ok": False,
+        "isError": True,
+        "tool": tool,
+        "error": error_code,
+        "message": message,
+        "required_params": missing if missing else required,
+        "unknown_fields": unknown,
+        "accepted_keys": {"required": required, "optional": optional},
+        "hint": hint,
+        "governance_status": "HOLD",
+        "execution_status": "ERROR",
+    }
 
 
 # ──────────────────────────────────────────────────────────────── Tools
@@ -325,6 +477,14 @@ async def geox_glof_cascade_inverse(
     )
 
     try:
+        # af-fix #5: validate BEFORE dataclass construction — no raw TypeError escapes
+        _err = _validate_glof_payload("geox_glof_cascade_inverse", "observation", request.observation, "observation")
+        if _err:
+            return _err
+        if request.base_theta is not None:
+            _err = _validate_glof_payload("geox_glof_cascade_inverse", "material", request.base_theta, "base_theta")
+            if _err:
+                return _err
         obs = GLOFObservation(**request.observation)
         base = None
         if request.base_theta:
@@ -361,6 +521,16 @@ async def geox_glof_cascade_metabolize(
     from geox_core.physics.glgeomaterial import GLOFMaterialState, MaterialPhase
 
     try:
+        # af-fix #5: validate BEFORE dataclass construction — no raw TypeError escapes
+        _err = _validate_glof_payload("geox_glof_cascade_metabolize", "material", request.theta_hat, "theta_hat")
+        if _err:
+            return _err
+        _err = _validate_glof_payload("geox_glof_cascade_metabolize", "observation", request.observation, "observation")
+        if _err:
+            return _err
+        _err = _validate_glof_payload("geox_glof_cascade_metabolize", "forward_pred", request.forward_prediction, "forward_prediction")
+        if _err:
+            return _err
         # Reconstruct with phase_id coercion (dict -> Enum)
         theta_dict = dict(request.theta_hat)
         pid = theta_dict.get("phase_id", "unknown")
@@ -391,7 +561,7 @@ async def geox_glof_cascade_metabolize(
 # ─────────────────────────────────────────────────────────────── Phase C tools
 class GLOFCascadeMCMCRequest(BaseModel):
     """MCMC Bayesian posterior inference (Phase C)."""
-    observation: dict = Field(..., description="GLOFObservation dict")
+    observation: dict = Field(default=..., description="GLOFObservation dict. REQUIRED: label, water_head_m, breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m. OPTIONAL: source, timestamp_ns.")
     base_theta: dict | None = Field(default=None, description="Initial 33D state (full)")
     n_warmup: int = Field(default=80, description="Adaptive warm-up iterations per chain")
     n_iter: int = Field(default=200, description="Production iterations per chain")
@@ -429,6 +599,14 @@ async def geox_glof_cascade_mcmc_inverse(
     )
     from geox_core.physics.glgeomaterial import GLOFMaterialState
     try:
+        # af-fix #5: validate BEFORE dataclass construction — no raw TypeError escapes
+        _err = _validate_glof_payload("geox_glof_cascade_mcmc_inverse", "observation", request.observation, "observation")
+        if _err:
+            return _err
+        if request.base_theta is not None:
+            _err = _validate_glof_payload("geox_glof_cascade_mcmc_inverse", "material", request.base_theta, "base_theta")
+            if _err:
+                return _err
         obs = GLOFObservation(**request.observation)
         base = None
         if request.base_theta:
