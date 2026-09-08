@@ -4947,6 +4947,8 @@ def register_tools_on(mcp):
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
+        layers_input: list[dict[str, Any]] | None = None,
+        strata_source: str = "defaults",
     ) -> str:
         """Generate a deterministic 2D geological cross-section using matplotlib.
 
@@ -5131,6 +5133,11 @@ def register_tools_on(mcp):
             "execution_status": "OK",
             "image_path": out_path,
             "image_format": "png",
+            # D1: the caller's input appears identically in the first envelope
+            # — verbatim layers echo + which source drove the strata render.
+            "layers_input": layers_input,
+            "strata_source": strata_source,
+            "strata_resolved": [u.model_dump() for u in params.strata],
             "render": {
                 "dpi": 150,
                 "figsize": [12.0, 6.0],
@@ -6768,15 +6775,97 @@ def register_tools_on(mcp):
                 trace_id=trace_id,
             )
         elif mode == "geological_generate":
-            if geological_params is not None:
-                params = _GeologicalModelParams(**geological_params)
-            else:
-                params = _GeologicalModelParams()
+            # D1 (2026-09-09, sovereign residual delta): honor caller `layers`
+            # — previously ignored for this mode, so the renderer always drew
+            # default strata (Layer A–F + Basement) while the caller believed
+            # their input drove the render. Map layers → strata
+            # (formation→name, thickness_m→thickness_m, lithology→color).
+            # Malformed layers → structured contract error, never silent
+            # default substitution (F2).
+            _layers_input = None
+            _strata_source = "defaults"
+            _strata_from_layers = None
+            if layers:
+                _LITHOLOGY_COLORS = {
+                    "sandstone": "#E6A817", "shale": "#6E6E6E",
+                    "mudstone": "#8B7D7B", "siltstone": "#C9B28A",
+                    "claystone": "#7A6A5B", "limestone": "#B8C4D9",
+                    "dolomite": "#9FB8C9", "coal": "#1C1C1C",
+                    "conglomerate": "#D9A66C", "breccia": "#C48F5E",
+                    "basalt": "#3B3B3B", "granite": "#D2B48C",
+                    "gneiss": "#A89284", "tuff": "#BFB8A0",
+                    "ignimbrite": "#C7B8A0", "chalk": "#E8E4D8",
+                }
+                _strata_from_layers = []
+                for _i, _lyr in enumerate(layers):
+                    _bad = (
+                        not isinstance(_lyr, dict)
+                        or not str(_lyr.get("formation") or "").strip()
+                        or _lyr.get("thickness_m") is None
+                    )
+                    if not _bad:
+                        try:
+                            _th = float(_lyr["thickness_m"])
+                            _bad = _th <= 0
+                        except (TypeError, ValueError):
+                            _bad = True
+                    if _bad:
+                        return {
+                            "tool": "geox_model",
+                            "mode": "geological_generate",
+                            "mode_echo": "geological_generate",
+                            "ok": False,
+                            "isError": True,
+                            "execution_status": "ERROR",
+                            "governance_status": "HOLD",
+                            "error": "INVALID_LAYERS_CONTRACT",
+                            "message": (
+                                f"layers[{_i}] is malformed. Each layer must be "
+                                "an object with 'formation' (str) and 'thickness_m' "
+                                "(number > 0); optional 'lithology' (str) selects "
+                                "the fill colour."
+                            ),
+                            "accepted_shape": {
+                                "formation": "str (required) — rendered unit name",
+                                "thickness_m": "number > 0 (required)",
+                                "lithology": "str (optional) — colour key, e.g. "
+                                + ", ".join(list(_LITHOLOGY_COLORS)[:6]) + ", …",
+                            },
+                            "layers_received": layers,
+                            "_evidence_postcondition": {
+                                "applied": True,
+                                "verdict": "DOWNGRADED",
+                                "reason": "layers input does not satisfy the strata contract; rendering defaults would silently substitute caller intent (F2)",
+                                "spec": "geox-evidence-postcondition-v1",
+                            },
+                        }
+                    _strata_from_layers.append(
+                        {
+                            "name": str(_lyr["formation"]).strip(),
+                            "thickness_m": float(_lyr["thickness_m"]),
+                            "color": _LITHOLOGY_COLORS.get(
+                                str(_lyr.get("lithology") or "").strip().lower(),
+                                "#888888",
+                            ),
+                        }
+                    )
+                _layers_input = layers
+                _strata_source = "layers"
+            _gp = dict(geological_params) if geological_params else {}
+            if _strata_from_layers and "strata" not in _gp:
+                _gp["strata"] = _strata_from_layers
+                if geological_params is not None:
+                    _strata_source = "geological_params+layers"
+            elif geological_params is not None:
+                _strata_source = "geological_params"
+            params = _GeologicalModelParams(**_gp)
             return await _geological_model_generate(
                 params=params,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
+                layers_input=_layers_input,
+                strata_source=_strata_source,
             )
         elif mode == "gempy_3d":
             return await _gempy_implicit_3d(
