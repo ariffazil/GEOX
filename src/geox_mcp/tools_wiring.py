@@ -7175,8 +7175,18 @@ def register_tools_on(mcp):
                         Lambda-Mu-Rho (Goodway 1997), Castagna mudrock
         """
         if mode == "avo_forward":
-            return await _avo_forward(
-                mode="zoeppritz",
+            # af-fix #6b (2026-09-09): the previous direct _avo_forward call
+            # bypassed the contract wrapper in tools/seismic_compute_unified.py
+            # — response echoed the engine sub-mode ('zoeppritz') instead of
+            # the requested avo_forward and left synthetic_trace/reflectivity/
+            # attributes null (outputSchema violation, F3). Route through the
+            # wrapper (mode + mode_executed + field lift, gate-checked).
+            from geox_mcp.tools.seismic_compute_unified import (
+                geox_seismic_compute as _scu_impl,
+            )
+
+            return await _scu_impl(
+                mode="avo_forward",
                 vp1=vp1,
                 vs1=vs1,
                 rho1=rho1,
