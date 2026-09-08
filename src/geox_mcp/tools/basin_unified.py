@@ -84,6 +84,53 @@ async def geox_basin(
                    Diachroneity default. Reality loop: observe→hypothesize→test→contrast→loop.
     """
     kwargs = locals().copy()
+    # ── backstrip — Honest refusal (scar_...d5a284bb HIGH 0.8 fix) ─────────
+    # Fix (af-fix #1, 2026-09-09): previously, mode='backstrip' silently fell
+    # through to profile (no branch matched), returning ok:true with profile
+    # data while caller expected backstrip_result. The postcondition gate
+    # caught the silent fall-through but only as a side-effect — caller still
+    # received a "successful" response. Per the unified basin signature,
+    # backstrip-specific inputs (well_ref, stratigraphic_ages, lithology_model,
+    # palaeobathymetry_model) are not exposed. Refuse honestly and route to
+    # the dedicated tool.
+    if mode == "backstrip":
+        return {
+            "tool": "geox_basin",
+            "mode": "backstrip",
+            "mode_echo": "backstrip",
+            "ok": False,
+            "isError": True,
+            "execution_status": "ERROR",
+            "governance_status": "HOLD",
+            "claim_tag": "HYPOTHESIS",
+            "claim_state": "INVALID_MODE_FOR_THIS_TOOL",
+            "required_tool": "geox_basin_backstrip",
+            "required_params": [
+                "well_ref",
+                "stratigraphic_ages",
+                "lithology_model",
+                "palaeobathymetry_model",
+            ],
+            "error": (
+                "geox_basin(mode='backstrip') cannot execute: the unified basin "
+                "signature does not expose backstrip-specific inputs "
+                "(well_ref, stratigraphic_ages, lithology_model, "
+                "palaeobathymetry_model). Use the dedicated tool "
+                "`geox_basin_backstrip` directly, or extend the unified "
+                "signature with the required parameters."
+            ),
+            "_evidence_postcondition": {
+                "applied": True,
+                "verdict": "DOWNGRADED",
+                "reason": (
+                    "backstrip mode requested but backstrip-specific fields "
+                    "absent in unified signature; falling through to profile "
+                    "would be a silent F2 violation"
+                ),
+                "spec": "geox-evidence-postcondition-v1",
+            },
+        }
+
     if mode == "resolve":
         from geox_mcp.tools.basin import geox_basin_resolve as _impl
 
