@@ -3823,6 +3823,21 @@ async def _glof_cascade_inverse_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
+    """Bayesian grid-search inference of dam parameters from a field observation.
+
+    observation (REQUIRED keys, GLOFObservation): label (str), water_head_m,
+    breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m.
+    OPTIONAL: source, timestamp_ns. Note: peak_Q_m3s/Q_peak are NOT accepted —
+    the field is peak_discharge_m3s.
+
+    base_theta (GLOFMaterialState, optional — defaults to himalayan_defaults()).
+    REQUIRED scalars: rho, E, nu, c, phi (radians), k, phi_p, tau_0, sigma_t.
+    OPTIONAL: T, Pp, sigma_v, saturation, velocity, strain, cell_id, phase_id,
+    timestamp_ns, bounds.
+
+    Malformed dicts return a structured MISSING_REQUIRED_FIELD / UNKNOWN_FIELD
+    envelope listing required_params, accepted_keys and alias hints.
+    """
     return await _glofv(
         GLOFCascadeInverseRequest(
             observation=observation,
@@ -3841,6 +3856,24 @@ async def _glof_cascade_metabolize_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
+    """Close the F-I-M loop — produce a receipt with tri-witness G-score.
+
+    theta_hat (GLOFMaterialState): REQUIRED scalars rho, E, nu, c, phi (rad),
+    k, phi_p, tau_0, sigma_t; OPTIONAL T, Pp, sigma_v, saturation, velocity,
+    strain, cell_id, phase_id, timestamp_ns, bounds. The theta_hat dict
+    returned by geox_glof_cascade_inverse.result.theta_hat validates as-is.
+
+    observation (GLOFObservation): REQUIRED label, water_head_m,
+    breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m;
+    OPTIONAL source, timestamp_ns.
+
+    forward_prediction (dict, from forward_glof()): REQUIRED keys Q_peak_m3s,
+    time_to_peak_min, downstream_surge_m_est (consumed by the tri-witness
+    score); OPTIONAL: Pp_series, phase_series, breach_step, breach_time_min.
+
+    Malformed dicts return a structured MISSING_REQUIRED_FIELD / UNKNOWN_FIELD
+    envelope listing required_params, accepted_keys and alias hints.
+    """
     return await _glofm(
         GLOFCascadeMetabolizeRequest(
             cycle_id=cycle_id,
@@ -3863,6 +3896,19 @@ async def _glof_cascade_mcmc_inverse_tool(
     session_id: str = "",
     actor_id: str = "",
 ):
+    """MCMC Bayesian posterior inference of dam parameters (Phase C).
+
+    observation (REQUIRED keys, GLOFObservation): label (str), water_head_m,
+    breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m.
+    OPTIONAL: source, timestamp_ns. Note: peak_Q_m3s/Q_peak are NOT accepted —
+    the field is peak_discharge_m3s.
+
+    base_theta (GLOFMaterialState, optional): REQUIRED scalars rho, E, nu, c,
+    phi (radians), k, phi_p, tau_0, sigma_t; OPTIONAL dynamic/meta fields.
+
+    Malformed dicts return a structured MISSING_REQUIRED_FIELD / UNKNOWN_FIELD
+    envelope listing required_params, accepted_keys and alias hints.
+    """
     return await _glof_mcmc(
         GLOFCascadeMCMCRequest(
             observation=observation,
