@@ -79,6 +79,7 @@ static/gui/cesium/Workers/
 # Generated repo dump artifacts
 ariffazil-geox.txt
 Copilot/
+artifacts/
 
 
 # Volve field data (requires Equinor license)
@@ -100,6 +101,5 @@ CONTRIBUTING.md
 data/egs/receipts/TEST-*.json
 data/atlas/cache/renders/
 __pycache__/
-uv.lock
 *.bak.*
 sessions/

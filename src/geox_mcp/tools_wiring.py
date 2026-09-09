@@ -5560,10 +5560,13 @@ def register_tools_on(mcp):
                 if mode in ("zoeppritz", "full"):
                     rpp = zoeppritz_rpp(vp1, vs1, rho1, vp2, vs2, rho2, thetas)
                     results["zoeppritz"] = {"theta_deg": thetas.tolist(), "rpp": rpp.tolist()}
+                    results["reflectivity"] = rpp.tolist()
                 if mode in ("shuey", "full"):
                     sh = shuey_avo(vp1, vs1, rho1, vp2, vs2, rho2, theta_max)
                     sd = sh.to_dict() if hasattr(sh, 'to_dict') else {}
                     results["shuey"] = {"intercept_R0": sd.get("intercept_R0"), "gradient_G": sd.get("gradient_G"), "avo_class": sd.get("avo_class")}
+                    if sd.get("intercept_R0") is not None:
+                        results["amplitude"] = [sd.get("intercept_R0")]
                 if mode in ("lmr", "full"):
                     vpp = np.array([vp]) if isinstance(vp, (int, float)) else np.array(vp)
                     vss = np.array([vs]) if isinstance(vs, (int, float)) else np.array(vs)
@@ -5767,18 +5770,43 @@ def register_tools_on(mcp):
           scene_plan    — Create a deterministic visual recipe for a geological map scene
           render_preview — Render a static map preview from a scene plan or bbox
         """
+        # 2026-09-06: zen-consolidation commented out _map_layers_list /
+        # _map_scene_plan / _map_render_preview but this unified wrapper still
+        # called them → NameError. Call earth_map impls directly.
         if mode == "layers_list":
             if bbox is None:
-                return {"error": "layers_list mode requires bbox parameter"}
-            return await _map_layers_list(bbox=bbox, theme=theme, include_unavailable=include_unavailable, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+                return {"ok": False, "error": "layers_list mode requires bbox parameter"}
+            from geox_mcp.tools.earth_map import geox_map_layers_list as _impl
+
+            return await _impl(bbox=bbox, theme=theme, include_unavailable=include_unavailable)
         elif mode == "scene_plan":
             if bbox is None:
-                return {"error": "scene_plan mode requires bbox parameter"}
-            return await _map_scene_plan(bbox=bbox, layer_ids=layer_ids, theme=theme, map_purpose=map_purpose, style_profile=style_profile, crs=crs, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+                return {"ok": False, "error": "scene_plan mode requires bbox parameter"}
+            from geox_mcp.tools.earth_map import geox_map_scene_plan as _impl
+
+            return await _impl(
+                bbox=bbox,
+                layer_ids=layer_ids,
+                theme=theme,
+                map_purpose=map_purpose,
+                style_profile=style_profile,
+                crs=crs,
+            )
         elif mode == "render_preview":
-            return await _map_render_preview(scene_id=scene_id, bbox=bbox, layer_ids=layer_ids, theme=theme, width_px=width_px, height_px=height_px, style_profile=style_profile, format=format, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+            from geox_mcp.tools.earth_map import geox_map_render_preview as _impl
+
+            return await _impl(
+                scene_id=scene_id,
+                bbox=bbox,
+                layer_ids=layer_ids,
+                theme=theme,
+                width_px=width_px,
+                height_px=height_px,
+                style_profile=style_profile,
+                format=format,
+            )
         else:
-            return {"error": f"Unknown mode: {mode}. Valid: layers_list, scene_plan, render_preview"}
+            return {"ok": False, "error": f"Unknown mode: {mode}. Valid: layers_list, scene_plan, render_preview"}
 
     @mcp.tool(name="geox_map_layers_list", annotations=_geox_annotations("geox_map_layers_list"))
     async def _shim_map_layers_list(bbox, theme=None, include_unavailable=False, session_id=None, actor_id=None, trace_id=None):
@@ -5972,15 +6000,50 @@ def register_tools_on(mcp):
           dde_reason — Query DDE Ontology + Macrostrat for stratigraphic reasoning,
                        infer missing geology, validate cross-sections, tectonic context
         """
-        if mode == "dde_reason":
-            return await _dde_reason(
-                mode="query_stratigraphy", bbox=bbox, lat=lat, lng=lng,
-                formation=formation, known_units=known_units, ontology_term=ontology_term,
-                section_params=section_params, delta_age_ma=delta_age_ma, limit=limit,
-                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
-            )
-        else:
-            return {"error": f"Unknown mode: {mode}. Valid: dde_reason"}
+        # 2026-09-06: do not call nested _dde_reason (may be missing if LEM E5
+        # import failed) and do not forward session envelope blindly
+        # (unexpected keyword on older impls). Import + _safe_forward.
+        from geox_mcp.tools.dde_reason import geox_dde_reason as _impl
+
+        impl_mode = "query_stratigraphy"
+        if mode in (
+            "tectonic_context",
+            "lithology_at_point",
+            "age_constraints",
+            "query_dde",
+            "infer_missing",
+            "validate_section",
+            "query_stratigraphy",
+        ):
+            impl_mode = mode
+        elif mode not in ("dde_reason", "query_stratigraphy"):
+            return {
+                "ok": False,
+                "error": (
+                    f"Unknown mode: {mode}. Valid: dde_reason, tectonic_context, "
+                    "lithology_at_point, age_constraints, query_dde"
+                ),
+            }
+
+        args = _safe_forward(
+            _impl,
+            {
+                "mode": impl_mode,
+                "bbox": bbox,
+                "lat": lat,
+                "lng": lng,
+                "formation": formation,
+                "known_units": known_units,
+                "ontology_term": ontology_term,
+                "section_params": section_params,
+                "delta_age_ma": delta_age_ma,
+                "limit": limit,
+            },
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
+        )
+        return await _impl(**args)
 
     @mcp.tool(name="geox_dde_reason", annotations=_geox_annotations("geox_dde_reason"))
     async def _shim_dde_reason(mode="query_stratigraphy", bbox=None, lat=None, lng=None, formation=None, known_units=None, ontology_term=None, section_params=None, delta_age_ma=None, limit=10, session_id=None, actor_id=None, trace_id=None):

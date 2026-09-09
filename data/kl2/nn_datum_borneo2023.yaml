@@ -1,0 +1,45 @@
+# KL2 / NW Borneo — NN unified-horizon datum (registry-ready)
+# Authority: 2023 NW Borneo Integration Framework (PETRONAS unified horizons)
+# Fill source (un-anchored intervals only): ICS / Gradstein 2020 + ODP datum table
+# Deposited: 2026-09-07, FI-003 under F13 GO (validator memo, HOLD->REVISE->RE-SEAL)
+# Consumed by: strat_datum_check (see /root/GEOX/docs/strat_datum_check.spec.md)
+# Rule: adopt ONE scheme end-to-end — the 9 PETRONAS unified horizons.
+#       Never regroup into invented spans (NN16-20 / NN12-15 / NN10-11 / NN7-8):
+#       they straddle anchors and reintroduce ~2 Ma label/age divergence.
+datum:
+  id: nn-borneo-2023
+  name: 2023 NW Borneo Integration Framework — NN unified horizons
+  version: v2
+  ladder_is_continuous: true  # each zone base = next zone top; seams impossible by construction
+
+boundaries:            # surface = zone BASE age (Ma); younger zone sits above
+  - {surface: present,   age_ma: 0.00, provenance: mudline,                    confidence: HIGH}
+  - {surface: NN21_base, age_ma: 0.26, provenance: ICS/ODP (FO E. huxleyi),    confidence: HIGH}
+  - {surface: NN18_base, age_ma: 2.39, provenance: PETRONAS Borneo 2023,       confidence: HIGH}
+  - {surface: NN16_base, age_ma: 3.70, provenance: PETRONAS Borneo 2023,       confidence: HIGH}
+  - {surface: NN15_base, age_ma: 3.75, provenance: ICS-FILL (Gradstein 2020),  confidence: MEDIUM-LOW, ics_fill: true}
+  - {surface: NN13_base, age_ma: 4.00, provenance: ICS-FILL (Gradstein 2020),  confidence: MEDIUM-LOW, ics_fill: true}
+  - {surface: NN12_base, age_ma: 5.00, provenance: ICS-FILL (Gradstein 2020),  confidence: MEDIUM-LOW, ics_fill: true}
+  - {surface: NN11_base, age_ma: 8.29, provenance: PETRONAS Borneo 2023 (FAD D. quinqueramus 8.11), confidence: HIGH}
+  - {surface: NN10_base, age_ma: 9.53, provenance: PETRONAS Borneo 2023,       confidence: HIGH}
+  - {surface: NN9_base,  age_ma: 10.55, provenance: PETRONAS Borneo 2023,      confidence: HIGH}
+  - {surface: NN8_base,  age_ma: 10.89, provenance: PETRONAS Borneo 2023,      confidence: HIGH}
+  - {surface: NN7_base,  age_ma: 11.90, provenance: PETRONAS Borneo 2023,      confidence: HIGH}
+  - {surface: NN6_base,  age_ma: 13.53, provenance: PETRONAS Borneo 2023,      confidence: HIGH}
+  - {surface: NN5_base,  age_ma: 14.91, provenance: PETRONAS Borneo 2023,      confidence: HIGH}
+
+unresolved:
+  - NN14 not dated regionally; carried with NN15 (3.75 Ma), never reported as independent pick.
+
+gaps:
+  - interval: NN12-NN15
+    note: no regionally-anchored horizon between NN16 (3.7) and NN11 (8.29) — any pick here is ICS-FILL, tag MEDIUM-LOW and widen sigma; never present as regionally calibrated.
+
+forbidden_groups:      # invented coarse groups that straddle anchors — reject on sight
+  - NN16-20
+  - NN12-15
+  - NN10-11
+  - NN7-8
+
+flags:
+  age_divergence_ma: 0.5   # any supplied boundary off the ladder by more than this -> FLAG

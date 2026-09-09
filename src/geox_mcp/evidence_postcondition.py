@@ -33,12 +33,12 @@ logger = logging.getLogger("geox_mcp.evidence_postcondition")
 EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     # ── Compute / petrophysics ──────────────────────────────────────
     "geox_petrophysics": ["net_pay", "curves", "curves_available", "vsh", "porosity", "sw"],
-    "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute"],
+    "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute", "zoeppritz", "rpp", "shuey", "lmr", "castagna"],
     "geox_seismic_interpret": ["horizons", "faults", "interpretation_bundle", "geometry"],
     "geox_seismic_ingest": ["volume_ref", "headers", "trace_count", "sample_count"],
     "geox_sequence": ["correlation", "zones", "tops", "strat_column"],
     "geox_subsurface_model": ["layers", "prisms", "model", "density_model"],
-    "geox_geomechanics": ["moduli", "stress_polygon", "elastic_properties", "pressure"],
+    "geox_geomechanics": ["moduli", "stress_polygon", "stress_polygon_vertices", "elastic_properties", "pressure", "sv_mpa"],
     "geox_gravmag_studio": ["prisms", "forward_model", "residual", "anomaly"],
     "geox_lem_predict": ["predictions", "porosity", "sw", "lithology"],
     "geox_sediment_mass_balance": ["source_eroded_km3", "preserved_volumes", "bypassed"],
