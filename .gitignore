@@ -103,3 +103,7 @@ data/atlas/cache/renders/
 __pycache__/
 *.bak.*
 sessions/
+
+# Backup files (forensic, not source)
+*.bak-*
+*.bak
