@@ -1,0 +1,386 @@
+# =============================================================================
+# GEOX — OAuth Scope -> Tool Annotation Schema
+# P3 deliverable | T1 metadata-only | reversible | no blast radius
+# Baseline: MCP 2026-07-28 stateless | RFC 9728 PRM | RFC 8707 Resource Indicators
+# Seal: P3::GEOX_SCOPE_MAP::v2.0::DRAFT_GROUND_TRUTHED
+# -----------------------------------------------------------------------------
+# AUTHORITY DOCTRINE (non-negotiable):
+#   OAuth scope grants ENTRY. It NEVER grants AUTHORITY.
+#   tier >= forge  => constitutional_gate: required
+#   No forge/seal executes without arif_judge(SEAL) -> arif_forge -> arif_seal.
+#   If the edge gateway attempts to authorize a mutation on scope alone => VOID.
+# -----------------------------------------------------------------------------
+# TAGGING:
+#   [EVIDENCE]     structure is spec-grounded (RFC 9728 / 8707 / MCP 2026-07-28)
+#   [VERIFIED]     tool id + tier read directly from the live geox-direct MCP
+#                   registry (schema introspection), this session, 2026-09-09.
+#   [MODE-GATED]   this tool id spans more than one scope tier depending on its
+#                   `mode` argument (and, for geox:claim, `ack_irreversible`/
+#                   `judge_pin`). The gateway MUST branch on (tool, mode, flags),
+#                   not on tool id alone, or a low-tier call rides a high-tier
+#                   scope through undetected.
+#   [UNVERIFIED-CONTENT] entry exists on disk (filename/path confirmed) but its
+#                   internal body was not opened this session — do not treat its
+#                   claimed tool bindings as fact until read.
+# -----------------------------------------------------------------------------
+# REVISION NOTE (v1.0 -> v2.0):
+#   v1.0 shipped 32 tool `id:`s tagged [UNKNOWN] — every one of them was
+#   inferred from GEOX domain vocabulary, not read from a live registry.
+#   Checked against the live geox-direct MCP connection on 2026-09-09: ZERO
+#   of the 32 v1.0 ids matched a real tool. The real registry holds 26 tools
+#   under entirely different names (see `tools:` below). v1.0's own footer
+#   instruction — "ARIF: replace every id: below with the canonical tool id
+#   before commit" — is now actioned. This revision is FORGE-tier drafting
+#   only (execution-layer authority ceiling); committing/sealing v2.0 as the
+#   canonical map is Arif's call, not this clerk's.
+# =============================================================================
+
+version: "2.0"
+resource: "https://mcp.arif-fazil.com"
+organ: GEOX
+status: DRAFT_GROUND_TRUTHED   # tool identities verified; commit/seal still pending Arif
+
+# ---------------------------------------------------------------------------
+# SCOPE TAXONOMY — 4 tiers, monotonic (higher tier subsumes lower read rights)
+# unchanged from v1.0 — this structure held up under verification.
+# ---------------------------------------------------------------------------
+scopes:
+  geox:observe:
+    tier: 0
+    intent: "Read-only. Return existing data/interpretations. No compute persistence."
+    auth_required: false          # already public today; scope is for attribution only
+    constitutional_gate: false
+    reversibility: full
+    verdict_path: none            # OBSERVE needs no verdict
+  geox:interpret:
+    tier: 1
+    intent: "Derive/compute new results from inputs. Ephemeral. Writes nothing durable."
+    auth_required: true
+    constitutional_gate: false    # no persistent state change
+    reversibility: full
+    verdict_path: none
+  geox:forge:
+    tier: 2
+    intent: "Mutate durable state — write models, claims, artifacts into GEOX."
+    auth_required: true
+    constitutional_gate: required # MUST route arif_judge -> arif_forge
+    reversibility: partial
+    verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+  geox:seal:
+    tier: 3
+    intent: "Append to VAULT999 / canon-seal. Highest irreversibility. F13 lane."
+    auth_required: true
+    constitutional_gate: required # MUST route full chain incl. F13 sovereign
+    reversibility: none           # append-only, immutable
+    verdict_path: "arif_judge(SEAL) -> arif_forge -> arif_seal (F13 sovereign)"
+
+# ---------------------------------------------------------------------------
+# GATE ENFORCEMENT CONTRACT (edge gateway MUST honor)
+# ---------------------------------------------------------------------------
+gate_contract:
+  entry: "Validate external JWT vs jwks_uri + RFC 8707 audience == this resource."
+  exchange: "Mint internal SCT via RFC 8693 token-exchange. External JWT dies here."
+  authority: "For tier>=2, SCT capability is INSUFFICIENT alone. Gateway MUST invoke
+              arif_judge and forward the verdict. Absence of SEAL => refuse."
+  mode_gating: "[NEW in v2.0] For any tool tagged [MODE-GATED] below, the gateway
+              MUST inspect the call's `mode` argument (and, where present,
+              `ack_irreversible` / `judge_pin` / `output_path` / `overwrite` /
+              `drop_table`) to resolve the effective tier BEFORE applying
+              gate_contract.authority. A [MODE-GATED] tool id carries no single
+              scope of its own — only its (mode, flags) resolve one."
+  void_condition: "Any tier>=2 execution where verdict_path was not traversed => VOID + VAULT999 log.
+              Also VOID: any [MODE-GATED] call where the gateway applied a tier
+              lower than the one implied by its actual mode/flags."
+  default: "fail-closed. Unknown tool or unmapped scope => deny."
+
+# ---------------------------------------------------------------------------
+# TOOL ANNOTATIONS  (26 tools — [VERIFIED] against live geox-direct registry,
+# schema introspection, 2026-09-09. `required_scopes` is the FLOOR: caller
+# needs at least this scope tier. Domains follow GEOX's own grouping, not
+# v1.0's invented taxonomy.)
+# ---------------------------------------------------------------------------
+tools:
+
+  # --- Domain: Basin / regional context ---
+  - id: geox_basin                        # [VERIFIED]
+    domain: basin_analysis
+    intent: "Unified basin intelligence — profile, backstrip, thermal maturity, tectonic reconstruction, map context, deep time."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Claims / evidence engine ---
+  - id: geox_claim                        # [VERIFIED] [MODE-GATED]
+    domain: claim_engine
+    intent: "Unified claim lifecycle: create/validate/challenge/seal/attach, plus evidence discover/synthesize/abduct/contradict/ingest_literature, plus contradiction scan."
+    mode_tiers:
+      - modes: [discover, synthesize, abduct, contradict, spatial_block, ingest_literature, scan]
+        required_scopes: [geox:interpret]
+        constitutional_gate: false
+      - modes: [create, validate, challenge, attach]
+        required_scopes: [geox:forge]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+      - modes: [seal]
+        gate_condition: "ack_irreversible == true AND seal_verdict present"
+        required_scopes: [geox:seal]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL) -> arif_forge -> arif_seal (F13)"
+
+  - id: geox_contrast_metabolize           # [VERIFIED]
+    domain: seismic
+    intent: "ISOLATE -> MEASURE -> CLASSIFY acoustic-contrast pipeline. Self-declared ceiling: substrate_class=INERT, local max QUALIFIED_CANDIDATE — cannot self-seal."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  - id: geox_deep_time                     # [VERIFIED]
+    domain: chronostratigraphy
+    intent: "Deep-time Digital Earth (DDE) ontology + Macrostrat neuro-symbolic reasoning over stratigraphic queries."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  - id: geox_geomechanics                  # [VERIFIED]
+    domain: geomechanics
+    intent: "Bulk/shear/Young's modulus, Poisson ratio, acoustic impedance, stress polygon."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: GLOF cascade (glacial-hazard simulation — distinct from the petroleum domains below) ---
+  - id: geox_glof_cascade_initialize       # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Initialize 33D GLOF cascade simulation state (GEOXEarthState33)."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_step              # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Advance 33D GLOF state by n_steps via metabolize_33 closure."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_phase             # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Yield-surface evaluation (Mohr-Coulomb/Voellmy) on 33D state — breach probability."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_propagate         # [VERIFIED]
+    domain: geohazard_glof
+    intent: "1D Saint-Venant shallow-water wave propagation, breach to downstream."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_inverse           # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Bayesian grid-search inference on 33D posterior from wave observations."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_mcmc_inverse      # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Adaptive Metropolis-Hastings MCMC posterior (replaces grid search)."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+  - id: geox_glof_cascade_metabolize        # [VERIFIED]
+    domain: geohazard_glof
+    intent: "Close F-I-M loop on 33D state; emits FIMReceipt33 with tri-witness G-score. Same self-capping pattern as geox_contrast_metabolize — treat as non-self-sealing."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Mapping / visualization ---
+  - id: geox_map                           # [VERIFIED] [MODE-GATED]
+    domain: cartography
+    intent: "Geological map pipeline — list layers, plan a scene, render a static preview."
+    mode_tiers:
+      - modes: [layers_list]
+        required_scopes: [geox:observe]
+        constitutional_gate: false
+      - modes: [scene_plan, render_preview]
+        required_scopes: [geox:interpret]
+        constitutional_gate: false
+
+  - id: geox_model                         # [VERIFIED]
+    domain: subsurface_modeling
+    intent: "Joint inversion (gravity/mag/MT forward), 2D cross-section generation, GemPy implicit 3D structural modeling."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Paleontology / biostratigraphy ---
+  - id: geox_paleobiodb_query               # [VERIFIED]
+    domain: biostratigraphy
+    intent: "Query the Paleobiology Database (PBDB v1.2). Read-only, public-domain fossil data — GEOX's own description confirms this is the one unconditionally observe-tier tool."
+    required_scopes: [geox:observe]
+    constitutional_gate: false
+
+  # --- Domain: Petrophysics ---
+  - id: geox_petrophysics                   # [VERIFIED]
+    domain: petrophysics
+    intent: "Vsh, porosity, Sw (Archie), permeability, net pay, LEM inference, QC. Defaults to a synthetic cube (use_synth_cube=true) unless real curves are supplied — any output from a default call MUST be labeled synthetic, not field-derived."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Prospect evaluation ---
+  - id: geox_prospect                       # [VERIFIED] [MODE-GATED]
+    domain: prospect_evaluation
+    intent: "Volumetrics, POS, EVOI, risk assessment."
+    mode_tiers:
+      - modes: [screen]
+        required_scopes: [geox:interpret]
+        constitutional_gate: false
+      - modes: [evaluate]
+        gate_condition: "judge_pin present, or verdict != 'compute' (i.e. a verdict is being bound/persisted rather than just computed)"
+        required_scopes: [geox:forge]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+
+  # --- Domain: Seismic ---
+  - id: geox_seismic_compute                 # [VERIFIED]
+    domain: seismic
+    intent: "AVO forward modeling — Zoeppritz, Shuey, LMR, Castagna."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  - id: geox_seismic_ingest                  # [VERIFIED] [MODE-GATED]
+    domain: seismic
+    intent: "SEG-Y I/O, header inspection, export."
+    mode_tiers:
+      - modes: [inspect_segy]
+        required_scopes: [geox:observe]
+        constitutional_gate: false
+      - modes: [export, convert]   # any mode that writes via output_path / overwrite:true
+        gate_condition: "output_path is set, or overwrite == true"
+        required_scopes: [geox:forge]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+
+  - id: geox_seismic_interpret                # [VERIFIED]
+    domain: seismic
+    intent: "horizon_contrast, fault_sticks, structure_validate, interpret (>=3 hypotheses), segy_slice. Self-declared: preferred_hypothesis always null from GEOX; local max QUALIFIED_CANDIDATE — arifOS seals only. Ephemeral proposal, not a durable write."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Source rock / diagenesis ---
+  - id: geox_source                           # [VERIFIED]
+    domain: petroleum_system
+    intent: "Source rock (TOC, kerogen, maturity, DeltaLogR) and diagenesis (Athy, Sclater & Christie compaction)."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Spatial indexing / discovery ---
+  - id: geox_spatial                          # [VERIFIED] [MODE-GATED]
+    domain: spatial_index
+    intent: "H3 hexagonal indexing, LanceDB embedded vector store, STAC catalog discovery."
+    mode_tiers:
+      - modes: [h3_index, stac_discover]
+        required_scopes: [geox:observe]
+        constitutional_gate: false
+        note: "stac_discover queries an external read-only catalog; h3_index is pure computed indexing with no external store touched."
+      - modes: [lancedb_store]
+        gate_condition: "any write path (create_if_missing / insert / drop_table)"
+        required_scopes: [geox:forge]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+        note: "drop_table:true is destructive and irreversible for the affected table — treat as seal-adjacent even though the tool itself stays forge-tier; require explicit human confirmation regardless of scope."
+
+  # --- Domain: Temporal / production analytics ---
+  - id: geox_temporal                          # [VERIFIED]
+    domain: petroleum_system
+    intent: "Decline curve analysis, reserve replacement ratio, basin lifecycle classification, licensing cadence."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+  # --- Domain: Well operations ---
+  - id: geox_well                              # [VERIFIED] [MODE-GATED]
+    domain: well_ops
+    intent: "Hydrate LAS curves into interactive tracks for WellDesk (view), or interactive view/publish/render with petrophysics (desk)."
+    mode_tiers:
+      - modes: [view]
+        required_scopes: [geox:interpret]
+        constitutional_gate: false
+      - modes: [desk]
+        gate_condition: "publish action within desk mode persists a view/render state"
+        required_scopes: [geox:forge]
+        constitutional_gate: required
+        verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+
+  - id: geox_well_ingest                       # [VERIFIED]
+    domain: well_ops
+    intent: "Load LAS/SEG-Y/DST/deviation/tops files. Writes to target_dir (default /data/wells), overwrite flag present — this is a durable filesystem mutation by design, not an ephemeral parse."
+    required_scopes: [geox:forge]
+    constitutional_gate: required
+    verdict_path: "arif_judge(SEAL|PARTIAL) -> arif_forge"
+
+  - id: geox_well_qc                           # [VERIFIED]
+    domain: well_ops
+    intent: "Depth monotonicity, null %, physical range checks over supplied samples. No persistence."
+    required_scopes: [geox:interpret]
+    constitutional_gate: false
+
+# ---------------------------------------------------------------------------
+# GUI SURFACE — not present at all in v1.0. Confirmed live in the filesystem.
+# ---------------------------------------------------------------------------
+gui:
+  - app_id: geox.mcp-visual                    # [VERIFIED] geox/apps/geox-mcp-visual/manifest.json
+    display_name: "GEOX Visual Output Hub"
+    intent: "5-in-1 Plotly dashboard: WellDesk (1D) + SeisVis (2D) + CubeProbe (3D) + TimeLapse (4D) + PhysicCore (CANON_9)."
+    resource_uri: "https://geox.arif-fazil.com/apps/geox-mcp-visual/index.html"
+    required_floors: [F2, F4, F8, F9]
+    required_scopes: [geox:interpret]         # renders tier-1 outputs from the tools below; escalate per-panel if any panel starts writing state
+    gap_found: "manifest.json's required_tools and optional_tools arrays are both empty — the GUI declares NO dependency on any MCP tool. Fix: populate with the tool ids feeding each panel."
+    recommended_required_tools:
+      welldesk_1d:   [geox_well, geox_petrophysics, geox_well_qc]
+      seisvis_2d:    [geox_seismic_interpret, geox_seismic_compute]
+      cubeprobe_3d:  [geox_model, geox_seismic_ingest]
+      timelapse_4d:  [geox_temporal, geox_glof_cascade_step, geox_glof_cascade_propagate]
+      physiccore_canon9: [geox_geomechanics, geox_source]
+
+# ---------------------------------------------------------------------------
+# SCRIPT / PLAYBOOK SURFACE — not present in v1.0. Files confirmed to exist;
+# [UNVERIFIED-CONTENT] — paths only, internal tool bindings not read this
+# session. Do not treat the "likely_tools" below as fact until opened.
+# ---------------------------------------------------------------------------
+script_playbooks:
+  entries:
+    - path: geox/resources/playbooks/prospect_evaluation.yaml     # [UNVERIFIED-CONTENT]
+      likely_tools: [geox_prospect, geox_claim]
+    - path: geox/resources/playbooks/seismic_well_tie.yaml        # [UNVERIFIED-CONTENT]
+      likely_tools: [geox_seismic_interpret, geox_well, geox_seismic_ingest]
+    - path: geox/resources/playbooks/well_qc.yaml                 # [UNVERIFIED-CONTENT]
+      likely_tools: [geox_well_qc, geox_well_ingest]
+    - path: geox/resources/playbooks/well_sequence_stratigraphy.yaml  # [UNVERIFIED-CONTENT]
+      likely_tools: [geox_deep_time, geox_basin]
+  contracts_backing:
+    - geox/resources/schemas/prospect.schema.json
+    - geox/resources/schemas/well_desk_event_schema.json
+    - geox/resources/schemas/well_log.schema.json
+    - geox/contracts/mcp/geox_well_desk_contract.json
+
+# ---------------------------------------------------------------------------
+# KNOWN FIXTURE-INTEGRITY ISSUE (found while sourcing data for an unrelated
+# artifact, 2026-09-09) — logged here because it affects trust in any
+# "real_wells" claim GEOX tools might surface.
+# ---------------------------------------------------------------------------
+fixture_integrity_flag:
+  path: "geox/data/real_wells/q15_15_9_19/ and geox/data/geox_las/VOLVE_15_9_19.las"
+  issue: >
+    Files are named after the real, public Volve discovery well (15/9-19,
+    Norwegian North Sea, block 15/9) but their own LAS headers read
+    SRVC: "GEOX arifOS Real Petrophysics" / "GEOX Full Petrophysics + DAK",
+    DATE: 2026-04-02, COMP/UWI/API blank, FLD: "Q15 North Sea Danish" (Volve
+    is Norwegian, not Danish; "Q15" is not real NPD block nomenclature).
+    These are GEOX-synthesized petrophysics outputs carrying a real well's
+    name, not authentic recorded logs.
+  recommendation: "Rename out of the real_wells/ directory (or into a clearly
+    labeled _SYNTHETIC_NAMED_AFTER_REAL/ folder) before any downstream tool
+    or GUI panel treats path naming as a provenance signal."
+
+# ---------------------------------------------------------------------------
+# COVERAGE SUMMARY
+# ---------------------------------------------------------------------------
+coverage:
+  total_tools: 26
+  observe_fixed: 1          # geox_paleobiodb_query
+  interpret_fixed: 18        # basin, contrast_metabolize, deep_time, geomechanics,
+                              # 7x glof_cascade_*, model, petrophysics, seismic_compute,
+                              # seismic_interpret, source, temporal, well_qc
+  forge_fixed: 1             # geox_well_ingest
+  mode_gated: 6              # claim, map, prospect, seismic_ingest, spatial, well
+                              #   — each spans 2-3 tiers depending on mode/flags
+  seal_capable: 1            # geox_claim(mode=seal) only
+  ungated_mutations: 0       # INVARIANT: must remain 0. Any >0 => VOID the map.
+  verified: "2026-09-09 by live MCP schema introspection (geox-direct connection), this session — not a static parse+invariant script."
+  not_yet_verified: "script_playbooks[*] internal tool bindings (paths confirmed, contents unopened)."
