@@ -289,6 +289,24 @@ async def geox_basin_profile(
     lng : float, optional
         Longitude for Macrostrat queries (required for macrostrat_* modes).
     """
+    # F-003 2026-09-09: Reject empty basin_name early (was previously silently producing
+    # empty SUCCESS envelopes, caught only by postcondition — should fail at entry).
+    if not basin_name or not str(basin_name).strip():
+        return get_standard_envelope(
+            {
+                "tool": "geox_basin_profile",
+                "error": "basin_name is required (non-empty string)",
+                "hint": "Provide a basin name like 'malay_basin' or 'sabah_basin'. "
+                        "Note: MCP parameter name='name' is NOT mapped to basin_name — "
+                        "use basin_name explicitly.",
+            },
+            tool_class="observe",
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
+            claim_state="VOID",
+            session_id=session_id,
+            actor_id=actor_id,
+        )
     normalized = _normalize_name(basin_name)
     if normalized in ("basin_melayu", "malay_basin"):
         normalized = "malay_basin"
