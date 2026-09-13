@@ -1,8 +1,10 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-federation_release: v2026.08.26
-last_verified: 2026-09-06T15:05:00Z
-source_commit: e16c95cb+ (this README commit supersedes)
+federation_release: v2026.09.13
+last_verified: 2026-09-13T06:32:00Z
+source_commit: c1ad2812
+apex_zen: A2A delegates ⊥ MCP equips ⊥ ACT mutates ⊥ arifOS governs ⊥ F13 decides
+live_health: healthy · 555_COMPUTE_ONLY · evidence only
 live_runtime: /opt/geox · systemd geox-mcp.service · 127.0.0.1:8081
 tools_live: 26 (canonical, live-witnessed via :8081/health)
 mcp_apps_ui: 12 (GEOX_APPS keys well_desk…workspace_v1)
@@ -23,7 +25,7 @@ GEOX transforms subsurface data — seismic, wells, basin models — into audita
 
 ## Live reality (probe this, do not trust prose)
 
-| Fact | Live 2026-09-06 |
+| Fact | Live 2026-09-13 |
 |---|---|
 | Health | `GET http://127.0.0.1:8081/health` → `healthy` |
 | Process | `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081` |
