@@ -21,6 +21,14 @@ GEOX transforms subsurface data — seismic, wells, basin models — into audita
 
 **Licensed under the Business Source License 1.1 (BSL-1.1).** Production use requires a license from the author.
 
+| Audience | What you get |
+|---|---|
+| **Human / earth team** | A specialist that keeps uncertainty labelled. Not a generic chat about rocks |
+| **Agent / A2A** | MCP evidence tools only. No publish. No field control. No silent escalation to A-FORGE write |
+| **Institution** | A bounded subsurface organ you can plug in: physics in, evidence out, kernel still holds the gavel |
+
+Live MCP: `https://geox.arif-fazil.com/mcp`
+
 ---
 
 ## Live reality (probe this, do not trust prose)
