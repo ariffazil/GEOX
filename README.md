@@ -157,7 +157,7 @@ Confusing speculation with observation is how dry holes and fake seals are born.
 GEOX is the **earth witness**. Outputs are evidence for arifOS (F1–F13). Sister repos:
 
 - [arifOS](https://github.com/ariffazil/arifOS) — kernel / judgment
-- [AAA](https://github.com/ariffazil/AAA) — control plane / routing
+- [AAA](https://github.com/ariffazil/AAA) — Attention Plane / routing
 - [A-FORGE](https://github.com/ariffazil/A-FORGE) — execution
 - [WEALTH](https://github.com/ariffazil/WEALTH) — capital compute
 - [WELL](https://github.com/ariffazil/WELL) — vitality mirror
