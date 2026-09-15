@@ -239,6 +239,7 @@ class HypothesisModel(StrictModel):
     status: str | None = None
     hypothesis_status: str | None = None
     evidence_coverage: float | None = None
+    coverage_basis: dict[str, Any] | None = None
     calibration_status: str | None = None
     confidence_value: float | None = None
     confidence_basis: str | None = None

@@ -49,6 +49,8 @@ HYPOTHESIS_STATUS_MAP: dict[str, str] = {
     "PARTIAL": "SURVIVES_CURRENT_TESTS",
     "UNMEASURED": "UNTESTED",
     "INCONCLUSIVE": "INCONCLUSIVE",
+    "PARTIALLY_MEASURED": "SURVIVES_CURRENT_TESTS",
+    "COMPUTABLE": "UNTESTED",
 }
 
 
@@ -130,6 +132,8 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
     warns: list[str] = []
     unmeasured: list[str] = []
     not_applicable: list[str] = []
+    partially_measured: list[str] = []
+    computable: list[str] = []
 
     topology_result: dict[str, Any] | None = None
     for name, fn in gates_spec:
@@ -151,6 +155,10 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
             warns.append(name)
         elif v == "NOT_APPLICABLE":
             not_applicable.append(name)
+        elif v == "PARTIALLY_MEASURED":
+            partially_measured.append(name)
+        elif v == "COMPUTABLE":
+            computable.append(name)
         else:
             unmeasured.append(name)
 
@@ -158,6 +166,10 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
         combined = "KILL"
     elif passes or warns:
         combined = "PASS" if not unmeasured else "PARTIAL"
+    elif partially_measured:
+        combined = "PARTIALLY_MEASURED"
+    elif computable:
+        combined = "COMPUTABLE"
     else:
         combined = "UNMEASURED"
 
@@ -172,6 +184,8 @@ def run_all_structure_gates(framework: dict[str, Any]) -> dict[str, Any]:
         "warns": warns,
         "unmeasured": unmeasured,
         "not_applicable": not_applicable,
+        "partially_measured": partially_measured,
+        "computable": computable,
         "inconclusive": unmeasured,  # legacy alias
         "local_verdict": "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
