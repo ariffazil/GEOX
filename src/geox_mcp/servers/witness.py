@@ -45,6 +45,9 @@ from geox_mcp.tools.qc import geox_data_qc_bundle
 from geox_mcp.tools.registry import geox_system_registry_status
 from geox_mcp.tools.seismic_compute_unified import geox_seismic_compute  # ZEN G1
 from geox_mcp.tools.sequence import geox_sequence_interpret
+from geox_mcp.tools.calibration_witness import geox_calibration_register_witness
+from geox_mcp.tools.display_proxy import geox_extract_display_proxy
+from geox_mcp.tools.native_segy import geox_register_native_source, geox_extract_native_trace, geox_list_registered_sources
 
 _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_data_ingest_bundle", geox_data_ingest_bundle),
@@ -69,6 +72,12 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_literature_ingest", geox_literature_ingest),
     ("geox_las_inspect", geox_las_inspect),
     ("geox_seismic_segy_inspect", geox_seismic_segy_inspect),
+    # Evidence Spine — Phase 1/2A/2B (merged 2026-09-15)
+    ("geox_calibration_register_witness", geox_calibration_register_witness),
+    ("geox_extract_display_proxy", geox_extract_display_proxy),
+    ("geox_register_native_source", geox_register_native_source),
+    ("geox_extract_native_trace", geox_extract_native_trace),
+    ("geox_list_registered_sources", geox_list_registered_sources),
 ]
 
 _WITNESS_ANNOTATIONS: dict[str, dict] = {
@@ -233,6 +242,43 @@ _WITNESS_ANNOTATIONS: dict[str, dict] = {
     },
     "geox_seismic_segy_inspect": {
         "title": "SEG-Y Inspect",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    # Evidence Spine tools (Phase 1/2A/2B — merged 2026-09-15)
+    "geox_calibration_register_witness": {
+        "title": "Calibration Witness — Register",
+        "ui": {"resourceUri": "ui://geox/calibration-witness"},
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_extract_display_proxy": {
+        "title": "Display-Derived Proxy Extract",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_register_native_source": {
+        "title": "Native SEG-Y Source — Register",
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_extract_native_trace": {
+        "title": "Native Trace Extract",
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+    "geox_list_registered_sources": {
+        "title": "Registered Sources — List",
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
