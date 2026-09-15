@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CalibrationWitness",
+  "description": "GEOX Calibration Witness Package — the bridge between human calibration clicks and structural gate computation. DITEMPA BUKAN DIBERI.",
+  "type": "object",
+  "required": ["calibration_witness_id", "evidence_ref", "display_domain"],
+  "properties": {
+    "calibration_witness_id": {
+      "type": "string",
+      "description": "Unique witness identifier"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "VALID", "HOLD", "SUPERSEDED"],
+      "default": "DRAFT"
+    },
+    "purpose": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["dip_measurement", "displacement_estimation", "fault_throw_estimation", "structural_restoration"]
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "required": ["dataset_id"],
+      "properties": {
+        "dataset_id": { "type": "string" },
+        "dataset_version_hash": { "type": "string" },
+        "source_uri": { "type": "string" },
+        "classification": { "type": "string", "enum": ["synthetic", "public", "restricted"] },
+        "authority_state": { "type": "string", "enum": ["OPERATOR_APPROVED", "PUBLIC_VERIFIED", "SYNTHETIC_VERIFIED", "UNVERIFIED"] }
+      }
+    },
+    "display_domain": {
+      "type": "object",
+      "properties": {
+        "vertical_domain": { "type": "string", "enum": ["TWT", "DEPTH", "MIXED"] },
+        "vertical_units": { "type": "string" },
+        "horizontal_domain": { "type": "string" },
+        "crs": { "type": "string" },
+        "vertical_exaggeration": { "type": "number" }
+      }
+    },
+    "axis_calibration_h": { "$ref": "#/$defs/AxisCalibration" },
+    "axis_calibration_v": { "$ref": "#/$defs/AxisCalibration" },
+    "velocity_or_td_ref": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "enum": ["checkshot", "VSP", "velocity_model", "time_depth_curve"] },
+        "id": { "type": "string" },
+        "version_hash": { "type": "string" },
+        "validity_domain": { "type": "string" },
+        "uncertainty_band_pct": { "type": "number" }
+      }
+    },
+    "picks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pick_id", "kind"],
+        "properties": {
+          "pick_id": { "type": "string" },
+          "kind": { "type": "string", "enum": ["fault_trace", "horizon", "dip_segment", "throw_pair", "well_location"] },
+          "coordinates": { "type": "array", "items": { "type": "object" } },
+          "epistemic_tag": { "type": "string", "default": "INTERPRETED" },
+          "observer": { "type": "string" },
+          "uncertainty": { "type": "object" }
+        }
+      }
+    },
+    "observer": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "provenance": { "type": "object" }
+  },
+  "$defs": {
+    "AxisCalibration": {
+      "type": "object",
+      "required": ["anchor_a", "anchor_b"],
+      "properties": {
+        "method": { "type": "string", "default": "two_point" },
+        "anchor_a": { "$ref": "#/$defs/AnchorPoint" },
+        "anchor_b": { "$ref": "#/$defs/AnchorPoint" },
+        "scale_per_pixel": { "type": "number" },
+        "unit": { "type": "string" },
+        "uncertainty": { "type": "object" },
+        "residual": { "type": "number" }
+      }
+    },
+    "AnchorPoint": {
+      "type": "object",
+      "required": ["pixel_x", "pixel_y"],
+      "properties": {
+        "pixel_x": { "type": "number" },
+        "pixel_y": { "type": "number" },
+        "world_x": { "type": "number" },
+        "world_y": { "type": "number" },
+        "value": { "type": "number" }
+      }
+    }
+  }
+}

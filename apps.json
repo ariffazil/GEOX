@@ -107,6 +107,21 @@
       ],
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
+    },
+    {
+      "id": "geox-calibration-witness",
+      "name": "GEOX Calibration Witness",
+      "url": "https://geox.arif-fazil.com/apps/calibration-witness/index.html",
+      "ui_resource": "ui://geox/calibration-witness",
+      "description": "Measurement acquisition instrument — interactive axis calibration, velocity/T-D binding, semantic picks, and gate readiness for structural interpretation. Human supplies physical grounding; GEOX retains provenance, uncertainty, and refusal logic.",
+      "status": "LIVE",
+      "tools": [
+        "geox_calibration_register_witness",
+        "geox_seismic_interpret",
+        "geox_seismic_compute"
+      ],
+      "protocol": "mcp-apps/sep-1865",
+      "version": "1.0.0"
     }
   ]
 }

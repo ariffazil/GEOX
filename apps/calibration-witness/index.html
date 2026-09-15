@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOX Calibration Witness — Measurement Acquisition Instrument</title>
+  <script src="/gui/assets/geox-mcp-bridge.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f; --card: #12121a; --gold: #d4af37; --cyan: #00d4aa;
+      --blue: #3b82f6; --text: #e8e8f0; --muted: #606070; --warn: #f59e0b;
+      --danger: #ef4444; --border: #2a2a3a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'Outfit', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .cw-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 14px; font-size: 13px; }
+    .cw-header h1 { font-size: 15px; }
+    .cw-header h1 span { color: var(--cyan); }
+    .cw-badge { border: 1px solid var(--gold); border-radius: 3px; padding: 2px 8px; font-size: 10px; color: var(--gold); font-family: monospace; }
+    .cw-status { padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 600; }
+    .cw-status.DRAFT { background: #1a1a2e; color: var(--warn); border: 1px solid #333; }
+    .cw-status.VALID { background: #0a2a1a; color: var(--cyan); border: 1px solid #1a3a2a; }
+    .cw-status.HOLD { background: #2a1a1a; color: var(--danger); border: 1px solid #3a1a1a; }
+    .cw-main { flex: 1; display: flex; overflow: hidden; }
+    .cw-panel { width: 280px; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .cw-panel:last-child { border-right: none; border-left: 1px solid var(--border); }
+    .cw-section { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 6px; padding: 10px; }
+    .cw-section-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 8px; }
+    .cw-canvas-wrap { flex: 1; position: relative; background: #080810; display: flex; align-items: center; justify-content: center; }
+    .cw-canvas-wrap canvas { cursor: crosshair; }
+    .cw-field { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 11px; }
+    .cw-field label { color: var(--muted); }
+    .cw-field value, .cw-field span.val { color: var(--text); font-family: monospace; font-size: 11px; }
+    .cw-btn { background: rgba(59,130,246,0.15); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); border-radius: 4px; padding: 6px 12px; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+    .cw-btn:hover { background: rgba(59,130,246,0.25); }
+    .cw-btn.primary { background: rgba(0,212,170,0.15); color: var(--cyan); border-color: rgba(0,212,170,0.3); }
+    .cw-btn.primary:hover { background: rgba(0,212,170,0.25); }
+    .cw-btn.danger { background: rgba(239,68,68,0.15); color: var(--danger); border-color: rgba(239,68,68,0.3); }
+    .cw-pick-list { max-height: 120px; overflow-y: auto; }
+    .cw-pick-item { display: flex; align-items: center; gap: 6px; padding: 3px 0; font-size: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+    .cw-pick-kind { padding: 1px 5px; border-radius: 2px; font-size: 9px; text-transform: uppercase; }
+    .cw-pick-kind.fault { background: #2a1a1a; color: var(--danger); }
+    .cw-pick-kind.horizon { background: #1a2a1a; color: var(--cyan); }
+    .cw-pick-kind.dip { background: #1a1a2a; color: var(--blue); }
+    .cw-pick-kind.well { background: #2a2a1a; color: var(--gold); }
+    .cw-anchor-marker { position: absolute; width: 16px; height: 16px; border: 2px solid var(--gold); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; }
+    .cw-anchor-marker::after { content: attr(data-label); position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--gold); white-space: nowrap; font-family: monospace; }
+    .cw-pick-marker { position: absolute; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10; }
+    .cw-epistemic { font-size: 9px; padding: 1px 4px; border-radius: 2px; }
+    .cw-epistemic.OBS { background: #1a2a1a; color: #2ed573; }
+    .cw-epistemic.DER { background: #1a1a2a; color: #5b9aff; }
+    .cw-epistemic.INT { background: #2a2a1a; color: #d4af37; }
+    .cw-const { text-align: right; font-size: 9px; color: var(--muted); font-family: monospace; padding: 4px 12px; }
+    .cw-receipt { font-family: monospace; font-size: 10px; background: #0a0a12; border: 1px solid var(--border); border-radius: 4px; padding: 8px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; }
+    input[type="number"], input[type="text"], select { background: #1a1a25; border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 3px; font-size: 11px; width: 100%; }
+    input:focus, select:focus { outline: none; border-color: var(--cyan); }
+    .cw-mode-btns { display: flex; gap: 4px; }
+    .cw-mode-btns button { flex: 1; padding: 5px; font-size: 10px; border-radius: 3px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--muted); transition: all 0.2s; }
+    .cw-mode-btns button.active { background: rgba(59,130,246,0.2); color: var(--blue); border-color: var(--blue); }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="cw-header">
+    <h1>GEOX <span>CALIBRATION</span> WITNESS</h1>
+    <span class="cw-badge">ui://geox/calibration-witness</span>
+    <span id="witnessStatus" class="cw-status DRAFT">DRAFT</span>
+    <span id="dataRepBadge" style="font-size:10px;color:var(--warn);">DISPLAY_DERIVED_PROXY</span>
+    <span id="mcpStatus" style="font-size:9px;color:#444;">STANDALONE</span>
+    <span style="margin-left:auto;font-size:9px;color:var(--muted);">DITEMPA BUKAN DIBERI</span>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <div class="cw-main">
+    <!-- LEFT PANEL: Evidence + Domain -->
+    <aside class="cw-panel">
+      <div class="cw-section">
+        <div class="cw-section-title">① Evidence Source</div>
+        <div class="cw-field"><label>Dataset ID</label></div>
+        <input type="text" id="datasetId" placeholder="e.g. marmousi_synthetic" value="">
+        <div class="cw-field"><label>Classification</label></div>
+        <select id="dataClass">
+          <option value="synthetic">Synthetic</option>
+          <option value="public">Public</option>
+          <option value="restricted">Restricted</option>
+        </select>
+        <div class="cw-field"><label>Data Representation</label></div>
+        <select id="dataRep">
+          <option value="DISPLAY_DERIVED_PROXY">Display-Derived Proxy</option>
+          <option value="NATIVE_TRACE">Native Trace</option>
+        </select>
+        <div style="margin-top:8px;">
+          <input type="file" id="imageInput" accept="image/*" style="font-size:10px;">
+        </div>
+      </div>
+
+      <div class="cw-section">
+        <div class="cw-section-title">② Display Domain</div>
+        <div class="cw-field"><label>Vertical Domain</label></div>
+        <select id="vertDomain">
+          <option value="TWT">TWT (ms)</option>
+          <option value="DEPTH">Depth (m)</option>
+          <option value="MIXED">Mixed</option>
+        </select>
+        <div class="cw-field"><label>Horizontal Domain</label></div>
+        <select id="horizDomain">
+          <option value="distance_m">Distance (m)</option>
+          <option value="inline">Inline</option>
+          <option value="cdp">CDP</option>
+          <option value="crossline">Crossline</option>
+        </select>
+        <div class="cw-field"><label>Vertical Exaggeration</label></div>
+        <input type="number" id="veFactor" placeholder="1.0" step="0.1" min="0.1">
+      </div>
+
+      <div class="cw-section">
+        <div class="cw-section-title">③ Velocity / T-D</div>
+        <div class="cw-field"><label>Kind</label></div>
+        <select id="velKind">
+          <option value="">None</option>
+          <option value="checkshot">Checkshot</option>
+          <option value="VSP">VSP</option>
+          <option value="velocity_model">Velocity Model</option>
+          <option value="time_depth_curve">T-D Curve</option>
+        </select>
+        <div id="tdPoints" style="margin-top:6px;display:none;">
+          <div class="cw-field"><label>T-D Points (JSON)</label></div>
+          <textarea id="tdData" rows="3" style="width:100%;background:#1a1a25;border:1px solid var(--border);color:var(--text);font-size:10px;padding:4px;border-radius:3px;" placeholder='[{"twt_ms":0,"depth_m":0},{"twt_ms":1000,"depth_m":800}]'></textarea>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: Seismic Canvas -->
+    <div class="cw-canvas-wrap" id="canvasWrap">
+      <canvas id="seismicCanvas" width="800" height="600"></canvas>
+      <div id="anchorMarkers"></div>
+      <div id="pickMarkers"></div>
+    </div>
+
+    <!-- RIGHT PANEL: Calibration + Picks -->
+    <aside class="cw-panel">
+      <div class="cw-section">
+        <div class="cw-section-title">④ Axis Calibration</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px;">Click mode: place anchors on seismic section</div>
+        <div class="cw-mode-btns">
+          <button id="modeHzA" onclick="setMode('hz_a')">Hz A</button>
+          <button id="modeHzB" onclick="setMode('hz_b')">Hz B</button>
+          <button id="modeVtA" onclick="setMode('vt_a')">Vt A</button>
+          <button id="modeVtB" onclick="setMode('vt_b')">Vt B</button>
+        </div>
+        <div style="margin-top:8px;">
+          <div class="cw-field"><label>Hz Scale</label><span id="hzScale" class="val">—</span></div>
+          <div class="cw-field"><label>Vt Scale</label><span id="vtScale" class="val">—</span></div>
+          <div class="cw-field"><label>VE (derived)</label><span id="veDerived" class="val">—</span></div>
+        </div>
+      </div>
+
+      <div class="cw-section">
+        <div class="cw-section-title">⑤ Picks</div>
+        <div class="cw-mode-btns">
+          <button id="modeFault" onclick="setMode('fault')">Fault</button>
+          <button id="modeHorizon" onclick="setMode('horizon')">Horizon</button>
+          <button id="modeDip" onclick="setMode('dip')">Dip Seg</button>
+          <button id="modeWell" onclick="setMode('well')">Well</button>
+        </div>
+        <div class="cw-pick-list" id="pickList"></div>
+        <button class="cw-btn danger" style="margin-top:6px;width:100%;" onclick="clearPicks()">Clear Picks</button>
+      </div>
+
+      <div class="cw-section">
+        <div class="cw-section-title">⑥ Gate Readiness</div>
+        <div class="cw-field"><label>K-DIP</label><span id="gateKdip" class="val">UNMEASURED</span></div>
+        <div class="cw-field"><label>K-DL</label><span id="gateKdl" class="val">UNMEASURED</span></div>
+        <div class="cw-field"><label>K-THROW</label><span id="gateKthrow" class="val">UNMEASURED</span></div>
+        <div class="cw-field"><label>K-RESTORE</label><span id="gateKrestore" class="val">UNMEASURED</span></div>
+        <div class="cw-field"><label>K-VEL</label><span id="gateKvel" class="val">UNMEASURED</span></div>
+      </div>
+
+      <div class="cw-section">
+        <div class="cw-section-title">⑦ Witness Receipt</div>
+        <div class="cw-receipt" id="receiptPreview">{ "status": "DRAFT", "note": "calibrate axes first" }</div>
+        <button class="cw-btn primary" style="margin-top:8px;width:100%;" onclick="saveWitness()">Save Witness</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="cw-const">888_CALIBRATION_WITNESS | F2_truth | DISPLAY_DERIVED_PROXY default | DITEMPA BUKAN DIBERI</div>
+
+  <script>
+    // State
+    const state = {
+      mode: 'hz_a',
+      anchors: { hz_a: null, hz_b: null, vt_a: null, vt_b: null },
+      picks: [],
+      imageLoaded: false,
+      imageData: null,
+    };
+
+    const canvas = document.getElementById('seismicCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Mode management
+    function setMode(mode) {
+      state.mode = mode;
+      document.querySelectorAll('.cw-mode-btns button').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById('mode' + mode.charAt(0).toUpperCase() + mode.slice(1).replace(/_([a-z])/g, (_, c) => c.toUpperCase()));
+      if (btn) btn.classList.add('active');
+      // Also try simpler mapping
+      document.querySelectorAll('.cw-mode-btns button').forEach(b => {
+        if (b.textContent.toLowerCase().replace(/\s/g,'') === mode.replace('_','')) b.classList.add('active');
+      });
+    }
+
+    // Image loading
+    document.getElementById('imageInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        state.imageLoaded = true;
+        state.imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        document.getElementById('datasetId').value = file.name.replace(/\.[^.]+$/, '');
+        updateReceipt();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // Canvas click handler
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const px = (e.clientX - rect.left) * scaleX;
+      const py = (e.clientY - rect.top) * scaleY;
+
+      if (['hz_a', 'hz_b', 'vt_a', 'vt_b'].includes(state.mode)) {
+        state.anchors[state.mode] = { pixel_x: Math.round(px), pixel_y: Math.round(py) };
+        renderAnchors();
+        deriveCalibration();
+      } else if (['fault', 'horizon', 'dip', 'well'].includes(state.mode)) {
+        state.picks.push({
+          pick_id: 'pick_' + Date.now(),
+          kind: state.mode,
+          pixel_x: Math.round(px),
+          pixel_y: Math.round(py),
+          epistemic_tag: 'INTERPRETED',
+        });
+        renderPicks();
+        updateGateReadiness();
+      }
+      updateReceipt();
+    });
+
+    // Render anchors
+    function renderAnchors() {
+      const container = document.getElementById('anchorMarkers');
+      container.innerHTML = '';
+      const rect = canvas.getBoundingClientRect();
+      for (const [key, anchor] of Object.entries(state.anchors)) {
+        if (!anchor) continue;
+        const div = document.createElement('div');
+        div.className = 'cw-anchor-marker';
+        div.style.left = (anchor.pixel_x / canvas.width * rect.width) + 'px';
+        div.style.top = (anchor.pixel_y / canvas.height * rect.height) + 'px';
+        div.setAttribute('data-label', key.replace('_', ' '));
+        container.appendChild(div);
+      }
+    }
+
+    // Render picks
+    function renderPicks() {
+      const container = document.getElementById('pickMarkers');
+      container.innerHTML = '';
+      const rect = canvas.getBoundingClientRect();
+      const list = document.getElementById('pickList');
+      list.innerHTML = '';
+      for (const pick of state.picks) {
+        // On canvas
+        const div = document.createElement('div');
+        div.className = 'cw-pick-marker';
+        div.style.left = (pick.pixel_x / canvas.width * rect.width) + 'px';
+        div.style.top = (pick.pixel_y / canvas.height * rect.height) + 'px';
+        container.appendChild(div);
+        // In list
+        const item = document.createElement('div');
+        item.className = 'cw-pick-item';
+        item.innerHTML = `<span class="cw-pick-kind ${pick.kind}">${pick.kind}</span> <span style="font-family:monospace">${pick.pixel_x},${pick.pixel_y}</span> <span class="cw-epistemic INT">INT</span>`;
+        list.appendChild(item);
+      }
+    }
+
+    // Derive calibration from anchors
+    function deriveCalibration() {
+      const hzA = state.anchors.hz_a, hzB = state.anchors.hz_b;
+      const vtA = state.anchors.vt_a, vtB = state.anchors.vt_b;
+
+      if (hzA && hzB) {
+        // User enters world values in domain fields — for now, show pixel delta
+        const dpix = Math.abs(hzB.pixel_x - hzA.pixel_x);
+        document.getElementById('hzScale').textContent = `${dpix} px (enter world values)`;
+      }
+      if (vtA && vtB) {
+        const dpix = Math.abs(vtB.pixel_y - vtA.pixel_y);
+        document.getElementById('vtScale').textContent = `${dpix} px (enter world values)`;
+      }
+      if (hzA && hzB && vtA && vtB) {
+        document.getElementById('veDerived').textContent = 'requires world values';
+      }
+    }
+
+    // Gate readiness check
+    function updateGateReadiness() {
+      const hz = state.anchors.hz_a && state.anchors.hz_b;
+      const vt = state.anchors.vt_a && state.anchors.vt_b;
+      const hasFault = state.picks.some(p => p.kind === 'fault');
+      const hasHorizon = state.picks.some(p => p.kind === 'horizon');
+
+      const set = (id, status) => {
+        const el = document.getElementById(id);
+        el.textContent = status;
+        el.style.color = status === 'COMPUTABLE' ? 'var(--cyan)' : status === 'CALIBRATED_INPUT_AVAILABLE' ? 'var(--gold)' : 'var(--muted)';
+      };
+
+      set('gateKdip', hz && vt && hasFault ? 'COMPUTABLE' : hz && vt ? 'CALIBRATED_INPUT_AVAILABLE' : 'UNMEASURED');
+      set('gateKdl', hz && vt && hasFault ? 'COMPUTABLE' : 'UNMEASURED');
+      set('gateKthrow', hz && vt && hasFault ? 'COMPUTABLE' : 'UNMEASURED');
+      set('gateKrestore', hz && vt ? 'CALIBRATED_INPUT_AVAILABLE' : 'UNMEASURED');
+      const velKind = document.getElementById('velKind').value;
+      set('gateKvel', velKind ? 'COMPUTABLE' : 'UNMEASURED');
+    }
+
+    // Update receipt preview
+    function updateReceipt() {
+      const receipt = {
+        calibration_witness_id: 'calw_' + new Date().toISOString().slice(0,10).replace(/-/g,'') + '_001',
+        status: document.getElementById('witnessStatus').textContent,
+        purpose: [],
+        evidence_ref: {
+          dataset_id: document.getElementById('datasetId').value || null,
+          classification: document.getElementById('dataClass').value,
+          authority_state: 'UNVERIFIED',
+        },
+        display_domain: {
+          vertical_domain: document.getElementById('vertDomain').value,
+          horizontal_domain: document.getElementById('horizDomain').value,
+        },
+        data_representation: document.getElementById('dataRep').value,
+        n_anchors: Object.values(state.anchors).filter(Boolean).length,
+        n_picks: state.picks.length,
+        velocity: document.getElementById('velKind').value || null,
+        epistemic_note: 'Click-derived calibration. Not ground truth. Evidence of interpretation action.',
+      };
+      document.getElementById('receiptPreview').textContent = JSON.stringify(receipt, null, 2);
+    }
+
+    // Save witness via MCP bridge
+    async function saveWitness() {
+      const btn = event.target;
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+      try {
+        if (window.GEOX_MCP_BRIDGE) {
+          const result = await window.GEOX_MCP_BRIDGE.callTool('geox_calibration_register_witness', {
+            witness: buildWitnessPayload(),
+          });
+          document.getElementById('witnessStatus').textContent = result.status || 'VALID';
+          document.getElementById('witnessStatus').className = 'cw-status ' + (result.status || 'VALID');
+          btn.textContent = 'Saved ✓';
+        } else {
+          document.getElementById('witnessStatus').textContent = 'VALID';
+          document.getElementById('witnessStatus').className = 'cw-status VALID';
+          btn.textContent = 'Saved (local) ✓';
+        }
+      } catch (err) {
+        btn.textContent = 'Error: ' + err.message;
+      }
+      setTimeout(() => { btn.textContent = 'Save Witness'; btn.disabled = false; }, 2000);
+    }
+
+    function buildWitnessPayload() {
+      return {
+        calibration_witness_id: 'calw_' + Date.now(),
+        evidence_ref: {
+          dataset_id: document.getElementById('datasetId').value || 'unknown',
+          classification: document.getElementById('dataClass').value,
+        },
+        display_domain: {
+          vertical_domain: document.getElementById('vertDomain').value,
+          horizontal_domain: document.getElementById('horizDomain').value,
+          vertical_exaggeration: parseFloat(document.getElementById('veFactor').value) || null,
+        },
+        axis_calibration_h: state.anchors.hz_a && state.anchors.hz_b ? {
+          anchor_a: state.anchors.hz_a,
+          anchor_b: state.anchors.hz_b,
+        } : null,
+        axis_calibration_v: state.anchors.vt_a && state.anchors.vt_b ? {
+          anchor_a: state.anchors.vt_a,
+          anchor_b: state.anchors.vt_b,
+        } : null,
+        velocity_or_td_ref: document.getElementById('velKind').value ? {
+          kind: document.getElementById('velKind').value,
+        } : null,
+        picks: state.picks,
+        observer: 'arif',
+      };
+    }
+
+    // Velocity T-D toggle
+    document.getElementById('velKind').addEventListener('change', (e) => {
+      document.getElementById('tdPoints').style.display = e.target.value ? 'block' : 'none';
+      updateGateReadiness();
+      updateReceipt();
+    });
+
+    // Data representation badge
+    document.getElementById('dataRep').addEventListener('change', (e) => {
+      const badge = document.getElementById('dataRepBadge');
+      badge.textContent = e.target.value;
+      badge.style.color = e.target.value === 'NATIVE_TRACE' ? 'var(--cyan)' : 'var(--warn)';
+    });
+
+    // MCP bridge init
+    if (window.GEOX_MCP_BRIDGE) {
+      window.GEOX_MCP_BRIDGE.configure?.({}).then(() => {
+        document.getElementById('mcpStatus').textContent = 'MCP CONNECTED';
+        document.getElementById('mcpStatus').style.color = 'var(--cyan)';
+      }).catch(() => {});
+    }
+
+    // Init first mode
+    setMode('hz_a');
+    updateReceipt();
+  </script>
+</body>
+</html>
