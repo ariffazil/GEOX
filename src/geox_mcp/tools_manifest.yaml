@@ -1716,6 +1716,92 @@ tools:
   family: research
   tier: C
   subfamily: cascade
+# Evidence Spine tools — Phase 1/2A/2B (merged 2026-09-15)
+- name: geox_calibration_register_witness
+  domain: earth.structural
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.'
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+  ui:
+    resource_uri: ui://geox/calibration-witness
+    mode: app
+    app_id: geox.calibration.witness
+    version: 1.0.0
+  family: structural
+  tier: B
+- name: geox_extract_display_proxy
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+  family: seismic
+  tier: B
+- name: geox_register_native_source
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.'
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+  family: seismic
+  tier: B
+- name: geox_extract_native_trace
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+  family: seismic
+  tier: B
+- name: geox_list_registered_sources
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  face: surface
+  visibility: public
+  description: 'List all registered native seismic sources with classification, authority, trace count, and sample metadata.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+  family: seismic
+  tier: B
 sprint1_classified: true
 family_count: 7
 tier_distribution:
