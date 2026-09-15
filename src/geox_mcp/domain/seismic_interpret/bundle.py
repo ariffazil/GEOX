@@ -22,6 +22,72 @@ from geox_mcp.domain.seismic_interpret.models import (
 )
 
 
+def _gate_quality_score(gate_result: dict) -> float:
+    """Quality score for a single gate result.
+
+    1.0 = PASS, 0.75 = WARN, 0.5 = PARTIAL, 0.25 = PROXY_ONLY,
+    0.0 = UNMEASURED / HOLD / KILL.
+    Capped at 0.25 if data_representation is DISPLAY_DERIVED_PROXY.
+    """
+    status = str(gate_result.get("status") or gate_result.get("verdict") or "UNMEASURED").upper()
+    base = {
+        "PASS": 1.0,
+        "WARN": 0.75,
+        "PARTIAL": 0.5,
+        "PARTIALLY_MEASURED": 0.5,
+        "PROXY_ONLY": 0.25,
+        "UNMEASURED": 0.0,
+        "HOLD": 0.0,
+        "KILL": 0.0,
+    }.get(status, 0.0)
+    # Cap for display-derived proxy evidence
+    rep = str(gate_result.get("data_representation") or "").upper()
+    if rep == "DISPLAY_DERIVED_PROXY":
+        base = min(base, 0.25)
+    return base
+
+
+def _compute_quality_coverage(gates: dict[str, Any]) -> dict[str, Any]:
+    """Compute quality-weighted evidence_coverage from gate results.
+
+    Returns coverage dict with evidence_coverage (float), coverage_version,
+    coverage_basis, excluded, and missing.
+    """
+    gate_details: list[dict[str, Any]] = []
+    applicable = 0
+    quality_sum = 0.0
+    max_quality_sum = 0.0
+    excluded: list[dict[str, str]] = []
+    missing: list[str] = []
+
+    for gate_id, gate_val in gates.items():
+        status = str(gate_val.get("status") or gate_val.get("verdict") or "UNMEASURED").upper()
+        # NOT_APPLICABLE gates are excluded from coverage
+        if status == "NOT_APPLICABLE":
+            excluded.append({"gate": gate_id, "reason": "NOT_APPLICABLE"})
+            continue
+        applicable += 1
+        quality = _gate_quality_score(gate_val)
+        quality_sum += quality
+        max_quality_sum += 1.0
+        gate_details.append({"gate": gate_id, "status": status, "quality": quality})
+        if quality == 0.0:
+            missing.append(gate_id)
+
+    coverage = quality_sum / max(max_quality_sum, 1.0)
+    return {
+        "evidence_coverage": round(coverage, 4),
+        "coverage_version": "v1",
+        "coverage_basis": {
+            "applicable_gates": applicable,
+            "quality_weighted_support": round(quality_sum, 4),
+            "gate_results": gate_details,
+        },
+        "excluded": excluded,
+        "missing": missing,
+    }
+
+
 def _param_hash(obj: Any) -> str:
     raw = json.dumps(obj, sort_keys=True, default=str, separators=(",", ":"))
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
@@ -141,9 +207,8 @@ def build_interpretation_bundle(
         }
         status = hypothesis_status_map.get(combined_verdict, "UNTESTED")
 
-        applicable = len(gates)
-        measured = applicable - len(unmeas)
-        evidence_coverage = measured / max(applicable, 1)
+        coverage_result = _compute_quality_coverage(gates)
+        evidence_coverage = coverage_result["evidence_coverage"]
 
         if cal.get("calibrated"):
             cal_status = "CALIBRATED"
@@ -167,6 +232,7 @@ def build_interpretation_bundle(
             status=status,
             hypothesis_status=status,
             evidence_coverage=evidence_coverage,
+            coverage_basis=coverage_result,
             calibration_status=cal_status,
             confidence_value=None,
             confidence_basis=None,
@@ -231,8 +297,7 @@ def build_interpretation_bundle(
             "PARTIAL": "SURVIVES_CURRENT_TESTS",
             "UNMEASURED": "UNTESTED",
         }.get(combined_w, "UNTESTED")
-        applicable_w = len(gates_w)
-        measured_w = applicable_w - len(unmeas_w)
+        coverage_w = _compute_quality_coverage(gates_w)
         hypotheses.append(
             HypothesisModel(
                 hypothesis_id=w.get("hypothesis_id") or f"HYP-W-{i + 2:03d}",
@@ -246,7 +311,8 @@ def build_interpretation_bundle(
                 confidence=0.0,
                 status=status_w,
                 hypothesis_status=status_w,
-                evidence_coverage=measured_w / max(applicable_w, 1),
+                evidence_coverage=coverage_w["evidence_coverage"],
+                coverage_basis=coverage_w,
                 calibration_status="PARTIAL" if cal.get("calibrated") else "UNCALIBRATED",
                 confidence_value=None,
                 confidence_basis=None,
@@ -266,9 +332,8 @@ def build_interpretation_bundle(
         kills = gate_matrix.get("kills") or []
         combined = gate_matrix.get("combined_verdict", "")
         status = HYPOTHESIS_STATUS_MAP.get(combined, "UNTESTED")
-        applicable = len(gates)
-        measured = applicable - len(unmeas)
-        evidence_coverage = measured / max(applicable, 1)
+        coverage_result = _compute_quality_coverage(gates)
+        evidence_coverage = coverage_result["evidence_coverage"]
 
         hyp = HypothesisModel(
             hypothesis_id="HYP-001",
@@ -279,6 +344,7 @@ def build_interpretation_bundle(
             status=status,
             hypothesis_status=status,
             evidence_coverage=evidence_coverage,
+            coverage_basis=coverage_result,
             calibration_status="UNCALIBRATED",
             confidence_value=None,
             confidence_basis=None,
