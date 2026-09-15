@@ -1,0 +1,31 @@
+[Unit]
+Description=GEOX MCP Server — Earth Intelligence MCP Surface (FHS Promoted)
+Documentation=https://github.com/ariffazil/GEOX
+After=network.target
+Wants=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/geox
+EnvironmentFile=/etc/geox/geox.env
+ExecStart=/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081
+ExecStartPost=+/bin/sh -c '/usr/bin/python3 /root/AAA/governance/register_with_aaa.py --organ-id geox --port 8081 --name GEOX --skills geoscience || true'
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=geox-mcp
+
+# Hardening
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=true
+NoNewPrivileges=false
+ReadWritePaths=/var/lib/geox /var/log/geox /root/.local/share/arifos/saf-data /root/geox/999_vault
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
