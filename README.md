@@ -114,6 +114,60 @@ Docker Compose exists for portable builds. **It is not how KVM8 runs GEOX.** Liv
 
 ## Canonical public tools (26)
 
+### Capability Graph
+
+```
+L0  Tools                    ✅  (26 public, 54 internal)
+L1  Family Taxonomy          ✅  (7 families)
+L2  Tier Taxonomy            ✅  (A=13 Core, B=6 Specialist, C=7 Research)
+L3  Capability Packs         ✅  (earth_core, earth_specialist, earth_research)
+L4  Discovery Filtering      ✅  (default=13, specialist=19, research=26)
+L5  Workflow Orchestration   ✅  (4 geological workflows)
+L6  Earth Capability Graph   ✅  (26 nodes, 32 edges, 6 hub tools)
+```
+
+### By Family
+
+| Family | Tools | Tier |
+|---|---|---|
+| **Evidence** | `geox_basin` · `geox_claim` · `geox_deep_time` · `geox_paleobiodb_query` · `geox_source` · `geox_spatial` · `geox_temporal` | A + B |
+| **Ingest** | `geox_well_ingest` · `geox_well_qc` · `geox_seismic_ingest` | A + B |
+| **Interpret** | `geox_well` · `geox_petrophysics` · `geox_seismic_interpret` · `geox_seismic_compute` · `geox_geomechanics` · `geox_contrast_metabolize` | A + B |
+| **Model** | `geox_model` | A |
+| **Prospect** | `geox_prospect` | A |
+| **View** | `geox_map` | A |
+| **Research** | `geox_glof_cascade_{initialize,step,phase,inverse,metabolize,mcmc_inverse,propagate}` | C |
+
+### Discovery Profiles
+
+| Profile | Packs | Tools |
+|---|---|---|
+| `default` | earth_core | 13 |
+| `specialist` | core + specialist | 19 |
+| `research` | all packs | 26 |
+
+### Workflows
+
+| Workflow | Steps | Output |
+|---|---|---|
+| `well_to_correlation` | basin → well → well_qc → petrophysics → deep_time → model → map | CorrelationPackage |
+| `seismic_to_prospect` | basin → seismic_ingest → seismic_compute → seismic_interpret → geomechanics → model → prospect → claim | ProspectEvidencePackage |
+| `basin_screening` | basin → spatial → temporal → source → deep_time → claim → prospect → map | PlayFairwaySummary |
+| `glof_uncertainty` | initialize → propagate → phase → inverse → mcmc_inverse → metabolize | UncertaintyReport |
+
+### Hub Tools (cross-workflow convergence)
+
+| Hub | Workflows | Role |
+|---|---|---|
+| `geox_basin` | 3 | Universal context provider |
+| `geox_model` | 2 | Integration convergence |
+| `geox_prospect` | 2 | Decision convergence |
+| `geox_claim` | 2 | Evidence registration |
+| `geox_map` | 2 | Presentation convergence |
+| `geox_deep_time` | 2 | Temporal framework |
+
+### Flat list (for reference)
+
 `geox_well_ingest` · `geox_well_qc` · `geox_well` · `geox_petrophysics` · `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_basin` · `geox_map` · `geox_deep_time` · `geox_geomechanics` · `geox_source` · `geox_spatial` · `geox_temporal` · `geox_model` · `geox_claim` · `geox_prospect` · `geox_paleobiodb_query` · `geox_contrast_metabolize` · `geox_glof_cascade_{initialize,step,phase,inverse,metabolize,mcmc_inverse,propagate}`
 
 `geox_workspace` was removed from the public manifest (2026-09-06 Z2). Do not document it as live.
