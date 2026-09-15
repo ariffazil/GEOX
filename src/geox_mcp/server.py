@@ -4093,6 +4093,24 @@ def create_app():
     app.router.redirect_slashes = False
     mcp_http_handler.router.redirect_slashes = False
 
+    # ── DUAL-ERA MCP TRANSPORT (2026-09-15) — stateless 2026-07-28 ───────
+    # Registered FIRST so it lands INNERMOST (Starlette add_middleware inserts
+    # at index 0 → first-added is closest to the router). That means it runs
+    # AFTER OriginValidation / McpAuth / McpProtocolVersion / McpLifecycle —
+    # no security gate is bypassed — while the underlying FastMCP transport
+    # stays exactly as it is. See geox_mcp/stateless_era.py for the measured
+    # root cause (mcp 1.29.0 _validate_session + _validate_protocol_version).
+    from geox_mcp.stateless_era import McpStatelessEraMiddleware
+
+    app.add_middleware(
+        McpStatelessEraMiddleware,
+        server_name="GEOX Earth Intelligence",
+        server_version=GEOX_VERSION,
+        instructions=_mcp_kwargs.get("instructions", ""),
+        surface_count=len(CANONICAL_PUBLIC_TOOLS),
+        website_url="https://geox.arif-fazil.com",
+    )
+
     # P1-A FIX (2026-06-27): Rewrite /mcp → /mcp/ BEFORE route matching.
     # Starlette Mount("/mcp/", ...) only serves paths prefixed /mcp/, not the exact /mcp.
     # Middleware fires before routing, so scope.path="/mcp" becomes "/mcp/" transparently.
