@@ -1,16 +1,17 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
-federation_release: v2026.09.13
-last_verified: 2026-09-13T06:32:00Z
-source_commit: c1ad2812
+federation_release: v2026.09.15
+last_verified: 2026-09-15T08:50:00Z
+source_commit: f1d113fad7f
 apex_zen: A2A delegates ⊥ MCP equips ⊥ ACT mutates ⊥ arifOS governs ⊥ F13 decides
 live_health: healthy · 555_COMPUTE_ONLY · evidence only
 live_runtime: /opt/geox · systemd geox-mcp.service · 127.0.0.1:8081
-tools_live: 26 (canonical, live-witnessed via :8081/health)
-mcp_apps_ui: 12 (GEOX_APPS keys well_desk…workspace_v1)
+tools_live: 30 (canonical, live-witnessed via :8081/health)
+mcp_apps_ui: 13 (GEOX_APPS keys well_desk…calibration-witness)
 authority_ceiling: 555_COMPUTE_ONLY
 domain_law: NATURAL_LAW
 truth_rule: live :8081/health beats any static count in this file
+evidence_spine: Phase 0+1+2A+2B delivered (PR #177 merged 2026-09-15)
 -->
 
 # GEOX — Earth Intelligence Engine
@@ -85,6 +86,57 @@ It will also **refuse**. A 33° map bbox is too big — that is a design constra
 ```
 
 APEX `G = (A·P·E·X)^(1/4)` is the federation feasibility envelope. GEOX feeds **Earth evidence** into that envelope. It is not APEX. A false SUCCESS from GEOX contaminates the E-dial.
+
+---
+
+## Evidence Spine — Calibration & Structural Interpretation
+
+**Core principle:** GEOX has the physics. It needs evidence-preserving orchestration plus human physical grounding — not another library.
+
+### Native vs Display Data Lanes
+
+| Property | NATIVE_TRACE | DISPLAY_DERIVED_PROXY |
+|---|---|---|
+| Input | Registered SEG-Y | PNG, JPEG, screenshot |
+| Amplitude | CONDITIONAL (never PRESERVED without proof) | DISPLAY_TRANSFORMED |
+| Well tie | Permitted with true trace | Exploratory visual only |
+| AVO / quantitative | Possible under proper conditioning | **BLOCKED** |
+| Coverage cap | 1.0 | 0.25 |
+
+### Calibration Witness
+
+`ui://geox/calibration-witness` — MCP App for interactive measurement acquisition.
+
+Human geologist clicks reference points → agent computes scale → structural gates advance:
+
+```
+UNMEASURED → CALIBRATED_INPUT_AVAILABLE → COMPUTABLE → PASS|WARN|KILL|HOLD
+```
+
+Calibration never auto-PASSes physical gates. Each K-gate (K-DIP, K-DL, K-THROW, K-RESTORE, K-VEL) independently states evidence consumed, conversions applied, uncertainty, and remaining blockers.
+
+### SGR (Shale Gouge Ratio)
+
+Pure computation kernel. **NOT a seal verdict.** No universal thresholds.
+
+```
+SGR = Σ(Vsh × Δz) / throw × 100%
+```
+
+Output states `NOT_A_SEAL_VERDICT`. Thresholds are basin/play-specific, configured with evidence and a reviewer.
+
+### Gate Statuses
+
+| Status | Meaning |
+|---|---|
+| UNMEASURED | No calibration or evidence available |
+| CALIBRATED_INPUT_AVAILABLE | Calibration present, interpretation inputs pending |
+| COMPUTABLE | All inputs present, computation possible |
+| PARTIALLY_MEASURED | Some gates measured, some not |
+| PASS | All criteria met |
+| WARN | Passed with caveats |
+| KILL | Failed — interpretation rejected |
+| HOLD | Blocked — requires resolution |
 
 ---
 
