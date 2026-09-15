@@ -1,0 +1,12 @@
+[importlinter]
+root_packages =
+    geox_core
+    geox_mcp
+
+[importlinter:contract:geox-data-003]
+name = GEOX-DATA-003: domain core must not reach up into MCP serving layer
+type = forbidden
+source_modules =
+    geox_core
+forbidden_modules =
+    geox_mcp

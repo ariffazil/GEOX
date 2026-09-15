@@ -1,0 +1,21 @@
+{
+  "schema": "arifos.boundary-exceptions.v1",
+  "policy": "Ratchet: CI fails on NEW violations and on EXPIRED entries. Extending expiry is a deliberate ledger edit (visible in diff).",
+  "default_expiry_days": 90,
+  "forged": "2026-09-16",
+  "forged_by": "333-AGI",
+  "violations": [
+    {
+      "id": "EX-GEOX-003-001",
+      "contract": "geox-data-003",
+      "path": "geox_core -> geox_mcp",
+      "detail": "4 paths: benchmarks.geox_001_orthogonal_route->tools.{well_ingest,well_qc}; core.welltie->tools._helpers (l.43,l.580); well.tools.sensing->tools.kernel._petrophysics (l.49)",
+      "discovered": "2026-09-16",
+      "expires": "2026-12-15",
+      "owner_note": "Fix: move _classify_gr_motif + helpers into geox_core; benchmarks should import core, not mcp."
+    }
+  ],
+  "observations_non_gating": [
+    "6 mutual-import pairs + 3 longer cycles in mcp layer (wiring<->server<->registry trinity) — refactor = 888_HOLD"
+  ]
+}
