@@ -43,7 +43,7 @@ changes_since_last_verified:
 - **Dual surface cleanup**: 16 dead `geox/` submodules archived to `.archive/`
 - **entrypoint_unified.sh deprecated** — forwards to `entrypoint.sh`; remove after 2026-07-30
 - **Dockerfile confirmed clean** — uses `pyproject.toml` + `pip install .`
-- **Live surface verified**: 32 canonical tools on :8081, all ANALYZE class, mutation=false
+- **Live surface verified**: 26 canonical tools on :8081, all ANALYZE class, mutation=false
 - **`geox_map_export_package` live** — completes the map verb chain with PROV sidecar + STAC catalog
 - **Artifact envelope contract** — `contracts/artifact_envelope.py` — forensic traceability for all tool returns
 - **Production readiness audit** — 11-gate scorecard: 72% YELLOW. Gap tracker: `forge_work/FORGE_PRODUCTION_GAPS.md`
@@ -53,7 +53,7 @@ changes_since_last_verified:
 - **Verdict:** YELLOW (72%) — concept strong, production gaps real
 - **Gap tracker:** `forge_work/FORGE_PRODUCTION_GAPS.md`
 - **Production audit:** `forge_work/PRODUCTION-READINESS-AUDIT-2026-07-02.md`
-- **P0 (1 day):** Stamp `_envelope` on 32 tools, fix 1 test failure
+- **P0 (1 day):** Stamp `_envelope` on 26 tools, fix 1 test failure
 - **P1 (8 days):** Unified QC runner, challenge gate, forbidden-claims classifier
 - **P2 (7 days):** Risk bands, evidence floors, petrophysics compute gaps
 - **Conveyor belt:** Ingest → QC → Compute → Claim → Challenge → Uncertainty → Reproducibility → Safety → arifOS
