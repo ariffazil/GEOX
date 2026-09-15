@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Any
+
+import yaml
 
 from geox_mcp.surface_manifest import (
     compat_tools,
+    capability_packs,
     internal_tool_names,
     manifest_entries_for_registry,
     manifest_tool_map,
@@ -194,3 +198,88 @@ def required_authority_for(tool_name: str, arguments: dict[str, Any] | None = No
 def is_mutating_call(tool_name: str, arguments: dict[str, Any] | None = None) -> bool:
     """Return True iff ``required_authority_for`` resolves to LIMITED_MUTATE."""
     return required_authority_for(tool_name, arguments) == "LIMITED_MUTATE"
+
+
+# ── Discovery Governance (Sprint 2B) ────────────────────────────────────
+# Capability-pack-based discovery filtering.
+# Principle: Capability Exists ≠ Capability Visible ≠ Capability Activated
+
+_REGISTRY_PATH = Path(__file__).with_name("registry")
+_CAPABILITY_REGISTRY_PATH = (
+    Path(__file__).resolve().parents[2] / "registry" / "capability_registry.yaml"
+)
+
+# Discovery profile definitions (loaded from capability_registry.yaml)
+_DISCOVERY_PROFILES: dict[str, dict[str, Any]] | None = None
+
+
+def _load_capability_registry() -> dict[str, Any]:
+    """Load capability_registry.yaml if present."""
+    if _CAPABILITY_REGISTRY_PATH.exists():
+        return yaml.safe_load(_CAPABILITY_REGISTRY_PATH.read_text()) or {}
+    return {}
+
+
+def _get_discovery_profiles() -> dict[str, dict[str, Any]]:
+    """Return discovery profile definitions."""
+    global _DISCOVERY_PROFILES
+    if _DISCOVERY_PROFILES is None:
+        reg = _load_capability_registry()
+        _DISCOVERY_PROFILES = reg.get("discovery_profiles", {})
+    return _DISCOVERY_PROFILES
+
+
+def discovery_profile_names() -> list[str]:
+    """Return available discovery profile names."""
+    return list(_get_discovery_profiles().keys())
+
+
+def tools_for_profile(profile: str = "default") -> list[str]:
+    """Return tool names visible under the given discovery profile.
+
+    Profiles:
+      default    → earth_core only (13 tools)
+      specialist → earth_core + earth_specialist (19 tools)
+      research   → all packs (26 tools)
+      full       → alias for research
+    """
+    profiles = _get_discovery_profiles()
+    prof = profiles.get(profile, profiles.get("default", {}))
+    visible_packs = prof.get("visible_packs", ["earth_core"])
+
+    packs = capability_packs()
+    tool_set: list[str] = []
+    seen: set[str] = set()
+    for pack_name in visible_packs:
+        pack = packs.get(pack_name, {})
+        for tool_name in pack.get("tools", []):
+            if tool_name not in seen:
+                tool_set.append(tool_name)
+                seen.add(tool_name)
+
+    return tool_set
+
+
+def default_visible_tools() -> list[str]:
+    """Return tools visible under the default discovery profile."""
+    return tools_for_profile("default")
+
+
+def pack_for_tool(tool_name: str) -> str | None:
+    """Return the capability pack a tool belongs to, or None."""
+    packs = capability_packs()
+    for pack_name, pack in packs.items():
+        if tool_name in pack.get("tools", []):
+            return pack_name
+    return None
+
+
+def is_escalation_required(tool_name: str) -> bool:
+    """Return True if the tool requires escalation beyond default discovery."""
+    pack = pack_for_tool(tool_name)
+    if pack is None:
+        return False
+    reg = _load_capability_registry()
+    visibility = reg.get("pack_visibility", {}).get(pack, {})
+    return visibility.get("escalation_required", False)
+

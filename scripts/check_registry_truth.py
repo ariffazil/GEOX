@@ -145,8 +145,8 @@ def check_llms_txt(strict: bool) -> None:
     else:
         fail("llms.txt: no '(N Public Tools)' header found")
 
-    # Count tool entries (lines starting with N. **geox_)
-    tool_lines = [l for l in text.splitlines() if re.match(r"^\d+\.\s+\*\*geox_", l)]
+    # Count tool entries (lines with **geox_ — supports both "N. **geox_" and "- **geox_")
+    tool_lines = [l for l in text.splitlines() if re.search(r"\*\*geox_\w+", l)]
     entry_count = len(tool_lines)
     if entry_count != TRUTH_COUNT:
         msg = f"llms.txt entries: count={entry_count}, truth={TRUTH_COUNT}"

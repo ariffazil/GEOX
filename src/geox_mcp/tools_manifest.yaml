@@ -22,6 +22,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: B
 - name: geox_petrophysics
   domain: earth.petrophysics
   axis: reason
@@ -42,6 +44,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: A
 - name: geox_seismic_ingest
   domain: earth.seismic
   axis: observe
@@ -61,6 +65,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: B
 - name: geox_seismic_compute
   domain: earth.seismic
   axis: compute
@@ -80,6 +86,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: B
 - name: geox_seismic_interpret
   domain: earth.seismic
   axis: reason
@@ -102,6 +110,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: A
 - name: geox_basin
   domain: earth.basin
   axis: reason
@@ -122,15 +132,17 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: A
 - name: geox_paleobiodb_query
   domain: earth.paleobiology
   axis: observe
   lane: evidence
   face: surface
   visibility: public
-  description: 'Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones.
-    Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale),
-    age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.'
+  description: 'Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon),
+    occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only,
+    public-domain fossil data.'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -143,6 +155,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
+  family: evidence
+  tier: B
 - name: geox_geomechanics
   domain: earth.structure
   axis: compute
@@ -162,6 +176,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: B
 - name: geox_prospect
   domain: earth.prospect
   axis: reason
@@ -181,6 +197,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: prospect
+  tier: A
 - name: geox_gravmag_studio
   domain: earth.geophysics
   axis: compute
@@ -203,6 +221,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_well_qc
   domain: earth.well
   axis: reason
@@ -222,6 +242,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: A
 - name: geox_sediment_mass_balance
   domain: earth.basin
   axis: compute
@@ -241,6 +263,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_claim_graph_evaluate
   domain: governance
   axis: reason
@@ -261,6 +285,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
+  family: evidence
+  tier: Z
 - name: geox_to_wealth_bridge
   domain: governance.bridge
   axis: reason
@@ -281,6 +307,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: false
+  family: prospect
+  tier: Z
 - name: geox_well_desurvey
   domain: earth.well
   axis: compute
@@ -300,6 +328,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_physical_reality_interpret
   domain: earth.seismic
   axis: reason
@@ -319,6 +349,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_geological_cognition_run
   domain: earth.seismic
   axis: reason
@@ -338,6 +370,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_panel_d_render_mcp
   domain: earth.seismic
   axis: reason
@@ -357,6 +391,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: view
+  tier: Z
 - name: geox_segy_trace_audit
   domain: earth.seismic
   axis: observe
@@ -376,6 +412,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: Z
 - name: geox_well_tie_compute
   domain: earth.seismic
   axis: reason
@@ -395,6 +433,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_3d_model_build
   domain: earth.seismic
   axis: reason
@@ -414,6 +454,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_wealth_bridge_run
   domain: earth.seismic
   axis: reason
@@ -433,6 +475,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: prospect
+  tier: Z
 - name: geox_rsi_interpret
   domain: earth.seismic
   axis: reason
@@ -452,6 +496,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_render_audit
   domain: earth.seismic
   axis: verify
@@ -471,6 +517,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: view
+  tier: Z
 - name: geox_map_export_package
   domain: earth.map
   axis: compute
@@ -490,6 +538,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: view
+  tier: Z
 - name: geox_atlas
   domain: earth.atlas
   axis: observe
@@ -509,6 +559,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_forbidden_claims_scan
   domain: earth.governance
   axis: verify
@@ -528,6 +580,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_doctrine
   domain: governance.doctrine
   axis: verify
@@ -547,6 +601,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_query_entity
   domain: earth.governance
   axis: observe
@@ -566,6 +622,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_query_claim
   domain: earth.governance
   axis: observe
@@ -585,6 +643,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_query_uncertainty
   domain: earth.governance
   axis: observe
@@ -604,6 +664,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_query_provenance
   domain: earth.governance
   axis: observe
@@ -623,6 +685,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_claim_create
   domain: earth.governance
   axis: reason
@@ -642,6 +706,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_claim_challenge
   domain: earth.governance
   axis: reason
@@ -661,6 +727,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_evidence_attach
   domain: earth.governance
   axis: reason
@@ -680,6 +748,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_evidence_reason
   domain: earth.governance
   axis: reason
@@ -699,6 +769,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_egs_seismic_compute
   domain: earth.seismic
   axis: compute
@@ -718,6 +790,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_egs_rock_physics
   domain: earth.petrophysics
   axis: compute
@@ -737,6 +811,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_egs_data_qc_bundle
   domain: earth.general
   axis: verify
@@ -756,6 +832,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: Z
 - name: geox_egs_scenario_audit
   domain: earth.governance
   axis: verify
@@ -775,6 +853,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_seismic_cognition
   domain: earth.seismic
   axis: reason
@@ -794,6 +874,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_visual_enhance
   domain: earth.seismic
   axis: compute
@@ -813,6 +895,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: view
+  tier: Z
 - name: geox_visual_generate_hypotheses
   domain: earth.seismic
   axis: reason
@@ -832,6 +916,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_panel_d_render
   domain: earth.seismic
   axis: compute
@@ -851,6 +937,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: view
+  tier: Z
 - name: geox_cognitive_rank_hypotheses
   domain: earth.seismic
   axis: reason
@@ -870,6 +958,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_segy_audit
   domain: earth.seismic
   axis: verify
@@ -889,6 +979,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: Z
 - name: geox_well_tie
   domain: earth.seismic
   axis: reason
@@ -908,6 +1000,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_3d_model
   domain: earth.seismic
   axis: reason
@@ -927,6 +1021,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_wealth_consequence
   domain: earth.seismic
   axis: reason
@@ -946,6 +1042,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: prospect
+  tier: Z
 - name: geox_bid_round_screener
   domain: earth.basin
   axis: reason
@@ -965,6 +1063,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: prospect
+  tier: Z
 - name: geox_simulate_accommodation
   domain: earth.stratigraphy
   axis: reason
@@ -984,6 +1084,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_simulate_surfaces
   domain: earth.stratigraphy
   axis: reason
@@ -1003,6 +1105,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_simulate_sequences
   domain: earth.stratigraphy
   axis: reason
@@ -1022,6 +1126,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_simulate_routing
   domain: earth.stratigraphy
   axis: reason
@@ -1041,6 +1147,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: model
+  tier: Z
 - name: geox_biostrat_nn_age
   domain: earth.stratigraphy
   axis: reason
@@ -1060,6 +1168,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_biostrat_ruling_check
   domain: earth.stratigraphy
   axis: verify
@@ -1079,6 +1189,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_macrostrat_calibrate
   domain: earth.stratigraphy
   axis: reason
@@ -1098,6 +1210,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: evidence
+  tier: Z
 - name: geox_tie_receipt
   domain: earth.well
   axis: reason
@@ -1118,6 +1232,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_tie_preflight
   domain: earth.well
   axis: reason
@@ -1138,6 +1254,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_benchmark_001
   domain: earth.seismic
   axis: verify
@@ -1157,6 +1275,9 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: research
+  tier: Z
+  subfamily: unclassified
 - name: geox_well_time_depth_calibrate
   domain: earth.well
   axis: calibrate
@@ -1177,6 +1298,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_well_seismic_mistie_rms
   domain: earth.seismic
   axis: verify
@@ -1197,6 +1320,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_wavelet_extract_least_squares
   domain: earth.seismic
   axis: calibrate
@@ -1217,6 +1342,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: interpret
+  tier: Z
 - name: geox_dst_ingest_test
   domain: earth.well
   axis: verify
@@ -1236,6 +1363,8 @@ tools:
     action_class: OBSERVE
     mutation: false
     physics_guard_required: true
+  family: ingest
+  tier: Z
 - name: geox_temporal
   domain: earth.temporal
   axis: compute
@@ -1250,6 +1379,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: evidence
+  tier: A
 - name: geox_map
   domain: earth.spatial
   axis: compute
@@ -1264,6 +1395,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: view
+  tier: A
 - name: geox_source
   domain: earth.source
   axis: compute
@@ -1278,6 +1411,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: evidence
+  tier: A
 - name: geox_spatial
   domain: earth.spatial
   axis: compute
@@ -1292,6 +1427,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: evidence
+  tier: A
 - name: geox_deep_time
   domain: earth.time
   axis: compute
@@ -1306,6 +1443,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: evidence
+  tier: A
 - name: geox_claim
   domain: earth.governance
   axis: reason
@@ -1321,6 +1460,8 @@ tools:
   governance:
     action_class: LIMITED_MUTATE
     mutation: true
+  family: evidence
+  tier: A
 - name: geox_model
   domain: earth.model
   axis: compute
@@ -1336,6 +1477,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: model
+  tier: A
 - name: geox_well
   domain: earth.well
   axis: reason
@@ -1350,6 +1493,8 @@ tools:
   governance:
     action_class: OBSERVE
     mutation: false
+  family: interpret
+  tier: A
 - name: geox_contrast_metabolize
   domain: earth.seismic
   axis: reason
@@ -1372,13 +1517,16 @@ tools:
   plugin:
     exposed: true
   ui: null
+  family: interpret
+  tier: B
 - name: geox_glof_cascade_initialize
   domain: earth.hazard
   axis: compute
   lane: reasoning
   face: surface
   visibility: public
-  description: 'GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.'
+  description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33.
+    Returns session state_id.
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1396,13 +1544,17 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.1.0
+  family: research
+  tier: C
+  subfamily: cascade
 - name: geox_glof_cascade_step
   domain: earth.hazard
   axis: compute
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.'
+  description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B).
+    Returns evolved 33D state.
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1420,13 +1572,17 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.1.0
+  family: research
+  tier: C
+  subfamily: cascade
 - name: geox_glof_cascade_phase
   domain: earth.hazard
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.'
+  description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D,
+    hydro_fracture indicator.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1444,13 +1600,17 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.1.0
+  family: research
+  tier: C
+  subfamily: cascade
 - name: geox_glof_cascade_inverse
   domain: earth.hazard
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.'
+  description: Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat
+    + log_likelihood + posterior_summary.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1468,13 +1628,16 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.1.0
+  family: research
+  tier: C
+  subfamily: inversion
 - name: geox_glof_cascade_metabolize
   domain: earth.hazard
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.'
+  description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1492,13 +1655,17 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.1.0
+  family: research
+  tier: C
+  subfamily: cascade
 - name: geox_glof_cascade_mcmc_inverse
   domain: earth.hazard
   axis: reason
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).'
+  description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior
+    mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1517,13 +1684,17 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.2.0
+  family: research
+  tier: C
+  subfamily: inversion
 - name: geox_glof_cascade_propagate
   domain: earth.hazard
   axis: compute
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.'
+  description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume
+    solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1542,3 +1713,576 @@ tools:
     mode: external
     app_id: geox.glof.cascade
     version: 0.2.0
+  family: research
+  tier: C
+  subfamily: cascade
+sprint1_classified: true
+family_count: 7
+tier_distribution:
+  A: 13
+  B: 6
+  C: 7
+  Z: 54
+capability_packs:
+  earth_core:
+    tier: A
+    label: Earth Core
+    description: Default discovery surface. All agents see these tools.
+    intent: Evaluate basin context, validate data, interpret wells/seismic, assess prospects.
+    tools:
+    - geox_basin
+    - geox_claim
+    - geox_deep_time
+    - geox_map
+    - geox_model
+    - geox_prospect
+    - geox_seismic_interpret
+    - geox_source
+    - geox_spatial
+    - geox_temporal
+    - geox_petrophysics
+    - geox_well
+    - geox_well_qc
+  earth_specialist:
+    tier: B
+    label: Earth Specialist
+    description: Opt-in after task declaration. Seismic computation, geomechanics, data ingestion.
+    intent: Process raw data, run computations, analyze paleobiology.
+    tools:
+    - geox_contrast_metabolize
+    - geox_geomechanics
+    - geox_paleobiodb_query
+    - geox_seismic_compute
+    - geox_seismic_ingest
+    - geox_well_ingest
+  earth_research:
+    tier: C
+    label: Earth Research
+    description: Advanced/research only. GLOF cascade simulation, Bayesian inversion.
+    intent: Run experimental Earth-science computations under bounded resources.
+    sub_packs:
+      cascade:
+        label: GLOF Cascade Simulation
+        tools:
+        - geox_glof_cascade_initialize
+        - geox_glof_cascade_step
+        - geox_glof_cascade_phase
+        - geox_glof_cascade_metabolize
+        - geox_glof_cascade_propagate
+      inversion:
+        label: Bayesian Inversion
+        tools:
+        - geox_glof_cascade_inverse
+        - geox_glof_cascade_mcmc_inverse
+      restoration:
+        label: Structural Restoration (PLANNED)
+        tools: []
+      simulation:
+        label: Stratigraphic Simulation (PLANNED)
+        tools: []
+      uncertainty:
+        label: Uncertainty Quantification (PLANNED)
+        tools: []
+    tools:
+    - geox_glof_cascade_initialize
+    - geox_glof_cascade_step
+    - geox_glof_cascade_phase
+    - geox_glof_cascade_inverse
+    - geox_glof_cascade_mcmc_inverse
+    - geox_glof_cascade_metabolize
+    - geox_glof_cascade_propagate
+workflow_packs:
+  well_to_correlation:
+    label: Well → Correlation
+    intent: Evaluate well data, build correlations, and produce a validated correlation package.
+    pack_requirement: earth_core
+    required_packs:
+    - earth_core
+    optional_packs:
+    - earth_specialist
+    steps:
+    - tool: geox_basin
+      purpose: Establish basin and stratigraphic context
+    - tool: geox_well
+      purpose: Load and view well curves
+    - tool: geox_well_qc
+      purpose: Validate depth datum, curve units, missing intervals
+    - tool: geox_petrophysics
+      purpose: Compute Vsh, porosity, Sw, permeability, net pay
+    - tool: geox_deep_time
+      purpose: Chronostratigraphic framework for correlation
+    - tool: geox_model
+      purpose: Build integrated subsurface model
+    - tool: geox_map
+      purpose: Render correlation map and cross-sections
+    output_contract: CorrelationPackage
+    output_fields:
+    - validated_well_evidence
+    - curve_unit_datum_qc_receipt
+    - petrophysical_interpretation
+    - correlation_hypothesis_with_alternatives
+    - explicit_unknown_intervals
+    blocking_conditions:
+    - missing_depth_datum
+    - unknown_curve_units
+    - unresolved_duplicate_curves
+  seismic_to_prospect:
+    label: Seismic → Prospect
+    intent: Evaluate seismic data, build structural and stratigraphic interpretation, and produce a prospect evidence package.
+    pack_requirement: earth_specialist
+    required_packs:
+    - earth_core
+    - earth_specialist
+    optional_packs: []
+    steps:
+    - tool: geox_basin
+      purpose: Establish basin and petroleum system context
+    - tool: geox_seismic_ingest
+      purpose: Register and validate seismic input (SEG-Y)
+    - tool: geox_seismic_compute
+      purpose: Run attributes, inversion, well tie
+    - tool: geox_seismic_interpret
+      purpose: Horizons, faults, facies, DHI interpretation
+    - tool: geox_geomechanics
+      purpose: Stress compatibility, reactivation probability
+    - tool: geox_model
+      purpose: Build integrated subsurface model
+    - tool: geox_prospect
+      purpose: Prospect hypothesis, risk assessment, volumetrics
+    - tool: geox_claim
+      purpose: Register and verify prospect claims
+    output_contract: ProspectEvidencePackage
+    output_fields:
+    - seismic_lineage_and_readiness
+    - horizon_fault_interpretation
+    - structural_charge_seal_hypothesis
+    - risk_register_and_evidence_gaps
+    - prospect_statement_observation_vs_interpretation
+    blocking_conditions:
+    - unknown_seismic_phase_polarity
+    - missing_processing_lineage
+    - crs_mismatch_well_seismic
+  basin_screening:
+    label: Basin Screening
+    intent: Screen a basin for petroleum prospectivity — play fairway analysis from regional context to prospect ranking.
+    pack_requirement: earth_core
+    required_packs:
+    - earth_core
+    optional_packs:
+    - earth_specialist
+    steps:
+    - tool: geox_basin
+      purpose: Basin profile, tectonic setting, stratigraphy
+    - tool: geox_spatial
+      purpose: Spatial indexing, H3 grid, proximity analysis
+    - tool: geox_temporal
+      purpose: Basin lifecycle, decline curves, timing
+    - tool: geox_source
+      purpose: Source rock presence, kerogen type, maturity
+    - tool: geox_deep_time
+      purpose: Chronostratigraphic framework and paleogeography
+    - tool: geox_claim
+      purpose: Register and verify play/fairway claims
+    - tool: geox_prospect
+      purpose: Screen and rank prospects
+    - tool: geox_map
+      purpose: Render play fairway map
+    output_contract: PlayFairwaySummary
+    output_fields:
+    - basin_profile_and_tectonic_context
+    - source_reservoir_seal_presence
+    - play_fairway_map
+    - prospect_ranking_with_risk
+    - evidence_gaps_and_unknowns
+    blocking_conditions:
+    - no_source_rock_evidence
+    - missing_stratigraphic_framework
+  glof_uncertainty:
+    label: GLOF Uncertainty Analysis
+    intent: Run GLOF cascade simulation with Bayesian inversion for uncertainty quantification.
+    pack_requirement: earth_research
+    required_packs:
+    - earth_research
+    optional_packs: []
+    steps:
+    - tool: geox_glof_cascade_initialize
+      purpose: Initialize 33D GLOF state
+    - tool: geox_glof_cascade_propagate
+      purpose: 1D Saint-Venant wave propagation
+    - tool: geox_glof_cascade_phase
+      purpose: Yield surface evaluation
+    - tool: geox_glof_cascade_inverse
+      purpose: Bayesian grid-search inference
+    - tool: geox_glof_cascade_mcmc_inverse
+      purpose: Full MCMC posterior sampling
+    - tool: geox_glof_cascade_metabolize
+      purpose: Close F-I-M loop, emit receipt
+    output_contract: UncertaintyReport
+    output_fields:
+    - posterior_parameter_distributions
+    - convergence_diagnostics
+    - breach_probability_33d
+    - downstream_impact_scenarios
+    - non_convergence_hold_if_applicable
+    blocking_conditions:
+    - mcmc_non_convergence
+    - insufficient_observation_data
+    resource_budget_required: true
+    random_seed_required: true
+earth_capability_graph:
+  version: 1.0.0
+  description: GEOX Earth Capability Graph — tool dependencies, workflow paths, and evidence flow.
+  doctrine: Capability → Organ → Tool → Skill. Graph edges are witnessed dependencies, not declared hierarchies.
+  nodes:
+    geox_basin:
+      family: evidence
+      role: entry_point
+      description: Basin context — most workflows start here
+    geox_claim:
+      family: evidence
+      role: decision_point
+      description: Claim registration and verification
+    geox_source:
+      family: evidence
+      role: evidence_node
+      description: Source rock and diagenesis
+    geox_spatial:
+      family: evidence
+      role: evidence_node
+      description: Spatial indexing and discovery
+    geox_temporal:
+      family: evidence
+      role: evidence_node
+      description: Temporal analytics
+    geox_deep_time:
+      family: evidence
+      role: evidence_node
+      description: Chronostratigraphic framework
+    geox_paleobiodb_query:
+      family: evidence
+      role: evidence_node
+      description: Paleobiology data
+    geox_well_ingest:
+      family: ingest
+      role: data_gate
+      description: Well data registration
+    geox_well_qc:
+      family: ingest
+      role: data_gate
+      description: Well data quality control
+    geox_seismic_ingest:
+      family: ingest
+      role: data_gate
+      description: Seismic data registration
+    geox_well:
+      family: interpret
+      role: reasoning_node
+      description: Well data query and visualization
+    geox_petrophysics:
+      family: interpret
+      role: reasoning_node
+      description: Petrophysical analysis
+    geox_seismic_compute:
+      family: interpret
+      role: reasoning_node
+      description: Seismic computation
+    geox_seismic_interpret:
+      family: interpret
+      role: reasoning_node
+      description: Seismic interpretation
+    geox_geomechanics:
+      family: interpret
+      role: reasoning_node
+      description: Geomechanical analysis
+    geox_contrast_metabolize:
+      family: interpret
+      role: reasoning_node
+      description: Anomalous contrast pipeline
+    geox_model:
+      family: model
+      role: integration_node
+      description: Integrated subsurface model
+    geox_prospect:
+      family: prospect
+      role: decision_point
+      description: Prospect assessment and risk
+    geox_map:
+      family: view
+      role: presentation_node
+      description: Map rendering and visualization
+    geox_glof_cascade_initialize:
+      family: research
+      role: entry_point
+      subfamily: cascade
+      description: GLOF state initialization
+    geox_glof_cascade_step:
+      family: research
+      role: reasoning_node
+      subfamily: cascade
+      description: State advancement
+    geox_glof_cascade_phase:
+      family: research
+      role: reasoning_node
+      subfamily: cascade
+      description: Yield surface evaluation
+    geox_glof_cascade_propagate:
+      family: research
+      role: reasoning_node
+      subfamily: cascade
+      description: Wave propagation
+    geox_glof_cascade_inverse:
+      family: research
+      role: reasoning_node
+      subfamily: inversion
+      description: Grid-search inference
+    geox_glof_cascade_mcmc_inverse:
+      family: research
+      role: decision_point
+      subfamily: inversion
+      description: MCMC posterior sampling
+    geox_glof_cascade_metabolize:
+      family: research
+      role: integration_node
+      subfamily: cascade
+      description: F-I-M loop closure
+  edges:
+  - from: geox_basin
+    to: geox_spatial
+    rel: context_for
+    evidence: basin_extent
+  - from: geox_basin
+    to: geox_temporal
+    rel: context_for
+    evidence: stratigraphic_framework
+  - from: geox_basin
+    to: geox_source
+    rel: context_for
+    evidence: petroleum_system
+  - from: geox_basin
+    to: geox_deep_time
+    rel: context_for
+    evidence: chronostratigraphy
+  - from: geox_basin
+    to: geox_map
+    rel: context_for
+    evidence: spatial_extent
+  - from: geox_well_ingest
+    to: geox_well_qc
+    rel: feeds
+    evidence: raw_curves
+  - from: geox_well_qc
+    to: geox_well
+    rel: feeds
+    evidence: validated_curves
+  - from: geox_well
+    to: geox_petrophysics
+    rel: feeds
+    evidence: curve_data
+  - from: geox_basin
+    to: geox_well
+    rel: context_for
+    evidence: stratigraphic_framework
+  - from: geox_seismic_ingest
+    to: geox_seismic_compute
+    rel: feeds
+    evidence: segy_data
+  - from: geox_seismic_compute
+    to: geox_seismic_interpret
+    rel: feeds
+    evidence: attributes_volumes
+  - from: geox_seismic_interpret
+    to: geox_geomechanics
+    rel: feeds
+    evidence: structural_model
+  - from: geox_basin
+    to: geox_seismic_interpret
+    rel: context_for
+    evidence: depositional_model
+  - from: geox_petrophysics
+    to: geox_model
+    rel: feeds
+    evidence: petrophysical_properties
+  - from: geox_seismic_interpret
+    to: geox_model
+    rel: feeds
+    evidence: structural_framework
+  - from: geox_geomechanics
+    to: geox_model
+    rel: feeds
+    evidence: stress_state
+  - from: geox_deep_time
+    to: geox_model
+    rel: feeds
+    evidence: temporal_framework
+  - from: geox_source
+    to: geox_model
+    rel: feeds
+    evidence: source_rock_properties
+  - from: geox_basin
+    to: geox_model
+    rel: context_for
+    evidence: basin_context
+  - from: geox_model
+    to: geox_prospect
+    rel: feeds
+    evidence: integrated_model
+  - from: geox_basin
+    to: geox_prospect
+    rel: context_for
+    evidence: play_context
+  - from: geox_prospect
+    to: geox_claim
+    rel: feeds
+    evidence: prospect_hypothesis
+  - from: geox_prospect
+    to: geox_map
+    rel: feeds
+    evidence: prospect_geometry
+  - from: geox_glof_cascade_initialize
+    to: geox_glof_cascade_step
+    rel: feeds
+    evidence: initial_state_33d
+  - from: geox_glof_cascade_step
+    to: geox_glof_cascade_phase
+    rel: feeds
+    evidence: evolved_state
+  - from: geox_glof_cascade_step
+    to: geox_glof_cascade_propagate
+    rel: feeds
+    evidence: state_for_propagation
+  - from: geox_glof_cascade_propagate
+    to: geox_glof_cascade_inverse
+    rel: feeds
+    evidence: wave_observations
+  - from: geox_glof_cascade_inverse
+    to: geox_glof_cascade_mcmc_inverse
+    rel: feeds
+    evidence: grid_search_posterior
+  - from: geox_glof_cascade_phase
+    to: geox_glof_cascade_metabolize
+    rel: feeds
+    evidence: yield_surface
+  - from: geox_glof_cascade_mcmc_inverse
+    to: geox_glof_cascade_metabolize
+    rel: feeds
+    evidence: mcmc_posterior
+  - from: geox_paleobiodb_query
+    to: geox_deep_time
+    rel: feeds
+    evidence: biostratigraphic_constraints
+  - from: geox_contrast_metabolize
+    to: geox_seismic_interpret
+    rel: feeds
+    evidence: contrast_hypotheses
+  workflow_paths:
+    well_to_correlation:
+      path:
+      - geox_basin
+      - geox_well
+      - geox_well_qc
+      - geox_petrophysics
+      - geox_deep_time
+      - geox_model
+      - geox_map
+      entry: geox_basin
+      output: geox_map
+      crosses_families:
+      - evidence
+      - ingest
+      - interpret
+      - model
+      - view
+    seismic_to_prospect:
+      path:
+      - geox_basin
+      - geox_seismic_ingest
+      - geox_seismic_compute
+      - geox_seismic_interpret
+      - geox_geomechanics
+      - geox_model
+      - geox_prospect
+      - geox_claim
+      entry: geox_basin
+      output: geox_claim
+      crosses_families:
+      - evidence
+      - ingest
+      - interpret
+      - model
+      - prospect
+    basin_screening:
+      path:
+      - geox_basin
+      - geox_spatial
+      - geox_temporal
+      - geox_source
+      - geox_deep_time
+      - geox_claim
+      - geox_prospect
+      - geox_map
+      entry: geox_basin
+      output: geox_map
+      crosses_families:
+      - evidence
+      - prospect
+      - view
+    glof_uncertainty:
+      path:
+      - geox_glof_cascade_initialize
+      - geox_glof_cascade_propagate
+      - geox_glof_cascade_phase
+      - geox_glof_cascade_inverse
+      - geox_glof_cascade_mcmc_inverse
+      - geox_glof_cascade_metabolize
+      entry: geox_glof_cascade_initialize
+      output: geox_glof_cascade_metabolize
+      crosses_families:
+      - research
+  hub_tools:
+    geox_basin:
+      in_workflows: 3
+      role: universal_context_provider
+    geox_model:
+      in_workflows: 2
+      role: integration_convergence_point
+    geox_prospect:
+      in_workflows: 2
+      role: decision_convergence_point
+    geox_claim:
+      in_workflows: 2
+      role: evidence_registration
+    geox_map:
+      in_workflows: 2
+      role: presentation_convergence_point
+    geox_deep_time:
+      in_workflows: 2
+      role: temporal_framework_provider
+  evidence_types:
+  - basin_extent
+  - stratigraphic_framework
+  - petroleum_system
+  - chronostratigraphy
+  - raw_curves
+  - validated_curves
+  - curve_data
+  - petrophysical_properties
+  - segy_data
+  - attributes_volumes
+  - structural_framework
+  - structural_model
+  - stress_state
+  - temporal_framework
+  - source_rock_properties
+  - basin_context
+  - integrated_model
+  - play_context
+  - prospect_hypothesis
+  - prospect_geometry
+  - biostratigraphic_constraints
+  - contrast_hypotheses
+  - initial_state_33d
+  - evolved_state
+  - wave_observations
+  - grid_search_posterior
+  - mcmc_posterior
+  - yield_surface

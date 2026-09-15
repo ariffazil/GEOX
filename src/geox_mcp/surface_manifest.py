@@ -33,6 +33,9 @@ class SurfaceTool:
     ui: dict[str, Any] | None
     plugin: dict[str, Any]
     governance: dict[str, Any]
+    family: str
+    tier: str
+    subfamily: str
 
     @property
     def is_public(self) -> bool:
@@ -87,6 +90,9 @@ def _normalize_tool(entry: dict[str, Any]) -> SurfaceTool:
         ui=ui,
         plugin=plugin,
         governance=governance,
+        family=str(entry.get("family") or "unclassified"),
+        tier=str(entry.get("tier") or "Z"),
+        subfamily=str(entry.get("subfamily") or ""),
     )
 
 
@@ -124,6 +130,9 @@ def load_surface_manifest() -> dict[str, Any]:
         "tools": tuple(tools),
         "compat_tools": tuple(compat_names),
         "doctrine": payload.get("doctrine") or {},
+        "capability_packs": payload.get("capability_packs") or {},
+        "workflow_packs": payload.get("workflow_packs") or {},
+        "earth_capability_graph": payload.get("earth_capability_graph") or {},
     }
 
 
@@ -163,6 +172,21 @@ def plugin_export_tool_names() -> list[str]:
     return [tool.name for tool in public_tools() if tool.is_plugin_exposed]
 
 
+def capability_packs() -> dict[str, Any]:
+    """Return capability pack definitions from manifest."""
+    return load_surface_manifest().get("capability_packs", {})
+
+
+def workflow_packs() -> dict[str, Any]:
+    """Return workflow pack definitions from manifest."""
+    return load_surface_manifest().get("workflow_packs", {})
+
+
+def earth_capability_graph() -> dict[str, Any]:
+    """Return Earth Capability Graph from manifest."""
+    return load_surface_manifest().get("earth_capability_graph", {})
+
+
 def ui_tool_names() -> list[str]:
     return [tool.name for tool in public_tools() if tool.has_ui]
 
@@ -194,6 +218,31 @@ def webmcp_categories() -> list[dict[str, Any]]:
             label = "Governance"
         else:
             label = tail.replace("_", " ").title()
+        categories.setdefault(label, []).append(tool.name)
+    return [
+        {"category": category, "tools": sorted(names)}
+        for category, names in sorted(categories.items(), key=lambda item: item[0].lower())
+    ]
+
+
+def webmcp_family_categories() -> list[dict[str, Any]]:
+    """Group public tools by family for MCP App GUI tab rendering.
+
+    Returns tool groups aligned with capability packs and family taxonomy.
+    Used by MCP Apps / webmcp for family-based tab layout.
+    """
+    family_labels = {
+        "evidence": "Evidence & Orientation",
+        "ingest": "Data Intake & QC",
+        "interpret": "Earth Interpretation",
+        "model": "Integration & Models",
+        "prospect": "Prospect & Decision",
+        "view": "Visualization",
+        "research": "Research Lab",
+    }
+    categories: dict[str, list[str]] = {}
+    for tool in public_tools():
+        label = family_labels.get(tool.family, tool.family.title())
         categories.setdefault(label, []).append(tool.name)
     return [
         {"category": category, "tools": sorted(names)}

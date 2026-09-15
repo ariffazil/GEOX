@@ -1,15 +1,22 @@
 organ: GEOX
-version: 2026.08.18
+version: 2026.09.15
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 19
-regenerated: '2026-08-18T07:20:36.505195+00:00'
+public_count: 26
+regenerated: '2026-09-15T06:06:21.570591+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
+sprint1_classified: true
+tier_distribution:
+  A: 13
+  B: 6
+  C: 7
 tools:
 - name: geox_basin
   domain: earth.basin
   axis: reason
   lane: reasoning
+  family: evidence
+  tier: A
   access: public
   description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
     mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
@@ -21,6 +28,8 @@ tools:
   domain: earth.governance
   axis: reason
   lane: reasoning
+  family: evidence
+  tier: A
   access: public
   description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
     synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
@@ -33,6 +42,8 @@ tools:
   domain: earth.seismic
   axis: reason
   lane: reasoning
+  family: interpret
+  tier: B
   access: public
   description: 'Unified anomalous contrast metabolic pipeline. Binds three stages
     into one call: ISOLATE (deterministic acoustic impedance contrast detection) then
@@ -46,6 +57,8 @@ tools:
   domain: earth.time
   axis: compute
   lane: compute
+  family: evidence
+  tier: A
   access: public
   description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.'
   annotations:
@@ -56,9 +69,104 @@ tools:
   domain: earth.structure
   axis: compute
   lane: reasoning
+  family: interpret
+  tier: B
   access: public
   description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic
     impedance, stress polygon.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_initialize
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6
+    zen-33) or defaults to himalayan_glof_33. Returns session state_id.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_inverse
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Bayesian grid-search inference on 33D posterior from wave observations
+    (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_mcmc_inverse
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings
+    MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS,
+    accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_metabolize
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score,
+    phase transitions, cycle_id.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_phase
+  domain: earth.hazard
+  axis: reason
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict
+    + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_propagate
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach
+    to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns
+    time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_glof_cascade_step
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  family: research
+  tier: C
+  access: public
+  description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics
+    to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
   annotations:
     read_only: true
     destructive: false
@@ -67,6 +175,8 @@ tools:
   domain: earth.spatial
   axis: compute
   lane: compute
+  family: view
+  tier: A
   access: public
   description: 'Map intelligence: layer discovery, scene composition, preview. Modes:
     layers_list, scene_plan, render_preview.'
@@ -78,9 +188,26 @@ tools:
   domain: earth.model
   axis: compute
   lane: compute
+  family: model
+  tier: A
   access: public
   description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
     3D. Modes: subsurface, geological_generate, gempy_3d.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_paleobiodb_query
+  domain: earth.paleobiology
+  axis: observe
+  lane: evidence
+  family: evidence
+  tier: B
+  access: public
+  description: 'Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences,
+    and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records),
+    zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only,
+    public-domain fossil data.'
   annotations:
     read_only: true
     destructive: false
@@ -89,6 +216,8 @@ tools:
   domain: earth.petrophysics
   axis: reason
   lane: reasoning
+  family: interpret
+  tier: A
   access: public
   description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM
     inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.'
@@ -100,6 +229,8 @@ tools:
   domain: earth.prospect
   axis: reason
   lane: judgment
+  family: prospect
+  tier: A
   access: public
   description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
     screen, evaluate.'
@@ -111,6 +242,8 @@ tools:
   domain: earth.seismic
   axis: compute
   lane: reasoning
+  family: interpret
+  tier: B
   access: public
   description: 'Seismic computation: forward model, well tie, attributes, wavelet
     extraction, inversion.'
@@ -122,6 +255,8 @@ tools:
   domain: earth.seismic
   axis: observe
   lane: evidence
+  family: ingest
+  tier: B
   access: public
   description: SEG-Y I/O, header inspection, export.
   annotations:
@@ -132,6 +267,8 @@ tools:
   domain: earth.seismic
   axis: reason
   lane: reasoning
+  family: interpret
+  tier: A
   access: public
   description: 'One semantic capability — propose geometry, physics-gate, compare
     hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks,
@@ -147,6 +284,8 @@ tools:
   domain: earth.source
   axis: compute
   lane: compute
+  family: evidence
+  tier: A
   access: public
   description: 'Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes:
     source_rock, diagenesis.'
@@ -158,6 +297,8 @@ tools:
   domain: earth.spatial
   axis: compute
   lane: compute
+  family: evidence
+  tier: A
   access: public
   description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
     stac_discover.'
@@ -169,6 +310,8 @@ tools:
   domain: earth.temporal
   axis: compute
   lane: compute
+  family: evidence
+  tier: A
   access: public
   description: 'Temporal analytics: decline curve, RRR, basin lifecycle, cadence.
     Modes: decline, rrr, basin_lifecycle, cadence.'
@@ -180,6 +323,8 @@ tools:
   domain: earth.well
   axis: reason
   lane: reasoning
+  family: interpret
+  tier: A
   access: public
   description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
     desk.'
@@ -191,6 +336,8 @@ tools:
   domain: earth.well
   axis: observe
   lane: evidence
+  family: ingest
+  tier: B
   access: public
   description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
     Auto-detects format.
@@ -202,21 +349,11 @@ tools:
   domain: earth.well
   axis: reason
   lane: evidence
+  family: ingest
+  tier: A
   access: public
   description: 'Quality control for well data: depth monotonicity, null %, physical
     range checks.'
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_workspace
-  domain: earth.meta
-  axis: observe
-  lane: evidence
-  access: public
-  description: 'GEOX Workspace — persistent geological context across all tools. Set
-    basin/play/well once; every tool inherits. Modes: set, view, history, evidence,
-    relations, reset.'
   annotations:
     read_only: true
     destructive: false
