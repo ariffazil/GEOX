@@ -1,17 +1,17 @@
 <!-- SOT-MANIFEST
 owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
 federation_release: v2026.09.15
-last_verified: 2026-09-15T08:50:00Z
-source_commit: f1d113fad7f
+last_verified: 2026-09-15T09:15:00Z
+source_commit: e68ae5e2
 apex_zen: A2A delegates ⊥ MCP equips ⊥ ACT mutates ⊥ arifOS governs ⊥ F13 decides
 live_health: healthy · 555_COMPUTE_ONLY · evidence only
 live_runtime: /opt/geox · systemd geox-mcp.service · 127.0.0.1:8081
-tools_live: 30 (canonical, live-witnessed via :8081/health)
+tools_live: 31 (canonical, live-witnessed via :8081/health — 5 evidence spine tools added 2026-09-15)
 mcp_apps_ui: 13 (GEOX_APPS keys well_desk…calibration-witness)
 authority_ceiling: 555_COMPUTE_ONLY
 domain_law: NATURAL_LAW
 truth_rule: live :8081/health beats any static count in this file
-evidence_spine: Phase 0+1+2A+2B delivered (PR #177 merged 2026-09-15)
+evidence_spine: Phase 0+1+2A+2B deployed+verified E2E (PR #177, 10 commits on main, 35 tests + 5 live MCP calls)
 -->
 
 # GEOX — Earth Intelligence Engine
@@ -34,20 +34,20 @@ Live MCP: `https://geox.arif-fazil.com/mcp`
 
 ## Live reality (probe this, do not trust prose)
 
-| Fact | Live 2026-09-13 |
+| Fact | Live 2026-09-15 |
 |---|---|
 | Health | `GET http://127.0.0.1:8081/health` → `healthy` |
 | Process | `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081` |
 | Unit | `geox-mcp.service` |
 | Source repo | `/root/GEOX` → `github.com/ariffazil/GEOX` |
 | Runtime | `/opt/geox` (FHS). Source ≠ runtime until deploy. |
-| Canonical MCP tools | **26** (`tools_loaded` / `canonical_tools` on `/health`) |
+| Canonical MCP tools | **31** (`tools_loaded` / `canonical_tools` on `/health`) |
 | Ghost / internal names | 22 ghosted in `geox_mcp.registry` — not on the public surface |
 | Authority | `555_COMPUTE_ONLY` — Earth evidence only. Judgment is arifOS. Mutation is A-FORGE. |
 | Domain law | `NATURAL_LAW` |
 | Public MCP | `https://geox.arif-fazil.com/mcp` |
 
-Stale counts still circulating in other repos (AAA `ORGAN.md` / `organs.yaml` snapshot 2026-07-30 said **33** tools; this README previously said **19**). **Live health wins.**
+Stale counts still circulating in other repos (AAA `ORGAN.md` / `organs.yaml` snapshot 2026-07-30 said **33** tools; this README previously said **19** then **26**). **Live health wins.**
 
 ---
 
@@ -70,7 +70,7 @@ It will also **refuse**. A 33° map bbox is too big — that is a design constra
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │ GEOX Earth Intelligence                                      │
-│ :8081  ·  MCP  ·  26 public tools  ·  555_COMPUTE_ONLY       │
+│ :8081  ·  MCP  ·  31 public tools  ·  555_COMPUTE_ONLY       │
 ├──────────────────────────────────────────────────────────────┤
 │  Well / Petrophysics │ Seismic │ Basin │ Map │ Deep time     │
 │  Geomechanics        │ Source  │ Claim │ GLOF cascade        │
@@ -164,7 +164,7 @@ Docker Compose exists for portable builds. **It is not how KVM8 runs GEOX.** Liv
 
 ---
 
-## Canonical public tools (26)
+## Canonical public tools (31)
 
 ### Capability Graph
 
