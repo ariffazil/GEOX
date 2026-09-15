@@ -10,7 +10,15 @@ import hashlib
 import json
 from typing import Any, Literal
 
-GateStatus = Literal["PASS", "WARN", "KILL", "UNMEASURED", "NOT_APPLICABLE"]
+GateStatus = Literal[
+    "PASS",
+    "WARN",
+    "KILL",
+    "UNMEASURED",
+    "NOT_APPLICABLE",
+    "PARTIALLY_MEASURED",
+    "COMPUTABLE",
+]
 
 
 def receipt_hash(payload: dict[str, Any]) -> str:
