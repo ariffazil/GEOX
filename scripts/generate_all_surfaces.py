@@ -36,6 +36,13 @@ from geox_mcp.surface_manifest import (  # noqa: E402
     load_surface_manifest,
     manifest_tool_map,
     public_tool_names,
+    capability_packs,
+    workflow_packs,
+    earth_capability_graph,
+)
+from geox_mcp.registry import (  # noqa: E402
+    tools_for_profile,
+    discovery_profile_names,
 )
 
 TRUTH_SET: set[str] = set(CANONICAL_PUBLIC_TOOLS)
@@ -66,6 +73,8 @@ def get_tool_metadata(name: str) -> dict:
             "lane": "unknown",
             "description": "",
             "governance": {"action_class": "OBSERVE"},
+            "family": "unclassified",
+            "tier": "Z",
         }
     return {
         "name": entry.name,
@@ -75,6 +84,9 @@ def get_tool_metadata(name: str) -> dict:
         "description": entry.description,
         "ui": entry.ui,
         "governance": entry.governance,
+        "family": entry.family,
+        "tier": entry.tier,
+        "subfamily": entry.subfamily,
     }
 
 
@@ -92,6 +104,8 @@ def regenerate_tools_sot_yaml(dry_run: bool) -> None:
                 "domain": meta["domain"],
                 "axis": meta["axis"],
                 "lane": meta["lane"],
+                "family": meta["family"],
+                "tier": meta["tier"],
                 "access": "public",
                 "description": meta["description"] or f"GEOX tool: {name}",
                 "annotations": {
@@ -102,6 +116,11 @@ def regenerate_tools_sot_yaml(dry_run: bool) -> None:
             }
         )
 
+    # Tier distribution summary
+    tier_dist = {}
+    for t in tools:
+        tier_dist[t["tier"]] = tier_dist.get(t["tier"], 0) + 1
+
     data = {
         "organ": "GEOX",
         "version": datetime.now(timezone.utc).strftime("%Y.%m.%d"),
@@ -110,6 +129,8 @@ def regenerate_tools_sot_yaml(dry_run: bool) -> None:
         "public_count": TRUTH_COUNT,
         "regenerated": NOW_UTC,
         "regenerated_by": "generate_all_surfaces.py (registry.py truth)",
+        "sprint1_classified": True,
+        "tier_distribution": tier_dist,
         "tools": tools,
     }
 
@@ -131,26 +152,50 @@ def regenerate_canonical_public_surface_json(dry_run: bool) -> None:
     tools_list = []
     for name in TRUTH_SORTED:
         meta = get_tool_metadata(name)
-        tools_list.append(
-            {
-                "name": name,
-                "domain": meta["domain"],
-                "axis": meta["axis"],
-                "lane": meta["lane"],
-                "description": meta["description"] or f"GEOX tool: {name}",
-                "ui": meta.get("ui"),
-                "governance": meta["governance"],
-            }
-        )
+        entry = {
+            "name": name,
+            "domain": meta["domain"],
+            "axis": meta["axis"],
+            "lane": meta["lane"],
+            "family": meta["family"],
+            "tier": meta["tier"],
+            "description": meta["description"] or f"GEOX tool: {name}",
+            "ui": meta.get("ui"),
+            "governance": meta["governance"],
+        }
+        if meta.get("subfamily"):
+            entry["subfamily"] = meta["subfamily"]
+        tools_list.append(entry)
+
+    packs = capability_packs()
+    workflows = workflow_packs()
+    graph = earth_capability_graph()
+
+    # Discovery profiles with tool lists
+    profiles = {}
+    for pname in discovery_profile_names():
+        profiles[pname] = {
+            "tools": tools_for_profile(pname),
+            "count": len(tools_for_profile(pname)),
+        }
 
     data = {
-        "schema": "geox.canonical_public_surface.v1",
+        "schema": "geox.canonical_public_surface.v2",
         "generated_at": NOW_UTC,
         "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
         "public_count": TRUTH_COUNT,
         "internal_count": len(GHOST_TOOLS),
         "public_tools": TRUTH_SORTED,
         "tools": tools_list,
+        "families": sorted(set(m["family"] for m in tools_list)),
+        "tier_distribution": {
+            tier: [t["name"] for t in tools_list if t["tier"] == tier]
+            for tier in sorted(set(t["tier"] for t in tools_list))
+        },
+        "capability_packs": packs,
+        "discovery_profiles": profiles,
+        "workflow_packs": workflows,
+        "earth_capability_graph": graph,
         "rule": "tools/list MUST equal public_tools. Docs must not hardcode counts.",
     }
 
@@ -202,25 +247,89 @@ def regenerate_llms_txt(dry_run: bool) -> None:
     path = ROOT / "llms.txt"
     before = path.read_text() if path.exists() else ""
 
-    tool_lines = []
-    for i, name in enumerate(TRUTH_SORTED, 1):
+    # Group tools by family
+    family_groups: dict[str, list[dict]] = {}
+    for name in TRUTH_SORTED:
         meta = get_tool_metadata(name)
-        desc = meta["description"] or f"GEOX tool: {name}"
-        tool_lines.append(f"{i}. **{name}**: {desc}")
+        fam = meta.get("family", "unclassified")
+        family_groups.setdefault(fam, []).append({"name": name, "meta": meta, "tier": meta.get("tier", "Z")})
+
+    family_labels = {
+        "evidence": "1. Evidence & Orientation",
+        "ingest": "2. Data Intake & QC",
+        "interpret": "3. Earth Interpretation",
+        "model": "4. Integration & Models",
+        "prospect": "5. Prospect & Decision",
+        "view": "6. Presentation",
+        "research": "7. Research / Cascade Lab",
+    }
+    tier_labels = {"A": "Core", "B": "Specialist", "C": "Research", "Z": "Internal"}
+
+    tool_lines = []
+    for fam_key in ["evidence", "ingest", "interpret", "model", "prospect", "view", "research"]:
+        group = family_groups.get(fam_key, [])
+        if not group:
+            continue
+        label = family_labels.get(fam_key, fam_key.title())
+        tool_lines.append(f"### {label}")
+        tool_lines.append("")
+        for item in sorted(group, key=lambda x: x["name"]):
+            name = item["name"]
+            meta = item["meta"]
+            tier = item["tier"]
+            desc = meta["description"] or f"GEOX tool: {name}"
+            tier_label = tier_labels.get(tier, tier)
+            tool_lines.append(f"- **{name}** [Tier {tier} — {tier_label}]: {desc}")
+        tool_lines.append("")
 
     lines = [
         f"# GEOX — Earth Intelligence Sovereign Kernel ({TRUTH_COUNT} Public Tools)",
         "> Doctrine: Physics before narrative. Governed evidence only.",
         "> Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS",
+        f"> Capability families: {len(family_groups)} | Sprint 1 classified",
         "",
-        "## 1. Canonical Tool Surface",
+        "## 1. Capability Graph — Tool Surface",
         "",
     ]
     lines.extend(tool_lines)
     lines.extend(
         [
+            "## 2. Tier Legend",
+            "- **Tier A (Core)**: Default discovery. All agents see these.",
+            "- **Tier B (Specialist)**: Opt-in after task declaration.",
+            "- **Tier C (Research)**: Advanced/research. Not visible by default.",
             "",
-            "## 2. Agent Reasoning Logic",
+            "## 3. Capability Packs",
+            "",
+            "### earth_core (Tier A — 13 tools)",
+            "Default discovery surface. Basin context, data validation, well/seismic interpretation, prospect assessment.",
+            "",
+            "### earth_specialist (Tier B — 6 tools)",
+            "Opt-in. Seismic computation, geomechanics, data ingestion, paleobiology.",
+            "",
+            "### earth_research (Tier C — 7 tools)",
+            "Advanced/research only. Sub-packs:",
+            "- **cascade** (5): GLOF cascade simulation (initialize, step, phase, metabolize, propagate)",
+            "- **inversion** (2): Bayesian inference (inverse, mcmc_inverse)",
+            "- **restoration** (0): Structural restoration (PLANNED)",
+            "- **simulation** (0): Stratigraphic simulation (PLANNED)",
+            "- **uncertainty** (0): Uncertainty quantification (PLANNED)",
+            "",
+            "## 4. Workflow Packs",
+            "",
+            "### well_to_correlation (7 steps → CorrelationPackage)",
+            "basin → well → well_qc → petrophysics → deep_time → model → map",
+            "",
+            "### seismic_to_prospect (8 steps → ProspectEvidencePackage)",
+            "basin → seismic_ingest → seismic_compute → seismic_interpret → geomechanics → model → prospect → claim",
+            "",
+            "### basin_screening (8 steps → PlayFairwaySummary)",
+            "basin → spatial → temporal → source → deep_time → claim → prospect → map",
+            "",
+            "### glof_uncertainty (6 steps → UncertaintyReport)",
+            "initialize → propagate → phase → inverse → mcmc_inverse → metabolize",
+            "",
+            "## 5. Agent Reasoning Logic",
             "- Evidence before interpretation.",
             "- Governance stays server-side.",
             "- App-enabled workspace URI: `ui://geox/workspace-v1.html` (text/html;profile=mcp-app).",
@@ -248,6 +357,8 @@ def regenerate_contracts_tools_yaml(dry_run: bool) -> None:
         tools_dict[name] = {
             "category": meta["domain"],
             "lane": meta["lane"],
+            "family": meta["family"],
+            "capability_tier": meta["tier"],
             "risk_tier": "readonly",
             "description": meta["description"] or f"GEOX tool: {name}",
         }

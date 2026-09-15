@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-08-18T07:20:36.505195+00:00
+# Regenerated: 2026-09-15T06:06:21.570591+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.08.18
+schema_version: 2026.09.15
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 19
-contract_epoch: 2026-08-18-GEOX-19TOOLS-ZEN
+canonical_tool_count: 26
+contract_epoch: 2026-09-15-GEOX-26TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -26,12 +26,16 @@ tools:
   geox_basin:
     category: earth.basin
     lane: reasoning
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
       mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
   geox_claim:
     category: earth.governance
     lane: reasoning
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
       synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
@@ -39,6 +43,8 @@ tools:
   geox_contrast_metabolize:
     category: earth.seismic
     lane: reasoning
+    family: interpret
+    capability_tier: B
     risk_tier: readonly
     description: 'Unified anomalous contrast metabolic pipeline. Binds three stages
       into one call: ISOLATE (deterministic acoustic impedance contrast detection)
@@ -48,53 +54,139 @@ tools:
   geox_deep_time:
     category: earth.time
     lane: compute
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes:
       dde_reason.'
   geox_geomechanics:
     category: earth.structure
     lane: reasoning
+    family: interpret
+    capability_tier: B
     risk_tier: readonly
     description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio,
       acoustic impedance, stress polygon.'
+  geox_glof_cascade_initialize:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6
+      zen-33) or defaults to himalayan_glof_33. Returns session state_id.
+  geox_glof_cascade_inverse:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Bayesian grid-search inference on 33D posterior from wave observations
+      (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
+  geox_glof_cascade_mcmc_inverse:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings
+      MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat,
+      ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
+  geox_glof_cascade_metabolize:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness
+      G-score, phase transitions, cycle_id.
+  geox_glof_cascade_phase:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict
+      + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
+  geox_glof_cascade_propagate:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach
+      to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns
+      time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
+  geox_glof_cascade_step:
+    category: earth.hazard
+    lane: reasoning
+    family: research
+    capability_tier: C
+    risk_tier: readonly
+    description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics
+      to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
   geox_map:
     category: earth.spatial
     lane: compute
+    family: view
+    capability_tier: A
     risk_tier: readonly
     description: 'Map intelligence: layer discovery, scene composition, preview. Modes:
       layers_list, scene_plan, render_preview.'
   geox_model:
     category: earth.model
     lane: compute
+    family: model
+    capability_tier: A
     risk_tier: readonly
     description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
       3D. Modes: subsurface, geological_generate, gempy_3d.'
+  geox_paleobiodb_query:
+    category: earth.paleobiology
+    lane: evidence
+    family: evidence
+    capability_tier: B
+    risk_tier: readonly
+    description: 'Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences,
+      and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records),
+      zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only,
+      public-domain fossil data.'
   geox_petrophysics:
     category: earth.petrophysics
     lane: reasoning
+    family: interpret
+    capability_tier: A
     risk_tier: readonly
     description: 'Unified petrophysics: Vsh, porosity, Sw, permeability, net pay,
       LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.'
   geox_prospect:
     category: earth.prospect
     lane: judgment
+    family: prospect
+    capability_tier: A
     risk_tier: readonly
     description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
       screen, evaluate.'
   geox_seismic_compute:
     category: earth.seismic
     lane: reasoning
+    family: interpret
+    capability_tier: B
     risk_tier: readonly
     description: 'Seismic computation: forward model, well tie, attributes, wavelet
       extraction, inversion.'
   geox_seismic_ingest:
     category: earth.seismic
     lane: evidence
+    family: ingest
+    capability_tier: B
     risk_tier: readonly
     description: SEG-Y I/O, header inspection, export.
   geox_seismic_interpret:
     category: earth.seismic
     lane: reasoning
+    family: interpret
+    capability_tier: A
     risk_tier: readonly
     description: 'One semantic capability — propose geometry, physics-gate, compare
       hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks,
@@ -105,43 +197,48 @@ tools:
   geox_source:
     category: earth.source
     lane: compute
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes:
       source_rock, diagenesis.'
   geox_spatial:
     category: earth.spatial
     lane: compute
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
       stac_discover.'
   geox_temporal:
     category: earth.temporal
     lane: compute
+    family: evidence
+    capability_tier: A
     risk_tier: readonly
     description: 'Temporal analytics: decline curve, RRR, basin lifecycle, cadence.
       Modes: decline, rrr, basin_lifecycle, cadence.'
   geox_well:
     category: earth.well
     lane: reasoning
+    family: interpret
+    capability_tier: A
     risk_tier: readonly
     description: 'Well intelligence: view curves, open desk, desurvey. Modes: view,
       desk.'
   geox_well_ingest:
     category: earth.well
     lane: evidence
+    family: ingest
+    capability_tier: B
     risk_tier: readonly
     description: Load well log data from LAS, SEG-Y, DST, deviation, or tops files.
       Auto-detects format.
   geox_well_qc:
     category: earth.well
     lane: evidence
+    family: ingest
+    capability_tier: A
     risk_tier: readonly
     description: 'Quality control for well data: depth monotonicity, null %, physical
       range checks.'
-  geox_workspace:
-    category: earth.meta
-    lane: evidence
-    risk_tier: readonly
-    description: 'GEOX Workspace — persistent geological context across all tools.
-      Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence,
-      relations, reset.'

@@ -1,102 +1,45 @@
 {
-  "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-26T09:42:15.099410+00:00",
-  "source": "tools_manifest.yaml",
-  "public_count": 20,
-  "internal_count": 54,
+  "schema": "geox.canonical_public_surface.v2",
+  "generated_at": "2026-09-15T06:06:21.570591+00:00",
+  "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
+  "public_count": 26,
+  "internal_count": 22,
   "public_tools": [
-    "geox_well_ingest",
-    "geox_petrophysics",
-    "geox_seismic_ingest",
-    "geox_seismic_compute",
-    "geox_seismic_interpret",
     "geox_basin",
-    "geox_paleobiodb_query",
+    "geox_claim",
+    "geox_contrast_metabolize",
+    "geox_deep_time",
     "geox_geomechanics",
-    "geox_prospect",
-    "geox_well_qc",
-    "geox_workspace",
-    "geox_temporal",
+    "geox_glof_cascade_initialize",
+    "geox_glof_cascade_inverse",
+    "geox_glof_cascade_mcmc_inverse",
+    "geox_glof_cascade_metabolize",
+    "geox_glof_cascade_phase",
+    "geox_glof_cascade_propagate",
+    "geox_glof_cascade_step",
     "geox_map",
+    "geox_model",
+    "geox_paleobiodb_query",
+    "geox_petrophysics",
+    "geox_prospect",
+    "geox_seismic_compute",
+    "geox_seismic_ingest",
+    "geox_seismic_interpret",
     "geox_source",
     "geox_spatial",
-    "geox_deep_time",
-    "geox_claim",
-    "geox_model",
+    "geox_temporal",
     "geox_well",
-    "geox_contrast_metabolize"
+    "geox_well_ingest",
+    "geox_well_qc"
   ],
   "tools": [
-    {
-      "name": "geox_well_ingest",
-      "domain": "earth.well",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_petrophysics",
-      "domain": "earth.petrophysics",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_ingest",
-      "domain": "earth.seismic",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "SEG-Y I/O, header inspection, export.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_compute",
-      "domain": "earth.seismic",
-      "axis": "compute",
-      "lane": "reasoning",
-      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
-    {
-      "name": "geox_seismic_interpret",
-      "domain": "earth.seismic",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "One semantic capability \u2014 propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (inte",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": true
-      }
-    },
     {
       "name": "geox_basin",
       "domain": "earth.basin",
       "axis": "reason",
       "lane": "reasoning",
+      "family": "evidence",
+      "tier": "A",
       "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.",
       "ui": null,
       "governance": {
@@ -106,11 +49,263 @@
       }
     },
     {
+      "name": "geox_claim",
+      "domain": "earth.governance",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "evidence",
+      "tier": "A",
+      "description": "Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.",
+      "ui": null,
+      "governance": {
+        "action_class": "LIMITED_MUTATE",
+        "mutation": true
+      }
+    },
+    {
+      "name": "geox_contrast_metabolize",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "interpret",
+      "tier": "B",
+      "description": "Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS seals.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "substrate_class": "INERT"
+      }
+    },
+    {
+      "name": "geox_deep_time",
+      "domain": "earth.time",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "evidence",
+      "tier": "A",
+      "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_geomechanics",
+      "domain": "earth.structure",
+      "axis": "compute",
+      "lane": "reasoning",
+      "family": "interpret",
+      "tier": "B",
+      "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_initialize",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      },
+      "subfamily": "cascade"
+    },
+    {
+      "name": "geox_glof_cascade_inverse",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true
+      },
+      "subfamily": "inversion"
+    },
+    {
+      "name": "geox_glof_cascade_mcmc_inverse",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.2.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true,
+        "phase_c": true
+      },
+      "subfamily": "inversion"
+    },
+    {
+      "name": "geox_glof_cascade_metabolize",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      },
+      "subfamily": "cascade"
+    },
+    {
+      "name": "geox_glof_cascade_phase",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true
+      },
+      "subfamily": "cascade"
+    },
+    {
+      "name": "geox_glof_cascade_propagate",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.2.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true,
+        "phase_c": true
+      },
+      "subfamily": "cascade"
+    },
+    {
+      "name": "geox_glof_cascade_step",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "family": "research",
+      "tier": "C",
+      "description": "Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      },
+      "subfamily": "cascade"
+    },
+    {
+      "name": "geox_map",
+      "domain": "earth.spatial",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "view",
+      "tier": "A",
+      "description": "Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_model",
+      "domain": "earth.model",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "model",
+      "tier": "A",
+      "description": "Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
       "name": "geox_paleobiodb_query",
       "domain": "earth.paleobiology",
       "axis": "observe",
       "lane": "evidence",
-      "description": "Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / n",
+      "family": "evidence",
+      "tier": "B",
+      "description": "Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -119,11 +314,13 @@
       }
     },
     {
-      "name": "geox_geomechanics",
-      "domain": "earth.structure",
-      "axis": "compute",
+      "name": "geox_petrophysics",
+      "domain": "earth.petrophysics",
+      "axis": "reason",
       "lane": "reasoning",
-      "description": "Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.",
+      "family": "interpret",
+      "tier": "A",
+      "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -136,6 +333,8 @@
       "domain": "earth.prospect",
       "axis": "reason",
       "lane": "judgment",
+      "family": "prospect",
+      "tier": "A",
       "description": "Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.",
       "ui": null,
       "governance": {
@@ -145,11 +344,13 @@
       }
     },
     {
-      "name": "geox_well_qc",
-      "domain": "earth.well",
-      "axis": "reason",
-      "lane": "evidence",
-      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "name": "geox_seismic_compute",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "reasoning",
+      "family": "interpret",
+      "tier": "B",
+      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -158,43 +359,33 @@
       }
     },
     {
-      "name": "geox_workspace",
-      "domain": "earth.meta",
+      "name": "geox_seismic_ingest",
+      "domain": "earth.seismic",
       "axis": "observe",
       "lane": "evidence",
-      "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
-      "ui": {
-        "resource_uri": "ui://geox/visual-hub",
-        "mime_type": "text/html;profile=mcp-app"
-      },
+      "family": "ingest",
+      "tier": "B",
+      "description": "SEG-Y I/O, header inspection, export.",
+      "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": false
+        "physics_guard_required": true
       }
     },
     {
-      "name": "geox_temporal",
-      "domain": "earth.temporal",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.",
+      "name": "geox_seismic_interpret",
+      "domain": "earth.seismic",
+      "axis": "reason",
+      "lane": "reasoning",
+      "family": "interpret",
+      "tier": "A",
+      "description": "One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
-        "mutation": false
-      }
-    },
-    {
-      "name": "geox_map",
-      "domain": "earth.spatial",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false
+        "mutation": false,
+        "physics_guard_required": true
       }
     },
     {
@@ -202,6 +393,8 @@
       "domain": "earth.source",
       "axis": "compute",
       "lane": "compute",
+      "family": "evidence",
+      "tier": "A",
       "description": "Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.",
       "ui": null,
       "governance": {
@@ -214,6 +407,8 @@
       "domain": "earth.spatial",
       "axis": "compute",
       "lane": "compute",
+      "family": "evidence",
+      "tier": "A",
       "description": "Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.",
       "ui": null,
       "governance": {
@@ -222,35 +417,13 @@
       }
     },
     {
-      "name": "geox_deep_time",
-      "domain": "earth.time",
+      "name": "geox_temporal",
+      "domain": "earth.temporal",
       "axis": "compute",
       "lane": "compute",
-      "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
-      "ui": null,
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false
-      }
-    },
-    {
-      "name": "geox_claim",
-      "domain": "earth.governance",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan",
-      "ui": null,
-      "governance": {
-        "action_class": "LIMITED_MUTATE",
-        "mutation": true
-      }
-    },
-    {
-      "name": "geox_model",
-      "domain": "earth.model",
-      "axis": "compute",
-      "lane": "compute",
-      "description": "Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.",
+      "family": "evidence",
+      "tier": "A",
+      "description": "Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -262,6 +435,8 @@
       "domain": "earth.well",
       "axis": "reason",
       "lane": "reasoning",
+      "family": "interpret",
+      "tier": "A",
       "description": "Well intelligence: view curves, open desk, desurvey. Modes: view, desk.",
       "ui": null,
       "governance": {
@@ -270,19 +445,957 @@
       }
     },
     {
-      "name": "geox_contrast_metabolize",
-      "domain": "earth.seismic",
-      "axis": "reason",
-      "lane": "reasoning",
-      "description": "Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY",
+      "name": "geox_well_ingest",
+      "domain": "earth.well",
+      "axis": "observe",
+      "lane": "evidence",
+      "family": "ingest",
+      "tier": "B",
+      "description": "Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false,
-        "physics_guard_required": true,
-        "substrate_class": "INERT"
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_well_qc",
+      "domain": "earth.well",
+      "axis": "reason",
+      "lane": "evidence",
+      "family": "ingest",
+      "tier": "A",
+      "description": "Quality control for well data: depth monotonicity, null %, physical range checks.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
       }
     }
   ],
+  "families": [
+    "evidence",
+    "ingest",
+    "interpret",
+    "model",
+    "prospect",
+    "research",
+    "view"
+  ],
+  "tier_distribution": {
+    "A": [
+      "geox_basin",
+      "geox_claim",
+      "geox_deep_time",
+      "geox_map",
+      "geox_model",
+      "geox_petrophysics",
+      "geox_prospect",
+      "geox_seismic_interpret",
+      "geox_source",
+      "geox_spatial",
+      "geox_temporal",
+      "geox_well",
+      "geox_well_qc"
+    ],
+    "B": [
+      "geox_contrast_metabolize",
+      "geox_geomechanics",
+      "geox_paleobiodb_query",
+      "geox_seismic_compute",
+      "geox_seismic_ingest",
+      "geox_well_ingest"
+    ],
+    "C": [
+      "geox_glof_cascade_initialize",
+      "geox_glof_cascade_inverse",
+      "geox_glof_cascade_mcmc_inverse",
+      "geox_glof_cascade_metabolize",
+      "geox_glof_cascade_phase",
+      "geox_glof_cascade_propagate",
+      "geox_glof_cascade_step"
+    ]
+  },
+  "capability_packs": {
+    "earth_core": {
+      "tier": "A",
+      "label": "Earth Core",
+      "description": "Default discovery surface. All agents see these tools.",
+      "intent": "Evaluate basin context, validate data, interpret wells/seismic, assess prospects.",
+      "tools": [
+        "geox_basin",
+        "geox_claim",
+        "geox_deep_time",
+        "geox_map",
+        "geox_model",
+        "geox_prospect",
+        "geox_seismic_interpret",
+        "geox_source",
+        "geox_spatial",
+        "geox_temporal",
+        "geox_petrophysics",
+        "geox_well",
+        "geox_well_qc"
+      ]
+    },
+    "earth_specialist": {
+      "tier": "B",
+      "label": "Earth Specialist",
+      "description": "Opt-in after task declaration. Seismic computation, geomechanics, data ingestion.",
+      "intent": "Process raw data, run computations, analyze paleobiology.",
+      "tools": [
+        "geox_contrast_metabolize",
+        "geox_geomechanics",
+        "geox_paleobiodb_query",
+        "geox_seismic_compute",
+        "geox_seismic_ingest",
+        "geox_well_ingest"
+      ]
+    },
+    "earth_research": {
+      "tier": "C",
+      "label": "Earth Research",
+      "description": "Advanced/research only. GLOF cascade simulation, Bayesian inversion.",
+      "intent": "Run experimental Earth-science computations under bounded resources.",
+      "sub_packs": {
+        "cascade": {
+          "label": "GLOF Cascade Simulation",
+          "tools": [
+            "geox_glof_cascade_initialize",
+            "geox_glof_cascade_step",
+            "geox_glof_cascade_phase",
+            "geox_glof_cascade_metabolize",
+            "geox_glof_cascade_propagate"
+          ]
+        },
+        "inversion": {
+          "label": "Bayesian Inversion",
+          "tools": [
+            "geox_glof_cascade_inverse",
+            "geox_glof_cascade_mcmc_inverse"
+          ]
+        },
+        "restoration": {
+          "label": "Structural Restoration (PLANNED)",
+          "tools": []
+        },
+        "simulation": {
+          "label": "Stratigraphic Simulation (PLANNED)",
+          "tools": []
+        },
+        "uncertainty": {
+          "label": "Uncertainty Quantification (PLANNED)",
+          "tools": []
+        }
+      },
+      "tools": [
+        "geox_glof_cascade_initialize",
+        "geox_glof_cascade_step",
+        "geox_glof_cascade_phase",
+        "geox_glof_cascade_inverse",
+        "geox_glof_cascade_mcmc_inverse",
+        "geox_glof_cascade_metabolize",
+        "geox_glof_cascade_propagate"
+      ]
+    }
+  },
+  "discovery_profiles": {
+    "default": {
+      "tools": [
+        "geox_basin",
+        "geox_claim",
+        "geox_deep_time",
+        "geox_map",
+        "geox_model",
+        "geox_prospect",
+        "geox_seismic_interpret",
+        "geox_source",
+        "geox_spatial",
+        "geox_temporal",
+        "geox_petrophysics",
+        "geox_well",
+        "geox_well_qc"
+      ],
+      "count": 13
+    },
+    "specialist": {
+      "tools": [
+        "geox_basin",
+        "geox_claim",
+        "geox_deep_time",
+        "geox_map",
+        "geox_model",
+        "geox_prospect",
+        "geox_seismic_interpret",
+        "geox_source",
+        "geox_spatial",
+        "geox_temporal",
+        "geox_petrophysics",
+        "geox_well",
+        "geox_well_qc",
+        "geox_contrast_metabolize",
+        "geox_geomechanics",
+        "geox_paleobiodb_query",
+        "geox_seismic_compute",
+        "geox_seismic_ingest",
+        "geox_well_ingest"
+      ],
+      "count": 19
+    },
+    "research": {
+      "tools": [
+        "geox_basin",
+        "geox_claim",
+        "geox_deep_time",
+        "geox_map",
+        "geox_model",
+        "geox_prospect",
+        "geox_seismic_interpret",
+        "geox_source",
+        "geox_spatial",
+        "geox_temporal",
+        "geox_petrophysics",
+        "geox_well",
+        "geox_well_qc",
+        "geox_contrast_metabolize",
+        "geox_geomechanics",
+        "geox_paleobiodb_query",
+        "geox_seismic_compute",
+        "geox_seismic_ingest",
+        "geox_well_ingest",
+        "geox_glof_cascade_initialize",
+        "geox_glof_cascade_step",
+        "geox_glof_cascade_phase",
+        "geox_glof_cascade_inverse",
+        "geox_glof_cascade_mcmc_inverse",
+        "geox_glof_cascade_metabolize",
+        "geox_glof_cascade_propagate"
+      ],
+      "count": 26
+    },
+    "full": {
+      "tools": [
+        "geox_basin",
+        "geox_claim",
+        "geox_deep_time",
+        "geox_map",
+        "geox_model",
+        "geox_prospect",
+        "geox_seismic_interpret",
+        "geox_source",
+        "geox_spatial",
+        "geox_temporal",
+        "geox_petrophysics",
+        "geox_well",
+        "geox_well_qc",
+        "geox_contrast_metabolize",
+        "geox_geomechanics",
+        "geox_paleobiodb_query",
+        "geox_seismic_compute",
+        "geox_seismic_ingest",
+        "geox_well_ingest",
+        "geox_glof_cascade_initialize",
+        "geox_glof_cascade_step",
+        "geox_glof_cascade_phase",
+        "geox_glof_cascade_inverse",
+        "geox_glof_cascade_mcmc_inverse",
+        "geox_glof_cascade_metabolize",
+        "geox_glof_cascade_propagate"
+      ],
+      "count": 26
+    }
+  },
+  "workflow_packs": {
+    "well_to_correlation": {
+      "label": "Well → Correlation",
+      "intent": "Evaluate well data, build correlations, and produce a validated correlation package.",
+      "pack_requirement": "earth_core",
+      "required_packs": [
+        "earth_core"
+      ],
+      "optional_packs": [
+        "earth_specialist"
+      ],
+      "steps": [
+        {
+          "tool": "geox_basin",
+          "purpose": "Establish basin and stratigraphic context"
+        },
+        {
+          "tool": "geox_well",
+          "purpose": "Load and view well curves"
+        },
+        {
+          "tool": "geox_well_qc",
+          "purpose": "Validate depth datum, curve units, missing intervals"
+        },
+        {
+          "tool": "geox_petrophysics",
+          "purpose": "Compute Vsh, porosity, Sw, permeability, net pay"
+        },
+        {
+          "tool": "geox_deep_time",
+          "purpose": "Chronostratigraphic framework for correlation"
+        },
+        {
+          "tool": "geox_model",
+          "purpose": "Build integrated subsurface model"
+        },
+        {
+          "tool": "geox_map",
+          "purpose": "Render correlation map and cross-sections"
+        }
+      ],
+      "output_contract": "CorrelationPackage",
+      "output_fields": [
+        "validated_well_evidence",
+        "curve_unit_datum_qc_receipt",
+        "petrophysical_interpretation",
+        "correlation_hypothesis_with_alternatives",
+        "explicit_unknown_intervals"
+      ],
+      "blocking_conditions": [
+        "missing_depth_datum",
+        "unknown_curve_units",
+        "unresolved_duplicate_curves"
+      ]
+    },
+    "seismic_to_prospect": {
+      "label": "Seismic → Prospect",
+      "intent": "Evaluate seismic data, build structural and stratigraphic interpretation, and produce a prospect evidence package.",
+      "pack_requirement": "earth_specialist",
+      "required_packs": [
+        "earth_core",
+        "earth_specialist"
+      ],
+      "optional_packs": [],
+      "steps": [
+        {
+          "tool": "geox_basin",
+          "purpose": "Establish basin and petroleum system context"
+        },
+        {
+          "tool": "geox_seismic_ingest",
+          "purpose": "Register and validate seismic input (SEG-Y)"
+        },
+        {
+          "tool": "geox_seismic_compute",
+          "purpose": "Run attributes, inversion, well tie"
+        },
+        {
+          "tool": "geox_seismic_interpret",
+          "purpose": "Horizons, faults, facies, DHI interpretation"
+        },
+        {
+          "tool": "geox_geomechanics",
+          "purpose": "Stress compatibility, reactivation probability"
+        },
+        {
+          "tool": "geox_model",
+          "purpose": "Build integrated subsurface model"
+        },
+        {
+          "tool": "geox_prospect",
+          "purpose": "Prospect hypothesis, risk assessment, volumetrics"
+        },
+        {
+          "tool": "geox_claim",
+          "purpose": "Register and verify prospect claims"
+        }
+      ],
+      "output_contract": "ProspectEvidencePackage",
+      "output_fields": [
+        "seismic_lineage_and_readiness",
+        "horizon_fault_interpretation",
+        "structural_charge_seal_hypothesis",
+        "risk_register_and_evidence_gaps",
+        "prospect_statement_observation_vs_interpretation"
+      ],
+      "blocking_conditions": [
+        "unknown_seismic_phase_polarity",
+        "missing_processing_lineage",
+        "crs_mismatch_well_seismic"
+      ]
+    },
+    "basin_screening": {
+      "label": "Basin Screening",
+      "intent": "Screen a basin for petroleum prospectivity — play fairway analysis from regional context to prospect ranking.",
+      "pack_requirement": "earth_core",
+      "required_packs": [
+        "earth_core"
+      ],
+      "optional_packs": [
+        "earth_specialist"
+      ],
+      "steps": [
+        {
+          "tool": "geox_basin",
+          "purpose": "Basin profile, tectonic setting, stratigraphy"
+        },
+        {
+          "tool": "geox_spatial",
+          "purpose": "Spatial indexing, H3 grid, proximity analysis"
+        },
+        {
+          "tool": "geox_temporal",
+          "purpose": "Basin lifecycle, decline curves, timing"
+        },
+        {
+          "tool": "geox_source",
+          "purpose": "Source rock presence, kerogen type, maturity"
+        },
+        {
+          "tool": "geox_deep_time",
+          "purpose": "Chronostratigraphic framework and paleogeography"
+        },
+        {
+          "tool": "geox_claim",
+          "purpose": "Register and verify play/fairway claims"
+        },
+        {
+          "tool": "geox_prospect",
+          "purpose": "Screen and rank prospects"
+        },
+        {
+          "tool": "geox_map",
+          "purpose": "Render play fairway map"
+        }
+      ],
+      "output_contract": "PlayFairwaySummary",
+      "output_fields": [
+        "basin_profile_and_tectonic_context",
+        "source_reservoir_seal_presence",
+        "play_fairway_map",
+        "prospect_ranking_with_risk",
+        "evidence_gaps_and_unknowns"
+      ],
+      "blocking_conditions": [
+        "no_source_rock_evidence",
+        "missing_stratigraphic_framework"
+      ]
+    },
+    "glof_uncertainty": {
+      "label": "GLOF Uncertainty Analysis",
+      "intent": "Run GLOF cascade simulation with Bayesian inversion for uncertainty quantification.",
+      "pack_requirement": "earth_research",
+      "required_packs": [
+        "earth_research"
+      ],
+      "optional_packs": [],
+      "steps": [
+        {
+          "tool": "geox_glof_cascade_initialize",
+          "purpose": "Initialize 33D GLOF state"
+        },
+        {
+          "tool": "geox_glof_cascade_propagate",
+          "purpose": "1D Saint-Venant wave propagation"
+        },
+        {
+          "tool": "geox_glof_cascade_phase",
+          "purpose": "Yield surface evaluation"
+        },
+        {
+          "tool": "geox_glof_cascade_inverse",
+          "purpose": "Bayesian grid-search inference"
+        },
+        {
+          "tool": "geox_glof_cascade_mcmc_inverse",
+          "purpose": "Full MCMC posterior sampling"
+        },
+        {
+          "tool": "geox_glof_cascade_metabolize",
+          "purpose": "Close F-I-M loop, emit receipt"
+        }
+      ],
+      "output_contract": "UncertaintyReport",
+      "output_fields": [
+        "posterior_parameter_distributions",
+        "convergence_diagnostics",
+        "breach_probability_33d",
+        "downstream_impact_scenarios",
+        "non_convergence_hold_if_applicable"
+      ],
+      "blocking_conditions": [
+        "mcmc_non_convergence",
+        "insufficient_observation_data"
+      ],
+      "resource_budget_required": true,
+      "random_seed_required": true
+    }
+  },
+  "earth_capability_graph": {
+    "version": "1.0.0",
+    "description": "GEOX Earth Capability Graph — tool dependencies, workflow paths, and evidence flow.",
+    "doctrine": "Capability → Organ → Tool → Skill. Graph edges are witnessed dependencies, not declared hierarchies.",
+    "nodes": {
+      "geox_basin": {
+        "family": "evidence",
+        "role": "entry_point",
+        "description": "Basin context — most workflows start here"
+      },
+      "geox_claim": {
+        "family": "evidence",
+        "role": "decision_point",
+        "description": "Claim registration and verification"
+      },
+      "geox_source": {
+        "family": "evidence",
+        "role": "evidence_node",
+        "description": "Source rock and diagenesis"
+      },
+      "geox_spatial": {
+        "family": "evidence",
+        "role": "evidence_node",
+        "description": "Spatial indexing and discovery"
+      },
+      "geox_temporal": {
+        "family": "evidence",
+        "role": "evidence_node",
+        "description": "Temporal analytics"
+      },
+      "geox_deep_time": {
+        "family": "evidence",
+        "role": "evidence_node",
+        "description": "Chronostratigraphic framework"
+      },
+      "geox_paleobiodb_query": {
+        "family": "evidence",
+        "role": "evidence_node",
+        "description": "Paleobiology data"
+      },
+      "geox_well_ingest": {
+        "family": "ingest",
+        "role": "data_gate",
+        "description": "Well data registration"
+      },
+      "geox_well_qc": {
+        "family": "ingest",
+        "role": "data_gate",
+        "description": "Well data quality control"
+      },
+      "geox_seismic_ingest": {
+        "family": "ingest",
+        "role": "data_gate",
+        "description": "Seismic data registration"
+      },
+      "geox_well": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Well data query and visualization"
+      },
+      "geox_petrophysics": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Petrophysical analysis"
+      },
+      "geox_seismic_compute": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Seismic computation"
+      },
+      "geox_seismic_interpret": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Seismic interpretation"
+      },
+      "geox_geomechanics": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Geomechanical analysis"
+      },
+      "geox_contrast_metabolize": {
+        "family": "interpret",
+        "role": "reasoning_node",
+        "description": "Anomalous contrast pipeline"
+      },
+      "geox_model": {
+        "family": "model",
+        "role": "integration_node",
+        "description": "Integrated subsurface model"
+      },
+      "geox_prospect": {
+        "family": "prospect",
+        "role": "decision_point",
+        "description": "Prospect assessment and risk"
+      },
+      "geox_map": {
+        "family": "view",
+        "role": "presentation_node",
+        "description": "Map rendering and visualization"
+      },
+      "geox_glof_cascade_initialize": {
+        "family": "research",
+        "role": "entry_point",
+        "subfamily": "cascade",
+        "description": "GLOF state initialization"
+      },
+      "geox_glof_cascade_step": {
+        "family": "research",
+        "role": "reasoning_node",
+        "subfamily": "cascade",
+        "description": "State advancement"
+      },
+      "geox_glof_cascade_phase": {
+        "family": "research",
+        "role": "reasoning_node",
+        "subfamily": "cascade",
+        "description": "Yield surface evaluation"
+      },
+      "geox_glof_cascade_propagate": {
+        "family": "research",
+        "role": "reasoning_node",
+        "subfamily": "cascade",
+        "description": "Wave propagation"
+      },
+      "geox_glof_cascade_inverse": {
+        "family": "research",
+        "role": "reasoning_node",
+        "subfamily": "inversion",
+        "description": "Grid-search inference"
+      },
+      "geox_glof_cascade_mcmc_inverse": {
+        "family": "research",
+        "role": "decision_point",
+        "subfamily": "inversion",
+        "description": "MCMC posterior sampling"
+      },
+      "geox_glof_cascade_metabolize": {
+        "family": "research",
+        "role": "integration_node",
+        "subfamily": "cascade",
+        "description": "F-I-M loop closure"
+      }
+    },
+    "edges": [
+      {
+        "from": "geox_basin",
+        "to": "geox_spatial",
+        "rel": "context_for",
+        "evidence": "basin_extent"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_temporal",
+        "rel": "context_for",
+        "evidence": "stratigraphic_framework"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_source",
+        "rel": "context_for",
+        "evidence": "petroleum_system"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_deep_time",
+        "rel": "context_for",
+        "evidence": "chronostratigraphy"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_map",
+        "rel": "context_for",
+        "evidence": "spatial_extent"
+      },
+      {
+        "from": "geox_well_ingest",
+        "to": "geox_well_qc",
+        "rel": "feeds",
+        "evidence": "raw_curves"
+      },
+      {
+        "from": "geox_well_qc",
+        "to": "geox_well",
+        "rel": "feeds",
+        "evidence": "validated_curves"
+      },
+      {
+        "from": "geox_well",
+        "to": "geox_petrophysics",
+        "rel": "feeds",
+        "evidence": "curve_data"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_well",
+        "rel": "context_for",
+        "evidence": "stratigraphic_framework"
+      },
+      {
+        "from": "geox_seismic_ingest",
+        "to": "geox_seismic_compute",
+        "rel": "feeds",
+        "evidence": "segy_data"
+      },
+      {
+        "from": "geox_seismic_compute",
+        "to": "geox_seismic_interpret",
+        "rel": "feeds",
+        "evidence": "attributes_volumes"
+      },
+      {
+        "from": "geox_seismic_interpret",
+        "to": "geox_geomechanics",
+        "rel": "feeds",
+        "evidence": "structural_model"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_seismic_interpret",
+        "rel": "context_for",
+        "evidence": "depositional_model"
+      },
+      {
+        "from": "geox_petrophysics",
+        "to": "geox_model",
+        "rel": "feeds",
+        "evidence": "petrophysical_properties"
+      },
+      {
+        "from": "geox_seismic_interpret",
+        "to": "geox_model",
+        "rel": "feeds",
+        "evidence": "structural_framework"
+      },
+      {
+        "from": "geox_geomechanics",
+        "to": "geox_model",
+        "rel": "feeds",
+        "evidence": "stress_state"
+      },
+      {
+        "from": "geox_deep_time",
+        "to": "geox_model",
+        "rel": "feeds",
+        "evidence": "temporal_framework"
+      },
+      {
+        "from": "geox_source",
+        "to": "geox_model",
+        "rel": "feeds",
+        "evidence": "source_rock_properties"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_model",
+        "rel": "context_for",
+        "evidence": "basin_context"
+      },
+      {
+        "from": "geox_model",
+        "to": "geox_prospect",
+        "rel": "feeds",
+        "evidence": "integrated_model"
+      },
+      {
+        "from": "geox_basin",
+        "to": "geox_prospect",
+        "rel": "context_for",
+        "evidence": "play_context"
+      },
+      {
+        "from": "geox_prospect",
+        "to": "geox_claim",
+        "rel": "feeds",
+        "evidence": "prospect_hypothesis"
+      },
+      {
+        "from": "geox_prospect",
+        "to": "geox_map",
+        "rel": "feeds",
+        "evidence": "prospect_geometry"
+      },
+      {
+        "from": "geox_glof_cascade_initialize",
+        "to": "geox_glof_cascade_step",
+        "rel": "feeds",
+        "evidence": "initial_state_33d"
+      },
+      {
+        "from": "geox_glof_cascade_step",
+        "to": "geox_glof_cascade_phase",
+        "rel": "feeds",
+        "evidence": "evolved_state"
+      },
+      {
+        "from": "geox_glof_cascade_step",
+        "to": "geox_glof_cascade_propagate",
+        "rel": "feeds",
+        "evidence": "state_for_propagation"
+      },
+      {
+        "from": "geox_glof_cascade_propagate",
+        "to": "geox_glof_cascade_inverse",
+        "rel": "feeds",
+        "evidence": "wave_observations"
+      },
+      {
+        "from": "geox_glof_cascade_inverse",
+        "to": "geox_glof_cascade_mcmc_inverse",
+        "rel": "feeds",
+        "evidence": "grid_search_posterior"
+      },
+      {
+        "from": "geox_glof_cascade_phase",
+        "to": "geox_glof_cascade_metabolize",
+        "rel": "feeds",
+        "evidence": "yield_surface"
+      },
+      {
+        "from": "geox_glof_cascade_mcmc_inverse",
+        "to": "geox_glof_cascade_metabolize",
+        "rel": "feeds",
+        "evidence": "mcmc_posterior"
+      },
+      {
+        "from": "geox_paleobiodb_query",
+        "to": "geox_deep_time",
+        "rel": "feeds",
+        "evidence": "biostratigraphic_constraints"
+      },
+      {
+        "from": "geox_contrast_metabolize",
+        "to": "geox_seismic_interpret",
+        "rel": "feeds",
+        "evidence": "contrast_hypotheses"
+      }
+    ],
+    "workflow_paths": {
+      "well_to_correlation": {
+        "path": [
+          "geox_basin",
+          "geox_well",
+          "geox_well_qc",
+          "geox_petrophysics",
+          "geox_deep_time",
+          "geox_model",
+          "geox_map"
+        ],
+        "entry": "geox_basin",
+        "output": "geox_map",
+        "crosses_families": [
+          "evidence",
+          "ingest",
+          "interpret",
+          "model",
+          "view"
+        ]
+      },
+      "seismic_to_prospect": {
+        "path": [
+          "geox_basin",
+          "geox_seismic_ingest",
+          "geox_seismic_compute",
+          "geox_seismic_interpret",
+          "geox_geomechanics",
+          "geox_model",
+          "geox_prospect",
+          "geox_claim"
+        ],
+        "entry": "geox_basin",
+        "output": "geox_claim",
+        "crosses_families": [
+          "evidence",
+          "ingest",
+          "interpret",
+          "model",
+          "prospect"
+        ]
+      },
+      "basin_screening": {
+        "path": [
+          "geox_basin",
+          "geox_spatial",
+          "geox_temporal",
+          "geox_source",
+          "geox_deep_time",
+          "geox_claim",
+          "geox_prospect",
+          "geox_map"
+        ],
+        "entry": "geox_basin",
+        "output": "geox_map",
+        "crosses_families": [
+          "evidence",
+          "prospect",
+          "view"
+        ]
+      },
+      "glof_uncertainty": {
+        "path": [
+          "geox_glof_cascade_initialize",
+          "geox_glof_cascade_propagate",
+          "geox_glof_cascade_phase",
+          "geox_glof_cascade_inverse",
+          "geox_glof_cascade_mcmc_inverse",
+          "geox_glof_cascade_metabolize"
+        ],
+        "entry": "geox_glof_cascade_initialize",
+        "output": "geox_glof_cascade_metabolize",
+        "crosses_families": [
+          "research"
+        ]
+      }
+    },
+    "hub_tools": {
+      "geox_basin": {
+        "in_workflows": 3,
+        "role": "universal_context_provider"
+      },
+      "geox_model": {
+        "in_workflows": 2,
+        "role": "integration_convergence_point"
+      },
+      "geox_prospect": {
+        "in_workflows": 2,
+        "role": "decision_convergence_point"
+      },
+      "geox_claim": {
+        "in_workflows": 2,
+        "role": "evidence_registration"
+      },
+      "geox_map": {
+        "in_workflows": 2,
+        "role": "presentation_convergence_point"
+      },
+      "geox_deep_time": {
+        "in_workflows": 2,
+        "role": "temporal_framework_provider"
+      }
+    },
+    "evidence_types": [
+      "basin_extent",
+      "stratigraphic_framework",
+      "petroleum_system",
+      "chronostratigraphy",
+      "raw_curves",
+      "validated_curves",
+      "curve_data",
+      "petrophysical_properties",
+      "segy_data",
+      "attributes_volumes",
+      "structural_framework",
+      "structural_model",
+      "stress_state",
+      "temporal_framework",
+      "source_rock_properties",
+      "basin_context",
+      "integrated_model",
+      "play_context",
+      "prospect_hypothesis",
+      "prospect_geometry",
+      "biostratigraphic_constraints",
+      "contrast_hypotheses",
+      "initial_state_33d",
+      "evolved_state",
+      "wave_observations",
+      "grid_search_posterior",
+      "mcmc_posterior",
+      "yield_surface"
+    ]
+  },
   "rule": "tools/list MUST equal public_tools. Docs must not hardcode counts."
 }

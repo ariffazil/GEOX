@@ -1,0 +1,103 @@
+manifest_version: 2026.09.15-discovery-governance
+# Capability Registry — Sprint 2B
+# Governs which capability packs are visible by default in MCP tools/list.
+# The manifest (tools_manifest.yaml) defines WHAT tools exist and their packs.
+# This registry governs HOW they are discovered.
+#
+# Principle: Capability Exists ≠ Capability Visible ≠ Capability Activated
+#
+# Profiles:
+#   default    → earth_core only (13 tools)
+#   specialist → earth_core + earth_specialist (19 tools)
+#   research   → all packs (26 tools)
+#   full       → all packs (26 tools, alias for research)
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+
+discovery_profiles:
+  default:
+    label: "Default Discovery"
+    description: "Core Earth tools only. Basin context, data validation, interpretation, prospects."
+    visible_packs:
+      - earth_core
+    tool_count: 13
+
+  specialist:
+    label: "Specialist Discovery"
+    description: "Core + Specialist. Adds seismic computation, geomechanics, data ingestion."
+    visible_packs:
+      - earth_core
+      - earth_specialist
+    tool_count: 19
+
+  research:
+    label: "Research Discovery"
+    description: "All packs. Includes GLOF cascade simulation and Bayesian inversion."
+    visible_packs:
+      - earth_core
+      - earth_specialist
+      - earth_research
+    tool_count: 26
+
+  full:
+    label: "Full Discovery"
+    description: "Alias for research. All 26 public tools."
+    visible_packs:
+      - earth_core
+      - earth_specialist
+      - earth_research
+    tool_count: 26
+
+pack_visibility:
+  earth_core:
+    default_visible: true
+    escalation_required: false
+    description: "Default discovery surface. All agents see these tools."
+
+  earth_specialist:
+    default_visible: false
+    escalation_required: true
+    escalation_trigger: "Task declares need for raw data processing, computation, or specialist domain analysis."
+    description: "Opt-in after task declaration. Seismic computation, geomechanics, data ingestion."
+
+  earth_research:
+    default_visible: false
+    escalation_required: true
+    escalation_trigger: "Task explicitly requests cascade simulation, Bayesian inversion, or experimental Earth science."
+    description: "Advanced/research only. GLOF cascade, Bayesian inversion."
+
+# GUI mapping — maps capability packs to MCP App tab groups
+# Used by GEOX MCP Apps and webmcp_categories()
+gui_tab_groups:
+  - id: evidence
+    label: "Evidence & Orientation"
+    icon: "🌍"
+    packs: [earth_core]
+    families: [evidence]
+  - id: wells
+    label: "Wells"
+    icon: "🛢️"
+    packs: [earth_core, earth_specialist]
+    families: [ingest, interpret]
+    filter_domain: "earth.well"
+  - id: seismic
+    label: "Seismic"
+    icon: "📊"
+    packs: [earth_core, earth_specialist]
+    families: [interpret]
+    filter_domain: "earth.seismic"
+  - id: models
+    label: "Models & Prospect"
+    icon: "🔬"
+    packs: [earth_core]
+    families: [model, prospect]
+  - id: research_lab
+    label: "Research Lab"
+    icon: "🧪"
+    packs: [earth_research]
+    families: [research]
+  - id: visualization
+    label: "Visualization"
+    icon: "🗺️"
+    packs: [earth_core]
+    families: [view]
