@@ -30,10 +30,13 @@ changes_since_last_verified:
 
 ## Canonical Tool Surface
 
-- **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS list = 32 tools)
+- **Source of truth:** `src/geox_mcp/tools_manifest.yaml` → `surface_manifest.py` → `registry.py`
+- **Public tools:** 26 (Capability Graph: 7 families, 3 tiers, 3 packs, 4 discovery profiles, 4 workflows)
 - **Runtime discovery:** `tools/list` MCP call or `curl :8081/health`
-- **Backward-compat aliases** in `CANONICAL_COMPAT_TOOLS` — scheduled for deletion 2026-07-30
-- Map surface: `geox_map_layers_list`, `geox_map_scene_plan`, `geox_map_render_preview`, `geox_map_export_package` (Phase 2.3 + 2.4)
+- **Discovery profiles:** `default` (13 tools), `specialist` (19), `research` (26)
+- **Capability packs:** `earth_core` (Tier A), `earth_specialist` (Tier B), `earth_research` (Tier C)
+- **Flat tool names unchanged:** `geox_basin`, `geox_well`, `geox_petrophysics`, etc. (no renames)
+- **SOT pipeline:** `tools_manifest.yaml` → `generate_all_surfaces.py` → all JSON/YAML/MD surfaces
 
 ## Key Updates (2026-07-02 FORGE)
 
