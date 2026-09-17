@@ -3,7 +3,7 @@ version: 2026.09.17
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
 public_count: 31
-regenerated: '2026-09-17T21:12:50.927635+00:00'
+regenerated: '2026-09-17T21:47:24.083982+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:

@@ -624,14 +624,11 @@ class GeoxGovernanceMiddleware(Middleware):
             # C3 FIX: capture validated SCT authority before stripping.
             # The authority gate needs this because the SCT is stripped next.
             if isinstance(arguments, dict):
-                _sct_token = (
-                    arguments.get("session_token")
-                    or arguments.get("sct")
-                    or arguments.get("arifos_sct")
-                )
+                _sct_token = arguments.get("session_token") or arguments.get("sct") or arguments.get("arifos_sct")
                 if _sct_token and isinstance(_sct_token, str) and _sct_token.startswith("act_v1."):
                     try:
                         import base64 as _b64
+
                         _payload_b64 = _sct_token.split(".", 1)[1]
                         # Pad for base64 decode
                         _payload_b64 += "=" * (-len(_payload_b64) % 4)
@@ -1024,6 +1021,12 @@ class GeoxGovernanceMiddleware(Middleware):
         """P0-6: Inject 5-layer evidence envelope into tool response.
 
         Preserves FastMCP ToolResult wire type (mutates structured_content).
+
+        F2 PATCH (2026-09-18 · 333-AGI · audit-layer dual-truth fix):
+        Propagates actual error state from tool result into the stamped
+        envelope. Previously hardcoded execution_status="COMPLETED" and
+        omitted is_error/error_detail — a failed call would be recorded
+        as a successful computation in the audit layer.
         """
         if not isinstance(gov_envelope, dict):
             return result
@@ -1036,18 +1039,48 @@ class GeoxGovernanceMiddleware(Middleware):
             # MANDATORY content_sha256 — never empty (F11 AUDITABILITY).
             # Compute deterministic SHA256 of canonical envelope payload so
             # every receipt has a verifiable hash even when no artifact exists.
-            _envelope_for_hash = _json.dumps(
-                gov_envelope, sort_keys=True, default=str
-            )
+            _envelope_for_hash = _json.dumps(gov_envelope, sort_keys=True, default=str)
             content_sha256 = hashlib.sha256(_envelope_for_hash.encode()).hexdigest()
+
+            # F2 PATCH: detect actual error state from tool result.
+            # Honours result.isError (FastMCP wrapper), result["isError"],
+            # result["status"] in {"ERROR","INVALID","FAILED"}, and
+            # truthy result["error"] payload. Falls back to ToolResult
+            # attribute for non-dict returns.
+            _is_error = False
+            _error_detail = ""
+            try:
+                if isinstance(result, dict):
+                    if result.get("isError") is True:
+                        _is_error = True
+                    elif result.get("status") in ("ERROR", "INVALID", "FAILED", "REJECTED"):
+                        _is_error = True
+                    _err = result.get("error")
+                    if isinstance(_err, dict):
+                        _error_detail = str(_err.get("message") or _err.get("detail") or _err)[:200]
+                    elif _err is not None and _err is not False:
+                        _error_detail = str(_err)[:200]
+                else:
+                    _is_error = bool(getattr(result, "is_error", False))
+                    if _is_error:
+                        _error_detail = str(getattr(result, "error", ""))[:200]
+            except Exception:
+                pass
+
+            _transport = "ERROR" if _is_error else "OK"
+            _execution = "FAILED" if _is_error else "COMPLETED"
+            _artifact = "REJECTED" if _is_error else ("CREATED" if gov_envelope.get("artifact_id") else "NONE")
+            _gov_verdict = gov_envelope.get("gate_verdict", "VOID" if _is_error else "ADVISORY")
 
             envelope = build_evidence_envelope(
                 tool_name=tool_name,
-                transport_status="OK",
-                execution_status="COMPLETED",
-                artifact_status="CREATED" if gov_envelope.get("artifact_id") else "NONE",
+                transport_status=_transport,
+                execution_status=_execution,
+                artifact_status=_artifact,
                 verification_status="PENDING",
-                governance_verdict=gov_envelope.get("gate_verdict", "ADVISORY"),
+                governance_verdict=_gov_verdict,
+                is_error=_is_error,
+                error_detail=_error_detail,
                 artifact_id=gov_envelope.get("artifact_id", ""),
                 session_id=gov_envelope.get("session_id", ""),
                 actor_id=gov_envelope.get("actor_id", "anonymous"),
