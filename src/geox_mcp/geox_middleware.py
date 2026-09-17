@@ -1170,7 +1170,44 @@ class GeoxGovernanceMiddleware(Middleware):
             elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
                 result.structured_content = {**conformance, **result.structured_content}
             return result
-        except Exception:
+        except Exception as exc:
+            # T7-P2 (2026-09-18, BIJAKSANA compile): stop burying well_conformance errors.
+            # Surface the exception under _well_conformance.errors so RT1/RT3 callers
+            # can detect a swallowed failure instead of receiving conformant=True on a
+            # degraded result. Verdict stays HOLD, never SEAL, when conformance fails.
+            logger.warning(
+                "well_conformance injection failed for tool=%s: %s",
+                tool_name,
+                exc,
+            )
+            try:
+                if isinstance(result, dict):
+                    result = {
+                        "_well_conformance": {
+                            "claim_state": "HOLD",
+                            "witness_type": "AI",
+                            "organ_type": "GEOX",
+                            "conformance_version": "v1.0",
+                            "conformant": False,
+                            "errors": [f"{type(exc).__name__}: {exc}"],
+                        },
+                        **result,
+                    }
+                elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
+                    result.structured_content = {
+                        "_well_conformance": {
+                            "claim_state": "HOLD",
+                            "witness_type": "AI",
+                            "organ_type": "GEOX",
+                            "conformance_version": "v1.0",
+                            "conformant": False,
+                            "errors": [f"{type(exc).__name__}: {exc}"],
+                        },
+                        **result.structured_content,
+                    }
+            except Exception:
+                # Last resort — never lose the original tool result.
+                return result
             return result
 
     @staticmethod

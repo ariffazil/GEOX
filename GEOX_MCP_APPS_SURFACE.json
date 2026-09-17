@@ -1,12 +1,12 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-18T22:00:00.000000+00:00",
+  "generated_at": "2026-09-17T21:51:50.766847+00:00",
   "organ": "GEOX",
-  "total_canonical_tools": 31,
-  "total_ui_resources": 20,
-  "active_ui_resources": 9,
+  "total_canonical_tools": 32,
+  "total_ui_resources": 24,
+  "active_ui_resources": 20,
   "deprecated_ui_resources": 3,
-  "planned_ui_resources": 8,
+  "planned_ui_resources": 1,
   "active_zero_bound": 0,
   "ui_resources": [
     {
@@ -63,7 +63,12 @@
       "content_bytes": 20695,
       "content_hash": "sha256:86033a594271b898",
       "bound_tools": [
-        "geox_basin"
+        "geox_basin",
+        "geox_basin_backstrip",
+        "geox_dde_reason",
+        "geox_sediment_mass_balance",
+        "geox_sequence",
+        "geox_thermal_maturity_history"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -80,11 +85,13 @@
       "id": "catalog",
       "uri": "ui://geox/catalog",
       "title": "GEOX Skills Catalog",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 3015,
       "content_hash": "sha256:258e3125718b63fe",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_surface_status"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -94,17 +101,24 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
     },
     {
       "id": "earth-map",
       "uri": "ui://geox/earth-map",
       "title": "GEOX Earth Map",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 18593,
       "content_hash": "sha256:c03c131cec85840d",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_h3_spatial_index",
+        "geox_map_export_package",
+        "geox_map_layers_list",
+        "geox_map_render_preview",
+        "geox_map_scene_plan",
+        "geox_stac_discover"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -114,7 +128,7 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
     },
     {
       "id": "earth-volume",
@@ -125,8 +139,12 @@
       "content_bytes": 9341,
       "content_hash": "sha256:c6a7b21f04f2f209",
       "bound_tools": [
+        "geox_deep_time_state",
+        "geox_gempy_implicit_3d",
+        "geox_geological_model_generate",
         "geox_seismic_compute",
-        "geox_seismic_interpret"
+        "geox_seismic_interpret",
+        "geox_subsurface_model"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -149,7 +167,8 @@
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
         "geox_geomechanics",
-        "geox_prospect"
+        "geox_prospect",
+        "geox_to_wealth_bridge"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -171,7 +190,8 @@
       "content_bytes": 43,
       "content_hash": "sha256:4587d1308b5c9200",
       "bound_tools": [
-        "geox_basin"
+        "geox_basin",
+        "geox_deep_time_state"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -188,11 +208,16 @@
       "id": "geox-mcp-visual",
       "uri": "ui://geox/geox-mcp-visual",
       "title": "geox_ui_geox_mcp_visual",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_lancedb_embed_store",
+        "geox_surface_status",
+        "geox_visual_generate_hypotheses",
+        "geox_visual_understand"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -202,17 +227,19 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
     },
     {
       "id": "gravmag-studio",
       "uri": "ui://geox/gravmag-studio",
       "title": "GEOX GravMag Studio",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 32029,
       "content_hash": "sha256:dc40fb98f565881f",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_gravmag_studio"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -222,7 +249,29 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
+    },
+    {
+      "id": "gravmag-studio",
+      "uri": "ui://geox/gravmag-studio.html",
+      "title": "geox_gravmag_studio_v1",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 32029,
+      "content_hash": "sha256:dc40fb98f565881f",
+      "bound_tools": [
+        "geox_gravmag_studio"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
     },
     {
       "id": "judge-console",
@@ -234,6 +283,9 @@
       "content_hash": "sha256:b7b25d6b5c9c0e25",
       "bound_tools": [
         "geox_claim",
+        "geox_contradiction_scan",
+        "geox_evidence",
+        "geox_falsify",
         "geox_prospect"
       ],
       "csp_domains": [
@@ -257,7 +309,32 @@
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
         "geox_basin",
-        "geox_prospect"
+        "geox_prospect",
+        "geox_subsurface_model"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "prospect-ui",
+      "uri": "ui://geox/prospect-ui",
+      "title": "GEOX Prospect UI",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 35137,
+      "content_hash": "sha256:6b771f45c0ebd037",
+      "bound_tools": [
+        "geox_basin",
+        "geox_prospect",
+        "geox_subsurface_model"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -279,7 +356,8 @@
       "content_bytes": 34295,
       "content_hash": "sha256:b7b25d6b5c9c0e25",
       "bound_tools": [
-        "geox_claim"
+        "geox_claim",
+        "geox_claim_graph_evaluate"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -343,11 +421,16 @@
       "id": "visual-hub",
       "uri": "ui://geox/visual-hub",
       "title": "GEOX Visual Output Hub",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_lancedb_embed_store",
+        "geox_surface_status",
+        "geox_visual_generate_hypotheses",
+        "geox_visual_understand"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -357,7 +440,7 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
     },
     {
       "id": "well-desk",
@@ -368,9 +451,13 @@
       "content_bytes": 23612,
       "content_hash": "sha256:ab1c4ae9b5623dad",
       "bound_tools": [
+        "geox_lem_predict",
         "geox_petrophysics",
+        "geox_well_desk",
+        "geox_well_desurvey",
         "geox_well_ingest",
-        "geox_well_qc"
+        "geox_well_qc",
+        "geox_well_view"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -409,11 +496,13 @@
       "id": "workbench-v1",
       "uri": "ui://geox/workbench-v1",
       "title": "GEOX Workbench",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 18593,
       "content_hash": "sha256:c03c131cec85840d",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_map_layers_list"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -423,17 +512,41 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
+    },
+    {
+      "id": "workbench-v1",
+      "uri": "ui://geox/workbench-v1.html",
+      "title": "geox_workbench",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 18593,
+      "content_hash": "sha256:c03c131cec85840d",
+      "bound_tools": [
+        "geox_map_layers_list"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
     },
     {
       "id": "workspace-v1",
       "uri": "ui://geox/workspace-v1",
       "title": "GEOX Workspace",
-      "status": "planned",
+      "status": "active",
       "mime_type": "text/html;profile=mcp-app",
       "content_bytes": 18593,
       "content_hash": "sha256:c03c131cec85840d",
-      "bound_tools": [],
+      "bound_tools": [
+        "geox_workspace"
+      ],
       "csp_domains": [
         "geox.arif-fazil.com",
         "macrostrat.org",
@@ -443,8 +556,29 @@
       "component_domains": [
         "geox.arif-fazil.com"
       ],
-      "deprecation_note": "2026-09-18 musyawawah: bound_tools were all ghosted or not-on-live. Held as planned until the underlying tools are un-ghosted (F13 SOVEREIGN ack). Real content kept (3KB\u2013143KB) \u2014 not deleted, awaiting resurrection."
+      "deprecation_note": null
+    },
+    {
+      "id": "workspace-v1",
+      "uri": "ui://geox/workspace-v1.html",
+      "title": "geox_workspace_v1",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 14014,
+      "content_hash": "sha256:a2201d3dd0937ff4",
+      "bound_tools": [
+        "geox_workspace"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
     }
-  ],
-  "regeneration_reason": "Musyawawah 2026-09-18: 41 ghost/not-in-live bindings across active Apps. Regenerated from SURFACE_TOOLS (live canonical = 31). Original at GEOX_MCP_APPS_SURFACE.json.bak-20260918-pre-regen. Reversible. No F13 required."
+  ]
 }
