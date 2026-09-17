@@ -357,7 +357,7 @@ _mcp_kwargs: dict[str, Any] = {
     "name": "GEOX",
     "version": GEOX_VERSION,
     "instructions": (
-        "Canonical GEOX Registry & MCP App Control Plane (Sovereign 30). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
+        "Canonical GEOX Registry & MCP App Control Plane (Sovereign 31). DITEMPA BUKAN DIBERI — One Sovereign Kernel."
     ),
     "tasks": True,
     # MCP logging: SEP-2577 deprecated — maintenance only; default min warning.
