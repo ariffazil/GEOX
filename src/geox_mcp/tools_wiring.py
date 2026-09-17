@@ -326,6 +326,7 @@ def register_tools_on(mcp):
         # _well_view was never defined, so geox_well(mode=view) raised
         #   NameError: name '_well_view' is not defined   (tools_wiring.py:6309).
         # Restored the header verbatim (pre-ZEN 83816a88~1:289).
+
     async def _well_view(
         well_id: str | None = None,
         source_uri: str | None = None,
@@ -1435,6 +1436,7 @@ def register_tools_on(mcp):
         #   ^ decorator stays retired: mode routed via geox_model(mode=subsurface).
         # af-fix #4b (2026-09-09, F4-class): ZEN header restore — _model_unified
         # (mode=subsurface) called the undefined name _subsurface_model.
+
     async def _subsurface_model(
         mode: str = "joint_inversion",
         survey_type: str = "gravity",
@@ -1599,6 +1601,7 @@ def register_tools_on(mcp):
         #   ^ decorator stays retired: public name registered via _claim_unified (geox_claim).
         # af-fix #4b (2026-09-09, F4-class): ZEN header restore — _claim_unified
         # calls the undefined names _claim/_falsify/_evidence/_contradiction_scan.
+
     async def _claim(
         mode: str = "create",
         claim_id: str = "",
@@ -1691,6 +1694,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_falsify", annotations=_geox_annotations("geox_falsify"))
         #   ^ decorator stays retired: public name registered via _shim_falsify → geox_claim(mode=falsify).
         # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+
     async def _falsify(
         claim_text: str = "",
         claim_type: str = "general",
@@ -4333,6 +4337,7 @@ def register_tools_on(mcp):
         #   ^ decorator stays retired: public name registered via _shim_well_desk → geox_well(mode=desk).
         # af-fix #4b (2026-09-09, F4 FATAL, same class as _well_view): ZEN
         # header restore — _well_unified(mode=desk) called the undefined name.
+
     async def _well_desk(
         mode: str = "open",
         well_id: str = "",
@@ -4534,6 +4539,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_contradiction_scan", annotations=_geox_annotations("geox_contradiction_scan"))
         #   ^ decorator stays retired: routed via geox_claim(mode=scan).
         # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+
     async def _contradiction_scan(
         claim_text: str = "",
         claim_type: str = "general",
@@ -4578,6 +4584,7 @@ def register_tools_on(mcp):
         # ZEN-CONSOLIDATED — @mcp.tool(name="geox_evidence", annotations=_geox_annotations("geox_evidence"))
         #   ^ decorator stays retired: routed via geox_claim(mode=evidence).
         # af-fix #4b (2026-09-09, F4-class): ZEN header restore.
+
     async def _evidence(
         mode: str = "synthesize",
         evidence_id: str = "",
@@ -5147,8 +5154,7 @@ def register_tools_on(mcp):
             "params": params.model_dump(),
             "generated_at": datetime.now(UTC).isoformat(),
             "note": (
-                "Deterministic numpy/matplotlib cross-section (Agg, no network, "
-                "no diffusion model). Open image_path to view."
+                "Deterministic numpy/matplotlib cross-section (Agg, no network, no diffusion model). Open image_path to view."
             ),
         }
 
@@ -6787,14 +6793,22 @@ def register_tools_on(mcp):
             _strata_from_layers = None
             if layers:
                 _LITHOLOGY_COLORS = {
-                    "sandstone": "#E6A817", "shale": "#6E6E6E",
-                    "mudstone": "#8B7D7B", "siltstone": "#C9B28A",
-                    "claystone": "#7A6A5B", "limestone": "#B8C4D9",
-                    "dolomite": "#9FB8C9", "coal": "#1C1C1C",
-                    "conglomerate": "#D9A66C", "breccia": "#C48F5E",
-                    "basalt": "#3B3B3B", "granite": "#D2B48C",
-                    "gneiss": "#A89284", "tuff": "#BFB8A0",
-                    "ignimbrite": "#C7B8A0", "chalk": "#E8E4D8",
+                    "sandstone": "#E6A817",
+                    "shale": "#6E6E6E",
+                    "mudstone": "#8B7D7B",
+                    "siltstone": "#C9B28A",
+                    "claystone": "#7A6A5B",
+                    "limestone": "#B8C4D9",
+                    "dolomite": "#9FB8C9",
+                    "coal": "#1C1C1C",
+                    "conglomerate": "#D9A66C",
+                    "breccia": "#C48F5E",
+                    "basalt": "#3B3B3B",
+                    "granite": "#D2B48C",
+                    "gneiss": "#A89284",
+                    "tuff": "#BFB8A0",
+                    "ignimbrite": "#C7B8A0",
+                    "chalk": "#E8E4D8",
                 }
                 _strata_from_layers = []
                 for _i, _lyr in enumerate(layers):
@@ -6829,7 +6843,8 @@ def register_tools_on(mcp):
                                 "formation": "str (required) — rendered unit name",
                                 "thickness_m": "number > 0 (required)",
                                 "lithology": "str (optional) — colour key, e.g. "
-                                + ", ".join(list(_LITHOLOGY_COLORS)[:6]) + ", …",
+                                + ", ".join(list(_LITHOLOGY_COLORS)[:6])
+                                + ", …",
                             },
                             "layers_received": layers,
                             "_evidence_postcondition": {
@@ -7232,6 +7247,10 @@ def register_tools_on(mcp):
         )
 
     # ── GROUP 11: geox_seismic_compute absorbs avo_forward ──
+    # F2 PATCH (2026-09-18 · 333-AGI): dropped theta_max from signature.
+    # Implementation derives theta_max = theta_deg or 30.0 internally;
+    # exposing it as a public parameter caused schema-vs-runtime drift
+    # (clients passed theta_max, impl required theta_deg for zoeppritz).
     @mcp.tool(
         name="geox_seismic_compute",
         description="Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, LMR, Castagna).",
@@ -7247,7 +7266,6 @@ def register_tools_on(mcp):
         vs2: float = 1.2,
         rho2: float = 2.1,
         theta_deg: list[float] | None = None,
-        theta_max: float = 30.0,
         vp: float = 3.0,
         vs: float = 1.5,
         rho: float = 2.3,
@@ -7261,7 +7279,8 @@ def register_tools_on(mcp):
 
         Modes:
           avo_forward — AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term,
-                        Lambda-Mu-Rho (Goodway 1997), Castagna mudrock
+                        Lambda-Mu-Rho (Goodway 1997), Castagna mudrock.
+                        Requires: vp1, vs1, rho1, vp2, vs2, rho2, theta_deg.
         """
         if mode == "avo_forward":
             # af-fix #6b (2026-09-09): the previous direct _avo_forward call
@@ -7298,7 +7317,6 @@ def register_tools_on(mcp):
         vs2=1.2,
         rho2=2.1,
         theta_deg=None,
-        theta_max=30.0,
         vp=3.0,
         vs=1.5,
         rho=2.3,
@@ -7315,7 +7333,6 @@ def register_tools_on(mcp):
             vs2=vs2,
             rho2=rho2,
             theta_deg=theta_deg,
-            theta_max=theta_max,
             vp=vp,
             vs=vs,
             rho=rho,
