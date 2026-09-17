@@ -229,7 +229,35 @@ def _stamp_qualified(
 ) -> dict[str, Any]:
     result.setdefault("tool", "geox_seismic_interpret")
     result["mode"] = mode
-    result["local_verdict"] = "QUALIFIED_CANDIDATE"
+    # WALL WINS OVER BRANDING (2026-09-18): a structure the K-* physics gates rejected must not be
+    # relabelled a candidate on the way out. The kill signal is looked for wherever the payload
+    # actually reports it — at top level (the interpret branch writes it there) or inside
+    # structure_validate (measure_throw / track_horizon write it there). Deliberately NOT keyed on
+    # governance_status: HOLD also means "empty framework" or "unknown mode", which is a request
+    # problem, not a physics falsification. Conflating the two mislabelled a bad request as a
+    # falsified claim.
+    def _gate_killed(payload: dict) -> bool:
+        for src in (payload, payload.get("structure_validate"), payload.get("validation")):
+            if isinstance(src, dict):
+                if src.get("combined_gate_verdict") == "KILL":
+                    return True
+                _k = src.get("kills")
+                if isinstance(_k, list) and _k:
+                    return True
+                if src.get("gate_summary") == "KILL":
+                    return True
+        return False
+
+    if _gate_killed(result):
+        result["local_verdict"] = "FALSIFIED"
+        result.setdefault("governance_status", "HOLD")
+        result.setdefault(
+            "governance_note",
+            "Rejected by the GEOX structural physics gates (K-*). A falsified framework is not a "
+            "candidate — do not relay it as one. Re-propose against the kill reasons.",
+        )
+    else:
+        result["local_verdict"] = "QUALIFIED_CANDIDATE"
     result["seal_authority"] = "arifOS_only"
     gov = result.get("governance_status") or result.get("governance", {})
     if gov == "SEAL" or (isinstance(gov, dict) and gov.get("status") == "SEAL"):
@@ -852,6 +880,29 @@ async def geox_seismic_interpret(
             gates = sv.get("gates") or {}
             gsum = compact_gate_summary(gates)
 
+            # WALL VERDICT (2026-09-18): the gates ran — so the gates get to decide the label.
+            # Before this, `interpret` returned ok=True + local_verdict=QUALIFIED_CANDIDATE even
+            # when K-THROW/K-DL had KILLed the framework, and the rendered PNG was titled
+            # QUALIFIED_CANDIDATE. A physics wall that does not change the output is a wall
+            # beside the road. The kills travel into the payload, the render title and the
+            # governance status, so a downstream reader cannot miss them.
+            _kills = list(sv.get("kills") or [])
+            _gkilled = (sv.get("combined_gate_verdict") == "KILL") or bool(_kills)
+            if _gkilled:
+                gov_status = "HOLD"
+                local_verdict = "FALSIFIED"
+                render_verdict = "FALSIFIED"
+            else:
+                gov_status = "QUALIFY"
+                local_verdict = "QUALIFIED_CANDIDATE"
+                render_verdict = "QUALIFIED_CANDIDATE"
+            wall = {
+                "combined_gate_verdict": sv.get("combined_gate_verdict"),
+                "kills": _kills,
+                "governance_status": gov_status,
+                "local_verdict": local_verdict,
+            }
+
             # Auto-render primary hypothesis for human loop (skip if request.render=false)
             render_info = None
             do_render = True
@@ -881,7 +932,7 @@ async def geox_seismic_interpret(
                     render_info = await geox_section_render(
                         image_path=rpath,
                         framework=fw,
-                        title="GEOX interpret · HYP-001 · QUALIFIED_CANDIDATE",
+                        title=f"GEOX interpret · HYP-001 · {render_verdict}",
                         receipt_hash=rh,
                         hypothesis_id="HYP-001",
                         calibration=cal,
@@ -933,6 +984,7 @@ async def geox_seismic_interpret(
                     "ok": True,
                     "input_hash": input_hash,
                     "gate_summary": gsum,
+                    **wall,
                     "structure_validate": full_detail["structure_validate"],
                     "propose": full_detail["propose"],
                     "preferred_hypothesis": None,
@@ -951,7 +1003,8 @@ async def geox_seismic_interpret(
             else:
                 # P4 progressive disclosure — default ≤2KB-class envelope
                 out_payload = compact_interpret_envelope(
-                    verdict="QUALIFIED_CANDIDATE",
+                    verdict=render_verdict,
+                    local_verdict=local_verdict,
                     input_class=str(cal.get("input_class") or "image_only"),
                     n_hypotheses=max(n_hyps, 3),
                     gate_summary={
@@ -967,6 +1020,8 @@ async def geox_seismic_interpret(
                         "ok": True,
                         "input_hash": input_hash,
                         "combined_gate_verdict": sv.get("combined_gate_verdict"),
+                        "kills": _kills,
+                        "governance_status": gov_status,
                         "cutoffs_n": len(sv.get("cutoffs") or []),
                     },
                 )

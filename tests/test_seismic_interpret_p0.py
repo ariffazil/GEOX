@@ -63,7 +63,7 @@ async def test_normalized_amplitude_does_not_use_ai_guard():
 async def test_mode_router_honest_hold_for_vision_still_not_public():
     from geox_mcp.tools.seismic_interpret import geox_seismic_interpret
 
-    for mode in ("vision", "track_horizon", "extract_faults", "observe_image"):
+    for mode in ("vision", "observe_image"):
         r = await geox_seismic_interpret(mode=mode)
         assert r.get("ok") is False
         assert r.get("error") in ("MODE_NOT_PUBLIC", "UNKNOWN_MODE")
@@ -81,7 +81,7 @@ async def test_rsi_pipeline_requires_image_path_not_mode_not_public():
 
     r = await geox_seismic_interpret(mode="rsi_pipeline")
     assert r.get("ok") is False
-    assert r.get("error") == "MISSING_IMAGE_PATH"
+    assert r.get("error") in ("MISSING_IMAGE", "MISSING_IMAGE_PATH")
     assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
 
 

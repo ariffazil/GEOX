@@ -377,8 +377,14 @@ def compact_interpret_envelope(
     detail_ref: str | None = None,
     receipt_hash: str | None = None,
     extras: dict[str, Any] | None = None,
+    local_verdict: str | None = None,
 ) -> dict[str, Any]:
-    """≤2KB-class progressive disclosure default (P4)."""
+    """≤2KB-class progressive disclosure default (P4).
+
+    ``local_verdict`` (2026-09-18): the envelope used to hardcode QUALIFIED_CANDIDATE even when the
+    physics gates had returned KILL. Callers that ran the gates pass the real verdict in; the
+    default preserves old behaviour for callers that did not.
+    """
     gs = gate_summary or {}
     if "pass" not in gs and "passes" in gs:
         gs = {
@@ -389,7 +395,7 @@ def compact_interpret_envelope(
         }
     out = {
         "verdict": verdict,
-        "local_verdict": "QUALIFIED_CANDIDATE",
+        "local_verdict": local_verdict or "QUALIFIED_CANDIDATE",
         "seal_authority": "arifOS_only",
         "preferred_hypothesis": None,
         "input_class": input_class,
