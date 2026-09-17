@@ -1,0 +1,158 @@
+# CSP Contract — GEOX Public Edge
+# Forged: 2026-09-18 (musyawawah audit)
+# Doctrine: DITEMPA BUKAN DIBERI
+#
+# This file enumerates the *intentional* exceptions in the Content Security
+# Policy served at geox.arif-fazil.com. Each exception is:
+#   - named (so auditors can find it)
+#   - scoped (which directive it affects)
+#   - justified (why it must remain)
+#   - witnessed (how violations surface)
+#
+# CSP header at the edge:
+#   Content-Security-Policy:
+#     default-src 'self';
+#     script-src 'self' 'unsafe-inline' 'unsafe-eval'
+#       https://api.fontshare.com https://fonts.googleapis.com
+#       https://cdn.jsdelivr.net https://unpkg.com
+#       https://static.cloudflareinsights.com
+#       https://s3.tradingview.com https://*.tradingview.com;
+#     style-src 'self' 'unsafe-inline'
+#       https://api.fontshare.com https://fonts.googleapis.com https://unpkg.com;
+#     font-src 'self'
+#       https://api.fontshare.com https://cdn.fontshare.com
+#       https://fonts.gstatic.com data:;
+#     img-src 'self' data: https:;
+#     connect-src 'self'
+#       https://arif-fazil.com https://arifos.arif-fazil.com
+#       https://mcp.arif-fazil.com https://geox.arif-fazil.com
+#       https://wealth.arif-fazil.com https://well.arif-fazil.com
+#       https://aaa.arif-fazil.com
+#       https://api.gold-api.com https://fapi.binance.com
+#       https://api.binance.com https://api.macrostrat.org
+#       https://tiles.macrostrat.org
+#       https://a.basemaps.cartocdn.com https://b.basemaps.cartocdn.com
+#       https://*.basemaps.cartocdn.com
+#       https://*.tradingview.com wss://*.tradingview.com;
+#     frame-src 'self'
+#       https://www.youtube.com https://www.youtube-nocookie.com
+#       https://s3.tradingview.com https://*.tradingview.com
+#       https://www.tradingview.com;
+#     frame-ancestors 'self';
+#     report-uri https://arifos.arif-fazil.com/api/csp-report;
+#     report-to csp-endpoint;
+#
+# Violations are witnessed at arifOS /api/csp-report — every blocked load is
+# an auditable event in the federation log. Broad CSP ≠ unauditable CSP.
+
+csp_contract:
+  organ: GEOX
+  edge: geox.arif-fazil.com (Cloudflare → Caddy → :8081)
+  policy_source: live response header (curl -I)
+  last_audited: 2026-09-18
+  auditor: 555-ASI
+  reversible: true (no F13 needed)
+
+exceptions:
+
+  - id: csp-ex-001
+    scope: script-src, style-src, font-src, connect-src
+    domain: https://api.fontshare.com, https://cdn.fontshare.com
+    reason: "Typography (Sora / Inter / JetBrains Mono) — brand-grade font CDN. Alternative would be self-hosting ~600KB of woff2."
+    risk: low (CDN vendor, used widely, no PII)
+    mitigation: Subresource Integrity hash for any specific asset if needed
+    f13_required: false
+
+  - id: csp-ex-002
+    scope: script-src, style-src, font-src
+    domain: https://fonts.googleapis.com, https://fonts.gstatic.com
+    reason: "Google Fonts fallback for older browsers. Brand fonts also via Fontshare."
+    risk: low
+    f13_required: false
+
+  - id: csp-ex-003
+    scope: script-src, style-src
+    domain: https://cdn.jsdelivr.net, https://unpkg.com
+    reason: "MapLibre / Cesium static assets are bundled in /static/gui/, but some MapLibre style fallbacks load from unpkg. Cesium Workers are local."
+    risk: medium (CDN, SRI recommended for any specific module)
+    mitigation: Prefer bundled assets; only use unpkg as documented fallback
+    f13_required: false
+
+  - id: csp-ex-004
+    scope: script-src
+    domain: https://static.cloudflareinsights.com
+    reason: "Cloudflare Web Analytics beacon. Sovereign-side telemetry."
+    risk: low (Cloudflare is the sovereign CDN; same trust boundary as the edge)
+    f13_required: false
+
+  - id: csp-ex-005
+    scope: script-src, connect-src, frame-src
+    domain: https://*.tradingview.com, https://s3.tradingview.com, wss://*.tradingview.com
+    reason: "TradingView widget embed for live market context in WEALTH/WELL cross-organ views. Not a core GEOX tool — only loads on cross-organ pages."
+    risk: medium (third-party iframe, but only on opt-in pages)
+    mitigation: iframe sandbox; tradingview widget itself does not run scripts in GEOX scope
+    f13_required: true  # <-- cross-organ, requires sovereign ack for embedding
+
+  - id: csp-ex-006
+    scope: script-src
+    flag: unsafe-inline, unsafe-eval
+    reason: "React 19 + Vite dev-mode + Cesium runtime require eval. Build pipeline does not yet produce nonce-tagged CSP-safe bundles."
+    risk: medium (XSS surface larger than ideal)
+    mitigation: Live deploy is build-only (not dev-mode). No source maps shipped to public beyond the SPA entry chunk. Cesium runtime is sandboxed via iframe where used.
+    follow_up: "Vite build with nonce support (Caddy supplies per-request nonce) — ticket opened. F13 HOLD until completed."
+    f13_required: false  # current deploy acceptable; nonce-tagging tracked as HOLD
+
+  - id: csp-ex-007
+    scope: connect-src
+    domain: https://api.macrostrat.org, https://tiles.macrostrat.org
+    reason: "Macrostrat geology database — public, used by geox_basin for stratigraphic context."
+    risk: low (read-only public DB, no auth)
+    f13_required: false
+
+  - id: csp-ex-008
+    scope: connect-src
+    domain: https://*.basemaps.cartocdn.com
+    reason: "CARTO basemap tiles for the geo map UI. Public CDN, no PII."
+    risk: low
+    f13_required: false
+
+  - id: csp-ex-009
+    scope: connect-src
+    domain: https://api.gold-api.com, https://fapi.binance.com, https://api.binance.com
+    reason: "WEALTH cross-organ live pricing — only loaded on wealth.arif-fazil.com, not GEOX root."
+    risk: medium (third-party market data)
+    mitigation: Loaded only on WEALTH surface; GEOX does not initiate these connections
+    f13_required: false
+
+  - id: csp-ex-010
+    scope: frame-src
+    domain: https://www.youtube.com, https://www.youtube-nocookie.com
+    reason: "Educational video embeds in the Malay Basin pilot + basin-explorer App."
+    risk: low (no-cookie mode by default; user opt-in to load)
+    f13_required: false
+
+  - id: csp-ex-011
+    scope: report-uri
+    domain: https://arifos.arif-fazil.com/api/csp-report
+    reason: "Every CSP violation is witnessed at arifOS — auditable event, not silent failure."
+    risk: none (read-only reporter)
+    f13_required: false
+
+  - id: csp-ex-012
+    scope: img-src
+    flag: https: (wildcard)
+    reason: "Geological figures + cross-organ image embeds. Wildcard is intentional for the federation scope; tightening would break image-rendering on Apps."
+    risk: medium (image-based XSS requires Content-Type validation server-side, which Caddy provides)
+    f13_required: true  # cross-organ, requires sovereign ack for wildcard
+
+f13_hold_gates:
+  - "Tightening CSP without enumerating exceptions: blocked (would break TradingView, Macrostrat, basemap tiles)."
+  - "Replacing unsafe-eval with nonce-tagged bundles: tracked, requires build-pipeline change + Vite config update."
+  - "Removing TradingView widget: requires WEALTH cross-organ review."
+  - "Replacing wildcard img-src https:: requires Content-Type enforcement review at Caddy."
+
+# Audit cadence: re-audit on any CSP change, every federation release.
+re_audit_cadence: every_federation_release + on_change
+owner: Muhammad Arif bin Fazil (F13 SOVEREIGN)
+sealed_at: null  # not sealed — description of policy, not a SEAL-grade artifact
+doctrine: DITEMPA BUKAN DIBERI
