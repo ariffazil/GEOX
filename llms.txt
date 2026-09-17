@@ -1,7 +1,7 @@
-# GEOX — Earth Intelligence Sovereign Kernel (26 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (31 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
-> Capability families: 7 | Sprint 1 classified
+> Capability families: 9 | Sprint 1 classified
 
 ## 1. Capability Graph — Tool Surface
 
@@ -51,6 +51,17 @@
 - **geox_glof_cascade_phase** [Tier C — Research]: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
 - **geox_glof_cascade_propagate** [Tier C — Research]: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
 - **geox_glof_cascade_step** [Tier C — Research]: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+
+### 8. Seismic Sources & Traces
+
+- **geox_extract_display_proxy** [Tier B — Specialist]: Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.
+- **geox_extract_native_trace** [Tier B — Specialist]: Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.
+- **geox_list_registered_sources** [Tier B — Specialist]: List all registered native seismic sources with classification, authority, trace count, and sample metadata.
+- **geox_register_native_source** [Tier B — Specialist]: Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.
+
+### 9. Structural Calibration
+
+- **geox_calibration_register_witness** [Tier B — Specialist]: Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.
 
 ## 2. Tier Legend
 - **Tier A (Core)**: Default discovery. All agents see these.

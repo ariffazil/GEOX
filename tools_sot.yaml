@@ -1,14 +1,14 @@
 organ: GEOX
-version: 2026.09.15
+version: 2026.09.17
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 26
-regenerated: '2026-09-15T06:06:21.570591+00:00'
+public_count: 31
+regenerated: '2026-09-17T21:12:50.927635+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
   A: 13
-  B: 6
+  B: 11
   C: 7
 tools:
 - name: geox_basin
@@ -20,6 +20,20 @@ tools:
   access: public
   description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
     mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_calibration_register_witness
+  domain: earth.structural
+  axis: compute
+  lane: compute
+  family: structural
+  tier: B
+  access: public
+  description: Register a CalibrationWitness for structural interpretation. Validates
+    schema, checks completeness blockers (missing axes, depth-without-velocity). Returns
+    VOID on bad input, HOLD on missing calibration.
   annotations:
     read_only: true
     destructive: false
@@ -61,6 +75,34 @@ tools:
   tier: A
   access: public
   description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_extract_display_proxy
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  family: seismic
+  tier: B
+  access: public
+  description: Extract display-derived proxy from raster seismic image. Requires CalibrationWitness.
+    Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation,
+    or native well-tie.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_extract_native_trace
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  family: seismic
+  tier: B
+  access: public
+  description: Extract a native seismic trace from a registered source. Returns NativeTraceRef
+    with full provenance. HOLD for unverified authority, restricted data, or missing
+    source.
   annotations:
     read_only: true
     destructive: false
@@ -171,6 +213,19 @@ tools:
     read_only: true
     destructive: false
     idempotent: true
+- name: geox_list_registered_sources
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  family: seismic
+  tier: B
+  access: public
+  description: List all registered native seismic sources with classification, authority,
+    trace count, and sample metadata.
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
 - name: geox_map
   domain: earth.spatial
   axis: compute
@@ -234,6 +289,20 @@ tools:
   access: public
   description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
     screen, evaluate.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_register_native_source
+  domain: earth.seismic
+  axis: compute
+  lane: compute
+  family: seismic
+  tier: B
+  access: public
+  description: 'Register a native SEG-Y source for trace extraction. Validates file
+    existence, computes SHA256, extracts binary header metadata. Authority downgrade:
+    OPERATOR_APPROVED without actor → UNVERIFIED.'
   annotations:
     read_only: true
     destructive: false
