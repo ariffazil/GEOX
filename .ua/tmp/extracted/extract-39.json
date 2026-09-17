@@ -1,0 +1,422 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 8,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 8
+    }
+  },
+  "results": [
+    {
+      "path": "resources/playbooks/geomechanics.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 43,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prerequisites",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/petrophysics.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 54,
+      "nonEmptyLines": 48,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prerequisites",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/process_abduction.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 54,
+      "nonEmptyLines": 48,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prerequisites",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/prospect_evaluation.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 22,
+      "nonEmptyLines": 22,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "goal",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "required_evidence",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "recommended_evidence",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/recursive_toac.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 44,
+      "nonEmptyLines": 38,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prerequisites",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/seismic_well_tie.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 56,
+      "nonEmptyLines": 49,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prerequisites",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/playbooks/well_qc.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 49,
+      "nonEmptyLines": 43,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "epistemic_layers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "resources/playbooks/well_sequence_stratigraphy.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "goal",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "required_evidence",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "recommended_evidence",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"batchIndex": 2, "files": [{"path": "geox-gui/.dockerignore", "language": "unknown", "sizeLines": 4, "fileCategory": "infra"}, {"path": "geox-gui/Dockerfile", "language": "dockerfile", "sizeLines": 29, "fileCategory": "infra"}], "batchImportData": {"geox-gui/.dockerignore": [], "geox-gui/Dockerfile": []}, "neighborMap": {}}

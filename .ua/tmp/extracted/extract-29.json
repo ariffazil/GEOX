@@ -1,0 +1,138 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [
+    "geox/seismic/rsi/geox_out/D_geologist_report.txt"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 2,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "geox/seismic/rsi/geox_out/cognition.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 722,
+      "nonEmptyLines": 722,
+      "sections": [
+        {
+          "heading": "packages",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "terminations",
+          "level": 1,
+          "line": 148
+        },
+        {
+          "heading": "artifacts",
+          "level": 1,
+          "line": 245
+        },
+        {
+          "heading": "hypotheses",
+          "level": 1,
+          "line": 155
+        },
+        {
+          "heading": "basin_context",
+          "level": 1,
+          "line": 308
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "geox/seismic/rsi/geox_out/geoseismic_model.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 25429,
+      "nonEmptyLines": 25429,
+      "sections": [
+        {
+          "heading": "schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "input",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "attributes_computed",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "faults",
+          "level": 1,
+          "line": 42
+        },
+        {
+          "heading": "fault_polylines_full",
+          "level": 1,
+          "line": 335
+        },
+        {
+          "heading": "horizons",
+          "level": 1,
+          "line": 1283
+        },
+        {
+          "heading": "horizon_polylines_full",
+          "level": 1,
+          "line": 1760
+        },
+        {
+          "heading": "epistemic",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "verdict",
+          "level": 1,
+          "line": 25415
+        },
+        {
+          "heading": "confidence_cap",
+          "level": 1,
+          "line": 25416
+        },
+        {
+          "heading": "outputs",
+          "level": 1,
+          "line": 25417
+        },
+        {
+          "heading": "next_steps",
+          "level": 1,
+          "line": 25422
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    }
+  ]
+}

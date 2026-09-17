@@ -1,0 +1,2244 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/parity/runtime_matrix.py",
+      "type": "file",
+      "name": "runtime_matrix.py",
+      "filePath": "src/geox_core/parity/runtime_matrix.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/physics/__init__.py",
+      "summary": "python code file (100 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/drivers.py",
+      "type": "file",
+      "name": "drivers.py",
+      "filePath": "src/geox_core/physics/drivers.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/drivers.py:build_lithology_model",
+      "type": "function",
+      "name": "build_lithology_model",
+      "filePath": "src/geox_core/physics/drivers.py",
+      "lineRange": [
+        21,
+        47
+      ],
+      "summary": "build_lithology_model(state) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/drivers.py:anomaly_contrast_theory",
+      "type": "function",
+      "name": "anomaly_contrast_theory",
+      "filePath": "src/geox_core/physics/drivers.py",
+      "lineRange": [
+        53,
+        91
+      ],
+      "summary": "anomaly_contrast_theory(background, observed) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/drivers.py:inverse_physics9",
+      "type": "function",
+      "name": "inverse_physics9",
+      "filePath": "src/geox_core/physics/drivers.py",
+      "lineRange": [
+        97,
+        136
+      ],
+      "summary": "inverse_physics9(measurements, prior_state) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/drivers.py:metabolic_loop",
+      "type": "function",
+      "name": "metabolic_loop",
+      "filePath": "src/geox_core/physics/drivers.py",
+      "lineRange": [
+        142,
+        189
+      ],
+      "summary": "metabolic_loop(initial_state, measurements, max_iterations) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/earth_state_vector.py",
+      "type": "file",
+      "name": "earth_state_vector.py",
+      "filePath": "src/geox_core/physics/earth_state_vector.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/earth_state_vector.py:build_earth_state_vector_from_mineral_zone",
+      "type": "function",
+      "name": "build_earth_state_vector_from_mineral_zone",
+      "filePath": "src/geox_core/physics/earth_state_vector.py",
+      "lineRange": [
+        127,
+        148
+      ],
+      "summary": "build_earth_state_vector_from_mineral_zone(zone_result, well_id, basin) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/earth_state_vector.py:_dominant_mineral_from_stats",
+      "type": "function",
+      "name": "_dominant_mineral_from_stats",
+      "filePath": "src/geox_core/physics/earth_state_vector.py",
+      "lineRange": [
+        151,
+        160
+      ],
+      "summary": "_dominant_mineral_from_stats(mineralogy) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/earth_state_vector.py:PetrophysicalEarthStateVector",
+      "type": "class",
+      "name": "PetrophysicalEarthStateVector",
+      "filePath": "src/geox_core/physics/earth_state_vector.py",
+      "lineRange": [
+        24,
+        122
+      ],
+      "summary": "Class PetrophysicalEarthStateVector with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/gl33.py",
+      "type": "file",
+      "name": "gl33.py",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "summary": "Defines 7 function(s); 4 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:forward_kinematics",
+      "type": "function",
+      "name": "forward_kinematics",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        215,
+        233
+      ],
+      "summary": "forward_kinematics(s) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:gassmann_substitution",
+      "type": "function",
+      "name": "gassmann_substitution",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        236,
+        255
+      ],
+      "summary": "gassmann_substitution(s, K_f) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:metabolize_33",
+      "type": "function",
+      "name": "metabolize_33",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        258,
+        324
+      ],
+      "summary": "metabolize_33(s) — 66 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:_g33_gaussian_likelihood",
+      "type": "function",
+      "name": "_g33_gaussian_likelihood",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        345,
+        355
+      ],
+      "summary": "_g33_gaussian_likelihood(s_sim, w_obs) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:run_fim_cycle_33",
+      "type": "function",
+      "name": "run_fim_cycle_33",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        358,
+        417
+      ],
+      "summary": "run_fim_cycle_33(s0, w_obs, cycle_id, notes) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:from_legacy_states",
+      "type": "function",
+      "name": "from_legacy_states",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        421,
+        464
+      ],
+      "summary": "from_legacy_states(physics13_dict, glof_dict) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl33.py:himalayan_glof_33",
+      "type": "function",
+      "name": "himalayan_glof_33",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        467,
+        485
+      ],
+      "summary": "himalayan_glof_33() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/gl33.py:GEOXEarthState33",
+      "type": "class",
+      "name": "GEOXEarthState33",
+      "filePath": "src/geox_core/physics/gl33.py",
+      "lineRange": [
+        102,
+        211
+      ],
+      "summary": "Class GEOXEarthState33 with 10 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "type": "file",
+      "name": "gl_forward_inverse_loop.py",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "summary": "Defines 11 function(s); 3 class(es); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:forward_glof",
+      "type": "function",
+      "name": "forward_glof",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        84,
+        142
+      ],
+      "summary": "forward_glof(theta, water_head_m, dam_height_m, dt_sec, n_steps) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:log_likelihood",
+      "type": "function",
+      "name": "log_likelihood",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        156,
+        176
+      ],
+      "summary": "log_likelihood(theta, obs) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:inverse_infer",
+      "type": "function",
+      "name": "inverse_infer",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        180,
+        213
+      ],
+      "summary": "inverse_infer(obs, base_theta, prior, n_grid) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:_emit_grid_result",
+      "type": "function",
+      "name": "_emit_grid_result",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        216,
+        223
+      ],
+      "summary": "_emit_grid_result(all_ll, base, pr, n_grid) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:mcmc_infer",
+      "type": "function",
+      "name": "mcmc_infer",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        226,
+        284
+      ],
+      "summary": "mcmc_infer(obs, base_theta, n_warmup, n_iter, n_chains, seed) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:saint_venant_propagate",
+      "type": "function",
+      "name": "saint_venant_propagate",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        287,
+        324
+      ],
+      "summary": "saint_venant_propagate(breach_Q_func, length_m, nx, manning_n, bed_slope, duration_s, output_interval_s) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:tri_witness_score",
+      "type": "function",
+      "name": "tri_witness_score",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        345,
+        374
+      ],
+      "summary": "tri_witness_score(forward_pred, obs, theta) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:metabolize",
+      "type": "function",
+      "name": "metabolize",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        377,
+        399
+      ],
+      "summary": "metabolize(cycle_id, theta_hat, forward_pred, obs, prior_receipt) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:seed_from_seismic",
+      "type": "function",
+      "name": "seed_from_seismic",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        403,
+        416
+      ],
+      "summary": "seed_from_seismic(physics13_state_dict, extras) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_forward_inverse_loop.py:run_fim_cycle",
+      "type": "function",
+      "name": "run_fim_cycle",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        420,
+        430
+      ],
+      "summary": "run_fim_cycle(obs, cycle_id, n_grid, prior_receipt) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/gl_forward_inverse_loop.py:ThetaPrior",
+      "type": "class",
+      "name": "ThetaPrior",
+      "filePath": "src/geox_core/physics/gl_forward_inverse_loop.py",
+      "lineRange": [
+        57,
+        80
+      ],
+      "summary": "Class ThetaPrior with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/gl_mcmc.py",
+      "type": "file",
+      "name": "gl_mcmc.py",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "summary": "Defines 6 function(s); 1 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:_log_prior",
+      "type": "function",
+      "name": "_log_prior",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        50,
+        57
+      ],
+      "summary": "_log_prior(theta) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:_pack_theta",
+      "type": "function",
+      "name": "_pack_theta",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        60,
+        73
+      ],
+      "summary": "_pack_theta(theta) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:_unpack_theta",
+      "type": "function",
+      "name": "_unpack_theta",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        76,
+        87
+      ],
+      "summary": "_unpack_theta(theta0, x) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:_log_posterior",
+      "type": "function",
+      "name": "_log_posterior",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        90,
+        95
+      ],
+      "summary": "_log_posterior(theta, obs) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:metropolis_hastings",
+      "type": "function",
+      "name": "metropolis_hastings",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        98,
+        186
+      ],
+      "summary": "metropolis_hastings(theta0, obs, n_warmup, n_iter, n_chains, seed) — 88 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_mcmc.py:_diagnose",
+      "type": "function",
+      "name": "_diagnose",
+      "filePath": "src/geox_core/physics/gl_mcmc.py",
+      "lineRange": [
+        189,
+        240
+      ],
+      "summary": "_diagnose(chains_x, chains_ll, n_warmup) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/gl_saint_venant.py",
+      "type": "file",
+      "name": "gl_saint_venant.py",
+      "filePath": "src/geox_core/physics/gl_saint_venant.py",
+      "summary": "Defines 3 function(s); 2 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_saint_venant.py:saint_venant_step",
+      "type": "function",
+      "name": "saint_venant_step",
+      "filePath": "src/geox_core/physics/gl_saint_venant.py",
+      "lineRange": [
+        72,
+        156
+      ],
+      "summary": "saint_venant_step(h, u, domain, dt, Q_in) — 84 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/gl_saint_venant.py:simulate_glof_propagation",
+      "type": "function",
+      "name": "simulate_glof_propagation",
+      "filePath": "src/geox_core/physics/gl_saint_venant.py",
+      "lineRange": [
+        159,
+        262
+      ],
+      "summary": "simulate_glof_propagation(breach_Q_func, domain, duration_s, output_interval_s, h_initial, Q_initial) — 103 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/physics/glgeomaterial.py",
+      "type": "file",
+      "name": "glgeomaterial.py",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "summary": "Defines 5 function(s); 3 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/glgeomaterial.py:_bounds_as_dict",
+      "type": "function",
+      "name": "_bounds_as_dict",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        78,
+        81
+      ],
+      "summary": "_bounds_as_dict() — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glgeomaterial.py:from_physics13_state",
+      "type": "function",
+      "name": "from_physics13_state",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        168,
+        208
+      ],
+      "summary": "from_physics13_state(phys13, **extras) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/glgeomaterial.py:himalayan_defaults",
+      "type": "function",
+      "name": "himalayan_defaults",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        211,
+        235
+      ],
+      "summary": "himalayan_defaults() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glgeomaterial.py:himalayan_ice",
+      "type": "function",
+      "name": "himalayan_ice",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        238,
+        249
+      ],
+      "summary": "himalayan_ice() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glgeomaterial.py:himalayan_water",
+      "type": "function",
+      "name": "himalayan_water",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        252,
+        263
+      ],
+      "summary": "himalayan_water() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/glgeomaterial.py:GLOFMaterialState",
+      "type": "class",
+      "name": "GLOFMaterialState",
+      "filePath": "src/geox_core/physics/glgeomaterial.py",
+      "lineRange": [
+        85,
+        164
+      ],
+      "summary": "Class GLOFMaterialState with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/glphase_switcher.py",
+      "type": "file",
+      "name": "glphase_switcher.py",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "summary": "Defines 6 function(s); 1 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:evaluate_mohr_coulomb",
+      "type": "function",
+      "name": "evaluate_mohr_coulomb",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        64,
+        79
+      ],
+      "summary": "evaluate_mohr_coulomb(s, sigma_n, tau_applied) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:evaluate_tensile",
+      "type": "function",
+      "name": "evaluate_tensile",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        83,
+        103
+      ],
+      "summary": "evaluate_tensile(s, sigma_applied, crack_length_m) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:evaluate_voellmy",
+      "type": "function",
+      "name": "evaluate_voellmy",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        107,
+        122
+      ],
+      "summary": "evaluate_voellmy(s, sigma_n, velocity, mu, xi) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:evaluate_bingham",
+      "type": "function",
+      "name": "evaluate_bingham",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        126,
+        141
+      ],
+      "summary": "evaluate_bingham(s, gamma_dot, eta, n) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:evaluate_cascade",
+      "type": "function",
+      "name": "evaluate_cascade",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        145,
+        211
+      ],
+      "summary": "evaluate_cascade(s, sigma_n, tau_applied, velocity, sigma_applied, saturation) — 66 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/glphase_switcher.py:phase_sequence",
+      "type": "function",
+      "name": "phase_sequence",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        215,
+        242
+      ],
+      "summary": "phase_sequence(s0, loads) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/glphase_switcher.py:YieldVerdict",
+      "type": "class",
+      "name": "YieldVerdict",
+      "filePath": "src/geox_core/physics/glphase_switcher.py",
+      "lineRange": [
+        44,
+        60
+      ],
+      "summary": "Class YieldVerdict with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/guards.py",
+      "type": "file",
+      "name": "guards.py",
+      "filePath": "src/geox_core/physics/guards.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/physics/guards.py:ValidationResult",
+      "type": "class",
+      "name": "ValidationResult",
+      "filePath": "src/geox_core/physics/guards.py",
+      "lineRange": [
+        30,
+        62
+      ],
+      "summary": "Class ValidationResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/physics/guards.py:PhysicsGuard",
+      "type": "class",
+      "name": "PhysicsGuard",
+      "filePath": "src/geox_core/physics/guards.py",
+      "lineRange": [
+        65,
+        539
+      ],
+      "summary": "Class PhysicsGuard with 17 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/physics/joint_inversion.py",
+      "type": "file",
+      "name": "joint_inversion.py",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "summary": "Defines 9 function(s); 2 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:forward_gravity_bouguer",
+      "type": "function",
+      "name": "forward_gravity_bouguer",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        86,
+        102
+      ],
+      "summary": "forward_gravity_bouguer(state, depth_m) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:forward_magnetic_tmi",
+      "type": "function",
+      "name": "forward_magnetic_tmi",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        105,
+        116
+      ],
+      "summary": "forward_magnetic_tmi(state, depth_m) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:_clip_to_bounds",
+      "type": "function",
+      "name": "_clip_to_bounds",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        138,
+        150
+      ],
+      "summary": "_clip_to_bounds(state, bounds) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:_forward_observation",
+      "type": "function",
+      "name": "_forward_observation",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        153,
+        165
+      ],
+      "summary": "_forward_observation(state, obs) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:joint_inversion",
+      "type": "function",
+      "name": "joint_inversion",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        168,
+        338
+      ],
+      "summary": "joint_inversion(request) — 170 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion.py:joint_inversion_batch",
+      "type": "function",
+      "name": "joint_inversion_batch",
+      "filePath": "src/geox_core/physics/joint_inversion.py",
+      "lineRange": [
+        342,
+        378
+      ],
+      "summary": "joint_inversion_batch(cells, doctrine_registry, doctrine_wall) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/joint_inversion_zone_hook.py",
+      "type": "file",
+      "name": "joint_inversion_zone_hook.py",
+      "filePath": "src/geox_core/physics/joint_inversion_zone_hook.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion_zone_hook.py:_depth_km_from_state",
+      "type": "function",
+      "name": "_depth_km_from_state",
+      "filePath": "src/geox_core/physics/joint_inversion_zone_hook.py",
+      "lineRange": [
+        54,
+        67
+      ],
+      "summary": "_depth_km_from_state(state, observations) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/joint_inversion_zone_hook.py:classify_state_post_inversion",
+      "type": "function",
+      "name": "classify_state_post_inversion",
+      "filePath": "src/geox_core/physics/joint_inversion_zone_hook.py",
+      "lineRange": [
+        70,
+        124
+      ],
+      "summary": "classify_state_post_inversion(state, observations, hook) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/manifest.py",
+      "type": "file",
+      "name": "manifest.py",
+      "filePath": "src/geox_core/physics/manifest.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/manifest.py:_sha256_of_file",
+      "type": "function",
+      "name": "_sha256_of_file",
+      "filePath": "src/geox_core/physics/manifest.py",
+      "lineRange": [
+        31,
+        39
+      ],
+      "summary": "_sha256_of_file(path) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/manifest.py:compute_physics_manifest_hash",
+      "type": "function",
+      "name": "compute_physics_manifest_hash",
+      "filePath": "src/geox_core/physics/manifest.py",
+      "lineRange": [
+        42,
+        58
+      ],
+      "summary": "compute_physics_manifest_hash() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/manifest.py:_compute_physics_guard_version",
+      "type": "function",
+      "name": "_compute_physics_guard_version",
+      "filePath": "src/geox_core/physics/manifest.py",
+      "lineRange": [
+        71,
+        87
+      ],
+      "summary": "_compute_physics_guard_version() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/manifest.py:get_geo_identity",
+      "type": "function",
+      "name": "get_geo_identity",
+      "filePath": "src/geox_core/physics/manifest.py",
+      "lineRange": [
+        93,
+        103
+      ],
+      "summary": "get_geo_identity() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/parameters.py",
+      "type": "file",
+      "name": "parameters.py",
+      "filePath": "src/geox_core/physics/parameters.py",
+      "summary": "Defines 21 function(s); exports 21 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/parameters.py:faust_velocity",
+      "type": "function",
+      "name": "faust_velocity",
+      "filePath": "src/geox_core/physics/parameters.py",
+      "lineRange": [
+        91,
+        103
+      ],
+      "summary": "faust_velocity(depth, resistivity, faust_k, exp) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/parameters.py:apply_anisotropic_velocity_correction",
+      "type": "function",
+      "name": "apply_anisotropic_velocity_correction",
+      "filePath": "src/geox_core/physics/parameters.py",
+      "lineRange": [
+        121,
+        132
+      ],
+      "summary": "apply_anisotropic_velocity_correction(vp_vertical, theta_deg, epsilon, delta) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/parameters.py:forward_physics9",
+      "type": "function",
+      "name": "forward_physics9",
+      "filePath": "src/geox_core/physics/parameters.py",
+      "lineRange": [
+        187,
+        214
+      ],
+      "summary": "forward_physics9(state) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/parameters.py:compute_buoyancy",
+      "type": "function",
+      "name": "compute_buoyancy",
+      "filePath": "src/geox_core/physics/parameters.py",
+      "lineRange": [
+        220,
+        262
+      ],
+      "summary": "compute_buoyancy(rho_material, thickness_m, rho_fluid, g) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/restoration_bridge.py",
+      "type": "file",
+      "name": "restoration_bridge.py",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/restoration_bridge.py:prepare_backstrip_input",
+      "type": "function",
+      "name": "prepare_backstrip_input",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "lineRange": [
+        20,
+        44
+      ],
+      "summary": "prepare_backstrip_input(esv) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/restoration_bridge.py:compute_porosity_residual",
+      "type": "function",
+      "name": "compute_porosity_residual",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "lineRange": [
+        47,
+        81
+      ],
+      "summary": "compute_porosity_residual(measured_phi, predicted_phi, depth_m) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/restoration_bridge.py:_recommend_from_residual",
+      "type": "function",
+      "name": "_recommend_from_residual",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "lineRange": [
+        84,
+        89
+      ],
+      "summary": "_recommend_from_residual(flag) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/restoration_bridge.py:enrich_earth_state_vector_with_burial",
+      "type": "function",
+      "name": "enrich_earth_state_vector_with_burial",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "lineRange": [
+        92,
+        102
+      ],
+      "summary": "enrich_earth_state_vector_with_burial(esv, backstrip_result) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/restoration_bridge.py:enrich_earth_state_vector_with_thermal",
+      "type": "function",
+      "name": "enrich_earth_state_vector_with_thermal",
+      "filePath": "src/geox_core/physics/restoration_bridge.py",
+      "lineRange": [
+        105,
+        116
+      ],
+      "summary": "enrich_earth_state_vector_with_thermal(esv, thermal_result) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/state.py",
+      "type": "file",
+      "name": "state.py",
+      "filePath": "src/geox_core/physics/state.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/physics/state.py:Physics13State",
+      "type": "class",
+      "name": "Physics13State",
+      "filePath": "src/geox_core/physics/state.py",
+      "lineRange": [
+        25,
+        179
+      ],
+      "summary": "Class Physics13State with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/physics/td_methods/__init__.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/__init__.py:fit_td",
+      "type": "function",
+      "name": "fit_td",
+      "filePath": "src/geox_core/physics/td_methods/__init__.py",
+      "lineRange": [
+        12,
+        31
+      ],
+      "summary": "fit_td(method, checkshot_data, depth_array, **kwargs) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/base.py",
+      "type": "file",
+      "name": "base.py",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/base.py:_validate_inputs",
+      "type": "function",
+      "name": "_validate_inputs",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "lineRange": [
+        79,
+        106
+      ],
+      "summary": "_validate_inputs(checkshot_data, depth_array) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/base.py:_coverage",
+      "type": "function",
+      "name": "_coverage",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "lineRange": [
+        109,
+        118
+      ],
+      "summary": "_coverage(depth_array, cs_depths) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/base.py:_extrapolation_risk",
+      "type": "function",
+      "name": "_extrapolation_risk",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "lineRange": [
+        121,
+        134
+      ],
+      "summary": "_extrapolation_risk(depth_array, cs_depths) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/base.py:_audit",
+      "type": "function",
+      "name": "_audit",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "lineRange": [
+        137,
+        174
+      ],
+      "summary": "_audit(twt_ms, depth_array, residual_twt_ms) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/physics/td_methods/base.py:TDFitResult",
+      "type": "class",
+      "name": "TDFitResult",
+      "filePath": "src/geox_core/physics/td_methods/base.py",
+      "lineRange": [
+        49,
+        73
+      ],
+      "summary": "Class TDFitResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/layer_cake.py",
+      "type": "file",
+      "name": "layer_cake.py",
+      "filePath": "src/geox_core/physics/td_methods/layer_cake.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/layer_cake.py:fit_layer_cake",
+      "type": "function",
+      "name": "fit_layer_cake",
+      "filePath": "src/geox_core/physics/td_methods/layer_cake.py",
+      "lineRange": [
+        40,
+        175
+      ],
+      "summary": "fit_layer_cake(checkshot_data, depth_array, tops, v_fallback, allow_extrapolation) — 135 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/linear.py",
+      "type": "file",
+      "name": "linear.py",
+      "filePath": "src/geox_core/physics/td_methods/linear.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/linear.py:fit_linear",
+      "type": "function",
+      "name": "fit_linear",
+      "filePath": "src/geox_core/physics/td_methods/linear.py",
+      "lineRange": [
+        35,
+        69
+      ],
+      "summary": "fit_linear(checkshot_data, depth_array) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/polynomial.py",
+      "type": "file",
+      "name": "polynomial.py",
+      "filePath": "src/geox_core/physics/td_methods/polynomial.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/polynomial.py:fit_polynomial",
+      "type": "function",
+      "name": "fit_polynomial",
+      "filePath": "src/geox_core/physics/td_methods/polynomial.py",
+      "lineRange": [
+        44,
+        117
+      ],
+      "summary": "fit_polynomial(checkshot_data, depth_array, degree, weights, allow_extrapolation) — 73 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/td_methods/vo_k.py",
+      "type": "file",
+      "name": "vo_k.py",
+      "filePath": "src/geox_core/physics/td_methods/vo_k.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/physics/td_methods/vo_k.py:fit_vo_k",
+      "type": "function",
+      "name": "fit_vo_k",
+      "filePath": "src/geox_core/physics/td_methods/vo_k.py",
+      "lineRange": [
+        52,
+        137
+      ],
+      "summary": "fit_vo_k(checkshot_data, depth_array, mode, v0_init, k_init, allow_extrapolation) — 85 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/physics/thermal_history.py",
+      "type": "file",
+      "name": "thermal_history.py",
+      "filePath": "src/geox_core/physics/thermal_history.py",
+      "summary": "Defines 2 function(s); 3 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/thermal_history.py:compute_cooling_path",
+      "type": "function",
+      "name": "compute_cooling_path",
+      "filePath": "src/geox_core/physics/thermal_history.py",
+      "lineRange": [
+        103,
+        227
+      ],
+      "summary": "compute_cooling_path(points, geothermal_gradient_C_per_km) — 124 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/physics/thermal_history.py:kinabalu_cooling_path",
+      "type": "function",
+      "name": "kinabalu_cooling_path",
+      "filePath": "src/geox_core/physics/thermal_history.py",
+      "lineRange": [
+        233,
+        289
+      ],
+      "summary": "kinabalu_cooling_path() — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/physics/thermal_history.py:ThermalHistoryResult",
+      "type": "class",
+      "name": "ThermalHistoryResult",
+      "filePath": "src/geox_core/physics/thermal_history.py",
+      "lineRange": [
+        70,
+        100
+      ],
+      "summary": "Class ThermalHistoryResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/plot/epistemic_style.py",
+      "type": "file",
+      "name": "epistemic_style.py",
+      "filePath": "src/geox_core/plot/epistemic_style.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/plot/epistemic_style.py:get_epistemic_style",
+      "type": "function",
+      "name": "get_epistemic_style",
+      "filePath": "src/geox_core/plot/epistemic_style.py",
+      "lineRange": [
+        55,
+        76
+      ],
+      "summary": "get_epistemic_style(epistemic_label) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/plot/epistemic_style.py:add_epistemic_banner",
+      "type": "function",
+      "name": "add_epistemic_banner",
+      "filePath": "src/geox_core/plot/epistemic_style.py",
+      "lineRange": [
+        79,
+        154
+      ],
+      "summary": "add_epistemic_banner(ax, epistemic_label, confidence, position) — 75 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot/epistemic_style.py:add_provenance_footer",
+      "type": "function",
+      "name": "add_provenance_footer",
+      "filePath": "src/geox_core/plot/epistemic_style.py",
+      "lineRange": [
+        157,
+        190
+      ],
+      "summary": "add_provenance_footer(fig, sources, fontsize) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot/epistemic_style.py:style_plot_for_epistemic_status",
+      "type": "function",
+      "name": "style_plot_for_epistemic_status",
+      "filePath": "src/geox_core/plot/epistemic_style.py",
+      "lineRange": [
+        193,
+        259
+      ],
+      "summary": "style_plot_for_epistemic_status(ax, epistemic_label, confidence, depth, pressure, label) — 66 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/physics/drivers.py",
+      "target": "function:src/geox_core/physics/drivers.py:build_lithology_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/drivers.py",
+      "target": "function:src/geox_core/physics/drivers.py:anomaly_contrast_theory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/drivers.py",
+      "target": "function:src/geox_core/physics/drivers.py:inverse_physics9",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/drivers.py",
+      "target": "function:src/geox_core/physics/drivers.py:metabolic_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/earth_state_vector.py",
+      "target": "function:src/geox_core/physics/earth_state_vector.py:build_earth_state_vector_from_mineral_zone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/earth_state_vector.py",
+      "target": "function:src/geox_core/physics/earth_state_vector.py:_dominant_mineral_from_stats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/earth_state_vector.py",
+      "target": "class:src/geox_core/physics/earth_state_vector.py:PetrophysicalEarthStateVector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:forward_kinematics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:gassmann_substitution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:metabolize_33",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:_g33_gaussian_likelihood",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:run_fim_cycle_33",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:from_legacy_states",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "function:src/geox_core/physics/gl33.py:himalayan_glof_33",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl33.py",
+      "target": "class:src/geox_core/physics/gl33.py:GEOXEarthState33",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:forward_glof",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:log_likelihood",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:inverse_infer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:_emit_grid_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:mcmc_infer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:saint_venant_propagate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:tri_witness_score",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:metabolize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:seed_from_seismic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "function:src/geox_core/physics/gl_forward_inverse_loop.py:run_fim_cycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_forward_inverse_loop.py",
+      "target": "class:src/geox_core/physics/gl_forward_inverse_loop.py:ThetaPrior",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:_log_prior",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:_pack_theta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:_unpack_theta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:_log_posterior",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:metropolis_hastings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_mcmc.py",
+      "target": "function:src/geox_core/physics/gl_mcmc.py:_diagnose",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_saint_venant.py",
+      "target": "function:src/geox_core/physics/gl_saint_venant.py:saint_venant_step",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/gl_saint_venant.py",
+      "target": "function:src/geox_core/physics/gl_saint_venant.py:simulate_glof_propagation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "function:src/geox_core/physics/glgeomaterial.py:_bounds_as_dict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "function:src/geox_core/physics/glgeomaterial.py:from_physics13_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "function:src/geox_core/physics/glgeomaterial.py:himalayan_defaults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "function:src/geox_core/physics/glgeomaterial.py:himalayan_ice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "function:src/geox_core/physics/glgeomaterial.py:himalayan_water",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glgeomaterial.py",
+      "target": "class:src/geox_core/physics/glgeomaterial.py:GLOFMaterialState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:evaluate_mohr_coulomb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:evaluate_tensile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:evaluate_voellmy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:evaluate_bingham",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:evaluate_cascade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "function:src/geox_core/physics/glphase_switcher.py:phase_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/glphase_switcher.py",
+      "target": "class:src/geox_core/physics/glphase_switcher.py:YieldVerdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/guards.py",
+      "target": "class:src/geox_core/physics/guards.py:ValidationResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/guards.py",
+      "target": "class:src/geox_core/physics/guards.py:PhysicsGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:forward_gravity_bouguer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:forward_magnetic_tmi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:_clip_to_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:_forward_observation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:joint_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion.py",
+      "target": "function:src/geox_core/physics/joint_inversion.py:joint_inversion_batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion_zone_hook.py",
+      "target": "function:src/geox_core/physics/joint_inversion_zone_hook.py:_depth_km_from_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/joint_inversion_zone_hook.py",
+      "target": "function:src/geox_core/physics/joint_inversion_zone_hook.py:classify_state_post_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/manifest.py",
+      "target": "function:src/geox_core/physics/manifest.py:_sha256_of_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/manifest.py",
+      "target": "function:src/geox_core/physics/manifest.py:compute_physics_manifest_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/manifest.py",
+      "target": "function:src/geox_core/physics/manifest.py:_compute_physics_guard_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/manifest.py",
+      "target": "function:src/geox_core/physics/manifest.py:get_geo_identity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/parameters.py",
+      "target": "function:src/geox_core/physics/parameters.py:faust_velocity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/parameters.py",
+      "target": "function:src/geox_core/physics/parameters.py:apply_anisotropic_velocity_correction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/parameters.py",
+      "target": "function:src/geox_core/physics/parameters.py:forward_physics9",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/parameters.py",
+      "target": "function:src/geox_core/physics/parameters.py:compute_buoyancy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/restoration_bridge.py",
+      "target": "function:src/geox_core/physics/restoration_bridge.py:prepare_backstrip_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/restoration_bridge.py",
+      "target": "function:src/geox_core/physics/restoration_bridge.py:compute_porosity_residual",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/restoration_bridge.py",
+      "target": "function:src/geox_core/physics/restoration_bridge.py:_recommend_from_residual",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/restoration_bridge.py",
+      "target": "function:src/geox_core/physics/restoration_bridge.py:enrich_earth_state_vector_with_burial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/restoration_bridge.py",
+      "target": "function:src/geox_core/physics/restoration_bridge.py:enrich_earth_state_vector_with_thermal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/state.py",
+      "target": "class:src/geox_core/physics/state.py:Physics13State",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/__init__.py",
+      "target": "function:src/geox_core/physics/td_methods/__init__.py:fit_td",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/base.py",
+      "target": "function:src/geox_core/physics/td_methods/base.py:_validate_inputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/base.py",
+      "target": "function:src/geox_core/physics/td_methods/base.py:_coverage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/base.py",
+      "target": "function:src/geox_core/physics/td_methods/base.py:_extrapolation_risk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/base.py",
+      "target": "function:src/geox_core/physics/td_methods/base.py:_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/base.py",
+      "target": "class:src/geox_core/physics/td_methods/base.py:TDFitResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/layer_cake.py",
+      "target": "function:src/geox_core/physics/td_methods/layer_cake.py:fit_layer_cake",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/linear.py",
+      "target": "function:src/geox_core/physics/td_methods/linear.py:fit_linear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/polynomial.py",
+      "target": "function:src/geox_core/physics/td_methods/polynomial.py:fit_polynomial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/td_methods/vo_k.py",
+      "target": "function:src/geox_core/physics/td_methods/vo_k.py:fit_vo_k",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/thermal_history.py",
+      "target": "function:src/geox_core/physics/thermal_history.py:compute_cooling_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/thermal_history.py",
+      "target": "function:src/geox_core/physics/thermal_history.py:kinabalu_cooling_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/physics/thermal_history.py",
+      "target": "class:src/geox_core/physics/thermal_history.py:ThermalHistoryResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot/epistemic_style.py",
+      "target": "function:src/geox_core/plot/epistemic_style.py:get_epistemic_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot/epistemic_style.py",
+      "target": "function:src/geox_core/plot/epistemic_style.py:add_epistemic_banner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot/epistemic_style.py",
+      "target": "function:src/geox_core/plot/epistemic_style.py:add_provenance_footer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot/epistemic_style.py",
+      "target": "function:src/geox_core/plot/epistemic_style.py:style_plot_for_epistemic_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

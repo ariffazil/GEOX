@@ -1,0 +1,3939 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/test_analog_atlas.py",
+      "type": "file",
+      "name": "test_analog_atlas.py",
+      "filePath": "tests/test_analog_atlas.py",
+      "summary": "Defines 26 function(s); exports 26 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_score_exact_match_high_similarity",
+      "type": "function",
+      "name": "test_score_exact_match_high_similarity",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        122,
+        137
+      ],
+      "summary": "test_score_exact_match_high_similarity(corpus_dir) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_score_structurally_different_fires_dangerous_flag",
+      "type": "function",
+      "name": "test_score_structurally_different_fires_dangerous_flag",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        140,
+        168
+      ],
+      "summary": "test_score_structurally_different_fires_dangerous_flag(corpus_dir) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:_pa",
+      "type": "function",
+      "name": "_pa",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        188,
+        190
+      ],
+      "summary": "_pa(res) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_invalid_contrast_mode_returns_hold",
+      "type": "function",
+      "name": "test_invalid_contrast_mode_returns_hold",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        208,
+        218
+      ],
+      "summary": "test_invalid_contrast_mode_returns_hold() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_clean_query_returns_qualify",
+      "type": "function",
+      "name": "test_clean_query_returns_qualify",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        229,
+        252
+      ],
+      "summary": "test_clean_query_returns_qualify(corpus_dir) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_dangerous_query_returns_hold",
+      "type": "function",
+      "name": "test_dangerous_query_returns_hold",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        255,
+        284
+      ],
+      "summary": "test_dangerous_query_returns_hold(corpus_dir) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_corpus_filter_basin_ids_works",
+      "type": "function",
+      "name": "test_corpus_filter_basin_ids_works",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        287,
+        299
+      ],
+      "summary": "test_corpus_filter_basin_ids_works(corpus_dir) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_min_data_quality_filter",
+      "type": "function",
+      "name": "test_min_data_quality_filter",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        302,
+        314
+      ],
+      "summary": "test_min_data_quality_filter(corpus_dir) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_contrast_mode_similarity_only_strips_contrast",
+      "type": "function",
+      "name": "test_contrast_mode_similarity_only_strips_contrast",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        317,
+        339
+      ],
+      "summary": "test_contrast_mode_similarity_only_strips_contrast(corpus_dir) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_contrast_mode_contrast_only_strips_similarity",
+      "type": "function",
+      "name": "test_contrast_mode_contrast_only_strips_similarity",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        342,
+        363
+      ],
+      "summary": "test_contrast_mode_contrast_only_strips_similarity(corpus_dir) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_claim_tag_is_hypothesis_when_dangerous",
+      "type": "function",
+      "name": "test_claim_tag_is_hypothesis_when_dangerous",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        366,
+        386
+      ],
+      "summary": "test_claim_tag_is_hypothesis_when_dangerous(corpus_dir) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_min_similarity_filter",
+      "type": "function",
+      "name": "test_min_similarity_filter",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        389,
+        401
+      ],
+      "summary": "test_min_similarity_filter() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_analog_atlas.py:test_doctrine_8_missing_evidence_surface",
+      "type": "function",
+      "name": "test_doctrine_8_missing_evidence_surface",
+      "filePath": "tests/test_analog_atlas.py",
+      "lineRange": [
+        404,
+        416
+      ],
+      "summary": "test_doctrine_8_missing_evidence_surface(corpus_dir) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_anomalous_contrast.py",
+      "type": "file",
+      "name": "test_anomalous_contrast.py",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "summary": "Defines 17 function(s); exports 17 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_no_anomaly_aligned_boundary",
+      "type": "function",
+      "name": "test_no_anomaly_aligned_boundary",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        21,
+        41
+      ],
+      "summary": "test_no_anomaly_aligned_boundary() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_anomaly_displaced_reflector",
+      "type": "function",
+      "name": "test_anomaly_displaced_reflector",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        44,
+        71
+      ],
+      "summary": "test_anomaly_displaced_reflector() — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_megah1_quantified_case",
+      "type": "function",
+      "name": "test_megah1_quantified_case",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        74,
+        98
+      ],
+      "summary": "test_megah1_quantified_case() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_plain_output_contract",
+      "type": "function",
+      "name": "test_plain_output_contract",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        110,
+        131
+      ],
+      "summary": "test_plain_output_contract() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_qi_rung_declares_post_stack_fluid_limit",
+      "type": "function",
+      "name": "test_qi_rung_declares_post_stack_fluid_limit",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        134,
+        156
+      ],
+      "summary": "test_qi_rung_declares_post_stack_fluid_limit() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_seismic_compute_surfaces_qi_rung_top_level",
+      "type": "function",
+      "name": "test_seismic_compute_surfaces_qi_rung_top_level",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        159,
+        179
+      ],
+      "summary": "test_seismic_compute_surfaces_qi_rung_top_level() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_avo_class_classification",
+      "type": "function",
+      "name": "test_avo_class_classification",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        187,
+        222
+      ],
+      "summary": "test_avo_class_classification() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_attention_residual_computed",
+      "type": "function",
+      "name": "test_attention_residual_computed",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        225,
+        273
+      ],
+      "summary": "test_attention_residual_computed() — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_attention_equivalence_top_level",
+      "type": "function",
+      "name": "test_attention_equivalence_top_level",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        276,
+        345
+      ],
+      "summary": "test_attention_equivalence_top_level() — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_attention_residual_no_anomaly_still_present",
+      "type": "function",
+      "name": "test_attention_residual_no_anomaly_still_present",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        348,
+        368
+      ],
+      "summary": "test_attention_residual_no_anomaly_still_present() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_softmax_alpha_bounded",
+      "type": "function",
+      "name": "test_softmax_alpha_bounded",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        371,
+        407
+      ],
+      "summary": "test_softmax_alpha_bounded() — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_avo_class_iii_iv_conditional",
+      "type": "function",
+      "name": "test_avo_class_iii_iv_conditional",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        410,
+        438
+      ],
+      "summary": "test_avo_class_iii_iv_conditional() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_essay13_softmax_hallucination_risk_present",
+      "type": "function",
+      "name": "test_essay13_softmax_hallucination_risk_present",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        446,
+        493
+      ],
+      "summary": "test_essay13_softmax_hallucination_risk_present() — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_essay13_approximation_tier",
+      "type": "function",
+      "name": "test_essay13_approximation_tier",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        496,
+        527
+      ],
+      "summary": "test_essay13_approximation_tier() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_essay13_boundary_condition_flags",
+      "type": "function",
+      "name": "test_essay13_boundary_condition_flags",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        530,
+        571
+      ],
+      "summary": "test_essay13_boundary_condition_flags() — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_anomalous_contrast.py:test_essay13_trilogy_reference_in_top_level",
+      "type": "function",
+      "name": "test_essay13_trilogy_reference_in_top_level",
+      "filePath": "tests/test_anomalous_contrast.py",
+      "lineRange": [
+        574,
+        610
+      ],
+      "summary": "test_essay13_trilogy_reference_in_top_level() — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_app_export_parity.py",
+      "type": "file",
+      "name": "test_app_export_parity.py",
+      "filePath": "tests/test_app_export_parity.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_app_export_parity.py:TestAppExportParity",
+      "type": "class",
+      "name": "TestAppExportParity",
+      "filePath": "tests/test_app_export_parity.py",
+      "lineRange": [
+        17,
+        65
+      ],
+      "summary": "Class TestAppExportParity with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_argument_sidecar.py",
+      "type": "file",
+      "name": "test_argument_sidecar.py",
+      "filePath": "tests/test_argument_sidecar.py",
+      "summary": "Defines 3 function(s); 4 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_argument_sidecar.py:_sabah_structural_claims",
+      "type": "function",
+      "name": "_sabah_structural_claims",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        33,
+        61
+      ],
+      "summary": "_sabah_structural_claims() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_argument_sidecar.py:_sabah_rival_claims",
+      "type": "function",
+      "name": "_sabah_rival_claims",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        64,
+        100
+      ],
+      "summary": "_sabah_rival_claims() — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_argument_sidecar.py:_sabah_uncertainty",
+      "type": "function",
+      "name": "_sabah_uncertainty",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        103,
+        116
+      ],
+      "summary": "_sabah_uncertainty() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_argument_sidecar.py:TestGeologicalClaim",
+      "type": "class",
+      "name": "TestGeologicalClaim",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        122,
+        145
+      ],
+      "summary": "Class TestGeologicalClaim with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_argument_sidecar.py:TestArgumentSidecar",
+      "type": "class",
+      "name": "TestArgumentSidecar",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        164,
+        279
+      ],
+      "summary": "Class TestArgumentSidecar with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_argument_sidecar.py:TestArgumentBuilder",
+      "type": "class",
+      "name": "TestArgumentBuilder",
+      "filePath": "tests/test_argument_sidecar.py",
+      "lineRange": [
+        282,
+        345
+      ],
+      "summary": "Class TestArgumentBuilder with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_artifact_identity_roundtrip.py",
+      "type": "file",
+      "name": "test_artifact_identity_roundtrip.py",
+      "filePath": "tests/test_artifact_identity_roundtrip.py",
+      "summary": "Defines 24 function(s); exports 24 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_artifact_identity_roundtrip.py:test_make_then_parse_canonical",
+      "type": "function",
+      "name": "test_make_then_parse_canonical",
+      "filePath": "tests/test_artifact_identity_roundtrip.py",
+      "lineRange": [
+        48,
+        60
+      ],
+      "summary": "test_make_then_parse_canonical() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_artifact_identity_roundtrip.py:test_audit_failing_case_normalizes_correctly",
+      "type": "function",
+      "name": "test_audit_failing_case_normalizes_correctly",
+      "filePath": "tests/test_artifact_identity_roundtrip.py",
+      "lineRange": [
+        173,
+        191
+      ],
+      "summary": "test_audit_failing_case_normalizes_correctly() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_asset_memory_wave2.py",
+      "type": "file",
+      "name": "test_asset_memory_wave2.py",
+      "filePath": "tests/test_asset_memory_wave2.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_asset_memory_wave2.py:test_asset_memory_store_and_recall",
+      "type": "function",
+      "name": "test_asset_memory_store_and_recall",
+      "filePath": "tests/test_asset_memory_wave2.py",
+      "lineRange": [
+        6,
+        19
+      ],
+      "summary": "test_asset_memory_store_and_recall(tmp_path) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_attributes.py",
+      "type": "file",
+      "name": "test_attributes.py",
+      "filePath": "tests/test_attributes.py",
+      "summary": "Defines 2 function(s); 6 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_attributes.py:synthetic_3d_volume",
+      "type": "function",
+      "name": "synthetic_3d_volume",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        39,
+        54
+      ],
+      "summary": "synthetic_3d_volume() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_attributes.py:synthetic_2d_slice",
+      "type": "function",
+      "name": "synthetic_2d_slice",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        58,
+        73
+      ],
+      "summary": "synthetic_2d_slice() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestCoherence",
+      "type": "class",
+      "name": "TestCoherence",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        80,
+        101
+      ],
+      "summary": "Class TestCoherence with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestCurvature",
+      "type": "class",
+      "name": "TestCurvature",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        108,
+        131
+      ],
+      "summary": "Class TestCurvature with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestSpectralDecomposition",
+      "type": "class",
+      "name": "TestSpectralDecomposition",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        138,
+        161
+      ],
+      "summary": "Class TestSpectralDecomposition with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestAmplitude",
+      "type": "class",
+      "name": "TestAmplitude",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        168,
+        189
+      ],
+      "summary": "Class TestAmplitude with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestComputeAttributes",
+      "type": "class",
+      "name": "TestComputeAttributes",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        196,
+        228
+      ],
+      "summary": "Class TestComputeAttributes with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_attributes.py:TestSeismicAttributeTool",
+      "type": "class",
+      "name": "TestSeismicAttributeTool",
+      "filePath": "tests/test_attributes.py",
+      "lineRange": [
+        235,
+        277
+      ],
+      "summary": "Class TestSeismicAttributeTool with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_auto_mint.py",
+      "type": "file",
+      "name": "test_auto_mint.py",
+      "filePath": "tests/test_auto_mint.py",
+      "summary": "Defines 2 function(s); 7 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_auto_mint.py:_count_claims",
+      "type": "function",
+      "name": "_count_claims",
+      "filePath": "tests/test_auto_mint.py",
+      "lineRange": [
+        60,
+        64
+      ],
+      "summary": "_count_claims(db_path) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_auto_mint.py:TestCanonicalMint",
+      "type": "class",
+      "name": "TestCanonicalMint",
+      "filePath": "tests/test_auto_mint.py",
+      "lineRange": [
+        97,
+        130
+      ],
+      "summary": "Class TestCanonicalMint with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_auto_mint.py:TestSyntheticGuard",
+      "type": "class",
+      "name": "TestSyntheticGuard",
+      "filePath": "tests/test_auto_mint.py",
+      "lineRange": [
+        153,
+        169
+      ],
+      "summary": "Class TestSyntheticGuard with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_basin_charge_wave2.py",
+      "type": "file",
+      "name": "test_basin_charge_wave2.py",
+      "filePath": "tests/test_basin_charge_wave2.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_basin_charge_wave2.py:test_basin_charge_simulator_returns_probability",
+      "type": "function",
+      "name": "test_basin_charge_simulator_returns_probability",
+      "filePath": "tests/test_basin_charge_wave2.py",
+      "lineRange": [
+        5,
+        19
+      ],
+      "summary": "test_basin_charge_simulator_returns_probability() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_basin_synthesis_pipeline.py",
+      "type": "file",
+      "name": "test_basin_synthesis_pipeline.py",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "summary": "Defines 1 function(s); 11 class(es); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestGapRegistry",
+      "type": "class",
+      "name": "TestGapRegistry",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        73,
+        136
+      ],
+      "summary": "Class TestGapRegistry with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestProvenanceLedger",
+      "type": "class",
+      "name": "TestProvenanceLedger",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        144,
+        214
+      ],
+      "summary": "Class TestProvenanceLedger with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestUncertaintyCascade",
+      "type": "class",
+      "name": "TestUncertaintyCascade",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        222,
+        303
+      ],
+      "summary": "Class TestUncertaintyCascade with 13 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestSynthesisState",
+      "type": "class",
+      "name": "TestSynthesisState",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        311,
+        379
+      ],
+      "summary": "Class TestSynthesisState with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestBasinSynthesisPipeline",
+      "type": "class",
+      "name": "TestBasinSynthesisPipeline",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        387,
+        535
+      ],
+      "summary": "Class TestBasinSynthesisPipeline with 15 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestStrangeLoopConvergence",
+      "type": "class",
+      "name": "TestStrangeLoopConvergence",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        579,
+        656
+      ],
+      "summary": "Class TestStrangeLoopConvergence with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestPhysics9GapFill",
+      "type": "class",
+      "name": "TestPhysics9GapFill",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        664,
+        758
+      ],
+      "summary": "Class TestPhysics9GapFill with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestFetcherRetry",
+      "type": "class",
+      "name": "TestFetcherRetry",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        766,
+        866
+      ],
+      "summary": "Class TestFetcherRetry with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_basin_synthesis_pipeline.py:TestFetcherFallbackChain",
+      "type": "class",
+      "name": "TestFetcherFallbackChain",
+      "filePath": "tests/test_basin_synthesis_pipeline.py",
+      "lineRange": [
+        874,
+        940
+      ],
+      "summary": "Class TestFetcherFallbackChain with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_bid_round_screener.py",
+      "type": "file",
+      "name": "test_bid_round_screener.py",
+      "filePath": "tests/test_bid_round_screener.py",
+      "summary": "Defines 1 function(s); 6 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_bid_round_screener.py:_make_mbr2026_request",
+      "type": "function",
+      "name": "_make_mbr2026_request",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        51,
+        97
+      ],
+      "summary": "_make_mbr2026_request() — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestScoringFunctions",
+      "type": "class",
+      "name": "TestScoringFunctions",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        103,
+        199
+      ],
+      "summary": "Class TestScoringFunctions with 26 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestSchemas",
+      "type": "class",
+      "name": "TestSchemas",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        205,
+        285
+      ],
+      "summary": "Class TestSchemas with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestIntegration",
+      "type": "class",
+      "name": "TestIntegration",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        291,
+        407
+      ],
+      "summary": "Class TestIntegration with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestSecurity",
+      "type": "class",
+      "name": "TestSecurity",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        413,
+        513
+      ],
+      "summary": "Class TestSecurity with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestAudit",
+      "type": "class",
+      "name": "TestAudit",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        519,
+        533
+      ],
+      "summary": "Class TestAudit with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_bid_round_screener.py:TestEdgeCases",
+      "type": "class",
+      "name": "TestEdgeCases",
+      "filePath": "tests/test_bid_round_screener.py",
+      "lineRange": [
+        539,
+        635
+      ],
+      "summary": "Class TestEdgeCases with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_biharmonic_grid.py",
+      "type": "file",
+      "name": "test_biharmonic_grid.py",
+      "filePath": "tests/test_biharmonic_grid.py",
+      "summary": "Defines 2 function(s); 2 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_biharmonic_grid.py:_dense_grid",
+      "type": "function",
+      "name": "_dense_grid",
+      "filePath": "tests/test_biharmonic_grid.py",
+      "lineRange": [
+        49,
+        54
+      ],
+      "summary": "_dense_grid() — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_biharmonic_grid.py:_sparse_grid",
+      "type": "function",
+      "name": "_sparse_grid",
+      "filePath": "tests/test_biharmonic_grid.py",
+      "lineRange": [
+        57,
+        64
+      ],
+      "summary": "_sparse_grid() — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_biharmonic_grid.py:TestBiharmonicEngine",
+      "type": "class",
+      "name": "TestBiharmonicEngine",
+      "filePath": "tests/test_biharmonic_grid.py",
+      "lineRange": [
+        70,
+        211
+      ],
+      "summary": "Class TestBiharmonicEngine with 19 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_biharmonic_grid.py:TestGeoxInterpolateGridMCP",
+      "type": "class",
+      "name": "TestGeoxInterpolateGridMCP",
+      "filePath": "tests/test_biharmonic_grid.py",
+      "lineRange": [
+        217,
+        293
+      ],
+      "summary": "Class TestGeoxInterpolateGridMCP with 10 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_c3_redteam_session_enforcement.py",
+      "type": "file",
+      "name": "test_c3_redteam_session_enforcement.py",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "summary": "Defines 2 function(s); 7 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_c3_redteam_session_enforcement.py:_make_sct",
+      "type": "function",
+      "name": "_make_sct",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        41,
+        58
+      ],
+      "summary": "_make_sct(actor, authority, ttl, verified) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_c3_redteam_session_enforcement.py:_mock_kernel_response",
+      "type": "function",
+      "name": "_mock_kernel_response",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        61,
+        98
+      ],
+      "summary": "_mock_kernel_response(session_id, actor_id, actor_verified, authority, status, verdict, session_token) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamFabricatedSession",
+      "type": "class",
+      "name": "TestC3RedteamFabricatedSession",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        104,
+        151
+      ],
+      "summary": "Class TestC3RedteamFabricatedSession with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamValidSessionPreservesId",
+      "type": "class",
+      "name": "TestC3RedteamValidSessionPreservesId",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        157,
+        224
+      ],
+      "summary": "Class TestC3RedteamValidSessionPreservesId with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamSctStillWorks",
+      "type": "class",
+      "name": "TestC3RedteamSctStillWorks",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        230,
+        289
+      ],
+      "summary": "Class TestC3RedteamSctStillWorks with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamActorBinding",
+      "type": "class",
+      "name": "TestC3RedteamActorBinding",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        295,
+        325
+      ],
+      "summary": "Class TestC3RedteamActorBinding with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamInsufficientAuthority",
+      "type": "class",
+      "name": "TestC3RedteamInsufficientAuthority",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        331,
+        357
+      ],
+      "summary": "Class TestC3RedteamInsufficientAuthority with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamUnknownFormat",
+      "type": "class",
+      "name": "TestC3RedteamUnknownFormat",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        363,
+        386
+      ],
+      "summary": "Class TestC3RedteamUnknownFormat with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamNoAnonymousCoercion",
+      "type": "class",
+      "name": "TestC3RedteamNoAnonymousCoercion",
+      "filePath": "tests/test_c3_redteam_session_enforcement.py",
+      "lineRange": [
+        392,
+        424
+      ],
+      "summary": "Class TestC3RedteamNoAnonymousCoercion with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_calibration_gate.py",
+      "type": "file",
+      "name": "test_calibration_gate.py",
+      "filePath": "tests/test_calibration_gate.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_calibration_gate.py:test_calibrated_with_all_inputs_passes",
+      "type": "function",
+      "name": "test_calibrated_with_all_inputs_passes",
+      "filePath": "tests/test_calibration_gate.py",
+      "lineRange": [
+        37,
+        48
+      ],
+      "summary": "test_calibrated_with_all_inputs_passes() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_calibration_gate.py:test_basin_context_loads_malay_basin_group_f_seal",
+      "type": "function",
+      "name": "test_basin_context_loads_malay_basin_group_f_seal",
+      "filePath": "tests/test_calibration_gate.py",
+      "lineRange": [
+        98,
+        123
+      ],
+      "summary": "test_basin_context_loads_malay_basin_group_f_seal() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_calibration_gate.py:test_requires_calibration_decorator",
+      "type": "function",
+      "name": "test_requires_calibration_decorator",
+      "filePath": "tests/test_calibration_gate.py",
+      "lineRange": [
+        146,
+        159
+      ],
+      "summary": "test_requires_calibration_decorator() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_canonical_noun_set.py",
+      "type": "file",
+      "name": "test_canonical_noun_set.py",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "summary": "Defines 19 function(s); exports 19 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:_point",
+      "type": "function",
+      "name": "_point",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        31,
+        42
+      ],
+      "summary": "_point(**overrides) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:_polyline",
+      "type": "function",
+      "name": "_polyline",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        45,
+        51
+      ],
+      "summary": "_polyline() — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:_fault_kwargs",
+      "type": "function",
+      "name": "_fault_kwargs",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        54,
+        58
+      ],
+      "summary": "_fault_kwargs() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:_witness_kwargs",
+      "type": "function",
+      "name": "_witness_kwargs",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        61,
+        68
+      ],
+      "summary": "_witness_kwargs() — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:_minimal_hypothesis_kwargs",
+      "type": "function",
+      "name": "_minimal_hypothesis_kwargs",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        71,
+        72
+      ],
+      "summary": "_minimal_hypothesis_kwargs() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_hypothesis_no_fixed_confidence",
+      "type": "function",
+      "name": "test_hypothesis_no_fixed_confidence",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        131,
+        143
+      ],
+      "summary": "test_hypothesis_no_fixed_confidence() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_hypothesis_confidence_only_via_attachment",
+      "type": "function",
+      "name": "test_hypothesis_confidence_only_via_attachment",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        146,
+        158
+      ],
+      "summary": "test_hypothesis_confidence_only_via_attachment() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_gate_result_required_fields",
+      "type": "function",
+      "name": "test_gate_result_required_fields",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        164,
+        202
+      ],
+      "summary": "test_gate_result_required_fields() — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_gate_result_inputs_units_parallel",
+      "type": "function",
+      "name": "test_gate_result_inputs_units_parallel",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        205,
+        225
+      ],
+      "summary": "test_gate_result_inputs_units_parallel() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_fault_dip_fields_distinct",
+      "type": "function",
+      "name": "test_fault_dip_fields_distinct",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        231,
+        255
+      ],
+      "summary": "test_fault_dip_fields_distinct() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_horizon_geometries_distinct",
+      "type": "function",
+      "name": "test_horizon_geometries_distinct",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        261,
+        283
+      ],
+      "summary": "test_horizon_geometries_distinct() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_witness_provenance_required_chain",
+      "type": "function",
+      "name": "test_witness_provenance_required_chain",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        289,
+        306
+      ],
+      "summary": "test_witness_provenance_required_chain() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_coordinate_domain_declared",
+      "type": "function",
+      "name": "test_coordinate_domain_declared",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        312,
+        357
+      ],
+      "summary": "test_coordinate_domain_declared() — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_canonical_noun_set.py:test_polyline_ordering",
+      "type": "function",
+      "name": "test_polyline_ordering",
+      "filePath": "tests/test_canonical_noun_set.py",
+      "lineRange": [
+        363,
+        380
+      ],
+      "summary": "test_polyline_ordering() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_canonical_public_surface.py",
+      "type": "file",
+      "name": "test_canonical_public_surface.py",
+      "filePath": "tests/test_canonical_public_surface.py",
+      "summary": "Defines 1 function(s); 1 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_canonical_public_surface.py:_extract_feature_collection",
+      "type": "function",
+      "name": "_extract_feature_collection",
+      "filePath": "tests/test_canonical_public_surface.py",
+      "lineRange": [
+        15,
+        21
+      ],
+      "summary": "_extract_feature_collection(payload) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_canonical_public_surface.py:TestWorkspaceSurface",
+      "type": "class",
+      "name": "TestWorkspaceSurface",
+      "filePath": "tests/test_canonical_public_surface.py",
+      "lineRange": [
+        24,
+        133
+      ],
+      "summary": "Class TestWorkspaceSurface with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_canonical_surface_invariant.py",
+      "type": "file",
+      "name": "test_canonical_surface_invariant.py",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "summary": "Defines 21 function(s); exports 21 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_canonical_set_includes_well_known_tools",
+      "type": "function",
+      "name": "test_canonical_set_includes_well_known_tools",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        66,
+        78
+      ],
+      "summary": "test_canonical_set_includes_well_known_tools() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_is_canonical_returns_false_for_drift_names",
+      "type": "function",
+      "name": "test_is_canonical_returns_false_for_drift_names",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        88,
+        102
+      ],
+      "summary": "test_is_canonical_returns_false_for_drift_names() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_filter_tolerates_missing_name_field",
+      "type": "function",
+      "name": "test_filter_tolerates_missing_name_field",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        134,
+        144
+      ],
+      "summary": "test_filter_tolerates_missing_name_field() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_drift_report_detects_live_extras",
+      "type": "function",
+      "name": "test_drift_report_detects_live_extras",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        162,
+        173
+      ],
+      "summary": "test_drift_report_detects_live_extras(live_with_drift) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_drift_endpoint_returns_drift_report",
+      "type": "function",
+      "name": "test_drift_endpoint_returns_drift_report",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        207,
+        221
+      ],
+      "summary": "test_drift_endpoint_returns_drift_report(monkeypatch) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_drift_endpoint_returns_409_on_drift",
+      "type": "function",
+      "name": "test_drift_endpoint_returns_409_on_drift",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        224,
+        237
+      ],
+      "summary": "test_drift_endpoint_returns_409_on_drift(monkeypatch) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:_geox_server_reachable",
+      "type": "function",
+      "name": "_geox_server_reachable",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        248,
+        254
+      ],
+      "summary": "_geox_server_reachable(host, port) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_canonical_surface_invariant.py:test_live_mcp_tools_list_matches_canonical",
+      "type": "function",
+      "name": "test_live_mcp_tools_list_matches_canonical",
+      "filePath": "tests/test_canonical_surface_invariant.py",
+      "lineRange": [
+        261,
+        338
+      ],
+      "summary": "test_live_mcp_tools_list_matches_canonical() — 77 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_cigvis_adapter.py",
+      "type": "file",
+      "name": "test_cigvis_adapter.py",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_volume_slice_to_node_uses_cigvis_v020_api",
+      "type": "function",
+      "name": "test_volume_slice_to_node_uses_cigvis_v020_api",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        22,
+        47
+      ],
+      "summary": "test_volume_slice_to_node_uses_cigvis_v020_api(monkeypatch) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_surface_to_node_uses_create_surfaces",
+      "type": "function",
+      "name": "test_surface_to_node_uses_create_surfaces",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        50,
+        82
+      ],
+      "summary": "test_surface_to_node_uses_create_surfaces(monkeypatch) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_fault_to_node_uses_create_points",
+      "type": "function",
+      "name": "test_fault_to_node_uses_create_points",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        85,
+        109
+      ],
+      "summary": "test_fault_to_node_uses_create_points(monkeypatch) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_well_to_node_uses_create_well_logs",
+      "type": "function",
+      "name": "test_well_to_node_uses_create_well_logs",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        112,
+        142
+      ],
+      "summary": "test_well_to_node_uses_create_well_logs(monkeypatch) — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_render_snapshot_uses_plot3d_savename",
+      "type": "function",
+      "name": "test_render_snapshot_uses_plot3d_savename",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        145,
+        169
+      ],
+      "summary": "test_render_snapshot_uses_plot3d_savename(monkeypatch, tmp_path) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_launch_interactive_uses_viserplot_server",
+      "type": "function",
+      "name": "test_launch_interactive_uses_viserplot_server",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        172,
+        205
+      ],
+      "summary": "test_launch_interactive_uses_viserplot_server(monkeypatch) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter.py:test_compile_cross_section_well_creates_cigvis_node",
+      "type": "function",
+      "name": "test_compile_cross_section_well_creates_cigvis_node",
+      "filePath": "tests/test_cigvis_adapter.py",
+      "lineRange": [
+        208,
+        246
+      ],
+      "summary": "test_compile_cross_section_well_creates_cigvis_node(monkeypatch) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_cigvis_adapter_runtime.py",
+      "type": "file",
+      "name": "test_cigvis_adapter_runtime.py",
+      "filePath": "tests/test_cigvis_adapter_runtime.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter_runtime.py:test_render_snapshot_reports_missing_output_file",
+      "type": "function",
+      "name": "test_render_snapshot_reports_missing_output_file",
+      "filePath": "tests/test_cigvis_adapter_runtime.py",
+      "lineRange": [
+        43,
+        53
+      ],
+      "summary": "test_render_snapshot_reports_missing_output_file(monkeypatch, tmp_path) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter_runtime.py:test_render_snapshot_adds_headless_hint_for_viewport_errors",
+      "type": "function",
+      "name": "test_render_snapshot_adds_headless_hint_for_viewport_errors",
+      "filePath": "tests/test_cigvis_adapter_runtime.py",
+      "lineRange": [
+        56,
+        67
+      ],
+      "summary": "test_render_snapshot_adds_headless_hint_for_viewport_errors(monkeypatch) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter_runtime.py:test_session_cleanup_and_shutdown_release_ports",
+      "type": "function",
+      "name": "test_session_cleanup_and_shutdown_release_ports",
+      "filePath": "tests/test_cigvis_adapter_runtime.py",
+      "lineRange": [
+        80,
+        95
+      ],
+      "summary": "test_session_cleanup_and_shutdown_release_ports() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_cigvis_adapter_runtime.py:test_static_and_interactive_renderer_fail_cleanly_without_cigvis",
+      "type": "function",
+      "name": "test_static_and_interactive_renderer_fail_cleanly_without_cigvis",
+      "filePath": "tests/test_cigvis_adapter_runtime.py",
+      "lineRange": [
+        106,
+        118
+      ],
+      "summary": "test_static_and_interactive_renderer_fail_cleanly_without_cigvis(monkeypatch) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_claim_laundering_guard.py",
+      "type": "file",
+      "name": "test_claim_laundering_guard.py",
+      "filePath": "tests/test_claim_laundering_guard.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_prospect_evaluate_blocks_hypothesis",
+      "type": "function",
+      "name": "test_claim_laundering_guard_prospect_evaluate_blocks_hypothesis",
+      "filePath": "tests/test_claim_laundering_guard.py",
+      "lineRange": [
+        17,
+        36
+      ],
+      "summary": "test_claim_laundering_guard_prospect_evaluate_blocks_hypothesis(mcp_server) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_prospect_judge_verdict_blocks_hypothesis",
+      "type": "function",
+      "name": "test_claim_laundering_guard_prospect_judge_verdict_blocks_hypothesis",
+      "filePath": "tests/test_claim_laundering_guard.py",
+      "lineRange": [
+        44,
+        59
+      ],
+      "summary": "test_claim_laundering_guard_prospect_judge_verdict_blocks_hypothesis(mcp_server) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_evidence_summarize_cross_blocks_hypothesis",
+      "type": "function",
+      "name": "test_claim_laundering_guard_evidence_summarize_cross_blocks_hypothesis",
+      "filePath": "tests/test_claim_laundering_guard.py",
+      "lineRange": [
+        67,
+        82
+      ],
+      "summary": "test_claim_laundering_guard_evidence_summarize_cross_blocks_hypothesis(mcp_server) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_classical_section.py",
+      "type": "file",
+      "name": "test_classical_section.py",
+      "filePath": "tests/test_classical_section.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:_img",
+      "type": "function",
+      "name": "_img",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        21,
+        26
+      ],
+      "summary": "_img() — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:test_classical_section_proposes_geometry",
+      "type": "function",
+      "name": "test_classical_section_proposes_geometry",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        30,
+        54
+      ],
+      "summary": "test_classical_section_proposes_geometry() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:test_classical_via_seismic_interpret_mode",
+      "type": "function",
+      "name": "test_classical_via_seismic_interpret_mode",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        58,
+        76
+      ],
+      "summary": "test_classical_via_seismic_interpret_mode() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:test_interpret_section_aliases_classical",
+      "type": "function",
+      "name": "test_interpret_section_aliases_classical",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        80,
+        91
+      ],
+      "summary": "test_interpret_section_aliases_classical() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:test_interpret_image_uses_classical_then_gates",
+      "type": "function",
+      "name": "test_interpret_image_uses_classical_then_gates",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        95,
+        117
+      ],
+      "summary": "test_interpret_image_uses_classical_then_gates() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_classical_section.py:test_classical_no_guess_true_dip_without_ve",
+      "type": "function",
+      "name": "test_classical_no_guess_true_dip_without_ve",
+      "filePath": "tests/test_classical_section.py",
+      "lineRange": [
+        121,
+        144
+      ],
+      "summary": "test_classical_no_guess_true_dip_without_ve() — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_contrast_canon.py",
+      "type": "file",
+      "name": "test_contrast_canon.py",
+      "filePath": "tests/test_contrast_canon.py",
+      "summary": "Defines 20 function(s); exports 20 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_contrast_metadata_creation",
+      "type": "function",
+      "name": "test_contrast_metadata_creation",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        38,
+        50
+      ],
+      "summary": "test_contrast_metadata_creation() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_contrast_metadata_meta_attribute",
+      "type": "function",
+      "name": "test_contrast_metadata_meta_attribute",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        53,
+        63
+      ],
+      "summary": "test_contrast_metadata_meta_attribute() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_contrast_verdict_seal",
+      "type": "function",
+      "name": "test_contrast_verdict_seal",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        100,
+        113
+      ],
+      "summary": "test_contrast_verdict_seal() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_contrast_verdict_block_ungrounded_meta",
+      "type": "function",
+      "name": "test_contrast_verdict_block_ungrounded_meta",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        116,
+        130
+      ],
+      "summary": "test_contrast_verdict_block_ungrounded_meta() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_contrast_verdict_partial_with_warnings",
+      "type": "function",
+      "name": "test_contrast_verdict_partial_with_warnings",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        133,
+        150
+      ],
+      "summary": "test_contrast_verdict_partial_with_warnings() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_classical",
+      "type": "function",
+      "name": "test_seismic_attributes_tool_classical",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        158,
+        175
+      ],
+      "summary": "test_seismic_attributes_tool_classical() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_meta_without_wells",
+      "type": "function",
+      "name": "test_seismic_attributes_tool_meta_without_wells",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        179,
+        196
+      ],
+      "summary": "test_seismic_attributes_tool_meta_without_wells() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_meta_with_wells",
+      "type": "function",
+      "name": "test_seismic_attributes_tool_meta_with_wells",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        200,
+        217
+      ],
+      "summary": "test_seismic_attributes_tool_meta_with_wells() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_contrast_metadata",
+      "type": "function",
+      "name": "test_seismic_attributes_contrast_metadata",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        221,
+        238
+      ],
+      "summary": "test_seismic_attributes_contrast_metadata() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_f7_uncertainty",
+      "type": "function",
+      "name": "test_seismic_attributes_f7_uncertainty",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        242,
+        261
+      ],
+      "summary": "test_seismic_attributes_f7_uncertainty() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_channel_fault_discrimination",
+      "type": "function",
+      "name": "test_channel_fault_discrimination",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        269,
+        318
+      ],
+      "summary": "test_channel_fault_discrimination() — 49 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_registry_seismic_attributes_execution",
+      "type": "function",
+      "name": "test_registry_seismic_attributes_execution",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        336,
+        346
+      ],
+      "summary": "test_registry_seismic_attributes_execution() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_seismic_attributes_empty_attribute_list",
+      "type": "function",
+      "name": "test_seismic_attributes_empty_attribute_list",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        367,
+        378
+      ],
+      "summary": "test_seismic_attributes_empty_attribute_list() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_f7_humility_enforcement",
+      "type": "function",
+      "name": "test_f7_humility_enforcement",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        386,
+        398
+      ],
+      "summary": "test_f7_humility_enforcement() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_canon.py:test_f9_anti_hantu_meta_detection",
+      "type": "function",
+      "name": "test_f9_anti_hantu_meta_detection",
+      "filePath": "tests/test_contrast_canon.py",
+      "lineRange": [
+        402,
+        422
+      ],
+      "summary": "test_f9_anti_hantu_meta_detection() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_contrast_metadata.py",
+      "type": "file",
+      "name": "test_contrast_metadata.py",
+      "filePath": "tests/test_contrast_metadata.py",
+      "summary": "Defines 5 function(s); 7 class(es); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestContrastSourceDomain",
+      "type": "class",
+      "name": "TestContrastSourceDomain",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        96,
+        108
+      ],
+      "summary": "Class TestContrastSourceDomain with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestVisualTransform",
+      "type": "class",
+      "name": "TestVisualTransform",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        111,
+        123
+      ],
+      "summary": "Class TestVisualTransform with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestPhysicalProxy",
+      "type": "class",
+      "name": "TestPhysicalProxy",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        126,
+        137
+      ],
+      "summary": "Class TestPhysicalProxy with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestConfidenceClass",
+      "type": "class",
+      "name": "TestConfidenceClass",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        140,
+        161
+      ],
+      "summary": "Class TestConfidenceClass with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestContrastMetadata",
+      "type": "class",
+      "name": "TestContrastMetadata",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        168,
+        232
+      ],
+      "summary": "Class TestContrastMetadata with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestGovernanceProperties",
+      "type": "class",
+      "name": "TestGovernanceProperties",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        239,
+        315
+      ],
+      "summary": "Class TestGovernanceProperties with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_contrast_metadata.py:TestFactoryHelpers",
+      "type": "class",
+      "name": "TestFactoryHelpers",
+      "filePath": "tests/test_contrast_metadata.py",
+      "lineRange": [
+        322,
+        361
+      ],
+      "summary": "Class TestFactoryHelpers with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_contrast_views.py",
+      "type": "file",
+      "name": "test_contrast_views.py",
+      "filePath": "tests/test_contrast_views.py",
+      "summary": "Defines 25 function(s); exports 25 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:synthetic_faulted_section",
+      "type": "function",
+      "name": "synthetic_faulted_section",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        47,
+        87
+      ],
+      "summary": "synthetic_faulted_section() — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_texture_energy_is_high_in_chaotic_zone",
+      "type": "function",
+      "name": "test_texture_energy_is_high_in_chaotic_zone",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        132,
+        143
+      ],
+      "summary": "test_texture_energy_is_high_in_chaotic_zone(synthetic_faulted_section) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_default_modes_are_phase1",
+      "type": "function",
+      "name": "test_default_modes_are_phase1",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        172,
+        182
+      ],
+      "summary": "test_default_modes_are_phase1(synthetic_faulted_section) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_invalid_mode_returns_hold",
+      "type": "function",
+      "name": "test_invalid_mode_returns_hold",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        197,
+        207
+      ],
+      "summary": "test_invalid_mode_returns_hold(synthetic_faulted_section) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_every_attribute_carries_axis_and_provenance",
+      "type": "function",
+      "name": "test_every_attribute_carries_axis_and_provenance",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        228,
+        245
+      ],
+      "summary": "test_every_attribute_carries_axis_and_provenance(synthetic_faulted_section) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_image_provenance_is_carried_through",
+      "type": "function",
+      "name": "test_image_provenance_is_carried_through",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        275,
+        290
+      ],
+      "summary": "test_image_provenance_is_carried_through(synthetic_faulted_section) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_phase2_modes_explicitly_rejected",
+      "type": "function",
+      "name": "test_phase2_modes_explicitly_rejected",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        293,
+        307
+      ],
+      "summary": "test_phase2_modes_explicitly_rejected() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_ac_risk_heatmap_is_opt_in",
+      "type": "function",
+      "name": "test_ac_risk_heatmap_is_opt_in",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        310,
+        328
+      ],
+      "summary": "test_ac_risk_heatmap_is_opt_in(synthetic_faulted_section) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_all_nine_attributes_on_real_data",
+      "type": "function",
+      "name": "test_all_nine_attributes_on_real_data",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        331,
+        355
+      ],
+      "summary": "test_all_nine_attributes_on_real_data(synthetic_faulted_section) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_contrast_views.py:test_failure_in_one_mode_doesnt_kill_others",
+      "type": "function",
+      "name": "test_failure_in_one_mode_doesnt_kill_others",
+      "filePath": "tests/test_contrast_views.py",
+      "lineRange": [
+        367,
+        394
+      ],
+      "summary": "test_failure_in_one_mode_doesnt_kill_others(monkeypatch, synthetic_faulted_section) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_core_tools.py",
+      "type": "file",
+      "name": "test_core_tools.py",
+      "filePath": "tests/test_core_tools.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_core_tools.py:test_earth_model_tool_returns_reproducible_quantities",
+      "type": "function",
+      "name": "test_earth_model_tool_returns_reproducible_quantities",
+      "filePath": "tests/test_core_tools.py",
+      "lineRange": [
+        20,
+        39
+      ],
+      "summary": "test_earth_model_tool_returns_reproducible_quantities() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_core_tools.py:test_eo_foundation_model_tool_runs_with_bbox_inputs",
+      "type": "function",
+      "name": "test_eo_foundation_model_tool_runs_with_bbox_inputs",
+      "filePath": "tests/test_core_tools.py",
+      "lineRange": [
+        53,
+        69
+      ],
+      "summary": "test_eo_foundation_model_tool_runs_with_bbox_inputs() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_core_tools.py:test_seismic_vlm_tool_enforces_perception_uncertainty_floor",
+      "type": "function",
+      "name": "test_seismic_vlm_tool_enforces_perception_uncertainty_floor",
+      "filePath": "tests/test_core_tools.py",
+      "lineRange": [
+        73,
+        85
+      ],
+      "summary": "test_seismic_vlm_tool_enforces_perception_uncertainty_floor() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_core_tools.py:test_simulator_tool_returns_forward_model_outputs",
+      "type": "function",
+      "name": "test_simulator_tool_returns_forward_model_outputs",
+      "filePath": "tests/test_core_tools.py",
+      "lineRange": [
+        99,
+        119
+      ],
+      "summary": "test_simulator_tool_returns_forward_model_outputs() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_core_tools.py:test_georag_tool_falls_back_to_global_literature_when_basin_has_no_match",
+      "type": "function",
+      "name": "test_georag_tool_falls_back_to_global_literature_when_basin_has_no_match",
+      "filePath": "tests/test_core_tools.py",
+      "lineRange": [
+        123,
+        136
+      ],
+      "summary": "test_georag_tool_falls_back_to_global_literature_when_basin_has_no_match() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_score_exact_match_high_similarity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_score_structurally_different_fires_dangerous_flag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:_pa",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_invalid_contrast_mode_returns_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_clean_query_returns_qualify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_dangerous_query_returns_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_corpus_filter_basin_ids_works",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_min_data_quality_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_contrast_mode_similarity_only_strips_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_contrast_mode_contrast_only_strips_similarity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_claim_tag_is_hypothesis_when_dangerous",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_min_similarity_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_analog_atlas.py",
+      "target": "function:tests/test_analog_atlas.py:test_doctrine_8_missing_evidence_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_no_anomaly_aligned_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_anomaly_displaced_reflector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_megah1_quantified_case",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_plain_output_contract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_qi_rung_declares_post_stack_fluid_limit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_seismic_compute_surfaces_qi_rung_top_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_avo_class_classification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_attention_residual_computed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_attention_equivalence_top_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_attention_residual_no_anomaly_still_present",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_softmax_alpha_bounded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_avo_class_iii_iv_conditional",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_essay13_softmax_hallucination_risk_present",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_essay13_approximation_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_essay13_boundary_condition_flags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_anomalous_contrast.py",
+      "target": "function:tests/test_anomalous_contrast.py:test_essay13_trilogy_reference_in_top_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_app_export_parity.py",
+      "target": "class:tests/test_app_export_parity.py:TestAppExportParity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "function:tests/test_argument_sidecar.py:_sabah_structural_claims",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "function:tests/test_argument_sidecar.py:_sabah_rival_claims",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "function:tests/test_argument_sidecar.py:_sabah_uncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "class:tests/test_argument_sidecar.py:TestGeologicalClaim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "class:tests/test_argument_sidecar.py:TestArgumentSidecar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_argument_sidecar.py",
+      "target": "class:tests/test_argument_sidecar.py:TestArgumentBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_artifact_identity_roundtrip.py",
+      "target": "function:tests/test_artifact_identity_roundtrip.py:test_make_then_parse_canonical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_artifact_identity_roundtrip.py",
+      "target": "function:tests/test_artifact_identity_roundtrip.py:test_audit_failing_case_normalizes_correctly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_asset_memory_wave2.py",
+      "target": "function:tests/test_asset_memory_wave2.py:test_asset_memory_store_and_recall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "function:tests/test_attributes.py:synthetic_3d_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "function:tests/test_attributes.py:synthetic_2d_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestCoherence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestCurvature",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestSpectralDecomposition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestAmplitude",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestComputeAttributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_attributes.py",
+      "target": "class:tests/test_attributes.py:TestSeismicAttributeTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_auto_mint.py",
+      "target": "function:tests/test_auto_mint.py:_count_claims",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_auto_mint.py",
+      "target": "class:tests/test_auto_mint.py:TestCanonicalMint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_auto_mint.py",
+      "target": "class:tests/test_auto_mint.py:TestSyntheticGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_charge_wave2.py",
+      "target": "function:tests/test_basin_charge_wave2.py:test_basin_charge_simulator_returns_probability",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestGapRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestProvenanceLedger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestUncertaintyCascade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestSynthesisState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestBasinSynthesisPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestStrangeLoopConvergence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestPhysics9GapFill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestFetcherRetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_basin_synthesis_pipeline.py",
+      "target": "class:tests/test_basin_synthesis_pipeline.py:TestFetcherFallbackChain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "function:tests/test_bid_round_screener.py:_make_mbr2026_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestScoringFunctions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestSchemas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestSecurity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestAudit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_bid_round_screener.py",
+      "target": "class:tests/test_bid_round_screener.py:TestEdgeCases",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_biharmonic_grid.py",
+      "target": "function:tests/test_biharmonic_grid.py:_dense_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_biharmonic_grid.py",
+      "target": "function:tests/test_biharmonic_grid.py:_sparse_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_biharmonic_grid.py",
+      "target": "class:tests/test_biharmonic_grid.py:TestBiharmonicEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_biharmonic_grid.py",
+      "target": "class:tests/test_biharmonic_grid.py:TestGeoxInterpolateGridMCP",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "function:tests/test_c3_redteam_session_enforcement.py:_make_sct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "function:tests/test_c3_redteam_session_enforcement.py:_mock_kernel_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamFabricatedSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamValidSessionPreservesId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamSctStillWorks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamActorBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamInsufficientAuthority",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamUnknownFormat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_c3_redteam_session_enforcement.py",
+      "target": "class:tests/test_c3_redteam_session_enforcement.py:TestC3RedteamNoAnonymousCoercion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_calibration_gate.py",
+      "target": "function:tests/test_calibration_gate.py:test_calibrated_with_all_inputs_passes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_calibration_gate.py",
+      "target": "function:tests/test_calibration_gate.py:test_basin_context_loads_malay_basin_group_f_seal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_calibration_gate.py",
+      "target": "function:tests/test_calibration_gate.py:test_requires_calibration_decorator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:_polyline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:_fault_kwargs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:_witness_kwargs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:_minimal_hypothesis_kwargs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_hypothesis_no_fixed_confidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_hypothesis_confidence_only_via_attachment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_gate_result_required_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_gate_result_inputs_units_parallel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_fault_dip_fields_distinct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_horizon_geometries_distinct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_witness_provenance_required_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_coordinate_domain_declared",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_noun_set.py",
+      "target": "function:tests/test_canonical_noun_set.py:test_polyline_ordering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_public_surface.py",
+      "target": "function:tests/test_canonical_public_surface.py:_extract_feature_collection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_public_surface.py",
+      "target": "class:tests/test_canonical_public_surface.py:TestWorkspaceSurface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_canonical_set_includes_well_known_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_is_canonical_returns_false_for_drift_names",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_filter_tolerates_missing_name_field",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_drift_report_detects_live_extras",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_drift_endpoint_returns_drift_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_drift_endpoint_returns_409_on_drift",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:_geox_server_reachable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_canonical_surface_invariant.py",
+      "target": "function:tests/test_canonical_surface_invariant.py:test_live_mcp_tools_list_matches_canonical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_volume_slice_to_node_uses_cigvis_v020_api",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_surface_to_node_uses_create_surfaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_fault_to_node_uses_create_points",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_well_to_node_uses_create_well_logs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_render_snapshot_uses_plot3d_savename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_launch_interactive_uses_viserplot_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter.py",
+      "target": "function:tests/test_cigvis_adapter.py:test_compile_cross_section_well_creates_cigvis_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter_runtime.py",
+      "target": "function:tests/test_cigvis_adapter_runtime.py:test_render_snapshot_reports_missing_output_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter_runtime.py",
+      "target": "function:tests/test_cigvis_adapter_runtime.py:test_render_snapshot_adds_headless_hint_for_viewport_errors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter_runtime.py",
+      "target": "function:tests/test_cigvis_adapter_runtime.py:test_session_cleanup_and_shutdown_release_ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_cigvis_adapter_runtime.py",
+      "target": "function:tests/test_cigvis_adapter_runtime.py:test_static_and_interactive_renderer_fail_cleanly_without_cigvis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_claim_laundering_guard.py",
+      "target": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_prospect_evaluate_blocks_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_claim_laundering_guard.py",
+      "target": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_prospect_judge_verdict_blocks_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_claim_laundering_guard.py",
+      "target": "function:tests/test_claim_laundering_guard.py:test_claim_laundering_guard_evidence_summarize_cross_blocks_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:_img",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:test_classical_section_proposes_geometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:test_classical_via_seismic_interpret_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:test_interpret_section_aliases_classical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:test_interpret_image_uses_classical_then_gates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_classical_section.py",
+      "target": "function:tests/test_classical_section.py:test_classical_no_guess_true_dip_without_ve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_contrast_metadata_creation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_contrast_metadata_meta_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_contrast_verdict_seal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_contrast_verdict_block_ungrounded_meta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_contrast_verdict_partial_with_warnings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_classical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_meta_without_wells",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_tool_meta_with_wells",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_contrast_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_f7_uncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_channel_fault_discrimination",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_registry_seismic_attributes_execution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_seismic_attributes_empty_attribute_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_f7_humility_enforcement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_canon.py",
+      "target": "function:tests/test_contrast_canon.py:test_f9_anti_hantu_meta_detection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestContrastSourceDomain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestVisualTransform",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestPhysicalProxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestConfidenceClass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestContrastMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestGovernanceProperties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_metadata.py",
+      "target": "class:tests/test_contrast_metadata.py:TestFactoryHelpers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:synthetic_faulted_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_texture_energy_is_high_in_chaotic_zone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_default_modes_are_phase1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_invalid_mode_returns_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_every_attribute_carries_axis_and_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_image_provenance_is_carried_through",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_phase2_modes_explicitly_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_ac_risk_heatmap_is_opt_in",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_all_nine_attributes_on_real_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_contrast_views.py",
+      "target": "function:tests/test_contrast_views.py:test_failure_in_one_mode_doesnt_kill_others",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_core_tools.py",
+      "target": "function:tests/test_core_tools.py:test_earth_model_tool_returns_reproducible_quantities",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_core_tools.py",
+      "target": "function:tests/test_core_tools.py:test_eo_foundation_model_tool_runs_with_bbox_inputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_core_tools.py",
+      "target": "function:tests/test_core_tools.py:test_seismic_vlm_tool_enforces_perception_uncertainty_floor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_core_tools.py",
+      "target": "function:tests/test_core_tools.py:test_simulator_tool_returns_forward_model_outputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_core_tools.py",
+      "target": "function:tests/test_core_tools.py:test_georag_tool_falls_back_to_global_literature_when_basin_has_no_match",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

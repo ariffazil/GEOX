@@ -1,0 +1,360 @@
+# ==============================================================================
+# tectonic_invariants.yaml
+# GEOX Tectonic-Event Constitution — F0 Layer
+# Above structural restoration (F1 = SR_INV_001–015)
+# Above operational invariants (F2 = geox_invariants.yaml PI/EI/CG/OI)
+#
+# Forged: 2026-09-14
+# Architect: Muhammad Arif bin Fazil (F13 Sovereign)
+# Source: Dr Shahram 3D Restoration Method lecture × Kinabalu Basin reasoning
+# Doctrine: Restoration products are observations. Tectonic events are explanations.
+#            Accommodation is an effect. The signal is in the transition.
+#            Never confuse the two.
+# ==============================================================================
+
+meta:
+  artifact_id: geox_tectonic_invariants_v1
+  version: "1.0.0"
+  forged_at: "2026-09-14T00:00:00+00:00"
+  author: "ariffazil"
+  space: "GEOX Structural Restoration — arifOS"
+  layer: "F0 — above structural restoration F1, above operational F2"
+  doctrine: >
+    A restoration is admissible only when geometry, chronology, physics,
+    uncertainty and provenance remain mutually consistent.
+    A visually plausible map is not evidence of a valid restoration.
+  seal: "DITEMPA BUKAN DIBERI"
+
+# ==============================================================================
+# I. TECTONIC REASONING INVARIANTS (F0)
+# These govern how GEOX reasons about geological events.
+# They sit ABOVE structural restoration invariants (SR_INV_001–015).
+# They sit ABOVE operational invariants (PI/EI/CG/OI).
+# ==============================================================================
+
+tectonic_invariants:
+
+  TECT-001:
+    name: "Observation ≠ Explanation"
+    statement: >
+      Restoration products (accommodation maps, subsidence maps,
+      fill-ratio maps, uncertainty envelopes) are observations of
+      geometric differences between states. They are NOT explanations
+      of tectonic causation. GEOX must never present a restoration
+      product as a tectonic interpretation without explicit causal
+      reasoning and competing hypotheses.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F4, F9]
+    violation_action: "HOLD — separate observation from interpretation in output"
+    kinabalu_example: >
+      A fill-ratio map showing1.5 in a mini-basin is an observation.
+      Attributing it to fault activity without testing compaction error,
+      horizon mistie, velocity bias, erosional removal, or grid artefact
+      is premature causal attribution.
+
+  TECT-002:
+    name: "Accommodation Is an Effect"
+    statement: >
+      Accommodation space is created by the combined consequences of
+      tectonic subsidence, eustatic change, sediment loading, compaction,
+      and structural deformation. It is NOT a primary cause. GEOX must
+      not treat accommodation creation as a tectonic explanation.
+      The correct question is: what event created this accommodation?
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — require upstream causal chain before accepting accommodation as explanation"
+    kinabalu_example: >
+      Identical accommodation in two mini-basins does not imply identical
+      causation. One may be thermal sag; another strike-slip pull-apart.
+      Same effect, different events.
+
+  TECT-003:
+    name: "Subsidence Is an Effect"
+    statement: >
+      Basement subsidence records the geometric consequence of
+      lithospheric thinning, loading, or dynamic support removal.
+      It does not, by itself, identify the mechanism. GEOX must
+      distinguish between thermal subsidence, flexural subsidence,
+      tectonic subsidence, and dynamic subsidence as separate causal
+      pathways that produce similar geometric signatures.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — require mechanism declaration before accepting subsidence as explanation"
+
+  TECT-004:
+    name: "Fault Azimuth Is Evidence, Not Age"
+    statement: >
+      A fault's present-day orientation is a geometric observation.
+      It cannot, alone, determine the fault's age, generation,
+      or tectonic origin. Faults can be rotated, reactivated,
+      segmented, bent, or overprinted by subsequent events.
+      Two NE-SW faults can have completely different ages, drivers,
+      and petroleum implications while appearing identical on a map.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F4, F9]
+    violation_action: "HOLD — require relational evidence before assigning fault generation"
+    evidence_requirements:
+      - "cross-cutting relationships"
+      - "termination against older structures"
+      - "bending along basement trends"
+      - "displacement changes along strike"
+      - "linkage and segmentation patterns"
+      - "agreement with independent stress indicators"
+      - "agreement with gravity/magnetic basement trends"
+
+  TECT-005:
+    name: "Stress Rotation Outranks Fault Orientation"
+    statement: >
+      When independent stress indicators (earthquake focal mechanisms,
+      borehole breakout, magnetic stripes, plate reconstruction) show
+      a change in stress direction, this change takes precedence over
+      present-day fault azimuth for interpreting tectonic events.
+      Stress rotation is a primary signal; fault orientation is a
+      secondary geometric consequence.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — do not overwrite observed geometry with expected stress; validate both"
+    kinabalu_example: >
+      NW Sabah shows N-S extension → NE-SW extension transitions.
+      The stress rotation signal, not individual fault azimuths,
+      identifies the tectonic phase transition.
+
+  TECT-006:
+    name: "Basin Evolution Is Event Sequence, Not Geometry Sequence"
+    statement: >
+      A basin's geological history is fundamentally a sequence of
+      tectonic events (rifting, sag, breakup, collision, inversion,
+      strike-slip, thermal relaxation), not merely a sequence of
+      geometric states. Restoration that produces only geometry
+      differences (State(t0) vs State(t1)) without linking to
+      event transitions (Event(t0) → Event(t1) → Event(t2))
+      is incomplete geological reasoning.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — require event identification before claiming basin evolution is understood"
+    kinabalu_example: >
+      Kinabalu Basin requires event-stack restoration:
+      Syn-rift → Collision → Wedge growth → Slab breakoff → Mud canopy.
+      Single-step present-to-past restoration conflates five distinct mechanisms.
+
+  TECT-007:
+    name: "Restoration Products Support Multiple Hypotheses"
+    statement: >
+      Any single restoration product (accommodation map, subsidence
+      map, fill-ratio map) is consistent with multiple tectonic
+      hypotheses. GEOX must enumerate at least two competing
+      hypotheses for any material restoration observation and
+      assign relative probabilities. Single-hypothesis interpretation
+      of restoration products is prohibited at decision gates.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F3, F7]
+    violation_action: "888 HOLD — block interpretation until alternatives registered"
+    kinabalu_example: >
+      Strike-slip pull-apart and rift border fault can produce
+      identical fill ratios. The observation constrains but does
+      not determine the explanation.
+
+  TECT-008:
+    name: "Geological Interpretation Must Preserve Ambiguity"
+    statement: >
+      Where multiple tectonic interpretations are consistent with
+      the evidence, GEOX must preserve all viable interpretations
+      with their relative probabilities. Collapsing ambiguity into
+      a single preferred interpretation without falsifying alternatives
+      is epistemic overreach. Ambiguity is information, not noise.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F7]
+    violation_action: "HOLD — restore competing hypotheses to output"
+
+  TECT-009:
+    name: "Tectonic Contrast Signal Is Transition, Not Value"
+    statement: >
+      The diagnostic signal in overprinted basins is the change in
+      behaviour (Δ), not the absolute value at any point. Stress
+      rotation, fault generation switch, carbonate factory on/off,
+      extension-to-strike-slip transition — these transitions are
+      the primary data. Absolute accommodation or thickness values
+      are secondary geometric consequences.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — identify the transition before interpreting the value"
+    kinabalu_example: >
+      The NW Sabah signal is: N-S stress → NE-SW stress,
+      Extension → Strike-slip, Fault propagation → Fault inheritance,
+      Carbonate factory on → Carbonate factory off.
+      Each transition carries more tectonic information than any
+      single fill-ratio or accommodation map.
+
+  TECT-010:
+    name: "Single Restoration Step Risks Conflating Mechanisms"
+    statement: >
+      In basins with multiple overprinted deformation episodes,
+      a single present-day-to-past restoration step risks mixing
+      distinct mechanisms into one geometric transformation.
+      Event-stack restoration (decomposing into sequential tectonic
+      phases) is required when the basin contains evidence of
+      more than one deformation generation.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — decompose into event-stack before accepting single-step restoration"
+    kinabalu_example: >
+      Kinabalu Basin current geometry = rift + post-rift + strike-slip +
+      gravity sliding + compression, all stacked. Single-step restoration
+      cannot separate these mechanisms.
+
+  TECT-011:
+    name: "Basement May Contain Multiple Histories"
+    statement: >
+      A single "Top Basement" surface may geometrically exist but
+      tectonically represent multiple distinct geological elements
+      (stretched continental crust, inherited rift blocks, igneous
+      additions, older structural fabrics). One basement horizon
+      does not equal one geological event. GEOX must inspect
+      basement heterogeneity before using it as a restoration datum.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — require basement heterogeneity assessment before using as reference"
+    kinabalu_example: >
+      NW Sabah basement may include Dangerous Grounds blocks,
+      stretched continental crust, and igneous additions.
+      Using "Top Basement" as a single reference conflates
+      distinct tectonic histories.
+
+  TECT-012:
+    name: "Overprinting Requires Event Decomposition"
+    statement: >
+      When a basin shows evidence of multiple deformation episodes
+      (multiple fault generations, rotated stress fields, unconformity
+      superposition), GEOX must attempt event decomposition before
+      computing restoration products. Undecomposed restoration of
+      overprinted basins produces geometrically valid but geologically
+      meaningless products.
+    epistemic_tag: CLAIM
+    floor_ref: [F2, F9]
+    violation_action: "HOLD — decompose overprinting before accepting restoration products"
+
+# ==============================================================================
+# II. KINABALU-SPECIFIC TECTONIC FRAMEWORK
+# Event sequence for NW Sabah basin. Not a general model — a calibrated
+# regional reference. Other basins supply their own event sequences.
+# ==============================================================================
+
+kinabalu_event_stack:
+  description: >
+    NW Sabah Basin evolved through five major tectonic phases.
+    The signal is in the transitions between phases, not in
+    any single phase's geometric state.
+  source: "Morley 2023, Morley 2024, Pilia et al. 2023, tectonic_history.md"
+  phases:
+    - id: ASAS
+      name: "Syn-Rift / Platform Setup"
+      age_range: "Paleogene–Early Miocene (40–23 Ma)"
+      tectonic_regime: "Extension"
+      events: ["PSCS rifting", "Dangerous Grounds rift blocks"]
+      transition_to: BEBAS
+
+    - id: BEBAS
+      name: "Intra-Rift Reorganisation"
+      age_range: "Oligocene"
+      tectonic_regime: "Extension (reoriented)"
+      events: ["Intra-rift reorganisation"]
+      transition_to: KAPUR
+
+    - id: KAPUR
+      name: "Collision Onset / NSPW Base"
+      age_range: "~23 Ma (BMU/TCU)"
+      tectonic_regime: "Collision"
+      events:
+        - "Dangerous Grounds enters subduction zone"
+        - "Cannot subduct (buoyant) → underthrusts NW Borneo"
+        - "End of Crocker accretionary prism"
+        - "NSPW begins as post-collisional syn-orogenic wedge"
+      transition_to: SABAR
+
+    - id: SABAR
+      name: "Slab Breakoff + Wedge-Top"
+      age_range: "~13–10.5 Ma (DRU)"
+      tectonic_regime: "Post-collisional extension / rebound"
+      events:
+        - "PSCS slab breaks off (Pilia et al. 2023)"
+        - "Buoyant rebound uplifts NW Borneo hinterland"
+        - "DRU carved into shelf (wedge-top, NOT collision onset)"
+        - "Massive delta progradation begins"
+        - "Shale-expulsion basins develop"
+      transition_to: SENJA
+
+    - id: SENJA
+      name: "Mud Canopy + Post-Wedge Burial"
+      age_range: "10.5–0 Ma"
+      tectonic_regime: "Gravity-driven + mud expulsion"
+      events:
+        - "Overpressured shales expelled through pipes/vents"
+        - "50 mud volcano centres → 1900 km² canopy"
+        - "SRU (~8.5 Ma): post-canopy burial"
+        - "Late gravity-driven DWFTB develops"
+        - "Present-day mud volcanoes still active"
+
+  unconformities:
+    - name: BMU/TCU
+      age_ma: 23
+      meaning: "Collision onset / NSPW base"
+    - name: DRU
+      age_ma: 13
+      meaning: "Wedge-top / slab breakoff response (NOT collision start)"
+    - name: UIU
+      age_ma: 10.5
+      meaning: "End of mini-basin development"
+    - name: SRU
+      age_ma: 8.5
+      meaning: "Post-canopy burial"
+
+  event_transitions:
+    - from: ASAS
+      to: BEBAS
+      signal: "Stress reorientation within extension"
+      observation: "Rift block geometry change"
+    - from: BEBAS
+      to: KAPUR
+      signal: "Extension → Collision"
+      observation: "Accretionary prism cessation, underthrusting begins"
+    - from: KAPUR
+      to: SABAR
+      signal: "Collision → Post-collisional rebound"
+      observation: "Slab breakoff, DRU, hinterland uplift, delta progradation"
+    - from: SABAR
+      to: SENJA
+      signal: "Wedge-top → Gravity-driven burial"
+      observation: "Mud canopy, DWFTB, post-canopy sedimentation"
+
+# ==============================================================================
+# III. BUILD ORDER
+# Phase 1 (NOW): This file — tectonic_invariants.yaml (F0)
+# Phase 2 (NEXT): structural_restoration/invariants.yaml (F1 = SR_INV_001–015)
+# Phase 3: state.py — RestorationState schema
+# Phase 4: compute tools (accommodation_diff, basement_subsidence, fill_ratio)
+# Phase 5: uncertainty tools (compaction_uncertainty, distance_uncertainty)
+# Phase 6: fault_inheritance (relational evidence engine)
+# Phase 7: tectonic_reasoning engine (infer_event_changes, rank_tectonic_scenarios)
+# Phase 8: MCP tool wrappers + resources + system prompt
+# ==============================================================================
+
+# ==============================================================================
+# IV. RELATIONSHIP TO EXISTING INVARIANTS
+#
+# Layer F0: THIS FILE — tectonic_invariants.yaml (TECT-001–012)
+#           Governs: how GEOX reasons about geological events
+#           Principle: observation ≠ explanation
+#
+# Layer F1: structural_restoration/invariants.yaml (SR_INV_001–015)
+#           Governs: how GEOX computes restoration products
+#           Principle: geometry, chronology, physics, uncertainty, provenance
+#
+# Layer F2: geox_invariants.yaml (PI/EI/CG/OI-01–05)
+#           Governs: how GEOX operates as a system
+#           Principle: physics > narrative, maruah > convenience
+# ==============================================================================
+
+# ==============================================================================
+# DITEMPA BUKAN DIBERI — Forged, Not Given
+# The signal is in the transition. Accommodation is an effect.
+# ==============================================================================

@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/infrastructure/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/infrastructure/agent-card.json",
+      "summary": "json config file (94 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/infrastructure/infra-capacity-and-failure.md",
+      "type": "document",
+      "name": "infra-capacity-and-failure.md",
+      "filePath": "skills/infrastructure/infra-capacity-and-failure.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/infrastructure/infra-critical-node-watch.md",
+      "type": "document",
+      "name": "infra-critical-node-watch.md",
+      "filePath": "skills/infrastructure/infra-critical-node-watch.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/infrastructure/infra-network-topology.md",
+      "type": "document",
+      "name": "infra-network-topology.md",
+      "filePath": "skills/infrastructure/infra-network-topology.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

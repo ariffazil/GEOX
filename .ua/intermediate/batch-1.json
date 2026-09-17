@@ -1,0 +1,44 @@
+{
+  "nodes": [
+    {
+      "id": "service:.dockerignore",
+      "type": "service",
+      "name": ".dockerignore",
+      "filePath": ".dockerignore",
+      "summary": "unknown infra file (30 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "Dockerfile",
+      "summary": "dockerfile infra file (52 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "dockerfile",
+        "containerization",
+        "deployment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:docker-compose.yml",
+      "type": "service",
+      "name": "docker-compose.yml",
+      "filePath": "docker-compose.yml",
+      "summary": "yaml infra file (64 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "orchestration"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

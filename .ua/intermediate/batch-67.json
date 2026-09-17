@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/terrain/terrain-drainage-structure.md",
+      "type": "document",
+      "name": "terrain-drainage-structure.md",
+      "filePath": "src/geox_core/skills/terrain/terrain-drainage-structure.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/terrain/terrain-relief-and-slope.md",
+      "type": "document",
+      "name": "terrain-relief-and-slope.md",
+      "filePath": "src/geox_core/skills/terrain/terrain-relief-and-slope.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/terrain/terrain-surface-access.md",
+      "type": "document",
+      "name": "terrain-surface-access.md",
+      "filePath": "src/geox_core/skills/terrain/terrain-surface-access.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,3895 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_mcp/routing/policy.py",
+      "type": "file",
+      "name": "policy.py",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:_contains_any",
+      "type": "function",
+      "name": "_contains_any",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        13,
+        15
+      ],
+      "summary": "_contains_any(query, patterns) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:_resolve_mode",
+      "type": "function",
+      "name": "_resolve_mode",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "_resolve_mode(route_input, policy) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:_resolve_risk",
+      "type": "function",
+      "name": "_resolve_risk",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        37,
+        40
+      ],
+      "summary": "_resolve_risk(route_input, policy) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:_build_policy_flags",
+      "type": "function",
+      "name": "_build_policy_flags",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        43,
+        51
+      ],
+      "summary": "_build_policy_flags(mode, domain, risk) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:_filter_allowed_tools",
+      "type": "function",
+      "name": "_filter_allowed_tools",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        54,
+        61
+      ],
+      "summary": "_filter_allowed_tools(mode, user_groups, policy) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:route_query",
+      "type": "function",
+      "name": "route_query",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        64,
+        82
+      ],
+      "summary": "route_query(route_input) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/policy.py:fallback_route",
+      "type": "function",
+      "name": "fallback_route",
+      "filePath": "src/geox_mcp/routing/policy.py",
+      "lineRange": [
+        85,
+        108
+      ],
+      "summary": "fallback_route(route_input, failure_class) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/routing/tool.py",
+      "type": "file",
+      "name": "tool.py",
+      "filePath": "src/geox_mcp/routing/tool.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/routing/tool.py:arifos_route_query",
+      "type": "function",
+      "name": "arifos_route_query",
+      "filePath": "src/geox_mcp/routing/tool.py",
+      "lineRange": [
+        11,
+        50
+      ],
+      "summary": "arifos_route_query(query, user_id, request_id, user_groups, domain_hint, current_hypothesis, task_type, risk_context) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/seal_receipt.py",
+      "type": "file",
+      "name": "seal_receipt.py",
+      "filePath": "src/geox_mcp/seal_receipt.py",
+      "summary": "Defines 3 function(s); 1 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/seal_receipt.py:_build_pai_receipt",
+      "type": "function",
+      "name": "_build_pai_receipt",
+      "filePath": "src/geox_mcp/seal_receipt.py",
+      "lineRange": [
+        100,
+        141
+      ],
+      "summary": "_build_pai_receipt(tool, artifact_id, artifact_sha256, actor_id, session_id, risk_class, action, reversibility) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/seal_receipt.py:seal_receipt",
+      "type": "function",
+      "name": "seal_receipt",
+      "filePath": "src/geox_mcp/seal_receipt.py",
+      "lineRange": [
+        144,
+        281
+      ],
+      "summary": "seal_receipt(tool, artifact_id, artifact_sha256, actor_id, session_id, verdict, risk_class, reversibility) — 137 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/seal_receipt.py:build_verification_envelope",
+      "type": "function",
+      "name": "build_verification_envelope",
+      "filePath": "src/geox_mcp/seal_receipt.py",
+      "lineRange": [
+        287,
+        344
+      ],
+      "summary": "build_verification_envelope(artifact_status, verification_status, artifact_id, artifact_sha256, actor_id, session_id, tool, verification_reason, receipt, claim_state) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/seal_receipt.py:SealResult",
+      "type": "class",
+      "name": "SealResult",
+      "filePath": "src/geox_mcp/seal_receipt.py",
+      "lineRange": [
+        54,
+        94
+      ],
+      "summary": "Class SealResult with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/server.py",
+      "type": "file",
+      "name": "server.py",
+      "filePath": "src/geox_mcp/server.py",
+      "summary": "Defines 82 function(s); 7 class(es); exports 89 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_annotations",
+      "type": "function",
+      "name": "_geox_annotations",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        258,
+        271
+      ],
+      "summary": "_geox_annotations(tool_name) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_get_git_version",
+      "type": "function",
+      "name": "_get_git_version",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        290,
+        317
+      ],
+      "summary": "_get_git_version() — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_build_geox_governance_middleware",
+      "type": "function",
+      "name": "_build_geox_governance_middleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        407,
+        418
+      ],
+      "summary": "_build_geox_governance_middleware() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_build_geox_ttl_middleware",
+      "type": "function",
+      "name": "_build_geox_ttl_middleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        421,
+        432
+      ],
+      "summary": "_build_geox_ttl_middleware() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_enforce_geox",
+      "type": "function",
+      "name": "_enforce_geox",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        444,
+        453
+      ],
+      "summary": "_enforce_geox() — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_consequence_footprint",
+      "type": "function",
+      "name": "_consequence_footprint",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        468,
+        512
+      ],
+      "summary": "_consequence_footprint(action_description, affected_area_km2, material_movement_tonnes, emissions_tonnes_co2e, water_impact_m3, habitat_fragmentation, subsidence_risk, contamination_risk, reversibility, uncertainty_factor) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_optionality_loss",
+      "type": "function",
+      "name": "_optionality_loss",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        515,
+        536
+      ],
+      "summary": "_optionality_loss(action_description, options_destroyed, options_preserved) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_feedback_integrity",
+      "type": "function",
+      "name": "_feedback_integrity",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        539,
+        577
+      ],
+      "summary": "_feedback_integrity(monitoring_system, sensor_coverage_pct, baseline_quality, missing_measurements, reporting_delay_hours, threshold_manipulation_detected, excluded_anomalies) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_material_truth_challenge",
+      "type": "function",
+      "name": "_material_truth_challenge",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        580,
+        609
+      ],
+      "summary": "_material_truth_challenge(institutional_claim, earth_measurements, measurement_confidence) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_cascade_pathway",
+      "type": "function",
+      "name": "_cascade_pathway",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        612,
+        627
+      ],
+      "summary": "_cascade_pathway(intervention, cascade_graph) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:compose_geox_servers",
+      "type": "function",
+      "name": "compose_geox_servers",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        630,
+        693
+      ],
+      "summary": "compose_geox_servers() — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_doctrine_assumption_register",
+      "type": "function",
+      "name": "_doctrine_assumption_register",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        810,
+        832
+      ],
+      "summary": "_doctrine_assumption_register(introduced_by, rung_origin, description, parent_assumption_id, inherited_from, epistemic_label) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_doctrine_anti_beautiful_one",
+      "type": "function",
+      "name": "_doctrine_anti_beautiful_one",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        836,
+        856
+      ],
+      "summary": "_doctrine_anti_beautiful_one(text, grounding_evidence_count, grounding_evidence_rungs, threshold, include_decomposition) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_doctrine_godel_review",
+      "type": "function",
+      "name": "_doctrine_godel_review",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        860,
+        894
+      ],
+      "summary": "_doctrine_godel_review(claim_id, action, void_reason, rung, description, depends_on_assumption_ids) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_prithvi_eo_inference",
+      "type": "function",
+      "name": "_prithvi_eo_inference",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        899,
+        922
+      ],
+      "summary": "_prithvi_eo_inference(tile_id, task, bands, time_range_start, time_range_end, cloud_cover_max, source_uri) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_gravity_magnetic_forward",
+      "type": "function",
+      "name": "_gravity_magnetic_forward",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        927,
+        951
+      ],
+      "summary": "_gravity_magnetic_forward(survey_type, easting_m, northing_m, prisms, magnetization_a_m, field_declination_deg, field_inclination_deg) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_emag2_ingest",
+      "type": "function",
+      "name": "_emag2_ingest",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        955,
+        963
+      ],
+      "summary": "_emag2_ingest(force) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_icgem_models",
+      "type": "function",
+      "name": "_icgem_models",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        967,
+        974
+      ],
+      "summary": "_icgem_models() — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geochem_kinetics",
+      "type": "function",
+      "name": "_geochem_kinetics",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        978,
+        1003
+      ],
+      "summary": "_geochem_kinetics(initial_smectite_frac, T_C, time_ma, TOC_wt, kerogen_type) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_joint_inversion",
+      "type": "function",
+      "name": "_joint_inversion",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1008,
+        1033
+      ],
+      "summary": "_joint_inversion(observations, prior, max_iter, tolerance) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_mt_forward",
+      "type": "function",
+      "name": "_mt_forward",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1037,
+        1051
+      ],
+      "summary": "_mt_forward(layers, frequencies_hz) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_biostrat_constraint",
+      "type": "function",
+      "name": "_biostrat_constraint",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1055,
+        1069
+      ],
+      "summary": "_biostrat_constraint(state, age_ma) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_biostrat_parse",
+      "type": "function",
+      "name": "_biostrat_parse",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1074,
+        1095
+      ],
+      "summary": "_biostrat_parse(text, paleoenvironment, lithology) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_biostrat_nn_age",
+      "type": "function",
+      "name": "_biostrat_nn_age",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1100,
+        1115
+      ],
+      "summary": "_biostrat_nn_age(zone, scheme, calibration) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_biostrat_ruling_check",
+      "type": "function",
+      "name": "_biostrat_ruling_check",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1120,
+        1146
+      ],
+      "summary": "_biostrat_ruling_check(biozone, lithology, environment, claim, depth_m) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_biostrat_falsify",
+      "type": "function",
+      "name": "_biostrat_falsify",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1151,
+        1204
+      ],
+      "summary": "_biostrat_falsify(fossil_group, biozone, lithology, environment, claim, claim_type, sample_type, depth_m, younger_zone, older_zone, depth_younger_m, depth_older_m, reworking_claimed, fault_present, fossil_names, basin_province, claim_is_basinwide, seismic_group, expected_seismic_group, stacking_pattern, region) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_macrostrat_calibrate",
+      "type": "function",
+      "name": "_macrostrat_calibrate",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1209,
+        1247
+      ],
+      "summary": "_macrostrat_calibrate(biozone, lat, lng, radius_km, discipline_hint, macrostrat_unit_name, session_id, actor_id) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_seismic_inversion",
+      "type": "function",
+      "name": "_seismic_inversion",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1252,
+        1276
+      ],
+      "summary": "_seismic_inversion(reflectivity, sample_interval_s, initial_impedance, depth_top_m, resistivity_ohm_m) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geomechanics",
+      "type": "function",
+      "name": "_geomechanics",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1281,
+        1386
+      ],
+      "summary": "_geomechanics(mode, state, depth_m, sv_mpa, pp_mpa, friction_coefficient, avg_density_kg_m3, water_depth_m, session_id, actor_id, trace_id, thickness_m, rho_fluid) — 105 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_dynamical_systems",
+      "type": "function",
+      "name": "_dynamical_systems",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1397,
+        1503
+      ],
+      "summary": "_dynamical_systems(mode, series, max_lag, delay, dim, kernel, k, temperature, library, targets, query) — 106 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_gravity_screen",
+      "type": "function",
+      "name": "_gravity_screen",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1508,
+        1543
+      ],
+      "summary": "_gravity_screen(observed_mGal, easting_m, northing_m, density_kg_m3, depth_top_m, depth_bottom_m, reference_density_kg_m3, claim_id, hypothesis_prior, actor_id, session_id, trace_id) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_judgment_preflight",
+      "type": "function",
+      "name": "_judgment_preflight",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1548,
+        1623
+      ],
+      "summary": "_judgment_preflight(target_tool, actor_id, session_id, trace_id) — 75 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_lem_predict",
+      "type": "function",
+      "name": "_lem_predict",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1631,
+        1682
+      ],
+      "summary": "_lem_predict(well_id, curves, depth_m, depth_top_m, depth_bot_m, target_properties, mode, basin, rw_ohm_m, rho_matrix_g_cc, rho_fluid_g_cc, patch_size_m, actor_id, session_id) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_deep_time_state",
+      "type": "function",
+      "name": "_deep_time_state",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1687,
+        1716
+      ],
+      "summary": "_deep_time_state(age_ma, age_top_ma, age_bot_ma, period, query, biozone, include_pending_datasets, actor_id, session_id) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_isitwater",
+      "type": "function",
+      "name": "_geox_isitwater",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1721,
+        1733
+      ],
+      "summary": "_geox_isitwater(lat, lon) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_context_at_location",
+      "type": "function",
+      "name": "_geox_context_at_location",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1737,
+        1748
+      ],
+      "summary": "_geox_context_at_location(lat, lon) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_atlas",
+      "type": "function",
+      "name": "_geox_atlas",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1752,
+        1792
+      ],
+      "summary": "_geox_atlas(lat, lon, mode) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_forbidden_claims_scan",
+      "type": "function",
+      "name": "_geox_forbidden_claims_scan",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1796,
+        1840
+      ],
+      "summary": "_geox_forbidden_claims_scan(text) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_map_layers_list",
+      "type": "function",
+      "name": "_geox_map_layers_list",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1850,
+        1866
+      ],
+      "summary": "_geox_map_layers_list(bbox, theme, include_unavailable) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_map_scene_plan",
+      "type": "function",
+      "name": "_geox_map_scene_plan",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1870,
+        1897
+      ],
+      "summary": "_geox_map_scene_plan(bbox, layer_ids, theme, map_purpose, style_profile, crs) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_map_render_preview",
+      "type": "function",
+      "name": "_geox_map_render_preview",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1901,
+        1930
+      ],
+      "summary": "_geox_map_render_preview(scene_id, bbox, layer_ids, theme, width_px, height_px, style_profile, format) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_map_export_package",
+      "type": "function",
+      "name": "_geox_map_export_package",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1934,
+        1974
+      ],
+      "summary": "_geox_map_export_package(scene_plan_id, formats, include_sources, include_provenance, review_mode, output_dir) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:geox_query_macrostrat",
+      "type": "function",
+      "name": "geox_query_macrostrat",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        1982,
+        2006
+      ],
+      "summary": "geox_query_macrostrat(basin_name, mode, lat, lng) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_contrast_detect",
+      "type": "function",
+      "name": "_geox_contrast_detect",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2017,
+        2115
+      ],
+      "summary": "_geox_contrast_detect(dimension, mass_predicted, mass_observed, energy_predicted_stress, energy_observed_stress, energy_predicted_temp, energy_observed_temp, time_expected_ma, time_measured_ma, absence_expected_thickness, absence_observed_thickness, absence_expected_timespan, absence_observed_timespan, threshold, mass_predicted_dist, mass_observed_dist, energy_predicted_temp_dist, energy_observed_temp_dist, time_expected_dist, time_measured_dist, confidence_index, data_quality, session_id, actor_id) — 98 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_rsi_interpret",
+      "type": "function",
+      "name": "_geox_rsi_interpret",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2126,
+        2172
+      ],
+      "summary": "_geox_rsi_interpret(image_path, mode, max_faults, max_horizons, fault_percentile, fault_min_length, horizon_search, horizon_lookahead, include_attributes) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_render_audit",
+      "type": "function",
+      "name": "_geox_render_audit",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2176,
+        2194
+      ],
+      "summary": "_geox_render_audit(image_path, agc_window) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_register_prefab_apps",
+      "type": "function",
+      "name": "_register_prefab_apps",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2202,
+        2308
+      ],
+      "summary": "_register_prefab_apps() — 106 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_prune_mcp_surface",
+      "type": "function",
+      "name": "_prune_mcp_surface",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2331,
+        2373
+      ],
+      "summary": "_prune_mcp_surface(mcp_server) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_patch_output_schemas",
+      "type": "function",
+      "name": "_patch_output_schemas",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2465,
+        2477
+      ],
+      "summary": "_patch_output_schemas(mcp_server) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_safe_forward",
+      "type": "function",
+      "name": "_safe_forward",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2490,
+        2514
+      ],
+      "summary": "_safe_forward(impl, explicit_args, session_id, actor_id, trace_id, ack_irreversible) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_build_list_changed_payload",
+      "type": "function",
+      "name": "_build_list_changed_payload",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2523,
+        2525
+      ],
+      "summary": "_build_list_changed_payload(method) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_emit_tools_list_changed",
+      "type": "function",
+      "name": "_emit_tools_list_changed",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2528,
+        2539
+      ],
+      "summary": "_emit_tools_list_changed() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_emit_resources_list_changed",
+      "type": "function",
+      "name": "_emit_resources_list_changed",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2542,
+        2553
+      ],
+      "summary": "_emit_resources_list_changed() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_emit_resources_updated",
+      "type": "function",
+      "name": "_emit_resources_updated",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2556,
+        2567
+      ],
+      "summary": "_emit_resources_updated(uri) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_emit_prompts_list_changed",
+      "type": "function",
+      "name": "_emit_prompts_list_changed",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2570,
+        2576
+      ],
+      "summary": "_emit_prompts_list_changed() — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:root_handler",
+      "type": "function",
+      "name": "root_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2837,
+        2854
+      ],
+      "summary": "root_handler(request) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:health_handler",
+      "type": "function",
+      "name": "health_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2857,
+        3228
+      ],
+      "summary": "health_handler(request) — 371 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:geox_preview_handler",
+      "type": "function",
+      "name": "geox_preview_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3234,
+        3252
+      ],
+      "summary": "geox_preview_handler(request) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:build_info_handler",
+      "type": "function",
+      "name": "build_info_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3255,
+        3268
+      ],
+      "summary": "build_info_handler(request) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:status_handler",
+      "type": "function",
+      "name": "status_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3281,
+        3292
+      ],
+      "summary": "status_handler(request) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:discovery_handler",
+      "type": "function",
+      "name": "discovery_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3295,
+        3373
+      ],
+      "summary": "discovery_handler(request) — 78 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:mcp_server_card",
+      "type": "function",
+      "name": "mcp_server_card",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3376,
+        3398
+      ],
+      "summary": "mcp_server_card(request) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:tools_list_handler",
+      "type": "function",
+      "name": "tools_list_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3401,
+        3418
+      ],
+      "summary": "tools_list_handler(request) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:drift_handler",
+      "type": "function",
+      "name": "drift_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3421,
+        3452
+      ],
+      "summary": "drift_handler(request) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:delete_mcp_handler",
+      "type": "function",
+      "name": "delete_mcp_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3455,
+        3471
+      ],
+      "summary": "delete_mcp_handler(request) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:legacy_sse_handler",
+      "type": "function",
+      "name": "legacy_sse_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3474,
+        3507
+      ],
+      "summary": "legacy_sse_handler(request) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_geox_write_domain_receipt",
+      "type": "function",
+      "name": "_geox_write_domain_receipt",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3520,
+        3595
+      ],
+      "summary": "_geox_write_domain_receipt(tool_name, result, session_id, actor_id) — 75 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:contract_handler",
+      "type": "function",
+      "name": "contract_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3620,
+        3660
+      ],
+      "summary": "contract_handler(request) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:schemas_handler",
+      "type": "function",
+      "name": "schemas_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3663,
+        3696
+      ],
+      "summary": "schemas_handler(request) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:adapters_handler",
+      "type": "function",
+      "name": "adapters_handler",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3699,
+        3709
+      ],
+      "summary": "adapters_handler(request) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_initialize_tool",
+      "type": "function",
+      "name": "_glof_cascade_initialize_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3748,
+        3771
+      ],
+      "summary": "_glof_cascade_initialize_tool(domain_bounds_x_m, domain_bounds_z_m, resolution_m, dam_height_m, water_head_initial_m, use_seismic_priors, initial_state_33, panel_focus, session_id, actor_id) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_step_tool",
+      "type": "function",
+      "name": "_glof_cascade_step_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3775,
+        3790
+      ],
+      "summary": "_glof_cascade_step_tool(state_id, n_steps, dt_sec, boundary_conditions, session_id, actor_id) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_phase_tool",
+      "type": "function",
+      "name": "_glof_cascade_phase_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3794,
+        3815
+      ],
+      "summary": "_glof_cascade_phase_tool(state_id, cell_id, sigma_n, tau_applied, velocity, sigma_applied, saturation, session_id, actor_id) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_inverse_tool",
+      "type": "function",
+      "name": "_glof_cascade_inverse_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3819,
+        3847
+      ],
+      "summary": "_glof_cascade_inverse_tool(observation, base_theta, n_grid, session_id, actor_id) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_metabolize_tool",
+      "type": "function",
+      "name": "_glof_cascade_metabolize_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3851,
+        3884
+      ],
+      "summary": "_glof_cascade_metabolize_tool(theta_hat, forward_prediction, observation, cycle_id, session_id, actor_id) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_mcmc_inverse_tool",
+      "type": "function",
+      "name": "_glof_cascade_mcmc_inverse_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3889,
+        3921
+      ],
+      "summary": "_glof_cascade_mcmc_inverse_tool(observation, base_theta, n_warmup, n_iter, n_chains, seed, session_id, actor_id) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:_glof_cascade_propagate_tool",
+      "type": "function",
+      "name": "_glof_cascade_propagate_tool",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3925,
+        3946
+      ],
+      "summary": "_glof_cascade_propagate_tool(breach_Q_profile, length_m, nx, manning_n, bed_slope, duration_s, output_interval_s, session_id, actor_id) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:create_app",
+      "type": "function",
+      "name": "create_app",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        3949,
+        4124
+      ],
+      "summary": "create_app() — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/server.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        4130,
+        4175
+      ],
+      "summary": "main() — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:_McpSlashRewriteMiddleware",
+      "type": "class",
+      "name": "_McpSlashRewriteMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        701,
+        721
+      ],
+      "summary": "Class _McpSlashRewriteMiddleware with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:_McpAcceptNegotiationMiddleware",
+      "type": "class",
+      "name": "_McpAcceptNegotiationMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        734,
+        797
+      ],
+      "summary": "Class _McpAcceptNegotiationMiddleware with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:OriginValidationMiddleware",
+      "type": "class",
+      "name": "OriginValidationMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2615,
+        2655
+      ],
+      "summary": "Class OriginValidationMiddleware with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:McpAuthMiddleware",
+      "type": "class",
+      "name": "McpAuthMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2658,
+        2689
+      ],
+      "summary": "Class McpAuthMiddleware with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:McpLifecycleMiddleware",
+      "type": "class",
+      "name": "McpLifecycleMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2701,
+        2782
+      ],
+      "summary": "Class McpLifecycleMiddleware with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/server.py:McpProtocolVersionMiddleware",
+      "type": "class",
+      "name": "McpProtocolVersionMiddleware",
+      "filePath": "src/geox_mcp/server.py",
+      "lineRange": [
+        2785,
+        2829
+      ],
+      "summary": "Class McpProtocolVersionMiddleware with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/server.py.bak.20260804-oauth-off",
+      "type": "file",
+      "name": "server.py.bak.20260804-oauth-off",
+      "filePath": "src/geox_mcp/server.py.bak.20260804-oauth-off",
+      "summary": "20260804-oauth-off code file (2578 non-empty lines).",
+      "tags": [
+        "code",
+        "20260804-oauth-off"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/servers/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/servers/__init__.py",
+      "summary": "python code file (12 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/servers/claims.py",
+      "type": "file",
+      "name": "claims.py",
+      "filePath": "src/geox_mcp/servers/claims.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/servers/paleoscan.py",
+      "type": "file",
+      "name": "paleoscan.py",
+      "filePath": "src/geox_mcp/servers/paleoscan.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/servers/vision.py",
+      "type": "file",
+      "name": "vision.py",
+      "filePath": "src/geox_mcp/servers/vision.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/servers/vision.py:create_vision_server",
+      "type": "function",
+      "name": "create_vision_server",
+      "filePath": "src/geox_mcp/servers/vision.py",
+      "lineRange": [
+        69,
+        79
+      ],
+      "summary": "create_vision_server() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/servers/witness.py",
+      "type": "file",
+      "name": "witness.py",
+      "filePath": "src/geox_mcp/servers/witness.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/services/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/services/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/services/auto_mint.py",
+      "type": "file",
+      "name": "auto_mint.py",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:_db_path",
+      "type": "function",
+      "name": "_db_path",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        51,
+        52
+      ],
+      "summary": "_db_path() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:_enabled",
+      "type": "function",
+      "name": "_enabled",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        55,
+        56
+      ],
+      "summary": "_enabled() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:_fingerprint",
+      "type": "function",
+      "name": "_fingerprint",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        59,
+        74
+      ],
+      "summary": "_fingerprint(tool_name, result) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:_already_minted",
+      "type": "function",
+      "name": "_already_minted",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        77,
+        89
+      ],
+      "summary": "_already_minted(fingerprint, db_path) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:_extract_claim",
+      "type": "function",
+      "name": "_extract_claim",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        92,
+        112
+      ],
+      "summary": "_extract_claim(result) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/services/auto_mint.py:mint_from_gate_pass",
+      "type": "function",
+      "name": "mint_from_gate_pass",
+      "filePath": "src/geox_mcp/services/auto_mint.py",
+      "lineRange": [
+        115,
+        195
+      ],
+      "summary": "mint_from_gate_pass(tool_name, result, session_id, actor_id) — 80 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/session_apex.py",
+      "type": "file",
+      "name": "session_apex.py",
+      "filePath": "src/geox_mcp/session_apex.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/session_apex.py:_unmeasured_block",
+      "type": "function",
+      "name": "_unmeasured_block",
+      "filePath": "src/geox_mcp/session_apex.py",
+      "lineRange": [
+        32,
+        41
+      ],
+      "summary": "_unmeasured_block() — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_apex.py:_sanitize_kernel_apex",
+      "type": "function",
+      "name": "_sanitize_kernel_apex",
+      "filePath": "src/geox_mcp/session_apex.py",
+      "lineRange": [
+        44,
+        62
+      ],
+      "summary": "_sanitize_kernel_apex(raw) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_apex.py:fetch_kernel_apex_scalars",
+      "type": "function",
+      "name": "fetch_kernel_apex_scalars",
+      "filePath": "src/geox_mcp/session_apex.py",
+      "lineRange": [
+        65,
+        100
+      ],
+      "summary": "fetch_kernel_apex_scalars(timeout_s, use_cache) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/session_apex.py:attach_session_apex",
+      "type": "function",
+      "name": "attach_session_apex",
+      "filePath": "src/geox_mcp/session_apex.py",
+      "lineRange": [
+        103,
+        138
+      ],
+      "summary": "attach_session_apex(result, force, timeout_s) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/session_enforcement.py",
+      "type": "file",
+      "name": "session_enforcement.py",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "summary": "Defines 8 function(s); 1 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_authority_rank",
+      "type": "function",
+      "name": "_authority_rank",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        71,
+        75
+      ],
+      "summary": "_authority_rank(level) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_as_mapping",
+      "type": "function",
+      "name": "_as_mapping",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        78,
+        85
+      ],
+      "summary": "_as_mapping(value) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_ensure_arifos_mcp_session",
+      "type": "function",
+      "name": "_ensure_arifos_mcp_session",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        106,
+        158
+      ],
+      "summary": "_ensure_arifos_mcp_session() — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_cached_kernel_verify",
+      "type": "function",
+      "name": "_cached_kernel_verify",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        164,
+        301
+      ],
+      "summary": "_cached_kernel_verify(session_id, actor_id) — 137 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_verify_sct_authoritatively",
+      "type": "function",
+      "name": "_verify_sct_authoritatively",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        304,
+        321
+      ],
+      "summary": "_verify_sct_authoritatively(token, actor_id, required_authority) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:validate_session",
+      "type": "function",
+      "name": "validate_session",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        324,
+        600
+      ],
+      "summary": "validate_session(session_id, actor_id, required_authority) — 276 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:_error_code_to_http_status",
+      "type": "function",
+      "name": "_error_code_to_http_status",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        603,
+        624
+      ],
+      "summary": "_error_code_to_http_status(error_code) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/session_enforcement.py:enforce_session_or_400",
+      "type": "function",
+      "name": "enforce_session_or_400",
+      "filePath": "src/geox_mcp/session_enforcement.py",
+      "lineRange": [
+        627,
+        661
+      ],
+      "summary": "enforce_session_or_400(session_id, actor_id, required_authority) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/surface_manifest.py",
+      "type": "file",
+      "name": "surface_manifest.py",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "summary": "Defines 16 function(s); 1 class(es); exports 17 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/surface_manifest.py:_normalize_tool",
+      "type": "function",
+      "name": "_normalize_tool",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        54,
+        90
+      ],
+      "summary": "_normalize_tool(entry) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/surface_manifest.py:load_surface_manifest",
+      "type": "function",
+      "name": "load_surface_manifest",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        94,
+        127
+      ],
+      "summary": "load_surface_manifest() — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/surface_manifest.py:manifest_entries_for_registry",
+      "type": "function",
+      "name": "manifest_entries_for_registry",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        170,
+        185
+      ],
+      "summary": "manifest_entries_for_registry() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/surface_manifest.py:webmcp_categories",
+      "type": "function",
+      "name": "webmcp_categories",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        188,
+        201
+      ],
+      "summary": "webmcp_categories() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/surface_manifest.py:surface_attestation",
+      "type": "function",
+      "name": "surface_attestation",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        209,
+        230
+      ],
+      "summary": "surface_attestation() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/surface_manifest.py:SurfaceTool",
+      "type": "class",
+      "name": "SurfaceTool",
+      "filePath": "src/geox_mcp/surface_manifest.py",
+      "lineRange": [
+        23,
+        51
+      ],
+      "summary": "Class SurfaceTool with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tool_discovery.py",
+      "type": "file",
+      "name": "tool_discovery.py",
+      "filePath": "src/geox_mcp/tool_discovery.py",
+      "summary": "Defines 9 function(s); 1 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_discovery.py:find_tools_by_query",
+      "type": "function",
+      "name": "find_tools_by_query",
+      "filePath": "src/geox_mcp/tool_discovery.py",
+      "lineRange": [
+        445,
+        461
+      ],
+      "summary": "find_tools_by_query(query) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_discovery.py:format_discovery_for_llm",
+      "type": "function",
+      "name": "format_discovery_for_llm",
+      "filePath": "src/geox_mcp/tool_discovery.py",
+      "lineRange": [
+        464,
+        480
+      ],
+      "summary": "format_discovery_for_llm(tool_name) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_discovery.py:format_all_discoveries_for_llm",
+      "type": "function",
+      "name": "format_all_discoveries_for_llm",
+      "filePath": "src/geox_mcp/tool_discovery.py",
+      "lineRange": [
+        483,
+        500
+      ],
+      "summary": "format_all_discoveries_for_llm() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_discovery.py:get_tool_discovery_resource",
+      "type": "function",
+      "name": "get_tool_discovery_resource",
+      "filePath": "src/geox_mcp/tool_discovery.py",
+      "lineRange": [
+        508,
+        534
+      ],
+      "summary": "get_tool_discovery_resource() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tool_invocation_counter.py",
+      "type": "file",
+      "name": "tool_invocation_counter.py",
+      "filePath": "src/geox_mcp/tool_invocation_counter.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_invocation_counter.py:_path",
+      "type": "function",
+      "name": "_path",
+      "filePath": "src/geox_mcp/tool_invocation_counter.py",
+      "lineRange": [
+        20,
+        22
+      ],
+      "summary": "_path() — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tool_invocation_counter.py:record_invocation",
+      "type": "function",
+      "name": "record_invocation",
+      "filePath": "src/geox_mcp/tool_invocation_counter.py",
+      "lineRange": [
+        25,
+        52
+      ],
+      "summary": "record_invocation(tool, session_id, actor_id, ok, duration_ms) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tool_tiers.py",
+      "type": "file",
+      "name": "tool_tiers.py",
+      "filePath": "src/geox_mcp/tool_tiers.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/tools/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "type": "file",
+      "name": "_artifact_helpers.py",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_compute_content_hash",
+      "type": "function",
+      "name": "_compute_content_hash",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        18,
+        31
+      ],
+      "summary": "_compute_content_hash(file_path) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_artifact_exists",
+      "type": "function",
+      "name": "_artifact_exists",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        34,
+        36
+      ],
+      "summary": "_artifact_exists(artifact_id) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_register_artifact",
+      "type": "function",
+      "name": "_register_artifact",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        39,
+        54
+      ],
+      "summary": "_register_artifact(artifact_id, **kwargs) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_get_artifact",
+      "type": "function",
+      "name": "_get_artifact",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        57,
+        59
+      ],
+      "summary": "_get_artifact(artifact_id) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_record_latest_qc",
+      "type": "function",
+      "name": "_record_latest_qc",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        62,
+        66
+      ],
+      "summary": "_record_latest_qc(artifact_id, qc_result) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_reset_registry",
+      "type": "function",
+      "name": "_reset_registry",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        69,
+        73
+      ],
+      "summary": "_reset_registry() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_safe_upload_path",
+      "type": "function",
+      "name": "_safe_upload_path",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        76,
+        89
+      ],
+      "summary": "_safe_upload_path(filename, target_dir) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_helpers.py:_decode_upload_content",
+      "type": "function",
+      "name": "_decode_upload_content",
+      "filePath": "src/geox_mcp/tools/_artifact_helpers.py",
+      "lineRange": [
+        92,
+        101
+      ],
+      "summary": "_decode_upload_content(content_base64) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "type": "file",
+      "name": "_artifact_identity.py",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "summary": "Defines 8 function(s); 1 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:make_artifact_id",
+      "type": "function",
+      "name": "make_artifact_id",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        75,
+        113
+      ],
+      "summary": "make_artifact_id(kind, canonical_id, sha256, version) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:canonicalize_well_ref",
+      "type": "function",
+      "name": "canonicalize_well_ref",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        116,
+        131
+      ],
+      "summary": "canonicalize_well_ref(well_name, uwi) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:parse_artifact_ref",
+      "type": "function",
+      "name": "parse_artifact_ref",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        154,
+        213
+      ],
+      "summary": "parse_artifact_ref(ref) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:artifact_refs_equal",
+      "type": "function",
+      "name": "artifact_refs_equal",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        216,
+        235
+      ],
+      "summary": "artifact_refs_equal(a, b) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:storage_keys_for",
+      "type": "function",
+      "name": "storage_keys_for",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        241,
+        287
+      ],
+      "summary": "storage_keys_for(ref) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_artifact_identity.py:verify_artifact",
+      "type": "function",
+      "name": "verify_artifact",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        338,
+        474
+      ],
+      "summary": "verify_artifact(artifact_path, expected_sha256, expected_metadata, check_registry, registry_key) — 136 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/_artifact_identity.py:VerificationResult",
+      "type": "class",
+      "name": "VerificationResult",
+      "filePath": "src/geox_mcp/tools/_artifact_identity.py",
+      "lineRange": [
+        308,
+        335
+      ],
+      "summary": "Class VerificationResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/_helpers.py",
+      "type": "file",
+      "name": "_helpers.py",
+      "filePath": "src/geox_mcp/tools/_helpers.py",
+      "summary": "python code file (105 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/_register.py",
+      "type": "file",
+      "name": "_register.py",
+      "filePath": "src/geox_mcp/tools/_register.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_register.py:_classify_geox_epistemic",
+      "type": "function",
+      "name": "_classify_geox_epistemic",
+      "filePath": "src/geox_mcp/tools/_register.py",
+      "lineRange": [
+        65,
+        84
+      ],
+      "summary": "_classify_geox_epistemic(result) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_register.py:_geox_wrap_envelope",
+      "type": "function",
+      "name": "_geox_wrap_envelope",
+      "filePath": "src/geox_mcp/tools/_register.py",
+      "lineRange": [
+        87,
+        150
+      ],
+      "summary": "_geox_wrap_envelope(tool_name, result) — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_register.py:_make_receipt_wrapper",
+      "type": "function",
+      "name": "_make_receipt_wrapper",
+      "filePath": "src/geox_mcp/tools/_register.py",
+      "lineRange": [
+        153,
+        504
+      ],
+      "summary": "_make_receipt_wrapper(func, name) — 351 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_register.py:register_tools_on_server",
+      "type": "function",
+      "name": "register_tools_on_server",
+      "filePath": "src/geox_mcp/tools/_register.py",
+      "lineRange": [
+        507,
+        549
+      ],
+      "summary": "register_tools_on_server(mcp, tools, annotations, tasks, apps) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/_workspace_decorator.py",
+      "type": "file",
+      "name": "_workspace_decorator.py",
+      "filePath": "src/geox_mcp/tools/_workspace_decorator.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_workspace_decorator.py:_inject_workspace_params",
+      "type": "function",
+      "name": "_inject_workspace_params",
+      "filePath": "src/geox_mcp/tools/_workspace_decorator.py",
+      "lineRange": [
+        44,
+        73
+      ],
+      "summary": "_inject_workspace_params(kwargs, session_id) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/_workspace_decorator.py:with_workspace",
+      "type": "function",
+      "name": "with_workspace",
+      "filePath": "src/geox_mcp/tools/_workspace_decorator.py",
+      "lineRange": [
+        76,
+        127
+      ],
+      "summary": "with_workspace(func, session_id, extract_session) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/abduction.py",
+      "type": "file",
+      "name": "abduction.py",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "summary": "Defines 14 function(s); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_load_artifact",
+      "type": "function",
+      "name": "_load_artifact",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        185,
+        206
+      ],
+      "summary": "_load_artifact(artifact_ref) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_extract_evidence_summary",
+      "type": "function",
+      "name": "_extract_evidence_summary",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        209,
+        286
+      ],
+      "summary": "_extract_evidence_summary(artifacts) — 77 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_match_rules",
+      "type": "function",
+      "name": "_match_rules",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        294,
+        356
+      ],
+      "summary": "_match_rules(evidence) — 62 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_build_evidence_for",
+      "type": "function",
+      "name": "_build_evidence_for",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        359,
+        366
+      ],
+      "summary": "_build_evidence_for(rule, evidence) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_build_evidence_against",
+      "type": "function",
+      "name": "_build_evidence_against",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        369,
+        380
+      ],
+      "summary": "_build_evidence_against(candidate, evidence, missing_context) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_build_missing_tests",
+      "type": "function",
+      "name": "_build_missing_tests",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        383,
+        403
+      ],
+      "summary": "_build_missing_tests(candidate, evidence, missing_context) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_score_to_confidence",
+      "type": "function",
+      "name": "_score_to_confidence",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        406,
+        415
+      ],
+      "summary": "_score_to_confidence(score) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_derive_gr_lithology",
+      "type": "function",
+      "name": "_derive_gr_lithology",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        423,
+        431
+      ],
+      "summary": "_derive_gr_lithology(gr_mean_api) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_derive_rt_lithology",
+      "type": "function",
+      "name": "_derive_rt_lithology",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        434,
+        442
+      ],
+      "summary": "_derive_rt_lithology(rt_mean_ohmm) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_contradiction_scan",
+      "type": "function",
+      "name": "_contradiction_scan",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        445,
+        640
+      ],
+      "summary": "_contradiction_scan(hypotheses, evidence) — 195 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:_processes_incompatible",
+      "type": "function",
+      "name": "_processes_incompatible",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        643,
+        655
+      ],
+      "summary": "_processes_incompatible(a, b) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:geox_process_abduction",
+      "type": "function",
+      "name": "geox_process_abduction",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        663,
+        775
+      ],
+      "summary": "geox_process_abduction(evidence_refs, scale, depo_context, claim_strictness) — 112 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:geox_evidence_contradiction_scan",
+      "type": "function",
+      "name": "geox_evidence_contradiction_scan",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        778,
+        893
+      ],
+      "summary": "geox_evidence_contradiction_scan(evidence_refs, hypotheses) — 115 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/abduction.py:geox_task_metabolize_basin",
+      "type": "function",
+      "name": "geox_task_metabolize_basin",
+      "filePath": "src/geox_mcp/tools/abduction.py",
+      "lineRange": [
+        901,
+        1051
+      ],
+      "summary": "geox_task_metabolize_basin(well_refs, basin_context, canon9_profile) — 150 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:_contains_any",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:_resolve_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:_resolve_risk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:_build_policy_flags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:_filter_allowed_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:route_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/policy.py",
+      "target": "function:src/geox_mcp/routing/policy.py:fallback_route",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/routing/tool.py",
+      "target": "function:src/geox_mcp/routing/tool.py:arifos_route_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/seal_receipt.py",
+      "target": "function:src/geox_mcp/seal_receipt.py:_build_pai_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/seal_receipt.py",
+      "target": "function:src/geox_mcp/seal_receipt.py:seal_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/seal_receipt.py",
+      "target": "function:src/geox_mcp/seal_receipt.py:build_verification_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/seal_receipt.py",
+      "target": "class:src/geox_mcp/seal_receipt.py:SealResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_annotations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_get_git_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_build_geox_governance_middleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_build_geox_ttl_middleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_enforce_geox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_consequence_footprint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_optionality_loss",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_feedback_integrity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_material_truth_challenge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_cascade_pathway",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:compose_geox_servers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_doctrine_assumption_register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_doctrine_anti_beautiful_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_doctrine_godel_review",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_prithvi_eo_inference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_gravity_magnetic_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_emag2_ingest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_icgem_models",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geochem_kinetics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_joint_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_mt_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_biostrat_constraint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_biostrat_parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_biostrat_nn_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_biostrat_ruling_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_biostrat_falsify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_macrostrat_calibrate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_seismic_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geomechanics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_dynamical_systems",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_gravity_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_judgment_preflight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_lem_predict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_deep_time_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_isitwater",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_context_at_location",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_atlas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_forbidden_claims_scan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_map_layers_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_map_scene_plan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_map_render_preview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_map_export_package",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:geox_query_macrostrat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_contrast_detect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_rsi_interpret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_render_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_register_prefab_apps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_prune_mcp_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_patch_output_schemas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_safe_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_build_list_changed_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_emit_tools_list_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_emit_resources_list_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_emit_resources_updated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_emit_prompts_list_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:root_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:health_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:geox_preview_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:build_info_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:status_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:discovery_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:mcp_server_card",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:tools_list_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:drift_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:delete_mcp_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:legacy_sse_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_geox_write_domain_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:contract_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:schemas_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:adapters_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_initialize_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_step_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_phase_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_inverse_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_metabolize_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_mcmc_inverse_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:_glof_cascade_propagate_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:create_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "function:src/geox_mcp/server.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:_McpSlashRewriteMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:_McpAcceptNegotiationMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:OriginValidationMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:McpAuthMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:McpLifecycleMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/server.py",
+      "target": "class:src/geox_mcp/server.py:McpProtocolVersionMiddleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/servers/vision.py",
+      "target": "function:src/geox_mcp/servers/vision.py:create_vision_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:_db_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:_enabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:_fingerprint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:_already_minted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:_extract_claim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/services/auto_mint.py",
+      "target": "function:src/geox_mcp/services/auto_mint.py:mint_from_gate_pass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_apex.py",
+      "target": "function:src/geox_mcp/session_apex.py:_unmeasured_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_apex.py",
+      "target": "function:src/geox_mcp/session_apex.py:_sanitize_kernel_apex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_apex.py",
+      "target": "function:src/geox_mcp/session_apex.py:fetch_kernel_apex_scalars",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_apex.py",
+      "target": "function:src/geox_mcp/session_apex.py:attach_session_apex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_authority_rank",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_as_mapping",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_ensure_arifos_mcp_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_cached_kernel_verify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_verify_sct_authoritatively",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:validate_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:_error_code_to_http_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/session_enforcement.py",
+      "target": "function:src/geox_mcp/session_enforcement.py:enforce_session_or_400",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "function:src/geox_mcp/surface_manifest.py:_normalize_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "function:src/geox_mcp/surface_manifest.py:load_surface_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "function:src/geox_mcp/surface_manifest.py:manifest_entries_for_registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "function:src/geox_mcp/surface_manifest.py:webmcp_categories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "function:src/geox_mcp/surface_manifest.py:surface_attestation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/surface_manifest.py",
+      "target": "class:src/geox_mcp/surface_manifest.py:SurfaceTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_discovery.py",
+      "target": "function:src/geox_mcp/tool_discovery.py:find_tools_by_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_discovery.py",
+      "target": "function:src/geox_mcp/tool_discovery.py:format_discovery_for_llm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_discovery.py",
+      "target": "function:src/geox_mcp/tool_discovery.py:format_all_discoveries_for_llm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_discovery.py",
+      "target": "function:src/geox_mcp/tool_discovery.py:get_tool_discovery_resource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_invocation_counter.py",
+      "target": "function:src/geox_mcp/tool_invocation_counter.py:_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tool_invocation_counter.py",
+      "target": "function:src/geox_mcp/tool_invocation_counter.py:record_invocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_compute_content_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_artifact_exists",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_register_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_get_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_record_latest_qc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_reset_registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_safe_upload_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_helpers.py",
+      "target": "function:src/geox_mcp/tools/_artifact_helpers.py:_decode_upload_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:make_artifact_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:canonicalize_well_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:parse_artifact_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:artifact_refs_equal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:storage_keys_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "function:src/geox_mcp/tools/_artifact_identity.py:verify_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_artifact_identity.py",
+      "target": "class:src/geox_mcp/tools/_artifact_identity.py:VerificationResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_register.py",
+      "target": "function:src/geox_mcp/tools/_register.py:_classify_geox_epistemic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_register.py",
+      "target": "function:src/geox_mcp/tools/_register.py:_geox_wrap_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_register.py",
+      "target": "function:src/geox_mcp/tools/_register.py:_make_receipt_wrapper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_register.py",
+      "target": "function:src/geox_mcp/tools/_register.py:register_tools_on_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_workspace_decorator.py",
+      "target": "function:src/geox_mcp/tools/_workspace_decorator.py:_inject_workspace_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/_workspace_decorator.py",
+      "target": "function:src/geox_mcp/tools/_workspace_decorator.py:with_workspace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_load_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_extract_evidence_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_match_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_build_evidence_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_build_evidence_against",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_build_missing_tests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_score_to_confidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_derive_gr_lithology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_derive_rt_lithology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_contradiction_scan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:_processes_incompatible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:geox_process_abduction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:geox_evidence_contradiction_scan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/abduction.py",
+      "target": "function:src/geox_mcp/tools/abduction.py:geox_task_metabolize_basin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,518 @@
+# ==============================================================================
+# structural_restoration_registry.yaml
+# Canonical registry entries for GEOX structural restoration capabilities.
+#
+# Format: Copilot P0 canonical registry specification.
+# Status: PLANNED — not LIVE until compute engines are wired to MCP surface.
+# Source: Dr Shahram3D Restoration Method × Kinabalu Basin tectonic reasoning.
+#
+# Registry declares. Runtime proves. Generation publishes. Parity decides.
+#
+# Forged: 2026-09-14
+# ==============================================================================
+
+meta:
+  registry_version: "1.0.0"
+  forged_at: "2026-09-14T00:00:00+00:00"
+  organ: GEOX
+  authority_ceiling: COMPUTE_ONLY
+  protocol_version: "REQUIRED_AT_BUILD"
+  documentation_snapshot: "2026-07-28"
+  draft_features: false
+  source_of_truth: "This registry is the single source. Generate all public surfaces from here."
+
+# ═══════════════════════════════════════════════════════════════════════════
+# F0: ONTOLOGY — Tectonic Events & Earth Reality Graph
+# ═══════════════════════════════════════════════════════════════════════════
+
+tools:
+  # ─── Structural Restoration (F1) ──────────────────────────────────────
+
+  - tool_id: geox.structural.validate_restoration_inputs
+    name: geox_validate_restoration_inputs
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Fail-fast gate for restoration computations. Validates CRS, datum,
+      units, Z polarity, ages, stratigraphic ordering, and source geometry
+      immutability before any downstream computation. Returns SEAL, PARTIAL,
+      HOLD, or VOID with detected mismatches and permitted/blocked calculations.
+    implementation: src/geox_core/engines/structural_restoration/validate_inputs.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "OBS -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: false
+    inputs: [RestorationScenario]
+    outputs: [ValidationResult]
+    invariants: [SR_INV_001, SR_INV_003, SR_INV_004]
+
+  - tool_id: geox.structural.compute_accommodation_space
+    name: geox_compute_accommodation_space
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Compute accommodation space by state differencing between two restoration
+      states. Returns accommodation grid, subtraction order, source lineage,
+      scenario identifier, and uncertainty reference. This is STATE DIFFERENCING,
+      not forward physics simulation. TECT-001: output is an observation, not
+      an explanation.
+    implementation: src/geox_core/engines/structural_restoration/accommodation_diff.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "OBS -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+      graph_node_type: accommodation
+    inputs: [RestorationScenario]
+    outputs: [AccommodationGrid]
+    invariants: [SR_INV_001, SR_INV_002, SR_INV_003, SR_INV_005, TECT_001, TECT_002]
+
+  - tool_id: geox.structural.compute_basement_subsidence
+    name: geox_compute_basement_subsidence
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Compute basement subsidence by differencing basement position between two
+      restoration states. Basement surface must represent the same geological
+      boundary in both states. Reports tectonic subsidence separately from
+      stratigraphic accommodation. SR_INV-005: subsidence ≠ accommodation ≠ thickness.
+    implementation: src/geox_core/engines/structural_restoration/basement_subsidence.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "OBS -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+      graph_node_type: subsidence
+    inputs: [RestorationScenario]
+    outputs: [SubsidenceGrid]
+    invariants: [SR_INV_001, SR_INV_002, SR_INV_005, TECT_003]
+
+  - tool_id: geox.structural.compute_fill_ratio
+    name: geox_compute_fill_ratio
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Compute sediment fill ratio (thickness / accommodation). Values above one
+      are returned as DIAGNOSTIC ANOMALIES and never automatically interpreted as
+      fault activity. The10-item diagnostic checklist is enforced.
+      SR_INV-007: fill_ratio > 1 triggers DIAGNOSTIC_REVIEW.
+    implementation: src/geox_core/engines/structural_restoration/fill_ratio.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "DER -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+      graph_node_type: fill_ratio
+    inputs: [SedimentThicknessGrid, AccommodationGrid]
+    outputs: [FillRatioGrid, DiagnosticChecklist]
+    invariants: [SR_INV_005, SR_INV_006, SR_INV_007, TECT_001]
+
+  - tool_id: geox.structural.propagate_compaction_uncertainty
+    name: geox_propagate_compaction_uncertainty
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Propagate compaction uncertainty through depth using scenario-based
+      compaction curves. Produces low, reference, and high scenarios.
+      SR_INV-009: extrapolation requires explicit scenario name, interval,
+      and uncertainty envelope. SR_INV-010: measured/published/extrapolated/
+      assumed must be distinguishable.5% must distinguish absolute porosity
+      points from relative percentage change.
+    implementation: src/geox_core/engines/structural_restoration/compaction_uncertainty.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "DER -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+    inputs: [CompactionScenario, DepthInterval]
+    outputs: [UncertaintyEnvelope]
+
+  - tool_id: geox.structural.build_distance_weighted_uncertainty
+    name: geox_build_distance_weighted_uncertainty
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Build distance-weighted uncertainty grid. Calibration confidence decays
+      spatially from well control points. Growth function is configurable.
+      SR_INV-011: u_max and d_cutoff are scenario parameters, never basin constants.
+      EUREKA-08: every uncertainty map must disclose control points, distance metric,
+      growth function, cutoff distance, max uncertainty, and whether observed or assumed.
+    implementation: src/geox_core/engines/structural_restoration/distance_uncertainty.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "DER -> DER"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2]
+      evidence_postcondition: true
+      reality_graph_emission: true
+    inputs: [WellLocations, UncertaintyParameters]
+    outputs: [UncertaintyGrid]
+
+  - tool_id: geox.structural.analyse_fault_inheritance
+    name: geox_analyse_fault_inheritance
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Analyse fault inheritance using relational evidence. Returns hypotheses,
+      not deterministic ages. SR_INV-008: fault generation cannot be assigned
+      from azimuth alone. TECT-004: fault azimuth is evidence, not age.
+      Required evidence: cross-cutting, termination, bending, segmentation,
+      displacement, basement trend, stress comparison.
+    implementation: src/geox_core/engines/structural_restoration/fault_inheritance.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "DER -> INT"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: MEDIUM
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+      graph_node_type: fault_interpretation
+    inputs: [FaultSet, BasementFabric, StressField]
+    outputs: [FaultInheritanceHypotheses]
+
+  # ─── Geomechanics (F1 causality) ──────────────────────────────────────
+
+  - tool_id: geox.geomechanics.qc_seismic_fault
+    name: geox_qc_seismic_fault_geomechanics
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Geomechanical QC of seismic fault interpretations. Evaluates whether a
+      fault interpretation is consistent with the proposed stress regime, rock
+      properties, and basement fabric. Returns CONSISTENT, INCONSISTENT,
+      UNDERCONSTRAINED, or ANOMALOUS. Geomechanical incompatibility creates a
+      contradiction node — it must not silently delete the seismic interpretation.
+    implementation: src/geox_core/engines/geomechanics/fault_qc.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "INT -> INT"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+      graph_node_type: failure_state
+    inputs: [FaultInterpretation, StressTensor, MechanicalLayer]
+    outputs: [FaultQCResult]
+
+  - tool_id: geox.geomechanics.run_forward_inverse_test
+    name: geox_run_forward_inverse_test
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Run forward–inverse closure test. Forward: stress → geomechanics → structure
+      → basin → petrophysics → seismic. Inverse: seismic → interpretation →
+      restoration → geomechanics → stress. Closure: compare forward prediction
+      with inverse inference. Earth computes forward, GEOX computes backward.
+    implementation: src/geox_core/engines/geomechanics/forward_inverse.py
+    annotations:
+      readOnlyHint: true
+      destructiveHint: false
+      idempotentHint: true
+    geox:
+      epistemic_transition: "INT -> INT"
+      aaa_lane: REASONING
+      authority_ceiling: COMPUTE_ONLY
+      mutation_class: NONE
+      risk_class: LOW
+      floors: [F1, F2, F9]
+      evidence_postcondition: true
+      reality_graph_emission: true
+    inputs: [TectonicScenario, StressPhases, SeismicInterpretation]
+    outputs: [ForwardInverseWorkflow, Residuals, SurvivingHypotheses]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# RESOURCES — Structural Restoration Pack
+# ═══════════════════════════════════════════════════════════════════════════
+
+resources:
+  - resource_id: geox.invariants.structural_restoration
+    uri: "geox://invariants/structural-restoration"
+    name: Structural Restoration Invariants
+    status: LIVE
+    description: SR_INV-001–015 constitutional invariants for structural restoration computation
+    mime_type: text/yaml
+    file: src/geox_core/engines/structural_restoration/invariants.yaml
+    epistemic_class: SPEC
+
+  - resource_id: geox.invariants.tectonic_events
+    uri: "geox://invariants/tectonic-events"
+    name: Tectonic Event Invariants
+    status: LIVE
+    description: TECT-001–012 constitutional invariants for tectonic reasoning (F0 layer)
+    mime_type: text/yaml
+    file: src/geox_core/ontology/tectonic_events/tectonic_invariants.yaml
+    epistemic_class: SPEC
+
+  - resource_id: geox.ontology.tectonic_events
+    uri: "geox://ontology/tectonic-events"
+    name: Tectonic Event Ontology
+    status: LIVE
+    description: Event classes, transitions, scenarios, restoration observations, diagnostic checklists
+    mime_type: text/x-python
+    file: src/geox_core/ontology/tectonic_events/event_schema.py
+    epistemic_class: SPEC
+
+  - resource_id: geox.ontology.earth_reality_graph
+    uri: "geox://ontology/earth-reality-graph"
+    name: Earth Reality Graph Schema
+    status: LIVE
+    description: 19 node types (F0–F7), 10 edge types, 7 graph invariants, epistemic/evidence classes
+    mime_type: text/x-python
+    file: src/geox_core/ontology/earth_reality_graph/graph_schema.py
+    epistemic_class: SPEC
+
+  - resource_id: geox.schemas.restoration_state
+    uri: "geox://schemas/restoration-state"
+    name: Restoration State Schema
+    status: LIVE
+    description: CRSProof, SurfaceIdentity, FaultIdentity, CompactionScenario, RestorationScenario
+    mime_type: text/x-python
+    file: src/geox_core/engines/structural_restoration/state.py
+    epistemic_class: SPEC
+
+  - resource_id: geox.schemas.restoration_provenance
+    uri: "geox://schemas/restoration-provenance"
+    name: Restoration Provenance Envelope
+    status: LIVE
+    description: JSON Schema for restoration audit output (verdict, lineage, uncertainty, provenance)
+    mime_type: application/json
+    file: resources/structural_restoration/provenance_schema.json
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.principles
+    uri: "geox://playbooks/structural-restoration-principles"
+    name: Structural Restoration Principles
+    status: LIVE
+    description: Master invariant, five axes of admissibility, layer architecture, observation-explanation divide
+    mime_type: text/markdown
+    file: resources/structural_restoration/principles.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.fill_ratio_diagnostics
+    uri: "geox://playbooks/fill-ratio-diagnostics"
+    name: Fill Ratio Diagnostic Protocol
+    status: LIVE
+    description: fill_ratio > 1 classification, 10-item diagnostic checklist, NW Sabah context
+    mime_type: text/markdown
+    file: resources/structural_restoration/fill_ratio_diagnostics.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.accommodation_space
+    uri: "geox://playbooks/accommodation-space"
+    name: Accommodation Space Computation
+    status: LIVE
+    description: State differencing concept, what accommodation IS and IS NOT, mandatory outputs
+    mime_type: text/markdown
+    file: resources/structural_restoration/accommodation_space.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.basement_subsidence
+    uri: "geox://playbooks/basement-subsidence"
+    name: Basement Subsidence Computation
+    status: LIVE
+    description: Guardrails, distinct from accommodation, NW Sabah basement heterogeneity warning
+    mime_type: text/markdown
+    file: resources/structural_restoration/basement_subsidence.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.fault_inheritance
+    uri: "geox://playbooks/fault-inheritance"
+    name: Fault Inheritance Analysis
+    status: LIVE
+    description: Relational evidence requirements, NW Sabah fault generations, azimuth ≠ age
+    mime_type: text/markdown
+    file: resources/structural_restoration/fault_inheritance.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.compaction_uncertainty
+    uri: "geox://playbooks/compaction-uncertainty"
+    name: Compaction Uncertainty Propagation
+    status: LIVE
+    description: Low/reference/high scenarios, 5% ambiguity, available compaction models
+    mime_type: text/markdown
+    file: resources/structural_restoration/compaction_uncertainty.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.distance_weighting
+    uri: "geox://playbooks/distance-weighting"
+    name: Distance-Weighted Uncertainty
+    status: LIVE
+    description: Spatial confidence decay, pluggable growth functions, scenario parameters not basin constants
+    mime_type: text/markdown
+    file: resources/structural_restoration/distance_weighting.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.playbooks.qc_checklist
+    uri: "geox://playbooks/restoration-qc-checklist"
+    name: Restoration QC Checklist
+    status: LIVE
+    description: Pre-computation, computation, post-computation, and interpretation gate checks
+    mime_type: text/markdown
+    file: resources/structural_restoration/qc_checklist.md
+    epistemic_class: SPEC
+
+  - resource_id: geox.contexts.nw_sabah_restoration
+    uri: "geox://contexts/nw-sabah-restoration"
+    name: NW Sabah Restoration Context
+    status: LIVE
+    description: ABKSS event stack, unconformities, overprinting, mobile shale, basement heterogeneity
+    mime_type: text/markdown
+    file: resources/structural_restoration/nw_sabah_context.md
+    epistemic_class: INT
+
+  - resource_id: geox.system_prompt.structural_restoration
+    uri: "geox://prompts/structural-restoration-system"
+    name: Structural Restoration System Prompt
+    status: LIVE
+    description: Constitutional prompt for GEOX Structural Restoration Intelligence
+    mime_type: text/markdown
+    file: resources/structural_restoration/system_prompt.md
+    epistemic_class: SPEC
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PROMPTS — Structural Restoration
+# ═══════════════════════════════════════════════════════════════════════════
+
+prompts:
+  - prompt_id: geox_structural_restore
+    name: geox_structural_restore
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Full structural restoration workflow: validate inputs → compute accommodation →
+      compute subsidence → compute fill ratio → propagate uncertainty → analyse
+      fault inheritance. Returns graph-addressable observations with competing hypotheses.
+    arguments:
+      - name: scenario_id
+        required: true
+        description: RestorationScenario ID
+      - name: basin_name
+        required: false
+        description: Basin context (loads basin-specific parameters)
+    required_resources:
+      - geox://invariants/structural-restoration
+      - geox://schemas/restoration-state
+      - geox://playbooks/fill-ratio-diagnostics
+    tool_sequence:
+      - geox_validate_restoration_inputs
+      - geox_compute_accommodation_space
+      - geox_compute_basement_subsidence
+      - geox_compute_fill_ratio
+      - geox_propagate_compaction_uncertainty
+      - geox_build_distance_weighted_uncertainty
+    epistemic_constraints:
+      - "OBSERVATION != INTERPRETATION"
+      - "INTERPRETATION != CAUSE"
+      - "SURVIVED != PROVEN"
+      - "VISUAL PLAUSIBILITY != RESTORATION VALIDITY"
+      - "ANOMALY != DIAGNOSIS"
+
+  - prompt_id: geox_geomechanical_fault_qc
+    name: geox_geomechanical_fault_qc
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Geomechanical QC of seismic fault interpretations. Stress compatibility,
+      reactivation probability, inheritance likelihood, basement agreement.
+    arguments:
+      - name: fault_id
+        required: true
+      - name: stress_phase_id
+        required: true
+    tool_sequence:
+      - geox_qc_seismic_fault_geomechanics
+    epistemic_constraints:
+      - "FAULT AZIMUTH IS EVIDENCE, NOT AGE"
+      - "STRESS ROTATION OUTRANKS FAULT ORIENTATION"
+      - "ASSUMED STRENGTH != HIGH-CONFIDENCE REACTIVATION"
+
+  - prompt_id: geox_forward_inverse_test
+    name: geox_forward_inverse_test
+    version: 1.0.0
+    status: PLANNED
+    description: >
+      Forward–inverse closure test. Forward: stress → seismic. Inverse: seismic → stress.
+      Closure: compare prediction with inference.
+    arguments:
+      - name: basin_name
+        required: true
+      - name: tectonic_scenario_id
+        required: true
+    tool_sequence:
+      - geox_run_forward_inverse_test
+    epistemic_constraints:
+      - "EARTH COMPUTES FORWARD. GEOX COMPUTES BACKWARD."
+      - "SEISMIC IS AN OBSERVATION LAYER."
+      - "GEOMECHANICS IS A CAUSALITY LAYER."
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTES
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# All tools are PLANNED, not LIVE. The correct public count is:
+#   count(registry items ∩ runtime items WHERE visibility=PUBLIC AND status=LIVE)
+# Do not force a number. Discover it.
+#
+# Registry declares. Runtime proves. Generation publishes. Parity decides.
+#
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+# ==============================================================================

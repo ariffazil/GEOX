@@ -1,0 +1,501 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 7,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 7
+    }
+  },
+  "results": [
+    {
+      "path": "resources/biostrat/mcp/concepts_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 133,
+      "nonEmptyLines": 128,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "region",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "doctrine",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "concepts",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 126
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/governance.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 165,
+      "nonEmptyLines": 160,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "doctrine",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "truth_classes",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "transition_rules",
+          "level": 1,
+          "line": 112
+        },
+        {
+          "heading": "biostrat_specific_constraints",
+          "level": 1,
+          "line": 120
+        },
+        {
+          "heading": "violation_handling",
+          "level": 1,
+          "line": 140
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 159
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/prompts_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 122,
+      "nonEmptyLines": 117,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "prompts",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 117
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/resources_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 125,
+      "nonEmptyLines": 115,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "epistemic_status",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "resources",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/skill_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 172,
+      "nonEmptyLines": 165,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "uri",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "agent_personality",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "required_resources",
+          "level": 1,
+          "line": 52
+        },
+        {
+          "heading": "required_prompts",
+          "level": 1,
+          "line": 71
+        },
+        {
+          "heading": "workflow",
+          "level": 1,
+          "line": 90
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 153
+        },
+        {
+          "heading": "popperian_discipline",
+          "level": 1,
+          "line": 168
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/task_reality_loop.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 174,
+      "nonEmptyLines": 170,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "uri",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "task_definition",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "stages",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 149
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 168
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "resources/biostrat/mcp/tools_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 127,
+      "nonEmptyLines": 122,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "phase",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "epistemic_status",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 121
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

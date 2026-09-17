@@ -1,0 +1,284 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "results": [
+    {
+      "path": "skills/orchestration/agent-card.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 94,
+      "nonEmptyLines": 94,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "url",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "authentication",
+          "level": 1,
+          "line": 54
+        },
+        {
+          "heading": "_geox",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "kernel_prompts",
+          "level": 1,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "skills/orchestration/forge_geox_mcp_app.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 293,
+      "nonEmptyLines": 218,
+      "sections": [
+        {
+          "heading": "Skill: forge_geox_mcp_app",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Purpose",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "What is an MCP App",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "GEOX Repo Structure (current)",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "5-Gap Checklist: What Still Needs to Be Done",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "GAP 1 — Missing `_meta.ui.resourceUri` in Tool Definitions (CRITICAL)",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "GAP 2 — Missing `ui/initialize` Handshake in HTML Apps (CRITICAL)",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "GAP 3 — Missing `manifest.json` on 3 Apps (MEDIUM)",
+          "level": 3,
+          "line": 132
+        },
+        {
+          "heading": "GAP 4 — `ui://` Resource Path Mismatch (MEDIUM)",
+          "level": 3,
+          "line": 166
+        },
+        {
+          "heading": "GAP 5 — No `text_fallback` on Public Tools (MEDIUM)",
+          "level": 3,
+          "line": 189
+        },
+        {
+          "heading": "MCP Apps Deployment Checklist (Per App)",
+          "level": 2,
+          "line": 203
+        },
+        {
+          "heading": "Deployment Steps (FastMCP on uvicorn)",
+          "level": 2,
+          "line": 222
+        },
+        {
+          "heading": "App-to-Tool Mapping (GEOX 5 Apps)",
+          "level": 2,
+          "line": 254
+        },
+        {
+          "heading": "arifOS Constitutional Wire",
+          "level": 2,
+          "line": 268
+        },
+        {
+          "heading": "References",
+          "level": 2,
+          "line": 282
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "skills/orchestration/orch-multi-agent-decomposition.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "orch-multi-agent-decomposition",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/orchestration/orch-void-and-data-denial.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "orch-void-and-data-denial",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/orchestration/orch-world-model-sync.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "orch-world-model-sync",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

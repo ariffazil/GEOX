@@ -1,0 +1,7475 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 25,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 25,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_mcp/contracts/seismic_interpret_schema.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 57,
+      "functions": [
+        {
+          "name": "generate_json_schema",
+          "startLine": 51,
+          "endLine": 53,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "StrictInterpretRequest",
+          "startLine": 36,
+          "endLine": 48,
+          "methods": [],
+          "properties": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "StrictInterpretRequest",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "generate_json_schema",
+          "line": 51,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "generate_json_schema",
+          "callee": "_interpret_request_json_schema",
+          "lineNumber": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_geometry/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 49,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_geometry/models.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 329,
+      "nonEmptyLines": 271,
+      "functions": [
+        {
+          "name": "schema_snapshot",
+          "startLine": 311,
+          "endLine": 329,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "StrictFrozen",
+          "startLine": 22,
+          "endLine": 23,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CoordinateDomain",
+          "startLine": 26,
+          "endLine": 32,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EpistemicLabel",
+          "startLine": 35,
+          "endLine": 39,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "HypothesisStatus",
+          "startLine": 42,
+          "endLine": 46,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CalibrationStatus",
+          "startLine": 49,
+          "endLine": 52,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GateStatus",
+          "startLine": 55,
+          "endLine": 60,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FaultKinematicStatus",
+          "startLine": 63,
+          "endLine": 69,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Point2D",
+          "startLine": 72,
+          "endLine": 81,
+          "methods": [],
+          "properties": [
+            "x",
+            "y",
+            "domain",
+            "horizontal_unit",
+            "vertical_unit",
+            "epistemic",
+            "source_section",
+            "source_hash",
+            "order_index"
+          ]
+        },
+        {
+          "name": "Polyline2D",
+          "startLine": 84,
+          "endLine": 99,
+          "methods": [
+            "_min_points"
+          ],
+          "properties": [
+            "points",
+            "domain",
+            "horizontal_unit",
+            "vertical_unit",
+            "source_section",
+            "source_hash",
+            "epistemic",
+            "ordered"
+          ]
+        },
+        {
+          "name": "AxisCalibration",
+          "startLine": 102,
+          "endLine": 120,
+          "methods": [],
+          "properties": [
+            "horizontal_unit",
+            "vertical_unit",
+            "domain",
+            "vertical_exaggeration",
+            "bin_spacing_m",
+            "sample_interval_ms",
+            "section_azimuth_deg",
+            "polarity_convention",
+            "datum",
+            "crs",
+            "velocity_td",
+            "velocity_linear_m_s",
+            "well_tie",
+            "calibration_hash",
+            "calibrated",
+            "bound"
+          ]
+        },
+        {
+          "name": "Section",
+          "startLine": 123,
+          "endLine": 130,
+          "methods": [],
+          "properties": [
+            "section_id",
+            "source_hash",
+            "input_class",
+            "domain",
+            "axis_calibration",
+            "image_path",
+            "attachments"
+          ]
+        },
+        {
+          "name": "SectionRef",
+          "startLine": 133,
+          "endLine": 135,
+          "methods": [],
+          "properties": [
+            "section_id",
+            "source_hash"
+          ]
+        },
+        {
+          "name": "Fault",
+          "startLine": 138,
+          "endLine": 169,
+          "methods": [
+            "_no_true_dip_without_basis"
+          ],
+          "properties": [
+            "fault_id",
+            "geometry",
+            "image_dip_deg",
+            "apparent_section_dip_deg",
+            "true_subsurface_dip_deg",
+            "dip_basis",
+            "dip_direction",
+            "fault_strike_deg",
+            "section_azimuth_deg",
+            "kinematic_claim",
+            "kinematic_status",
+            "regime_prior",
+            "throw_profile",
+            "max_displacement",
+            "length_m",
+            "artifact",
+            "witness_id",
+            "attachments"
+          ]
+        },
+        {
+          "name": "Horizon",
+          "startLine": 172,
+          "endLine": 193,
+          "methods": [
+            "_depth_requires_basis"
+          ],
+          "properties": [
+            "horizon_id",
+            "pixel_geometry",
+            "time_geometry",
+            "depth_geometry",
+            "conversion_basis",
+            "order_index",
+            "witness_id",
+            "attachments"
+          ]
+        },
+        {
+          "name": "FaultCutoff",
+          "startLine": 196,
+          "endLine": 209,
+          "methods": [],
+          "properties": [
+            "horizon_id",
+            "fault_id",
+            "hw_twt",
+            "fw_twt",
+            "hw_depth_m",
+            "fw_depth_m",
+            "sense",
+            "throw_ms",
+            "throw_m",
+            "fault_cmp",
+            "epistemic"
+          ]
+        },
+        {
+          "name": "WitnessProvenance",
+          "startLine": 212,
+          "endLine": 226,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_type",
+            "model_or_method",
+            "prompt_hash",
+            "source_geometry_hash",
+            "derivation"
+          ]
+        },
+        {
+          "name": "GateResult",
+          "startLine": 229,
+          "endLine": 239,
+          "methods": [],
+          "properties": [
+            "gate_id",
+            "status",
+            "inputs_used",
+            "measurement_units",
+            "equation_or_rule",
+            "threshold_source",
+            "reason",
+            "missing_inputs",
+            "receipt_hash",
+            "findings"
+          ]
+        },
+        {
+          "name": "Hypothesis",
+          "startLine": 242,
+          "endLine": 261,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "witness",
+            "structural_style",
+            "kinematic_claims",
+            "faults",
+            "horizons",
+            "cutoffs",
+            "supporting_evidence",
+            "contradicting_evidence",
+            "unresolved_measurements",
+            "gate_results",
+            "status",
+            "evidence_coverage",
+            "calibration_status",
+            "confidence_value",
+            "confidence_basis",
+            "combined_gate_verdict",
+            "render_ref",
+            "attachments"
+          ]
+        },
+        {
+          "name": "RenderArtifact",
+          "startLine": 264,
+          "endLine": 271,
+          "methods": [],
+          "properties": [
+            "render_ref",
+            "render_hash",
+            "source_hash",
+            "format",
+            "hypothesis_id",
+            "style_version",
+            "path"
+          ]
+        },
+        {
+          "name": "CompactHypothesisSummary",
+          "startLine": 274,
+          "endLine": 279,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "status",
+            "gate_summary",
+            "render_ref",
+            "witness_type"
+          ]
+        },
+        {
+          "name": "CompactInterpretationResult",
+          "startLine": 282,
+          "endLine": 292,
+          "methods": [],
+          "properties": [
+            "status",
+            "local_verdict",
+            "seal_authority",
+            "preferred_hypothesis",
+            "input_class",
+            "calibration_status",
+            "hypotheses",
+            "detail_ref",
+            "receipt_hash",
+            "render_refs"
+          ]
+        },
+        {
+          "name": "InterpretationBundle",
+          "startLine": 295,
+          "endLine": 308,
+          "methods": [],
+          "properties": [
+            "observations",
+            "hypotheses",
+            "preferred_hypothesis",
+            "limitations",
+            "provenance",
+            "local_verdict",
+            "seal_authority",
+            "seal_eligibility",
+            "renders",
+            "cutoffs",
+            "section"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "StrictFrozen",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "CoordinateDomain",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "EpistemicLabel",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "HypothesisStatus",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationStatus",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "GateStatus",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "FaultKinematicStatus",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "Point2D",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "Polyline2D",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "AxisCalibration",
+          "line": 102,
+          "isDefault": false
+        },
+        {
+          "name": "Section",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "SectionRef",
+          "line": 133,
+          "isDefault": false
+        },
+        {
+          "name": "Fault",
+          "line": 138,
+          "isDefault": false
+        },
+        {
+          "name": "Horizon",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "FaultCutoff",
+          "line": 196,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessProvenance",
+          "line": 212,
+          "isDefault": false
+        },
+        {
+          "name": "GateResult",
+          "line": 229,
+          "isDefault": false
+        },
+        {
+          "name": "Hypothesis",
+          "line": 242,
+          "isDefault": false
+        },
+        {
+          "name": "RenderArtifact",
+          "line": 264,
+          "isDefault": false
+        },
+        {
+          "name": "CompactHypothesisSummary",
+          "line": 274,
+          "isDefault": false
+        },
+        {
+          "name": "CompactInterpretationResult",
+          "line": 282,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretationBundle",
+          "line": 295,
+          "isDefault": false
+        },
+        {
+          "name": "schema_snapshot",
+          "line": 311,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_min_points",
+          "callee": "len",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_min_points",
+          "callee": "ValueError",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_no_true_dip_without_basis",
+          "callee": "ValueError",
+          "lineNumber": 165
+        },
+        {
+          "caller": "_depth_requires_basis",
+          "callee": "ValueError",
+          "lineNumber": 186
+        },
+        {
+          "caller": "schema_snapshot",
+          "callee": "v.model_json_schema",
+          "lineNumber": 329
+        },
+        {
+          "caller": "schema_snapshot",
+          "callee": "models.items",
+          "lineNumber": 329
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 23,
+        "functionCount": 1,
+        "classCount": 22
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/bundle.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 422,
+      "nonEmptyLines": 391,
+      "functions": [
+        {
+          "name": "_param_hash",
+          "startLine": 25,
+          "endLine": 27,
+          "params": [
+            "obj"
+          ]
+        },
+        {
+          "name": "_style_from_faults",
+          "startLine": 30,
+          "endLine": 41,
+          "params": [
+            "faults"
+          ]
+        },
+        {
+          "name": "_build_hypothesis_from_framework",
+          "startLine": 44,
+          "endLine": 69,
+          "params": [
+            "hypothesis_id",
+            "witness_id",
+            "witness_type",
+            "framework",
+            "model_or_method",
+            "derivation"
+          ]
+        },
+        {
+          "name": "build_interpretation_bundle",
+          "startLine": 72,
+          "endLine": 422,
+          "params": [
+            "frameworks_or_primary",
+            "gate_matrix",
+            "observations",
+            "calibration",
+            "earth_constraints",
+            "request",
+            "propose_result",
+            "model_revision",
+            "independent_witnesses"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_param_hash",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "_style_from_faults",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "_build_hypothesis_from_framework",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "build_interpretation_bundle",
+          "line": 72,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_param_hash",
+          "callee": "json.dumps",
+          "lineNumber": 26
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "hashlib.sha256(raw.encode()).hexdigest",
+          "lineNumber": 27
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 27
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "raw.encode",
+          "lineNumber": 27
+        },
+        {
+          "caller": "_style_from_faults",
+          "callee": "str(f.get(\"regime_prior\") or f.get(\"regime\") or \"unknown\").lower",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_style_from_faults",
+          "callee": "str",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_style_from_faults",
+          "callee": "f.get",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_style_from_faults",
+          "callee": "f.get",
+          "lineNumber": 31
+        },
+        {
+          "caller": "_style_from_faults",
+          "callee": "regimes.discard",
+          "lineNumber": 32
+        },
+        {
+          "caller": "_build_hypothesis_from_framework",
+          "callee": "list",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_build_hypothesis_from_framework",
+          "callee": "framework.get",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_build_hypothesis_from_framework",
+          "callee": "list",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_build_hypothesis_from_framework",
+          "callee": "framework.get",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_build_hypothesis_from_framework",
+          "callee": "_style_from_faults",
+          "lineNumber": 55
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "calibration.model_dump",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "request.model_dump",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "InterpretRequestFlags().model_dump",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "InterpretRequestFlags",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "int",
+          "lineNumber": 94
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "req.get",
+          "lineNumber": 94
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 95
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "dict",
+          "lineNumber": 97
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.setdefault",
+          "lineNumber": 99
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 100
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "dict",
+          "lineNumber": 101
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 102
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "dict",
+          "lineNumber": 103
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "mc.get",
+          "lineNumber": 103
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "bool",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "set",
+          "lineNumber": 117
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "_build_hypothesis_from_framework",
+          "lineNumber": 120
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "run_all_structure_gates",
+          "lineNumber": 128
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix.get",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates.items",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "v.get",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "v.get",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix.get",
+          "lineNumber": 131
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "all_unmeasured.update",
+          "lineNumber": 132
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix.get",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypothesis_status_map.get",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 144
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "max",
+          "lineNumber": 146
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel",
+          "lineNumber": 155
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 161
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 161
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix.get",
+          "lineNumber": 174
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 176
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates.values",
+          "lineNumber": 176
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 178
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 181
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hyp.model_dump",
+          "lineNumber": 181
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "range",
+          "lineNumber": 184
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 185
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 207
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 208
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "ec.get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "wit_list.extend",
+          "lineNumber": 209
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "enumerate",
+          "lineNumber": 210
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 211
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "str",
+          "lineNumber": 213
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 213
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 213
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "dict",
+          "lineNumber": 214
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 214
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 215
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 217
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 219
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 219
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 221
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "run_all_structure_gates",
+          "lineNumber": 223
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix_w.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates_w.items",
+          "lineNumber": 225
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "v.get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "all_unmeasured.update",
+          "lineNumber": 226
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix_w.get",
+          "lineNumber": 227
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "{\n            \"KILL\": \"REJECTED\",\n            \"PASS\": \"SURVIVES_CURRENT_TESTS\",\n            \"PARTIAL\": \"SURVIVES_CURRENT_TESTS\",\n            \"UNMEASURED\": \"UNTESTED\",\n        }.get",
+          "lineNumber": 228
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 234
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 235
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 236
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel(\n                hypothesis_id=w.get(\"hypothesis_id\") or f\"HYP-W-{i + 2:03d}\",\n                witness_id=w.get(\"witness_id\") or f\"W-{src}\",\n                witness_type=str(w.get(\"witness_type\") or \"independent_model\"),\n                model_or_method=str(w.get(\"model_or_method\") or src),\n                derivation=str(w.get(\"derivation\") or f\"independent_witness:{src}\"),\n                horizons=list(fw.get(\"horizons\") or []),\n                faults=list(fw.get(\"faults\") or []),\n                structural_style=_style_from_faults(fw.get(\"faults\") or []),\n                confidence=0.0,\n                status=status_w,\n                hypothesis_status=status_w,\n                evidence_coverage=measured_w / max(applicable_w, 1),\n                calibration_status=\"PARTIAL\" if cal.get(\"calibrated\") else \"UNCALIBRATED\",\n                confidence_value=None,\n                confidence_basis=None,\n                supporting_evidence=[f\"gate_pass:{g}\" for g in (matrix_w.get(\"passes\") or [])],\n                contradicting_evidence=[f\"gate_kill:{g}\" for g in (matrix_w.get(\"kills\") or [])],\n                physics_gates=list(gates_w.values()),\n                unresolved_measurements=list(unmeas_w),\n                combined_gate_verdict=combined_w,\n            ).model_dump",
+          "lineNumber": 237
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel",
+          "lineNumber": 237
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 238
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 239
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "str",
+          "lineNumber": 240
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 240
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "str",
+          "lineNumber": 241
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 241
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "str",
+          "lineNumber": 242
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "w.get",
+          "lineNumber": 242
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 243
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 243
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 244
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 244
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "_style_from_faults",
+          "lineNumber": 245
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "fw.get",
+          "lineNumber": 245
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "max",
+          "lineNumber": 249
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 250
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix_w.get",
+          "lineNumber": 253
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "matrix_w.get",
+          "lineNumber": 254
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 255
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates_w.values",
+          "lineNumber": 255
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 256
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gate_matrix.get",
+          "lineNumber": 263
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates.items",
+          "lineNumber": 264
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "v.get",
+          "lineNumber": 264
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "v.get",
+          "lineNumber": 264
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "all_unmeasured.update",
+          "lineNumber": 265
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gate_matrix.get",
+          "lineNumber": 266
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gate_matrix.get",
+          "lineNumber": 267
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HYPOTHESIS_STATUS_MAP.get",
+          "lineNumber": 268
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 269
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "len",
+          "lineNumber": 270
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "max",
+          "lineNumber": 271
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel",
+          "lineNumber": 273
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 275
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 275
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 276
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 276
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "_style_from_faults",
+          "lineNumber": 277
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 277
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 285
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "gates.values",
+          "lineNumber": 285
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "list",
+          "lineNumber": 288
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 291
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hyp.model_dump",
+          "lineNumber": 291
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "enumerate",
+          "lineNumber": 293
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 294
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel(\n                    hypothesis_id=f\"HYP-CONCEPTUAL-00{i}\",\n                    witness_id=f\"W-conceptual-{label}\",\n                    witness_type=\"empty_conceptual\",\n                    structural_style=label,\n                    confidence=0.0,\n                    status=\"UNTESTED\",\n                    hypothesis_status=\"UNTESTED\",\n                    evidence_coverage=0.0,\n                    calibration_status=\"UNCALIBRATED\",\n                    confidence_value=None,\n                    confidence_basis=None,\n                    epistemic_class=\"SPECULATION\",\n                    derivation=f\"empty_conceptual:{label}\",\n                    unresolved_measurements=[\"geometry required for this alternative\"],\n                    physics_gates=[],\n                ).model_dump",
+          "lineNumber": 295
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel",
+          "lineNumber": 295
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 316
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 317
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel(\n                hypothesis_id=\"HYP-001\",\n                horizons=propose_result.get(\"horizons\") or geom.get(\"horizons\") or [],\n                faults=propose_result.get(\"faults\") or geom.get(\"faults\") or [],\n                structural_style=\"rsi_primary\",\n                confidence=0.0,\n                status=\"UNTESTED\",\n                hypothesis_status=\"UNTESTED\",\n                evidence_coverage=0.0,\n                calibration_status=\"UNCALIBRATED\",\n                confidence_value=None,\n                confidence_basis=None,\n                epistemic_class=\"INTERPRETATION\",\n                supporting_evidence=[\"rsi_pipeline\"],\n                unresolved_questions=[\"physics_gates_not_run_on_image_only_propose\"],\n                unresolved_measurements=[\"axis_calibration\", \"velocity_model\", \"independent_geometry\"],\n            ).model_dump",
+          "lineNumber": 318
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel",
+          "lineNumber": 318
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 320
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "geom.get",
+          "lineNumber": 320
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 321
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "geom.get",
+          "lineNumber": 321
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "range",
+          "lineNumber": 336
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hypotheses.append",
+          "lineNumber": 337
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 358
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 359
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "(primary.get(\"measurement_context\") or {}).get",
+          "lineNumber": 360
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 360
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 362
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "(primary.get(\"measurement_context\") or {}).get",
+          "lineNumber": 362
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 362
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 365
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 366
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 367
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "earth_constraints.get",
+          "lineNumber": 367
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "hasattr",
+          "lineNumber": 368
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "getattr",
+          "lineNumber": 368
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 375
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "(propose_result.get(\"render_audit\") or {}).get",
+          "lineNumber": 376
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 376
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 377
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "propose_result.get",
+          "lineNumber": 377
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "validated_hyps.append",
+          "lineNumber": 385
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel.model_validate(h).model_dump",
+          "lineNumber": 385
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel.model_validate",
+          "lineNumber": 385
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "validated_hyps.append",
+          "lineNumber": 387
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 387
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "InterpretationBundle",
+          "lineNumber": 389
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "HypothesisModel.model_validate",
+          "lineNumber": 391
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "LimitationsModel",
+          "lineNumber": 393
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "bool",
+          "lineNumber": 394
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "bool",
+          "lineNumber": 395
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "bool",
+          "lineNumber": 396
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "sorted",
+          "lineNumber": 397
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "ProvenanceModel",
+          "lineNumber": 399
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 400
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "cal.get",
+          "lineNumber": 401
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "(primary.get(\"measurement_context\") or {}).get",
+          "lineNumber": 402
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 402
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "(primary.get(\"measurement_context\") or {}).get",
+          "lineNumber": 403
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "primary.get",
+          "lineNumber": 403
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "_param_hash",
+          "lineNumber": 406
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "bundle.model_dump",
+          "lineNumber": 413
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "out.setdefault",
+          "lineNumber": 418
+        },
+        {
+          "caller": "build_interpretation_bundle",
+          "callee": "isinstance",
+          "lineNumber": 419
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/canonical.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 151,
+      "nonEmptyLines": 118,
+      "classes": [
+        {
+          "name": "StrictModel",
+          "startLine": 19,
+          "endLine": 20,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FlexibleModel",
+          "startLine": 23,
+          "endLine": 24,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Calibration",
+          "startLine": 27,
+          "endLine": 47,
+          "methods": [],
+          "properties": [
+            "bin_spacing_m",
+            "sample_rate_ms",
+            "vertical_exaggeration",
+            "velocity_td",
+            "velocity_linear_m_s",
+            "section_azimuth_deg",
+            "polarity_convention",
+            "domain",
+            "datum",
+            "crs",
+            "units",
+            "well_tie",
+            "calibrated",
+            "input_class",
+            "sha256",
+            "calibration_hash",
+            "bound"
+          ]
+        },
+        {
+          "name": "Point2D",
+          "startLine": 73,
+          "endLine": 75,
+          "methods": [],
+          "properties": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "name": "Fault",
+          "startLine": 78,
+          "endLine": 88,
+          "methods": [],
+          "properties": [
+            "fault_id",
+            "points",
+            "regime_prior",
+            "dip_deg_image",
+            "dip_deg_subsurface",
+            "throw_profile",
+            "max_displacement",
+            "length",
+            "artifact",
+            "witness"
+          ]
+        },
+        {
+          "name": "Horizon",
+          "startLine": 91,
+          "endLine": 95,
+          "methods": [],
+          "properties": [
+            "horizon_id",
+            "points",
+            "order_index",
+            "witness"
+          ]
+        },
+        {
+          "name": "CutoffPair",
+          "startLine": 98,
+          "endLine": 110,
+          "methods": [],
+          "properties": [
+            "horizon_id",
+            "fault_id",
+            "hw_twt",
+            "fw_twt",
+            "hw_depth_m",
+            "fw_depth_m",
+            "sense",
+            "throw_ms",
+            "throw_m",
+            "fault_cmp"
+          ]
+        },
+        {
+          "name": "Hypothesis",
+          "startLine": 113,
+          "endLine": 121,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "structural_style",
+            "faults",
+            "horizons",
+            "cutoffs",
+            "witness",
+            "confidence",
+            "combined_gate_verdict"
+          ]
+        },
+        {
+          "name": "GateResult",
+          "startLine": 124,
+          "endLine": 129,
+          "methods": [],
+          "properties": [
+            "gate_id",
+            "status",
+            "reason",
+            "receipt_hash",
+            "equation"
+          ]
+        },
+        {
+          "name": "Section",
+          "startLine": 132,
+          "endLine": 137,
+          "methods": [],
+          "properties": [
+            "section_id",
+            "image_path",
+            "image_hash",
+            "input_class",
+            "domain"
+          ]
+        },
+        {
+          "name": "InterpretationBundle",
+          "startLine": 140,
+          "endLine": 151,
+          "methods": [],
+          "properties": [
+            "verdict",
+            "seal_authority",
+            "preferred_hypothesis",
+            "input_class",
+            "hypotheses",
+            "gate_summary",
+            "render_ref",
+            "detail_ref",
+            "receipt_hash"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "StrictModel",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "FlexibleModel",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "Calibration",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "Point2D",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "Fault",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "Horizon",
+          "line": 91,
+          "isDefault": false
+        },
+        {
+          "name": "CutoffPair",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "Hypothesis",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "GateResult",
+          "line": 124,
+          "isDefault": false
+        },
+        {
+          "name": "Section",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretationBundle",
+          "line": 140,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 0,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/hypothesis.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 234,
+      "nonEmptyLines": 187,
+      "functions": [
+        {
+          "name": "_param_hash",
+          "startLine": 126,
+          "endLine": 128,
+          "params": [
+            "obj"
+          ]
+        },
+        {
+          "name": "derive_hypothesis_status",
+          "startLine": 131,
+          "endLine": 157,
+          "params": [
+            "kills",
+            "passes",
+            "warns",
+            "unmeasured"
+          ]
+        },
+        {
+          "name": "evidence_coverage",
+          "startLine": 160,
+          "endLine": 164,
+          "params": [
+            "applicable",
+            "measured"
+          ]
+        },
+        {
+          "name": "calibration_status_from_calibration",
+          "startLine": 167,
+          "endLine": 177,
+          "params": [
+            "cal"
+          ]
+        },
+        {
+          "name": "make_empty_conceptual_hypothesis",
+          "startLine": 180,
+          "endLine": 219,
+          "params": [
+            "hypothesis_id",
+            "missing_measurements",
+            "witness_method"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WitnessType",
+          "startLine": 31,
+          "endLine": 36,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "HypothesisStatus",
+          "startLine": 39,
+          "endLine": 43,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CalibrationStatus",
+          "startLine": 46,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GeometryOrigin",
+          "startLine": 52,
+          "endLine": 56,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CoordinateDomain",
+          "startLine": 59,
+          "endLine": 65,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessProvenance",
+          "startLine": 71,
+          "endLine": 87,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_type",
+            "model_or_method",
+            "derivation",
+            "source_geometry_hash",
+            "prompt_hash",
+            "structural_style",
+            "kinematic_claims",
+            "supporting_evidence",
+            "contradicting_evidence",
+            "unresolved_measurements",
+            "attachments"
+          ]
+        },
+        {
+          "name": "Hypothesis",
+          "startLine": 93,
+          "endLine": 120,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "witness",
+            "faults",
+            "horizons",
+            "fault_blocks",
+            "structural_style",
+            "status",
+            "evidence_coverage_measured",
+            "evidence_coverage_applicable",
+            "calibration_status",
+            "confidence_value",
+            "confidence_basis",
+            "supporting_evidence",
+            "contradicting_evidence",
+            "physics_gates",
+            "unresolved_questions",
+            "combined_gate_verdict",
+            "attachments"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WitnessType",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "HypothesisStatus",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationStatus",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "GeometryOrigin",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "CoordinateDomain",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessProvenance",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "Hypothesis",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "_param_hash",
+          "line": 126,
+          "isDefault": false
+        },
+        {
+          "name": "derive_hypothesis_status",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "evidence_coverage",
+          "line": 160,
+          "isDefault": false
+        },
+        {
+          "name": "calibration_status_from_calibration",
+          "line": 167,
+          "isDefault": false
+        },
+        {
+          "name": "make_empty_conceptual_hypothesis",
+          "line": 180,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_param_hash",
+          "callee": "json.dumps",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "hashlib.sha256(raw.encode()).hexdigest",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_param_hash",
+          "callee": "raw.encode",
+          "lineNumber": 128
+        },
+        {
+          "caller": "derive_hypothesis_status",
+          "callee": "len",
+          "lineNumber": 147
+        },
+        {
+          "caller": "derive_hypothesis_status",
+          "callee": "len",
+          "lineNumber": 147
+        },
+        {
+          "caller": "evidence_coverage",
+          "callee": "max",
+          "lineNumber": 164
+        },
+        {
+          "caller": "evidence_coverage",
+          "callee": "int",
+          "lineNumber": 164
+        },
+        {
+          "caller": "evidence_coverage",
+          "callee": "max",
+          "lineNumber": 164
+        },
+        {
+          "caller": "evidence_coverage",
+          "callee": "int",
+          "lineNumber": 164
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "isinstance",
+          "lineNumber": 168
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "any",
+          "lineNumber": 170
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "cal.get",
+          "lineNumber": 170
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "any",
+          "lineNumber": 171
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "cal.get",
+          "lineNumber": 171
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "any",
+          "lineNumber": 172
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "cal.get",
+          "lineNumber": 172
+        },
+        {
+          "caller": "calibration_status_from_calibration",
+          "callee": "cal.get",
+          "lineNumber": 173
+        },
+        {
+          "caller": "make_empty_conceptual_hypothesis",
+          "callee": "Hypothesis",
+          "lineNumber": 191
+        },
+        {
+          "caller": "make_empty_conceptual_hypothesis",
+          "callee": "WitnessProvenance",
+          "lineNumber": 193
+        },
+        {
+          "caller": "make_empty_conceptual_hypothesis",
+          "callee": "list",
+          "lineNumber": 204
+        },
+        {
+          "caller": "make_empty_conceptual_hypothesis",
+          "callee": "list",
+          "lineNumber": 217
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 12,
+        "functionCount": 5,
+        "classCount": 7
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/models.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 640,
+      "nonEmptyLines": 502,
+      "functions": [
+        {
+          "name": "interpret_request_json_schema",
+          "startLine": 285,
+          "endLine": 290,
+          "params": []
+        },
+        {
+          "name": "bundle_json_schema",
+          "startLine": 293,
+          "endLine": 294,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "StrictModel",
+          "startLine": 19,
+          "endLine": 22,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "TransportAwareRequest",
+          "startLine": 25,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "session_id",
+            "actor_id",
+            "trace_id",
+            "source_sha256"
+          ]
+        },
+        {
+          "name": "AxisSpec",
+          "startLine": 48,
+          "endLine": 61,
+          "methods": [],
+          "properties": [
+            "type",
+            "values",
+            "unit"
+          ]
+        },
+        {
+          "name": "Calibration",
+          "startLine": 64,
+          "endLine": 87,
+          "methods": [],
+          "properties": [
+            "x_axis",
+            "vertical_axis",
+            "vertical_exaggeration",
+            "polarity",
+            "phase_degrees",
+            "sample_interval_ms",
+            "sample_rate_ms",
+            "bin_spacing_m",
+            "velocity_td",
+            "velocity_linear_m_s",
+            "well_tie",
+            "input_class",
+            "calibrated",
+            "sha256",
+            "calibration_hash",
+            "crs",
+            "vertical_datum"
+          ]
+        },
+        {
+          "name": "EarthConstraints",
+          "startLine": 90,
+          "endLine": 99,
+          "methods": [],
+          "properties": [
+            "wells",
+            "formation_tops",
+            "checkshots",
+            "velocity_model_ref",
+            "stratigraphic_framework_ref",
+            "structural_regime",
+            "witnesses"
+          ]
+        },
+        {
+          "name": "InterpretRequestFlags",
+          "startLine": 102,
+          "endLine": 107,
+          "methods": [],
+          "properties": [
+            "horizons",
+            "faults",
+            "structural_framework",
+            "restoration",
+            "hypothesis_count"
+          ]
+        },
+        {
+          "name": "HorizonContrastMode",
+          "startLine": 113,
+          "endLine": 122,
+          "methods": [],
+          "properties": [
+            "mode",
+            "attribute_data",
+            "depth",
+            "geological_query",
+            "well_ties",
+            "peak_threshold",
+            "min_separation_m",
+            "custom_query",
+            "calibration"
+          ]
+        },
+        {
+          "name": "StructureValidateMode",
+          "startLine": 125,
+          "endLine": 133,
+          "methods": [],
+          "properties": [
+            "mode",
+            "framework",
+            "faults",
+            "horizons",
+            "calibration",
+            "earth_constraints",
+            "request",
+            "claim_text"
+          ]
+        },
+        {
+          "name": "SectionImageMode",
+          "startLine": 136,
+          "endLine": 146,
+          "methods": [],
+          "properties": [
+            "mode",
+            "image_path",
+            "image_data",
+            "artifact_ref",
+            "source_uri",
+            "max_faults",
+            "max_horizons",
+            "calibration",
+            "earth_constraints",
+            "request"
+          ]
+        },
+        {
+          "name": "SegySliceMode",
+          "startLine": 149,
+          "endLine": 156,
+          "methods": [],
+          "properties": [
+            "mode",
+            "segy_path",
+            "source_uri",
+            "volume_ref",
+            "frame_index",
+            "orientation",
+            "calibration"
+          ]
+        },
+        {
+          "name": "FaultSticksMode",
+          "startLine": 159,
+          "endLine": 162,
+          "methods": [],
+          "properties": [
+            "mode",
+            "source_uri",
+            "source_type"
+          ]
+        },
+        {
+          "name": "VolumeFrameMode",
+          "startLine": 165,
+          "endLine": 172,
+          "methods": [],
+          "properties": [
+            "mode",
+            "action",
+            "volume_ref",
+            "frame_index",
+            "orientation",
+            "provenance",
+            "image_data"
+          ]
+        },
+        {
+          "name": "BlendMode",
+          "startLine": 175,
+          "endLine": 179,
+          "methods": [],
+          "properties": [
+            "mode",
+            "blend_mode",
+            "volume_ref",
+            "provenance"
+          ]
+        },
+        {
+          "name": "InterpretBundleMode",
+          "startLine": 182,
+          "endLine": 196,
+          "methods": [],
+          "properties": [
+            "mode",
+            "artifact_ref",
+            "artifact_type",
+            "image_path",
+            "image_data",
+            "segy_path",
+            "framework",
+            "faults",
+            "horizons",
+            "calibration",
+            "earth_constraints",
+            "request"
+          ]
+        },
+        {
+          "name": "GateResultModel",
+          "startLine": 215,
+          "endLine": 223,
+          "methods": [],
+          "properties": [
+            "gate_id",
+            "status",
+            "equation",
+            "receipt_hash",
+            "reason"
+          ]
+        },
+        {
+          "name": "HypothesisModel",
+          "startLine": 226,
+          "endLine": 251,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "witness_id",
+            "witness_type",
+            "model_or_method",
+            "derivation",
+            "horizons",
+            "faults",
+            "fault_blocks",
+            "structural_style",
+            "kinematic_claims",
+            "confidence",
+            "status",
+            "hypothesis_status",
+            "evidence_coverage",
+            "calibration_status",
+            "confidence_value",
+            "confidence_basis",
+            "epistemic_class",
+            "supporting_evidence",
+            "contradicting_evidence",
+            "physics_gates",
+            "unresolved_questions",
+            "unresolved_measurements",
+            "combined_gate_verdict"
+          ]
+        },
+        {
+          "name": "LimitationsModel",
+          "startLine": 254,
+          "endLine": 258,
+          "methods": [],
+          "properties": [
+            "missing_scale",
+            "missing_velocity",
+            "image_only",
+            "unmeasured_gates"
+          ]
+        },
+        {
+          "name": "ProvenanceModel",
+          "startLine": 261,
+          "endLine": 267,
+          "methods": [],
+          "properties": [
+            "input_hash",
+            "model_revision",
+            "algorithm_versions",
+            "parameter_hash",
+            "tool"
+          ]
+        },
+        {
+          "name": "InterpretationBundle",
+          "startLine": 270,
+          "endLine": 282,
+          "methods": [],
+          "properties": [
+            "observations",
+            "hypotheses",
+            "preferred_hypothesis",
+            "limitations",
+            "provenance",
+            "local_verdict",
+            "seal_authority",
+            "seal_eligibility",
+            "governance_status"
+          ]
+        },
+        {
+          "name": "CoordinateDomain",
+          "startLine": 309,
+          "endLine": 315,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GeometryOrigin",
+          "startLine": 318,
+          "endLine": 322,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Point2D",
+          "startLine": 325,
+          "endLine": 343,
+          "methods": [],
+          "properties": [
+            "x",
+            "y",
+            "domain",
+            "horizontal_unit",
+            "vertical_unit",
+            "source_section",
+            "source_hash",
+            "point_order",
+            "origin"
+          ]
+        },
+        {
+          "name": "Polyline2D",
+          "startLine": 346,
+          "endLine": 354,
+          "methods": [],
+          "properties": [
+            "points",
+            "closed",
+            "source_section",
+            "source_hash",
+            "origin"
+          ]
+        },
+        {
+          "name": "SectionRef",
+          "startLine": 357,
+          "endLine": 374,
+          "methods": [],
+          "properties": [
+            "section_id",
+            "source_uri",
+            "source_hash",
+            "source_type",
+            "inline_min",
+            "inline_max",
+            "xline_min",
+            "xline_max"
+          ]
+        },
+        {
+          "name": "AxisCalibration",
+          "startLine": 377,
+          "endLine": 392,
+          "methods": [],
+          "properties": [
+            "horizontal",
+            "vertical",
+            "vertical_exaggeration",
+            "section_azimuth_deg",
+            "calibrated",
+            "sha256",
+            "calibration_hash"
+          ]
+        },
+        {
+          "name": "DipBasis",
+          "startLine": 395,
+          "endLine": 398,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Fault",
+          "startLine": 401,
+          "endLine": 430,
+          "methods": [],
+          "properties": [
+            "fault_id",
+            "polyline",
+            "image_dip_deg",
+            "apparent_section_dip_deg",
+            "true_subsurface_dip_deg",
+            "dip_basis",
+            "dip_direction",
+            "fault_strike_deg",
+            "section_azimuth_deg",
+            "kinematic_claim",
+            "kinematic_status",
+            "regime_prior",
+            "reactivation_evidence",
+            "throw_profile_m",
+            "tip_taper",
+            "attachments"
+          ]
+        },
+        {
+          "name": "Horizon",
+          "startLine": 433,
+          "endLine": 451,
+          "methods": [],
+          "properties": [
+            "horizon_id",
+            "pixel_geometry",
+            "time_geometry",
+            "depth_geometry",
+            "conversion_basis",
+            "attachments"
+          ]
+        },
+        {
+          "name": "FaultCutoff",
+          "startLine": 454,
+          "endLine": 469,
+          "methods": [],
+          "properties": [
+            "fault_id",
+            "horizon_id",
+            "hanging_wall_value",
+            "footwall_value",
+            "throw_m",
+            "throw_ms",
+            "domain",
+            "measured"
+          ]
+        },
+        {
+          "name": "WitnessProvenance",
+          "startLine": 472,
+          "endLine": 496,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_type",
+            "model_or_method",
+            "prompt_hash",
+            "source_geometry_hash",
+            "derivation",
+            "structural_style",
+            "kinematic_claims",
+            "supporting_evidence",
+            "contradicting_evidence",
+            "unresolved_measurements",
+            "attachments"
+          ]
+        },
+        {
+          "name": "HypothesisStatus",
+          "startLine": 499,
+          "endLine": 503,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CalibrationStatus",
+          "startLine": 506,
+          "endLine": 509,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GateResult",
+          "startLine": 512,
+          "endLine": 530,
+          "methods": [],
+          "properties": [
+            "gate_id",
+            "status",
+            "inputs_used",
+            "measurement_units",
+            "equation_or_rule",
+            "threshold_source",
+            "reason",
+            "missing_inputs",
+            "receipt_hash"
+          ]
+        },
+        {
+          "name": "RenderStyleVersion",
+          "startLine": 533,
+          "endLine": 539,
+          "methods": [],
+          "properties": [
+            "style_id",
+            "palette_version",
+            "matplotlib_version"
+          ]
+        },
+        {
+          "name": "RenderArtifact",
+          "startLine": 542,
+          "endLine": 561,
+          "methods": [],
+          "properties": [
+            "render_ref",
+            "render_hash",
+            "source_hash",
+            "canonical_geometry_hash",
+            "annotations_hash",
+            "style_version",
+            "bytes",
+            "hypothesis_id",
+            "image_format",
+            "honest_banner"
+          ]
+        },
+        {
+          "name": "CompactInterpretationResult",
+          "startLine": 564,
+          "endLine": 582,
+          "methods": [],
+          "properties": [
+            "status",
+            "local_verdict",
+            "input_class",
+            "calibration_status",
+            "hypotheses",
+            "preferred_hypothesis",
+            "detail_ref",
+            "receipt_hash",
+            "seal_authority",
+            "gate_summary"
+          ]
+        },
+        {
+          "name": "CanonicalInterpretationBundle",
+          "startLine": 585,
+          "endLine": 608,
+          "methods": [],
+          "properties": [
+            "section",
+            "calibration",
+            "horizons",
+            "faults",
+            "fault_cutoffs",
+            "hypotheses",
+            "gate_results",
+            "render_artifacts",
+            "preferred_hypothesis",
+            "local_verdict",
+            "seal_authority",
+            "seal_eligibility",
+            "receipt_hash"
+          ]
+        },
+        {
+          "name": "Hypothesis",
+          "startLine": 611,
+          "endLine": 633,
+          "methods": [],
+          "properties": [
+            "hypothesis_id",
+            "witness",
+            "faults",
+            "horizons",
+            "status",
+            "evidence_coverage_measured",
+            "evidence_coverage_applicable",
+            "calibration_status",
+            "confidence_value",
+            "confidence_basis",
+            "gate_results",
+            "attachments"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "StrictModel",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "TransportAwareRequest",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "AxisSpec",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "Calibration",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "EarthConstraints",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretRequestFlags",
+          "line": 102,
+          "isDefault": false
+        },
+        {
+          "name": "HorizonContrastMode",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "StructureValidateMode",
+          "line": 125,
+          "isDefault": false
+        },
+        {
+          "name": "SectionImageMode",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "SegySliceMode",
+          "line": 149,
+          "isDefault": false
+        },
+        {
+          "name": "FaultSticksMode",
+          "line": 159,
+          "isDefault": false
+        },
+        {
+          "name": "VolumeFrameMode",
+          "line": 165,
+          "isDefault": false
+        },
+        {
+          "name": "BlendMode",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretBundleMode",
+          "line": 182,
+          "isDefault": false
+        },
+        {
+          "name": "GateResultModel",
+          "line": 215,
+          "isDefault": false
+        },
+        {
+          "name": "HypothesisModel",
+          "line": 226,
+          "isDefault": false
+        },
+        {
+          "name": "LimitationsModel",
+          "line": 254,
+          "isDefault": false
+        },
+        {
+          "name": "ProvenanceModel",
+          "line": 261,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretationBundle",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "interpret_request_json_schema",
+          "line": 285,
+          "isDefault": false
+        },
+        {
+          "name": "bundle_json_schema",
+          "line": 293,
+          "isDefault": false
+        },
+        {
+          "name": "CoordinateDomain",
+          "line": 309,
+          "isDefault": false
+        },
+        {
+          "name": "GeometryOrigin",
+          "line": 318,
+          "isDefault": false
+        },
+        {
+          "name": "Point2D",
+          "line": 325,
+          "isDefault": false
+        },
+        {
+          "name": "Polyline2D",
+          "line": 346,
+          "isDefault": false
+        },
+        {
+          "name": "SectionRef",
+          "line": 357,
+          "isDefault": false
+        },
+        {
+          "name": "AxisCalibration",
+          "line": 377,
+          "isDefault": false
+        },
+        {
+          "name": "DipBasis",
+          "line": 395,
+          "isDefault": false
+        },
+        {
+          "name": "Fault",
+          "line": 401,
+          "isDefault": false
+        },
+        {
+          "name": "Horizon",
+          "line": 433,
+          "isDefault": false
+        },
+        {
+          "name": "FaultCutoff",
+          "line": 454,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessProvenance",
+          "line": 472,
+          "isDefault": false
+        },
+        {
+          "name": "HypothesisStatus",
+          "line": 499,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationStatus",
+          "line": 506,
+          "isDefault": false
+        },
+        {
+          "name": "GateResult",
+          "line": 512,
+          "isDefault": false
+        },
+        {
+          "name": "RenderStyleVersion",
+          "line": 533,
+          "isDefault": false
+        },
+        {
+          "name": "RenderArtifact",
+          "line": 542,
+          "isDefault": false
+        },
+        {
+          "name": "CompactInterpretationResult",
+          "line": 564,
+          "isDefault": false
+        },
+        {
+          "name": "CanonicalInterpretationBundle",
+          "line": 585,
+          "isDefault": false
+        },
+        {
+          "name": "Hypothesis",
+          "line": 611,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "interpret_request_json_schema",
+          "callee": "TypeAdapter(InterpretRequest).json_schema",
+          "lineNumber": 290
+        },
+        {
+          "caller": "interpret_request_json_schema",
+          "callee": "TypeAdapter",
+          "lineNumber": 290
+        },
+        {
+          "caller": "bundle_json_schema",
+          "callee": "InterpretationBundle.model_json_schema",
+          "lineNumber": 294
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 40,
+        "functionCount": 2,
+        "classCount": 38
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_interpret/narrative_guard.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 89,
+      "functions": [
+        {
+          "name": "scan_narrative_claims",
+          "startLine": 44,
+          "endLine": 99,
+          "params": [
+            "text",
+            "input_class",
+            "has_velocity",
+            "has_3d"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "scan_narrative_claims",
+          "line": 44,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "rx.search",
+          "lineNumber": 57
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "blocked.append",
+          "lineNumber": 60
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "rx.findall",
+          "lineNumber": 65
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "blocked.append",
+          "lineNumber": 71
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "rx.findall",
+          "lineNumber": 76
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "rx.search(text).group",
+          "lineNumber": 76
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "rx.search",
+          "lineNumber": 76
+        },
+        {
+          "caller": "scan_narrative_claims",
+          "callee": "any",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_physics/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 7,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/domain/seismic_physics/receipts.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 68,
+      "nonEmptyLines": 59,
+      "functions": [
+        {
+          "name": "receipt_hash",
+          "startLine": 16,
+          "endLine": 20,
+          "params": [
+            "payload"
+          ]
+        },
+        {
+          "name": "make_gate_receipt",
+          "startLine": 23,
+          "endLine": 68,
+          "params": [
+            "gate_id",
+            "status",
+            "inputs",
+            "inputs_used",
+            "measurement_units",
+            "equation",
+            "equation_or_rule",
+            "thresholds",
+            "threshold_source",
+            "calculated_result",
+            "exceptions_considered",
+            "evidence_refs",
+            "reason",
+            "missing_inputs",
+            "findings",
+            "gate_type"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "receipt_hash",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "make_gate_receipt",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "receipt_hash",
+          "callee": "payload.items",
+          "lineNumber": 18
+        },
+        {
+          "caller": "receipt_hash",
+          "callee": "json.dumps",
+          "lineNumber": 19
+        },
+        {
+          "caller": "receipt_hash",
+          "callee": "hashlib.sha256(raw.encode(\"utf-8\")).hexdigest",
+          "lineNumber": 20
+        },
+        {
+          "caller": "receipt_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 20
+        },
+        {
+          "caller": "receipt_hash",
+          "callee": "raw.encode",
+          "lineNumber": 20
+        },
+        {
+          "caller": "make_gate_receipt",
+          "callee": "receipt_hash",
+          "lineNumber": 67
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/envelope_normalizer.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 187,
+      "nonEmptyLines": 158,
+      "functions": [
+        {
+          "name": "envelope_is_complete",
+          "startLine": 50,
+          "endLine": 64,
+          "params": [
+            "env"
+          ]
+        },
+        {
+          "name": "synthesize_envelope",
+          "startLine": 67,
+          "endLine": 106,
+          "params": [
+            "tool_name",
+            "result",
+            "actor_id",
+            "session_id",
+            "verification_status",
+            "receipt_state",
+            "receipt_ref"
+          ]
+        },
+        {
+          "name": "normalize_envelope_for_mutation",
+          "startLine": 109,
+          "endLine": 187,
+          "params": [
+            "tool_name",
+            "result",
+            "arguments"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "envelope_is_complete",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "synthesize_envelope",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "normalize_envelope_for_mutation",
+          "line": 109,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "envelope_is_complete",
+          "callee": "isinstance",
+          "lineNumber": 52
+        },
+        {
+          "caller": "envelope_is_complete",
+          "callee": "env.get",
+          "lineNumber": 55
+        },
+        {
+          "caller": "envelope_is_complete",
+          "callee": "env.get",
+          "lineNumber": 58
+        },
+        {
+          "caller": "envelope_is_complete",
+          "callee": "isinstance",
+          "lineNumber": 59
+        },
+        {
+          "caller": "synthesize_envelope",
+          "callee": "isinstance",
+          "lineNumber": 85
+        },
+        {
+          "caller": "synthesize_envelope",
+          "callee": "result.get",
+          "lineNumber": 86
+        },
+        {
+          "caller": "synthesize_envelope",
+          "callee": "result.get",
+          "lineNumber": 89
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 128
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "is_mutating_call",
+          "lineNumber": 130
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "result.get",
+          "lineNumber": 133
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 134
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "envelope_is_complete",
+          "lineNumber": 134
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "(arguments or {}).get",
+          "lineNumber": 139
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 139
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "(arguments or {}).get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 140
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 146
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "existing.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "existing.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 149
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "receipt.get",
+          "lineNumber": 150
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "receipt.get",
+          "lineNumber": 151
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "synthesize_envelope",
+          "lineNumber": 153
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "dict",
+          "lineNumber": 164
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "isinstance",
+          "lineNumber": 173
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "out.get",
+          "lineNumber": 173
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "logger.warning",
+          "lineNumber": 180
+        },
+        {
+          "caller": "normalize_envelope_for_mutation",
+          "callee": "result.get",
+          "lineNumber": 184
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 93,
+      "nonEmptyLines": 89,
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/anti_beautiful_one.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 358,
+      "nonEmptyLines": 308,
+      "classes": [
+        {
+          "name": "BeautyMetrics",
+          "startLine": 107,
+          "endLine": 135,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "rhetorical_coherence",
+            "evidentiary_density",
+            "beauty_overreach_score",
+            "certainty_gradient",
+            "grounding_gradient",
+            "polish_marker_count",
+            "strength_marker_count",
+            "evidence_citations",
+            "missing_grounding_count",
+            "overreach_verdict"
+          ]
+        },
+        {
+          "name": "AntiBeautifulOne",
+          "startLine": 138,
+          "endLine": 358,
+          "methods": [
+            "__init__",
+            "analyze",
+            "_rhetorical_coherence_score",
+            "_evidentiary_density_score",
+            "_certainty_gradient_score",
+            "_grounding_gradient_score",
+            "_count_polish_markers",
+            "_count_strength_markers",
+            "_count_uncertainty_markers",
+            "_count_missing_grounding",
+            "_compute_verdict",
+            "force_decomposition_triggered",
+            "suspicious"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "BeautyMetrics",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "AntiBeautifulOne",
+          "line": 138,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "round",
+          "lineNumber": 125
+        },
+        {
+          "caller": "to_dict",
+          "callee": "round",
+          "lineNumber": 126
+        },
+        {
+          "caller": "to_dict",
+          "callee": "round",
+          "lineNumber": 127
+        },
+        {
+          "caller": "to_dict",
+          "callee": "round",
+          "lineNumber": 128
+        },
+        {
+          "caller": "to_dict",
+          "callee": "round",
+          "lineNumber": 129
+        },
+        {
+          "caller": "__init__",
+          "callee": "output_text.lower",
+          "lineNumber": 161
+        },
+        {
+          "caller": "__init__",
+          "callee": "output_text.split",
+          "lineNumber": 162
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._rhetorical_coherence_score",
+          "lineNumber": 175
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._evidentiary_density_score",
+          "lineNumber": 176
+        },
+        {
+          "caller": "analyze",
+          "callee": "max",
+          "lineNumber": 180
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._certainty_gradient_score",
+          "lineNumber": 183
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._grounding_gradient_score",
+          "lineNumber": 184
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._compute_verdict",
+          "lineNumber": 186
+        },
+        {
+          "caller": "analyze",
+          "callee": "BeautyMetrics",
+          "lineNumber": 188
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._count_polish_markers",
+          "lineNumber": 194
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._count_strength_markers",
+          "lineNumber": 195
+        },
+        {
+          "caller": "analyze",
+          "callee": "self._count_missing_grounding",
+          "lineNumber": 197
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "self._count_polish_markers",
+          "lineNumber": 210
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "min",
+          "lineNumber": 211
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "self._count_strength_markers",
+          "lineNumber": 215
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "min",
+          "lineNumber": 216
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "re.split",
+          "lineNumber": 220
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "sum",
+          "lineNumber": 221
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "len",
+          "lineNumber": 221
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "s.strip",
+          "lineNumber": 221
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "len",
+          "lineNumber": 222
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "len",
+          "lineNumber": 222
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "s.strip",
+          "lineNumber": 222
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "max",
+          "lineNumber": 223
+        },
+        {
+          "caller": "_rhetorical_coherence_score",
+          "callee": "min",
+          "lineNumber": 226
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "min",
+          "lineNumber": 237
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "min",
+          "lineNumber": 241
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "self._count_uncertainty_markers",
+          "lineNumber": 245
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "min",
+          "lineNumber": 246
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "self._text_lower.count",
+          "lineNumber": 250
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "min",
+          "lineNumber": 251
+        },
+        {
+          "caller": "_evidentiary_density_score",
+          "callee": "min",
+          "lineNumber": 254
+        },
+        {
+          "caller": "_certainty_gradient_score",
+          "callee": "self._count_strength_markers",
+          "lineNumber": 262
+        },
+        {
+          "caller": "_certainty_gradient_score",
+          "callee": "self._count_polish_markers",
+          "lineNumber": 263
+        },
+        {
+          "caller": "_certainty_gradient_score",
+          "callee": "min",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_certainty_gradient_score",
+          "callee": "max",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_certainty_gradient_score",
+          "callee": "len",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "self._text_lower.count",
+          "lineNumber": 274
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "self._text_lower.count",
+          "lineNumber": 275
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "self._text_lower.count",
+          "lineNumber": 276
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "self._text_lower.count",
+          "lineNumber": 277
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "min",
+          "lineNumber": 279
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "max",
+          "lineNumber": 279
+        },
+        {
+          "caller": "_grounding_gradient_score",
+          "callee": "len",
+          "lineNumber": 279
+        },
+        {
+          "caller": "_count_polish_markers",
+          "callee": "self._text_lower.count",
+          "lineNumber": 284
+        },
+        {
+          "caller": "_count_strength_markers",
+          "callee": "text.count",
+          "lineNumber": 291
+        },
+        {
+          "caller": "_count_uncertainty_markers",
+          "callee": "text.count",
+          "lineNumber": 315
+        },
+        {
+          "caller": "_count_missing_grounding",
+          "callee": "re.split",
+          "lineNumber": 323
+        },
+        {
+          "caller": "_count_missing_grounding",
+          "callee": "sentence.lower",
+          "lineNumber": 326
+        },
+        {
+          "caller": "_count_missing_grounding",
+          "callee": "any",
+          "lineNumber": 327
+        },
+        {
+          "caller": "_count_missing_grounding",
+          "callee": "any",
+          "lineNumber": 328
+        },
+        {
+          "caller": "force_decomposition_triggered",
+          "callee": "self.analyze",
+          "lineNumber": 348
+        },
+        {
+          "caller": "suspicious",
+          "callee": "self.analyze",
+          "lineNumber": 354
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/assumption_lineage.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 313,
+      "nonEmptyLines": 262,
+      "functions": [
+        {
+          "name": "get_assumption_graph",
+          "startLine": 290,
+          "endLine": 301,
+          "params": []
+        },
+        {
+          "name": "reset_assumption_graph",
+          "startLine": 304,
+          "endLine": 313,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "AssumptionStatus",
+          "startLine": 28,
+          "endLine": 33,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AssumptionType",
+          "startLine": 36,
+          "endLine": 46,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AssumptionRecord",
+          "startLine": 50,
+          "endLine": 86,
+          "methods": [
+            "is_root",
+            "lineage_depth"
+          ],
+          "properties": [
+            "assumption_id",
+            "parent_assumption_id",
+            "introduced_by",
+            "rung_origin",
+            "assumption_type",
+            "description",
+            "value_used",
+            "alternatives",
+            "sensitivity",
+            "current_status",
+            "created_at",
+            "falsified_at",
+            "falsified_by",
+            "propagated_to",
+            "metadata"
+          ]
+        },
+        {
+          "name": "AssumptionGraph",
+          "startLine": 89,
+          "endLine": 280,
+          "methods": [
+            "__init__",
+            "register",
+            "falsify",
+            "get",
+            "get_by_tool",
+            "get_active",
+            "lineage",
+            "lineage_depth",
+            "detect_circular",
+            "affected_outputs",
+            "summary"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AssumptionStatus",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "AssumptionType",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "AssumptionRecord",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "AssumptionGraph",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "get_assumption_graph",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "reset_assumption_graph",
+          "line": 304,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "threading.RLock",
+          "lineNumber": 102
+        },
+        {
+          "caller": "register",
+          "callee": "AssumptionRecord",
+          "lineNumber": 132
+        },
+        {
+          "caller": "register",
+          "callee": "parent.propagated_to.append",
+          "lineNumber": 151
+        },
+        {
+          "caller": "falsify",
+          "callee": "datetime.now",
+          "lineNumber": 174
+        },
+        {
+          "caller": "falsify",
+          "callee": "self._records.get",
+          "lineNumber": 181
+        },
+        {
+          "caller": "falsify",
+          "callee": "datetime.now",
+          "lineNumber": 184
+        },
+        {
+          "caller": "get",
+          "callee": "self._records.get",
+          "lineNumber": 193
+        },
+        {
+          "caller": "get_by_tool",
+          "callee": "self._records.values",
+          "lineNumber": 198
+        },
+        {
+          "caller": "get_active",
+          "callee": "self._records.values",
+          "lineNumber": 203
+        },
+        {
+          "caller": "lineage",
+          "callee": "self._records.get",
+          "lineNumber": 212
+        },
+        {
+          "caller": "lineage",
+          "callee": "set",
+          "lineNumber": 213
+        },
+        {
+          "caller": "lineage",
+          "callee": "visited.add",
+          "lineNumber": 219
+        },
+        {
+          "caller": "lineage",
+          "callee": "chain.insert",
+          "lineNumber": 220
+        },
+        {
+          "caller": "lineage",
+          "callee": "self._records.get",
+          "lineNumber": 221
+        },
+        {
+          "caller": "lineage_depth",
+          "callee": "len",
+          "lineNumber": 227
+        },
+        {
+          "caller": "lineage_depth",
+          "callee": "self.lineage",
+          "lineNumber": 227
+        },
+        {
+          "caller": "detect_circular",
+          "callee": "set",
+          "lineNumber": 232
+        },
+        {
+          "caller": "detect_circular",
+          "callee": "self._records.get",
+          "lineNumber": 233
+        },
+        {
+          "caller": "detect_circular",
+          "callee": "visited.add",
+          "lineNumber": 238
+        },
+        {
+          "caller": "detect_circular",
+          "callee": "self._records.get",
+          "lineNumber": 239
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "set",
+          "lineNumber": 250
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "to_visit.pop",
+          "lineNumber": 253
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "visited.add",
+          "lineNumber": 256
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "self._records.get",
+          "lineNumber": 258
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "affected.append",
+          "lineNumber": 261
+        },
+        {
+          "caller": "affected_outputs",
+          "callee": "to_visit.append",
+          "lineNumber": 264
+        },
+        {
+          "caller": "summary",
+          "callee": "len",
+          "lineNumber": 272
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 273
+        },
+        {
+          "caller": "summary",
+          "callee": "self._records.values",
+          "lineNumber": 273
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 274
+        },
+        {
+          "caller": "summary",
+          "callee": "self._records.values",
+          "lineNumber": 274
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 275
+        },
+        {
+          "caller": "summary",
+          "callee": "self._records.values",
+          "lineNumber": 275
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 277
+        },
+        {
+          "caller": "summary",
+          "callee": "self._records.values",
+          "lineNumber": 277
+        },
+        {
+          "caller": "summary",
+          "callee": "set",
+          "lineNumber": 278
+        },
+        {
+          "caller": "summary",
+          "callee": "self._records.values",
+          "lineNumber": 278
+        },
+        {
+          "caller": "get_assumption_graph",
+          "callee": "AssumptionGraph",
+          "lineNumber": 300
+        },
+        {
+          "caller": "reset_assumption_graph",
+          "callee": "AssumptionGraph",
+          "lineNumber": 313
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 2,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/contradiction_ontology.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 320,
+      "nonEmptyLines": 271,
+      "functions": [
+        {
+          "name": "classify_contradiction",
+          "startLine": 191,
+          "endLine": 254,
+          "params": [
+            "claim_a_rung",
+            "claim_b_rung",
+            "claim_a_type",
+            "claim_b_type",
+            "has_physics_violation",
+            "has_circular_ref",
+            "beauty_score",
+            "has_missing_grounding"
+          ]
+        },
+        {
+          "name": "get_contradiction_record",
+          "startLine": 257,
+          "endLine": 320,
+          "params": [
+            "contradiction_type",
+            "claim_a",
+            "claim_a_rung",
+            "claim_a_tool",
+            "claim_b",
+            "claim_b_rung",
+            "claim_b_tool",
+            "session_id",
+            "contradiction_id",
+            "**kwargs"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ContradictionType",
+          "startLine": 32,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ContradictionSeverity",
+          "startLine": 52,
+          "endLine": 59,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ResolutionPath",
+          "startLine": 62,
+          "endLine": 71,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ContradictionRecord",
+          "startLine": 114,
+          "endLine": 188,
+          "methods": [
+            "is_fatal",
+            "requires_hold",
+            "to_dict"
+          ],
+          "properties": [
+            "contradiction_id",
+            "contradiction_type",
+            "severity",
+            "resolution_path",
+            "claim_a",
+            "claim_a_rung",
+            "claim_a_tool",
+            "claim_b",
+            "claim_b_rung",
+            "claim_b_tool",
+            "winning_claim",
+            "winning_rung",
+            "losing_claim",
+            "losing_rung",
+            "verdict",
+            "resolution_notes",
+            "resolved_at",
+            "assumption_ids_affected",
+            "downstream_tools_affected",
+            "session_id",
+            "detected_at",
+            "metadata"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ContradictionType",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "ContradictionSeverity",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "ResolutionPath",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "ContradictionRecord",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "classify_contradiction",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "get_contradiction_record",
+          "line": 257,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "self.resolved_at.isoformat",
+          "lineNumber": 182
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.detected_at.isoformat",
+          "lineNumber": 186
+        },
+        {
+          "caller": "classify_contradiction",
+          "callee": "max",
+          "lineNumber": 230
+        },
+        {
+          "caller": "classify_contradiction",
+          "callee": "claim_a_type.lower",
+          "lineNumber": 243
+        },
+        {
+          "caller": "classify_contradiction",
+          "callee": "claim_b_type.lower",
+          "lineNumber": 243
+        },
+        {
+          "caller": "classify_contradiction",
+          "callee": "min",
+          "lineNumber": 251
+        },
+        {
+          "caller": "get_contradiction_record",
+          "callee": "CONTRADICTION_SEVERITY.get",
+          "lineNumber": 289
+        },
+        {
+          "caller": "get_contradiction_record",
+          "callee": "CONTRADICTION_RESOLUTION.get",
+          "lineNumber": 290
+        },
+        {
+          "caller": "get_contradiction_record",
+          "callee": "ContradictionRecord",
+          "lineNumber": 302
+        },
+        {
+          "caller": "get_contradiction_record",
+          "callee": "str",
+          "lineNumber": 303
+        },
+        {
+          "caller": "get_contradiction_record",
+          "callee": "uuid.uuid4",
+          "lineNumber": 303
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 2,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/epistemic_runtime.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 385,
+      "nonEmptyLines": 335,
+      "functions": [
+        {
+          "name": "get_or_create_runtime",
+          "startLine": 374,
+          "endLine": 379,
+          "params": [
+            "session_id"
+          ]
+        },
+        {
+          "name": "get_runtime",
+          "startLine": 382,
+          "endLine": 385,
+          "params": [
+            "session_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "EpistemicEventType",
+          "startLine": 33,
+          "endLine": 44,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EpistemicEvent",
+          "startLine": 48,
+          "endLine": 120,
+          "methods": [
+            "__post_init__",
+            "to_dict"
+          ],
+          "properties": [
+            "event_id",
+            "event_type",
+            "tool_name",
+            "session_id",
+            "timestamp",
+            "from_rung",
+            "to_rung",
+            "rung_delta",
+            "assumption_id",
+            "assumption_type",
+            "parent_assumption_id",
+            "falsified_by",
+            "contradiction_type",
+            "claim_a",
+            "claim_b",
+            "winning_rung",
+            "losing_rung",
+            "beauty_score",
+            "overreach_ratio",
+            "iron_law_verdict",
+            "description",
+            "metadata"
+          ]
+        },
+        {
+          "name": "EpistemicRuntime",
+          "startLine": 123,
+          "endLine": 365,
+          "methods": [
+            "__init__",
+            "session_id",
+            "emit",
+            "emit_rung_ascent",
+            "emit_rung_descent",
+            "emit_assumption_added",
+            "emit_assumption_falsified",
+            "emit_contradiction",
+            "emit_beauty_drift",
+            "emit_iron_law",
+            "events",
+            "rung_deltas",
+            "assumption_count",
+            "beauty_events",
+            "iron_law_events",
+            "summary"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "EpistemicEventType",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "EpistemicEvent",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "EpistemicRuntime",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "get_or_create_runtime",
+          "line": 374,
+          "isDefault": false
+        },
+        {
+          "name": "get_runtime",
+          "line": 382,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__post_init__",
+          "callee": "str",
+          "lineNumber": 93
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "uuid.uuid4",
+          "lineNumber": 93
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.timestamp.isoformat",
+          "lineNumber": 102
+        },
+        {
+          "caller": "__init__",
+          "callee": "threading.RLock",
+          "lineNumber": 140
+        },
+        {
+          "caller": "emit",
+          "callee": "EpistemicEvent",
+          "lineNumber": 160
+        },
+        {
+          "caller": "emit",
+          "callee": "self._events.append",
+          "lineNumber": 168
+        },
+        {
+          "caller": "emit_rung_ascent",
+          "callee": "self.emit",
+          "lineNumber": 179
+        },
+        {
+          "caller": "emit_rung_descent",
+          "callee": "self.emit",
+          "lineNumber": 197
+        },
+        {
+          "caller": "emit_assumption_added",
+          "callee": "self.emit",
+          "lineNumber": 215
+        },
+        {
+          "caller": "emit_assumption_falsified",
+          "callee": "self.emit",
+          "lineNumber": 233
+        },
+        {
+          "caller": "emit_contradiction",
+          "callee": "self.emit",
+          "lineNumber": 253
+        },
+        {
+          "caller": "emit_beauty_drift",
+          "callee": "self.emit",
+          "lineNumber": 272
+        },
+        {
+          "caller": "emit_iron_law",
+          "callee": "self.emit",
+          "lineNumber": 290
+        },
+        {
+          "caller": "assumption_count",
+          "callee": "sum",
+          "lineNumber": 329
+        },
+        {
+          "caller": "assumption_count",
+          "callee": "sum",
+          "lineNumber": 330
+        },
+        {
+          "caller": "beauty_events",
+          "callee": "self.events",
+          "lineNumber": 335
+        },
+        {
+          "caller": "iron_law_events",
+          "callee": "self.events",
+          "lineNumber": 339
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 348
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 351
+        },
+        {
+          "caller": "summary",
+          "callee": "sum",
+          "lineNumber": 352
+        },
+        {
+          "caller": "summary",
+          "callee": "len",
+          "lineNumber": 356
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 360
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 361
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 362
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 363
+        },
+        {
+          "caller": "summary",
+          "callee": "by_type.get",
+          "lineNumber": 364
+        },
+        {
+          "caller": "get_or_create_runtime",
+          "callee": "EpistemicRuntime",
+          "lineNumber": 378
+        },
+        {
+          "caller": "get_runtime",
+          "callee": "_RUNTIME_REGISTRY.get",
+          "lineNumber": 385
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 2,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/godel_wall.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 344,
+      "nonEmptyLines": 290,
+      "functions": [
+        {
+          "name": "recursive_dependency_check",
+          "startLine": 111,
+          "endLine": 209,
+          "params": [
+            "claim_id",
+            "claim_rung",
+            "assumption_ids",
+            "get_assumption_rung_fn",
+            "get_parent_fn",
+            "visited",
+            "chain"
+          ]
+        },
+        {
+          "name": "godel_wall_check",
+          "startLine": 212,
+          "endLine": 318,
+          "params": [
+            "claim_id",
+            "claim_rung",
+            "assumptions",
+            "evidence_refs",
+            "contradictions"
+          ]
+        },
+        {
+          "name": "check_and_raise",
+          "startLine": 321,
+          "endLine": 344,
+          "params": [
+            "claim_id",
+            "claim_rung",
+            "assumptions",
+            "evidence_refs",
+            "contradictions"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "UndecidableReason",
+          "startLine": 30,
+          "endLine": 41,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GodelWallVerdict",
+          "startLine": 44,
+          "endLine": 51,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GodelWallRecord",
+          "startLine": 55,
+          "endLine": 94,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "wall_id",
+            "claim_id",
+            "claim_rung",
+            "reason",
+            "verdict",
+            "assumption_chain",
+            "circular_path",
+            "deepest_rung_reached",
+            "required_external_evidence",
+            "dependency_graph",
+            "checked_at",
+            "metadata"
+          ]
+        },
+        {
+          "name": "GodelWallError",
+          "startLine": 97,
+          "endLine": 108,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UndecidableReason",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "GodelWallVerdict",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "GodelWallRecord",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "GodelWallError",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "recursive_dependency_check",
+          "line": 111,
+          "isDefault": false
+        },
+        {
+          "name": "godel_wall_check",
+          "line": 212,
+          "isDefault": false
+        },
+        {
+          "name": "check_and_raise",
+          "line": 321,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "self.checked_at.isoformat",
+          "lineNumber": 92
+        },
+        {
+          "caller": "__init__",
+          "callee": "super().__init__",
+          "lineNumber": 108
+        },
+        {
+          "caller": "__init__",
+          "callee": "super",
+          "lineNumber": 108
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "set",
+          "lineNumber": 137
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "str",
+          "lineNumber": 141
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "uuid.uuid4",
+          "lineNumber": 141
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 146
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "visited.add",
+          "lineNumber": 156
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "assumption_chain.append",
+          "lineNumber": 162
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "get_assumption_rung_fn",
+          "lineNumber": 163
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 170
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "get_parent_fn",
+          "lineNumber": 187
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "recursive_dependency_check",
+          "lineNumber": 189
+        },
+        {
+          "caller": "recursive_dependency_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 201
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "str",
+          "lineNumber": 238
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "uuid.uuid4",
+          "lineNumber": 238
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "a.get",
+          "lineNumber": 243
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "isinstance",
+          "lineNumber": 244
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "assumption_ids.append",
+          "lineNumber": 245
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "a.get",
+          "lineNumber": 250
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "a.get",
+          "lineNumber": 251
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "c.get",
+          "lineNumber": 257
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 259
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "len",
+          "lineNumber": 266
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 271
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "assumption.get",
+          "lineNumber": 285
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "assumption.get",
+          "lineNumber": 286
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 291
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "GodelWallRecord",
+          "lineNumber": 309
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "max",
+          "lineNumber": 316
+        },
+        {
+          "caller": "godel_wall_check",
+          "callee": "a.get",
+          "lineNumber": 316
+        },
+        {
+          "caller": "check_and_raise",
+          "callee": "godel_wall_check",
+          "lineNumber": 331
+        },
+        {
+          "caller": "check_and_raise",
+          "callee": "GodelWallError",
+          "lineNumber": 339
+        },
+        {
+          "caller": "check_and_raise",
+          "callee": "record.metadata.get",
+          "lineNumber": 342
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 3,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_mcp/epistemic/meta_epistemic_audit.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 397,
+      "nonEmptyLines": 344,
+      "classes": [
+        {
+          "name": "ConstitutionalVerdict",
+          "startLine": 32,
+          "endLine": 37,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DeviationType",
+          "startLine": 40,
+          "endLine": 52,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "MetaAuditRecord",
+          "startLine": 56,
+          "endLine": 139,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "audit_id",
+            "tool_name",
+            "session_id",
+            "verdict",
+            "deviations",
+            "output_rung_declared",
+            "output_rung_warranted",
+            "rung_delta_declared",
+            "rung_delta_warranted",
+            "uncertainty_declared",
+            "uncertainty_warranted",
+            "uncertainty_compressed",
+            "contradictions_detected",
+            "contradictions_surfaced",
+            "contradictions_softened",
+            "iron_law_applied",
+            "iron_law_should_apply",
+            "beauty_score",
+            "beauty_drift_flagged",
+            "beauty_drift_ignored",
+            "assumptions_declared",
+            "assumptions_hidden",
+            "evidence_chain_complete",
+            "has_grounding_anchor",
+            "deviation_notes",
+            "constitutional_notes",
+            "audited_at"
+          ]
+        },
+        {
+          "name": "MetaEpistemicAuditor",
+          "startLine": 142,
+          "endLine": 397,
+          "methods": [
+            "__init__",
+            "audit_output",
+            "_warranted_rung_delta",
+            "_warranted_uncertainty",
+            "_has_linguistic_softening",
+            "_rough_beauty_score",
+            "_chain_has_lower_rung_support"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ConstitutionalVerdict",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "DeviationType",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "MetaAuditRecord",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "MetaEpistemicAuditor",
+          "line": 142,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "self.audited_at.isoformat",
+          "lineNumber": 138
+        },
+        {
+          "caller": "audit_output",
+          "callee": "min",
+          "lineNumber": 175
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._warranted_rung_delta",
+          "lineNumber": 177
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 181
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._warranted_uncertainty",
+          "lineNumber": 184
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 191
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._runtime.events",
+          "lineNumber": 195
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._runtime.events",
+          "lineNumber": 199
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 203
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 203
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._has_linguistic_softening",
+          "lineNumber": 204
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 204
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 206
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 209
+        },
+        {
+          "caller": "audit_output",
+          "callee": "bool",
+          "lineNumber": 211
+        },
+        {
+          "caller": "audit_output",
+          "callee": "any",
+          "lineNumber": 212
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 216
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 219
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 223
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._runtime.events",
+          "lineNumber": 227
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 231
+        },
+        {
+          "caller": "audit_output",
+          "callee": "str",
+          "lineNumber": 232
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 232
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 232
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._rough_beauty_score",
+          "lineNumber": 234
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 237
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 240
+        },
+        {
+          "caller": "audit_output",
+          "callee": "len",
+          "lineNumber": 241
+        },
+        {
+          "caller": "audit_output",
+          "callee": "self._chain_has_lower_rung_support",
+          "lineNumber": 241
+        },
+        {
+          "caller": "audit_output",
+          "callee": "deviations.append",
+          "lineNumber": 243
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 246
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get(\"epistemic_provenance\", {}).get",
+          "lineNumber": 246
+        },
+        {
+          "caller": "audit_output",
+          "callee": "output_data.get",
+          "lineNumber": 246
+        },
+        {
+          "caller": "audit_output",
+          "callee": "any",
+          "lineNumber": 255
+        },
+        {
+          "caller": "audit_output",
+          "callee": "MetaAuditRecord",
+          "lineNumber": 270
+        },
+        {
+          "caller": "audit_output",
+          "callee": "str",
+          "lineNumber": 271
+        },
+        {
+          "caller": "audit_output",
+          "callee": "uuid.uuid4",
+          "lineNumber": 271
+        },
+        {
+          "caller": "audit_output",
+          "callee": "\"; \".join",
+          "lineNumber": 295
+        },
+        {
+          "caller": "_warranted_rung_delta",
+          "callee": "a.get",
+          "lineNumber": 314
+        },
+        {
+          "caller": "_warranted_rung_delta",
+          "callee": "min",
+          "lineNumber": 321
+        },
+        {
+          "caller": "_warranted_uncertainty",
+          "callee": "len",
+          "lineNumber": 331
+        },
+        {
+          "caller": "_warranted_uncertainty",
+          "callee": "max",
+          "lineNumber": 332
+        },
+        {
+          "caller": "_warranted_uncertainty",
+          "callee": "a.get",
+          "lineNumber": 337
+        },
+        {
+          "caller": "_warranted_uncertainty",
+          "callee": "min",
+          "lineNumber": 343
+        },
+        {
+          "caller": "_has_linguistic_softening",
+          "callee": "text.lower",
+          "lineNumber": 359
+        },
+        {
+          "caller": "_has_linguistic_softening",
+          "callee": "sum",
+          "lineNumber": 360
+        },
+        {
+          "caller": "_rough_beauty_score",
+          "callee": "text.lower",
+          "lineNumber": 383
+        },
+        {
+          "caller": "_rough_beauty_score",
+          "callee": "sum",
+          "lineNumber": 384
+        },
+        {
+          "caller": "_rough_beauty_score",
+          "callee": "sum",
+          "lineNumber": 385
+        },
+        {
+          "caller": "_rough_beauty_score",
+          "callee": "min",
+          "lineNumber": 387
+        },
+        {
+          "caller": "_chain_has_lower_rung_support",
+          "callee": "link.get",
+          "lineNumber": 394
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_mcp/events/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 31,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/events/publisher.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 128,
+      "functions": [
+        {
+          "name": "build_atom_from_tool_result",
+          "startLine": 34,
+          "endLine": 69,
+          "params": [
+            "tool_name",
+            "tool_version",
+            "result",
+            "pai_receipt",
+            "rung",
+            "godel_state"
+          ]
+        },
+        {
+          "name": "publish_tool_atom",
+          "startLine": 72,
+          "endLine": 102,
+          "params": [
+            "tool_name",
+            "tool_version",
+            "result",
+            "pai_receipt",
+            "rung",
+            "godel_state"
+          ]
+        },
+        {
+          "name": "publish_tool_atom_sync",
+          "startLine": 105,
+          "endLine": 142,
+          "params": [
+            "tool_name",
+            "tool_version",
+            "result",
+            "pai_receipt",
+            "rung",
+            "godel_state"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "build_atom_from_tool_result",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "publish_tool_atom",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "publish_tool_atom_sync",
+          "line": 105,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "result.get",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "result.get(\"epistemic_provenance\", {}).get",
+          "lineNumber": 50
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "result.get",
+          "lineNumber": 50
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 50
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "result.get(\"godel_wall\", {}).get",
+          "lineNumber": 51
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "result.get",
+          "lineNumber": 51
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 51
+        },
+        {
+          "caller": "build_atom_from_tool_result",
+          "callee": "IntelligenceAtom",
+          "lineNumber": 53
+        },
+        {
+          "caller": "publish_tool_atom",
+          "callee": "build_atom_from_tool_result",
+          "lineNumber": 89
+        },
+        {
+          "caller": "publish_tool_atom",
+          "callee": "get_bus",
+          "lineNumber": 98
+        },
+        {
+          "caller": "publish_tool_atom",
+          "callee": "bus.publish_atom",
+          "lineNumber": 99
+        },
+        {
+          "caller": "publish_tool_atom_sync",
+          "callee": "asyncio.get_event_loop",
+          "lineNumber": 124
+        },
+        {
+          "caller": "publish_tool_atom_sync",
+          "callee": "asyncio.new_event_loop",
+          "lineNumber": 126
+        },
+        {
+          "caller": "publish_tool_atom_sync",
+          "callee": "asyncio.set_event_loop",
+          "lineNumber": 127
+        },
+        {
+          "caller": "publish_tool_atom_sync",
+          "callee": "loop.create_task",
+          "lineNumber": 129
+        },
+        {
+          "caller": "publish_tool_atom_sync",
+          "callee": "publish_tool_atom",
+          "lineNumber": 130
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/events/subscriber.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 228,
+      "nonEmptyLines": 178,
+      "functions": [
+        {
+          "name": "get_state",
+          "startLine": 96,
+          "endLine": 98,
+          "params": []
+        },
+        {
+          "name": "apply_atom",
+          "startLine": 101,
+          "endLine": 161,
+          "params": [
+            "atom"
+          ]
+        },
+        {
+          "name": "_on_well_operator",
+          "startLine": 195,
+          "endLine": 196,
+          "params": [
+            "atom"
+          ]
+        },
+        {
+          "name": "_on_kernel_verdict",
+          "startLine": 199,
+          "endLine": 200,
+          "params": [
+            "atom"
+          ]
+        },
+        {
+          "name": "_on_wealth_signal",
+          "startLine": 203,
+          "endLine": 204,
+          "params": [
+            "atom"
+          ]
+        },
+        {
+          "name": "_on_hold",
+          "startLine": 207,
+          "endLine": 208,
+          "params": [
+            "atom"
+          ]
+        },
+        {
+          "name": "get_subscriber",
+          "startLine": 215,
+          "endLine": 219,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "QuantumState",
+          "startLine": 39,
+          "endLine": 88,
+          "methods": [
+            "is_global_hold",
+            "operator_is_c5",
+            "summary"
+          ],
+          "properties": [
+            "operator_decision_class",
+            "operator_fatigue",
+            "operator_actor_id",
+            "operator_updated_at",
+            "latest_kernel_verdict",
+            "latest_kernel_verdict_atom_id",
+            "kernel_verdict_updated_at",
+            "latest_capital_signal",
+            "latest_capital_asset_id",
+            "capital_signal_updated_at",
+            "global_hold",
+            "global_hold_reason",
+            "global_hold_at",
+            "consumed_atom_ids"
+          ]
+        },
+        {
+          "name": "Subscriber",
+          "startLine": 165,
+          "endLine": 192,
+          "methods": [
+            "__init__",
+            "start",
+            "stop"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "QuantumState",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "get_state",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "apply_atom",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "Subscriber",
+          "line": 165,
+          "isDefault": false
+        },
+        {
+          "name": "_on_well_operator",
+          "line": 195,
+          "isDefault": false
+        },
+        {
+          "name": "_on_kernel_verdict",
+          "line": 199,
+          "isDefault": false
+        },
+        {
+          "name": "_on_wealth_signal",
+          "line": 203,
+          "isDefault": false
+        },
+        {
+          "name": "_on_hold",
+          "line": 207,
+          "isDefault": false
+        },
+        {
+          "name": "get_subscriber",
+          "line": 215,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "summary",
+          "callee": "len",
+          "lineNumber": 87
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "_state.consumed_atom_ids.append",
+          "lineNumber": 111
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "len",
+          "lineNumber": 113
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.lower",
+          "lineNumber": 117
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.lower",
+          "lineNumber": 117
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "r.get",
+          "lineNumber": 119
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "r.get",
+          "lineNumber": 120
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "r.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.pai_receipt.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "float",
+          "lineNumber": 123
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.startswith",
+          "lineNumber": 133
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.lower",
+          "lineNumber": 141
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.lower",
+          "lineNumber": 141
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "r.get",
+          "lineNumber": 143
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "r.get",
+          "lineNumber": 144
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.pai_receipt.get",
+          "lineNumber": 144
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.result.get",
+          "lineNumber": 150
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "atom.topic.startswith",
+          "lineNumber": 155
+        },
+        {
+          "caller": "apply_atom",
+          "callee": "_state.global_hold_reason.startswith",
+          "lineNumber": 157
+        },
+        {
+          "caller": "start",
+          "callee": "get_bus",
+          "lineNumber": 177
+        },
+        {
+          "caller": "start",
+          "callee": "bus.connect",
+          "lineNumber": 178
+        },
+        {
+          "caller": "start",
+          "callee": "self._tasks.append",
+          "lineNumber": 181
+        },
+        {
+          "caller": "start",
+          "callee": "asyncio.create_task",
+          "lineNumber": 181
+        },
+        {
+          "caller": "start",
+          "callee": "bus.subscribe",
+          "lineNumber": 181
+        },
+        {
+          "caller": "start",
+          "callee": "self._tasks.append",
+          "lineNumber": 182
+        },
+        {
+          "caller": "start",
+          "callee": "asyncio.create_task",
+          "lineNumber": 182
+        },
+        {
+          "caller": "start",
+          "callee": "bus.subscribe",
+          "lineNumber": 182
+        },
+        {
+          "caller": "start",
+          "callee": "self._tasks.append",
+          "lineNumber": 183
+        },
+        {
+          "caller": "start",
+          "callee": "asyncio.create_task",
+          "lineNumber": 183
+        },
+        {
+          "caller": "start",
+          "callee": "bus.subscribe",
+          "lineNumber": 183
+        },
+        {
+          "caller": "start",
+          "callee": "self._tasks.append",
+          "lineNumber": 184
+        },
+        {
+          "caller": "start",
+          "callee": "asyncio.create_task",
+          "lineNumber": 184
+        },
+        {
+          "caller": "start",
+          "callee": "bus.subscribe",
+          "lineNumber": 184
+        },
+        {
+          "caller": "stop",
+          "callee": "t.cancel",
+          "lineNumber": 190
+        },
+        {
+          "caller": "stop",
+          "callee": "self._tasks.clear",
+          "lineNumber": 191
+        },
+        {
+          "caller": "_on_well_operator",
+          "callee": "apply_atom",
+          "lineNumber": 196
+        },
+        {
+          "caller": "_on_kernel_verdict",
+          "callee": "apply_atom",
+          "lineNumber": 200
+        },
+        {
+          "caller": "_on_wealth_signal",
+          "callee": "apply_atom",
+          "lineNumber": 204
+        },
+        {
+          "caller": "_on_hold",
+          "callee": "apply_atom",
+          "lineNumber": 208
+        },
+        {
+          "caller": "get_subscriber",
+          "callee": "Subscriber",
+          "lineNumber": 218
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 7,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_mcp/evidence_postcondition.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 408,
+      "nonEmptyLines": 354,
+      "functions": [
+        {
+          "name": "_build_compliance_matrix",
+          "startLine": 115,
+          "endLine": 125,
+          "params": []
+        },
+        {
+          "name": "compliance_matrix",
+          "startLine": 131,
+          "endLine": 144,
+          "params": []
+        },
+        {
+          "name": "coerce_tool_result_to_dict",
+          "startLine": 147,
+          "endLine": 207,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "apply_domain_dict_to_result",
+          "startLine": 210,
+          "endLine": 243,
+          "params": [
+            "result",
+            "domain"
+          ]
+        },
+        {
+          "name": "_lookup_evidence_value",
+          "startLine": 246,
+          "endLine": 253,
+          "params": [
+            "result",
+            "key"
+          ]
+        },
+        {
+          "name": "_is_substantive",
+          "startLine": 256,
+          "endLine": 265,
+          "params": [
+            "val"
+          ]
+        },
+        {
+          "name": "ensure_fastmcp_tool_result",
+          "startLine": 268,
+          "endLine": 287,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "check_evidence_postcondition",
+          "startLine": 290,
+          "endLine": 408,
+          "params": [
+            "tool_name",
+            "result"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_build_compliance_matrix",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "compliance_matrix",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "coerce_tool_result_to_dict",
+          "line": 147,
+          "isDefault": false
+        },
+        {
+          "name": "apply_domain_dict_to_result",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "_lookup_evidence_value",
+          "line": 246,
+          "isDefault": false
+        },
+        {
+          "name": "_is_substantive",
+          "line": 256,
+          "isDefault": false
+        },
+        {
+          "name": "ensure_fastmcp_tool_result",
+          "line": 268,
+          "isDefault": false
+        },
+        {
+          "name": "check_evidence_postcondition",
+          "line": 290,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_build_compliance_matrix",
+          "callee": "set",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_build_compliance_matrix",
+          "callee": "EVIDENCE_CONTRACTS.keys",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_build_compliance_matrix",
+          "callee": "set",
+          "lineNumber": 122
+        },
+        {
+          "caller": "_build_compliance_matrix",
+          "callee": "set",
+          "lineNumber": 125
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "set",
+          "lineNumber": 133
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "EVIDENCE_CONTRACTS.keys",
+          "lineNumber": 133
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "len",
+          "lineNumber": 136
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "sorted",
+          "lineNumber": 137
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "len",
+          "lineNumber": 138
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "sorted",
+          "lineNumber": 139
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "len",
+          "lineNumber": 140
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "round",
+          "lineNumber": 141
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "len",
+          "lineNumber": 141
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "max",
+          "lineNumber": 141
+        },
+        {
+          "caller": "compliance_matrix",
+          "callee": "len",
+          "lineNumber": 141
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 162
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "getattr",
+          "lineNumber": 166
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 167
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "getattr",
+          "lineNumber": 171
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "list",
+          "lineNumber": 174
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "getattr",
+          "lineNumber": 178
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 179
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "block.get",
+          "lineNumber": 180
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 181
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "text.strip",
+          "lineNumber": 181
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "json.loads",
+          "lineNumber": 184
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 187
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "hasattr",
+          "lineNumber": 191
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "callable",
+          "lineNumber": 191
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "result.model_dump",
+          "lineNumber": 193
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 194
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "dumped.get",
+          "lineNumber": 195
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 196
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "getattr",
+          "lineNumber": 203
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "isinstance",
+          "lineNumber": 204
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "raw.items",
+          "lineNumber": 205
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "k.startswith",
+          "lineNumber": 205
+        },
+        {
+          "caller": "coerce_tool_result_to_dict",
+          "callee": "type",
+          "lineNumber": 207
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "isinstance",
+          "lineNumber": 216
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "bool",
+          "lineNumber": 220
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "domain.get",
+          "lineNumber": 220
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "domain.get",
+          "lineNumber": 220
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "hasattr",
+          "lineNumber": 221
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "hasattr",
+          "lineNumber": 226
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "hasattr",
+          "lineNumber": 232
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "TextContent",
+          "lineNumber": 236
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "json.dumps",
+          "lineNumber": 236
+        },
+        {
+          "caller": "apply_domain_dict_to_result",
+          "callee": "json.dumps",
+          "lineNumber": 240
+        },
+        {
+          "caller": "_lookup_evidence_value",
+          "callee": "result.get",
+          "lineNumber": 249
+        },
+        {
+          "caller": "_lookup_evidence_value",
+          "callee": "result.values",
+          "lineNumber": 250
+        },
+        {
+          "caller": "_lookup_evidence_value",
+          "callee": "isinstance",
+          "lineNumber": 251
+        },
+        {
+          "caller": "_lookup_evidence_value",
+          "callee": "val.get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "_is_substantive",
+          "callee": "isinstance",
+          "lineNumber": 259
+        },
+        {
+          "caller": "_is_substantive",
+          "callee": "isinstance",
+          "lineNumber": 261
+        },
+        {
+          "caller": "_is_substantive",
+          "callee": "isinstance",
+          "lineNumber": 263
+        },
+        {
+          "caller": "_is_substantive",
+          "callee": "len",
+          "lineNumber": 264
+        },
+        {
+          "caller": "_is_substantive",
+          "callee": "bool",
+          "lineNumber": 265
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "callable",
+          "lineNumber": 276
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 276
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 278
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "bool",
+          "lineNumber": 282
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "result.get",
+          "lineNumber": 282
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "result.get",
+          "lineNumber": 282
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "ToolResult",
+          "lineNumber": 283
+        },
+        {
+          "caller": "ensure_fastmcp_tool_result",
+          "callee": "logger.error",
+          "lineNumber": 285
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "EVIDENCE_CONTRACTS.get",
+          "lineNumber": 302
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "coerce_tool_result_to_dict",
+          "lineNumber": 304
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "logger.debug",
+          "lineNumber": 308
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 314
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "logger.error",
+          "lineNumber": 316
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 319
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 328
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 334
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "apply_domain_dict_to_result",
+          "lineNumber": 338
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 344
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 346
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 347
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 349
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 352
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 353
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "bool",
+          "lineNumber": 354
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 354
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "_lookup_evidence_value",
+          "lineNumber": 363
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "_is_substantive",
+          "lineNumber": 364
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "dict",
+          "lineNumber": 370
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "apply_domain_dict_to_result",
+          "lineNumber": 376
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "logger.warning",
+          "lineNumber": 379
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "\", \".join",
+          "lineNumber": 383
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "dict",
+          "lineNumber": 386
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "min",
+          "lineNumber": 392
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "float",
+          "lineNumber": 392
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.get",
+          "lineNumber": 392
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "domain.setdefault",
+          "lineNumber": 394
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "', '.join",
+          "lineNumber": 397
+        },
+        {
+          "caller": "check_evidence_postcondition",
+          "callee": "apply_domain_dict_to_result",
+          "lineNumber": 408
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 8,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_mcp/ext_witness_stamp.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 480,
+      "nonEmptyLines": 410,
+      "functions": [
+        {
+          "name": "require_live_enabled",
+          "startLine": 69,
+          "endLine": 72,
+          "params": []
+        },
+        {
+          "name": "normalize_mode",
+          "startLine": 75,
+          "endLine": 84,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "is_ext_witness_ready",
+          "startLine": 87,
+          "endLine": 90,
+          "params": [
+            "mode"
+          ]
+        },
+        {
+          "name": "extract_mode",
+          "startLine": 93,
+          "endLine": 137,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "infer_mode",
+          "startLine": 140,
+          "endLine": 277,
+          "params": [
+            "tool_name",
+            "result"
+          ]
+        },
+        {
+          "name": "_is_mcp_tool_result",
+          "startLine": 280,
+          "endLine": 282,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "_as_dict",
+          "startLine": 285,
+          "endLine": 315,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "stamp_ext_witness",
+          "startLine": 318,
+          "endLine": 379,
+          "params": [
+            "result",
+            "tool_name",
+            "force_mode"
+          ]
+        },
+        {
+          "name": "enforce_require_live",
+          "startLine": 382,
+          "endLine": 400,
+          "params": [
+            "result",
+            "tool_name"
+          ]
+        },
+        {
+          "name": "_stamp_tool_result",
+          "startLine": 403,
+          "endLine": 467,
+          "params": [
+            "result",
+            "tool_name"
+          ]
+        },
+        {
+          "name": "stamp_and_gate",
+          "startLine": 470,
+          "endLine": 480,
+          "params": [
+            "result",
+            "tool_name"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RequireLiveError",
+          "startLine": 56,
+          "endLine": 66,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "RequireLiveError",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "require_live_enabled",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "normalize_mode",
+          "line": 75,
+          "isDefault": false
+        },
+        {
+          "name": "is_ext_witness_ready",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "extract_mode",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "infer_mode",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "_is_mcp_tool_result",
+          "line": 280,
+          "isDefault": false
+        },
+        {
+          "name": "_as_dict",
+          "line": 285,
+          "isDefault": false
+        },
+        {
+          "name": "stamp_ext_witness",
+          "line": 318,
+          "isDefault": false
+        },
+        {
+          "name": "enforce_require_live",
+          "line": 382,
+          "isDefault": false
+        },
+        {
+          "name": "_stamp_tool_result",
+          "line": 403,
+          "isDefault": false
+        },
+        {
+          "name": "stamp_and_gate",
+          "line": 470,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "(\n            f\"REQUIRE_LIVE_FAIL: tool={tool_name} mode={mode} (GEOX_REQUIRE_LIVE=1 rejects offline_stub Ext). {detail}\"\n        ).strip",
+          "lineNumber": 63
+        },
+        {
+          "caller": "__init__",
+          "callee": "super().__init__",
+          "lineNumber": 66
+        },
+        {
+          "caller": "__init__",
+          "callee": "super",
+          "lineNumber": 66
+        },
+        {
+          "caller": "require_live_enabled",
+          "callee": "(os.environ.get(\"GEOX_REQUIRE_LIVE\") or \"\").strip().lower",
+          "lineNumber": 71
+        },
+        {
+          "caller": "require_live_enabled",
+          "callee": "(os.environ.get(\"GEOX_REQUIRE_LIVE\") or \"\").strip",
+          "lineNumber": 71
+        },
+        {
+          "caller": "require_live_enabled",
+          "callee": "os.environ.get",
+          "lineNumber": 71
+        },
+        {
+          "caller": "normalize_mode",
+          "callee": "isinstance",
+          "lineNumber": 79
+        },
+        {
+          "caller": "normalize_mode",
+          "callee": "raw.strip().lower",
+          "lineNumber": 81
+        },
+        {
+          "caller": "normalize_mode",
+          "callee": "raw.strip",
+          "lineNumber": 81
+        },
+        {
+          "caller": "normalize_mode",
+          "callee": "MODE_ALIASES.get",
+          "lineNumber": 84
+        },
+        {
+          "caller": "is_ext_witness_ready",
+          "callee": "normalize_mode",
+          "lineNumber": 89
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 102
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 103
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 104
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 105
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 107
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 108
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "prov.get",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 110
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "prov.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 111
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 112
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 113
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "evidence.get",
+          "lineNumber": 113
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 114
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 115
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 116
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "env.get",
+          "lineNumber": 116
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 117
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 119
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "data.get",
+          "lineNumber": 119
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "result.get",
+          "lineNumber": 120
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "candidates.append",
+          "lineNumber": 122
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "fetch.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "isinstance",
+          "lineNumber": 129
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "c.strip",
+          "lineNumber": 129
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "normalize_mode",
+          "lineNumber": 131
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "any_hits.append",
+          "lineNumber": 132
+        },
+        {
+          "caller": "extract_mode",
+          "callee": "data_source_hits.append",
+          "lineNumber": 134
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "extract_mode",
+          "lineNumber": 149
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "isinstance",
+          "lineNumber": 156
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "blob_parts.append",
+          "lineNumber": 157
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "v.lower",
+          "lineNumber": 157
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "\" \".join",
+          "lineNumber": 158
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "str(result.get(\"status\", \"\")).lower",
+          "lineNumber": 160
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "str",
+          "lineNumber": 160
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 160
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 162
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 164
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 164
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 166
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "(tool_name or \"\").lower",
+          "lineNumber": 170
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 171
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "tn.endswith",
+          "lineNumber": 204
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 207
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 251
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 264
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "isinstance",
+          "lineNumber": 274
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "any",
+          "lineNumber": 274
+        },
+        {
+          "caller": "infer_mode",
+          "callee": "result.get",
+          "lineNumber": 274
+        },
+        {
+          "caller": "_is_mcp_tool_result",
+          "callee": "callable",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_is_mcp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_is_mcp_tool_result",
+          "callee": "hasattr",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "_is_mcp_tool_result",
+          "lineNumber": 291
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "isinstance",
+          "lineNumber": 293
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "getattr",
+          "lineNumber": 295
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "callable",
+          "lineNumber": 296
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "dump",
+          "lineNumber": 298
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "isinstance",
+          "lineNumber": 299
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "dump",
+          "lineNumber": 302
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "isinstance",
+          "lineNumber": 303
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "dataclasses.is_dataclass",
+          "lineNumber": 311
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "isinstance",
+          "lineNumber": 311
+        },
+        {
+          "caller": "_as_dict",
+          "callee": "dataclasses.asdict",
+          "lineNumber": 312
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "_is_mcp_tool_result",
+          "lineNumber": 331
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "_stamp_tool_result",
+          "lineNumber": 333
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "_as_dict",
+          "lineNumber": 335
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "dict",
+          "lineNumber": 339
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "normalize_mode",
+          "lineNumber": 341
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "infer_mode",
+          "lineNumber": 343
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "is_ext_witness_ready",
+          "lineNumber": 345
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "normalize_mode",
+          "lineNumber": 351
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.get",
+          "lineNumber": 351
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.get",
+          "lineNumber": 351
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.setdefault",
+          "lineNumber": 359
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.setdefault",
+          "lineNumber": 364
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.setdefault",
+          "lineNumber": 370
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "out.get",
+          "lineNumber": 372
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "dict",
+          "lineNumber": 373
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "isinstance",
+          "lineNumber": 373
+        },
+        {
+          "caller": "stamp_ext_witness",
+          "callee": "prov.setdefault",
+          "lineNumber": 374
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "require_live_enabled",
+          "lineNumber": 388
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "isinstance",
+          "lineNumber": 390
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "normalize_mode",
+          "lineNumber": 393
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "result.get",
+          "lineNumber": 393
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "result.get",
+          "lineNumber": 393
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "RequireLiveError",
+          "lineNumber": 395
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "str",
+          "lineNumber": 398
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "result.get",
+          "lineNumber": 398
+        },
+        {
+          "caller": "enforce_require_live",
+          "callee": "result.get",
+          "lineNumber": 398
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 409
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 410
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "bool",
+          "lineNumber": 411
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 411
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 413
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamp_ext_witness",
+          "lineNumber": 414
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "enforce_require_live",
+          "lineNumber": 415
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamped_sc.get",
+          "lineNumber": 421
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamped_sc.get",
+          "lineNumber": 421
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "bool",
+          "lineNumber": 422
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamped_sc.get",
+          "lineNumber": 423
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamped_sc.get",
+          "lineNumber": 423
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "stamped_sc.get",
+          "lineNumber": 423
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "ToolResult",
+          "lineNumber": 434
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "logger.warning",
+          "lineNumber": 440
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "object.__setattr__",
+          "lineNumber": 447
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "isinstance",
+          "lineNumber": 454
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "dict",
+          "lineNumber": 455
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "meta.setdefault",
+          "lineNumber": 458
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "meta.setdefault",
+          "lineNumber": 459
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "meta.setdefault",
+          "lineNumber": 460
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "getattr",
+          "lineNumber": 464
+        },
+        {
+          "caller": "_stamp_tool_result",
+          "callee": "ToolResult",
+          "lineNumber": 465
+        },
+        {
+          "caller": "stamp_and_gate",
+          "callee": "_is_mcp_tool_result",
+          "lineNumber": 476
+        },
+        {
+          "caller": "stamp_and_gate",
+          "callee": "_stamp_tool_result",
+          "lineNumber": 477
+        },
+        {
+          "caller": "stamp_and_gate",
+          "callee": "stamp_ext_witness",
+          "lineNumber": 479
+        },
+        {
+          "caller": "stamp_and_gate",
+          "callee": "enforce_require_live",
+          "lineNumber": 480
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 12,
+        "functionCount": 11,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_mcp/federation_memory.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 221,
+      "nonEmptyLines": 202,
+      "functions": [
+        {
+          "name": "_ensure_session",
+          "startLine": 32,
+          "endLine": 87,
+          "params": []
+        },
+        {
+          "name": "remember",
+          "startLine": 90,
+          "endLine": 162,
+          "params": [
+            "content",
+            "tags",
+            "tier",
+            "session_id",
+            "summary",
+            "context",
+            "metadata"
+          ]
+        },
+        {
+          "name": "recall",
+          "startLine": 165,
+          "endLine": 212,
+          "params": [
+            "query",
+            "session_id",
+            "limit",
+            "context"
+          ]
+        },
+        {
+          "name": "get_contract_surface",
+          "startLine": 215,
+          "endLine": 221,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_ensure_session",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "remember",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "recall",
+          "line": 165,
+          "isDefault": false
+        },
+        {
+          "name": "get_contract_surface",
+          "line": 215,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_ensure_session",
+          "callee": "time.time",
+          "lineNumber": 44
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "uuid.uuid4",
+          "lineNumber": 51
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "urlrequest.Request",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "json.dumps(\n                {\n                    \"jsonrpc\": \"2.0\",\n                    \"id\": 1,\n                    \"method\": \"initialize\",\n                    \"params\": {\n                        \"protocolVersion\": \"2025-11-25\",\n                        \"capabilities\": {},\n                        \"clientInfo\": {\"name\": \"GEOX\", \"version\": \"0.1\"},\n                    },\n                }\n            ).encode",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "json.dumps",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "urlrequest.urlopen",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_ensure_session",
+          "callee": "resp.headers.get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "remember",
+          "callee": "_ensure_session",
+          "lineNumber": 103
+        },
+        {
+          "caller": "remember",
+          "callee": "int",
+          "lineNumber": 108
+        },
+        {
+          "caller": "remember",
+          "callee": "time.time",
+          "lineNumber": 108
+        },
+        {
+          "caller": "remember",
+          "callee": "urlrequest.Request",
+          "lineNumber": 129
+        },
+        {
+          "caller": "remember",
+          "callee": "json.dumps(payload).encode",
+          "lineNumber": 131
+        },
+        {
+          "caller": "remember",
+          "callee": "json.dumps",
+          "lineNumber": 131
+        },
+        {
+          "caller": "remember",
+          "callee": "urlrequest.urlopen",
+          "lineNumber": 138
+        },
+        {
+          "caller": "remember",
+          "callee": "resp.read().decode",
+          "lineNumber": 139
+        },
+        {
+          "caller": "remember",
+          "callee": "resp.read",
+          "lineNumber": 139
+        },
+        {
+          "caller": "remember",
+          "callee": "body.split",
+          "lineNumber": 140
+        },
+        {
+          "caller": "remember",
+          "callee": "line.startswith",
+          "lineNumber": 141
+        },
+        {
+          "caller": "remember",
+          "callee": "json.loads",
+          "lineNumber": 142
+        },
+        {
+          "caller": "remember",
+          "callee": "rpc.get(\"result\", {}).get",
+          "lineNumber": 143
+        },
+        {
+          "caller": "remember",
+          "callee": "rpc.get",
+          "lineNumber": 143
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 144
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 153
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 154
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "remember",
+          "callee": "sc.get",
+          "lineNumber": 158
+        },
+        {
+          "caller": "remember",
+          "callee": "type",
+          "lineNumber": 162
+        },
+        {
+          "caller": "recall",
+          "callee": "_ensure_session",
+          "lineNumber": 173
+        },
+        {
+          "caller": "recall",
+          "callee": "urlrequest.Request",
+          "lineNumber": 177
+        },
+        {
+          "caller": "recall",
+          "callee": "json.dumps(\n                {\n                    \"jsonrpc\": \"2.0\",\n                    \"id\": int(time.time() * 1000) % 1_000_000,\n                    \"method\": \"tools/call\",\n                    \"params\": {\n                        \"name\": \"arif_memory_recall\",\n                        \"arguments\": {\n                            \"mode\": \"search\",\n                            \"query\": query,\n                            \"session_id\": session_id or \"geox-default-session\",\n                            \"actor_id\": ACTOR_ID,\n                            \"limit\": limit,\n                            \"context\": context,\n                        },\n                    },\n                }\n            ).encode",
+          "lineNumber": 179
+        },
+        {
+          "caller": "recall",
+          "callee": "json.dumps",
+          "lineNumber": 179
+        },
+        {
+          "caller": "recall",
+          "callee": "int",
+          "lineNumber": 182
+        },
+        {
+          "caller": "recall",
+          "callee": "time.time",
+          "lineNumber": 182
+        },
+        {
+          "caller": "recall",
+          "callee": "urlrequest.urlopen",
+          "lineNumber": 203
+        },
+        {
+          "caller": "recall",
+          "callee": "resp.read().decode",
+          "lineNumber": 204
+        },
+        {
+          "caller": "recall",
+          "callee": "resp.read",
+          "lineNumber": 204
+        },
+        {
+          "caller": "recall",
+          "callee": "body.split",
+          "lineNumber": 205
+        },
+        {
+          "caller": "recall",
+          "callee": "line.startswith",
+          "lineNumber": 206
+        },
+        {
+          "caller": "recall",
+          "callee": "json.loads",
+          "lineNumber": 207
+        },
+        {
+          "caller": "recall",
+          "callee": "rpc.get(\"result\", {}).get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "recall",
+          "callee": "rpc.get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "recall",
+          "callee": "sc.get",
+          "lineNumber": 209
+        },
+        {
+          "caller": "recall",
+          "callee": "str",
+          "lineNumber": 212
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    }
+  ]
+}

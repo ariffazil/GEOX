@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/hazards/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/hazards/agent-card.json",
+      "summary": "json config file (94 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/hazards/hazard-anomaly-detection.md",
+      "type": "document",
+      "name": "hazard-anomaly-detection.md",
+      "filePath": "skills/hazards/hazard-anomaly-detection.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/hazards/hazard-multi-risk-escalation.md",
+      "type": "document",
+      "name": "hazard-multi-risk-escalation.md",
+      "filePath": "skills/hazards/hazard-multi-risk-escalation.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/hazards/hazard-seismic-and-ground-shift.md",
+      "type": "document",
+      "name": "hazard-seismic-and-ground-shift.md",
+      "filePath": "skills/hazards/hazard-seismic-and-ground-shift.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

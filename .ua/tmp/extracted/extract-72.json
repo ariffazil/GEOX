@@ -1,0 +1,107 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [
+    "static/agents.html",
+    "static/constitution.html",
+    "static/index.html",
+    "static/llms.txt",
+    "static/robots.txt",
+    "static/why.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 1,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "static/PUBLIC_SURFACE_MANIFEST.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 292,
+      "nonEmptyLines": 292,
+      "sections": [
+        {
+          "heading": "schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "purpose",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "generator",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "owner",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "base_url",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "discovery_paths",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "spa_shell_signature",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "soft_404_signature",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "kinds",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "routes",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "preserved_overlays",
+          "level": 1,
+          "line": 251
+        },
+        {
+          "heading": "removed_entries",
+          "level": 1,
+          "line": 278
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "nodes": [
+    {
+      "id": "config:organ.yaml",
+      "type": "config",
+      "name": "organ.yaml",
+      "filePath": "organ.yaml",
+      "summary": "yaml config file (10 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:pyproject.toml",
+      "type": "config",
+      "name": "pyproject.toml",
+      "filePath": "pyproject.toml",
+      "summary": "toml config file (219 non-empty lines).",
+      "tags": [
+        "configuration",
+        "toml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:pytest-receipt.json",
+      "type": "config",
+      "name": "pytest-receipt.json",
+      "filePath": "pytest-receipt.json",
+      "summary": "json config file (654 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:tools.json",
+      "type": "config",
+      "name": "tools.json",
+      "filePath": "tools.json",
+      "summary": "json config file (103 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:tools_sot.yaml",
+      "type": "config",
+      "name": "tools_sot.yaml",
+      "filePath": "tools_sot.yaml",
+      "summary": "yaml config file (356 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/examples/bad_las_qc_failure.json",
+      "type": "config",
+      "name": "bad_las_qc_failure.json",
+      "filePath": "resources/examples/bad_las_qc_failure.json",
+      "summary": "json config file (22 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/examples/danum1_expected_summary.json",
+      "type": "config",
+      "name": "danum1_expected_summary.json",
+      "filePath": "resources/examples/danum1_expected_summary.json",
+      "summary": "json config file (50 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/examples/danum1_project.yaml",
+      "type": "config",
+      "name": "danum1_project.yaml",
+      "filePath": "resources/examples/danum1_project.yaml",
+      "summary": "yaml config file (19 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/examples/gold_causal_scene.json",
+      "type": "config",
+      "name": "gold_causal_scene.json",
+      "filePath": "resources/examples/gold_causal_scene.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/examples/process_abduction_shoreface.yaml",
+      "type": "config",
+      "name": "process_abduction_shoreface.yaml",
+      "filePath": "resources/examples/process_abduction_shoreface.yaml",
+      "summary": "yaml config file (49 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/examples/seismic_well_tie_example.yaml",
+      "type": "config",
+      "name": "seismic_well_tie_example.yaml",
+      "filePath": "resources/examples/seismic_well_tie_example.yaml",
+      "summary": "yaml config file (25 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

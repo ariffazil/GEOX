@@ -1,0 +1,5090 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 24,
+  "filesSkipped": [
+    "geox-gui/src/components/VerdictConsole/VerdictConsole.css"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 24,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 24,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "geox-gui/src/components/SectionCanvas/SectionCanvas.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 98,
+      "functions": [
+        {
+          "name": "SectionCanvas",
+          "startLine": 5,
+          "endLine": 106,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SectionCanvas",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SectionCanvas",
+          "callee": "useState",
+          "lineNumber": 6
+        },
+        {
+          "caller": "SectionCanvas",
+          "callee": "[1, 2, 3, 4, 5].map",
+          "lineNumber": 73
+        },
+        {
+          "caller": "SectionCanvas",
+          "callee": "setMode",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 842,
+      "nonEmptyLines": 778,
+      "functions": [
+        {
+          "name": "SeismicSectionRenderer",
+          "startLine": 84,
+          "endLine": 262,
+          "params": [
+            "{ picks, pickMode, onCanvasClick, showHorizons, showFaults, readOnly }"
+          ]
+        },
+        {
+          "name": "SeismicInterpretationCanvas",
+          "startLine": 268,
+          "endLine": 840,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SeismicInterpretationCanvas",
+          "line": 268,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "useRef",
+          "lineNumber": 92
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "useRef",
+          "lineNumber": 100
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "useEffect",
+          "lineNumber": 102
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "Math.sin",
+          "lineNumber": 113
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "Math.sin",
+          "lineNumber": 114
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "Math.sin",
+          "lineNumber": 115
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "trace.push",
+          "lineNumber": 116
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "Math.random",
+          "lineNumber": 116
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "data.push",
+          "lineNumber": 118
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "useCallback",
+          "lineNumber": 123
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "canvas.getContext",
+          "lineNumber": 126
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.scale",
+          "lineNumber": 131
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.clearRect",
+          "lineNumber": 133
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fillRect",
+          "lineNumber": 134
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 136
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "d3.scaleLinear().domain(timeRange).range",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 144
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 147
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 154
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "synthData.current.forEach",
+          "lineNumber": 160
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 165
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "trace.forEach",
+          "lineNumber": 168
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 169
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 171
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 172
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 174
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 174
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.closePath",
+          "lineNumber": 175
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fill",
+          "lineNumber": 176
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 179
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "trace.forEach",
+          "lineNumber": 182
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 183
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 185
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 186
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 188
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "picks.forEach",
+          "lineNumber": 193
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 198
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 200
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "pick.points.forEach",
+          "lineNumber": 202
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 204
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 205
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 206
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 208
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 209
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "pick.points.forEach",
+          "lineNumber": 212
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "yScale",
+          "lineNumber": 214
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 216
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.arc",
+          "lineNumber": 217
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fill",
+          "lineNumber": 218
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 221
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 229
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 233
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "pickMode.toUpperCase",
+          "lineNumber": 233
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "useEffect",
+          "lineNumber": 237
+        },
+        {
+          "caller": "SeismicSectionRenderer",
+          "callee": "draw",
+          "lineNumber": 237
+        },
+        {
+          "caller": "handleClick",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 241
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.round",
+          "lineNumber": 247
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotH]).range",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleClick",
+          "callee": "yScale",
+          "lineNumber": 249
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onCanvasClick",
+          "lineNumber": 250
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useGEOXStore",
+          "lineNumber": 269
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 270
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 271
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 272
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 273
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 274
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useGeologicalClaim",
+          "lineNumber": 281
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useGeologicalClaim",
+          "lineNumber": 282
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useRef",
+          "lineNumber": 288
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useState",
+          "lineNumber": 291
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 292
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setAuditLog",
+          "lineNumber": 298
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "prev.slice",
+          "lineNumber": 298
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "new Date().toISOString",
+          "lineNumber": 299
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 308
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setPicks",
+          "lineNumber": 314
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updater",
+          "lineNumber": 315
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.toDraft",
+          "lineNumber": 318
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "next.filter",
+          "lineNumber": 318
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.toDraft",
+          "lineNumber": 321
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "next.filter",
+          "lineNumber": 321
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "logMutation",
+          "lineNumber": 325
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useMcpTool",
+          "lineNumber": 328
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 335
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 337
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "interpretTool.call",
+          "lineNumber": 338
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 343
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "result.horizons.map",
+          "lineNumber": 347
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "h.points?.map",
+          "lineNumber": 351
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 354
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 362
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "String",
+          "lineNumber": 362
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 366
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 368
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "interpretTool.call",
+          "lineNumber": 369
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 373
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "result.faults.map",
+          "lineNumber": 376
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "f.points?.map",
+          "lineNumber": 380
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 384
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "updateFloorStatus",
+          "lineNumber": 392
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "String",
+          "lineNumber": 392
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 396
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 404
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 414
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 423
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "prev.map",
+          "lineNumber": 424
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "[...p.points, { trace, time }].sort",
+          "lineNumber": 425
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 431
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 440
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "commitPick",
+          "lineNumber": 448
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "prev.map",
+          "lineNumber": 449
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 459
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.requestReview",
+          "lineNumber": 459
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 460
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.requestReview",
+          "lineNumber": 460
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 461
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.attest",
+          "lineNumber": 462
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 462
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "useCallback",
+          "lineNumber": 464
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.attest",
+          "lineNumber": 465
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 465
+        },
+        {
+          "caller": "clearPicks",
+          "callee": "commitPick",
+          "lineNumber": 470
+        },
+        {
+          "caller": "undoLast",
+          "callee": "commitPick",
+          "lineNumber": 478
+        },
+        {
+          "caller": "undoLast",
+          "callee": "prev.slice",
+          "lineNumber": 483
+        },
+        {
+          "caller": "undoLast",
+          "callee": "prev.map",
+          "lineNumber": 484
+        },
+        {
+          "caller": "undoLast",
+          "callee": "p.points.slice",
+          "lineNumber": 484
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 491
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "picks.filter",
+          "lineNumber": 492
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setPickMode",
+          "lineNumber": 509
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setPickMode",
+          "lineNumber": 517
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setPickMode",
+          "lineNumber": 524
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setShowHorizons",
+          "lineNumber": 548
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setShowFaults",
+          "lineNumber": 552
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizonPicks.map",
+          "lineNumber": 582
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "setActiveHorizonIdx",
+          "lineNumber": 584
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "faultPicks.map",
+          "lineNumber": 595
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizonPicks.reduce",
+          "lineNumber": 632
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.resetToReality",
+          "lineNumber": 657
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.toDraft",
+          "lineNumber": 679
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "faultPicks.reduce",
+          "lineNumber": 703
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.resetToReality",
+          "lineNumber": 728
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.toDraft",
+          "lineNumber": 750
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "auditLog.slice().reverse().map",
+          "lineNumber": 773
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "auditLog.slice().reverse",
+          "lineNumber": 773
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "auditLog.slice",
+          "lineNumber": 773
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "new Date(entry.timestamp).toLocaleTimeString",
+          "lineNumber": 775
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "entry.action.includes",
+          "lineNumber": 778
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "horizon.claim.state.toUpperCase",
+          "lineNumber": 826
+        },
+        {
+          "caller": "SeismicInterpretationCanvas",
+          "callee": "fault.claim.state.toUpperCase",
+          "lineNumber": 833
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/VerdictConsole/VerdictConsole.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 368,
+      "nonEmptyLines": 342,
+      "functions": [
+        {
+          "name": "VerdictConsole",
+          "startLine": 49,
+          "endLine": 366,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "VerdictConsole",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "VerdictConsole",
+          "callee": "useState",
+          "lineNumber": 50
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useState",
+          "lineNumber": 51
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useState",
+          "lineNumber": 52
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useState",
+          "lineNumber": 53
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useState",
+          "lineNumber": 54
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useGEOXStore",
+          "lineNumber": 56
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useMcpTool",
+          "lineNumber": 58
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useMcpTool",
+          "lineNumber": 63
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "useEffect",
+          "lineNumber": 69
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setActiveVerdict",
+          "lineNumber": 71
+        },
+        {
+          "caller": "handleEvaluate",
+          "callee": "callJudge",
+          "lineNumber": 77
+        },
+        {
+          "caller": "handleEvaluate",
+          "callee": "Date.now",
+          "lineNumber": 78
+        },
+        {
+          "caller": "handleEvaluate",
+          "callee": "console.error",
+          "lineNumber": 83
+        },
+        {
+          "caller": "handleSeal",
+          "callee": "callSeal",
+          "lineNumber": 91
+        },
+        {
+          "caller": "handleSeal",
+          "callee": "setActiveVerdict",
+          "lineNumber": 97
+        },
+        {
+          "caller": "handleSeal",
+          "callee": "updateFloorStatus",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleSeal",
+          "callee": "console.error",
+          "lineNumber": 106
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setProspectId",
+          "lineNumber": 141
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setWellId",
+          "lineNumber": 152
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 194
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 210
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 216
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "activeVerdict.auditTraceId.slice",
+          "lineNumber": 227
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "(activeVerdict.confidence * 100).toFixed",
+          "lineNumber": 236
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "(activeVerdict.risk.score * 100).toFixed",
+          "lineNumber": 248
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "activeVerdict.risk.factors.map",
+          "lineNumber": 267
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 270
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "f.impact.toFixed",
+          "lineNumber": 273
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "new Date(activeVerdict.timestamp).toLocaleString",
+          "lineNumber": 299
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setAuthToken",
+          "lineNumber": 324
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setShowAuthInput",
+          "lineNumber": 330
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "setShowAuthInput",
+          "lineNumber": 346
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 348
+        },
+        {
+          "caller": "VerdictConsole",
+          "callee": "twMerge",
+          "lineNumber": 355
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/VolumeRenderer.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "normalize",
+          "startLine": 3,
+          "endLine": 8,
+          "params": [
+            "value",
+            "min",
+            "max"
+          ]
+        },
+        {
+          "name": "VolumeRenderer",
+          "startLine": 10,
+          "endLine": 44,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "VolumeRenderer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "VolumeRenderer",
+          "callee": "values.flat().map",
+          "lineNumber": 28
+        },
+        {
+          "caller": "VolumeRenderer",
+          "callee": "values.flat",
+          "lineNumber": 28
+        },
+        {
+          "caller": "VolumeRenderer",
+          "callee": "normalize",
+          "lineNumber": 29
+        },
+        {
+          "caller": "VolumeRenderer",
+          "callee": "alpha.toFixed",
+          "lineNumber": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 358,
+      "nonEmptyLines": 322,
+      "functions": [
+        {
+          "name": "ResultRow",
+          "startLine": 63,
+          "endLine": 68,
+          "params": [
+            "{ label, value }"
+          ]
+        },
+        {
+          "name": "ToACResultBadge",
+          "startLine": 72,
+          "endLine": 100,
+          "params": [
+            "{ result }"
+          ]
+        },
+        {
+          "name": "McpResultPanel",
+          "startLine": 102,
+          "endLine": 180,
+          "params": [
+            "{ petro, swModel, holdCheck }"
+          ]
+        },
+        {
+          "name": "WellContextDesk",
+          "startLine": 186,
+          "endLine": 356,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WellContextDesk",
+          "line": 186,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ToACResultBadge",
+          "callee": "c9.slice(0, 3).map",
+          "lineNumber": 92
+        },
+        {
+          "caller": "ToACResultBadge",
+          "callee": "c9.slice",
+          "lineNumber": 92
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(swModel.confidence * 100).toFixed",
+          "lineNumber": 141
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(petro.sw_p50 * 100).toFixed",
+          "lineNumber": 147
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(petro.sw_p10 * 100).toFixed",
+          "lineNumber": 153
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(petro.sw_p90 * 100).toFixed",
+          "lineNumber": 153
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(petro.phi_e * 100).toFixed",
+          "lineNumber": 157
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "(petro.vsh * 100).toFixed",
+          "lineNumber": 160
+        },
+        {
+          "caller": "McpResultPanel",
+          "callee": "petro.constitutional_floors.map",
+          "lineNumber": 171
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useGEOXStore",
+          "lineNumber": 187
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useState",
+          "lineNumber": 188
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useState",
+          "lineNumber": 191
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useMcpTool",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useMcpTool",
+          "lineNumber": 197
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useMcpTool",
+          "lineNumber": 200
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "React.useEffect",
+          "lineNumber": 209
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "setToACReport",
+          "lineNumber": 213
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "useCallback",
+          "lineNumber": 225
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "updateFloorStatus",
+          "lineNumber": 226
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "swModelTool.call",
+          "lineNumber": 230
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "petroTool.call",
+          "lineNumber": 236
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "holdTool.call",
+          "lineNumber": 248
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "updateFloorStatus",
+          "lineNumber": 255
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "updateFloorStatus",
+          "lineNumber": 257
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "setShowMcpPanel",
+          "lineNumber": 294
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "(['rw', 'rt', 'phi'] as const).map",
+          "lineNumber": 310
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "setParams",
+          "lineNumber": 318
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "parseFloat",
+          "lineNumber": 318
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "petroTool.reset",
+          "lineNumber": 325
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "swModelTool.reset",
+          "lineNumber": 325
+        },
+        {
+          "caller": "WellContextDesk",
+          "callee": "holdTool.reset",
+          "lineNumber": 325
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 402,
+      "nonEmptyLines": 367,
+      "functions": [
+        {
+          "name": "StatusIcon",
+          "startLine": 46,
+          "endLine": 59,
+          "params": [
+            "{ status }"
+          ]
+        },
+        {
+          "name": "FloorBadge",
+          "startLine": 62,
+          "endLine": 135,
+          "params": [
+            "{ floor }"
+          ]
+        },
+        {
+          "name": "StatusRibbon",
+          "startLine": 138,
+          "endLine": 158,
+          "params": []
+        },
+        {
+          "name": "PerceptionBadge",
+          "startLine": 164,
+          "endLine": 248,
+          "params": []
+        },
+        {
+          "name": "WitnessBadges",
+          "startLine": 251,
+          "endLine": 314,
+          "params": []
+        },
+        {
+          "name": "WitnessBadgesCompact",
+          "startLine": 317,
+          "endLine": 377,
+          "params": []
+        },
+        {
+          "name": "GroundedBadge",
+          "startLine": 380,
+          "endLine": 400,
+          "params": [
+            "{ confidence, status, source }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WitnessBadges",
+          "line": 251,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessBadgesCompact",
+          "line": 317,
+          "isDefault": false
+        },
+        {
+          "name": "GroundedBadge",
+          "line": 380,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FloorBadge",
+          "callee": "floor.status.toUpperCase",
+          "lineNumber": 83
+        },
+        {
+          "caller": "FloorBadge",
+          "callee": "floor.type.toUpperCase",
+          "lineNumber": 102
+        },
+        {
+          "caller": "FloorBadge",
+          "callee": "floor.status.toUpperCase",
+          "lineNumber": 125
+        },
+        {
+          "caller": "StatusRibbon",
+          "callee": "useGovernance",
+          "lineNumber": 139
+        },
+        {
+          "caller": "PerceptionBadge",
+          "callee": "useToACReport",
+          "lineNumber": 165
+        },
+        {
+          "caller": "PerceptionBadge",
+          "callee": "report.canon_9_touched.slice(0, 3).map",
+          "lineNumber": 193
+        },
+        {
+          "caller": "PerceptionBadge",
+          "callee": "report.canon_9_touched.slice",
+          "lineNumber": 193
+        },
+        {
+          "caller": "PerceptionBadge",
+          "callee": "meta.color.replace",
+          "lineNumber": 218
+        },
+        {
+          "caller": "PerceptionBadge",
+          "callee": "report.canon_9_touched.join",
+          "lineNumber": 224
+        },
+        {
+          "caller": "WitnessBadges",
+          "callee": "useGovernance",
+          "lineNumber": 252
+        },
+        {
+          "caller": "WitnessBadges",
+          "callee": "priorityFloors.map",
+          "lineNumber": 282
+        },
+        {
+          "caller": "WitnessBadges",
+          "callee": "(Object.keys(governance.floors) as FloorId[]).map",
+          "lineNumber": 296
+        },
+        {
+          "caller": "WitnessBadges",
+          "callee": "Object.keys",
+          "lineNumber": 296
+        },
+        {
+          "caller": "WitnessBadges",
+          "callee": "governance.sessionId.slice",
+          "lineNumber": 309
+        },
+        {
+          "caller": "WitnessBadgesCompact",
+          "callee": "useGovernance",
+          "lineNumber": 318
+        },
+        {
+          "caller": "WitnessBadgesCompact",
+          "callee": "getStatusIcon",
+          "lineNumber": 334
+        },
+        {
+          "caller": "WitnessBadgesCompact",
+          "callee": "governance.overallStatus.toUpperCase",
+          "lineNumber": 345
+        },
+        {
+          "caller": "WitnessBadgesCompact",
+          "callee": "Object.values(governance.floors).map",
+          "lineNumber": 355
+        },
+        {
+          "caller": "WitnessBadgesCompact",
+          "callee": "Object.values",
+          "lineNumber": 355
+        },
+        {
+          "caller": "GroundedBadge",
+          "callee": "(confidence * 100).toFixed",
+          "lineNumber": 392
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/Domain1D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 210,
+      "nonEmptyLines": 188,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 5,
+          "endLine": 18,
+          "params": [
+            "{ children, color = \"amber\" }"
+          ]
+        },
+        {
+          "name": "Domain1D",
+          "startLine": 20,
+          "endLine": 208,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain1D",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Domain1D",
+          "callee": "useMcpTool",
+          "lineNumber": 21
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "Array.from",
+          "lineNumber": 29
+        },
+        {
+          "caller": "noise",
+          "callee": "Math.random",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 34
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 37
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 38
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 40
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 41
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 43
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 44
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 46
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 47
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 48
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 49
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "noise",
+          "lineNumber": 50
+        },
+        {
+          "caller": "getPoints",
+          "callee": "syntheticLogs.map((p, i) => {\n      const y = (i / (depthPoints - 1)) * trackHeight;\n      const val = p[dataKey] as number;\n      let x = isLog \n        ? ((Math.log10(val) - Math.log10(minX)) / (Math.log10(maxX) - Math.log10(minX))) * trackWidth \n        : ((val - minX) / (maxX - minX)) * trackWidth;\n      x = Math.max(0, Math.min(trackWidth, x));\n      return `${x},${y}`;\n    }).join",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getPoints",
+          "callee": "syntheticLogs.map",
+          "lineNumber": 56
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.log10",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.log10",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.log10",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.log10",
+          "lineNumber": 60
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.max",
+          "lineNumber": 62
+        },
+        {
+          "caller": "getPoints",
+          "callee": "Math.min",
+          "lineNumber": 62
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "(() => {\n    const polygonPoints: { xNeu: number; xDen: number; y: number }[] = [];\n    let isCrossover = false;\n    const paths: string[] = [];\n    const denMin = 1.95, denMax = 2.95;\n    const neuMin = 0.45, neuMax = -0.15;\n\n    syntheticLogs.forEach((p, i) => {\n      const y = (i / (depthPoints - 1)) * trackHeight;\n      const denX = ((p.den - denMin) / (denMax - denMin)) * trackWidth;\n      const neuX = ((p.neu - neuMin) / (neuMax - neuMin)) * trackWidth;\n\n      if (neuX < denX) {\n        if (!isCrossover) { isCrossover = true; polygonPoints.length = 0; }\n        polygonPoints.push({ xNeu: neuX, xDen: denX, y });\n      } else {\n        if (isCrossover) {\n          isCrossover = false;\n          const r = [...polygonPoints].reverse().map(pt => `${pt.xDen},${pt.y}`);\n          const l = polygonPoints.map(pt => `${pt.xNeu},${pt.y}`);\n          paths.push([...l, ...r].join(' '));\n        }\n      }\n    });\n    return paths;\n  })",
+          "lineNumber": 67
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "syntheticLogs.forEach",
+          "lineNumber": 74
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "polygonPoints.push",
+          "lineNumber": 81
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "[...polygonPoints].reverse().map",
+          "lineNumber": 85
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "[...polygonPoints].reverse",
+          "lineNumber": 85
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "polygonPoints.map",
+          "lineNumber": 86
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "paths.push",
+          "lineNumber": 87
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "[...l, ...r].join",
+          "lineNumber": 87
+        },
+        {
+          "caller": "handleAutoInterpret",
+          "callee": "interpretTool.call",
+          "lineNumber": 95
+        },
+        {
+          "caller": "simulateCalibration",
+          "callee": "setIsCalibrating",
+          "lineNumber": 99
+        },
+        {
+          "caller": "simulateCalibration",
+          "callee": "setTimeout",
+          "lineNumber": 100
+        },
+        {
+          "caller": "simulateCalibration",
+          "callee": "setIsCalibrating",
+          "lineNumber": 100
+        },
+        {
+          "caller": "simulateCalibration",
+          "callee": "setCalibrated",
+          "lineNumber": 100
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "interpretTool.data?.includes",
+          "lineNumber": 103
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "getPoints",
+          "lineNumber": 132
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "[...Array(13)].map",
+          "lineNumber": 143
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "Array",
+          "lineNumber": 143
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "getPoints",
+          "lineNumber": 154
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "crossoverPaths.map",
+          "lineNumber": 165
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "getPoints",
+          "lineNumber": 166
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "getPoints",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/Domain2D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 148,
+      "nonEmptyLines": 132,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 5,
+          "endLine": 18,
+          "params": [
+            "{ children, color = \"amber\" }"
+          ]
+        },
+        {
+          "name": "Domain2D",
+          "startLine": 20,
+          "endLine": 146,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain2D",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Domain2D",
+          "callee": "useRef",
+          "lineNumber": 21
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useMcpTool",
+          "lineNumber": 22
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useEffect",
+          "lineNumber": 26
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "canvas.getContext",
+          "lineNumber": 29
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "ctx.createImageData",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getHorizonDepth",
+          "callee": "Math.sin",
+          "lineNumber": 42
+        },
+        {
+          "caller": "getHorizonDepth",
+          "callee": "Math.cos",
+          "lineNumber": 43
+        },
+        {
+          "caller": "getHorizonDepth",
+          "callee": "Math.sin",
+          "lineNumber": 44
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "getHorizonDepth",
+          "lineNumber": 51
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.sin",
+          "lineNumber": 52
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.cos",
+          "lineNumber": 52
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.random",
+          "lineNumber": 53
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.abs",
+          "lineNumber": 54
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.cos",
+          "lineNumber": 54
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.min",
+          "lineNumber": 57
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.min",
+          "lineNumber": 58
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "Math.abs",
+          "lineNumber": 58
+        },
+        {
+          "caller": "renderSeismic",
+          "callee": "ctx.putImageData",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "renderSeismic",
+          "lineNumber": 66
+        },
+        {
+          "caller": "triggerGCPScan",
+          "callee": "setIsScanning",
+          "lineNumber": 70
+        },
+        {
+          "caller": "triggerGCPScan",
+          "callee": "setTimeout",
+          "lineNumber": 70
+        },
+        {
+          "caller": "triggerGCPScan",
+          "callee": "setIsScanning",
+          "lineNumber": 70
+        },
+        {
+          "caller": "triggerGCPScan",
+          "callee": "setGcpScanned",
+          "lineNumber": 70
+        },
+        {
+          "caller": "handleSeismicAnalysis",
+          "callee": "interpretTool.call",
+          "lineNumber": 74
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "interpretTool.data?.includes",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/Domain3D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 229,
+      "nonEmptyLines": 214,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 41,
+          "endLine": 54,
+          "params": [
+            "{ children, color = \"emerald\" }"
+          ]
+        },
+        {
+          "name": "Domain3D",
+          "startLine": 56,
+          "endLine": 227,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain3D",
+          "line": 56,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Domain3D",
+          "callee": "useMcpTool",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useMcpTool",
+          "lineNumber": 58
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useCallback",
+          "lineNumber": 62
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "basinResolveTool.call",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "basinTool.call",
+          "lineNumber": 67
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "acrisk.toFixed",
+          "lineNumber": 91
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "maruahFlag.intersected_basins.join",
+          "lineNumber": 105
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "acrisk.toFixed",
+          "lineNumber": 111
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "maruahFlag.floors_triggered.join",
+          "lineNumber": 114
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "geojsonData.features.map",
+          "lineNumber": 142
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "String",
+          "lineNumber": 146
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "String",
+          "lineNumber": 148
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "JSON.stringify(feature.geometry.coordinates).slice",
+          "lineNumber": 153
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "JSON.stringify",
+          "lineNumber": 153
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "maruahFlag.intersected_basins.join",
+          "lineNumber": 166
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "acrisk.toFixed",
+          "lineNumber": 199
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "JSON.stringify",
+          "lineNumber": 209
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/DomainLEM.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 107,
+      "nonEmptyLines": 95,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 5,
+          "endLine": 15,
+          "params": [
+            "{ children, color = \"purple\" }"
+          ]
+        },
+        {
+          "name": "DomainLEM",
+          "startLine": 17,
+          "endLine": 105,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DomainLEM",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "DomainLEM",
+          "callee": "useMcpTool",
+          "lineNumber": 18
+        },
+        {
+          "caller": "DomainLEM",
+          "callee": "useState",
+          "lineNumber": 19
+        },
+        {
+          "caller": "handleBackpropagate",
+          "callee": "setIsPropagating",
+          "lineNumber": 22
+        },
+        {
+          "caller": "handleBackpropagate",
+          "callee": "auditTool.call",
+          "lineNumber": 23
+        },
+        {
+          "caller": "handleBackpropagate",
+          "callee": "setIsPropagating",
+          "lineNumber": 24
+        },
+        {
+          "caller": "DomainLEM",
+          "callee": "auditTool.data?.includes",
+          "lineNumber": 39
+        },
+        {
+          "caller": "DomainLEM",
+          "callee": "physics9.map",
+          "lineNumber": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/DomainVoid.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 157,
+      "nonEmptyLines": 136,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 5,
+          "endLine": 17,
+          "params": [
+            "{ children, color = \"amber\" }"
+          ]
+        },
+        {
+          "name": "DomainVoid",
+          "startLine": 19,
+          "endLine": 155,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DomainVoid",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "DomainVoid",
+          "callee": "useMcpTool",
+          "lineNumber": 20
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useMcpTool",
+          "lineNumber": 21
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useState",
+          "lineNumber": 25
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.min",
+          "lineNumber": 33
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.max",
+          "lineNumber": 33
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.sqrt",
+          "lineNumber": 33
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.pow",
+          "lineNumber": 33
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useEffect",
+          "lineNumber": 37
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "stoiipTool.call",
+          "lineNumber": 38
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Array.from",
+          "lineNumber": 49
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.exp",
+          "lineNumber": 49
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.pow",
+          "lineNumber": 49
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.random",
+          "lineNumber": 49
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "Math.max",
+          "lineNumber": 50
+        },
+        {
+          "caller": "handleGenerateVerdict",
+          "callee": "interpretTool.call",
+          "lineNumber": 53
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "interpretTool.data?.includes",
+          "lineNumber": 56
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "computedSTOIIP.toFixed",
+          "lineNumber": 82
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "bins.map",
+          "lineNumber": 84
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "(derivedSw * 100).toFixed",
+          "lineNumber": 92
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "rw.toFixed",
+          "lineNumber": 117
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "setRw",
+          "lineNumber": 119
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "parseFloat",
+          "lineNumber": 119
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "archieM.toFixed",
+          "lineNumber": 125
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "setArchieM",
+          "lineNumber": 127
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "parseFloat",
+          "lineNumber": 127
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "(phiCut*100).toFixed",
+          "lineNumber": 133
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "setPhiCut",
+          "lineNumber": 135
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "parseFloat",
+          "lineNumber": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/domains/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 10,
+      "exports": [
+        {
+          "name": "DomainVoid",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "Domain1D",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "Domain2D",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "Domain3D",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "DomainLEM",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 721,
+      "nonEmptyLines": 676,
+      "functions": [
+        {
+          "name": "LogTrackSVG",
+          "startLine": 106,
+          "endLine": 300,
+          "params": [
+            "{ track, depthRange, height, selectedDepth, onDepthClick }"
+          ]
+        },
+        {
+          "name": "FormationStrip",
+          "startLine": 305,
+          "endLine": 365,
+          "params": [
+            "{ formations, depthRange, height, onFormationClick }"
+          ]
+        },
+        {
+          "name": "DepthAxis",
+          "startLine": 370,
+          "endLine": 423,
+          "params": [
+            "{ range, height, reference, onReferenceChange }"
+          ]
+        },
+        {
+          "name": "WellInfoPanel",
+          "startLine": 428,
+          "endLine": 467,
+          "params": [
+            "{ well }"
+          ]
+        },
+        {
+          "name": "Domain1D",
+          "startLine": 472,
+          "endLine": 625,
+          "params": [
+            "{\n  well = defaultWell,\n  tracks = defaultTracks,\n  formations = defaultFormations,\n  onDepthSelect = () => {},\n  onFormationPick = () => {},\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain1D",
+          "line": 472,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "LogTrackSVG",
+          "callee": "useRef",
+          "lineNumber": 113
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "useState",
+          "lineNumber": 114
+        },
+        {
+          "caller": "handleClick",
+          "callee": "svgRef.current.getBoundingClientRect",
+          "lineNumber": 132
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onDepthClick",
+          "lineNumber": 136
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.max",
+          "lineNumber": 136
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.min",
+          "lineNumber": 136
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "useMemo",
+          "lineNumber": 140
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Math.ceil",
+          "lineNumber": 142
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "lines.push",
+          "lineNumber": 144
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 148
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 150
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "useMemo",
+          "lineNumber": 161
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "track.curves.map",
+          "lineNumber": 162
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "xScale",
+          "lineNumber": 165
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 165
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "xScale",
+          "lineNumber": 167
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 167
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "svgRef.current?.getBoundingClientRect",
+          "lineNumber": 190
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "setHoverDepth",
+          "lineNumber": 195
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Math.max",
+          "lineNumber": 195
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Math.min",
+          "lineNumber": 195
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "setHoverDepth",
+          "lineNumber": 198
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Array.from",
+          "lineNumber": 213
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "curvePaths.map",
+          "lineNumber": 229
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 245
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 247
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 257
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 259
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Array.from",
+          "lineNumber": 267
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "yScale",
+          "lineNumber": 273
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "Math.round",
+          "lineNumber": 280
+        },
+        {
+          "caller": "LogTrackSVG",
+          "callee": "track.curves.map",
+          "lineNumber": 288
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "formations.map",
+          "lineNumber": 333
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "yScale",
+          "lineNumber": 335
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "yScale",
+          "lineNumber": 336
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "formation.lithology?.toLowerCase",
+          "lineNumber": 337
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "onFormationClick",
+          "lineNumber": 349
+        },
+        {
+          "caller": "FormationStrip",
+          "callee": "formation.depth.toFixed",
+          "lineNumber": 356
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "onReferenceChange",
+          "lineNumber": 394
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "Object.entries(referenceLabels).map",
+          "lineNumber": 397
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "Object.entries",
+          "lineNumber": 397
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "Array.from",
+          "lineNumber": 405
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "yScale",
+          "lineNumber": 411
+        },
+        {
+          "caller": "DepthAxis",
+          "callee": "Math.round",
+          "lineNumber": 414
+        },
+        {
+          "caller": "WellInfoPanel",
+          "callee": "well.location.latitude.toFixed",
+          "lineNumber": 457
+        },
+        {
+          "caller": "WellInfoPanel",
+          "callee": "well.location.longitude.toFixed",
+          "lineNumber": 457
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 479
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 480
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 481
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useRef",
+          "lineNumber": 482
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useState",
+          "lineNumber": 483
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "useEffect",
+          "lineNumber": 485
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "setLogHeight",
+          "lineNumber": 487
+        },
+        {
+          "caller": "handleDepthClick",
+          "callee": "setSelectedDepth",
+          "lineNumber": 492
+        },
+        {
+          "caller": "handleDepthClick",
+          "callee": "onDepthSelect",
+          "lineNumber": 493
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "selectedDepth.toFixed",
+          "lineNumber": 530
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "(selectedDepth - well.kbElevation).toFixed",
+          "lineNumber": 537
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "(selectedDepth * 2).toFixed",
+          "lineNumber": 542
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "setDepthRange",
+          "lineNumber": 560
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "Number",
+          "lineNumber": 560
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "setDepthRange",
+          "lineNumber": 567
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "Number",
+          "lineNumber": 567
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "setDepthRange",
+          "lineNumber": 574
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "setDepthRange",
+          "lineNumber": 580
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "onFormationPick",
+          "lineNumber": 600
+        },
+        {
+          "caller": "Domain1D",
+          "callee": "tracks.map",
+          "lineNumber": 602
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 733,
+      "nonEmptyLines": 669,
+      "functions": [
+        {
+          "name": "getColorFromValue",
+          "startLine": 117,
+          "endLine": 157,
+          "params": [
+            "value",
+            "colorMap"
+          ]
+        },
+        {
+          "name": "SeismicCanvas",
+          "startLine": 162,
+          "endLine": 340,
+          "params": [
+            "{\n  data,\n  displayMode,\n  colorMap,\n  gain,\n  horizons,\n  gcps,\n  onPick,\n  width,\n  height,\n}"
+          ]
+        },
+        {
+          "name": "AttributePanel",
+          "startLine": 345,
+          "endLine": 391,
+          "params": [
+            "{ attributes, onToggle, onCompute }"
+          ]
+        },
+        {
+          "name": "DisplayControls",
+          "startLine": 396,
+          "endLine": 455,
+          "params": [
+            "{ displayMode, colorMap, gain, onDisplayModeChange, onColorMapChange, onGainChange }"
+          ]
+        },
+        {
+          "name": "Domain2D",
+          "startLine": 460,
+          "endLine": 677,
+          "params": [
+            "{\n  seismicData = defaultSeismicData,\n  horizons: initialHorizons = defaultHorizons,\n  gcps = defaultGCPs,\n  attributes = defaultAttributes,\n  onPick = () => {},\n  onGcpAdd = () => {},\n  onHorizonEdit = () => {},\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain2D",
+          "line": 460,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.max",
+          "lineNumber": 118
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.min",
+          "lineNumber": 118
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 122
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.abs",
+          "lineNumber": 128
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 129
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 129
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 131
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.abs",
+          "lineNumber": 137
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 138
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 141
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 141
+        },
+        {
+          "caller": "getColorFromValue",
+          "callee": "Math.round",
+          "lineNumber": 141
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "useRef",
+          "lineNumber": 183
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "useState",
+          "lineNumber": 184
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "useState",
+          "lineNumber": 185
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "useEffect",
+          "lineNumber": 191
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "canvas.getContext",
+          "lineNumber": 195
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.fillRect",
+          "lineNumber": 200
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.beginPath",
+          "lineNumber": 212
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.moveTo",
+          "lineNumber": 222
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.lineTo",
+          "lineNumber": 224
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.stroke",
+          "lineNumber": 227
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.beginPath",
+          "lineNumber": 231
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.fillRect",
+          "lineNumber": 238
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "getColorFromValue",
+          "lineNumber": 248
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.fillRect",
+          "lineNumber": 249
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "horizons.filter(h => h.visible).forEach",
+          "lineNumber": 255
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "horizons.filter",
+          "lineNumber": 255
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.beginPath",
+          "lineNumber": 256
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "horizon.picks.forEach",
+          "lineNumber": 260
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "Math.round",
+          "lineNumber": 262
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.moveTo",
+          "lineNumber": 266
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.lineTo",
+          "lineNumber": 268
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.stroke",
+          "lineNumber": 271
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "gcps.forEach",
+          "lineNumber": 275
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "Math.round",
+          "lineNumber": 277
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.beginPath",
+          "lineNumber": 280
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.moveTo",
+          "lineNumber": 283
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.lineTo",
+          "lineNumber": 284
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.moveTo",
+          "lineNumber": 285
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.lineTo",
+          "lineNumber": 286
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.stroke",
+          "lineNumber": 287
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.beginPath",
+          "lineNumber": 290
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.arc",
+          "lineNumber": 292
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.stroke",
+          "lineNumber": 293
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.createLinearGradient",
+          "lineNumber": 297
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 298
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 299
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 300
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "ctx.fillRect",
+          "lineNumber": 302
+        },
+        {
+          "caller": "handleClick",
+          "callee": "canvasRef.current?.getBoundingClientRect",
+          "lineNumber": 307
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.floor",
+          "lineNumber": 313
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.floor",
+          "lineNumber": 314
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onPick",
+          "lineNumber": 317
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "canvasRef.current?.getBoundingClientRect",
+          "lineNumber": 328
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "setCursorPos",
+          "lineNumber": 330
+        },
+        {
+          "caller": "SeismicCanvas",
+          "callee": "setCursorPos",
+          "lineNumber": 336
+        },
+        {
+          "caller": "AttributePanel",
+          "callee": "attributes.map",
+          "lineNumber": 359
+        },
+        {
+          "caller": "AttributePanel",
+          "callee": "onToggle",
+          "lineNumber": 367
+        },
+        {
+          "caller": "AttributePanel",
+          "callee": "(['rms', 'sweetness', 'envelope', 'phase'] as const).map",
+          "lineNumber": 379
+        },
+        {
+          "caller": "AttributePanel",
+          "callee": "onCompute",
+          "lineNumber": 382
+        },
+        {
+          "caller": "AttributePanel",
+          "callee": "type.toUpperCase",
+          "lineNumber": 385
+        },
+        {
+          "caller": "DisplayControls",
+          "callee": "onDisplayModeChange",
+          "lineNumber": 416
+        },
+        {
+          "caller": "DisplayControls",
+          "callee": "onColorMapChange",
+          "lineNumber": 429
+        },
+        {
+          "caller": "DisplayControls",
+          "callee": "gain.toFixed",
+          "lineNumber": 441
+        },
+        {
+          "caller": "DisplayControls",
+          "callee": "onGainChange",
+          "lineNumber": 449
+        },
+        {
+          "caller": "DisplayControls",
+          "callee": "Number",
+          "lineNumber": 449
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 469
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 470
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 471
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 472
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 473
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 474
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 475
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 476
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useRef",
+          "lineNumber": 478
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useState",
+          "lineNumber": 479
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useEffect",
+          "lineNumber": 481
+        },
+        {
+          "caller": "updateSize",
+          "callee": "setCanvasSize",
+          "lineNumber": 484
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "updateSize",
+          "lineNumber": 490
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "window.addEventListener",
+          "lineNumber": 491
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "window.removeEventListener",
+          "lineNumber": 492
+        },
+        {
+          "caller": "handlePick",
+          "callee": "Math.round",
+          "lineNumber": 497
+        },
+        {
+          "caller": "handlePick",
+          "callee": "setSelectedPoint",
+          "lineNumber": 500
+        },
+        {
+          "caller": "handlePick",
+          "callee": "onPick",
+          "lineNumber": 501
+        },
+        {
+          "caller": "toggleAttribute",
+          "callee": "setActiveAttributes",
+          "lineNumber": 505
+        },
+        {
+          "caller": "toggleAttribute",
+          "callee": "prev.map",
+          "lineNumber": 506
+        },
+        {
+          "caller": "computeAttribute",
+          "callee": "console.log",
+          "lineNumber": 514
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "useMemo",
+          "lineNumber": 518
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "seismicData.traces.slice",
+          "lineNumber": 520
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "selectedPoint.twt.toFixed",
+          "lineNumber": 580
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "selectedPoint.amplitude.toFixed",
+          "lineNumber": 584
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "setViewStart",
+          "lineNumber": 598
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "Math.max",
+          "lineNumber": 598
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "setViewStart",
+          "lineNumber": 608
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "Number",
+          "lineNumber": 608
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "setViewStart",
+          "lineNumber": 612
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "Math.min",
+          "lineNumber": 612
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "setViewWidth",
+          "lineNumber": 623
+        },
+        {
+          "caller": "Domain2D",
+          "callee": "Number",
+          "lineNumber": 623
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 818,
+      "nonEmptyLines": 758,
+      "functions": [
+        {
+          "name": "VolumeCanvas3D",
+          "startLine": 135,
+          "endLine": 317,
+          "params": [
+            "{ volume, surfaces, wells, viewState, viewMode, width, height }"
+          ]
+        },
+        {
+          "name": "BasinInfoPanel",
+          "startLine": 322,
+          "endLine": 380,
+          "params": [
+            "{ basin }"
+          ]
+        },
+        {
+          "name": "LayerControlPanel",
+          "startLine": 385,
+          "endLine": 448,
+          "params": [
+            "{ surfaces, wells, onSurfaceToggle, onWellToggle }"
+          ]
+        },
+        {
+          "name": "ViewControls",
+          "startLine": 453,
+          "endLine": 546,
+          "params": [
+            "{ viewState, viewMode, onViewStateChange, onViewModeChange }"
+          ]
+        },
+        {
+          "name": "Domain3D",
+          "startLine": 551,
+          "endLine": 710,
+          "params": [
+            "{\n  volume = defaultVolume,\n  surfaces: initialSurfaces = defaultSurfaces,\n  wells: initialWells = defaultWells,\n  basin = defaultBasin,\n  onPointSelect = () => {},\n  onSliceChange = () => {},\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Domain3D",
+          "line": 551,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "useRef",
+          "lineNumber": 144
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "useEffect",
+          "lineNumber": 146
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "canvas.getContext",
+          "lineNumber": 150
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.fillRect",
+          "lineNumber": 155
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.createLinearGradient",
+          "lineNumber": 158
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 159
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 160
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "gradient.addColorStop",
+          "lineNumber": 161
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.fillRect",
+          "lineNumber": 163
+        },
+        {
+          "caller": "project",
+          "callee": "Math.cos",
+          "lineNumber": 175
+        },
+        {
+          "caller": "project",
+          "callee": "Math.sin",
+          "lineNumber": 175
+        },
+        {
+          "caller": "project",
+          "callee": "Math.sin",
+          "lineNumber": 176
+        },
+        {
+          "caller": "project",
+          "callee": "Math.cos",
+          "lineNumber": 176
+        },
+        {
+          "caller": "project",
+          "callee": "Math.cos",
+          "lineNumber": 177
+        },
+        {
+          "caller": "project",
+          "callee": "Math.sin",
+          "lineNumber": 177
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 189
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 214
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "edges.forEach",
+          "lineNumber": 215
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 216
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 217
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 218
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 219
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 221
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 222
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "surfaces.filter(s => s.visible).forEach",
+          "lineNumber": 226
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "surfaces.filter",
+          "lineNumber": 226
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 232
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 238
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 239
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 240
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 242
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 243
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 244
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.closePath",
+          "lineNumber": 245
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 247
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "wells.filter(w => w.visible).forEach",
+          "lineNumber": 252
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "wells.filter",
+          "lineNumber": 252
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 255
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "well.path.forEach",
+          "lineNumber": 257
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 258
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 260
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 262
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 265
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 269
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 271
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.arc",
+          "lineNumber": 272
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.fill",
+          "lineNumber": 273
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 281
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 285
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 286
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 287
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 288
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 289
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 293
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 294
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 295
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 296
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 297
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.beginPath",
+          "lineNumber": 301
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.moveTo",
+          "lineNumber": 302
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "project",
+          "lineNumber": 303
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.lineTo",
+          "lineNumber": 304
+        },
+        {
+          "caller": "VolumeCanvas3D",
+          "callee": "ctx.stroke",
+          "lineNumber": 305
+        },
+        {
+          "caller": "BasinInfoPanel",
+          "callee": "basin.stratigraphy.map",
+          "lineNumber": 367
+        },
+        {
+          "caller": "LayerControlPanel",
+          "callee": "surfaces.map",
+          "lineNumber": 402
+        },
+        {
+          "caller": "LayerControlPanel",
+          "callee": "onSurfaceToggle",
+          "lineNumber": 410
+        },
+        {
+          "caller": "LayerControlPanel",
+          "callee": "wells.map",
+          "lineNumber": 426
+        },
+        {
+          "caller": "LayerControlPanel",
+          "callee": "onWellToggle",
+          "lineNumber": 434
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "(['volume', 'surface', 'slice', 'basin'] as ViewMode3D[]).map",
+          "lineNumber": 470
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "onViewModeChange",
+          "lineNumber": 473
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "mode.charAt(0).toUpperCase",
+          "lineNumber": 478
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "mode.charAt",
+          "lineNumber": 478
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "mode.slice",
+          "lineNumber": 478
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "viewState.zoom.toFixed",
+          "lineNumber": 486
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "onViewStateChange",
+          "lineNumber": 494
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "Number",
+          "lineNumber": 494
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "onViewStateChange",
+          "lineNumber": 507
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "Number",
+          "lineNumber": 508
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "onViewStateChange",
+          "lineNumber": 520
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "Number",
+          "lineNumber": 521
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "onViewStateChange",
+          "lineNumber": 537
+        },
+        {
+          "caller": "ViewControls",
+          "callee": "Number",
+          "lineNumber": 538
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useState",
+          "lineNumber": 559
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useState",
+          "lineNumber": 565
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useState",
+          "lineNumber": 566
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useState",
+          "lineNumber": 567
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useRef",
+          "lineNumber": 569
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useState",
+          "lineNumber": 570
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "useEffect",
+          "lineNumber": 572
+        },
+        {
+          "caller": "updateSize",
+          "callee": "setCanvasSize",
+          "lineNumber": 575
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "updateSize",
+          "lineNumber": 581
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "window.addEventListener",
+          "lineNumber": 582
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "window.removeEventListener",
+          "lineNumber": 583
+        },
+        {
+          "caller": "toggleSurface",
+          "callee": "setSurfaces",
+          "lineNumber": 587
+        },
+        {
+          "caller": "toggleSurface",
+          "callee": "prev.map",
+          "lineNumber": 588
+        },
+        {
+          "caller": "toggleWell",
+          "callee": "setWells",
+          "lineNumber": 593
+        },
+        {
+          "caller": "toggleWell",
+          "callee": "prev.map",
+          "lineNumber": 594
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "setViewState",
+          "lineNumber": 629
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "setViewState",
+          "lineNumber": 645
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "setViewState",
+          "lineNumber": 651
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "setViewState",
+          "lineNumber": 658
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "basin.location.centerLat.toFixed",
+          "lineNumber": 674
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "basin.location.centerLon.toFixed",
+          "lineNumber": 674
+        },
+        {
+          "caller": "Domain3D",
+          "callee": "viewMode.toUpperCase",
+          "lineNumber": 695
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 539,
+      "nonEmptyLines": 505,
+      "functions": [
+        {
+          "name": "GCOSGauge",
+          "startLine": 97,
+          "endLine": 153,
+          "params": [
+            "{ components }"
+          ]
+        },
+        {
+          "name": "VolumetricsChart",
+          "startLine": 158,
+          "endLine": 205,
+          "params": [
+            "{\n  distribution,\n  label,\n  unit,\n}"
+          ]
+        },
+        {
+          "name": "FloorStatusPanel",
+          "startLine": 210,
+          "endLine": 253,
+          "params": [
+            "{ verdicts }"
+          ]
+        },
+        {
+          "name": "HoldGateControl",
+          "startLine": 258,
+          "endLine": 353,
+          "params": [
+            "{ onHoldRequest, onSealRequest, canSeal }"
+          ]
+        },
+        {
+          "name": "EconomicSummary",
+          "startLine": 358,
+          "endLine": 403,
+          "params": [
+            "{ metrics }"
+          ]
+        },
+        {
+          "name": "DomainVoid",
+          "startLine": 408,
+          "endLine": 502,
+          "params": [
+            "{\n  assessment = defaultAssessment,\n  gcos = defaultGCOS,\n  economics = defaultEconomics,\n  verdicts = defaultVerdicts,\n  onHoldRequest = () => {},\n  onSealRequest = () => {},\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DomainVoid",
+          "line": 408,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GaugeBar",
+          "callee": "getColor",
+          "lineNumber": 110
+        },
+        {
+          "caller": "GaugeBar",
+          "callee": "(value * 100).toFixed",
+          "lineNumber": 111
+        },
+        {
+          "caller": "GaugeBar",
+          "callee": "getColor",
+          "lineNumber": 117
+        },
+        {
+          "caller": "GCOSGauge",
+          "callee": "getColor",
+          "lineNumber": 132
+        },
+        {
+          "caller": "GCOSGauge",
+          "callee": "(overall * 100).toFixed",
+          "lineNumber": 134
+        },
+        {
+          "caller": "GCOSGauge",
+          "callee": "(overall * 100).toFixed",
+          "lineNumber": 146
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "p50.toFixed",
+          "lineNumber": 175
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "toPercent",
+          "lineNumber": 183
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "toPercent",
+          "lineNumber": 184
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "toPercent",
+          "lineNumber": 184
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "toPercent",
+          "lineNumber": 190
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "toPercent",
+          "lineNumber": 195
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "p90.toFixed",
+          "lineNumber": 199
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "mean.toFixed",
+          "lineNumber": 200
+        },
+        {
+          "caller": "VolumetricsChart",
+          "callee": "p10.toFixed",
+          "lineNumber": 201
+        },
+        {
+          "caller": "FloorStatusPanel",
+          "callee": "verdicts.map",
+          "lineNumber": 235
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "useState",
+          "lineNumber": 263
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "onHoldRequest",
+          "lineNumber": 290
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 291
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 298
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "onSealRequest",
+          "lineNumber": 316
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 317
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 324
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 334
+        },
+        {
+          "caller": "HoldGateControl",
+          "callee": "setConfirming",
+          "lineNumber": 341
+        },
+        {
+          "caller": "MetricRow",
+          "callee": "p50.toFixed",
+          "lineNumber": 373
+        },
+        {
+          "caller": "EconomicSummary",
+          "callee": "metrics.breakEvenPrice.toFixed",
+          "lineNumber": 396
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useMemo",
+          "lineNumber": 417
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "verdicts.every",
+          "lineNumber": 418
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "useMemo",
+          "lineNumber": 422
+        },
+        {
+          "caller": "DomainVoid",
+          "callee": "(acRisk * 100).toFixed",
+          "lineNumber": 446
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/domain/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 11,
+      "exports": [
+        {
+          "name": "DomainVoid",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "Domain1D",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "Domain2D",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "Domain3D",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "default",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 36,
+      "exports": [
+        {
+          "name": "GeoScaleEngine",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "createScaleEngine",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "ScaleDomain",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "PixelCoordinate",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "WorldCoordinate",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "SpatialReference",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "TemporalReference",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationResult",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "CalibratedPoint",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "GeoTransform",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "Chronostratigraphy",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "ScaleMetadata",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "DomainVoid",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Domain1D",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "Domain2D",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "Domain3D",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "useGeminiIntelligence",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "useQuickInterpretation",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "GeminiConfig",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "GeologicalContext",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "GeologicalInterpretation",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "UseGeminiIntelligenceReturn",
+          "line": 32,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 22,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/intelligence/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "exports": [
+        {
+          "name": "useGeminiIntelligence",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "useQuickInterpretation",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 495,
+      "nonEmptyLines": 423,
+      "functions": [
+        {
+          "name": "delay",
+          "startLine": 217,
+          "endLine": 217,
+          "params": [
+            "ms"
+          ]
+        },
+        {
+          "name": "useGeminiIntelligence",
+          "startLine": 222,
+          "endLine": 458,
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "useQuickInterpretation",
+          "startLine": 463,
+          "endLine": 493,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useGeminiIntelligence",
+          "line": 222,
+          "isDefault": false
+        },
+        {
+          "name": "useQuickInterpretation",
+          "line": 463,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "delay",
+          "callee": "setTimeout",
+          "lineNumber": 217
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useState",
+          "lineNumber": 227
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useState",
+          "lineNumber": 228
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useState",
+          "lineNumber": 229
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useState",
+          "lineNumber": 230
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useRef",
+          "lineNumber": 232
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useCallback",
+          "lineNumber": 237
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "abortControllerRef.current.abort",
+          "lineNumber": 239
+        },
+        {
+          "caller": "parseResponse",
+          "callee": "JSON.parse",
+          "lineNumber": 250
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useCallback",
+          "lineNumber": 283
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setIsLoading",
+          "lineNumber": 285
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setError",
+          "lineNumber": 286
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setTimeout",
+          "lineNumber": 307
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "abortControllerRef.current?.abort",
+          "lineNumber": 307
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "fetch",
+          "lineNumber": 309
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "JSON.stringify",
+          "lineNumber": 314
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "clearTimeout",
+          "lineNumber": 319
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "response.json().catch",
+          "lineNumber": 322
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "response.json",
+          "lineNumber": 322
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "response.json",
+          "lineNumber": 326
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "parseResponse",
+          "lineNumber": 333
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setLastResponse",
+          "lineNumber": 335
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setTokenUsage",
+          "lineNumber": 336
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "Math.min",
+          "lineNumber": 354
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "Math.pow",
+          "lineNumber": 354
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "delay",
+          "lineNumber": 355
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setError",
+          "lineNumber": 361
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "useCallback",
+          "lineNumber": 370
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setIsLoading",
+          "lineNumber": 376
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setError",
+          "lineNumber": 377
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "fetch",
+          "lineNumber": 393
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "JSON.stringify",
+          "lineNumber": 398
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "response.body?.getReader",
+          "lineNumber": 407
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "reader.read",
+          "lineNumber": 414
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "decoder.decode",
+          "lineNumber": 417
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "buffer.split",
+          "lineNumber": 418
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "lines.pop",
+          "lineNumber": 419
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "line.startsWith",
+          "lineNumber": 422
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "line.slice",
+          "lineNumber": 423
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "JSON.parse",
+          "lineNumber": 427
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "onChunk",
+          "lineNumber": 430
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setError",
+          "lineNumber": 441
+        },
+        {
+          "caller": "useGeminiIntelligence",
+          "callee": "setIsLoading",
+          "lineNumber": 444
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "useGeminiIntelligence",
+          "lineNumber": 464
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "useCallback",
+          "lineNumber": 466
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "generate",
+          "lineNumber": 469
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "useCallback",
+          "lineNumber": 473
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "generate",
+          "lineNumber": 476
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "useCallback",
+          "lineNumber": 480
+        },
+        {
+          "caller": "useQuickInterpretation",
+          "callee": "generate",
+          "lineNumber": 483
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 493,
+      "nonEmptyLines": 444,
+      "functions": [
+        {
+          "name": "createScaleEngine",
+          "startLine": 470,
+          "endLine": 493,
+          "params": [
+            "domain",
+            "options"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GeoScaleEngine",
+          "startLine": 153,
+          "endLine": 465,
+          "methods": [
+            "constructor",
+            "calibrate1D",
+            "calibrate2D",
+            "calibrate3D",
+            "interpolateTWT",
+            "estimateAge",
+            "inlineXlineToWorld",
+            "twtToDepth",
+            "calculateConfidence1D",
+            "calculateConfidence2D",
+            "detectGCPsAuto",
+            "hydrateChronostratigraphy",
+            "getScaleSummary"
+          ],
+          "properties": [
+            "config",
+            "transformCache"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GeoScaleEngine",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "createScaleEngine",
+          "line": 470,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "calibrate1D",
+          "callee": "this.interpolateTWT",
+          "lineNumber": 181
+        },
+        {
+          "caller": "calibrate1D",
+          "callee": "this.estimateAge",
+          "lineNumber": 187
+        },
+        {
+          "caller": "calibrate1D",
+          "callee": "this.calculateConfidence1D",
+          "lineNumber": 194
+        },
+        {
+          "caller": "calibrate2D",
+          "callee": "this.calculateConfidence2D",
+          "lineNumber": 218
+        },
+        {
+          "caller": "calibrate3D",
+          "callee": "this.inlineXlineToWorld",
+          "lineNumber": 253
+        },
+        {
+          "caller": "calibrate3D",
+          "callee": "this.twtToDepth",
+          "lineNumber": 262
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "Math.min",
+          "lineNumber": 337
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "corners.map",
+          "lineNumber": 337
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "Math.max",
+          "lineNumber": 338
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "corners.map",
+          "lineNumber": 338
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "Math.min",
+          "lineNumber": 339
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "corners.map",
+          "lineNumber": 339
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "Math.max",
+          "lineNumber": 340
+        },
+        {
+          "caller": "inlineXlineToWorld",
+          "callee": "corners.map",
+          "lineNumber": 340
+        },
+        {
+          "caller": "twtToDepth",
+          "callee": "velocityModel.reduce",
+          "lineNumber": 358
+        },
+        {
+          "caller": "calculateConfidence1D",
+          "callee": "Math.min",
+          "lineNumber": 375
+        },
+        {
+          "caller": "calculateConfidence1D",
+          "callee": "Math.max",
+          "lineNumber": 378
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "Math.max",
+          "lineNumber": 389
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "Math.min",
+          "lineNumber": 392
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "config.gcps.map",
+          "lineNumber": 393
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "Math.sqrt",
+          "lineNumber": 396
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "Math.min",
+          "lineNumber": 401
+        },
+        {
+          "caller": "calculateConfidence2D",
+          "callee": "Math.max",
+          "lineNumber": 404
+        },
+        {
+          "caller": "detectGCPsAuto",
+          "callee": "expectedGcps.map",
+          "lineNumber": 416
+        },
+        {
+          "caller": "hydrateChronostratigraphy",
+          "callee": "calibration.horizons.map",
+          "lineNumber": 440
+        },
+        {
+          "caller": "hydrateChronostratigraphy",
+          "callee": "this.estimateAge",
+          "lineNumber": 442
+        },
+        {
+          "caller": "hydrateChronostratigraphy",
+          "callee": "new Date().toISOString",
+          "lineNumber": 445
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/scale/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "exports": [
+        {
+          "name": "GeoScaleEngine",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "createScaleEngine",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/forge/scale/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 137,
+      "nonEmptyLines": 126,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/hooks/useGeologicalClaim.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 92,
+      "nonEmptyLines": 82,
+      "functions": [
+        {
+          "name": "useGeologicalClaim",
+          "startLine": 19,
+          "endLine": 92,
+          "params": [
+            "claimType"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useGeologicalClaim",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useGEOXStore",
+          "lineNumber": 20
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useState",
+          "lineNumber": 21
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "Date.now",
+          "lineNumber": 22
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "new Date().toISOString",
+          "lineNumber": 25
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useCallback",
+          "lineNumber": 29
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 32
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "setClaim",
+          "lineNumber": 35
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 36
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useCallback",
+          "lineNumber": 39
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "setClaim",
+          "lineNumber": 40
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 41
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useCallback",
+          "lineNumber": 44
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "setClaim",
+          "lineNumber": 45
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 46
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "fetch",
+          "lineNumber": 51
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "JSON.stringify",
+          "lineNumber": 54
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "response.json",
+          "lineNumber": 64
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "setClaim",
+          "lineNumber": 66
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "new Date().toISOString",
+          "lineNumber": 70
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 72
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 74
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 77
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "useCallback",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "setClaim",
+          "lineNumber": 82
+        },
+        {
+          "caller": "useGeologicalClaim",
+          "callee": "updateFloorStatus",
+          "lineNumber": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

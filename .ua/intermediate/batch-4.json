@@ -1,0 +1,248 @@
+{
+  "nodes": [
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "config config file (13 non-empty lines).",
+      "tags": [
+        "configuration",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "markdown docs file (8 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:CANONICAL_PUBLIC_SURFACE.json",
+      "type": "config",
+      "name": "CANONICAL_PUBLIC_SURFACE.json",
+      "filePath": "CANONICAL_PUBLIC_SURFACE.json",
+      "summary": "json config file (288 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:CHANGELOG.md",
+      "type": "document",
+      "name": "CHANGELOG.md",
+      "filePath": "CHANGELOG.md",
+      "summary": "markdown docs file (23 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "markdown docs file (9 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CONTRIBUTING.md",
+      "type": "document",
+      "name": "CONTRIBUTING.md",
+      "filePath": "CONTRIBUTING.md",
+      "summary": "markdown docs file (29 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:DEPLOYMENT.md",
+      "type": "document",
+      "name": "DEPLOYMENT.md",
+      "filePath": "DEPLOYMENT.md",
+      "summary": "markdown docs file (54 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:Dockerfile.local",
+      "type": "service",
+      "name": "Dockerfile.local",
+      "filePath": "Dockerfile.local",
+      "summary": "dockerfile infra file (34 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "dockerfile",
+        "containerization",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:FEDERATION.md",
+      "type": "document",
+      "name": "FEDERATION.md",
+      "filePath": "FEDERATION.md",
+      "summary": "markdown docs file (20 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:FEDERATION_CONTRACT.md",
+      "type": "document",
+      "name": "FEDERATION_CONTRACT.md",
+      "filePath": "FEDERATION_CONTRACT.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:FEDERATION_MAP.md",
+      "type": "document",
+      "name": "FEDERATION_MAP.md",
+      "filePath": "FEDERATION_MAP.md",
+      "summary": "markdown docs file (2 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:GEOX_MCP_APPS_SURFACE.json",
+      "type": "config",
+      "name": "GEOX_MCP_APPS_SURFACE.json",
+      "filePath": "GEOX_MCP_APPS_SURFACE.json",
+      "summary": "json config file (554 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "service:Makefile",
+      "type": "service",
+      "name": "Makefile",
+      "filePath": "Makefile",
+      "summary": "makefile infra file (103 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "makefile"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:PROTOCOL_CONFORMANCE.md",
+      "type": "document",
+      "name": "PROTOCOL_CONFORMANCE.md",
+      "filePath": "PROTOCOL_CONFORMANCE.md",
+      "summary": "markdown docs file (43 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "markdown docs file (129 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "entry-point"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:SECURITY.md",
+      "type": "document",
+      "name": "SECURITY.md",
+      "filePath": "SECURITY.md",
+      "summary": "markdown docs file (20 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:apps.json",
+      "type": "config",
+      "name": "apps.json",
+      "filePath": "apps.json",
+      "summary": "json config file (112 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:entrypoint.sh",
+      "type": "file",
+      "name": "entrypoint.sh",
+      "filePath": "entrypoint.sh",
+      "summary": "shell script file (14 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:identity.toml",
+      "type": "config",
+      "name": "identity.toml",
+      "filePath": "identity.toml",
+      "summary": "toml config file (2 non-empty lines).",
+      "tags": [
+        "configuration",
+        "toml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:llms.txt",
+      "type": "document",
+      "name": "llms.txt",
+      "filePath": "llms.txt",
+      "summary": "txt docs file (21 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,4226 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 25,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 24,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_core/skills/subsurface/sensitivity_tool.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 7,
+      "functions": [
+        {
+          "name": "geox_run_sensitivity_sweep_tool",
+          "startLine": 10,
+          "endLine": 11,
+          "params": [
+            "base_inputs",
+            "percent_delta"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_run_sensitivity_sweep_tool",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_run_sensitivity_sweep_tool",
+          "callee": "SensitivitySweep().run(base_inputs=base_inputs, percent_delta=percent_delta).to_dict",
+          "lineNumber": 11
+        },
+        {
+          "caller": "geox_run_sensitivity_sweep_tool",
+          "callee": "SensitivitySweep().run",
+          "lineNumber": 11
+        },
+        {
+          "caller": "geox_run_sensitivity_sweep_tool",
+          "callee": "SensitivitySweep",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/stratigraphy_sequence.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 17,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "assign_layer",
+          "startLine": 7,
+          "endLine": 12,
+          "params": [
+            "depth",
+            "stratigraphy"
+          ]
+        },
+        {
+          "name": "compute_layer_thickness",
+          "startLine": 15,
+          "endLine": 17,
+          "params": [
+            "layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "assign_layer",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "compute_layer_thickness",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/stress_geomechanics.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 32,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "compute_overburden_pressure",
+          "startLine": 7,
+          "endLine": 15,
+          "params": [
+            "depth_m",
+            "avg_density_gcc"
+          ]
+        },
+        {
+          "name": "estimate_pore_pressure",
+          "startLine": 18,
+          "endLine": 22,
+          "params": [
+            "depth_m",
+            "gradient_mpa_m"
+          ]
+        },
+        {
+          "name": "gardner_velocity_to_density",
+          "startLine": 25,
+          "endLine": 32,
+          "params": [
+            "vp_ms"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "compute_overburden_pressure",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "estimate_pore_pressure",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "gardner_velocity_to_density",
+          "line": 25,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "gardner_velocity_to_density",
+          "callee": "round",
+          "lineNumber": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/sts_rift_bridge.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 128,
+      "nonEmptyLines": 108,
+      "functions": [
+        {
+          "name": "rift_phase_to_basin_state",
+          "startLine": 33,
+          "endLine": 35,
+          "params": [
+            "rift_phase_value"
+          ]
+        },
+        {
+          "name": "compute_basin_state_sequence",
+          "startLine": 38,
+          "endLine": 121,
+          "params": [
+            "beta",
+            "time_since_rift_ma",
+            "subsidence_rate_mm_yr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "rift_phase_to_basin_state",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "compute_basin_state_sequence",
+          "line": 38,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "rift_phase_to_basin_state",
+          "callee": "_RIFT_TO_BASIN_STATE.get",
+          "lineNumber": 35
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "compute_rift_kinematics",
+          "lineNumber": 68
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "rift_phase_to_basin_state",
+          "lineNumber": 86
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "states.append",
+          "lineNumber": 87
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "states.append",
+          "lineNumber": 98
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "max",
+          "lineNumber": 103
+        },
+        {
+          "caller": "compute_basin_state_sequence",
+          "callee": "rift_phase_to_basin_state",
+          "lineNumber": 107
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/volumes/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/volumes/volume_frames.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 273,
+      "nonEmptyLines": 229,
+      "functions": [
+        {
+          "name": "extract_frame_from_image3d",
+          "startLine": 27,
+          "endLine": 43,
+          "params": [
+            "volume",
+            "frame_index",
+            "orientation"
+          ]
+        },
+        {
+          "name": "extract_frame_from_segy",
+          "startLine": 46,
+          "endLine": 104,
+          "params": [
+            "segy_path",
+            "frame_index",
+            "orientation"
+          ]
+        },
+        {
+          "name": "write_frame_to_image3d",
+          "startLine": 110,
+          "endLine": 133,
+          "params": [
+            "volume",
+            "frame_index",
+            "orientation",
+            "image"
+          ]
+        },
+        {
+          "name": "create_segy_file",
+          "startLine": 139,
+          "endLine": 186,
+          "params": [
+            "output_path",
+            "inline_range",
+            "crossline_range",
+            "sample_interval_ms",
+            "n_samples"
+          ]
+        },
+        {
+          "name": "geox_volume_get_frame",
+          "startLine": 192,
+          "endLine": 242,
+          "params": [
+            "volume_ref",
+            "frame_index",
+            "orientation",
+            "provenance"
+          ]
+        },
+        {
+          "name": "geox_volume_set_frame",
+          "startLine": 245,
+          "endLine": 273,
+          "params": [
+            "volume_ref",
+            "frame_index",
+            "orientation",
+            "image_data"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extract_frame_from_image3d",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "extract_frame_from_segy",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "write_frame_to_image3d",
+          "line": 110,
+          "isDefault": false
+        },
+        {
+          "name": "create_segy_file",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "geox_volume_get_frame",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "geox_volume_set_frame",
+          "line": 245,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extract_frame_from_image3d",
+          "callee": "volume.get_image",
+          "lineNumber": 43
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "logger.error",
+          "lineNumber": 65
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "segyio.open",
+          "lineNumber": 69
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "hasattr",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "len",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "logger.error",
+          "lineNumber": 72
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "Image2d",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "data.astype",
+          "lineNumber": 76
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "hasattr",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "len",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "logger.error",
+          "lineNumber": 80
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "Image2d",
+          "lineNumber": 83
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "data.astype",
+          "lineNumber": 84
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "logger.error",
+          "lineNumber": 90
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "len",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "hasattr",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "len",
+          "lineNumber": 94
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "hasattr",
+          "lineNumber": 94
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "data[:, frame_index].reshape",
+          "lineNumber": 96
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "data[:, frame_index].reshape",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "Image2d",
+          "lineNumber": 99
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "slice_data.astype",
+          "lineNumber": 100
+        },
+        {
+          "caller": "extract_frame_from_segy",
+          "callee": "logger.error",
+          "lineNumber": 103
+        },
+        {
+          "caller": "write_frame_to_image3d",
+          "callee": "volume.set_image",
+          "lineNumber": 129
+        },
+        {
+          "caller": "write_frame_to_image3d",
+          "callee": "logger.error",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "logger.error",
+          "lineNumber": 164
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "np.arange",
+          "lineNumber": 168
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "np.arange",
+          "lineNumber": 169
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "segyio.spec",
+          "lineNumber": 171
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "np.arange",
+          "lineNumber": 174
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "segyio.create",
+          "lineNumber": 178
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "segyio.Trace",
+          "lineNumber": 181
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "segyio.traceheader",
+          "lineNumber": 181
+        },
+        {
+          "caller": "create_segy_file",
+          "callee": "logger.error",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "_admissibility_gate",
+          "lineNumber": 207
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "extract_frame_from_segy",
+          "lineNumber": 220
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "result.update",
+          "lineNumber": 222
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "make_vault_receipt",
+          "lineNumber": 229
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "result.update",
+          "lineNumber": 232
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "img.to_dict",
+          "lineNumber": 235
+        },
+        {
+          "caller": "geox_volume_get_frame",
+          "callee": "make_vault_receipt",
+          "lineNumber": 241
+        },
+        {
+          "caller": "geox_volume_set_frame",
+          "callee": "make_vault_receipt",
+          "lineNumber": 272
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/skills/subsurface/volumes/volumetrics.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "geox_compute_volume_probabilistic_tool",
+          "startLine": 10,
+          "endLine": 25,
+          "params": [
+            "grv_dist",
+            "ntg_dist",
+            "phi_dist",
+            "sw_dist",
+            "fvf_dist",
+            "draws"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_compute_volume_probabilistic_tool",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_compute_volume_probabilistic_tool",
+          "callee": "ProbabilisticVolumetrics(draws=draws).compute_hcpv",
+          "lineNumber": 18
+        },
+        {
+          "caller": "geox_compute_volume_probabilistic_tool",
+          "callee": "ProbabilisticVolumetrics",
+          "lineNumber": 18
+        },
+        {
+          "caller": "geox_compute_volume_probabilistic_tool",
+          "callee": "result.to_dict",
+          "lineNumber": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/source_rock/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/source_rock/parameters.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "classify_toc",
+          "startLine": 6,
+          "endLine": 12,
+          "params": [
+            "toc_wt_pct"
+          ]
+        },
+        {
+          "name": "classify_kerogen",
+          "startLine": 14,
+          "endLine": 23,
+          "params": [
+            "hydrogen_index",
+            "oxygen_index",
+            "tmax_c"
+          ]
+        },
+        {
+          "name": "classify_maturity",
+          "startLine": 25,
+          "endLine": 31,
+          "params": [
+            "tmax_c",
+            "kerogen_type"
+          ]
+        },
+        {
+          "name": "estimate_toc_deltalogr",
+          "startLine": 33,
+          "endLine": 43,
+          "params": [
+            "depth_m",
+            "resistivity_ohm_m",
+            "sonic_us_ft",
+            "density_gcc",
+            "lom",
+            "baseline_resistivity",
+            "baseline_sonic"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "classify_toc",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "classify_kerogen",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "classify_maturity",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "estimate_toc_deltalogr",
+          "line": 33,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "classify_kerogen",
+          "callee": "classify_maturity",
+          "lineNumber": 22
+        },
+        {
+          "caller": "estimate_toc_deltalogr",
+          "callee": "math.log10",
+          "lineNumber": 34
+        },
+        {
+          "caller": "estimate_toc_deltalogr",
+          "callee": "max",
+          "lineNumber": 40
+        },
+        {
+          "caller": "estimate_toc_deltalogr",
+          "callee": "classify_toc",
+          "lineNumber": 42
+        },
+        {
+          "caller": "estimate_toc_deltalogr",
+          "callee": "round",
+          "lineNumber": 43
+        },
+        {
+          "caller": "estimate_toc_deltalogr",
+          "callee": "round",
+          "lineNumber": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/spatial/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 33,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/spatial/crs_reproject.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 296,
+      "nonEmptyLines": 246,
+      "functions": [
+        {
+          "name": "is_known_crs",
+          "startLine": 113,
+          "endLine": 115,
+          "params": [
+            "crs"
+          ]
+        },
+        {
+          "name": "validate_crs",
+          "startLine": 118,
+          "endLine": 155,
+          "params": [
+            "crs",
+            "allow_unknown"
+          ]
+        },
+        {
+          "name": "reproject_point",
+          "startLine": 158,
+          "endLine": 190,
+          "params": [
+            "x",
+            "y",
+            "source_crs",
+            "target_crs"
+          ]
+        },
+        {
+          "name": "reproject_points",
+          "startLine": 193,
+          "endLine": 219,
+          "params": [
+            "points",
+            "source_crs",
+            "target_crs"
+          ]
+        },
+        {
+          "name": "roundtrip_tolerance",
+          "startLine": 222,
+          "endLine": 248,
+          "params": [
+            "points",
+            "source_crs",
+            "tolerance_m"
+          ]
+        },
+        {
+          "name": "get_crs_info",
+          "startLine": 251,
+          "endLine": 268,
+          "params": [
+            "crs"
+          ]
+        },
+        {
+          "name": "to_provenance_entry",
+          "startLine": 271,
+          "endLine": 296,
+          "params": [
+            "source_crs",
+            "target_crs",
+            "depth_datum"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "is_known_crs",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "validate_crs",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "reproject_point",
+          "line": 158,
+          "isDefault": false
+        },
+        {
+          "name": "reproject_points",
+          "line": 193,
+          "isDefault": false
+        },
+        {
+          "name": "roundtrip_tolerance",
+          "line": 222,
+          "isDefault": false
+        },
+        {
+          "name": "get_crs_info",
+          "line": 251,
+          "isDefault": false
+        },
+        {
+          "name": "to_provenance_entry",
+          "line": 271,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "is_known_crs",
+          "callee": "crs.upper",
+          "lineNumber": 115
+        },
+        {
+          "caller": "validate_crs",
+          "callee": "crs.upper().strip",
+          "lineNumber": 131
+        },
+        {
+          "caller": "validate_crs",
+          "callee": "crs.upper",
+          "lineNumber": 131
+        },
+        {
+          "caller": "validate_crs",
+          "callee": "crs.startswith",
+          "lineNumber": 133
+        },
+        {
+          "caller": "validate_crs",
+          "callee": "pyproj.CRS",
+          "lineNumber": 145
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "validate_crs",
+          "lineNumber": 180
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "ValueError",
+          "lineNumber": 182
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "validate_crs",
+          "lineNumber": 184
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "ValueError",
+          "lineNumber": 186
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "pyproj.Transformer.from_crs",
+          "lineNumber": 188
+        },
+        {
+          "caller": "reproject_point",
+          "callee": "transformer.transform",
+          "lineNumber": 189
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "validate_crs",
+          "lineNumber": 210
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "ValueError",
+          "lineNumber": 212
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "validate_crs",
+          "lineNumber": 214
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "ValueError",
+          "lineNumber": 216
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "pyproj.Transformer.from_crs",
+          "lineNumber": 218
+        },
+        {
+          "caller": "reproject_points",
+          "callee": "transformer.transform",
+          "lineNumber": 219
+        },
+        {
+          "caller": "roundtrip_tolerance",
+          "callee": "reproject_points",
+          "lineNumber": 238
+        },
+        {
+          "caller": "roundtrip_tolerance",
+          "callee": "reproject_points",
+          "lineNumber": 240
+        },
+        {
+          "caller": "roundtrip_tolerance",
+          "callee": "zip",
+          "lineNumber": 243
+        },
+        {
+          "caller": "roundtrip_tolerance",
+          "callee": "deviations.append",
+          "lineNumber": 245
+        },
+        {
+          "caller": "roundtrip_tolerance",
+          "callee": "all",
+          "lineNumber": 247
+        },
+        {
+          "caller": "get_crs_info",
+          "callee": "crs.upper().strip",
+          "lineNumber": 253
+        },
+        {
+          "caller": "get_crs_info",
+          "callee": "crs.upper",
+          "lineNumber": 253
+        },
+        {
+          "caller": "get_crs_info",
+          "callee": "pyproj.CRS",
+          "lineNumber": 259
+        },
+        {
+          "caller": "get_crs_info",
+          "callee": "str",
+          "lineNumber": 262
+        },
+        {
+          "caller": "to_provenance_entry",
+          "callee": "get_crs_info",
+          "lineNumber": 286
+        },
+        {
+          "caller": "to_provenance_entry",
+          "callee": "get_crs_info",
+          "lineNumber": 287
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/spatial/maruah_zones.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "get_maruah_zone_polygons",
+          "startLine": 48,
+          "endLine": 98,
+          "params": [
+            "bbox",
+            "crs"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "get_maruah_zone_polygons",
+          "line": 48,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "_KNOWN_TERRITORIES.items",
+          "lineNumber": 65
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "zones.append",
+          "lineNumber": 70
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "info.get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "info.get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "info.get",
+          "lineNumber": 77
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "logger.info",
+          "lineNumber": 93
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "info.get",
+          "lineNumber": 93
+        },
+        {
+          "caller": "get_maruah_zone_polygons",
+          "callee": "logger.debug",
+          "lineNumber": 96
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/spatial/transforms.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 317,
+      "nonEmptyLines": 256,
+      "functions": [
+        {
+          "name": "build_block_to_survey_matrix",
+          "startLine": 28,
+          "endLine": 48,
+          "params": [
+            "block",
+            "survey"
+          ]
+        },
+        {
+          "name": "build_survey_to_block_matrix",
+          "startLine": 51,
+          "endLine": 54,
+          "params": [
+            "block",
+            "survey"
+          ]
+        },
+        {
+          "name": "build_block_to_world_matrix",
+          "startLine": 57,
+          "endLine": 92,
+          "params": [
+            "block",
+            "world"
+          ]
+        },
+        {
+          "name": "build_world_to_block_matrix",
+          "startLine": 95,
+          "endLine": 98,
+          "params": [
+            "block",
+            "world"
+          ]
+        },
+        {
+          "name": "build_survey_to_world_matrix",
+          "startLine": 101,
+          "endLine": 110,
+          "params": [
+            "survey",
+            "world"
+          ]
+        },
+        {
+          "name": "build_world_to_survey_matrix",
+          "startLine": 113,
+          "endLine": 116,
+          "params": [
+            "survey",
+            "world"
+          ]
+        },
+        {
+          "name": "block_to_survey",
+          "startLine": 260,
+          "endLine": 267,
+          "params": [
+            "points",
+            "block",
+            "survey"
+          ]
+        },
+        {
+          "name": "survey_to_block",
+          "startLine": 270,
+          "endLine": 277,
+          "params": [
+            "points",
+            "block",
+            "survey"
+          ]
+        },
+        {
+          "name": "block_to_world",
+          "startLine": 280,
+          "endLine": 287,
+          "params": [
+            "points",
+            "block",
+            "world"
+          ]
+        },
+        {
+          "name": "world_to_block",
+          "startLine": 290,
+          "endLine": 297,
+          "params": [
+            "points",
+            "block",
+            "world"
+          ]
+        },
+        {
+          "name": "survey_to_world",
+          "startLine": 300,
+          "endLine": 307,
+          "params": [
+            "points",
+            "survey",
+            "world"
+          ]
+        },
+        {
+          "name": "world_to_survey",
+          "startLine": 310,
+          "endLine": 317,
+          "params": [
+            "points",
+            "survey",
+            "world"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CoordinateSystem",
+          "startLine": 122,
+          "endLine": 254,
+          "methods": [
+            "__init__",
+            "_rebuild",
+            "set_block_space",
+            "set_survey_space",
+            "set_world_space",
+            "get_matrix",
+            "inline_resolution",
+            "crossline_resolution",
+            "vertical_resolution",
+            "transform_points",
+            "to_dict"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "build_block_to_survey_matrix",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "build_survey_to_block_matrix",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "build_block_to_world_matrix",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "build_world_to_block_matrix",
+          "line": 95,
+          "isDefault": false
+        },
+        {
+          "name": "build_survey_to_world_matrix",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "build_world_to_survey_matrix",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "CoordinateSystem",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "block_to_survey",
+          "line": 260,
+          "isDefault": false
+        },
+        {
+          "name": "survey_to_block",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "block_to_world",
+          "line": 280,
+          "isDefault": false
+        },
+        {
+          "name": "world_to_block",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "survey_to_world",
+          "line": 300,
+          "isDefault": false
+        },
+        {
+          "name": "world_to_survey",
+          "line": 310,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_block_to_survey_matrix",
+          "callee": "max",
+          "lineNumber": 37
+        },
+        {
+          "caller": "build_block_to_survey_matrix",
+          "callee": "max",
+          "lineNumber": 38
+        },
+        {
+          "caller": "build_block_to_survey_matrix",
+          "callee": "max",
+          "lineNumber": 39
+        },
+        {
+          "caller": "build_block_to_survey_matrix",
+          "callee": "np.eye",
+          "lineNumber": 41
+        },
+        {
+          "caller": "build_survey_to_block_matrix",
+          "callee": "build_block_to_survey_matrix",
+          "lineNumber": 53
+        },
+        {
+          "caller": "build_survey_to_block_matrix",
+          "callee": "np.linalg.inv",
+          "lineNumber": 54
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.array",
+          "lineNumber": 69
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.array",
+          "lineNumber": 79
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.append",
+          "lineNumber": 81
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.append",
+          "lineNumber": 82
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.append",
+          "lineNumber": 83
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.append",
+          "lineNumber": 84
+        },
+        {
+          "caller": "build_block_to_world_matrix",
+          "callee": "np.linalg.lstsq",
+          "lineNumber": 90
+        },
+        {
+          "caller": "build_world_to_block_matrix",
+          "callee": "build_block_to_world_matrix",
+          "lineNumber": 97
+        },
+        {
+          "caller": "build_world_to_block_matrix",
+          "callee": "np.linalg.inv",
+          "lineNumber": 98
+        },
+        {
+          "caller": "build_survey_to_world_matrix",
+          "callee": "BlockSpace",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_survey_to_world_matrix",
+          "callee": "build_survey_to_block_matrix",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_survey_to_world_matrix",
+          "callee": "build_block_to_world_matrix",
+          "lineNumber": 109
+        },
+        {
+          "caller": "build_world_to_survey_matrix",
+          "callee": "build_survey_to_world_matrix",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_world_to_survey_matrix",
+          "callee": "np.linalg.inv",
+          "lineNumber": 116
+        },
+        {
+          "caller": "__init__",
+          "callee": "BlockSpace",
+          "lineNumber": 134
+        },
+        {
+          "caller": "__init__",
+          "callee": "SurveySpace",
+          "lineNumber": 135
+        },
+        {
+          "caller": "__init__",
+          "callee": "WorldSpace",
+          "lineNumber": 136
+        },
+        {
+          "caller": "__init__",
+          "callee": "self._rebuild",
+          "lineNumber": 138
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_block_to_survey_matrix",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_survey_to_block_matrix",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "logger.debug",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_block_to_world_matrix",
+          "lineNumber": 151
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_world_to_block_matrix",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "logger.debug",
+          "lineNumber": 154
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 155
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_survey_to_world_matrix",
+          "lineNumber": 159
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "build_world_to_survey_matrix",
+          "lineNumber": 160
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "logger.debug",
+          "lineNumber": 162
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 163
+        },
+        {
+          "caller": "_rebuild",
+          "callee": "np.eye",
+          "lineNumber": 164
+        },
+        {
+          "caller": "set_block_space",
+          "callee": "self.block.set_block_space",
+          "lineNumber": 167
+        },
+        {
+          "caller": "set_block_space",
+          "callee": "self._rebuild",
+          "lineNumber": 168
+        },
+        {
+          "caller": "set_survey_space",
+          "callee": "self.survey.set_survey_space",
+          "lineNumber": 179
+        },
+        {
+          "caller": "set_survey_space",
+          "callee": "self._rebuild",
+          "lineNumber": 180
+        },
+        {
+          "caller": "set_world_space",
+          "callee": "self.world.set_world_space",
+          "lineNumber": 189
+        },
+        {
+          "caller": "set_world_space",
+          "callee": "self._rebuild",
+          "lineNumber": 190
+        },
+        {
+          "caller": "get_matrix",
+          "callee": "KeyError",
+          "lineNumber": 195
+        },
+        {
+          "caller": "inline_resolution",
+          "callee": "max",
+          "lineNumber": 201
+        },
+        {
+          "caller": "crossline_resolution",
+          "callee": "max",
+          "lineNumber": 206
+        },
+        {
+          "caller": "vertical_resolution",
+          "callee": "max",
+          "lineNumber": 211
+        },
+        {
+          "caller": "transform_points",
+          "callee": "np.asarray",
+          "lineNumber": 230
+        },
+        {
+          "caller": "transform_points",
+          "callee": "points.reshape",
+          "lineNumber": 233
+        },
+        {
+          "caller": "transform_points",
+          "callee": "ValueError",
+          "lineNumber": 236
+        },
+        {
+          "caller": "transform_points",
+          "callee": "self.get_matrix",
+          "lineNumber": 238
+        },
+        {
+          "caller": "transform_points",
+          "callee": "np.hstack",
+          "lineNumber": 239
+        },
+        {
+          "caller": "transform_points",
+          "callee": "np.ones",
+          "lineNumber": 239
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.block.to_dict",
+          "lineNumber": 247
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.survey.to_dict",
+          "lineNumber": 248
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.world.to_dict",
+          "lineNumber": 249
+        },
+        {
+          "caller": "to_dict",
+          "callee": "v.tolist",
+          "lineNumber": 253
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self._matrices.items",
+          "lineNumber": 253
+        },
+        {
+          "caller": "block_to_survey",
+          "callee": "CoordinateSystem",
+          "lineNumber": 266
+        },
+        {
+          "caller": "block_to_survey",
+          "callee": "cs.transform_points",
+          "lineNumber": 267
+        },
+        {
+          "caller": "survey_to_block",
+          "callee": "CoordinateSystem",
+          "lineNumber": 276
+        },
+        {
+          "caller": "survey_to_block",
+          "callee": "cs.transform_points",
+          "lineNumber": 277
+        },
+        {
+          "caller": "block_to_world",
+          "callee": "CoordinateSystem",
+          "lineNumber": 286
+        },
+        {
+          "caller": "block_to_world",
+          "callee": "cs.transform_points",
+          "lineNumber": 287
+        },
+        {
+          "caller": "world_to_block",
+          "callee": "CoordinateSystem",
+          "lineNumber": 296
+        },
+        {
+          "caller": "world_to_block",
+          "callee": "cs.transform_points",
+          "lineNumber": 297
+        },
+        {
+          "caller": "survey_to_world",
+          "callee": "CoordinateSystem",
+          "lineNumber": 306
+        },
+        {
+          "caller": "survey_to_world",
+          "callee": "cs.transform_points",
+          "lineNumber": 307
+        },
+        {
+          "caller": "world_to_survey",
+          "callee": "CoordinateSystem",
+          "lineNumber": 316
+        },
+        {
+          "caller": "world_to_survey",
+          "callee": "cs.transform_points",
+          "lineNumber": 317
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 12,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_core/spatial/velocity_slice.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 451,
+      "nonEmptyLines": 378,
+      "functions": [
+        {
+          "name": "slice_velocity_cube",
+          "startLine": 142,
+          "endLine": 189,
+          "params": [
+            "cube",
+            "depth",
+            "window_m"
+          ]
+        },
+        {
+          "name": "structural_attribution",
+          "startLine": 207,
+          "endLine": 295,
+          "params": [
+            "slice_data",
+            "physics9_catalog",
+            "matrix_vp",
+            "fluid_vp_brine",
+            "fluid_vp_gas"
+          ]
+        },
+        {
+          "name": "bootstrap_structure",
+          "startLine": 301,
+          "endLine": 382,
+          "params": [
+            "checkshots",
+            "cube",
+            "target_depth",
+            "target_twt",
+            "tie_tolerance_m"
+          ]
+        },
+        {
+          "name": "synth_cube_with_structure",
+          "startLine": 388,
+          "endLine": 451,
+          "params": [
+            "x_min",
+            "x_max",
+            "y_min",
+            "y_max",
+            "z_min",
+            "z_max",
+            "nx",
+            "ny",
+            "nz",
+            "include_anticline",
+            "include_fault",
+            "include_gas_pocket",
+            "compaction_v0",
+            "compaction_k",
+            "seed"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "VpCube",
+          "startLine": 27,
+          "endLine": 68,
+          "methods": [
+            "__post_init__",
+            "shape",
+            "to_dict"
+          ],
+          "properties": [
+            "data",
+            "x",
+            "y",
+            "z",
+            "units",
+            "source",
+            "provenance",
+            "construction",
+            "dix_horizontal_layering_assumed",
+            "cube_id"
+          ]
+        },
+        {
+          "name": "VpSlice",
+          "startLine": 72,
+          "endLine": 109,
+          "methods": [
+            "__post_init__",
+            "shape",
+            "to_dict"
+          ],
+          "properties": [
+            "data",
+            "x",
+            "y",
+            "depth",
+            "cube_id",
+            "slice_id",
+            "smoothing_window_m",
+            "envelope"
+          ]
+        },
+        {
+          "name": "StructuralMap",
+          "startLine": 113,
+          "endLine": 136,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "slice_data",
+            "signals",
+            "attribution_confidence",
+            "envelope"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "VpCube",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "VpSlice",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "StructuralMap",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "slice_velocity_cube",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "structural_attribution",
+          "line": 207,
+          "isDefault": false
+        },
+        {
+          "name": "bootstrap_structure",
+          "line": 301,
+          "isDefault": false
+        },
+        {
+          "name": "synth_cube_with_structure",
+          "line": 388,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__post_init__",
+          "callee": "ValueError",
+          "lineNumber": 46
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "hashlib.sha256(self.data.tobytes()).hexdigest",
+          "lineNumber": 48
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "hashlib.sha256",
+          "lineNumber": 48
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "self.data.tobytes",
+          "lineNumber": 48
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "np.clip",
+          "lineNumber": 49
+        },
+        {
+          "caller": "shape",
+          "callee": "tuple",
+          "lineNumber": 53
+        },
+        {
+          "caller": "to_dict",
+          "callee": "list",
+          "lineNumber": 58
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 59
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.x.min",
+          "lineNumber": 59
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 59
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.x.max",
+          "lineNumber": 59
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 60
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.y.min",
+          "lineNumber": 60
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 60
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.y.max",
+          "lineNumber": 60
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.z.min",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.z.max",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 62
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.min",
+          "lineNumber": 62
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 63
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.max",
+          "lineNumber": 63
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 64
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.mean",
+          "lineNumber": 64
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "ValueError",
+          "lineNumber": 86
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "int",
+          "lineNumber": 88
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "hashlib.sha256(self.data.tobytes()).hexdigest",
+          "lineNumber": 88
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "hashlib.sha256",
+          "lineNumber": 88
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "self.data.tobytes",
+          "lineNumber": 88
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "np.clip",
+          "lineNumber": 89
+        },
+        {
+          "caller": "shape",
+          "callee": "tuple",
+          "lineNumber": 93
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 98
+        },
+        {
+          "caller": "to_dict",
+          "callee": "list",
+          "lineNumber": 99
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 100
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.min",
+          "lineNumber": 100
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 101
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.max",
+          "lineNumber": 101
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 102
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.mean",
+          "lineNumber": 102
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 103
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.data.std",
+          "lineNumber": 103
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 104
+        },
+        {
+          "caller": "to_dict",
+          "callee": "list",
+          "lineNumber": 125
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 126
+        },
+        {
+          "caller": "to_dict",
+          "callee": "v.mean",
+          "lineNumber": 126
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.signals.items",
+          "lineNumber": 126
+        },
+        {
+          "caller": "to_dict",
+          "callee": "list",
+          "lineNumber": 127
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.signals.items",
+          "lineNumber": 127
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.signals.items",
+          "lineNumber": 132
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 133
+        },
+        {
+          "caller": "to_dict",
+          "callee": "arr.min",
+          "lineNumber": 133
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 134
+        },
+        {
+          "caller": "to_dict",
+          "callee": "arr.max",
+          "lineNumber": 134
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 135
+        },
+        {
+          "caller": "to_dict",
+          "callee": "arr.std",
+          "lineNumber": 135
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "z_arr.min",
+          "lineNumber": 149
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "z_arr.max",
+          "lineNumber": 149
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 150
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "np.clip",
+          "lineNumber": 150
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "z_arr.min",
+          "lineNumber": 150
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "z_arr.max",
+          "lineNumber": 150
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "int",
+          "lineNumber": 155
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "np.argmin",
+          "lineNumber": 155
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "np.abs",
+          "lineNumber": 155
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 156
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 159
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "len",
+          "lineNumber": 159
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "max",
+          "lineNumber": 160
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "int",
+          "lineNumber": 160
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "round",
+          "lineNumber": 160
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "max",
+          "lineNumber": 161
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "min",
+          "lineNumber": 162
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "len",
+          "lineNumber": 162
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "np.mean",
+          "lineNumber": 163
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "cube.data[:, :, z_idx].copy",
+          "lineNumber": 165
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 168
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 171
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "slice_2d.mean",
+          "lineNumber": 171
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 172
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "slice_2d.std",
+          "lineNumber": 172
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 173
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "slice_2d.min",
+          "lineNumber": 173
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "float",
+          "lineNumber": 174
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "slice_2d.max",
+          "lineNumber": 174
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "VpSlice",
+          "lineNumber": 181
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "cube.x.copy",
+          "lineNumber": 183
+        },
+        {
+          "caller": "slice_velocity_cube",
+          "callee": "cube.y.copy",
+          "lineNumber": 184
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "float",
+          "lineNumber": 219
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.mean",
+          "lineNumber": 219
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "float",
+          "lineNumber": 220
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.std",
+          "lineNumber": 220
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.std",
+          "lineNumber": 220
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.copy",
+          "lineNumber": 222
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "list",
+          "lineNumber": 224
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "physics9_catalog.keys",
+          "lineNumber": 224
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.array",
+          "lineNumber": 225
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "physics9_catalog[n].get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.abs",
+          "lineNumber": 226
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.argmin",
+          "lineNumber": 227
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.where",
+          "lineNumber": 229
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 231
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 235
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.power",
+          "lineNumber": 236
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 237
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.zeros_like",
+          "lineNumber": 239
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 242
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.maximum",
+          "lineNumber": 243
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 247
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "np.clip",
+          "lineNumber": 249
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "litho_id.astype",
+          "lineNumber": 253
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "enumerate",
+          "lineNumber": 269
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "float",
+          "lineNumber": 272
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "float",
+          "lineNumber": 273
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.min",
+          "lineNumber": 273
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "float",
+          "lineNumber": 273
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "vp.max",
+          "lineNumber": 273
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "len",
+          "lineNumber": 277
+        },
+        {
+          "caller": "structural_attribution",
+          "callee": "StructuralMap",
+          "lineNumber": 290
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "zip",
+          "lineNumber": 317
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 320
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "np.clip",
+          "lineNumber": 320
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "well_vp_obs.append",
+          "lineNumber": 322
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 322
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 324
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 324
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 327
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "np.clip",
+          "lineNumber": 327
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "well_vp_obs.append",
+          "lineNumber": 328
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "max",
+          "lineNumber": 332
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 333
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "np.interp",
+          "lineNumber": 333
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "sorted",
+          "lineNumber": 333
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "sorted",
+          "lineNumber": 333
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "slice_velocity_cube",
+          "lineNumber": 335
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 339
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "np.interp",
+          "lineNumber": 340
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 347
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "np.mean",
+          "lineNumber": 347
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "abs",
+          "lineNumber": 349
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 351
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "structural_attribution",
+          "lineNumber": 357
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "len",
+          "lineNumber": 360
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 361
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "float",
+          "lineNumber": 362
+        },
+        {
+          "caller": "bootstrap_structure",
+          "callee": "len",
+          "lineNumber": 366
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.random.default_rng",
+          "lineNumber": 413
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.linspace",
+          "lineNumber": 414
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.linspace",
+          "lineNumber": 415
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.linspace",
+          "lineNumber": 416
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.meshgrid",
+          "lineNumber": 417
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.exp",
+          "lineNumber": 426
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.where",
+          "lineNumber": 430
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "np.exp",
+          "lineNumber": 437
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "rng.normal",
+          "lineNumber": 439
+        },
+        {
+          "caller": "synth_cube_with_structure",
+          "callee": "VpCube",
+          "lineNumber": 441
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 4,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/telemetry/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/telemetry/geox_telemetry.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 281,
+      "nonEmptyLines": 244,
+      "functions": [
+        {
+          "name": "get_telemetry_emitter",
+          "startLine": 246,
+          "endLine": 250,
+          "params": []
+        },
+        {
+          "name": "telemetry_emit",
+          "startLine": 253,
+          "endLine": 281,
+          "params": [
+            "event_type",
+            "**kwargs"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ClaimTag",
+          "startLine": 28,
+          "endLine": 38,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GEOXTelemetryHeartbeat",
+          "startLine": 42,
+          "endLine": 64,
+          "methods": [
+            "__post_init__",
+            "to_dict"
+          ],
+          "properties": [
+            "organ",
+            "timestamp",
+            "uptime_ms",
+            "entropy_delta",
+            "peace_sq",
+            "dominant_claim",
+            "tools_used_count",
+            "last_tool",
+            "vault_receipts_count",
+            "active_apps",
+            "mcp_apps_plane_connected",
+            "arifos_registered",
+            "status"
+          ]
+        },
+        {
+          "name": "GEOXTelemetryEmitter",
+          "startLine": 67,
+          "endLine": 239,
+          "methods": [
+            "__init__",
+            "uptime_ms",
+            "emit_heartbeat",
+            "emit_tool_use",
+            "emit_ac_risk_result",
+            "emit_seismic_result",
+            "emit_well_result",
+            "emit_prospect_result",
+            "make_telemetry_receipt",
+            "full_diagnostic"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClaimTag",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "GEOXTelemetryHeartbeat",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "GEOXTelemetryEmitter",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "get_telemetry_emitter",
+          "line": 246,
+          "isDefault": false
+        },
+        {
+          "name": "telemetry_emit",
+          "line": 253,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__post_init__",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 61
+        },
+        {
+          "caller": "__post_init__",
+          "callee": "datetime.now",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_dict",
+          "callee": "asdict",
+          "lineNumber": 64
+        },
+        {
+          "caller": "__init__",
+          "callee": "os.environ.get",
+          "lineNumber": 79
+        },
+        {
+          "caller": "__init__",
+          "callee": "time.time",
+          "lineNumber": 80
+        },
+        {
+          "caller": "uptime_ms",
+          "callee": "time.time",
+          "lineNumber": 91
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "GEOXTelemetryHeartbeat",
+          "lineNumber": 95
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 97
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "datetime.now",
+          "lineNumber": 97
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "round",
+          "lineNumber": 98
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "round",
+          "lineNumber": 99
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "round",
+          "lineNumber": 100
+        },
+        {
+          "caller": "emit_heartbeat",
+          "callee": "heartbeat.to_dict",
+          "lineNumber": 110
+        },
+        {
+          "caller": "emit_tool_use",
+          "callee": "self._recent_tools.append",
+          "lineNumber": 116
+        },
+        {
+          "caller": "emit_tool_use",
+          "callee": "len",
+          "lineNumber": 117
+        },
+        {
+          "caller": "emit_tool_use",
+          "callee": "self._recent_tools.pop",
+          "lineNumber": 118
+        },
+        {
+          "caller": "emit_tool_use",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 126
+        },
+        {
+          "caller": "emit_tool_use",
+          "callee": "datetime.now",
+          "lineNumber": 126
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "verdict_entropy.get",
+          "lineNumber": 138
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "verdict_peace.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "round",
+          "lineNumber": 153
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "round",
+          "lineNumber": 155
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "round",
+          "lineNumber": 156
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 157
+        },
+        {
+          "caller": "emit_ac_risk_result",
+          "callee": "datetime.now",
+          "lineNumber": 157
+        },
+        {
+          "caller": "emit_seismic_result",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 168
+        },
+        {
+          "caller": "emit_seismic_result",
+          "callee": "datetime.now",
+          "lineNumber": 168
+        },
+        {
+          "caller": "emit_well_result",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 178
+        },
+        {
+          "caller": "emit_well_result",
+          "callee": "datetime.now",
+          "lineNumber": 178
+        },
+        {
+          "caller": "emit_prospect_result",
+          "callee": "verdict_peace.get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "emit_prospect_result",
+          "callee": "round",
+          "lineNumber": 191
+        },
+        {
+          "caller": "emit_prospect_result",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 192
+        },
+        {
+          "caller": "emit_prospect_result",
+          "callee": "datetime.now",
+          "lineNumber": 192
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "json.dumps",
+          "lineNumber": 197
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "hashlib.sha256(f\"telemetry:{canonical}\".encode()).hexdigest",
+          "lineNumber": 198
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "hashlib.sha256",
+          "lineNumber": 198
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "f\"telemetry:{canonical}\".encode",
+          "lineNumber": 198
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 203
+        },
+        {
+          "caller": "make_telemetry_receipt",
+          "callee": "datetime.now",
+          "lineNumber": 203
+        },
+        {
+          "caller": "full_diagnostic",
+          "callee": "round",
+          "lineNumber": 213
+        },
+        {
+          "caller": "full_diagnostic",
+          "callee": "round",
+          "lineNumber": 229
+        },
+        {
+          "caller": "full_diagnostic",
+          "callee": "round",
+          "lineNumber": 230
+        },
+        {
+          "caller": "full_diagnostic",
+          "callee": "self.emit_heartbeat",
+          "lineNumber": 238
+        },
+        {
+          "caller": "get_telemetry_emitter",
+          "callee": "GEOXTelemetryEmitter",
+          "lineNumber": 249
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "get_telemetry_emitter",
+          "lineNumber": 264
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_heartbeat",
+          "lineNumber": 267
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_tool_use",
+          "lineNumber": 269
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_ac_risk_result",
+          "lineNumber": 271
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_seismic_result",
+          "lineNumber": 273
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_well_result",
+          "lineNumber": 275
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.emit_prospect_result",
+          "lineNumber": 277
+        },
+        {
+          "caller": "telemetry_emit",
+          "callee": "emitter.make_telemetry_receipt",
+          "lineNumber": 281
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 2,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/viz/markdown_chart.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "markdown_bar",
+          "startLine": 12,
+          "endLine": 16,
+          "params": [
+            "label",
+            "value",
+            "max_value",
+            "width"
+          ]
+        },
+        {
+          "name": "risk_spider_markdown",
+          "startLine": 19,
+          "endLine": 26,
+          "params": [
+            "dimensions",
+            "scale"
+          ]
+        },
+        {
+          "name": "tornado_markdown",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "cases",
+            "value_key",
+            "label_key"
+          ]
+        },
+        {
+          "name": "decision_panel_markdown",
+          "startLine": 37,
+          "endLine": 48,
+          "params": [
+            "obs",
+            "der",
+            "inter",
+            "spec"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "markdown_bar",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "risk_spider_markdown",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "tornado_markdown",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "decision_panel_markdown",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "markdown_bar",
+          "callee": "max",
+          "lineNumber": 13
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "float",
+          "lineNumber": 13
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "max",
+          "lineNumber": 14
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "abs",
+          "lineNumber": 14
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "int",
+          "lineNumber": 15
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "round",
+          "lineNumber": 15
+        },
+        {
+          "caller": "markdown_bar",
+          "callee": "min",
+          "lineNumber": 15
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "lines.append",
+          "lineNumber": 22
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "dimensions.items",
+          "lineNumber": 23
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "lines.append",
+          "lineNumber": 24
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "markdown_bar",
+          "lineNumber": 24
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "float",
+          "lineNumber": 24
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "lines.append",
+          "lineNumber": 25
+        },
+        {
+          "caller": "risk_spider_markdown",
+          "callee": "\"\\n\".join",
+          "lineNumber": 26
+        },
+        {
+          "caller": "tornado_markdown",
+          "callee": "lines.append",
+          "lineNumber": 33
+        },
+        {
+          "caller": "tornado_markdown",
+          "callee": "c.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "tornado_markdown",
+          "callee": "c.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "tornado_markdown",
+          "callee": "\"\\n\".join",
+          "lineNumber": 34
+        },
+        {
+          "caller": "decision_panel_markdown",
+          "callee": "'; '.join",
+          "lineNumber": 43
+        },
+        {
+          "caller": "decision_panel_markdown",
+          "callee": "'; '.join",
+          "lineNumber": 44
+        },
+        {
+          "caller": "decision_panel_markdown",
+          "callee": "'; '.join",
+          "lineNumber": 45
+        },
+        {
+          "caller": "decision_panel_markdown",
+          "callee": "'; '.join",
+          "lineNumber": 46
+        },
+        {
+          "caller": "decision_panel_markdown",
+          "callee": "\"\\n\".join",
+          "lineNumber": 48
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/canon/WEALTH_HARNESS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 90,
+      "nonEmptyLines": 70,
+      "sections": [
+        {
+          "heading": "WEALTH_HARNESS.md — The 9-Harness Constraint Architecture",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "I. Overview",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "II. The 9 Harnesses",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "🧠 1. Identity Harness (Anchor Harness)",
+          "level": 3,
+          "line": 17
+        },
+        {
+          "heading": "📊 2. Reality Harness (Grounding Harness)",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "📐 3. Epistemic Harness (Anti-Delusion Harness)",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "📈 4. Entropy Harness (Risk Containment Harness)",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "🧱 5. Structural Load Harness (Survival Harness)",
+          "level": 3,
+          "line": 41
+        },
+        {
+          "heading": "⚖️ 6. Constitutional Harness (Floor Harness)",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "🎯 7. Efficiency Harness (Capital Discipline Harness)",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "🤝 8. Coordination Harness (Multi-Agent Stability Harness)",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "🌍 9. Civilization Harness (Long-Horizon Harness)",
+          "level": 3,
+          "line": 65
+        },
+        {
+          "heading": "III. Harness Violation Summary",
+          "level": 2,
+          "line": 73
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/harness_engine.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 124,
+      "nonEmptyLines": 104,
+      "classes": [
+        {
+          "name": "HarnessEngine",
+          "startLine": 13,
+          "endLine": 124,
+          "methods": [
+            "get_doctrine_hash",
+            "get_lineage_hash",
+            "audit"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "HarnessEngine",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "os.path.dirname",
+          "lineNumber": 24
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "os.path.join",
+          "lineNumber": 25
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "os.path.exists",
+          "lineNumber": 26
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "open",
+          "lineNumber": 27
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "hashlib.sha256(f.read().encode()).hexdigest",
+          "lineNumber": 28
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 28
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "f.read().encode",
+          "lineNumber": 28
+        },
+        {
+          "caller": "get_doctrine_hash",
+          "callee": "f.read",
+          "lineNumber": 28
+        },
+        {
+          "caller": "get_lineage_hash",
+          "callee": "inspect.getsource",
+          "lineNumber": 40
+        },
+        {
+          "caller": "get_lineage_hash",
+          "callee": "hashlib.sha256(source.encode()).hexdigest",
+          "lineNumber": 41
+        },
+        {
+          "caller": "get_lineage_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 41
+        },
+        {
+          "caller": "get_lineage_hash",
+          "callee": "source.encode",
+          "lineNumber": 41
+        },
+        {
+          "caller": "audit",
+          "callee": "len",
+          "lineNumber": 64
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Identity\"].update",
+          "lineNumber": 65
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 66
+        },
+        {
+          "caller": "audit",
+          "callee": "any",
+          "lineNumber": 69
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Reality\"].update",
+          "lineNumber": 70
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 71
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Epistemic\"].update",
+          "lineNumber": 75
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 76
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Entropy\"].update",
+          "lineNumber": 80
+        },
+        {
+          "caller": "audit",
+          "callee": "any",
+          "lineNumber": 83
+        },
+        {
+          "caller": "audit",
+          "callee": "f.startswith",
+          "lineNumber": 83
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Constitutional\"].update",
+          "lineNumber": 84
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 85
+        },
+        {
+          "caller": "audit",
+          "callee": "primary.get",
+          "lineNumber": 89
+        },
+        {
+          "caller": "audit",
+          "callee": "primary.get",
+          "lineNumber": 90
+        },
+        {
+          "caller": "audit",
+          "callee": "primary.get",
+          "lineNumber": 91
+        },
+        {
+          "caller": "audit",
+          "callee": "max",
+          "lineNumber": 94
+        },
+        {
+          "caller": "audit",
+          "callee": "max",
+          "lineNumber": 95
+        },
+        {
+          "caller": "audit",
+          "callee": "primary.get",
+          "lineNumber": 97
+        },
+        {
+          "caller": "audit",
+          "callee": "primary.get",
+          "lineNumber": 98
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status[\"Civilization\"].update",
+          "lineNumber": 101
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 104
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 106
+        },
+        {
+          "caller": "audit",
+          "callee": "sum",
+          "lineNumber": 109
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status.values",
+          "lineNumber": 109
+        },
+        {
+          "caller": "audit",
+          "callee": "violations.append",
+          "lineNumber": 111
+        },
+        {
+          "caller": "audit",
+          "callee": "any",
+          "lineNumber": 114
+        },
+        {
+          "caller": "audit",
+          "callee": "harness_status.values",
+          "lineNumber": 114
+        },
+        {
+          "caller": "audit",
+          "callee": "round",
+          "lineNumber": 121
+        },
+        {
+          "caller": "audit",
+          "callee": "self.get_lineage_hash",
+          "lineNumber": 122
+        },
+        {
+          "caller": "audit",
+          "callee": "self.get_doctrine_hash",
+          "lineNumber": 123
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/valuation_engine.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 56,
+      "functions": [
+        {
+          "name": "compute_sovereign_valuation",
+          "startLine": 14,
+          "endLine": 66,
+          "params": [
+            "psv",
+            "capex",
+            "opex_per_year",
+            "price_per_unit",
+            "discount_rate",
+            "parent_chain_hash"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "compute_sovereign_valuation",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_sovereign_valuation",
+          "callee": "compute_capital_x_rate",
+          "lineNumber": 35
+        },
+        {
+          "caller": "compute_sovereign_valuation",
+          "callee": "compute_emv",
+          "lineNumber": 38
+        },
+        {
+          "caller": "compute_sovereign_valuation",
+          "callee": "compute_npv",
+          "lineNumber": 39
+        },
+        {
+          "caller": "compute_sovereign_valuation",
+          "callee": "HarnessEngine",
+          "lineNumber": 42
+        },
+        {
+          "caller": "compute_sovereign_valuation",
+          "callee": "engine.audit",
+          "lineNumber": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/volumetric_mc.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 142,
+      "nonEmptyLines": 124,
+      "functions": [
+        {
+          "name": "_lognormal_samples",
+          "startLine": 17,
+          "endLine": 29,
+          "params": [
+            "p10",
+            "p50",
+            "p90",
+            "n",
+            "rng"
+          ]
+        },
+        {
+          "name": "stoiip_monte_carlo",
+          "startLine": 32,
+          "endLine": 103,
+          "params": [
+            "area_km2_p10",
+            "area_km2_p50",
+            "area_km2_p90",
+            "h_m_p10",
+            "h_m_p50",
+            "h_m_p90",
+            "ntg_p10",
+            "ntg_p50",
+            "ntg_p90",
+            "phi_p10",
+            "phi_p50",
+            "phi_p90",
+            "so_p10",
+            "so_p50",
+            "so_p90",
+            "bo_p10",
+            "bo_p50",
+            "bo_p90",
+            "n_sims",
+            "seed"
+          ]
+        },
+        {
+          "name": "emv_from_stoiip_mc",
+          "startLine": 106,
+          "endLine": 142,
+          "params": [
+            "stoiip",
+            "pos",
+            "value_per_mmstb_usd_mm",
+            "dry_hole_cost_usd_mm",
+            "recovery_factor"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_lognormal_samples",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "stoiip_monte_carlo",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "emv_from_stoiip_mc",
+          "line": 106,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_lognormal_samples",
+          "callee": "float",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "float",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "float",
+          "lineNumber": 23
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "max",
+          "lineNumber": 24
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "max",
+          "lineNumber": 24
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "max",
+          "lineNumber": 24
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "np.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "max",
+          "lineNumber": 28
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "np.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "np.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "_lognormal_samples",
+          "callee": "rng.lognormal",
+          "lineNumber": 29
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.random.default_rng",
+          "lineNumber": 59
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "int",
+          "lineNumber": 60
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "max",
+          "lineNumber": 60
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "min",
+          "lineNumber": 60
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 63
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 65
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.clip",
+          "lineNumber": 67
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 67
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.clip",
+          "lineNumber": 68
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 68
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.clip",
+          "lineNumber": 69
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 69
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.clip",
+          "lineNumber": 70
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "_lognormal_samples",
+          "lineNumber": 70
+        },
+        {
+          "caller": "pct",
+          "callee": "float",
+          "lineNumber": 76
+        },
+        {
+          "caller": "pct",
+          "callee": "np.percentile",
+          "lineNumber": 76
+        },
+        {
+          "caller": "pct",
+          "callee": "float",
+          "lineNumber": 76
+        },
+        {
+          "caller": "pct",
+          "callee": "np.percentile",
+          "lineNumber": 76
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "float",
+          "lineNumber": 79
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.percentile",
+          "lineNumber": 79
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "float",
+          "lineNumber": 80
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.percentile",
+          "lineNumber": 80
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "float",
+          "lineNumber": 81
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.percentile",
+          "lineNumber": 81
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "round",
+          "lineNumber": 87
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "round",
+          "lineNumber": 87
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "round",
+          "lineNumber": 87
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "round",
+          "lineNumber": 88
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "float",
+          "lineNumber": 88
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.mean",
+          "lineNumber": 88
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "round",
+          "lineNumber": 89
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "float",
+          "lineNumber": 89
+        },
+        {
+          "caller": "stoiip_monte_carlo",
+          "callee": "np.std",
+          "lineNumber": 89
+        },
+        {
+          "caller": "emv_from_stoiip_mc",
+          "callee": "abs",
+          "lineNumber": 125
+        },
+        {
+          "caller": "emv_from_stoiip_mc",
+          "callee": "compute_emv",
+          "lineNumber": 127
+        },
+        {
+          "caller": "emv_from_stoiip_mc",
+          "callee": "round",
+          "lineNumber": 132
+        },
+        {
+          "caller": "emv_from_stoiip_mc",
+          "callee": "round",
+          "lineNumber": 133
+        },
+        {
+          "caller": "emv_from_stoiip_mc",
+          "callee": "round",
+          "lineNumber": 134
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/wealth/wealth_score_kernel.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 74,
+      "functions": [
+        {
+          "name": "compute_npv",
+          "startLine": 15,
+          "endLine": 20,
+          "params": [
+            "initial_investment",
+            "cash_flows",
+            "discount_rate"
+          ]
+        },
+        {
+          "name": "compute_emv",
+          "startLine": 23,
+          "endLine": 26,
+          "params": [
+            "scenarios"
+          ]
+        },
+        {
+          "name": "compute_capital_x_rate",
+          "startLine": 29,
+          "endLine": 36,
+          "params": [
+            "base_rate",
+            "d_s",
+            "maruah",
+            "peace2"
+          ]
+        },
+        {
+          "name": "geox_to_wealth_score",
+          "startLine": 42,
+          "endLine": 97,
+          "params": [
+            "substrate_evidence",
+            "base_rate",
+            "parent_chain_hash"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "compute_npv",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "compute_emv",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "compute_capital_x_rate",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "geox_to_wealth_score",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_npv",
+          "callee": "abs",
+          "lineNumber": 17
+        },
+        {
+          "caller": "compute_npv",
+          "callee": "enumerate",
+          "lineNumber": 18
+        },
+        {
+          "caller": "compute_npv",
+          "callee": "pow",
+          "lineNumber": 19
+        },
+        {
+          "caller": "compute_npv",
+          "callee": "round",
+          "lineNumber": 20
+        },
+        {
+          "caller": "compute_emv",
+          "callee": "sum",
+          "lineNumber": 25
+        },
+        {
+          "caller": "compute_emv",
+          "callee": "s.get",
+          "lineNumber": 25
+        },
+        {
+          "caller": "compute_emv",
+          "callee": "s.get",
+          "lineNumber": 25
+        },
+        {
+          "caller": "compute_emv",
+          "callee": "round",
+          "lineNumber": 26
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "max",
+          "lineNumber": 31
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "min",
+          "lineNumber": 32
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "max",
+          "lineNumber": 32
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "min",
+          "lineNumber": 33
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "max",
+          "lineNumber": 33
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "max",
+          "lineNumber": 36
+        },
+        {
+          "caller": "compute_capital_x_rate",
+          "callee": "round",
+          "lineNumber": 36
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "Field",
+          "lineNumber": 43
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "Field",
+          "lineNumber": 44
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "Field",
+          "lineNumber": 45
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "HarnessEngine",
+          "lineNumber": 51
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 54
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 55
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "flags.append",
+          "lineNumber": 56
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 59
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 60
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get(\"primary_result\", {}).get",
+          "lineNumber": 61
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 61
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "engine.audit",
+          "lineNumber": 65
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 77
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 77
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "compute_capital_x_rate",
+          "lineNumber": 78
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 80
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "compute_emv",
+          "lineNumber": 84
+        },
+        {
+          "caller": "geox_to_wealth_score",
+          "callee": "substrate_evidence.get",
+          "lineNumber": 96
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/well/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 16,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/well/stratigraphy/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

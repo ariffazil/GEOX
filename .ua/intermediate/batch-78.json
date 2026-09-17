@@ -1,0 +1,705 @@
+{
+  "nodes": [
+    {
+      "id": "file:contracts/tools/canonical/prospect.py",
+      "type": "file",
+      "name": "prospect.py",
+      "filePath": "contracts/tools/canonical/prospect.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/prospect.py:geox_prospect_evaluate",
+      "type": "function",
+      "name": "geox_prospect_evaluate",
+      "filePath": "contracts/tools/canonical/prospect.py",
+      "lineRange": [
+        16,
+        149
+      ],
+      "summary": "geox_prospect_evaluate(prospect_ref, mode, evidence_refs) — 133 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_preview",
+      "type": "function",
+      "name": "geox_prospect_judge_preview",
+      "filePath": "contracts/tools/canonical/prospect.py",
+      "lineRange": [
+        152,
+        181
+      ],
+      "summary": "geox_prospect_judge_preview(prospect_ref, ac_risk_score) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_seal",
+      "type": "function",
+      "name": "geox_prospect_judge_seal",
+      "filePath": "contracts/tools/canonical/prospect.py",
+      "lineRange": [
+        184,
+        257
+      ],
+      "summary": "geox_prospect_judge_seal(prospect_ref, ac_risk_score, ack_irreversible, judge_pin) — 73 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_verdict",
+      "type": "function",
+      "name": "geox_prospect_judge_verdict",
+      "filePath": "contracts/tools/canonical/prospect.py",
+      "lineRange": [
+        261,
+        276
+      ],
+      "summary": "geox_prospect_judge_verdict(prospect_ref, ac_risk_score, ack_irreversible, judge_pin) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/tools/canonical/qc.py",
+      "type": "file",
+      "name": "qc.py",
+      "filePath": "contracts/tools/canonical/qc.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/qc.py:geox_data_qc_bundle",
+      "type": "function",
+      "name": "geox_data_qc_bundle",
+      "filePath": "contracts/tools/canonical/qc.py",
+      "lineRange": [
+        26,
+        356
+      ],
+      "summary": "geox_data_qc_bundle(artifact_ref, artifact_type, qc_mode) — 330 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:contracts/tools/canonical/registry.py",
+      "type": "file",
+      "name": "registry.py",
+      "filePath": "contracts/tools/canonical/registry.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/registry.py:geox_system_registry_status",
+      "type": "function",
+      "name": "geox_system_registry_status",
+      "filePath": "contracts/tools/canonical/registry.py",
+      "lineRange": [
+        18,
+        78
+      ],
+      "summary": "geox_system_registry_status(session_id, actor_id) — 60 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/canonical/registry.py:geox_history_audit",
+      "type": "function",
+      "name": "geox_history_audit",
+      "filePath": "contracts/tools/canonical/registry.py",
+      "lineRange": [
+        82,
+        244
+      ],
+      "summary": "geox_history_audit(query, limit, actor_id, session_id) — 162 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:contracts/tools/canonical/subsurface.py",
+      "type": "file",
+      "name": "subsurface.py",
+      "filePath": "contracts/tools/canonical/subsurface.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/canonical/subsurface.py:geox_subsurface_generate_candidates",
+      "type": "function",
+      "name": "geox_subsurface_generate_candidates",
+      "filePath": "contracts/tools/canonical/subsurface.py",
+      "lineRange": [
+        22,
+        140
+      ],
+      "summary": "geox_subsurface_generate_candidates(target_class, evidence_refs, realizations, gr_clean, gr_shale, vsh_method, matrix_density, fluid_density, sw_model, rw, archie_a, archie_m, archie_n, vsh_cutoff, phi_cutoff, sw_cutoff, rt_cutoff, zone_top_m, zone_base_m) — 118 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/subsurface.py:geox_subsurface_verify_integrity",
+      "type": "function",
+      "name": "geox_subsurface_verify_integrity",
+      "filePath": "contracts/tools/canonical/subsurface.py",
+      "lineRange": [
+        143,
+        176
+      ],
+      "summary": "geox_subsurface_verify_integrity(candidate_ref, domain) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/canonical/time4d.py",
+      "type": "file",
+      "name": "time4d.py",
+      "filePath": "contracts/tools/canonical/time4d.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/time4d.py:geox_time4d_analyze_system",
+      "type": "function",
+      "name": "geox_time4d_analyze_system",
+      "filePath": "contracts/tools/canonical/time4d.py",
+      "lineRange": [
+        12,
+        52
+      ],
+      "summary": "geox_time4d_analyze_system(prospect_ref, mode, evidence_refs) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/unified_13.py",
+      "type": "file",
+      "name": "unified_13.py",
+      "filePath": "contracts/tools/unified_13.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/unified_13.py:dispatch_alias",
+      "type": "function",
+      "name": "dispatch_alias",
+      "filePath": "contracts/tools/unified_13.py",
+      "lineRange": [
+        53,
+        74
+      ],
+      "summary": "dispatch_alias(old_name, canonical_name) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/unified_13.py:geox_health_check",
+      "type": "function",
+      "name": "geox_health_check",
+      "filePath": "contracts/tools/unified_13.py",
+      "lineRange": [
+        78,
+        92
+      ],
+      "summary": "geox_health_check() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/unified_13.py:register_unified_tools",
+      "type": "function",
+      "name": "register_unified_tools",
+      "filePath": "contracts/tools/unified_13.py",
+      "lineRange": [
+        123,
+        177
+      ],
+      "summary": "register_unified_tools(mcp, profile) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/well_correlation.py",
+      "type": "file",
+      "name": "well_correlation.py",
+      "filePath": "contracts/tools/well_correlation.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/well_correlation.py:register_well_correlation_tools",
+      "type": "function",
+      "name": "register_well_correlation_tools",
+      "filePath": "contracts/tools/well_correlation.py",
+      "lineRange": [
+        25,
+        348
+      ],
+      "summary": "register_well_correlation_tools(mcp) — 323 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/well_correlation.py:_error_response",
+      "type": "function",
+      "name": "_error_response",
+      "filePath": "contracts/tools/well_correlation.py",
+      "lineRange": [
+        353,
+        362
+      ],
+      "summary": "_error_response(error_code, message, wells_failed) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/well_correlation.py:_curve_unit",
+      "type": "function",
+      "name": "_curve_unit",
+      "filePath": "contracts/tools/well_correlation.py",
+      "lineRange": [
+        365,
+        374
+      ],
+      "summary": "_curve_unit(canon) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/well_correlation.py:_make_vault_receipt",
+      "type": "function",
+      "name": "_make_vault_receipt",
+      "filePath": "contracts/tools/well_correlation.py",
+      "lineRange": [
+        377,
+        392
+      ],
+      "summary": "_make_vault_receipt(tool_name, payload) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/well_correlation.py:_json_deterministic",
+      "type": "function",
+      "name": "_json_deterministic",
+      "filePath": "contracts/tools/well_correlation.py",
+      "lineRange": [
+        395,
+        397
+      ],
+      "summary": "_json_deterministic(obj) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/atlas/countries.geojson",
+      "type": "file",
+      "name": "countries.geojson",
+      "filePath": "data/atlas/countries.geojson",
+      "summary": "geojson code file (185 non-empty lines).",
+      "tags": [
+        "code",
+        "geojson"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:data/atlas/layers/earth_layers.json",
+      "type": "config",
+      "name": "earth_layers.json",
+      "filePath": "data/atlas/layers/earth_layers.json",
+      "summary": "json config file (354 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/atlas/malaysia.geojson",
+      "type": "file",
+      "name": "malaysia.geojson",
+      "filePath": "data/atlas/malaysia.geojson",
+      "summary": "geojson code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "geojson"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/atlas/sea_neighbors.geojson",
+      "type": "file",
+      "name": "sea_neighbors.geojson",
+      "filePath": "data/atlas/sea_neighbors.geojson",
+      "summary": "geojson code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "geojson"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/egs/receipts/index.jsonl",
+      "type": "file",
+      "name": "index.jsonl",
+      "filePath": "data/egs/receipts/index.jsonl",
+      "summary": "jsonl code file (110 non-empty lines).",
+      "tags": [
+        "code",
+        "jsonl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:data/emc_real/IODP386_M0087B_XRD.tab",
+      "type": "file",
+      "name": "IODP386_M0087B_XRD.tab",
+      "filePath": "data/emc_real/IODP386_M0087B_XRD.tab",
+      "summary": "tab code file (47 non-empty lines).",
+      "tags": [
+        "code",
+        "tab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/emc_real/IODP386_M0087B_XRF.tab",
+      "type": "file",
+      "name": "IODP386_M0087B_XRF.tab",
+      "filePath": "data/emc_real/IODP386_M0087B_XRF.tab",
+      "summary": "tab code file (35 non-empty lines).",
+      "tags": [
+        "code",
+        "tab"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/emc_real/Volve_15_9-F-11A.LAS",
+      "type": "file",
+      "name": "Volve_15_9-F-11A.LAS",
+      "filePath": "data/emc_real/Volve_15_9-F-11A.LAS",
+      "summary": "las code file (25063 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/emc_real/emc_real_provenance.jsonl",
+      "type": "file",
+      "name": "emc_real_provenance.jsonl",
+      "filePath": "data/emc_real/emc_real_provenance.jsonl",
+      "summary": "jsonl code file (2 non-empty lines).",
+      "tags": [
+        "code",
+        "jsonl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:data/evidence/PROSPECT_ALPHA.json",
+      "type": "config",
+      "name": "PROSPECT_ALPHA.json",
+      "filePath": "data/evidence/PROSPECT_ALPHA.json",
+      "summary": "json config file (52 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:data/evidence/W-101.json",
+      "type": "config",
+      "name": "W-101.json",
+      "filePath": "data/evidence/W-101.json",
+      "summary": "json config file (58 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:data/geox_las/CHATGPT_POST_PUSH_SMOKE.las",
+      "type": "file",
+      "name": "CHATGPT_POST_PUSH_SMOKE.las",
+      "filePath": "data/geox_las/CHATGPT_POST_PUSH_SMOKE.las",
+      "summary": "las code file (20 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+      "type": "file",
+      "name": "CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+      "filePath": "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+      "summary": "las code file (20860 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/geox_las/LIVE_HARDENED_BAD.las",
+      "type": "file",
+      "name": "LIVE_HARDENED_BAD.las",
+      "filePath": "data/geox_las/LIVE_HARDENED_BAD.las",
+      "summary": "las code file (21 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/geox_las/LIVE_HARDENED_PASS.las",
+      "type": "file",
+      "name": "LIVE_HARDENED_PASS.las",
+      "filePath": "data/geox_las/LIVE_HARDENED_PASS.las",
+      "summary": "las code file (21 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/geox_las/QQQ_FFF_test_well.las",
+      "type": "file",
+      "name": "QQQ_FFF_test_well.las",
+      "filePath": "data/geox_las/QQQ_FFF_test_well.las",
+      "summary": "las code file (2116 non-empty lines).",
+      "tags": [
+        "code",
+        "las",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/geox_las/bad_well.las",
+      "type": "file",
+      "name": "bad_well.las",
+      "filePath": "data/geox_las/bad_well.las",
+      "summary": "las code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/geox_las/empty_well.las",
+      "type": "file",
+      "name": "empty_well.las",
+      "filePath": "data/geox_las/empty_well.las",
+      "summary": "las code file (7 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:contracts/tools/canonical/prospect.py",
+      "target": "function:contracts/tools/canonical/prospect.py:geox_prospect_evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/prospect.py",
+      "target": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_preview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/prospect.py",
+      "target": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_seal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/prospect.py",
+      "target": "function:contracts/tools/canonical/prospect.py:geox_prospect_judge_verdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/qc.py",
+      "target": "function:contracts/tools/canonical/qc.py:geox_data_qc_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/registry.py",
+      "target": "function:contracts/tools/canonical/registry.py:geox_system_registry_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/registry.py",
+      "target": "function:contracts/tools/canonical/registry.py:geox_history_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/subsurface.py",
+      "target": "function:contracts/tools/canonical/subsurface.py:geox_subsurface_generate_candidates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/subsurface.py",
+      "target": "function:contracts/tools/canonical/subsurface.py:geox_subsurface_verify_integrity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/time4d.py",
+      "target": "function:contracts/tools/canonical/time4d.py:geox_time4d_analyze_system",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/unified_13.py",
+      "target": "function:contracts/tools/unified_13.py:dispatch_alias",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/unified_13.py",
+      "target": "function:contracts/tools/unified_13.py:geox_health_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/unified_13.py",
+      "target": "function:contracts/tools/unified_13.py:register_unified_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/well_correlation.py",
+      "target": "function:contracts/tools/well_correlation.py:register_well_correlation_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/well_correlation.py",
+      "target": "function:contracts/tools/well_correlation.py:_error_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/well_correlation.py",
+      "target": "function:contracts/tools/well_correlation.py:_curve_unit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/well_correlation.py",
+      "target": "function:contracts/tools/well_correlation.py:_make_vault_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/well_correlation.py",
+      "target": "function:contracts/tools/well_correlation.py:_json_deterministic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

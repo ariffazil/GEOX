@@ -1,0 +1,3056 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_mcp/tools/provenance_bridge.py",
+      "type": "file",
+      "name": "provenance_bridge.py",
+      "filePath": "src/geox_mcp/tools/provenance_bridge.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_bridge.py:enrich_layer_provenance",
+      "type": "function",
+      "name": "enrich_layer_provenance",
+      "filePath": "src/geox_mcp/tools/provenance_bridge.py",
+      "lineRange": [
+        55,
+        80
+      ],
+      "summary": "enrich_layer_provenance(layer_id) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_bridge.py:enrich_batch_provenance",
+      "type": "function",
+      "name": "enrich_batch_provenance",
+      "filePath": "src/geox_mcp/tools/provenance_bridge.py",
+      "lineRange": [
+        83,
+        93
+      ],
+      "summary": "enrich_batch_provenance(layer_ids) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_bridge.py:provenance_coverage",
+      "type": "function",
+      "name": "provenance_coverage",
+      "filePath": "src/geox_mcp/tools/provenance_bridge.py",
+      "lineRange": [
+        96,
+        110
+      ],
+      "summary": "provenance_coverage(layer_ids) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/provenance_gpts.py",
+      "type": "file",
+      "name": "provenance_gpts.py",
+      "filePath": "src/geox_mcp/tools/provenance_gpts.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_gpts.py:geox_provenance_gpts",
+      "type": "function",
+      "name": "geox_provenance_gpts",
+      "filePath": "src/geox_mcp/tools/provenance_gpts.py",
+      "lineRange": [
+        86,
+        367
+      ],
+      "summary": "geox_provenance_gpts(interval_name, age_ma, interval_top_ma, interval_base_ma, include_raw_csv) — 281 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_gpts.py:_resolve_chron_by_name",
+      "type": "function",
+      "name": "_resolve_chron_by_name",
+      "filePath": "src/geox_mcp/tools/provenance_gpts.py",
+      "lineRange": [
+        373,
+        396
+      ],
+      "summary": "_resolve_chron_by_name(name) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_gpts.py:_resolve_subchron_by_name",
+      "type": "function",
+      "name": "_resolve_subchron_by_name",
+      "filePath": "src/geox_mcp/tools/provenance_gpts.py",
+      "lineRange": [
+        399,
+        418
+      ],
+      "summary": "_resolve_subchron_by_name(name) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/provenance_gpts.py:_build_not_found",
+      "type": "function",
+      "name": "_build_not_found",
+      "filePath": "src/geox_mcp/tools/provenance_gpts.py",
+      "lineRange": [
+        421,
+        448
+      ],
+      "summary": "_build_not_found(interval_name, age_ma) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/qc.py",
+      "type": "file",
+      "name": "qc.py",
+      "filePath": "src/geox_mcp/tools/qc.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/qc.py:_normalize_artifact_ref_for_ingestor",
+      "type": "function",
+      "name": "_normalize_artifact_ref_for_ingestor",
+      "filePath": "src/geox_mcp/tools/qc.py",
+      "lineRange": [
+        27,
+        65
+      ],
+      "summary": "_normalize_artifact_ref_for_ingestor(artifact_ref) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/qc.py:geox_data_qc_bundle",
+      "type": "function",
+      "name": "geox_data_qc_bundle",
+      "filePath": "src/geox_mcp/tools/qc.py",
+      "lineRange": [
+        68,
+        965
+      ],
+      "summary": "geox_data_qc_bundle(artifact_ref, artifact_type, qc_mode, samples, existing_features, candidate_feature, target_key, session_id, actor_id, trace_id) — 897 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/qc.py:_qc_feature_info",
+      "type": "function",
+      "name": "_qc_feature_info",
+      "filePath": "src/geox_mcp/tools/qc.py",
+      "lineRange": [
+        975,
+        1083
+      ],
+      "summary": "_qc_feature_info(samples, existing_features, candidate_feature, target_key) — 108 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/registry.py",
+      "type": "file",
+      "name": "registry.py",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "summary": "Defines 10 function(s); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:_get_git_version",
+      "type": "function",
+      "name": "_get_git_version",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        8,
+        22
+      ],
+      "summary": "_get_git_version() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:_load_generated_public_surface",
+      "type": "function",
+      "name": "_load_generated_public_surface",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        40,
+        47
+      ],
+      "summary": "_load_generated_public_surface() — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:_load_plugin_export_surface",
+      "type": "function",
+      "name": "_load_plugin_export_surface",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        50,
+        75
+      ],
+      "summary": "_load_plugin_export_surface() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:_load_runtime_callable_public_surface",
+      "type": "function",
+      "name": "_load_runtime_callable_public_surface",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        78,
+        102
+      ],
+      "summary": "_load_runtime_callable_public_surface() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_system_registry_status",
+      "type": "function",
+      "name": "geox_system_registry_status",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        105,
+        265
+      ],
+      "summary": "geox_system_registry_status(session_id, actor_id) — 160 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_history_audit",
+      "type": "function",
+      "name": "geox_history_audit",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        268,
+        445
+      ],
+      "summary": "geox_history_audit(query, limit, actor_id, session_id) — 177 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_contradiction_registry_status",
+      "type": "function",
+      "name": "geox_contradiction_registry_status",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        453,
+        568
+      ],
+      "summary": "geox_contradiction_registry_status(session_id, actor_id) — 115 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_test_receipt_status",
+      "type": "function",
+      "name": "geox_test_receipt_status",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        576,
+        713
+      ],
+      "summary": "geox_test_receipt_status() — 137 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_bundle_security_audit",
+      "type": "function",
+      "name": "geox_bundle_security_audit",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        721,
+        799
+      ],
+      "summary": "geox_bundle_security_audit() — 78 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/registry.py:geox_resource_registry_status",
+      "type": "function",
+      "name": "geox_resource_registry_status",
+      "filePath": "src/geox_mcp/tools/registry.py",
+      "lineRange": [
+        807,
+        872
+      ],
+      "summary": "geox_resource_registry_status() — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/section.py",
+      "type": "file",
+      "name": "section.py",
+      "filePath": "src/geox_mcp/tools/section.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section.py:geox_section_interpret_correlation",
+      "type": "function",
+      "name": "geox_section_interpret_correlation",
+      "filePath": "src/geox_mcp/tools/section.py",
+      "lineRange": [
+        21,
+        411
+      ],
+      "summary": "geox_section_interpret_correlation(section_ref, well_refs, mode, well_las_paths, tops, zone_definitions, strat_standard, paleoenvironment_input, checkshot_ref, wavelet_mode, wavelet_freq_hz, phase_degrees, polarity, synthetics_output, tie_qc_report, seismic_ref, sonic_curve, density_curve) — 390 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/section_render.py",
+      "type": "file",
+      "name": "section_render.py",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:_sha",
+      "type": "function",
+      "name": "_sha",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        24,
+        26
+      ],
+      "summary": "_sha(obj) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:_points",
+      "type": "function",
+      "name": "_points",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        29,
+        40
+      ],
+      "summary": "_points(obj) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:_load_background",
+      "type": "function",
+      "name": "_load_background",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        43,
+        60
+      ],
+      "summary": "_load_background(image_path) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:render_section_overlay",
+      "type": "function",
+      "name": "render_section_overlay",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        63,
+        275
+      ],
+      "summary": "render_section_overlay(image_path, faults, horizons, framework, annotations, title, receipt_hash, hypothesis_id, output_path, cmp_range, twt_range, dpi) — 212 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:geox_section_render",
+      "type": "function",
+      "name": "geox_section_render",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        278,
+        310
+      ],
+      "summary": "geox_section_render(image_path, faults, horizons, framework, annotations, title, receipt_hash, hypothesis_id, output_path, calibration) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:compact_gate_summary",
+      "type": "function",
+      "name": "compact_gate_summary",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        313,
+        347
+      ],
+      "summary": "compact_gate_summary(gates) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:store_detail_receipt",
+      "type": "function",
+      "name": "store_detail_receipt",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        350,
+        367
+      ],
+      "summary": "store_detail_receipt(payload, prefix) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/section_render.py:compact_interpret_envelope",
+      "type": "function",
+      "name": "compact_interpret_envelope",
+      "filePath": "src/geox_mcp/tools/section_render.py",
+      "lineRange": [
+        370,
+        409
+      ],
+      "summary": "compact_interpret_envelope(verdict, input_class, n_hypotheses, gate_summary, render_ref, detail_ref, receipt_hash, extras) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "type": "file",
+      "name": "segy_horizon_bridge.py",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/segy_horizon_bridge.py:parse_horizon_picks",
+      "type": "function",
+      "name": "parse_horizon_picks",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "lineRange": [
+        35,
+        63
+      ],
+      "summary": "parse_horizon_picks(source) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/segy_horizon_bridge.py:picks_to_gempy_inputs",
+      "type": "function",
+      "name": "picks_to_gempy_inputs",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "lineRange": [
+        66,
+        104
+      ],
+      "summary": "picks_to_gempy_inputs(picks, z_convention, dip_hint_deg, azimuth_hint_deg) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/segy_horizon_bridge.py:validate_picks",
+      "type": "function",
+      "name": "validate_picks",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "lineRange": [
+        107,
+        134
+      ],
+      "summary": "validate_picks(picks) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/segy_horizon_bridge.py:extract_section_from_block",
+      "type": "function",
+      "name": "extract_section_from_block",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "lineRange": [
+        137,
+        154
+      ],
+      "summary": "extract_section_from_block(block, extent, y_slice_frac) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/segy_horizon_bridge.py:geox_segy_horizon_bridge",
+      "type": "function",
+      "name": "geox_segy_horizon_bridge",
+      "filePath": "src/geox_mcp/tools/segy_horizon_bridge.py",
+      "lineRange": [
+        169,
+        296
+      ],
+      "summary": "geox_segy_horizon_bridge(horizon_picks, picks_tag, z_convention, dip_hint_deg, azimuth_hint_deg, grid_resolution, model_extent, compute_uncertainty, y_slice_frac, output_format, session_id, actor_id, trace_id) — 127 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic.py",
+      "type": "file",
+      "name": "seismic.py",
+      "filePath": "src/geox_mcp/tools/seismic.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic.py:geox_seismic_analyze_volume",
+      "type": "function",
+      "name": "geox_seismic_analyze_volume",
+      "filePath": "src/geox_mcp/tools/seismic.py",
+      "lineRange": [
+        20,
+        83
+      ],
+      "summary": "geox_seismic_analyze_volume(volume_ref, mode, attribute) — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_classical.py",
+      "type": "file",
+      "name": "seismic_classical.py",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:structure_tensor",
+      "type": "function",
+      "name": "structure_tensor",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        38,
+        70
+      ],
+      "summary": "structure_tensor(image, sigma) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:semblance_coherence",
+      "type": "function",
+      "name": "semblance_coherence",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        73,
+        86
+      ],
+      "summary": "semblance_coherence(image, window) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:ridge_extraction",
+      "type": "function",
+      "name": "ridge_extraction",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        89,
+        121
+      ],
+      "summary": "ridge_extraction(image, sigma, threshold) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:_merge_ridge_points",
+      "type": "function",
+      "name": "_merge_ridge_points",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        124,
+        156
+      ],
+      "summary": "_merge_ridge_points(ridges, distance_thresh) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:dp_horizon_tracker",
+      "type": "function",
+      "name": "dp_horizon_tracker",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        159,
+        202
+      ],
+      "summary": "dp_horizon_tracker(seed_points, image, dip_penalty, amplitude_weight) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:rgt_estimation",
+      "type": "function",
+      "name": "rgt_estimation",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        205,
+        223
+      ],
+      "summary": "rgt_estimation(image, sigma) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:horizons_from_rgt",
+      "type": "function",
+      "name": "horizons_from_rgt",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        226,
+        272
+      ],
+      "summary": "horizons_from_rgt(rgt_field, n_levels, smoothness) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_classical.py:classical_baseline",
+      "type": "function",
+      "name": "classical_baseline",
+      "filePath": "src/geox_mcp/tools/seismic_classical.py",
+      "lineRange": [
+        275,
+        326
+      ],
+      "summary": "classical_baseline(image, sigma, n_horizon_levels, dip_penalty, coherence_threshold) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_compute.py",
+      "type": "file",
+      "name": "seismic_compute.py",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:_mode_synthetic",
+      "type": "function",
+      "name": "_mode_synthetic",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        41,
+        70
+      ],
+      "summary": "_mode_synthetic(well_id, vp, rho, depth, wavelet_type, wavelet_freq, wavelet_params, water_depth_m, vp_water, dt_ms, noise_db, output_format) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:_mode_well_tie",
+      "type": "function",
+      "name": "_mode_well_tie",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        78,
+        97
+      ],
+      "summary": "_mode_well_tie(well_id, volume_ref, extraction_window_ms, frequency_band, wavelet_type, apply_anisotropy_correction, q_factor) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:_mode_time_depth_anchor",
+      "type": "function",
+      "name": "_mode_time_depth_anchor",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        105,
+        116
+      ],
+      "summary": "_mode_time_depth_anchor(well_id, checkshot_ref, drift_threshold_ms) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:_mode_anomalous_contrast",
+      "type": "function",
+      "name": "_mode_anomalous_contrast",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        124,
+        334
+      ],
+      "summary": "_mode_anomalous_contrast(ai_profile, depth, formation_tops, rc_threshold, geological_boundary_tolerance_m, vp, rho) — 210 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:_mode_attribute",
+      "type": "function",
+      "name": "_mode_attribute",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        342,
+        389
+      ],
+      "summary": "_mode_attribute(volume_ref, attribute) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute.py:geox_seismic_compute",
+      "type": "function",
+      "name": "geox_seismic_compute",
+      "filePath": "src/geox_mcp/tools/seismic_compute.py",
+      "lineRange": [
+        397,
+        647
+      ],
+      "summary": "geox_seismic_compute(mode, well_id, vp, rho, depth, wavelet_type, wavelet_freq, wavelet_params, water_depth_m, vp_water, dt_ms, noise_db, output_format, volume_ref, extraction_window_ms, frequency_band, apply_anisotropy_correction, q_factor, checkshot_ref, drift_threshold_ms, ai_profile, ac_depth, formation_tops, rc_threshold, geological_boundary_tolerance_m, ac_vp, ac_rho, volume_ref_attr, attribute, ctx) — 250 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_compute_unified.py",
+      "type": "file",
+      "name": "seismic_compute_unified.py",
+      "filePath": "src/geox_mcp/tools/seismic_compute_unified.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_compute_unified.py:geox_seismic_compute",
+      "type": "function",
+      "name": "geox_seismic_compute",
+      "filePath": "src/geox_mcp/tools/seismic_compute_unified.py",
+      "lineRange": [
+        16,
+        311
+      ],
+      "summary": "geox_seismic_compute(mode, volume_ref, attribute, frame_index, orientation, window_size, provenance, reflectivity, sample_interval_s, initial_impedance, depth_top_m, resistivity_ohm_m, well_id, vp, rho, depth, wavelet_type, wavelet_freq, wavelet_params, water_depth_m, vp_water, dt_ms, noise_db, output_format, image_path, amplitude_grid, volume_inline, ai_profile, ac_depth, formation_tops, rc_threshold, geological_boundary_tolerance_m, ac_vp, ac_rho, extraction_window_ms, frequency_band, apply_anisotropy_correction, q_factor, checkshot_ref, drift_threshold_ms, volume_ref_attr, vp1, vs1, rho1, vp2, vs2, rho2, theta_deg, fluid_zone) — 295 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "type": "file",
+      "name": "seismic_corrections.py",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "summary": "Defines 10 function(s); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:_hash_correction",
+      "type": "function",
+      "name": "_hash_correction",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        30,
+        32
+      ],
+      "summary": "_hash_correction(action, payload) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:add_seeds",
+      "type": "function",
+      "name": "add_seeds",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        35,
+        71
+      ],
+      "summary": "add_seeds(framework, horizon_seeds, fault_seeds) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:remove_segment",
+      "type": "function",
+      "name": "remove_segment",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        74,
+        90
+      ],
+      "summary": "remove_segment(framework, target_type, target_id) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:join_faults",
+      "type": "function",
+      "name": "join_faults",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        93,
+        111
+      ],
+      "summary": "join_faults(framework, fault_ids) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:split_fault",
+      "type": "function",
+      "name": "split_fault",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        114,
+        134
+      ],
+      "summary": "split_fault(framework, fault_id, at_xy) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:mark_unconformity",
+      "type": "function",
+      "name": "mark_unconformity",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        137,
+        152
+      ],
+      "summary": "mark_unconformity(framework, horizon_id, surface_type) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:select_alternative",
+      "type": "function",
+      "name": "select_alternative",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        155,
+        170
+      ],
+      "summary": "select_alternative(framework, horizon_id, alternative_id) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:freeze_accepted_geometry",
+      "type": "function",
+      "name": "freeze_accepted_geometry",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        173,
+        185
+      ],
+      "summary": "freeze_accepted_geometry(framework) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:rerun_gates",
+      "type": "function",
+      "name": "rerun_gates",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        188,
+        202
+      ],
+      "summary": "rerun_gates(framework, gates) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_corrections.py:_now_iso",
+      "type": "function",
+      "name": "_now_iso",
+      "filePath": "src/geox_mcp/tools/seismic_corrections.py",
+      "lineRange": [
+        205,
+        208
+      ],
+      "summary": "_now_iso() — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_ingest.py",
+      "type": "file",
+      "name": "seismic_ingest.py",
+      "filePath": "src/geox_mcp/tools/seismic_ingest.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_ingest.py:geox_seismic_ingest",
+      "type": "function",
+      "name": "geox_seismic_ingest",
+      "filePath": "src/geox_mcp/tools/seismic_ingest.py",
+      "lineRange": [
+        16,
+        151
+      ],
+      "summary": "geox_seismic_ingest(mode, volume_ref, output_path, sample_interval_ms, textual_header, overwrite, provenance, segy_metadata, seismic_metadata, source_uri, source_type, well_id) — 135 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "type": "file",
+      "name": "seismic_interpret.py",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:_json_safe",
+      "type": "function",
+      "name": "_json_safe",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        76,
+        105
+      ],
+      "summary": "_json_safe(obj) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:_sha256_bytes",
+      "type": "function",
+      "name": "_sha256_bytes",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        108,
+        109
+      ],
+      "summary": "_sha256_bytes(data) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:_resolve_image_input",
+      "type": "function",
+      "name": "_resolve_image_input",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        112,
+        222
+      ],
+      "summary": "_resolve_image_input(image_path, image_data, artifact_ref, source_uri) — 110 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:_stamp_qualified",
+      "type": "function",
+      "name": "_stamp_qualified",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        225,
+        270
+      ],
+      "summary": "_stamp_qualified(result, mode, transport) — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:_normalize_request",
+      "type": "function",
+      "name": "_normalize_request",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        291,
+        390
+      ],
+      "summary": "_normalize_request(mode, kwargs) — 99 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_interpret.py:geox_seismic_interpret",
+      "type": "function",
+      "name": "geox_seismic_interpret",
+      "filePath": "src/geox_mcp/tools/seismic_interpret.py",
+      "lineRange": [
+        393,
+        1248
+      ],
+      "summary": "geox_seismic_interpret(mode, attribute_data, depth, geological_query, well_ties, stratigraphic_framework, peak_threshold, min_separation_m, custom_query, closure_grid, source_uri, source_type, action, volume_ref, frame_index, orientation, provenance, image_data, blend_mode, image_path, artifact_ref, framework, faults, horizons, measurement_context, calibration, earth_constraints, request, segy_path, max_faults, max_horizons, emit_bundle, session_id, actor_id, trace_id, source_sha256, horizon_query, threshold, confidence_cap, cube_ref, volume_inline) — 855 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_inversion.py",
+      "type": "file",
+      "name": "seismic_inversion.py",
+      "filePath": "src/geox_mcp/tools/seismic_inversion.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_inversion.py:geox_seismic_inversion",
+      "type": "function",
+      "name": "geox_seismic_inversion",
+      "filePath": "src/geox_mcp/tools/seismic_inversion.py",
+      "lineRange": [
+        38,
+        62
+      ],
+      "summary": "geox_seismic_inversion(request) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "type": "file",
+      "name": "seismic_onnx_adapter.py",
+      "filePath": "src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:ModelManifest",
+      "type": "class",
+      "name": "ModelManifest",
+      "filePath": "src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "lineRange": [
+        40,
+        61
+      ],
+      "summary": "Class ModelManifest with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:CandidateGeometry",
+      "type": "class",
+      "name": "CandidateGeometry",
+      "filePath": "src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "lineRange": [
+        65,
+        86
+      ],
+      "summary": "Class CandidateGeometry with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:OnnxModelAdapter",
+      "type": "class",
+      "name": "OnnxModelAdapter",
+      "filePath": "src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "lineRange": [
+        89,
+        125
+      ],
+      "summary": "Class OnnxModelAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:ClassicalBaselineAdapter",
+      "type": "class",
+      "name": "ClassicalBaselineAdapter",
+      "filePath": "src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "lineRange": [
+        128,
+        153
+      ],
+      "summary": "Class ClassicalBaselineAdapter with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "type": "file",
+      "name": "seismic_rsi.py",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "summary": "Defines 14 function(s); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_input_reality_gate",
+      "type": "function",
+      "name": "_input_reality_gate",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        42,
+        83
+      ],
+      "summary": "_input_reality_gate(image_path) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_sha256_file",
+      "type": "function",
+      "name": "_sha256_file",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        89,
+        91
+      ],
+      "summary": "_sha256_file(path) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_compute_provenance",
+      "type": "function",
+      "name": "_compute_provenance",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        94,
+        110
+      ],
+      "summary": "_compute_provenance(image_path, code_path) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_seismic_panel",
+      "type": "function",
+      "name": "_detect_seismic_panel",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        116,
+        138
+      ],
+      "summary": "_detect_seismic_panel(arr) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_agc",
+      "type": "function",
+      "name": "_agc",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        144,
+        150
+      ],
+      "summary": "_agc(data, win) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_compute_attributes",
+      "type": "function",
+      "name": "_compute_attributes",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        156,
+        275
+      ],
+      "summary": "_compute_attributes(amp_cropped) — 119 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_faults",
+      "type": "function",
+      "name": "_detect_faults",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        281,
+        350
+      ],
+      "summary": "_detect_faults(fp, orientation, min_length, percentile, max_faults) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_segment_fault_blocks",
+      "type": "function",
+      "name": "_segment_fault_blocks",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        353,
+        371
+      ],
+      "summary": "_segment_fault_blocks(faults, shape) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_track_horizon_dp",
+      "type": "function",
+      "name": "_track_horizon_dp",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        377,
+        439
+      ],
+      "summary": "_track_horizon_dp(agc_d, fault_mask, seed, search, lookahead) — 62 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_and_track_horizons",
+      "type": "function",
+      "name": "_detect_and_track_horizons",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        442,
+        511
+      ],
+      "summary": "_detect_and_track_horizons(agc_d, pc, fault_mask, max_horizons) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_build_epistemic_envelope",
+      "type": "function",
+      "name": "_build_epistemic_envelope",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        517,
+        571
+      ],
+      "summary": "_build_epistemic_envelope(faults, horizons, attributes) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:_render_audit",
+      "type": "function",
+      "name": "_render_audit",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        577,
+        642
+      ],
+      "summary": "_render_audit(arr_cropped, agc_d) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:geox_rsi_interpret",
+      "type": "function",
+      "name": "geox_rsi_interpret",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        648,
+        860
+      ],
+      "summary": "geox_rsi_interpret(image_path, mode, max_faults, max_horizons, fault_percentile, fault_min_length, horizon_search, horizon_lookahead, include_attributes) — 212 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_rsi.py:geox_render_audit",
+      "type": "function",
+      "name": "geox_render_audit",
+      "filePath": "src/geox_mcp/tools/seismic_rsi.py",
+      "lineRange": [
+        866,
+        924
+      ],
+      "summary": "geox_render_audit(image_path, agc_window) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_segy_slice.py",
+      "type": "file",
+      "name": "seismic_segy_slice.py",
+      "filePath": "src/geox_mcp/tools/seismic_segy_slice.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_segy_slice.py:geox_segy_slice",
+      "type": "function",
+      "name": "geox_segy_slice",
+      "filePath": "src/geox_mcp/tools/seismic_segy_slice.py",
+      "lineRange": [
+        16,
+        146
+      ],
+      "summary": "geox_segy_slice(segy_path, frame_index, orientation, max_traces, max_samples) — 130 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_vision.py",
+      "type": "file",
+      "name": "seismic_vision.py",
+      "filePath": "src/geox_mcp/tools/seismic_vision.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision.py:enforce_anti_hantu_protocol",
+      "type": "function",
+      "name": "enforce_anti_hantu_protocol",
+      "filePath": "src/geox_mcp/tools/seismic_vision.py",
+      "lineRange": [
+        9,
+        21
+      ],
+      "summary": "enforce_anti_hantu_protocol(input_type, execution_mode) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision.py:geox_vision_time_to_depth",
+      "type": "function",
+      "name": "geox_vision_time_to_depth",
+      "filePath": "src/geox_mcp/tools/seismic_vision.py",
+      "lineRange": [
+        24,
+        61
+      ],
+      "summary": "geox_vision_time_to_depth(image_path, max_time_ms, max_cmp, v_rms_anchor, execution_mode) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_vision_ai.py",
+      "type": "file",
+      "name": "seismic_vision_ai.py",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_understand",
+      "type": "function",
+      "name": "geox_visual_understand",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai.py",
+      "lineRange": [
+        30,
+        111
+      ],
+      "summary": "geox_visual_understand(image_path, mode, vlm_client_callback) — 81 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_enhance",
+      "type": "function",
+      "name": "geox_visual_enhance",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai.py",
+      "lineRange": [
+        119,
+        161
+      ],
+      "summary": "geox_visual_enhance(image_path, output_path, enhancement_mode) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_generate_hypotheses",
+      "type": "function",
+      "name": "geox_visual_generate_hypotheses",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai.py",
+      "lineRange": [
+        169,
+        217
+      ],
+      "summary": "geox_visual_generate_hypotheses(image_path, output_dir, target_feature_id, hypotheses) — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_panel_d_render",
+      "type": "function",
+      "name": "geox_panel_d_render",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai.py",
+      "lineRange": [
+        225,
+        307
+      ],
+      "summary": "geox_panel_d_render(base_image_path, output_path, obs_manifest, cognitive_manifest) — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_vision_ai_async.py",
+      "type": "file",
+      "name": "seismic_vision_ai_async.py",
+      "filePath": "src/geox_mcp/tools/seismic_vision_ai_async.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "type": "file",
+      "name": "seismic_well_tie.py",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_extract_well_curves_from_artifact",
+      "type": "function",
+      "name": "_extract_well_curves_from_artifact",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        38,
+        117
+      ],
+      "summary": "_extract_well_curves_from_artifact(well_id) — 79 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_build_wavelet_resource",
+      "type": "function",
+      "name": "_build_wavelet_resource",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        125,
+        159
+      ],
+      "summary": "_build_wavelet_resource(wavelet_type, frequency_hz, dt_ms, phase_degrees) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_seismic_well_tie_compute",
+      "type": "function",
+      "name": "geox_seismic_well_tie_compute",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        167,
+        342
+      ],
+      "summary": "geox_seismic_well_tie_compute(well_id, volume_ref, extraction_window_ms, frequency_band, wavelet_type, apply_anisotropy_correction, q_factor) — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_time_depth_anchor",
+      "type": "function",
+      "name": "geox_time_depth_anchor",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        350,
+        507
+      ],
+      "summary": "geox_time_depth_anchor(well_id, checkshot_ref, drift_threshold_ms) — 157 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_forward_model_synthetic",
+      "type": "function",
+      "name": "geox_forward_model_synthetic",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        515,
+        659
+      ],
+      "summary": "geox_forward_model_synthetic(well_id, wavelet_type, frequency_hz, phase_degrees, polarity, dt_ms, noise_db, register_output) — 144 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_estimate_thomsen_parameters",
+      "type": "function",
+      "name": "_estimate_thomsen_parameters",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        667,
+        674
+      ],
+      "summary": "_estimate_thomsen_parameters(vp, vsh) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_calculate_spectral_decay",
+      "type": "function",
+      "name": "_calculate_spectral_decay",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        677,
+        685
+      ],
+      "summary": "_calculate_spectral_decay(f_initial, twt_s, q_factor) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_build_forward_consistency_block",
+      "type": "function",
+      "name": "_build_forward_consistency_block",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        693,
+        778
+      ],
+      "summary": "_build_forward_consistency_block(synthetic_trace, volume_ref, well_id, gate_available) — 85 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_well_tie.py:_try_extract_seismic_at_well",
+      "type": "function",
+      "name": "_try_extract_seismic_at_well",
+      "filePath": "src/geox_mcp/tools/seismic_well_tie.py",
+      "lineRange": [
+        781,
+        813
+      ],
+      "summary": "_try_extract_seismic_at_well(volume_ref, well_id) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "type": "file",
+      "name": "seismic_zen_f1.py",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "summary": "Defines 10 function(s); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:_json_safe",
+      "type": "function",
+      "name": "_json_safe",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        28,
+        47
+      ],
+      "summary": "_json_safe(obj) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:_receipt",
+      "type": "function",
+      "name": "_receipt",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        50,
+        52
+      ],
+      "summary": "_receipt(payload) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:_qualified",
+      "type": "function",
+      "name": "_qualified",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        55,
+        70
+      ],
+      "summary": "_qualified(mode, body, tool) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:load_section_2d",
+      "type": "function",
+      "name": "load_section_2d",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        76,
+        174
+      ],
+      "summary": "load_section_2d(image_path, amplitude_grid, volume_inline, provenance) — 98 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:compute_attributes_2d",
+      "type": "function",
+      "name": "compute_attributes_2d",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        180,
+        278
+      ],
+      "summary": "compute_attributes_2d(amp, attribute, window) — 98 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:track_horizons_2d",
+      "type": "function",
+      "name": "track_horizons_2d",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        284,
+        342
+      ],
+      "summary": "track_horizons_2d(amp, max_horizons, seed_rows, search) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:measure_throw_from_horizons",
+      "type": "function",
+      "name": "measure_throw_from_horizons",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        348,
+        496
+      ],
+      "summary": "measure_throw_from_horizons(horizons, faults, sample_interval_ms, vertical_scale_m_per_sample, section_cols) — 148 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_attribute",
+      "type": "function",
+      "name": "zen_attribute",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        502,
+        555
+      ],
+      "summary": "zen_attribute(attribute, window_size, image_path, amplitude_grid, volume_inline, volume_ref, provenance) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_track_horizon",
+      "type": "function",
+      "name": "zen_track_horizon",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        558,
+        597
+      ],
+      "summary": "zen_track_horizon(image_path, amplitude_grid, volume_inline, max_horizons, seed_rows, provenance, request) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_measure_throw",
+      "type": "function",
+      "name": "zen_measure_throw",
+      "filePath": "src/geox_mcp/tools/seismic_zen_f1.py",
+      "lineRange": [
+        600,
+        683
+      ],
+      "summary": "zen_measure_throw(horizons, faults, image_path, amplitude_grid, volume_inline, max_horizons, calibration, request, provenance, run_gates) — 83 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/sequence.py",
+      "type": "file",
+      "name": "sequence.py",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "summary": "Defines 12 function(s); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_source_hash",
+      "type": "function",
+      "name": "_source_hash",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        51,
+        56
+      ],
+      "summary": "_source_hash(path) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_validate_interval",
+      "type": "function",
+      "name": "_validate_interval",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        59,
+        73
+      ],
+      "summary": "_validate_interval(zone_top, zone_base, bin_size_m) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_gr_physics_guard",
+      "type": "function",
+      "name": "_gr_physics_guard",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        76,
+        91
+      ],
+      "summary": "_gr_physics_guard(gr, min_samples) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_interpretation_limitations",
+      "type": "function",
+      "name": "_interpretation_limitations",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        94,
+        109
+      ],
+      "summary": "_interpretation_limitations(source_kind, multi_curve) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_load_las_or_csv",
+      "type": "function",
+      "name": "_load_las_or_csv",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        112,
+        208
+      ],
+      "summary": "_load_las_or_csv(source) — 96 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_error_envelope",
+      "type": "function",
+      "name": "_error_envelope",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        211,
+        227
+      ],
+      "summary": "_error_envelope(error_code, message, diagnostics) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_epistemic_provenance_for_sequence",
+      "type": "function",
+      "name": "_epistemic_provenance_for_sequence",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        240,
+        447
+      ],
+      "summary": "_epistemic_provenance_for_sequence(detail_level, source_sha256) — 207 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_workflow_single_well",
+      "type": "function",
+      "name": "_workflow_single_well",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        450,
+        616
+      ],
+      "summary": "_workflow_single_well(source, zone_top, zone_base, depo_env_code, bin_size_m, min_package_thickness_m, p50_shift_api, gr_cutoff_api, detail_level) — 166 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_workflow_project",
+      "type": "function",
+      "name": "_workflow_project",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        624,
+        677
+      ],
+      "summary": "_workflow_project(project_yaml, output_dir) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_workflow_preview",
+      "type": "function",
+      "name": "_workflow_preview",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        680,
+        709
+      ],
+      "summary": "_workflow_preview(project_yaml) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:_workflow_section_correlation",
+      "type": "function",
+      "name": "_workflow_section_correlation",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        717,
+        1154
+      ],
+      "summary": "_workflow_section_correlation(section_ref, well_refs, mode, well_las_paths, tops, zone_definitions, strat_standard, paleoenvironment_input, checkshot_ref, wavelet_mode, wavelet_freq_hz, phase_degrees, polarity, synthetics_output, tie_qc_report, seismic_ref, sonic_curve, density_curve, matrix_density, fluid_density) — 437 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence.py:geox_sequence_interpret",
+      "type": "function",
+      "name": "geox_sequence_interpret",
+      "filePath": "src/geox_mcp/tools/sequence.py",
+      "lineRange": [
+        1162,
+        1392
+      ],
+      "summary": "geox_sequence_interpret(workflow, source, zone_top, zone_base, depo_env_code, bin_size_m, min_package_thickness_m, p50_shift_api, gr_cutoff_api, detail_level, project_yaml, output_dir, section_ref, well_refs, mode, well_las_paths, tops, zone_definitions, strat_standard, paleoenvironment_input, checkshot_ref, wavelet_mode, wavelet_freq_hz, phase_degrees, polarity, synthetics_output, tie_qc_report, seismic_ref, sonic_curve, density_curve, matrix_density, fluid_density, ctx) — 230 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/sequence_unified.py",
+      "type": "file",
+      "name": "sequence_unified.py",
+      "filePath": "src/geox_mcp/tools/sequence_unified.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sequence_unified.py:geox_sequence",
+      "type": "function",
+      "name": "geox_sequence",
+      "filePath": "src/geox_mcp/tools/sequence_unified.py",
+      "lineRange": [
+        14,
+        75
+      ],
+      "summary": "geox_sequence(workflow, source, zone_top, zone_base, depo_env_code, bin_size_m, min_package_thickness_m, p50_shift_api, gr_cutoff_api, detail_level, project_yaml, output_dir, section_ref, well_refs, mode, well_las_paths, tops, zone_definitions, strat_standard, paleoenvironment_input, checkshot_ref, wavelet_mode, wavelet_freq_hz, phase_degrees, polarity, synthetics_output) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_mcp/tools/provenance_bridge.py",
+      "target": "function:src/geox_mcp/tools/provenance_bridge.py:enrich_layer_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_bridge.py",
+      "target": "function:src/geox_mcp/tools/provenance_bridge.py:enrich_batch_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_bridge.py",
+      "target": "function:src/geox_mcp/tools/provenance_bridge.py:provenance_coverage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_gpts.py",
+      "target": "function:src/geox_mcp/tools/provenance_gpts.py:geox_provenance_gpts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_gpts.py",
+      "target": "function:src/geox_mcp/tools/provenance_gpts.py:_resolve_chron_by_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_gpts.py",
+      "target": "function:src/geox_mcp/tools/provenance_gpts.py:_resolve_subchron_by_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/provenance_gpts.py",
+      "target": "function:src/geox_mcp/tools/provenance_gpts.py:_build_not_found",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/qc.py",
+      "target": "function:src/geox_mcp/tools/qc.py:_normalize_artifact_ref_for_ingestor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/qc.py",
+      "target": "function:src/geox_mcp/tools/qc.py:geox_data_qc_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/qc.py",
+      "target": "function:src/geox_mcp/tools/qc.py:_qc_feature_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:_get_git_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:_load_generated_public_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:_load_plugin_export_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:_load_runtime_callable_public_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_system_registry_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_history_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_contradiction_registry_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_test_receipt_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_bundle_security_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/registry.py",
+      "target": "function:src/geox_mcp/tools/registry.py:geox_resource_registry_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section.py",
+      "target": "function:src/geox_mcp/tools/section.py:geox_section_interpret_correlation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:_sha",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:_points",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:_load_background",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:render_section_overlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:geox_section_render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:compact_gate_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:store_detail_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/section_render.py",
+      "target": "function:src/geox_mcp/tools/section_render.py:compact_interpret_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "target": "function:src/geox_mcp/tools/segy_horizon_bridge.py:parse_horizon_picks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "target": "function:src/geox_mcp/tools/segy_horizon_bridge.py:picks_to_gempy_inputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "target": "function:src/geox_mcp/tools/segy_horizon_bridge.py:validate_picks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "target": "function:src/geox_mcp/tools/segy_horizon_bridge.py:extract_section_from_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/segy_horizon_bridge.py",
+      "target": "function:src/geox_mcp/tools/segy_horizon_bridge.py:geox_segy_horizon_bridge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic.py",
+      "target": "function:src/geox_mcp/tools/seismic.py:geox_seismic_analyze_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:structure_tensor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:semblance_coherence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:ridge_extraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:_merge_ridge_points",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:dp_horizon_tracker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:rgt_estimation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:horizons_from_rgt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_classical.py",
+      "target": "function:src/geox_mcp/tools/seismic_classical.py:classical_baseline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:_mode_synthetic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:_mode_well_tie",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:_mode_time_depth_anchor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:_mode_anomalous_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:_mode_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute.py:geox_seismic_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_compute_unified.py",
+      "target": "function:src/geox_mcp/tools/seismic_compute_unified.py:geox_seismic_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:_hash_correction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:add_seeds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:remove_segment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:join_faults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:split_fault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:mark_unconformity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:select_alternative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:freeze_accepted_geometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:rerun_gates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_corrections.py",
+      "target": "function:src/geox_mcp/tools/seismic_corrections.py:_now_iso",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_ingest.py",
+      "target": "function:src/geox_mcp/tools/seismic_ingest.py:geox_seismic_ingest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:_json_safe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:_sha256_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:_resolve_image_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:_stamp_qualified",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:_normalize_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_interpret.py",
+      "target": "function:src/geox_mcp/tools/seismic_interpret.py:geox_seismic_interpret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_inversion.py",
+      "target": "function:src/geox_mcp/tools/seismic_inversion.py:geox_seismic_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "target": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:ModelManifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "target": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:CandidateGeometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "target": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:OnnxModelAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_onnx_adapter.py",
+      "target": "class:src/geox_mcp/tools/seismic_onnx_adapter.py:ClassicalBaselineAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_input_reality_gate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_sha256_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_compute_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_seismic_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_agc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_compute_attributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_faults",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_segment_fault_blocks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_track_horizon_dp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_detect_and_track_horizons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_build_epistemic_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:_render_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:geox_rsi_interpret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_rsi.py",
+      "target": "function:src/geox_mcp/tools/seismic_rsi.py:geox_render_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_segy_slice.py",
+      "target": "function:src/geox_mcp/tools/seismic_segy_slice.py:geox_segy_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision.py:enforce_anti_hantu_protocol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision.py:geox_vision_time_to_depth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision_ai.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_understand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision_ai.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_enhance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision_ai.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_visual_generate_hypotheses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_vision_ai.py",
+      "target": "function:src/geox_mcp/tools/seismic_vision_ai.py:geox_panel_d_render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_extract_well_curves_from_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_build_wavelet_resource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_seismic_well_tie_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_time_depth_anchor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:geox_forward_model_synthetic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_estimate_thomsen_parameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_calculate_spectral_decay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_build_forward_consistency_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_well_tie.py",
+      "target": "function:src/geox_mcp/tools/seismic_well_tie.py:_try_extract_seismic_at_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:_json_safe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:_qualified",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:load_section_2d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:compute_attributes_2d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:track_horizons_2d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:measure_throw_from_horizons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_track_horizon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/seismic_zen_f1.py",
+      "target": "function:src/geox_mcp/tools/seismic_zen_f1.py:zen_measure_throw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_source_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_validate_interval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_gr_physics_guard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_interpretation_limitations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_load_las_or_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_error_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_epistemic_provenance_for_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_workflow_single_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_workflow_project",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_workflow_preview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:_workflow_section_correlation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence.py",
+      "target": "function:src/geox_mcp/tools/sequence.py:geox_sequence_interpret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sequence_unified.py",
+      "target": "function:src/geox_mcp/tools/sequence_unified.py:geox_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 8,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 8
+    }
+  },
+  "results": [
+    {
+      "path": "scripts/deploy-dimension-native.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 154,
+      "nonEmptyLines": 130,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/deploy-openai-adapter.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 200,
+      "nonEmptyLines": 174,
+      "functions": [
+        {
+          "name": "log",
+          "startLine": 40,
+          "endLine": 42,
+          "params": []
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/deploy-vps-local.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 136,
+      "nonEmptyLines": 119,
+      "functions": [
+        {
+          "name": "log_info",
+          "startLine": 37,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "log_warn",
+          "startLine": 38,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "log_error",
+          "startLine": 39,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/deploy-vps.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 80,
+      "nonEmptyLines": 67,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/entrypoint.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 17,
+      "nonEmptyLines": 14,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/entrypoint_unified.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 17,
+      "nonEmptyLines": 14,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/governance-gate.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 189,
+      "nonEmptyLines": 175,
+      "functions": [
+        {
+          "name": "check",
+          "startLine": 27,
+          "endLine": 34,
+          "params": []
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/scan_forbidden_phrases.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 62,
+      "nonEmptyLines": 54,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

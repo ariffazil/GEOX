@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/sensing/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/sensing/agent-card.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/sensing/sense-observation-intake.md",
+      "type": "document",
+      "name": "sense-observation-intake.md",
+      "filePath": "skills/sensing/sense-observation-intake.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/sensing/sense-observation-qc.md",
+      "type": "document",
+      "name": "sense-observation-qc.md",
+      "filePath": "skills/sensing/sense-observation-qc.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/sensing/sense-signal-classification.md",
+      "type": "document",
+      "name": "sense-signal-classification.md",
+      "filePath": "skills/sensing/sense-signal-classification.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

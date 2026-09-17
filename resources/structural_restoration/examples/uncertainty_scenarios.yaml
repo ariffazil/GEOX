@@ -1,0 +1,44 @@
+# Uncertainty Scenarios — Example
+# Demonstrates low/reference/high compaction scenarios (SR_INV_009)
+
+compaction_scenarios:
+  low:
+    scenario_name: "sclater-christie-shale-low"
+    reference_curve: "Sclater & Christie1980"
+    porosity_adjustment:
+      type: "absolute_porosity_points"
+      value: -5  # 5 porosity points lower
+    evidence_class: "PUBLISHED"
+    note: "Low porosity scenario — more compaction"
+
+  reference:
+    scenario_name: "sclater-christie-shale-reference"
+    reference_curve: "Sclater & Christie1980"
+    porosity_adjustment:
+      type: "absolute_porosity_points"
+      value: 0  # No adjustment
+    evidence_class: "PUBLISHED"
+    note: "Reference case — standard compaction curve"
+
+  high:
+    scenario_name: "sclater-christie-shale-high"
+    reference_curve: "Sclater & Christie1980"
+    porosity_adjustment:
+      type: "absolute_porosity_points"
+      value: +5  # 5 porosity points higher
+    evidence_class: "PUBLISHED"
+    note: "High porosity scenario — less compaction"
+
+# Distance-weighted uncertainty parameters
+# These are SCENARIO INPUTS, not basin constants (SR_INV_011)
+distance_uncertainty:
+  control_points: ["well-A", "well-B", "well-C"]
+  distance_metric: "euclidean"
+  growth_function: "linear"
+  cutoff_distance_km: 10       # SCENARIO parameter, not basin constant
+  max_uncertainty_m: 300       # SCENARIO parameter, not basin constant
+  values_are: "ASSUMED"        # Not observed
+
+# Note: The10 km and300 m values were modelling assumptions in
+# the Dr Shahram exercise. They must NOT be hardcoded as NW Sabah
+# universal constants. Other scenarios may use different values.

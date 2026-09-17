@@ -1,0 +1,113 @@
+{
+  "nodes": [
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/age_constraint.yaml",
+      "type": "config",
+      "name": "age_constraint.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/age_constraint.yaml",
+      "summary": "yaml config file (23 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/confidence.yaml",
+      "type": "config",
+      "name": "confidence.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/confidence.yaml",
+      "summary": "yaml config file (16 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/correlation.yaml",
+      "type": "config",
+      "name": "correlation.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/correlation.yaml",
+      "summary": "yaml config file (45 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/epistemic_tag.yaml",
+      "type": "config",
+      "name": "epistemic_tag.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/epistemic_tag.yaml",
+      "summary": "yaml config file (9 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/interval.yaml",
+      "type": "config",
+      "name": "interval.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/interval.yaml",
+      "summary": "yaml config file (52 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/pick.yaml",
+      "type": "config",
+      "name": "pick.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/pick.yaml",
+      "summary": "yaml config file (38 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/problem_details.yaml",
+      "type": "config",
+      "name": "problem_details.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/problem_details.yaml",
+      "summary": "yaml config file (25 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/provenance.yaml",
+      "type": "config",
+      "name": "provenance.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/provenance.yaml",
+      "summary": "yaml config file (25 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/components/schemas/timescale_unit.yaml",
+      "type": "config",
+      "name": "timescale_unit.yaml",
+      "filePath": "contracts/openapi/v1/components/schemas/timescale_unit.yaml",
+      "summary": "yaml config file (20 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/governance/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/governance/agent-card.json",
+      "summary": "json config file (84 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/governance/gov-human-in-loop-888.md",
+      "type": "document",
+      "name": "gov-human-in-loop-888.md",
+      "filePath": "skills/governance/gov-human-in-loop-888.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/governance/gov-legal-jurisdiction.md",
+      "type": "document",
+      "name": "gov-legal-jurisdiction.md",
+      "filePath": "skills/governance/gov-legal-jurisdiction.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/governance/gov-peace-maruah-screen.md",
+      "type": "document",
+      "name": "gov-peace-maruah-screen.md",
+      "filePath": "skills/governance/gov-peace-maruah-screen.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

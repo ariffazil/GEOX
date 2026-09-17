@@ -1,0 +1,1435 @@
+{
+  "nodes": [
+    {
+      "id": "file:contracts/enums/statuses.py",
+      "type": "file",
+      "name": "statuses.py",
+      "filePath": "contracts/enums/statuses.py",
+      "summary": "Defines 5 function(s); 17 class(es); exports 22 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/enums/statuses.py:enforce_claim_state",
+      "type": "function",
+      "name": "enforce_claim_state",
+      "filePath": "contracts/enums/statuses.py",
+      "lineRange": [
+        309,
+        338
+      ],
+      "summary": "enforce_claim_state(result, evidence_refs) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/enums/statuses.py:get_standard_envelope",
+      "type": "function",
+      "name": "get_standard_envelope",
+      "filePath": "contracts/enums/statuses.py",
+      "lineRange": [
+        341,
+        497
+      ],
+      "summary": "get_standard_envelope(primary_artifact, tool_class, execution_status, governance_status, artifact_status, uncertainty, evidence_refs, diagnostics, ui_resource_uri, claim_tag, claim_state, confidence_band, physics_guard, audit_receipt, humility_score, maruah_flag, tool_version, artifact_hash, depth_basis, depth_datum, session_id, trace_id, parent_trace_id, constitution_hash, next_best_actions, suggested_tool, can_auto_retry, missing_inputs_schema, confidence_policy, perception_class, evidence_tag, canon_9_touched, vertical_trend, litho_class, strat_standard) — 156 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/enums/statuses.py:_claim_to_metabolic",
+      "type": "function",
+      "name": "_claim_to_metabolic",
+      "filePath": "contracts/enums/statuses.py",
+      "lineRange": [
+        577,
+        579
+      ],
+      "summary": "_claim_to_metabolic(claim_state) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/enums/statuses.py:_get_confidence_for_claim",
+      "type": "function",
+      "name": "_get_confidence_for_claim",
+      "filePath": "contracts/enums/statuses.py",
+      "lineRange": [
+        582,
+        585
+      ],
+      "summary": "_get_confidence_for_claim(claim_state) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/enums/statuses.py:enrich_envelope_with_metabolic",
+      "type": "function",
+      "name": "enrich_envelope_with_metabolic",
+      "filePath": "contracts/enums/statuses.py",
+      "lineRange": [
+        588,
+        754
+      ],
+      "summary": "enrich_envelope_with_metabolic(envelope, tool_name, witness_type, witness_status, decoded_entities, anomalous_contrasts, candidate_meanings, constraints_checked, model_updates, required_next_tests, next_best_tool, cross_organ_handoff, session_id) — 166 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:contracts/governance/acp_logic.py",
+      "type": "file",
+      "name": "acp_logic.py",
+      "filePath": "contracts/governance/acp_logic.py",
+      "summary": "Defines 5 function(s); 13 class(es); exports 18 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/governance/acp_logic.py:acp_register_agent",
+      "type": "function",
+      "name": "acp_register_agent",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        741,
+        757
+      ],
+      "summary": "acp_register_agent(agent_id, role, name, resources, tools) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:Agent",
+      "type": "class",
+      "name": "Agent",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        98,
+        119
+      ],
+      "summary": "Class Agent with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:AgentRegistry",
+      "type": "class",
+      "name": "AgentRegistry",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        164,
+        250
+      ],
+      "summary": "Class AgentRegistry with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:A2AMessageBus",
+      "type": "class",
+      "name": "A2AMessageBus",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        257,
+        326
+      ],
+      "summary": "Class A2AMessageBus with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:FloorEnforcer",
+      "type": "class",
+      "name": "FloorEnforcer",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        333,
+        475
+      ],
+      "summary": "Class FloorEnforcer with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:DiscordanceDetector",
+      "type": "class",
+      "name": "DiscordanceDetector",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        482,
+        558
+      ],
+      "summary": "Class DiscordanceDetector with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:Judge888",
+      "type": "class",
+      "name": "Judge888",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        565,
+        649
+      ],
+      "summary": "Class Judge888 with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/governance/acp_logic.py:GEOSXACP",
+      "type": "class",
+      "name": "GEOSXACP",
+      "filePath": "contracts/governance/acp_logic.py",
+      "lineRange": [
+        656,
+        730
+      ],
+      "summary": "Class GEOSXACP with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/mcp/adapter_bus_contract.py",
+      "type": "file",
+      "name": "adapter_bus_contract.py",
+      "filePath": "contracts/mcp/adapter_bus_contract.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:contracts/openapi/v1/examples/payloads.json",
+      "type": "config",
+      "name": "payloads.json",
+      "filePath": "contracts/openapi/v1/examples/payloads.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/openapi/v1/openapi.yaml",
+      "type": "config",
+      "name": "openapi.yaml",
+      "filePath": "contracts/openapi/v1/openapi.yaml",
+      "summary": "yaml config file (209 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:contracts/parity/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/parity/__init__.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/parity/runtime_matrix.py",
+      "type": "file",
+      "name": "runtime_matrix.py",
+      "filePath": "contracts/parity/runtime_matrix.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/schemas/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/schemas/argument_sidecar.py",
+      "type": "file",
+      "name": "argument_sidecar.py",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "summary": "Defines 2 function(s); 7 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/argument_sidecar.py:validate_argument_for_export",
+      "type": "function",
+      "name": "validate_argument_for_export",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        297,
+        335
+      ],
+      "summary": "validate_argument_for_export(sidecar) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/schemas/argument_sidecar.py:build_argument_sidecar",
+      "type": "function",
+      "name": "build_argument_sidecar",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        343,
+        402
+      ],
+      "summary": "build_argument_sidecar(artifact_id, primary_claims, rival_claims, uncertainty, scene_plan_id, created_by) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/argument_sidecar.py:GeologicalClaim",
+      "type": "class",
+      "name": "GeologicalClaim",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        81,
+        123
+      ],
+      "summary": "Class GeologicalClaim with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/argument_sidecar.py:RivalInterpretation",
+      "type": "class",
+      "name": "RivalInterpretation",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        131,
+        160
+      ],
+      "summary": "Class RivalInterpretation with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/argument_sidecar.py:UncertaintyBand",
+      "type": "class",
+      "name": "UncertaintyBand",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        168,
+        197
+      ],
+      "summary": "Class UncertaintyBand with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/argument_sidecar.py:ArgumentSidecar",
+      "type": "class",
+      "name": "ArgumentSidecar",
+      "filePath": "contracts/schemas/argument_sidecar.py",
+      "lineRange": [
+        205,
+        289
+      ],
+      "summary": "Class ArgumentSidecar with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/artifacts/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/schemas/artifacts/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/schemas/earth_layer_registry.py",
+      "type": "file",
+      "name": "earth_layer_registry.py",
+      "filePath": "contracts/schemas/earth_layer_registry.py",
+      "summary": "Defines 1 function(s); 4 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/earth_layer_registry.py:seed_sabah_layers",
+      "type": "function",
+      "name": "seed_sabah_layers",
+      "filePath": "contracts/schemas/earth_layer_registry.py",
+      "lineRange": [
+        345,
+        439
+      ],
+      "summary": "seed_sabah_layers() — 94 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/earth_layer_registry.py:EarthLayer",
+      "type": "class",
+      "name": "EarthLayer",
+      "filePath": "contracts/schemas/earth_layer_registry.py",
+      "lineRange": [
+        101,
+        214
+      ],
+      "summary": "Class EarthLayer with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/earth_layer_registry.py:EarthLayerRegistry",
+      "type": "class",
+      "name": "EarthLayerRegistry",
+      "filePath": "contracts/schemas/earth_layer_registry.py",
+      "lineRange": [
+        222,
+        337
+      ],
+      "summary": "Class EarthLayerRegistry with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/federation_envelope.py",
+      "type": "file",
+      "name": "federation_envelope.py",
+      "filePath": "contracts/schemas/federation_envelope.py",
+      "summary": "Defines 2 function(s); 9 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/federation_envelope.py:build_federation_envelope",
+      "type": "function",
+      "name": "build_federation_envelope",
+      "filePath": "contracts/schemas/federation_envelope.py",
+      "lineRange": [
+        316,
+        369
+      ],
+      "summary": "build_federation_envelope(trace_id, actor_id, organ_origin, intent, metabolic_phase, evidence_type, evidence_refs, epistemic_label, confidence, autonomy_band, reversibility_class, risk_class, proposed_action, execution_status, measurement_result, measurement_summary, organ_target, handoff_reason, payload, session_id, parent_envelope_id, f13_required, required_floor_checks) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/schemas/federation_envelope.py:geox_to_federation_envelope",
+      "type": "function",
+      "name": "geox_to_federation_envelope",
+      "filePath": "contracts/schemas/federation_envelope.py",
+      "lineRange": [
+        377,
+        555
+      ],
+      "summary": "geox_to_federation_envelope(tool_name, tool_output, trace_id, actor_id, intent, session_id, organ_target, handoff_reason, parent_envelope_id) — 178 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:contracts/schemas/federation_envelope.py:EvidenceLayer",
+      "type": "class",
+      "name": "EvidenceLayer",
+      "filePath": "contracts/schemas/federation_envelope.py",
+      "lineRange": [
+        115,
+        150
+      ],
+      "summary": "Class EvidenceLayer with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/federation_envelope.py:FederationEnvelope",
+      "type": "class",
+      "name": "FederationEnvelope",
+      "filePath": "contracts/schemas/federation_envelope.py",
+      "lineRange": [
+        173,
+        308
+      ],
+      "summary": "Class FederationEnvelope with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/metabolic.py",
+      "type": "file",
+      "name": "metabolic.py",
+      "filePath": "contracts/schemas/metabolic.py",
+      "summary": "Defines 1 function(s); 22 class(es); exports 23 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/metabolic.py:build_metabolic_output",
+      "type": "function",
+      "name": "build_metabolic_output",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        603,
+        843
+      ],
+      "summary": "build_metabolic_output(tool_name, primary_artifact, witness_type, claim_state, confidence_level, witness_status, decoded_entities, anomalous_contrasts, candidate_meanings, constraints_checked, model_updates, required_next_tests, next_best_tool, evidence_freshness_as_of, cross_organ_handoff, session_id) — 240 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:DecodedEntity",
+      "type": "class",
+      "name": "DecodedEntity",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        175,
+        198
+      ],
+      "summary": "Class DecodedEntity with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:CandidateMeaning",
+      "type": "class",
+      "name": "CandidateMeaning",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        231,
+        251
+      ],
+      "summary": "Class CandidateMeaning with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:ModelUpdate",
+      "type": "class",
+      "name": "ModelUpdate",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        278,
+        302
+      ],
+      "summary": "Class ModelUpdate with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:OrganConflict",
+      "type": "class",
+      "name": "OrganConflict",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        400,
+        427
+      ],
+      "summary": "Class OrganConflict with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:MetabolicOutput",
+      "type": "class",
+      "name": "MetabolicOutput",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        435,
+        545
+      ],
+      "summary": "Class MetabolicOutput with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/metabolic.py:MetabolicCycle",
+      "type": "class",
+      "name": "MetabolicCycle",
+      "filePath": "contracts/schemas/metabolic.py",
+      "lineRange": [
+        553,
+        580
+      ],
+      "summary": "Class MetabolicCycle with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/schemas/output_schemas.py",
+      "type": "file",
+      "name": "output_schemas.py",
+      "filePath": "contracts/schemas/output_schemas.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/output_schemas.py:validate_iron_law",
+      "type": "function",
+      "name": "validate_iron_law",
+      "filePath": "contracts/schemas/output_schemas.py",
+      "lineRange": [
+        613,
+        667
+      ],
+      "summary": "validate_iron_law(evidence_chain) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/provenance_sidecar.py",
+      "type": "file",
+      "name": "provenance_sidecar.py",
+      "filePath": "contracts/schemas/provenance_sidecar.py",
+      "summary": "9 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:contracts/schemas/provenance_sidecar.py:ISO19115Metadata",
+      "type": "class",
+      "name": "ISO19115Metadata",
+      "filePath": "contracts/schemas/provenance_sidecar.py",
+      "lineRange": [
+        74,
+        119
+      ],
+      "summary": "Class ISO19115Metadata with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/provenance_sidecar.py:GeMSMapMetadata",
+      "type": "class",
+      "name": "GeMSMapMetadata",
+      "filePath": "contracts/schemas/provenance_sidecar.py",
+      "lineRange": [
+        127,
+        160
+      ],
+      "summary": "Class GeMSMapMetadata with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:contracts/schemas/provenance_sidecar.py:ProvenanceSidecar",
+      "type": "class",
+      "name": "ProvenanceSidecar",
+      "filePath": "contracts/schemas/provenance_sidecar.py",
+      "lineRange": [
+        212,
+        328
+      ],
+      "summary": "Class ProvenanceSidecar with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/schemas/request/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/schemas/request/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/schemas/response/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/schemas/response/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/schemas/scar_memory.py",
+      "type": "file",
+      "name": "scar_memory.py",
+      "filePath": "contracts/schemas/scar_memory.py",
+      "summary": "Defines 1 function(s); 3 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/schemas/scar_memory.py:seed_kinabalu_scars",
+      "type": "function",
+      "name": "seed_kinabalu_scars",
+      "filePath": "contracts/schemas/scar_memory.py",
+      "lineRange": [
+        253,
+        335
+      ],
+      "summary": "seed_kinabalu_scars() — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/scar_memory.py:Scar",
+      "type": "class",
+      "name": "Scar",
+      "filePath": "contracts/schemas/scar_memory.py",
+      "lineRange": [
+        73,
+        166
+      ],
+      "summary": "Class Scar with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:contracts/schemas/scar_memory.py:ScarStore",
+      "type": "class",
+      "name": "ScarStore",
+      "filePath": "contracts/schemas/scar_memory.py",
+      "lineRange": [
+        174,
+        245
+      ],
+      "summary": "Class ScarStore with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/tools/__init__.py",
+      "summary": "python code file (38 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "type": "file",
+      "name": "_artifact_helpers.py",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_artifact_exists",
+      "type": "function",
+      "name": "_artifact_exists",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        19,
+        21
+      ],
+      "summary": "_artifact_exists(artifact_id) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_register_artifact",
+      "type": "function",
+      "name": "_register_artifact",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        24,
+        28
+      ],
+      "summary": "_register_artifact(artifact_id, **kwargs) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_get_artifact",
+      "type": "function",
+      "name": "_get_artifact",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        31,
+        33
+      ],
+      "summary": "_get_artifact(artifact_id) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_record_latest_qc",
+      "type": "function",
+      "name": "_record_latest_qc",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        36,
+        40
+      ],
+      "summary": "_record_latest_qc(artifact_id, qc_result) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_reset_registry",
+      "type": "function",
+      "name": "_reset_registry",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        43,
+        47
+      ],
+      "summary": "_reset_registry() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_safe_upload_path",
+      "type": "function",
+      "name": "_safe_upload_path",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        50,
+        63
+      ],
+      "summary": "_safe_upload_path(filename, target_dir) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/_artifact_helpers.py:_decode_upload_content",
+      "type": "function",
+      "name": "_decode_upload_content",
+      "filePath": "contracts/tools/canonical/_artifact_helpers.py",
+      "lineRange": [
+        66,
+        75
+      ],
+      "summary": "_decode_upload_content(content_base64) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/tools/canonical/_helpers.py",
+      "type": "file",
+      "name": "_helpers.py",
+      "filePath": "contracts/tools/canonical/_helpers.py",
+      "summary": "python code file (106 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/canonical/dst.py",
+      "type": "file",
+      "name": "dst.py",
+      "filePath": "contracts/tools/canonical/dst.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/tools/canonical/dst.py:geox_dst_ingest_test",
+      "type": "function",
+      "name": "geox_dst_ingest_test",
+      "filePath": "contracts/tools/canonical/dst.py",
+      "lineRange": [
+        13,
+        101
+      ],
+      "summary": "geox_dst_ingest_test(well_id, field, reservoir_name, test_name, test_duration_hr, main_flow_hr, main_buildup_hr, choke_size_64ths, bhp_psi, bht_c, whp_psi, wht_c, gas_rate_mmscfd, condensate_rate_stbd, water_rate_stbd, co2_mol_pct, h2s_ppm, bsw_pct, chloride_ppm, wgr_stb_per_mmscf, permeability_md_min, permeability_md_max, skin_min, skin_max) — 88 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/tools/canonical/ingest.py",
+      "type": "file",
+      "name": "ingest.py",
+      "filePath": "contracts/tools/canonical/ingest.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:contracts/tools/canonical/ingest.py:_metabolic_return",
+      "type": "function",
+      "name": "_metabolic_return",
+      "filePath": "contracts/tools/canonical/ingest.py",
+      "lineRange": [
+        33,
+        48
+      ],
+      "summary": "_metabolic_return(envelope, witness_status, **kwargs) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/ingest.py:geox_data_ingest_bundle",
+      "type": "function",
+      "name": "geox_data_ingest_bundle",
+      "filePath": "contracts/tools/canonical/ingest.py",
+      "lineRange": [
+        51,
+        577
+      ],
+      "summary": "geox_data_ingest_bundle(source_uri, source_type, well_id, standardize_curves, normalize_units, content_base64, filename, target_dir, overwrite) — 526 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:contracts/tools/canonical/kernel/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/tools/canonical/kernel/__init__.py",
+      "summary": "python code file (6 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/tools/canonical/map_context.py",
+      "type": "file",
+      "name": "map_context.py",
+      "filePath": "contracts/tools/canonical/map_context.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/tools/canonical/map_context.py:geox_map_context_scene",
+      "type": "function",
+      "name": "geox_map_context_scene",
+      "filePath": "contracts/tools/canonical/map_context.py",
+      "lineRange": [
+        16,
+        49
+      ],
+      "summary": "geox_map_context_scene(bbox, mode, crs) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:contracts/enums/statuses.py",
+      "target": "function:contracts/enums/statuses.py:enforce_claim_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/enums/statuses.py",
+      "target": "function:contracts/enums/statuses.py:get_standard_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/enums/statuses.py",
+      "target": "function:contracts/enums/statuses.py:_claim_to_metabolic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/enums/statuses.py",
+      "target": "function:contracts/enums/statuses.py:_get_confidence_for_claim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/enums/statuses.py",
+      "target": "function:contracts/enums/statuses.py:enrich_envelope_with_metabolic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "function:contracts/governance/acp_logic.py:acp_register_agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:Agent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:AgentRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:A2AMessageBus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:FloorEnforcer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:DiscordanceDetector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:Judge888",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/governance/acp_logic.py",
+      "target": "class:contracts/governance/acp_logic.py:GEOSXACP",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "function:contracts/schemas/argument_sidecar.py:validate_argument_for_export",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "function:contracts/schemas/argument_sidecar.py:build_argument_sidecar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "class:contracts/schemas/argument_sidecar.py:GeologicalClaim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "class:contracts/schemas/argument_sidecar.py:RivalInterpretation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "class:contracts/schemas/argument_sidecar.py:UncertaintyBand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/argument_sidecar.py",
+      "target": "class:contracts/schemas/argument_sidecar.py:ArgumentSidecar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/earth_layer_registry.py",
+      "target": "function:contracts/schemas/earth_layer_registry.py:seed_sabah_layers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/earth_layer_registry.py",
+      "target": "class:contracts/schemas/earth_layer_registry.py:EarthLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/earth_layer_registry.py",
+      "target": "class:contracts/schemas/earth_layer_registry.py:EarthLayerRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/federation_envelope.py",
+      "target": "function:contracts/schemas/federation_envelope.py:build_federation_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/federation_envelope.py",
+      "target": "function:contracts/schemas/federation_envelope.py:geox_to_federation_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/federation_envelope.py",
+      "target": "class:contracts/schemas/federation_envelope.py:EvidenceLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/federation_envelope.py",
+      "target": "class:contracts/schemas/federation_envelope.py:FederationEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "function:contracts/schemas/metabolic.py:build_metabolic_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:DecodedEntity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:CandidateMeaning",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:ModelUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:OrganConflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:MetabolicOutput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/metabolic.py",
+      "target": "class:contracts/schemas/metabolic.py:MetabolicCycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/output_schemas.py",
+      "target": "function:contracts/schemas/output_schemas.py:validate_iron_law",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/provenance_sidecar.py",
+      "target": "class:contracts/schemas/provenance_sidecar.py:ISO19115Metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/provenance_sidecar.py",
+      "target": "class:contracts/schemas/provenance_sidecar.py:GeMSMapMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/provenance_sidecar.py",
+      "target": "class:contracts/schemas/provenance_sidecar.py:ProvenanceSidecar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/scar_memory.py",
+      "target": "function:contracts/schemas/scar_memory.py:seed_kinabalu_scars",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/scar_memory.py",
+      "target": "class:contracts/schemas/scar_memory.py:Scar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/schemas/scar_memory.py",
+      "target": "class:contracts/schemas/scar_memory.py:ScarStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_artifact_exists",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_register_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_get_artifact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_record_latest_qc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_reset_registry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_safe_upload_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/_artifact_helpers.py",
+      "target": "function:contracts/tools/canonical/_artifact_helpers.py:_decode_upload_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/dst.py",
+      "target": "function:contracts/tools/canonical/dst.py:geox_dst_ingest_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/ingest.py",
+      "target": "function:contracts/tools/canonical/ingest.py:_metabolic_return",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/ingest.py",
+      "target": "function:contracts/tools/canonical/ingest.py:geox_data_ingest_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/tools/canonical/map_context.py",
+      "target": "function:contracts/tools/canonical/map_context.py:geox_map_context_scene",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

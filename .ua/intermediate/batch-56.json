@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:skills/time/time-forecast-branching.md",
+      "type": "document",
+      "name": "time-forecast-branching.md",
+      "filePath": "skills/time/time-forecast-branching.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/time/time-monitoring-triggers.md",
+      "type": "document",
+      "name": "time-monitoring-triggers.md",
+      "filePath": "skills/time/time-monitoring-triggers.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/time/time-regime-shift.md",
+      "type": "document",
+      "name": "time-regime-shift.md",
+      "filePath": "skills/time/time-regime-shift.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

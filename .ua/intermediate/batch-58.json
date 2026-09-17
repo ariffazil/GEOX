@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "config:src/geox_core/schemas/graph.schema.json",
+      "type": "config",
+      "name": "graph.schema.json",
+      "filePath": "src/geox_core/schemas/graph.schema.json",
+      "summary": "json config file (36 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src/geox_core/schemas/registry.schema.json",
+      "type": "config",
+      "name": "registry.schema.json",
+      "filePath": "src/geox_core/schemas/registry.schema.json",
+      "summary": "json config file (82 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src/geox_core/schemas/skill.schema.json",
+      "type": "config",
+      "name": "skill.schema.json",
+      "filePath": "src/geox_core/schemas/skill.schema.json",
+      "summary": "json config file (105 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

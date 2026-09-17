@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "id": "config:static/PUBLIC_SURFACE_MANIFEST.json",
+      "type": "config",
+      "name": "PUBLIC_SURFACE_MANIFEST.json",
+      "filePath": "static/PUBLIC_SURFACE_MANIFEST.json",
+      "summary": "json config file (292 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:static/agents.html",
+      "type": "file",
+      "name": "agents.html",
+      "filePath": "static/agents.html",
+      "summary": "html markup file (520 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:static/constitution.html",
+      "type": "file",
+      "name": "constitution.html",
+      "filePath": "static/constitution.html",
+      "summary": "html markup file (559 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:static/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "static/index.html",
+      "summary": "html markup file (759 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:static/llms.txt",
+      "type": "document",
+      "name": "llms.txt",
+      "filePath": "static/llms.txt",
+      "summary": "txt docs file (81 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:static/robots.txt",
+      "type": "document",
+      "name": "robots.txt",
+      "filePath": "static/robots.txt",
+      "summary": "txt docs file (20 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:static/why.html",
+      "type": "file",
+      "name": "why.html",
+      "filePath": "static/why.html",
+      "summary": "html markup file (394 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

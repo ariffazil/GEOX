@@ -1,0 +1,170 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [
+    "static/gui/index.html",
+    "static/gui/malay_basin_workflow.html",
+    "static/gui/manifesto.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 2,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "static/gui/manifest-e2e.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 43,
+      "nonEmptyLines": 43,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "icon",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "events",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "fallback",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "static/gui/webmcp.manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 39,
+      "nonEmptyLines": 39,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "manifest_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "site",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "mcp",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "a2a",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "apps",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    }
+  ]
+}

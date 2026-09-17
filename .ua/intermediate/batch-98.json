@@ -1,0 +1,1525 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/plot_specs/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/plot_specs/__init__.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot_specs/__init__.py:_scan_forbidden",
+      "type": "function",
+      "name": "_scan_forbidden",
+      "filePath": "src/geox_core/plot_specs/__init__.py",
+      "lineRange": [
+        140,
+        156
+      ],
+      "summary": "_scan_forbidden(obj, path) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/plot_specs/__init__.py:PlotSpec",
+      "type": "class",
+      "name": "PlotSpec",
+      "filePath": "src/geox_core/plot_specs/__init__.py",
+      "lineRange": [
+        63,
+        137
+      ],
+      "summary": "Class PlotSpec with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/plot_specs/schemas.py",
+      "type": "file",
+      "name": "schemas.py",
+      "filePath": "src/geox_core/plot_specs/schemas.py",
+      "summary": "Defines 1 function(s); 5 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot_specs/schemas.py:_reject_forbidden_fields",
+      "type": "function",
+      "name": "_reject_forbidden_fields",
+      "filePath": "src/geox_core/plot_specs/schemas.py",
+      "lineRange": [
+        125,
+        137
+      ],
+      "summary": "_reject_forbidden_fields(value, path) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/plot_specs/schemas.py:TrackSpec",
+      "type": "class",
+      "name": "TrackSpec",
+      "filePath": "src/geox_core/plot_specs/schemas.py",
+      "lineRange": [
+        51,
+        71
+      ],
+      "summary": "Class TrackSpec with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/plot_specs/schemas.py:PlotSpec",
+      "type": "class",
+      "name": "PlotSpec",
+      "filePath": "src/geox_core/plot_specs/schemas.py",
+      "lineRange": [
+        79,
+        122
+      ],
+      "summary": "Class PlotSpec with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/plot_specs/validators.py",
+      "type": "file",
+      "name": "validators.py",
+      "filePath": "src/geox_core/plot_specs/validators.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot_specs/validators.py:build_well_panel_plot_spec",
+      "type": "function",
+      "name": "build_well_panel_plot_spec",
+      "filePath": "src/geox_core/plot_specs/validators.py",
+      "lineRange": [
+        33,
+        71
+      ],
+      "summary": "build_well_panel_plot_spec(las_paths, tracks, depth_range, output_formats, raw_plot_spec) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/plot_specs/validators.py:_track_to_spec",
+      "type": "function",
+      "name": "_track_to_spec",
+      "filePath": "src/geox_core/plot_specs/validators.py",
+      "lineRange": [
+        74,
+        82
+      ],
+      "summary": "_track_to_spec(track) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/registry/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/registry/__init__.py",
+      "summary": "python code file (23 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/registry/basin_context_loader.py",
+      "type": "file",
+      "name": "basin_context_loader.py",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "summary": "Defines 5 function(s); 5 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/registry/basin_context_loader.py:_parse_group",
+      "type": "function",
+      "name": "_parse_group",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        121,
+        137
+      ],
+      "summary": "_parse_group(group_data) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/registry/basin_context_loader.py:_parse_overpressure",
+      "type": "function",
+      "name": "_parse_overpressure",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        140,
+        150
+      ],
+      "summary": "_parse_overpressure(comp_data, name) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/registry/basin_context_loader.py:_parse_geothermal",
+      "type": "function",
+      "name": "_parse_geothermal",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        153,
+        161
+      ],
+      "summary": "_parse_geothermal(geo_data) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/registry/basin_context_loader.py:load_basin_context",
+      "type": "function",
+      "name": "load_basin_context",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        164,
+        230
+      ],
+      "summary": "load_basin_context(basin_name, registry_base) — 66 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/registry/basin_context_loader.py:get_basin_context",
+      "type": "function",
+      "name": "get_basin_context",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        237,
+        249
+      ],
+      "summary": "get_basin_context(basin_name) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/registry/basin_context_loader.py:BasinContext",
+      "type": "class",
+      "name": "BasinContext",
+      "filePath": "src/geox_core/registry/basin_context_loader.py",
+      "lineRange": [
+        68,
+        118
+      ],
+      "summary": "Class BasinContext with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/geox_core/registry/graph.json",
+      "type": "config",
+      "name": "graph.json",
+      "filePath": "src/geox_core/registry/graph.json",
+      "summary": "json config file (90 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src/geox_core/registry/registry.json",
+      "type": "config",
+      "name": "registry.json",
+      "filePath": "src/geox_core/registry/registry.json",
+      "summary": "json config file (704 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/renderers/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:dispatch",
+      "type": "function",
+      "name": "dispatch",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        33,
+        85
+      ],
+      "summary": "dispatch(spec) — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:_digest_spec",
+      "type": "function",
+      "name": "_digest_spec",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        88,
+        104
+      ],
+      "summary": "_digest_spec(spec) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:_render_matplotlib",
+      "type": "function",
+      "name": "_render_matplotlib",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        110,
+        145
+      ],
+      "summary": "_render_matplotlib(spec) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:_render_plotly",
+      "type": "function",
+      "name": "_render_plotly",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        151,
+        169
+      ],
+      "summary": "_render_plotly(spec) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:_render_pillow",
+      "type": "function",
+      "name": "_render_pillow",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        175,
+        190
+      ],
+      "summary": "_render_pillow(spec) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/renderers/__init__.py:_render_pyvista",
+      "type": "function",
+      "name": "_render_pyvista",
+      "filePath": "src/geox_core/renderers/__init__.py",
+      "lineRange": [
+        196,
+        220
+      ],
+      "summary": "_render_pyvista(spec) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/renderers/base.py",
+      "type": "file",
+      "name": "base.py",
+      "filePath": "src/geox_core/renderers/base.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/renderers/matplotlib_logs.py",
+      "type": "file",
+      "name": "matplotlib_logs.py",
+      "filePath": "src/geox_core/renderers/matplotlib_logs.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/renderers/matplotlib_logs.py:render_multiwell_correlation_panel",
+      "type": "function",
+      "name": "render_multiwell_correlation_panel",
+      "filePath": "src/geox_core/renderers/matplotlib_logs.py",
+      "lineRange": [
+        13,
+        81
+      ],
+      "summary": "render_multiwell_correlation_panel(request) — 68 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/renderers/matplotlib_logs.py:_pack_is_valid",
+      "type": "function",
+      "name": "_pack_is_valid",
+      "filePath": "src/geox_core/renderers/matplotlib_logs.py",
+      "lineRange": [
+        84,
+        89
+      ],
+      "summary": "_pack_is_valid(validation, required) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/renderers/plotly_logs.py",
+      "type": "file",
+      "name": "plotly_logs.py",
+      "filePath": "src/geox_core/renderers/plotly_logs.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/replan_dag.py",
+      "type": "file",
+      "name": "replan_dag.py",
+      "filePath": "src/geox_core/replan_dag.py",
+      "summary": "Defines 4 function(s); 4 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/replan_dag.py:_register",
+      "type": "function",
+      "name": "_register",
+      "filePath": "src/geox_core/replan_dag.py",
+      "lineRange": [
+        99,
+        112
+      ],
+      "summary": "_register(trigger_name, source_tool, affected_variables, propagation, reason) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/replan_dag.py:get_replan",
+      "type": "function",
+      "name": "get_replan",
+      "filePath": "src/geox_core/replan_dag.py",
+      "lineRange": [
+        269,
+        289
+      ],
+      "summary": "get_replan(trigger_name, source_tool) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/schemas/__init__.py",
+      "summary": "python code file (35 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/artifacts/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/schemas/artifacts/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/claim_envelope.py",
+      "type": "file",
+      "name": "claim_envelope.py",
+      "filePath": "src/geox_core/schemas/claim_envelope.py",
+      "summary": "Defines 1 function(s); 11 class(es); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/claim_envelope.py:wrap_for_membrane",
+      "type": "function",
+      "name": "wrap_for_membrane",
+      "filePath": "src/geox_core/schemas/claim_envelope.py",
+      "lineRange": [
+        475,
+        504
+      ],
+      "summary": "wrap_for_membrane(tool_id, adapter_output, canon9_variable, envelope_class, **kwargs) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/claim_envelope.py:ClaimEnvelope",
+      "type": "class",
+      "name": "ClaimEnvelope",
+      "filePath": "src/geox_core/schemas/claim_envelope.py",
+      "lineRange": [
+        129,
+        442
+      ],
+      "summary": "Class ClaimEnvelope with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/schemas/crust_provenance_map.py",
+      "type": "file",
+      "name": "crust_provenance_map.py",
+      "filePath": "src/geox_core/schemas/crust_provenance_map.py",
+      "summary": "Defines 4 function(s); 2 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/crust_provenance_map.py:lookup",
+      "type": "function",
+      "name": "lookup",
+      "filePath": "src/geox_core/schemas/crust_provenance_map.py",
+      "lineRange": [
+        448,
+        466
+      ],
+      "summary": "lookup(hasterok_label) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "type": "file",
+      "name": "crust_vp_grammar.py",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "summary": "Defines 2 function(s); 4 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/crust_vp_grammar.py:vp_zone_classify",
+      "type": "function",
+      "name": "vp_zone_classify",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "lineRange": [
+        252,
+        471
+      ],
+      "summary": "vp_zone_classify(vp_km_s, crust_thickness_km, depth_km, heat_flow_mw_m2) — 219 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/crust_vp_grammar.py:classify_column",
+      "type": "function",
+      "name": "classify_column",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "lineRange": [
+        474,
+        487
+      ],
+      "summary": "classify_column(column) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/crust_vp_grammar.py:VpObservation",
+      "type": "class",
+      "name": "VpObservation",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "lineRange": [
+        114,
+        153
+      ],
+      "summary": "Class VpObservation with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/crust_vp_grammar.py:CrustClassification",
+      "type": "class",
+      "name": "CrustClassification",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "lineRange": [
+        156,
+        207
+      ],
+      "summary": "Class CrustClassification with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/schemas/crust_vp_grammar.py:CrustColumn",
+      "type": "class",
+      "name": "CrustColumn",
+      "filePath": "src/geox_core/schemas/crust_vp_grammar.py",
+      "lineRange": [
+        210,
+        244
+      ],
+      "summary": "Class CrustColumn with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/geox_1d_mcp.py",
+      "type": "file",
+      "name": "geox_1d_mcp.py",
+      "filePath": "src/geox_core/schemas/geox_1d_mcp.py",
+      "summary": "Defines 1 function(s); 4 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/schemas/geox_1d_mcp.py:as_float_list",
+      "type": "function",
+      "name": "as_float_list",
+      "filePath": "src/geox_core/schemas/geox_1d_mcp.py",
+      "lineRange": [
+        19,
+        30
+      ],
+      "summary": "as_float_list(x) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/geox_schemas.py",
+      "type": "file",
+      "name": "geox_schemas.py",
+      "filePath": "src/geox_core/schemas/geox_schemas.py",
+      "summary": "44 class(es); exports 44 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/schemas/geox_schemas.py:SamplingAxis",
+      "type": "class",
+      "name": "SamplingAxis",
+      "filePath": "src/geox_core/schemas/geox_schemas.py",
+      "lineRange": [
+        162,
+        182
+      ],
+      "summary": "Class SamplingAxis with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/geox_schemas.py:PolicyBand",
+      "type": "class",
+      "name": "PolicyBand",
+      "filePath": "src/geox_core/schemas/geox_schemas.py",
+      "lineRange": [
+        288,
+        314
+      ],
+      "summary": "Class PolicyBand with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/geox_schemas.py:IntentEnvelope",
+      "type": "class",
+      "name": "IntentEnvelope",
+      "filePath": "src/geox_core/schemas/geox_schemas.py",
+      "lineRange": [
+        503,
+        523
+      ],
+      "summary": "Class IntentEnvelope with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/geox_schemas.py:ContrastVerdict",
+      "type": "class",
+      "name": "ContrastVerdict",
+      "filePath": "src/geox_core/schemas/geox_schemas.py",
+      "lineRange": [
+        599,
+        626
+      ],
+      "summary": "Class ContrastVerdict with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/intelligence_flow.py",
+      "type": "file",
+      "name": "intelligence_flow.py",
+      "filePath": "src/geox_core/schemas/intelligence_flow.py",
+      "summary": "Defines 1 function(s); 5 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/schemas/intelligence_flow.py:FlowPacket",
+      "type": "class",
+      "name": "FlowPacket",
+      "filePath": "src/geox_core/schemas/intelligence_flow.py",
+      "lineRange": [
+        218,
+        244
+      ],
+      "summary": "Class FlowPacket with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/intelligence_flow.py:FlowSession",
+      "type": "class",
+      "name": "FlowSession",
+      "filePath": "src/geox_core/schemas/intelligence_flow.py",
+      "lineRange": [
+        252,
+        284
+      ],
+      "summary": "Class FlowSession with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/kinabalu_corpus.py",
+      "type": "file",
+      "name": "kinabalu_corpus.py",
+      "filePath": "src/geox_core/schemas/kinabalu_corpus.py",
+      "summary": "9 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/schemas/kinabalu_corpus.py:Paper",
+      "type": "class",
+      "name": "Paper",
+      "filePath": "src/geox_core/schemas/kinabalu_corpus.py",
+      "lineRange": [
+        79,
+        127
+      ],
+      "summary": "Class Paper with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/kinabalu_corpus.py:Claim",
+      "type": "class",
+      "name": "Claim",
+      "filePath": "src/geox_core/schemas/kinabalu_corpus.py",
+      "lineRange": [
+        135,
+        155
+      ],
+      "summary": "Class Claim with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/kinabalu_corpus.py:Eureka",
+      "type": "class",
+      "name": "Eureka",
+      "filePath": "src/geox_core/schemas/kinabalu_corpus.py",
+      "lineRange": [
+        206,
+        234
+      ],
+      "summary": "Class Eureka with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/kinabalu_corpus.py:KinabaluCorpus",
+      "type": "class",
+      "name": "KinabaluCorpus",
+      "filePath": "src/geox_core/schemas/kinabalu_corpus.py",
+      "lineRange": [
+        242,
+        281
+      ],
+      "summary": "Class KinabaluCorpus with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/metabolic.py",
+      "type": "file",
+      "name": "metabolic.py",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "summary": "Defines 1 function(s); 22 class(es); exports 23 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/metabolic.py:build_metabolic_output",
+      "type": "function",
+      "name": "build_metabolic_output",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        603,
+        844
+      ],
+      "summary": "build_metabolic_output(tool_name, primary_artifact, witness_type, claim_state, confidence_level, witness_status, decoded_entities, anomalous_contrasts, candidate_meanings, constraints_checked, model_updates, required_next_tests, next_best_tool, evidence_freshness_as_of, cross_organ_handoff, session_id) — 241 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:DecodedEntity",
+      "type": "class",
+      "name": "DecodedEntity",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        174,
+        197
+      ],
+      "summary": "Class DecodedEntity with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:CandidateMeaning",
+      "type": "class",
+      "name": "CandidateMeaning",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        230,
+        250
+      ],
+      "summary": "Class CandidateMeaning with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:ModelUpdate",
+      "type": "class",
+      "name": "ModelUpdate",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        277,
+        301
+      ],
+      "summary": "Class ModelUpdate with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:OrganConflict",
+      "type": "class",
+      "name": "OrganConflict",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        399,
+        426
+      ],
+      "summary": "Class OrganConflict with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:MetabolicOutput",
+      "type": "class",
+      "name": "MetabolicOutput",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        434,
+        545
+      ],
+      "summary": "Class MetabolicOutput with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/schemas/metabolic.py:MetabolicCycle",
+      "type": "class",
+      "name": "MetabolicCycle",
+      "filePath": "src/geox_core/schemas/metabolic.py",
+      "lineRange": [
+        553,
+        580
+      ],
+      "summary": "Class MetabolicCycle with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/schemas/output_schemas.py",
+      "type": "file",
+      "name": "output_schemas.py",
+      "filePath": "src/geox_core/schemas/output_schemas.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/output_schemas.py:validate_iron_law",
+      "type": "function",
+      "name": "validate_iron_law",
+      "filePath": "src/geox_core/schemas/output_schemas.py",
+      "lineRange": [
+        612,
+        666
+      ],
+      "summary": "validate_iron_law(evidence_chain) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/schemas/render_payload.py",
+      "type": "file",
+      "name": "render_payload.py",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "summary": "Defines 3 function(s); 11 class(es); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/schemas/render_payload.py:render_map",
+      "type": "function",
+      "name": "render_map",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "lineRange": [
+        253,
+        270
+      ],
+      "summary": "render_map(geojson, bbox, crs, claim_tag, maruah_flag) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/schemas/render_payload.py:render_surface",
+      "type": "function",
+      "name": "render_surface",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "lineRange": [
+        273,
+        294
+      ],
+      "summary": "render_surface(resource_uri, geometry_type, shape, bbox, claim_tag) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/schemas/render_payload.py:render_cube_slice",
+      "type": "function",
+      "name": "render_cube_slice",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "lineRange": [
+        297,
+        328
+      ],
+      "summary": "render_cube_slice(resource_uri, shape, orientation, slice_index, bbox, attribute, claim_tag, cube_manifest) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/schemas/render_payload.py:CubeManifest",
+      "type": "class",
+      "name": "CubeManifest",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "lineRange": [
+        140,
+        189
+      ],
+      "summary": "Class CubeManifest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/schemas/render_payload.py:RenderPayload",
+      "type": "class",
+      "name": "RenderPayload",
+      "filePath": "src/geox_core/schemas/render_payload.py",
+      "lineRange": [
+        192,
+        247
+      ],
+      "summary": "Class RenderPayload with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/schemas/request/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/schemas/request/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/plot_specs/__init__.py",
+      "target": "function:src/geox_core/plot_specs/__init__.py:_scan_forbidden",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/__init__.py",
+      "target": "class:src/geox_core/plot_specs/__init__.py:PlotSpec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/schemas.py",
+      "target": "function:src/geox_core/plot_specs/schemas.py:_reject_forbidden_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/schemas.py",
+      "target": "class:src/geox_core/plot_specs/schemas.py:TrackSpec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/schemas.py",
+      "target": "class:src/geox_core/plot_specs/schemas.py:PlotSpec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/validators.py",
+      "target": "function:src/geox_core/plot_specs/validators.py:build_well_panel_plot_spec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/plot_specs/validators.py",
+      "target": "function:src/geox_core/plot_specs/validators.py:_track_to_spec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "function:src/geox_core/registry/basin_context_loader.py:_parse_group",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "function:src/geox_core/registry/basin_context_loader.py:_parse_overpressure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "function:src/geox_core/registry/basin_context_loader.py:_parse_geothermal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "function:src/geox_core/registry/basin_context_loader.py:load_basin_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "function:src/geox_core/registry/basin_context_loader.py:get_basin_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/registry/basin_context_loader.py",
+      "target": "class:src/geox_core/registry/basin_context_loader.py:BasinContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:dispatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:_digest_spec",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:_render_matplotlib",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:_render_plotly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:_render_pillow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/__init__.py",
+      "target": "function:src/geox_core/renderers/__init__.py:_render_pyvista",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/matplotlib_logs.py",
+      "target": "function:src/geox_core/renderers/matplotlib_logs.py:render_multiwell_correlation_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/renderers/matplotlib_logs.py",
+      "target": "function:src/geox_core/renderers/matplotlib_logs.py:_pack_is_valid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/replan_dag.py",
+      "target": "function:src/geox_core/replan_dag.py:_register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/replan_dag.py",
+      "target": "function:src/geox_core/replan_dag.py:get_replan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/claim_envelope.py",
+      "target": "function:src/geox_core/schemas/claim_envelope.py:wrap_for_membrane",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/claim_envelope.py",
+      "target": "class:src/geox_core/schemas/claim_envelope.py:ClaimEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_provenance_map.py",
+      "target": "function:src/geox_core/schemas/crust_provenance_map.py:lookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "target": "function:src/geox_core/schemas/crust_vp_grammar.py:vp_zone_classify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "target": "function:src/geox_core/schemas/crust_vp_grammar.py:classify_column",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "target": "class:src/geox_core/schemas/crust_vp_grammar.py:VpObservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "target": "class:src/geox_core/schemas/crust_vp_grammar.py:CrustClassification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/crust_vp_grammar.py",
+      "target": "class:src/geox_core/schemas/crust_vp_grammar.py:CrustColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/geox_1d_mcp.py",
+      "target": "function:src/geox_core/schemas/geox_1d_mcp.py:as_float_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/geox_schemas.py",
+      "target": "class:src/geox_core/schemas/geox_schemas.py:SamplingAxis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/geox_schemas.py",
+      "target": "class:src/geox_core/schemas/geox_schemas.py:PolicyBand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/geox_schemas.py",
+      "target": "class:src/geox_core/schemas/geox_schemas.py:IntentEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/geox_schemas.py",
+      "target": "class:src/geox_core/schemas/geox_schemas.py:ContrastVerdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/intelligence_flow.py",
+      "target": "class:src/geox_core/schemas/intelligence_flow.py:FlowPacket",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/intelligence_flow.py",
+      "target": "class:src/geox_core/schemas/intelligence_flow.py:FlowSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/kinabalu_corpus.py",
+      "target": "class:src/geox_core/schemas/kinabalu_corpus.py:Paper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/kinabalu_corpus.py",
+      "target": "class:src/geox_core/schemas/kinabalu_corpus.py:Claim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/kinabalu_corpus.py",
+      "target": "class:src/geox_core/schemas/kinabalu_corpus.py:Eureka",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/kinabalu_corpus.py",
+      "target": "class:src/geox_core/schemas/kinabalu_corpus.py:KinabaluCorpus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "function:src/geox_core/schemas/metabolic.py:build_metabolic_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:DecodedEntity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:CandidateMeaning",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:ModelUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:OrganConflict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:MetabolicOutput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/metabolic.py",
+      "target": "class:src/geox_core/schemas/metabolic.py:MetabolicCycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/output_schemas.py",
+      "target": "function:src/geox_core/schemas/output_schemas.py:validate_iron_law",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/render_payload.py",
+      "target": "function:src/geox_core/schemas/render_payload.py:render_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/render_payload.py",
+      "target": "function:src/geox_core/schemas/render_payload.py:render_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/render_payload.py",
+      "target": "function:src/geox_core/schemas/render_payload.py:render_cube_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/render_payload.py",
+      "target": "class:src/geox_core/schemas/render_payload.py:CubeManifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/schemas/render_payload.py",
+      "target": "class:src/geox_core/schemas/render_payload.py:RenderPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

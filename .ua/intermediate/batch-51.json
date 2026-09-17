@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/mobility/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/mobility/agent-card.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/mobility/mobility-chokepoint-detection.md",
+      "type": "document",
+      "name": "mobility-chokepoint-detection.md",
+      "filePath": "skills/mobility/mobility-chokepoint-detection.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/mobility/mobility-fleet-patterns.md",
+      "type": "document",
+      "name": "mobility-fleet-patterns.md",
+      "filePath": "skills/mobility/mobility-fleet-patterns.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/mobility/mobility-route-viability.md",
+      "type": "document",
+      "name": "mobility-route-viability.md",
+      "filePath": "skills/mobility/mobility-route-viability.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,392 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "docs/eureka_insights/E8_VELOCITY_AS_STRUCTURE_2026_06_03.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 411,
+      "nonEmptyLines": 314,
+      "sections": [
+        {
+          "heading": "E8 — Velocity IS Structure (Kinabalu-Pattern Insight Distillation)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. THE EUREKA STATEMENT",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "2. PHYSICS GROUNDING — 6 LAYERS, EACH INDEPENDENTLY SUFFICIENT",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Layer 1 — Elastic wave equation",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "Layer 2 — Rock physics (Wyllie, Gardner, Eaton, Bowers)",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "Layer 3 — Dix inversion and eikonal duality",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "Layer 4 — Velocity-structure duality (THE THEOREM)",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "Layer 5 — Multi-channel attribution (5 signals from 1 slice)",
+          "level": 3,
+          "line": 103
+        },
+        {
+          "heading": "Layer 6 — Structural inheritance",
+          "level": 3,
+          "line": 124
+        },
+        {
+          "heading": "3. IMPLEMENTATION — 3 PRIMITIVES, ZERO NEW MCP TOOLS",
+          "level": 2,
+          "line": 144
+        },
+        {
+          "heading": "Primitive 1: `slice_velocity_cube(cube, depth, window_m=0)`",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "Primitive 2: `structural_attribution(slice, physics9_catalog=...)`",
+          "level": 3,
+          "line": 151
+        },
+        {
+          "heading": "Primitive 3: `bootstrap_structure(checkshots, cube, target_depth, ...)`",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "Synthetic test cube: `synth_cube_with_structure(...)`",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "4. MCP WIRING — ZERO NEW TOOL SURFACE (F13 HONORED)",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "5. FAILURE MODES — DECLARED, NOT HIDDEN",
+          "level": 2,
+          "line": 191
+        },
+        {
+          "heading": "6. KINABALU APPLICATION — DIRECT FROM THEORY TO FIELD",
+          "level": 2,
+          "line": 210
+        },
+        {
+          "heading": "7. PROMOTION — E1–E7 ARE NOW SPATIAL",
+          "level": 2,
+          "line": 238
+        },
+        {
+          "heading": "8. UNCERTAINTY PROPAGATION & GOVERNANCE",
+          "level": 2,
+          "line": 259
+        },
+        {
+          "heading": "Velocity model uncertainty",
+          "level": 3,
+          "line": 261
+        },
+        {
+          "heading": "Non-uniqueness",
+          "level": 3,
+          "line": 267
+        },
+        {
+          "heading": "Attribution uncertainty",
+          "level": 3,
+          "line": 274
+        },
+        {
+          "heading": "Human oversight (Floor F13)",
+          "level": 3,
+          "line": 281
+        },
+        {
+          "heading": "9. EUREKA INSIGHTS — THE 8 LEARNINGS (from Kinabalu data)",
+          "level": 2,
+          "line": 288
+        },
+        {
+          "heading": "10. TEST CORPUS — 37 TESTS, 0 FAIL",
+          "level": 2,
+          "line": 336
+        },
+        {
+          "heading": "11. HONEST FLAGS (DECLARED, NOT HIDDEN)",
+          "level": 2,
+          "line": 362
+        },
+        {
+          "heading": "12. ROADMAP — THE FULL EUREKA FORGE",
+          "level": 2,
+          "line": 385
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/eureka_insights/E9_IMPEDANCE_AS_FLUID_2026_06_03.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 390,
+      "nonEmptyLines": 301,
+      "sections": [
+        {
+          "heading": "E9 — Impedance Contrast IS Fluid (AVO, the Fluid Twin of E8)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. THE EUREKA STATEMENT",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "2. THE GAP E8 LEFT OPEN",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "3. PHYSICS GROUNDING — 6 LAYERS, EACH INDEPENDENTLY SUFFICIENT",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "Layer 1 — Vs is the Rigidity Field",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "Layer 2 — Biot-Gassmann (the bridge from Vs to fluid)",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "Layer 3 — Zoeppritz Exact",
+          "level": 3,
+          "line": 82
+        },
+        {
+          "heading": "Layer 4 — Shuey Linearisation",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "Layer 5 — Lambda-Mu-Rho (LMR) Decomposition (Goodway 1997)",
+          "level": 3,
+          "line": 119
+        },
+        {
+          "heading": "Layer 6 — Physics9 Completeness Audit",
+          "level": 3,
+          "line": 136
+        },
+        {
+          "heading": "4. IMPLEMENTATION — 3 PRIMITIVES, ZERO NEW MCP TOOLS (F13)",
+          "level": 2,
+          "line": 157
+        },
+        {
+          "heading": "Primitive 1: `zoeppritz_rpp(vp1, vs1, rho1, vp2, vs2, rho2, theta_deg)`",
+          "level": 3,
+          "line": 159
+        },
+        {
+          "heading": "Primitive 2: `shuey_avo(vp1, vs1, rho1, vp2, vs2, rho2, theta_max=30)`",
+          "level": 3,
+          "line": 163
+        },
+        {
+          "heading": "Primitive 3: `lmr_decompose(vp, vs, rho)`",
+          "level": 3,
+          "line": 168
+        },
+        {
+          "heading": "Helper: `synth_gather(theta_deg, scenario)`",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "MCP wiring — none required at this layer",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "5. KINABALU APPLICATION — DIRECT FROM THEORY TO FIELD",
+          "level": 2,
+          "line": 190
+        },
+        {
+          "heading": "6. E8 / E9 DUALITY — THE COMPLETE PICTURE",
+          "level": 2,
+          "line": 216
+        },
+        {
+          "heading": "7. THE 4 PHYSICS9 GAPS — A 2-LINE FIX",
+          "level": 2,
+          "line": 237
+        },
+        {
+          "heading": "8. TEST CORPUS — 29 TESTS, 0 FAIL",
+          "level": 2,
+          "line": 252
+        },
+        {
+          "heading": "9. HONEST FLAGS (DECLARED, NOT HIDDEN)",
+          "level": 2,
+          "line": 276
+        },
+        {
+          "heading": "10. WHAT'S NEXT — THE 888_HOLD GATE",
+          "level": 2,
+          "line": 295
+        },
+        {
+          "heading": "11. ROADMAP — THE FULL EUREKA FORGE (NOW 8 KEYS)",
+          "level": 2,
+          "line": 321
+        },
+        {
+          "heading": "999 SEAL",
+          "level": 2,
+          "line": 353
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 24
+      }
+    },
+    {
+      "path": "docs/eureka_insights/KL2_KINABALU_2026_06_03.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 121,
+      "nonEmptyLines": 84,
+      "sections": [
+        {
+          "heading": "EUREKA INSIGHTS — Kinabalu KL2 Time-Depth Survey (2026-06-03)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. THE DATASET (canonical reference)",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "2. THE 8 EUREKA INSIGHTS (distilled)",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Insight 1 — Quality flagging must auto-detect \"SYNTHETIC\" labels",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "Insight 2 — Three Excel formats require a single parser",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "Insight 3 — Deviated well (BUNGA LILI-1) needs ray-traced TWT correction",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "Insight 4 — dVint/dZ derivative is the compaction indicator",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "Insight 5 — V_avg vs TWT is the velocity-analysis cross-check",
+          "level": 3,
+          "line": 57
+        },
+        {
+          "heading": "Insight 6 — T-Z residual from linear trend is the polynomial-fitter output",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "Insight 7 — Vint distribution IS the Bayesian prior",
+          "level": 3,
+          "line": 67
+        },
+        {
+          "heading": "Insight 8 — Multi-well simultaneous calibration is the right call",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "3. CROSS-VALIDATION TABLE",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "4. WHAT THE COPILOT DIDN'T CATCH (forge targets)",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "5. ACTION ITEMS (forge routing)",
+          "level": 2,
+          "line": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    }
+  ]
+}

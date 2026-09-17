@@ -1,0 +1,3521 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/test_seismic_rsi.py",
+      "type": "file",
+      "name": "test_seismic_rsi.py",
+      "filePath": "tests/test_seismic_rsi.py",
+      "summary": "Defines 1 function(s); 11 class(es); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_seismic_rsi.py:_run",
+      "type": "function",
+      "name": "_run",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        26,
+        28
+      ],
+      "summary": "_run(coro) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestRealityGate",
+      "type": "class",
+      "name": "TestRealityGate",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        31,
+        63
+      ],
+      "summary": "Class TestRealityGate with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestProvenance",
+      "type": "class",
+      "name": "TestProvenance",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        66,
+        89
+      ],
+      "summary": "Class TestProvenance with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestPanelDetection",
+      "type": "class",
+      "name": "TestPanelDetection",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        92,
+        111
+      ],
+      "summary": "Class TestPanelDetection with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestAttributes",
+      "type": "class",
+      "name": "TestAttributes",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        114,
+        141
+      ],
+      "summary": "Class TestAttributes with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestFaultDetection",
+      "type": "class",
+      "name": "TestFaultDetection",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        144,
+        180
+      ],
+      "summary": "Class TestFaultDetection with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestHorizonTracking",
+      "type": "class",
+      "name": "TestHorizonTracking",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        183,
+        204
+      ],
+      "summary": "Class TestHorizonTracking with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestRSIInterpret",
+      "type": "class",
+      "name": "TestRSIInterpret",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        244,
+        294
+      ],
+      "summary": "Class TestRSIInterpret with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_rsi.py:TestCanonicalRegistration",
+      "type": "class",
+      "name": "TestCanonicalRegistration",
+      "filePath": "tests/test_seismic_rsi.py",
+      "lineRange": [
+        314,
+        335
+      ],
+      "summary": "Class TestCanonicalRegistration with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_seismic_visual_filter.py",
+      "type": "file",
+      "name": "test_seismic_visual_filter.py",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "summary": "Defines 2 function(s); 6 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_seismic_visual_filter.py:synthetic_seismic_slice",
+      "type": "function",
+      "name": "synthetic_seismic_slice",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        41,
+        69
+      ],
+      "summary": "synthetic_seismic_slice() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestFilterFunctions",
+      "type": "class",
+      "name": "TestFilterFunctions",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        83,
+        133
+      ],
+      "summary": "Class TestFilterFunctions with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestFilterStack",
+      "type": "class",
+      "name": "TestFilterStack",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        140,
+        172
+      ],
+      "summary": "Class TestFilterStack with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestVisualHypothesis",
+      "type": "class",
+      "name": "TestVisualHypothesis",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        179,
+        200
+      ],
+      "summary": "Class TestVisualHypothesis with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestUtilities",
+      "type": "class",
+      "name": "TestUtilities",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        207,
+        231
+      ],
+      "summary": "Class TestUtilities with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestSeismicVisualFilterTool",
+      "type": "class",
+      "name": "TestSeismicVisualFilterTool",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        238,
+        331
+      ],
+      "summary": "Class TestSeismicVisualFilterTool with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_seismic_visual_filter.py:TestConstitutionalCompliance",
+      "type": "class",
+      "name": "TestConstitutionalCompliance",
+      "filePath": "tests/test_seismic_visual_filter.py",
+      "lineRange": [
+        338,
+        390
+      ],
+      "summary": "Class TestConstitutionalCompliance with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_seismic_zen_f1.py",
+      "type": "file",
+      "name": "test_seismic_zen_f1.py",
+      "filePath": "tests/test_seismic_zen_f1.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_seismic_zen_f1.py:test_f1_attribute_fixture_coherence",
+      "type": "function",
+      "name": "test_f1_attribute_fixture_coherence",
+      "filePath": "tests/test_seismic_zen_f1.py",
+      "lineRange": [
+        8,
+        18
+      ],
+      "summary": "test_f1_attribute_fixture_coherence() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_seismic_zen_f1.py:test_f1_track_horizon_fixture",
+      "type": "function",
+      "name": "test_f1_track_horizon_fixture",
+      "filePath": "tests/test_seismic_zen_f1.py",
+      "lineRange": [
+        22,
+        33
+      ],
+      "summary": "test_f1_track_horizon_fixture() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_seismic_zen_f1.py:test_f1_measure_throw_feeds_gates",
+      "type": "function",
+      "name": "test_f1_measure_throw_feeds_gates",
+      "filePath": "tests/test_seismic_zen_f1.py",
+      "lineRange": [
+        37,
+        58
+      ],
+      "summary": "test_f1_measure_throw_feeds_gates() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_seismic_zen_f1.py:test_f1_image_path_track",
+      "type": "function",
+      "name": "test_f1_image_path_track",
+      "filePath": "tests/test_seismic_zen_f1.py",
+      "lineRange": [
+        62,
+        76
+      ],
+      "summary": "test_f1_image_path_track() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_sensitivity_wave2.py",
+      "type": "file",
+      "name": "test_sensitivity_wave2.py",
+      "filePath": "tests/test_sensitivity_wave2.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_sensitivity_wave2.py:test_sensitivity_sweep_returns_ranked_cases",
+      "type": "function",
+      "name": "test_sensitivity_sweep_returns_ranked_cases",
+      "filePath": "tests/test_sensitivity_wave2.py",
+      "lineRange": [
+        5,
+        18
+      ],
+      "summary": "test_sensitivity_sweep_returns_ranked_cases() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_sequence_epistemic_provenance.py",
+      "type": "file",
+      "name": "test_sequence_epistemic_provenance.py",
+      "filePath": "tests/test_sequence_epistemic_provenance.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_sequence_epistemic_provenance.py:test_full_sequence_provenance_declares_pick_uncertainty_axes",
+      "type": "function",
+      "name": "test_full_sequence_provenance_declares_pick_uncertainty_axes",
+      "filePath": "tests/test_sequence_epistemic_provenance.py",
+      "lineRange": [
+        6,
+        16
+      ],
+      "summary": "test_full_sequence_provenance_declares_pick_uncertainty_axes() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_session_apex.py",
+      "type": "file",
+      "name": "test_session_apex.py",
+      "filePath": "tests/test_session_apex.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_session_apex.py:test_sanitize_rejects_nominal",
+      "type": "function",
+      "name": "test_sanitize_rejects_nominal",
+      "filePath": "tests/test_session_apex.py",
+      "lineRange": [
+        11,
+        22
+      ],
+      "summary": "test_sanitize_rejects_nominal() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_session_echo.py",
+      "type": "file",
+      "name": "test_session_echo.py",
+      "filePath": "tests/test_session_echo.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_session_echo.py:test_surface_status_echoes_federation_context",
+      "type": "function",
+      "name": "test_surface_status_echoes_federation_context",
+      "filePath": "tests/test_session_echo.py",
+      "lineRange": [
+        11,
+        27
+      ],
+      "summary": "test_surface_status_echoes_federation_context(mode) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_session_error_taxonomy.py",
+      "type": "file",
+      "name": "test_session_error_taxonomy.py",
+      "filePath": "tests/test_session_error_taxonomy.py",
+      "summary": "2 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_session_error_taxonomy.py:TestErrorTaxonomyMapping",
+      "type": "class",
+      "name": "TestErrorTaxonomyMapping",
+      "filePath": "tests/test_session_error_taxonomy.py",
+      "lineRange": [
+        25,
+        56
+      ],
+      "summary": "Class TestErrorTaxonomyMapping with 10 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_session_error_taxonomy.py:TestEnforceSessionTaxonomy",
+      "type": "class",
+      "name": "TestEnforceSessionTaxonomy",
+      "filePath": "tests/test_session_error_taxonomy.py",
+      "lineRange": [
+        62,
+        139
+      ],
+      "summary": "Class TestEnforceSessionTaxonomy with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_session_id_roundtrip_invariant.py",
+      "type": "file",
+      "name": "test_session_id_roundtrip_invariant.py",
+      "filePath": "tests/test_session_id_roundtrip_invariant.py",
+      "summary": "Defines 1 function(s); 4 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_session_id_roundtrip_invariant.py:TestValidateSessionPreservesFullSessionId",
+      "type": "class",
+      "name": "TestValidateSessionPreservesFullSessionId",
+      "filePath": "tests/test_session_id_roundtrip_invariant.py",
+      "lineRange": [
+        70,
+        116
+      ],
+      "summary": "Class TestValidateSessionPreservesFullSessionId with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_session_id_roundtrip_invariant.py:TestSourceLevelNoIdMutation",
+      "type": "class",
+      "name": "TestSourceLevelNoIdMutation",
+      "filePath": "tests/test_session_id_roundtrip_invariant.py",
+      "lineRange": [
+        124,
+        204
+      ],
+      "summary": "Class TestSourceLevelNoIdMutation with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_session_id_roundtrip_invariant.py:TestPropertyRoundTripPreservation",
+      "type": "class",
+      "name": "TestPropertyRoundTripPreservation",
+      "filePath": "tests/test_session_id_roundtrip_invariant.py",
+      "lineRange": [
+        211,
+        233
+      ],
+      "summary": "Class TestPropertyRoundTripPreservation with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_single_line_interpreter.py",
+      "type": "file",
+      "name": "test_single_line_interpreter.py",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "summary": "Defines 25 function(s); exports 25 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_compute_attributes_2d_segy",
+      "type": "function",
+      "name": "test_compute_attributes_2d_segy",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        104,
+        120
+      ],
+      "summary": "test_compute_attributes_2d_segy() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_compute_attributes_2d_raster",
+      "type": "function",
+      "name": "test_compute_attributes_2d_raster",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        124,
+        143
+      ],
+      "summary": "test_compute_attributes_2d_raster() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_contrast_metadata_bond_reference",
+      "type": "function",
+      "name": "test_contrast_metadata_bond_reference",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        147,
+        163
+      ],
+      "summary": "test_contrast_metadata_bond_reference() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_link_attributes_to_geology",
+      "type": "function",
+      "name": "test_link_attributes_to_geology",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        171,
+        189
+      ],
+      "summary": "test_link_attributes_to_geology() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_structural_elements_have_alternatives",
+      "type": "function",
+      "name": "test_structural_elements_have_alternatives",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        193,
+        209
+      ],
+      "summary": "test_structural_elements_have_alternatives() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_audit_conceptual_bias_bond_reference",
+      "type": "function",
+      "name": "test_audit_conceptual_bias_bond_reference",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        217,
+        237
+      ],
+      "summary": "test_audit_conceptual_bias_bond_reference() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_audit_anchoring_bias",
+      "type": "function",
+      "name": "test_audit_anchoring_bias",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        241,
+        258
+      ],
+      "summary": "test_audit_anchoring_bias() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_audit_raster_data_quality_bias",
+      "type": "function",
+      "name": "test_audit_raster_data_quality_bias",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        262,
+        281
+      ],
+      "summary": "test_audit_raster_data_quality_bias() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_segy",
+      "type": "function",
+      "name": "test_single_line_interpreter_segy",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        289,
+        315
+      ],
+      "summary": "test_single_line_interpreter_segy() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_raster",
+      "type": "function",
+      "name": "test_single_line_interpreter_raster",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        319,
+        341
+      ],
+      "summary": "test_single_line_interpreter_raster() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_validation_recommendations",
+      "type": "function",
+      "name": "test_single_line_interpreter_validation_recommendations",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        345,
+        362
+      ],
+      "summary": "test_single_line_interpreter_validation_recommendations() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_bias_mitigation",
+      "type": "function",
+      "name": "test_single_line_interpreter_bias_mitigation",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        366,
+        383
+      ],
+      "summary": "test_single_line_interpreter_bias_mitigation() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_bond_synthetic_inversion_case",
+      "type": "function",
+      "name": "test_bond_synthetic_inversion_case",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        404,
+        458
+      ],
+      "summary": "test_bond_synthetic_inversion_case() — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_bond_case_conceptual_uncertainty_high",
+      "type": "function",
+      "name": "test_bond_case_conceptual_uncertainty_high",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        462,
+        488
+      ],
+      "summary": "test_bond_case_conceptual_uncertainty_high() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_registry_execution",
+      "type": "function",
+      "name": "test_registry_execution",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        506,
+        520
+      ],
+      "summary": "test_registry_execution() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_contrast_canon_physical_vs_visual",
+      "type": "function",
+      "name": "test_contrast_canon_physical_vs_visual",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        528,
+        549
+      ],
+      "summary": "test_contrast_canon_physical_vs_visual() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_f7_humility_enforced",
+      "type": "function",
+      "name": "test_f7_humility_enforced",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        553,
+        566
+      ],
+      "summary": "test_f7_humility_enforced() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_single_line_interpreter.py:test_f9_anti_hantu_no_llm_guess",
+      "type": "function",
+      "name": "test_f9_anti_hantu_no_llm_guess",
+      "filePath": "tests/test_single_line_interpreter.py",
+      "lineRange": [
+        570,
+        592
+      ],
+      "summary": "test_f9_anti_hantu_no_llm_guess() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_spatial_block.py",
+      "type": "file",
+      "name": "test_spatial_block.py",
+      "filePath": "tests/test_spatial_block.py",
+      "summary": "Defines 18 function(s); exports 18 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_spatial_block.py:_make_spatially_correlated_samples",
+      "type": "function",
+      "name": "_make_spatially_correlated_samples",
+      "filePath": "tests/test_spatial_block.py",
+      "lineRange": [
+        103,
+        137
+      ],
+      "summary": "_make_spatially_correlated_samples(n, seed) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_spatial_block.py:_make_random_samples",
+      "type": "function",
+      "name": "_make_random_samples",
+      "filePath": "tests/test_spatial_block.py",
+      "lineRange": [
+        140,
+        163
+      ],
+      "summary": "_make_random_samples(n, seed) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_spatial_block.py:test_spatially_correlated_data_shows_gap",
+      "type": "function",
+      "name": "test_spatially_correlated_data_shows_gap",
+      "filePath": "tests/test_spatial_block.py",
+      "lineRange": [
+        178,
+        197
+      ],
+      "summary": "test_spatially_correlated_data_shows_gap() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_spatial_block.py:test_random_data_shows_no_gap",
+      "type": "function",
+      "name": "test_random_data_shows_no_gap",
+      "filePath": "tests/test_spatial_block.py",
+      "lineRange": [
+        200,
+        211
+      ],
+      "summary": "test_random_data_shows_no_gap() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_spatial_block.py:test_returns_receipt_fields",
+      "type": "function",
+      "name": "test_returns_receipt_fields",
+      "filePath": "tests/test_spatial_block.py",
+      "lineRange": [
+        234,
+        253
+      ],
+      "summary": "test_returns_receipt_fields() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_stratigraphy_engines.py",
+      "type": "file",
+      "name": "test_stratigraphy_engines.py",
+      "filePath": "tests/test_stratigraphy_engines.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_stratigraphy_engines.py:TestAccommodationEngine",
+      "type": "class",
+      "name": "TestAccommodationEngine",
+      "filePath": "tests/test_stratigraphy_engines.py",
+      "lineRange": [
+        46,
+        157
+      ],
+      "summary": "Class TestAccommodationEngine with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_stratigraphy_engines.py:TestSurfaceFirstEngine",
+      "type": "class",
+      "name": "TestSurfaceFirstEngine",
+      "filePath": "tests/test_stratigraphy_engines.py",
+      "lineRange": [
+        165,
+        233
+      ],
+      "summary": "Class TestSurfaceFirstEngine with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_stratigraphy_engines.py:TestSequenceEmergence",
+      "type": "class",
+      "name": "TestSequenceEmergence",
+      "filePath": "tests/test_stratigraphy_engines.py",
+      "lineRange": [
+        241,
+        316
+      ],
+      "summary": "Class TestSequenceEmergence with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_stratigraphy_engines.py:TestPhysicsKernels",
+      "type": "class",
+      "name": "TestPhysicsKernels",
+      "filePath": "tests/test_stratigraphy_engines.py",
+      "lineRange": [
+        324,
+        350
+      ],
+      "summary": "Class TestPhysicsKernels with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_structure_gates.py",
+      "type": "file",
+      "name": "test_structure_gates.py",
+      "filePath": "tests/test_structure_gates.py",
+      "summary": "Defines 11 function(s); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_kill_reverse_75_tip_growth",
+      "type": "function",
+      "name": "test_kill_reverse_75_tip_growth",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        12,
+        41
+      ],
+      "summary": "test_kill_reverse_75_tip_growth() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_unmeasured_image_dip_without_calibration",
+      "type": "function",
+      "name": "test_unmeasured_image_dip_without_calibration",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        45,
+        63
+      ],
+      "summary": "test_unmeasured_image_dip_without_calibration() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_pass_clean_normal_taper",
+      "type": "function",
+      "name": "test_pass_clean_normal_taper",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        67,
+        104
+      ],
+      "summary": "test_pass_clean_normal_taper() — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_topology_cross_kill",
+      "type": "function",
+      "name": "test_topology_cross_kill",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        108,
+        128
+      ],
+      "summary": "test_topology_cross_kill() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_growth_kill_and_restore_stub",
+      "type": "function",
+      "name": "test_growth_kill_and_restore_stub",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        132,
+        146
+      ],
+      "summary": "test_growth_kill_and_restore_stub() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_impossible_multi_kill_pack",
+      "type": "function",
+      "name": "test_impossible_multi_kill_pack",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        150,
+        190
+      ],
+      "summary": "test_impossible_multi_kill_pack() — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_interpretation_bundle_multi_hypothesis",
+      "type": "function",
+      "name": "test_interpretation_bundle_multi_hypothesis",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        194,
+        220
+      ],
+      "summary": "test_interpretation_bundle_multi_hypothesis() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_falsify_structural_claim_type",
+      "type": "function",
+      "name": "test_falsify_structural_claim_type",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        224,
+        244
+      ],
+      "summary": "test_falsify_structural_claim_type() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_k_dip_ve_correction_kills_apparent_normal",
+      "type": "function",
+      "name": "test_k_dip_ve_correction_kills_apparent_normal",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        248,
+        268
+      ],
+      "summary": "test_k_dip_ve_correction_kills_apparent_normal() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_structure_gates.py:test_alias_keys_dmax_m_throw_profile_m_kill",
+      "type": "function",
+      "name": "test_alias_keys_dmax_m_throw_profile_m_kill",
+      "filePath": "tests/test_structure_gates.py",
+      "lineRange": [
+        283,
+        314
+      ],
+      "summary": "test_alias_keys_dmax_m_throw_profile_m_kill() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_surface_invariance.py",
+      "type": "file",
+      "name": "test_surface_invariance.py",
+      "filePath": "tests/test_surface_invariance.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_surface_invariance.py:test_well_known_openapi_x_mcp_tools_aligned",
+      "type": "function",
+      "name": "test_well_known_openapi_x_mcp_tools_aligned",
+      "filePath": "tests/test_surface_invariance.py",
+      "lineRange": [
+        45,
+        56
+      ],
+      "summary": "test_well_known_openapi_x_mcp_tools_aligned() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_surface_invariance.py:test_runtime_list_tools_equals_canonical",
+      "type": "function",
+      "name": "test_runtime_list_tools_equals_canonical",
+      "filePath": "tests/test_surface_invariance.py",
+      "lineRange": [
+        68,
+        85
+      ],
+      "summary": "test_runtime_list_tools_equals_canonical() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_tepat2_multi_mineral.py",
+      "type": "file",
+      "name": "test_tepat2_multi_mineral.py",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "summary": "Defines 22 function(s); exports 22 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_b_clastic",
+      "type": "function",
+      "name": "tepat2_zone_b_clastic",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        42,
+        98
+      ],
+      "summary": "tepat2_zone_b_clastic() — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_c_carbonate",
+      "type": "function",
+      "name": "tepat2_zone_c_carbonate",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        102,
+        158
+      ],
+      "summary": "tepat2_zone_c_carbonate() — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_d_deep",
+      "type": "function",
+      "name": "tepat2_zone_d_deep",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        162,
+        218
+      ],
+      "summary": "tepat2_zone_d_deep() — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_b_still_convergent",
+      "type": "function",
+      "name": "test_porosity_zone_b_still_convergent",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        303,
+        313
+      ],
+      "summary": "test_porosity_zone_b_still_convergent(tepat2_zone_b_clastic) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_c_convergence_after_multimineral",
+      "type": "function",
+      "name": "test_porosity_zone_c_convergence_after_multimineral",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        316,
+        331
+      ],
+      "summary": "test_porosity_zone_c_convergence_after_multimineral(tepat2_zone_c_carbonate) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_d_convergence_after_multimineral",
+      "type": "function",
+      "name": "test_porosity_zone_d_convergence_after_multimineral",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        334,
+        345
+      ],
+      "summary": "test_porosity_zone_d_convergence_after_multimineral(tepat2_zone_d_deep) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_hc_correction_reduces_porosity_in_gas_zone",
+      "type": "function",
+      "name": "test_hc_correction_reduces_porosity_in_gas_zone",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        353,
+        363
+      ],
+      "summary": "test_hc_correction_reduces_porosity_in_gas_zone(tepat2_zone_d_deep) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_dual_water_shaly_increases_sw",
+      "type": "function",
+      "name": "test_dual_water_shaly_increases_sw",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        382,
+        394
+      ],
+      "summary": "test_dual_water_shaly_increases_sw() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tepat2_multi_mineral.py:test_porosity_uncertainty_mixed_lithology",
+      "type": "function",
+      "name": "test_porosity_uncertainty_mixed_lithology",
+      "filePath": "tests/test_tepat2_multi_mineral.py",
+      "lineRange": [
+        425,
+        439
+      ],
+      "summary": "test_porosity_uncertainty_mixed_lithology() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_tool_contracts.py",
+      "type": "file",
+      "name": "test_tool_contracts.py",
+      "filePath": "tests/test_tool_contracts.py",
+      "summary": "Defines 2 function(s); 3 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_tool_contracts.py:_get_public_params",
+      "type": "function",
+      "name": "_get_public_params",
+      "filePath": "tests/test_tool_contracts.py",
+      "lineRange": [
+        28,
+        35
+      ],
+      "summary": "_get_public_params(func) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_tool_contracts.py:_get_impl_params",
+      "type": "function",
+      "name": "_get_impl_params",
+      "filePath": "tests/test_tool_contracts.py",
+      "lineRange": [
+        38,
+        41
+      ],
+      "summary": "_get_impl_params(func) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_tool_contracts.py:TestToolContracts",
+      "type": "class",
+      "name": "TestToolContracts",
+      "filePath": "tests/test_tool_contracts.py",
+      "lineRange": [
+        47,
+        263
+      ],
+      "summary": "Class TestToolContracts with 24 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_tool_contracts.py:TestMCPBaseModelCoercion",
+      "type": "class",
+      "name": "TestMCPBaseModelCoercion",
+      "filePath": "tests/test_tool_contracts.py",
+      "lineRange": [
+        291,
+        353
+      ],
+      "summary": "Class TestMCPBaseModelCoercion with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_tools_list_snapshot.py",
+      "type": "file",
+      "name": "test_tools_list_snapshot.py",
+      "filePath": "tests/test_tools_list_snapshot.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_tools_list_snapshot.py:_load_snapshot",
+      "type": "function",
+      "name": "_load_snapshot",
+      "filePath": "tests/test_tools_list_snapshot.py",
+      "lineRange": [
+        34,
+        39
+      ],
+      "summary": "_load_snapshot() — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_tools_list_snapshot.py:TestToolsListSnapshot",
+      "type": "class",
+      "name": "TestToolsListSnapshot",
+      "filePath": "tests/test_tools_list_snapshot.py",
+      "lineRange": [
+        42,
+        92
+      ],
+      "summary": "Class TestToolsListSnapshot with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_tools_list_snapshot.py:TestNoProseHardcodesCount",
+      "type": "class",
+      "name": "TestNoProseHardcodesCount",
+      "filePath": "tests/test_tools_list_snapshot.py",
+      "lineRange": [
+        95,
+        137
+      ],
+      "summary": "Class TestNoProseHardcodesCount with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_transport_envelope_propagation.py",
+      "type": "file",
+      "name": "test_transport_envelope_propagation.py",
+      "filePath": "tests/test_transport_envelope_propagation.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_transport_envelope_propagation.py:test_handler_signature_accepts_transport_kwargs",
+      "type": "function",
+      "name": "test_handler_signature_accepts_transport_kwargs",
+      "filePath": "tests/test_transport_envelope_propagation.py",
+      "lineRange": [
+        50,
+        61
+      ],
+      "summary": "test_handler_signature_accepts_transport_kwargs() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_transport_envelope_propagation.py:test_transport_reaches_response_provenance",
+      "type": "function",
+      "name": "test_transport_reaches_response_provenance",
+      "filePath": "tests/test_transport_envelope_propagation.py",
+      "lineRange": [
+        70,
+        84
+      ],
+      "summary": "test_transport_reaches_response_provenance() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_transport_envelope_propagation.py:test_transport_omitted_does_not_clobber_existing_provenance",
+      "type": "function",
+      "name": "test_transport_omitted_does_not_clobber_existing_provenance",
+      "filePath": "tests/test_transport_envelope_propagation.py",
+      "lineRange": [
+        88,
+        99
+      ],
+      "summary": "test_transport_omitted_does_not_clobber_existing_provenance() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_transport_manifest.py",
+      "type": "file",
+      "name": "test_transport_manifest.py",
+      "filePath": "tests/test_transport_manifest.py",
+      "summary": "Defines 1 function(s); 1 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_transport_manifest.py:_llms_tools",
+      "type": "function",
+      "name": "_llms_tools",
+      "filePath": "tests/test_transport_manifest.py",
+      "lineRange": [
+        16,
+        27
+      ],
+      "summary": "_llms_tools() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_transport_manifest.py:TestManifestTopology",
+      "type": "class",
+      "name": "TestManifestTopology",
+      "filePath": "tests/test_transport_manifest.py",
+      "lineRange": [
+        30,
+        86
+      ],
+      "summary": "Class TestManifestTopology with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_truth_loop_hardening.py",
+      "type": "file",
+      "name": "test_truth_loop_hardening.py",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "summary": "Defines 24 function(s); exports 24 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:make_png",
+      "type": "function",
+      "name": "make_png",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        28,
+        47
+      ],
+      "summary": "make_png(width, height, grey) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:_runcible",
+      "type": "function",
+      "name": "_runcible",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        54,
+        59
+      ],
+      "summary": "_runcible() — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t1_narrative_attack_blocks",
+      "type": "function",
+      "name": "test_t1_narrative_attack_blocks",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        66,
+        105
+      ],
+      "summary": "test_t1_narrative_attack_blocks() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t2_image_only_minimum_three_distinct_hypotheses",
+      "type": "function",
+      "name": "test_t2_image_only_minimum_three_distinct_hypotheses",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        112,
+        162
+      ],
+      "summary": "test_t2_image_only_minimum_three_distinct_hypotheses() — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t3_ve_only_no_true_dip_classification",
+      "type": "function",
+      "name": "test_t3_ve_only_no_true_dip_classification",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        169,
+        200
+      ],
+      "summary": "test_t3_ve_only_no_true_dip_classification() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t4_checkshot_enables_measured_gates",
+      "type": "function",
+      "name": "test_t4_checkshot_enables_measured_gates",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        207,
+        246
+      ],
+      "summary": "test_t4_checkshot_enables_measured_gates() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t5_impossible_fault_killed",
+      "type": "function",
+      "name": "test_t5_impossible_fault_killed",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        253,
+        288
+      ],
+      "summary": "test_t5_impossible_fault_killed() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t6_independent_witnesses_no_silent_averaging",
+      "type": "function",
+      "name": "test_t6_independent_witnesses_no_silent_averaging",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        295,
+        351
+      ],
+      "summary": "test_t6_independent_witnesses_no_silent_averaging() — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t7_direct_vs_bridge_normalized_payload_hash",
+      "type": "function",
+      "name": "test_t7_direct_vs_bridge_normalized_payload_hash",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        358,
+        385
+      ],
+      "summary": "test_t7_direct_vs_bridge_normalized_payload_hash() — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t8_expired_session_returns_safe_action_marker",
+      "type": "function",
+      "name": "test_t8_expired_session_returns_safe_action_marker",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        391,
+        407
+      ],
+      "summary": "test_t8_expired_session_returns_safe_action_marker() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t9_surface_truth_count_parity",
+      "type": "function",
+      "name": "test_t9_surface_truth_count_parity",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        413,
+        465
+      ],
+      "summary": "test_t9_surface_truth_count_parity() — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_t10_render_byte_identical",
+      "type": "function",
+      "name": "test_t10_render_byte_identical",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        472,
+        511
+      ],
+      "summary": "test_t10_render_byte_identical() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w6_render_artifact_metadata",
+      "type": "function",
+      "name": "test_w6_render_artifact_metadata",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        518,
+        550
+      ],
+      "summary": "test_w6_render_artifact_metadata() — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w7_compact_output_size",
+      "type": "function",
+      "name": "test_w7_compact_output_size",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        557,
+        580
+      ],
+      "summary": "test_w7_compact_output_size() — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w8_surface_truth_one_source",
+      "type": "function",
+      "name": "test_w8_surface_truth_one_source",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        586,
+        611
+      ],
+      "summary": "test_w8_surface_truth_one_source() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w9_identity_bands_distinct",
+      "type": "function",
+      "name": "test_w9_identity_bands_distinct",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        617,
+        645
+      ],
+      "summary": "test_w9_identity_bands_distinct() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w9_identity_bands_no_silent_upgrade",
+      "type": "function",
+      "name": "test_w9_identity_bands_no_silent_upgrade",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        648,
+        676
+      ],
+      "summary": "test_w9_identity_bands_no_silent_upgrade() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w9_session_expired_marker_in_runtime",
+      "type": "function",
+      "name": "test_w9_session_expired_marker_in_runtime",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        679,
+        691
+      ],
+      "summary": "test_w9_session_expired_marker_in_runtime() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_w10_deployment_drift_invariant",
+      "type": "function",
+      "name": "test_w10_deployment_drift_invariant",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        697,
+        735
+      ],
+      "summary": "test_w10_deployment_drift_invariant() — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_no_fixed_probability_values_in_bundle_output",
+      "type": "function",
+      "name": "test_no_fixed_probability_values_in_bundle_output",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        752,
+        776
+      ],
+      "summary": "test_no_fixed_probability_values_in_bundle_output() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_no_fabricated_alternatives_in_bundle",
+      "type": "function",
+      "name": "test_no_fabricated_alternatives_in_bundle",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        779,
+        799
+      ],
+      "summary": "test_no_fabricated_alternatives_in_bundle() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_truth_loop_hardening.py:test_seal_authority_never_geox",
+      "type": "function",
+      "name": "test_seal_authority_never_geox",
+      "filePath": "tests/test_truth_loop_hardening.py",
+      "lineRange": [
+        802,
+        816
+      ],
+      "summary": "test_seal_authority_never_geox() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_validator.py",
+      "type": "file",
+      "name": "test_validator.py",
+      "filePath": "tests/test_validator.py",
+      "summary": "Defines 5 function(s); 5 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_validator.py:_coord",
+      "type": "function",
+      "name": "_coord",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        41,
+        42
+      ],
+      "summary": "_coord(lat, lon, depth) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_validator.py:_prov",
+      "type": "function",
+      "name": "_prov",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        45,
+        51
+      ],
+      "summary": "_prov(source_id, source_type) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_validator.py:_qty",
+      "type": "function",
+      "name": "_qty",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        54,
+        69
+      ],
+      "summary": "_qty(value, units, quantity_type, uncertainty, location) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_validator.py:_pred",
+      "type": "function",
+      "name": "_pred",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        72,
+        89
+      ],
+      "summary": "_pred(target, lo, hi, units, confidence, method, quantities) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_validator.py:_insight",
+      "type": "function",
+      "name": "_insight",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        92,
+        109
+      ],
+      "summary": "_insight(text, status, risk_level, requires_human_signoff, support, floor_verdicts) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_validator.py:TestParseRange",
+      "type": "class",
+      "name": "TestParseRange",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        116,
+        141
+      ],
+      "summary": "Class TestParseRange with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_validator.py:TestExtractPredictions",
+      "type": "class",
+      "name": "TestExtractPredictions",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        148,
+        244
+      ],
+      "summary": "Class TestExtractPredictions with 14 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_validator.py:TestVerifyPrediction",
+      "type": "class",
+      "name": "TestVerifyPrediction",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        251,
+        334
+      ],
+      "summary": "Class TestVerifyPrediction with 11 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_validator.py:TestValidateBatch",
+      "type": "class",
+      "name": "TestValidateBatch",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        341,
+        467
+      ],
+      "summary": "Class TestValidateBatch with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_validator.py:TestCheckFloorCompliance",
+      "type": "class",
+      "name": "TestCheckFloorCompliance",
+      "filePath": "tests/test_validator.py",
+      "lineRange": [
+        474,
+        607
+      ],
+      "summary": "Class TestCheckFloorCompliance with 12 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_vault_integrity.py",
+      "type": "file",
+      "name": "test_vault_integrity.py",
+      "filePath": "tests/test_vault_integrity.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_vault_integrity.py:test_vault_write_and_read",
+      "type": "function",
+      "name": "test_vault_write_and_read",
+      "filePath": "tests/test_vault_integrity.py",
+      "lineRange": [
+        7,
+        50
+      ],
+      "summary": "test_vault_write_and_read(tmp_path) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_verification_envelope.py",
+      "type": "file",
+      "name": "test_verification_envelope.py",
+      "filePath": "tests/test_verification_envelope.py",
+      "summary": "Defines 17 function(s); exports 17 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_verify_unverified_when_registry_missing",
+      "type": "function",
+      "name": "test_verify_unverified_when_registry_missing",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        94,
+        109
+      ],
+      "summary": "test_verify_unverified_when_registry_missing(las_file) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_verify_verified_when_registry_present",
+      "type": "function",
+      "name": "test_verify_verified_when_registry_present",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        112,
+        125
+      ],
+      "summary": "test_verify_verified_when_registry_present(las_file) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_verify_unverified_when_registry_raises",
+      "type": "function",
+      "name": "test_verify_unverified_when_registry_raises",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        128,
+        140
+      ],
+      "summary": "test_verify_unverified_when_registry_raises(las_file) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_verify_records_metadata_keys_as_checks",
+      "type": "function",
+      "name": "test_verify_records_metadata_keys_as_checks",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        143,
+        154
+      ],
+      "summary": "test_verify_records_metadata_keys_as_checks(las_file) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_seal_receipt_returns_sealed_when_arifos_up",
+      "type": "function",
+      "name": "test_seal_receipt_returns_sealed_when_arifos_up",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        160,
+        175
+      ],
+      "summary": "test_seal_receipt_returns_sealed_when_arifos_up() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_seal_receipt_pending_carrys_error",
+      "type": "function",
+      "name": "test_seal_receipt_pending_carrys_error",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        188,
+        198
+      ],
+      "summary": "test_seal_receipt_pending_carrys_error() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_envelope_verified_carries_sealed_receipt",
+      "type": "function",
+      "name": "test_envelope_verified_carries_sealed_receipt",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        204,
+        233
+      ],
+      "summary": "test_envelope_verified_carries_sealed_receipt() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_envelope_failed_carries_reason",
+      "type": "function",
+      "name": "test_envelope_failed_carries_reason",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        236,
+        252
+      ],
+      "summary": "test_envelope_failed_carries_reason() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_envelope_serializable_to_json",
+      "type": "function",
+      "name": "test_envelope_serializable_to_json",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        255,
+        269
+      ],
+      "summary": "test_envelope_serializable_to_json() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_verification_envelope.py:test_roundtrip_ingest_to_envelope",
+      "type": "function",
+      "name": "test_roundtrip_ingest_to_envelope",
+      "filePath": "tests/test_verification_envelope.py",
+      "lineRange": [
+        275,
+        316
+      ],
+      "summary": "test_roundtrip_ingest_to_envelope(las_file) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_vision_v1.py",
+      "type": "file",
+      "name": "test_vision_v1.py",
+      "filePath": "tests/test_vision_v1.py",
+      "summary": "Defines 3 function(s); 4 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_vision_v1.py:tmp_png",
+      "type": "function",
+      "name": "tmp_png",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        74,
+        85
+      ],
+      "summary": "tmp_png(tmp_path) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_vision_v1.py:mock_backend_perfect",
+      "type": "function",
+      "name": "mock_backend_perfect",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        89,
+        143
+      ],
+      "summary": "mock_backend_perfect() — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_vision_v1.py:mock_backend_overconfident",
+      "type": "function",
+      "name": "mock_backend_overconfident",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        147,
+        172
+      ],
+      "summary": "mock_backend_overconfident() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_vision_v1.py:TestPerceptualInventory",
+      "type": "class",
+      "name": "TestPerceptualInventory",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        180,
+        366
+      ],
+      "summary": "Class TestPerceptualInventory with 11 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_vision_v1.py:TestMiniMaxVLMAdapter",
+      "type": "class",
+      "name": "TestMiniMaxVLMAdapter",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        374,
+        503
+      ],
+      "summary": "Class TestMiniMaxVLMAdapter with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_vision_v1.py:TestVisionTestHarness",
+      "type": "class",
+      "name": "TestVisionTestHarness",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        511,
+        712
+      ],
+      "summary": "Class TestVisionTestHarness with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_vision_v1.py:TestForgeIntegrity",
+      "type": "class",
+      "name": "TestForgeIntegrity",
+      "filePath": "tests/test_vision_v1.py",
+      "lineRange": [
+        721,
+        764
+      ],
+      "summary": "Class TestForgeIntegrity with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_visual_image_publish.py",
+      "type": "file",
+      "name": "test_visual_image_publish.py",
+      "filePath": "tests/test_visual_image_publish.py",
+      "summary": "Defines 6 function(s); 1 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_visual_image_publish.py:_hermetic_dirs",
+      "type": "function",
+      "name": "_hermetic_dirs",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        34,
+        41
+      ],
+      "summary": "_hermetic_dirs(tmp_path, monkeypatch) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_image_publish.py:_run_async",
+      "type": "function",
+      "name": "_run_async",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        44,
+        52
+      ],
+      "summary": "_run_async(coro) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_image_publish.py:_unwrap",
+      "type": "function",
+      "name": "_unwrap",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        55,
+        73
+      ],
+      "summary": "_unwrap(result) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_image_publish.py:test_well_desk_publish",
+      "type": "function",
+      "name": "test_well_desk_publish",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        76,
+        99
+      ],
+      "summary": "test_well_desk_publish(mcp_registry) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_image_publish.py:test_render_well_panel",
+      "type": "function",
+      "name": "test_render_well_panel",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        102,
+        123
+      ],
+      "summary": "test_render_well_panel(mcp_registry) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_visual_image_publish.py:MockMCP",
+      "type": "class",
+      "name": "MockMCP",
+      "filePath": "tests/test_visual_image_publish.py",
+      "lineRange": [
+        13,
+        23
+      ],
+      "summary": "Class MockMCP with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "function:tests/test_seismic_rsi.py:_run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestRealityGate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestProvenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestPanelDetection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestAttributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestFaultDetection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestHorizonTracking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestRSIInterpret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_rsi.py",
+      "target": "class:tests/test_seismic_rsi.py:TestCanonicalRegistration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "function:tests/test_seismic_visual_filter.py:synthetic_seismic_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestFilterFunctions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestFilterStack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestVisualHypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestUtilities",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestSeismicVisualFilterTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_visual_filter.py",
+      "target": "class:tests/test_seismic_visual_filter.py:TestConstitutionalCompliance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_zen_f1.py",
+      "target": "function:tests/test_seismic_zen_f1.py:test_f1_attribute_fixture_coherence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_zen_f1.py",
+      "target": "function:tests/test_seismic_zen_f1.py:test_f1_track_horizon_fixture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_zen_f1.py",
+      "target": "function:tests/test_seismic_zen_f1.py:test_f1_measure_throw_feeds_gates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_seismic_zen_f1.py",
+      "target": "function:tests/test_seismic_zen_f1.py:test_f1_image_path_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_sensitivity_wave2.py",
+      "target": "function:tests/test_sensitivity_wave2.py:test_sensitivity_sweep_returns_ranked_cases",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_sequence_epistemic_provenance.py",
+      "target": "function:tests/test_sequence_epistemic_provenance.py:test_full_sequence_provenance_declares_pick_uncertainty_axes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_apex.py",
+      "target": "function:tests/test_session_apex.py:test_sanitize_rejects_nominal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_echo.py",
+      "target": "function:tests/test_session_echo.py:test_surface_status_echoes_federation_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_error_taxonomy.py",
+      "target": "class:tests/test_session_error_taxonomy.py:TestErrorTaxonomyMapping",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_error_taxonomy.py",
+      "target": "class:tests/test_session_error_taxonomy.py:TestEnforceSessionTaxonomy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_id_roundtrip_invariant.py",
+      "target": "class:tests/test_session_id_roundtrip_invariant.py:TestValidateSessionPreservesFullSessionId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_id_roundtrip_invariant.py",
+      "target": "class:tests/test_session_id_roundtrip_invariant.py:TestSourceLevelNoIdMutation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_session_id_roundtrip_invariant.py",
+      "target": "class:tests/test_session_id_roundtrip_invariant.py:TestPropertyRoundTripPreservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_compute_attributes_2d_segy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_compute_attributes_2d_raster",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_contrast_metadata_bond_reference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_link_attributes_to_geology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_structural_elements_have_alternatives",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_audit_conceptual_bias_bond_reference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_audit_anchoring_bias",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_audit_raster_data_quality_bias",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_segy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_raster",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_validation_recommendations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_single_line_interpreter_bias_mitigation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_bond_synthetic_inversion_case",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_bond_case_conceptual_uncertainty_high",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_registry_execution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_contrast_canon_physical_vs_visual",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_f7_humility_enforced",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_single_line_interpreter.py",
+      "target": "function:tests/test_single_line_interpreter.py:test_f9_anti_hantu_no_llm_guess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_spatial_block.py",
+      "target": "function:tests/test_spatial_block.py:_make_spatially_correlated_samples",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_spatial_block.py",
+      "target": "function:tests/test_spatial_block.py:_make_random_samples",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_spatial_block.py",
+      "target": "function:tests/test_spatial_block.py:test_spatially_correlated_data_shows_gap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_spatial_block.py",
+      "target": "function:tests/test_spatial_block.py:test_random_data_shows_no_gap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_spatial_block.py",
+      "target": "function:tests/test_spatial_block.py:test_returns_receipt_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_stratigraphy_engines.py",
+      "target": "class:tests/test_stratigraphy_engines.py:TestAccommodationEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_stratigraphy_engines.py",
+      "target": "class:tests/test_stratigraphy_engines.py:TestSurfaceFirstEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_stratigraphy_engines.py",
+      "target": "class:tests/test_stratigraphy_engines.py:TestSequenceEmergence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_stratigraphy_engines.py",
+      "target": "class:tests/test_stratigraphy_engines.py:TestPhysicsKernels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_kill_reverse_75_tip_growth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_unmeasured_image_dip_without_calibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_pass_clean_normal_taper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_topology_cross_kill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_growth_kill_and_restore_stub",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_impossible_multi_kill_pack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_interpretation_bundle_multi_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_falsify_structural_claim_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_k_dip_ve_correction_kills_apparent_normal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_structure_gates.py",
+      "target": "function:tests/test_structure_gates.py:test_alias_keys_dmax_m_throw_profile_m_kill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_surface_invariance.py",
+      "target": "function:tests/test_surface_invariance.py:test_well_known_openapi_x_mcp_tools_aligned",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_surface_invariance.py",
+      "target": "function:tests/test_surface_invariance.py:test_runtime_list_tools_equals_canonical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_b_clastic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_c_carbonate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:tepat2_zone_d_deep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_b_still_convergent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_c_convergence_after_multimineral",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_porosity_zone_d_convergence_after_multimineral",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_hc_correction_reduces_porosity_in_gas_zone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_dual_water_shaly_increases_sw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tepat2_multi_mineral.py",
+      "target": "function:tests/test_tepat2_multi_mineral.py:test_porosity_uncertainty_mixed_lithology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tool_contracts.py",
+      "target": "function:tests/test_tool_contracts.py:_get_public_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tool_contracts.py",
+      "target": "function:tests/test_tool_contracts.py:_get_impl_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tool_contracts.py",
+      "target": "class:tests/test_tool_contracts.py:TestToolContracts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tool_contracts.py",
+      "target": "class:tests/test_tool_contracts.py:TestMCPBaseModelCoercion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tools_list_snapshot.py",
+      "target": "function:tests/test_tools_list_snapshot.py:_load_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tools_list_snapshot.py",
+      "target": "class:tests/test_tools_list_snapshot.py:TestToolsListSnapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_tools_list_snapshot.py",
+      "target": "class:tests/test_tools_list_snapshot.py:TestNoProseHardcodesCount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_transport_envelope_propagation.py",
+      "target": "function:tests/test_transport_envelope_propagation.py:test_handler_signature_accepts_transport_kwargs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_transport_envelope_propagation.py",
+      "target": "function:tests/test_transport_envelope_propagation.py:test_transport_reaches_response_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_transport_envelope_propagation.py",
+      "target": "function:tests/test_transport_envelope_propagation.py:test_transport_omitted_does_not_clobber_existing_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_transport_manifest.py",
+      "target": "function:tests/test_transport_manifest.py:_llms_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_transport_manifest.py",
+      "target": "class:tests/test_transport_manifest.py:TestManifestTopology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:make_png",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:_runcible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t1_narrative_attack_blocks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t2_image_only_minimum_three_distinct_hypotheses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t3_ve_only_no_true_dip_classification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t4_checkshot_enables_measured_gates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t5_impossible_fault_killed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t6_independent_witnesses_no_silent_averaging",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t7_direct_vs_bridge_normalized_payload_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t8_expired_session_returns_safe_action_marker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t9_surface_truth_count_parity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_t10_render_byte_identical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w6_render_artifact_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w7_compact_output_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w8_surface_truth_one_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w9_identity_bands_distinct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w9_identity_bands_no_silent_upgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w9_session_expired_marker_in_runtime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_w10_deployment_drift_invariant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_no_fixed_probability_values_in_bundle_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_no_fabricated_alternatives_in_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_truth_loop_hardening.py",
+      "target": "function:tests/test_truth_loop_hardening.py:test_seal_authority_never_geox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "function:tests/test_validator.py:_coord",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "function:tests/test_validator.py:_prov",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "function:tests/test_validator.py:_qty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "function:tests/test_validator.py:_pred",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "function:tests/test_validator.py:_insight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "class:tests/test_validator.py:TestParseRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "class:tests/test_validator.py:TestExtractPredictions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "class:tests/test_validator.py:TestVerifyPrediction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "class:tests/test_validator.py:TestValidateBatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_validator.py",
+      "target": "class:tests/test_validator.py:TestCheckFloorCompliance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vault_integrity.py",
+      "target": "function:tests/test_vault_integrity.py:test_vault_write_and_read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_verify_unverified_when_registry_missing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_verify_verified_when_registry_present",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_verify_unverified_when_registry_raises",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_verify_records_metadata_keys_as_checks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_seal_receipt_returns_sealed_when_arifos_up",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_seal_receipt_pending_carrys_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_envelope_verified_carries_sealed_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_envelope_failed_carries_reason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_envelope_serializable_to_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_verification_envelope.py",
+      "target": "function:tests/test_verification_envelope.py:test_roundtrip_ingest_to_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "function:tests/test_vision_v1.py:tmp_png",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "function:tests/test_vision_v1.py:mock_backend_perfect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "function:tests/test_vision_v1.py:mock_backend_overconfident",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "class:tests/test_vision_v1.py:TestPerceptualInventory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "class:tests/test_vision_v1.py:TestMiniMaxVLMAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "class:tests/test_vision_v1.py:TestVisionTestHarness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_vision_v1.py",
+      "target": "class:tests/test_vision_v1.py:TestForgeIntegrity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "function:tests/test_visual_image_publish.py:_hermetic_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "function:tests/test_visual_image_publish.py:_run_async",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "function:tests/test_visual_image_publish.py:_unwrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "function:tests/test_visual_image_publish.py:test_well_desk_publish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "function:tests/test_visual_image_publish.py:test_render_well_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_image_publish.py",
+      "target": "class:tests/test_visual_image_publish.py:MockMCP",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "id": "document:schemas/earth/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "schemas/earth/README.md",
+      "summary": "markdown docs file (19 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:schemas/earth/crs_datum.json",
+      "type": "config",
+      "name": "crs_datum.json",
+      "filePath": "schemas/earth/crs_datum.json",
+      "summary": "json config file (54 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/dataset_manifest.json",
+      "type": "config",
+      "name": "dataset_manifest.json",
+      "filePath": "schemas/earth/dataset_manifest.json",
+      "summary": "json config file (35 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/deviation_survey.json",
+      "type": "config",
+      "name": "deviation_survey.json",
+      "filePath": "schemas/earth/deviation_survey.json",
+      "summary": "json config file (81 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/earth_claim.json",
+      "type": "config",
+      "name": "earth_claim.json",
+      "filePath": "schemas/earth/earth_claim.json",
+      "summary": "json config file (57 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/fault.json",
+      "type": "config",
+      "name": "fault.json",
+      "filePath": "schemas/earth/fault.json",
+      "summary": "json config file (108 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/horizon.json",
+      "type": "config",
+      "name": "horizon.json",
+      "filePath": "schemas/earth/horizon.json",
+      "summary": "json config file (94 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/interpretation_claim.json",
+      "type": "config",
+      "name": "interpretation_claim.json",
+      "filePath": "schemas/earth/interpretation_claim.json",
+      "summary": "json config file (88 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/measurement.json",
+      "type": "config",
+      "name": "measurement.json",
+      "filePath": "schemas/earth/measurement.json",
+      "summary": "json config file (35 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/memory_envelope.json",
+      "type": "config",
+      "name": "memory_envelope.json",
+      "filePath": "schemas/earth/memory_envelope.json",
+      "summary": "json config file (99 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/provenance.json",
+      "type": "config",
+      "name": "provenance.json",
+      "filePath": "schemas/earth/provenance.json",
+      "summary": "json config file (62 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/sample_sealed_interpretation_claim.json",
+      "type": "config",
+      "name": "sample_sealed_interpretation_claim.json",
+      "filePath": "schemas/earth/sample_sealed_interpretation_claim.json",
+      "summary": "json config file (17 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:schemas/earth/segy_metadata.json",
+      "type": "config",
+      "name": "segy_metadata.json",
+      "filePath": "schemas/earth/segy_metadata.json",
+      "summary": "json config file (156 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:schemas/earth/seismic_volume_metadata.json",
+      "type": "config",
+      "name": "seismic_volume_metadata.json",
+      "filePath": "schemas/earth/seismic_volume_metadata.json",
+      "summary": "json config file (71 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/uncertainty.json",
+      "type": "config",
+      "name": "uncertainty.json",
+      "filePath": "schemas/earth/uncertainty.json",
+      "summary": "json config file (40 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/units.json",
+      "type": "config",
+      "name": "units.json",
+      "filePath": "schemas/earth/units.json",
+      "summary": "json config file (55 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/well_header.json",
+      "type": "config",
+      "name": "well_header.json",
+      "filePath": "schemas/earth/well_header.json",
+      "summary": "json config file (83 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/well_log_curve.json",
+      "type": "config",
+      "name": "well_log_curve.json",
+      "filePath": "schemas/earth/well_log_curve.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/earth/well_tops.json",
+      "type": "config",
+      "name": "well_tops.json",
+      "filePath": "schemas/earth/well_tops.json",
+      "summary": "json config file (109 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,177 @@
+[
+  {
+    "order": 1,
+    "title": "Project Overview",
+    "description": "GEOX \u2014 Earth Intelligence Engine. Physics-grounded geological intelligence for exploration, hazard assessment, and earth science. Authority 555_COMPUTE_ONLY, lives at 127.0.0.1:8081.",
+    "nodeIds": [
+      "document:README.md",
+      "document:FEDERATION.md",
+      "document:CLAUDE.md"
+    ]
+  },
+  {
+    "order": 2,
+    "title": "Federation Contract",
+    "description": "How GEOX plugs into the arifOS federation: what it computes, what it refuses, and the constitutional floors it obeys.",
+    "nodeIds": [
+      "document:FEDERATION_CONTRACT.md",
+      "document:PROTOCOL_CONFORMANCE.md",
+      "document:FEDERATION_MAP.md"
+    ]
+  },
+  {
+    "order": 3,
+    "title": "Canonical Surface (Live MCP)",
+    "description": "The live public MCP surface: 26 canonical tools, ghost tracking, authority ceiling. The truth is :8081/health, not prose.",
+    "nodeIds": [
+      "config:CANONICAL_PUBLIC_SURFACE.json",
+      "config:GEOX_MCP_APPS_SURFACE.json",
+      "config:organ.yaml"
+    ]
+  },
+  {
+    "order": 4,
+    "title": "MCP Apps \u2014 The User Surfaces",
+    "description": "Twelve MCP apps render GEOX evidence for humans: well-desk (petrophysics), seismic-vision, earth-volume, judge-console, geoprobe.",
+    "nodeIds": [
+      "file:apps/1_welldesk.py",
+      "file:apps/2_seismic_vision.py",
+      "file:apps/3_earth_volume.py",
+      "file:apps/4_judge_console.py",
+      "file:apps/5_geoprobe.py"
+    ]
+  },
+  {
+    "order": 5,
+    "title": "Well Desk Front-End (React/JS)",
+    "description": "The Well Desk React app: physics modules (Gassmann, VpVsRho, Archie), tracks, multi-panel correlation. Bridges to MCP via MCPBridge.js.",
+    "nodeIds": [
+      "file:apps/well-desk/src/bridge/MCPBridge.js"
+    ]
+  },
+  {
+    "order": 6,
+    "title": "Core: Basin Analysis",
+    "description": "Basin profiling, subsidence backstripping, source rock maturity, tectonic reconstruction, Macrostrat evidence, paleobiology.",
+    "nodeIds": [
+      "config:resources/analogs/seed_malay_basin_J_deepwater.yaml",
+      "config:resources/analogs/seed_malay_basin_K_GroupH.yaml",
+      "config:resources/analogs/seed_malay_basin_K_center_overpressure.yaml",
+      "config:resources/basins/malay_basin/basin_profile.yaml",
+      "config:resources/basins/malay_basin/bibliography.yaml",
+      "config:resources/basins/malay_basin/claims.json"
+    ]
+  },
+  {
+    "order": 7,
+    "title": "Core: Seismic & Geophysics",
+    "description": "SEG-Y ingest, horizon picking, AVO forward (Zoeppritz/Shuey/LMR/Castagna), fault sticks, contrast metabolize, geomechanics.",
+    "nodeIds": [
+      "config:contracts/mcp/geox_seismic_load_volume_contract.json",
+      "config:data/seismic_sections/marmousi_synthetic_section.meta.json",
+      "config:geox/seismic/rsi/geometry.json",
+      "config:geox/seismic/rsi/geox_out/cognition.json",
+      "config:geox/seismic/rsi/geox_out/geoseismic_model.json",
+      "config:geox/seismic/rsi/rsi_manifest.json"
+    ]
+  },
+  {
+    "order": 8,
+    "title": "Core: Petrophysics",
+    "description": "LAS ingest, Vsh/porosity/Sw via Archie & SIMANDOUX, net-pay, LEM inference, well QC (depth monotonicity, physical range).",
+    "nodeIds": [
+      "config:resources/ontology/archie_params.yaml",
+      "config:resources/ontology/petrophysics_assumptions.yaml",
+      "config:resources/playbooks/petrophysics.yaml",
+      "config:resources/playbooks/well_qc.yaml",
+      "document:resources/ontology/petrophysics_report.md",
+      "file:src/geox_core/engines/petrophysics/__init__.py"
+    ]
+  },
+  {
+    "order": 9,
+    "title": "Core: Claims & Falsification",
+    "description": "Popperian claim lifecycle: create \u2192 validate \u2192 challenge \u2192 falsify \u2192 seal. Every claim carries truth class (OBS/DER/INT/SPEC) and uncertainty P10/P50/P90.",
+    "nodeIds": [
+      "config:contracts/claim_state_machine.yaml",
+      "config:contracts/schemas/claim_card.json",
+      "config:contracts/schemas/claim_state_machine.json",
+      "config:contracts/schemas/evidence_pack.json",
+      "config:data/evidence/PROSPECT_ALPHA.json",
+      "config:data/evidence/W-101.json"
+    ]
+  },
+  {
+    "order": 10,
+    "title": "Core: Mapping & 3D Models",
+    "description": "Geological maps (scene_plan), spatial indexing (H3, LanceDB, STAC), 2D cross-sections, GemPy 3D implicit modeling.",
+    "nodeIds": [
+      "file:src/geox_core/engines/geospatial/gempy_adapter.py",
+      "file:src/geox_core/engines/geospatial/gplately_adapter.py",
+      "file:src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "file:src/geox_core/io/landsat_stac_fetcher.py",
+      "file:src/geox_core/spatial/__init__.py",
+      "file:src/geox_core/spatial/crs_reproject.py",
+      "file:src/geox_mcp/tools/gempy_implicit_3d.py",
+      "file:src/geox_mcp/tools/gempy_section_renderer.py",
+      "file:src/geox_mcp/tools/geox_3d_modeling_gempy.py",
+      "file:src/geox_mcp/tools/geox_3d_modeling_gempy_async.py"
+    ]
+  },
+  {
+    "order": 11,
+    "title": "Cross-Organ Bridges",
+    "description": "How GEOX reaches WEALTH (NPV/EMV/Kelly) and WELL (homeostasis/dignity). Bridges route through arifOS, never mutate production state directly.",
+    "nodeIds": [
+      "document:src/geox_core/wealth/canon/WEALTH_HARNESS.md",
+      "file:src/geox_core/wealth/__init__.py",
+      "file:src/geox_core/wealth/harness_engine.py",
+      "file:src/geox_core/wealth/valuation_engine.py",
+      "file:src/geox_core/wealth/volumetric_mc.py",
+      "file:src/geox_core/wealth/wealth_score_kernel.py",
+      "config:contracts/mcp/geox_well_desk_contract.json",
+      "config:resources/playbooks/well_sequence_stratigraphy.yaml",
+      "config:resources/schemas/well_desk_event_schema.json",
+      "config:resources/schemas/well_log.schema.json",
+      "config:schemas/earth/well_header.json",
+      "config:schemas/earth/well_log_curve.json"
+    ]
+  },
+  {
+    "order": 12,
+    "title": "Infrastructure & Deployment",
+    "description": "Docker, docker-compose, systemd unit (geox-mcp.service), ops scripts, GitHub Actions CI/CD, security/identity config.",
+    "nodeIds": [
+      "service:Dockerfile",
+      "service:Dockerfile.local",
+      "service:docker-compose.yml"
+    ]
+  },
+  {
+    "order": 13,
+    "title": "Schemas, Contracts & Identity",
+    "description": "JSON Schemas, Pydantic models, MCP envelopes, OAuth, identity.toml, capability registry, contract tests.",
+    "nodeIds": [
+      "config:contracts/GEOX_EMC.mcp.yaml",
+      "config:contracts/mcp/geox_scope_annotations.yaml",
+      "config:contracts/mcp/geox_ui_tool_contract.json",
+      "config:contracts/mcp_surface.yaml",
+      "config:contracts/openapi/v1/components/schemas/age_constraint.yaml",
+      "config:contracts/openapi/v1/components/schemas/confidence.yaml",
+      "config:identity.toml",
+      "config:oauth/geox-scope-annotations.yaml",
+      "config:oauth/oauth-protected-resource.json",
+      "document:docs/SECURITY.md",
+      "file:allowed_signers",
+      "file:oauth/validate.py"
+    ]
+  },
+  {
+    "order": 14,
+    "title": "OKF \u2014 Sabah Baseline",
+    "description": "Ocean-Knowledge-Fabric Sabah basin baseline: ingest templates, fixtures, evidence packs for reproducible demos.",
+    "nodeIds": [
+      "document:okf/geox.md"
+    ]
+  }
+]

@@ -1,0 +1,125 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [
+    "apps/index.html",
+    "apps/well-witness.html",
+    "apps/workbench-v1.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 2,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "apps/apps.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 132,
+      "nonEmptyLines": 132,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "workbench",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "apps",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 129
+        },
+        {
+          "heading": "registry_note",
+          "level": 1,
+          "line": 130
+        },
+        {
+          "heading": "cleanup_log",
+          "level": 1,
+          "line": 131
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "apps/ui_resources.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 578,
+      "nonEmptyLines": 578,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "standard",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "apps",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "tool_to_app",
+          "level": 1,
+          "line": 363
+        },
+        {
+          "heading": "output_schemas",
+          "level": 1,
+          "line": 374
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    }
+  ]
+}

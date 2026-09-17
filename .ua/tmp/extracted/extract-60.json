@@ -1,0 +1,127 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_core/skills/geodesy/geo-coordinate-frames.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "geo-coordinate-frames",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/skills/geodesy/geo-position-fix-fusion.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "geo-position-fix-fusion",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/skills/geodesy/geo-scale-and-tiling.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 42,
+      "nonEmptyLines": 34,
+      "sections": [
+        {
+          "heading": "geo-scale-and-tiling",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/terrain/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/terrain/agent-card.json",
+      "summary": "json config file (89 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/terrain/terrain-drainage-structure.md",
+      "type": "document",
+      "name": "terrain-drainage-structure.md",
+      "filePath": "skills/terrain/terrain-drainage-structure.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/terrain/terrain-relief-and-slope.md",
+      "type": "document",
+      "name": "terrain-relief-and-slope.md",
+      "filePath": "skills/terrain/terrain-relief-and-slope.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/terrain/terrain-surface-access.md",
+      "type": "document",
+      "name": "terrain-surface-access.md",
+      "filePath": "skills/terrain/terrain-surface-access.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

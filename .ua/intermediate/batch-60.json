@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/geodesy/geo-coordinate-frames.md",
+      "type": "document",
+      "name": "geo-coordinate-frames.md",
+      "filePath": "src/geox_core/skills/geodesy/geo-coordinate-frames.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/geodesy/geo-position-fix-fusion.md",
+      "type": "document",
+      "name": "geo-position-fix-fusion.md",
+      "filePath": "src/geox_core/skills/geodesy/geo-position-fix-fusion.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/geodesy/geo-scale-and-tiling.md",
+      "type": "document",
+      "name": "geo-scale-and-tiling.md",
+      "filePath": "src/geox_core/skills/geodesy/geo-scale-and-tiling.md",
+      "summary": "markdown docs file (34 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

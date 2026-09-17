@@ -1,0 +1,4081 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [
+    "apps/well-desk/styles/well-desk.css",
+    "artifacts/2026-09-06-sunda-arc/sunda-arc-briefing.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 23,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 22,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "apps/well-desk/src/bridge/WellDeskRenderAdapter.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 120,
+      "nonEmptyLines": 106,
+      "callGraph": [
+        {
+          "caller": "renderCurve",
+          "callee": "document.getElementById",
+          "lineNumber": 20
+        },
+        {
+          "caller": "renderCurve",
+          "callee": "Math.min",
+          "lineNumber": 25
+        },
+        {
+          "caller": "renderCurve",
+          "callee": "Math.max",
+          "lineNumber": 26
+        },
+        {
+          "caller": "renderCurve",
+          "callee": "min.toFixed",
+          "lineNumber": 30
+        },
+        {
+          "caller": "renderCurve",
+          "callee": "max.toFixed",
+          "lineNumber": 30
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "document.getElementById",
+          "lineNumber": 47
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "document.getElementById",
+          "lineNumber": 50
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "w.totalDepth.toLocaleString",
+          "lineNumber": 52
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "renderCurve",
+          "lineNumber": 56
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "renderCurve",
+          "lineNumber": 57
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "renderCurve",
+          "lineNumber": 58
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "renderCurve",
+          "lineNumber": 59
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "document.getElementById",
+          "lineNumber": 63
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "zones.map(z => {\n          const v = z.verdict || '—';\n          const vClass = v === 'PAY' ? 'verdict-pay'\n            : v === 'POSSIBLE' ? 'verdict-possible'\n            : v === 'NON_PAY' ? 'verdict-nonpay'\n            : 'verdict-unknown';\n          return `<div class=\"wd-zone-row ${vClass}\">\n            <span class=\"wd-zone-depth\">${z.top}–${z.bot} m</span>\n            <span class=\"wd-zone-verdict\">${v}</span>\n          </div>`;\n        }).join",
+          "lineNumber": 68
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "zones.map",
+          "lineNumber": 68
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "document.getElementById",
+          "lineNumber": 84
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 87
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 88
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "(p9.vsh * 100).toFixed",
+          "lineNumber": 88
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 89
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "(p9.phi * 100).toFixed",
+          "lineNumber": 89
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 90
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "(p9.sw * 100).toFixed",
+          "lineNumber": 90
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 91
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "(p9.phi_eff * 100).toFixed",
+          "lineNumber": 91
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.push",
+          "lineNumber": 92
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "p9.sw_avg.toFixed",
+          "lineNumber": 92
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.map(t => `<span class=\"wd-param\">${t}</span>`).join",
+          "lineNumber": 94
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "items.map",
+          "lineNumber": 94
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "document.getElementById",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/well-desk/src/correlation/MultiWellPanel.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 227,
+      "nonEmptyLines": 199,
+      "classes": [
+        {
+          "name": "MultiWellPanel",
+          "startLine": 8,
+          "endLine": 227,
+          "methods": [
+            "constructor",
+            "addWell",
+            "setDepthRange",
+            "_render",
+            "_renderWellTrack",
+            "_renderTieLines",
+            "addTieLine",
+            "export",
+            "exportPng"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "document.getElementById",
+          "lineNumber": 10
+        },
+        {
+          "caller": "addWell",
+          "callee": "this.wells.push",
+          "lineNumber": 38
+        },
+        {
+          "caller": "addWell",
+          "callee": "this._render",
+          "lineNumber": 39
+        },
+        {
+          "caller": "setDepthRange",
+          "callee": "this._render",
+          "lineNumber": 48
+        },
+        {
+          "caller": "_render",
+          "callee": "document.createElementNS",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_render",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 57
+        },
+        {
+          "caller": "_render",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 58
+        },
+        {
+          "caller": "_render",
+          "callee": "document.createElementNS",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_render",
+          "callee": "bg.setAttribute",
+          "lineNumber": 64
+        },
+        {
+          "caller": "_render",
+          "callee": "bg.setAttribute",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_render",
+          "callee": "bg.setAttribute",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_render",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_render",
+          "callee": "this.container.appendChild",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_render",
+          "callee": "this.wells.forEach",
+          "lineNumber": 72
+        },
+        {
+          "caller": "_render",
+          "callee": "this._renderWellTrack",
+          "lineNumber": 74
+        },
+        {
+          "caller": "_render",
+          "callee": "this._renderTieLines",
+          "lineNumber": 78
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 82
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.setAttribute",
+          "lineNumber": 83
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 84
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 90
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "rect.setAttribute",
+          "lineNumber": 91
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "rect.setAttribute",
+          "lineNumber": 92
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "rect.setAttribute",
+          "lineNumber": 93
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "rect.setAttribute",
+          "lineNumber": 94
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 99
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 100
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 101
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 103
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 106
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "Math.max",
+          "lineNumber": 115
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "Math.min",
+          "lineNumber": 115
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 122
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 123
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 125
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 136
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 137
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 138
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 139
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 140
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 141
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "line.setAttribute",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "label.setAttribute",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "label.setAttribute",
+          "lineNumber": 149
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "label.setAttribute",
+          "lineNumber": 150
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "label.setAttribute",
+          "lineNumber": 151
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 153
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 158
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 159
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 160
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 161
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 162
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "pick.setAttribute",
+          "lineNumber": 163
+        },
+        {
+          "caller": "_renderWellTrack",
+          "callee": "group.appendChild",
+          "lineNumber": 167
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "document.createElementNS",
+          "lineNumber": 184
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 185
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 186
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 187
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 188
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 189
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 190
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 191
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "line.setAttribute",
+          "lineNumber": 192
+        },
+        {
+          "caller": "_renderTieLines",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 193
+        },
+        {
+          "caller": "addTieLine",
+          "callee": "this.tieLines.push",
+          "lineNumber": 201
+        },
+        {
+          "caller": "addTieLine",
+          "callee": "this._render",
+          "lineNumber": 202
+        },
+        {
+          "caller": "export",
+          "callee": "serializer.serializeToString",
+          "lineNumber": 210
+        },
+        {
+          "caller": "export",
+          "callee": "URL.createObjectURL",
+          "lineNumber": 212
+        },
+        {
+          "caller": "export",
+          "callee": "document.createElement",
+          "lineNumber": 213
+        },
+        {
+          "caller": "export",
+          "callee": "Date.now",
+          "lineNumber": 215
+        },
+        {
+          "caller": "export",
+          "callee": "a.click",
+          "lineNumber": 216
+        },
+        {
+          "caller": "export",
+          "callee": "URL.revokeObjectURL",
+          "lineNumber": 217
+        },
+        {
+          "caller": "exportPng",
+          "callee": "this.export",
+          "lineNumber": 225
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/crossplot/XPlot2D.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 191,
+      "nonEmptyLines": 167,
+      "classes": [
+        {
+          "name": "XPlot2D",
+          "startLine": 7,
+          "endLine": 191,
+          "methods": [
+            "constructor",
+            "load",
+            "setRange",
+            "_autoScale",
+            "_toCanvas",
+            "draw",
+            "_drawTemplates",
+            "brush",
+            "export"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "document.getElementById",
+          "lineNumber": 9
+        },
+        {
+          "caller": "constructor",
+          "callee": "document.createElement",
+          "lineNumber": 20
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.container.appendChild",
+          "lineNumber": 25
+        },
+        {
+          "caller": "constructor",
+          "callee": "this.canvas.getContext",
+          "lineNumber": 26
+        },
+        {
+          "caller": "load",
+          "callee": "this._autoScale",
+          "lineNumber": 37
+        },
+        {
+          "caller": "load",
+          "callee": "this.draw",
+          "lineNumber": 38
+        },
+        {
+          "caller": "setRange",
+          "callee": "this.draw",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "this.data.map",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "this.data.map",
+          "lineNumber": 53
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.max",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.min",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.max",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.min",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.min",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.max",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.min",
+          "lineNumber": 57
+        },
+        {
+          "caller": "_autoScale",
+          "callee": "Math.max",
+          "lineNumber": 57
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.fillRect",
+          "lineNumber": 76
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.beginPath",
+          "lineNumber": 83
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.moveTo",
+          "lineNumber": 84
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.lineTo",
+          "lineNumber": 85
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.stroke",
+          "lineNumber": 86
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.beginPath",
+          "lineNumber": 89
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.moveTo",
+          "lineNumber": 90
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.lineTo",
+          "lineNumber": 91
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.stroke",
+          "lineNumber": 92
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.beginPath",
+          "lineNumber": 98
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.moveTo",
+          "lineNumber": 99
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.lineTo",
+          "lineNumber": 100
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.lineTo",
+          "lineNumber": 101
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.stroke",
+          "lineNumber": 102
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.fillText",
+          "lineNumber": 114
+        },
+        {
+          "caller": "draw",
+          "callee": "val.toFixed",
+          "lineNumber": 114
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.fillText",
+          "lineNumber": 123
+        },
+        {
+          "caller": "draw",
+          "callee": "val.toFixed",
+          "lineNumber": 123
+        },
+        {
+          "caller": "draw",
+          "callee": "this._drawTemplates",
+          "lineNumber": 127
+        },
+        {
+          "caller": "draw",
+          "callee": "this._toCanvas",
+          "lineNumber": 131
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.beginPath",
+          "lineNumber": 132
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.arc",
+          "lineNumber": 133
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.fill",
+          "lineNumber": 135
+        },
+        {
+          "caller": "draw",
+          "callee": "this._toCanvas",
+          "lineNumber": 142
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.beginPath",
+          "lineNumber": 143
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.arc",
+          "lineNumber": 144
+        },
+        {
+          "caller": "draw",
+          "callee": "ctx.stroke",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "ctx.beginPath",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "this._toCanvas",
+          "lineNumber": 158
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "this._toCanvas",
+          "lineNumber": 159
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "ctx.moveTo",
+          "lineNumber": 160
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "ctx.lineTo",
+          "lineNumber": 161
+        },
+        {
+          "caller": "_drawTemplates",
+          "callee": "ctx.stroke",
+          "lineNumber": 162
+        },
+        {
+          "caller": "brush",
+          "callee": "Math.min",
+          "lineNumber": 170
+        },
+        {
+          "caller": "brush",
+          "callee": "Math.max",
+          "lineNumber": 170
+        },
+        {
+          "caller": "brush",
+          "callee": "Math.min",
+          "lineNumber": 171
+        },
+        {
+          "caller": "brush",
+          "callee": "Math.max",
+          "lineNumber": 171
+        },
+        {
+          "caller": "brush",
+          "callee": "this.data\n      .map((d, i) => ({ ...d, i }))\n      .filter(d => d.x >= xMin && d.x <= xMax && d.y >= yMin && d.y <= yMax)\n      .map",
+          "lineNumber": 173
+        },
+        {
+          "caller": "brush",
+          "callee": "this.data\n      .map((d, i) => ({ ...d, i }))\n      .filter",
+          "lineNumber": 173
+        },
+        {
+          "caller": "brush",
+          "callee": "this.data\n      .map",
+          "lineNumber": 173
+        },
+        {
+          "caller": "brush",
+          "callee": "this.draw",
+          "lineNumber": 178
+        },
+        {
+          "caller": "export",
+          "callee": "document.createElement",
+          "lineNumber": 186
+        },
+        {
+          "caller": "export",
+          "callee": "Date.now",
+          "lineNumber": 187
+        },
+        {
+          "caller": "export",
+          "callee": "this.canvas.toDataURL",
+          "lineNumber": 188
+        },
+        {
+          "caller": "export",
+          "callee": "link.click",
+          "lineNumber": 189
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/petro/PorosityCalc.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 81,
+      "nonEmptyLines": 70,
+      "classes": [
+        {
+          "name": "PorosityCalc",
+          "startLine": 7,
+          "endLine": 81,
+          "methods": [
+            "densityPorosity",
+            "neutronPorosity",
+            "ndCrossplotPorosity",
+            "sonicPorosity",
+            "effectivePorosity",
+            "computeCurves"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "densityPorosity",
+          "callee": "Math.max",
+          "lineNumber": 24
+        },
+        {
+          "caller": "densityPorosity",
+          "callee": "Math.min",
+          "lineNumber": 24
+        },
+        {
+          "caller": "neutronPorosity",
+          "callee": "Math.max",
+          "lineNumber": 31
+        },
+        {
+          "caller": "neutronPorosity",
+          "callee": "Math.min",
+          "lineNumber": 31
+        },
+        {
+          "caller": "ndCrossplotPorosity",
+          "callee": "this.densityPorosity",
+          "lineNumber": 39
+        },
+        {
+          "caller": "ndCrossplotPorosity",
+          "callee": "this.neutronPorosity",
+          "lineNumber": 40
+        },
+        {
+          "caller": "sonicPorosity",
+          "callee": "Math.max",
+          "lineNumber": 58
+        },
+        {
+          "caller": "sonicPorosity",
+          "callee": "Math.min",
+          "lineNumber": 58
+        },
+        {
+          "caller": "effectivePorosity",
+          "callee": "Math.max",
+          "lineNumber": 65
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "rhobArray.map",
+          "lineNumber": 73
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "this.densityPorosity",
+          "lineNumber": 73
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "nphiArray.map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "this.neutronPorosity",
+          "lineNumber": 74
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "dtArray.map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "this.sonicPorosity",
+          "lineNumber": 75
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "phiD.map",
+          "lineNumber": 76
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "this.ndCrossplotPorosity",
+          "lineNumber": 76
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "phiX.map",
+          "lineNumber": 77
+        },
+        {
+          "caller": "computeCurves",
+          "callee": "this.effectivePorosity",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/petro/SwArchie.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 83,
+      "nonEmptyLines": 78,
+      "classes": [
+        {
+          "name": "SwArchie",
+          "startLine": 7,
+          "endLine": 83,
+          "methods": [
+            "archie",
+            "indonesian",
+            "simandoux",
+            "waxmanSmits",
+            "computeCurve"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "archie",
+          "callee": "Math.pow",
+          "lineNumber": 22
+        },
+        {
+          "caller": "archie",
+          "callee": "Math.pow",
+          "lineNumber": 22
+        },
+        {
+          "caller": "archie",
+          "callee": "Math.max",
+          "lineNumber": 23
+        },
+        {
+          "caller": "archie",
+          "callee": "Math.min",
+          "lineNumber": 23
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.pow",
+          "lineNumber": 32
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.sqrt",
+          "lineNumber": 32
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.pow",
+          "lineNumber": 33
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.sqrt",
+          "lineNumber": 33
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.pow",
+          "lineNumber": 34
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.max",
+          "lineNumber": 35
+        },
+        {
+          "caller": "indonesian",
+          "callee": "Math.min",
+          "lineNumber": 35
+        },
+        {
+          "caller": "simandoux",
+          "callee": "Math.pow",
+          "lineNumber": 44
+        },
+        {
+          "caller": "simandoux",
+          "callee": "Math.pow",
+          "lineNumber": 46
+        },
+        {
+          "caller": "simandoux",
+          "callee": "Math.max",
+          "lineNumber": 47
+        },
+        {
+          "caller": "simandoux",
+          "callee": "Math.min",
+          "lineNumber": 47
+        },
+        {
+          "caller": "waxmanSmits",
+          "callee": "Math.pow",
+          "lineNumber": 57
+        },
+        {
+          "caller": "waxmanSmits",
+          "callee": "Math.pow",
+          "lineNumber": 57
+        },
+        {
+          "caller": "waxmanSmits",
+          "callee": "Math.max",
+          "lineNumber": 58
+        },
+        {
+          "caller": "waxmanSmits",
+          "callee": "Math.min",
+          "lineNumber": 58
+        },
+        {
+          "caller": "computeCurve",
+          "callee": "rtArray.map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "computeCurve",
+          "callee": "this.indonesian",
+          "lineNumber": 78
+        },
+        {
+          "caller": "computeCurve",
+          "callee": "this.archie",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/petro/VshCalc.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 70,
+      "nonEmptyLines": 63,
+      "classes": [
+        {
+          "name": "VshCalc",
+          "startLine": 7,
+          "endLine": 70,
+          "methods": [
+            "linear",
+            "larionovTertiary",
+            "larionovOlder",
+            "steiber",
+            "clavier",
+            "computeCurve"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "linear",
+          "callee": "Math.max",
+          "lineNumber": 15
+        },
+        {
+          "caller": "linear",
+          "callee": "Math.min",
+          "lineNumber": 15
+        },
+        {
+          "caller": "larionovTertiary",
+          "callee": "this.linear",
+          "lineNumber": 23
+        },
+        {
+          "caller": "larionovTertiary",
+          "callee": "Math.pow",
+          "lineNumber": 24
+        },
+        {
+          "caller": "larionovTertiary",
+          "callee": "Math.max",
+          "lineNumber": 25
+        },
+        {
+          "caller": "larionovTertiary",
+          "callee": "Math.min",
+          "lineNumber": 25
+        },
+        {
+          "caller": "larionovOlder",
+          "callee": "this.linear",
+          "lineNumber": 32
+        },
+        {
+          "caller": "larionovOlder",
+          "callee": "Math.pow",
+          "lineNumber": 33
+        },
+        {
+          "caller": "larionovOlder",
+          "callee": "Math.max",
+          "lineNumber": 34
+        },
+        {
+          "caller": "larionovOlder",
+          "callee": "Math.min",
+          "lineNumber": 34
+        },
+        {
+          "caller": "steiber",
+          "callee": "this.linear",
+          "lineNumber": 41
+        },
+        {
+          "caller": "steiber",
+          "callee": "Math.max",
+          "lineNumber": 43
+        },
+        {
+          "caller": "steiber",
+          "callee": "Math.min",
+          "lineNumber": 43
+        },
+        {
+          "caller": "clavier",
+          "callee": "this.linear",
+          "lineNumber": 50
+        },
+        {
+          "caller": "clavier",
+          "callee": "Math.sqrt",
+          "lineNumber": 51
+        },
+        {
+          "caller": "clavier",
+          "callee": "Math.pow",
+          "lineNumber": 51
+        },
+        {
+          "caller": "clavier",
+          "callee": "Math.max",
+          "lineNumber": 52
+        },
+        {
+          "caller": "clavier",
+          "callee": "Math.min",
+          "lineNumber": 52
+        },
+        {
+          "caller": "computeCurve",
+          "callee": "grArray.map",
+          "lineNumber": 68
+        },
+        {
+          "caller": "computeCurve",
+          "callee": "fn",
+          "lineNumber": 68
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/physics/Gassmann.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 126,
+      "nonEmptyLines": 112,
+      "callGraph": [
+        {
+          "caller": "mineralMix",
+          "callee": "Math.max",
+          "lineNumber": 37
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "Math.min",
+          "lineNumber": 37
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 43
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 44
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 50
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 51
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 57
+        },
+        {
+          "caller": "mineralMix",
+          "callee": "this.vrh",
+          "lineNumber": 58
+        },
+        {
+          "caller": "fluidMix",
+          "callee": "Math.max",
+          "lineNumber": 67
+        },
+        {
+          "caller": "fluidMix",
+          "callee": "Math.min",
+          "lineNumber": 67
+        },
+        {
+          "caller": "substitute",
+          "callee": "Math.max",
+          "lineNumber": 84
+        },
+        {
+          "caller": "substitute",
+          "callee": "Math.min",
+          "lineNumber": 84
+        },
+        {
+          "caller": "substitute",
+          "callee": "Math.max",
+          "lineNumber": 88
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.sqrt",
+          "lineNumber": 98
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.sqrt",
+          "lineNumber": 99
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.round",
+          "lineNumber": 101
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.round",
+          "lineNumber": 102
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.round",
+          "lineNumber": 103
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.round",
+          "lineNumber": 104
+        },
+        {
+          "caller": "velocities",
+          "callee": "Math.round",
+          "lineNumber": 105
+        },
+        {
+          "caller": "forward",
+          "callee": "Math.max",
+          "lineNumber": 113
+        },
+        {
+          "caller": "forward",
+          "callee": "Math.min",
+          "lineNumber": 113
+        },
+        {
+          "caller": "forward",
+          "callee": "this.mineralMix",
+          "lineNumber": 114
+        },
+        {
+          "caller": "forward",
+          "callee": "this.fluidMix",
+          "lineNumber": 115
+        },
+        {
+          "caller": "forward",
+          "callee": "Math.max",
+          "lineNumber": 118
+        },
+        {
+          "caller": "forward",
+          "callee": "Math.max",
+          "lineNumber": 119
+        },
+        {
+          "caller": "forward",
+          "callee": "this.substitute",
+          "lineNumber": 121
+        },
+        {
+          "caller": "forward",
+          "callee": "this.velocities",
+          "lineNumber": 124
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/well-desk/src/physics/InverseRockPhysics.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 165,
+      "nonEmptyLines": 144,
+      "classes": [
+        {
+          "name": "InverseRockPhysics",
+          "startLine": 8,
+          "endLine": 165,
+          "methods": [
+            "constructor",
+            "invert",
+            "_misfit",
+            "_misfitWithFluid",
+            "_reflect",
+            "_expand",
+            "_contract",
+            "_shrink",
+            "_gradeResult"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "invert",
+          "callee": "this._misfit",
+          "lineNumber": 35
+        },
+        {
+          "caller": "invert",
+          "callee": "simplex.sort",
+          "lineNumber": 41
+        },
+        {
+          "caller": "invert",
+          "callee": "this._reflect",
+          "lineNumber": 59
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfit",
+          "lineNumber": 60
+        },
+        {
+          "caller": "invert",
+          "callee": "this._expand",
+          "lineNumber": 64
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfit",
+          "lineNumber": 65
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.min",
+          "lineNumber": 66
+        },
+        {
+          "caller": "invert",
+          "callee": "this._contract",
+          "lineNumber": 71
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfit",
+          "lineNumber": 72
+        },
+        {
+          "caller": "invert",
+          "callee": "this._shrink",
+          "lineNumber": 78
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfit",
+          "lineNumber": 79
+        },
+        {
+          "caller": "invert",
+          "callee": "best.x.map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.max",
+          "lineNumber": 87
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.min",
+          "lineNumber": 87
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfitWithFluid",
+          "lineNumber": 91
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfitWithFluid",
+          "lineNumber": 92
+        },
+        {
+          "caller": "invert",
+          "callee": "this._misfitWithFluid",
+          "lineNumber": 93
+        },
+        {
+          "caller": "invert",
+          "callee": "fluidMisfits.sort",
+          "lineNumber": 95
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 103
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 104
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 105
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 109
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.abs",
+          "lineNumber": 109
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 110
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.abs",
+          "lineNumber": 110
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 113
+        },
+        {
+          "caller": "invert",
+          "callee": "Math.round",
+          "lineNumber": 114
+        },
+        {
+          "caller": "invert",
+          "callee": "this._gradeResult",
+          "lineNumber": 116
+        },
+        {
+          "caller": "_misfit",
+          "callee": "this._misfitWithFluid",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "x.map",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "Math.max",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "Math.min",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "GASSMANN.forward",
+          "lineNumber": 130
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "Math.max",
+          "lineNumber": 131
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "Math.max",
+          "lineNumber": 132
+        },
+        {
+          "caller": "_misfitWithFluid",
+          "callee": "Math.max",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_reflect",
+          "callee": "centroid.map",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_reflect",
+          "callee": "Math.max",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_reflect",
+          "callee": "Math.min",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_expand",
+          "callee": "centroid.map",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_expand",
+          "callee": "Math.max",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_expand",
+          "callee": "Math.min",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_contract",
+          "callee": "centroid.map",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_contract",
+          "callee": "Math.max",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_contract",
+          "callee": "Math.min",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_shrink",
+          "callee": "best.map",
+          "lineNumber": 157
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/physics/RockPhysicsTemplate.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 83,
+      "nonEmptyLines": 76,
+      "functions": [
+        {
+          "name": "matchTemplate",
+          "startLine": 63,
+          "endLine": 83,
+          "params": [
+            "computed"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "matchTemplate",
+          "callee": "Object.entries",
+          "lineNumber": 67
+        },
+        {
+          "caller": "matchTemplate",
+          "callee": "Math.round",
+          "lineNumber": 75
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/well-desk/src/physics/VpVsRho.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 81,
+      "nonEmptyLines": 73,
+      "classes": [
+        {
+          "name": "VpVsRho",
+          "startLine": 8,
+          "endLine": 81,
+          "methods": [
+            "constructor",
+            "compute",
+            "sweep",
+            "fluidScan",
+            "_grade",
+            "export"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute",
+          "callee": "GASSMANN.forward",
+          "lineNumber": 27
+        },
+        {
+          "caller": "compute",
+          "callee": "this._grade",
+          "lineNumber": 32
+        },
+        {
+          "caller": "compute",
+          "callee": "new Date().toISOString",
+          "lineNumber": 33
+        },
+        {
+          "caller": "sweep",
+          "callee": "this.compute",
+          "lineNumber": 44
+        },
+        {
+          "caller": "sweep",
+          "callee": "this.results.push",
+          "lineNumber": 45
+        },
+        {
+          "caller": "fluidScan",
+          "callee": "this.compute",
+          "lineNumber": 57
+        },
+        {
+          "caller": "fluidScan",
+          "callee": "this.results.push",
+          "lineNumber": 58
+        },
+        {
+          "caller": "export",
+          "callee": "JSON.stringify",
+          "lineNumber": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/tracks/GRTrack.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 96,
+      "classes": [
+        {
+          "name": "GRTrack",
+          "startLine": 8,
+          "endLine": 111,
+          "methods": [
+            "constructor",
+            "render",
+            "_renderScale"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 10
+        },
+        {
+          "caller": "render",
+          "callee": "Math.max",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render",
+          "callee": "Math.min",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render",
+          "callee": "document.createElementNS",
+          "lineNumber": 54
+        },
+        {
+          "caller": "render",
+          "callee": "fillPoly.setAttribute",
+          "lineNumber": 55
+        },
+        {
+          "caller": "render",
+          "callee": "fillPoly.setAttribute",
+          "lineNumber": 56
+        },
+        {
+          "caller": "render",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 57
+        },
+        {
+          "caller": "render",
+          "callee": "document.createElementNS",
+          "lineNumber": 60
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 61
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 62
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 63
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 64
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 65
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 66
+        },
+        {
+          "caller": "render",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 67
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderScale",
+          "lineNumber": 70
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 83
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 84
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 85
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 86
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 87
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 88
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 91
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 92
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 93
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 94
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 96
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.round(val).toString",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.round",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 103
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 105
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 106
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 107
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 109
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/tracks/PoroDensityTrack.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 202,
+      "nonEmptyLines": 173,
+      "classes": [
+        {
+          "name": "PoroDensityTrack",
+          "startLine": 9,
+          "endLine": 202,
+          "methods": [
+            "constructor",
+            "setNPHI",
+            "setRHOB",
+            "render",
+            "_renderCurve",
+            "_renderCrossover",
+            "_interpolate",
+            "_renderDualScale"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 11
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderCurve",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderCurve",
+          "lineNumber": 42
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderCrossover",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderDualScale",
+          "lineNumber": 48
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "Math.max",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "Math.min",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "document.createElementNS",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_renderCurve",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "Math.max",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "Math.floor",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "this._interpolate",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "document.createElementNS",
+          "lineNumber": 111
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "polygon.setAttribute",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "polyPoints.trim",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "polygon.setAttribute",
+          "lineNumber": 113
+        },
+        {
+          "caller": "_renderCrossover",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 114
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 145
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 150
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 151
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 153
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 154
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 155
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "val.toFixed",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 166
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 167
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 168
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 169
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 170
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 171
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 172
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 174
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 175
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 176
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 177
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 178
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 179
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "val.toFixed",
+          "lineNumber": 180
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 181
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 185
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "nphiUnit.setAttribute",
+          "lineNumber": 186
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "nphiUnit.setAttribute",
+          "lineNumber": 187
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "nphiUnit.setAttribute",
+          "lineNumber": 188
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "nphiUnit.setAttribute",
+          "lineNumber": 189
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 191
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 193
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "rhobUnit.setAttribute",
+          "lineNumber": 194
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "rhobUnit.setAttribute",
+          "lineNumber": 195
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "rhobUnit.setAttribute",
+          "lineNumber": 196
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "rhobUnit.setAttribute",
+          "lineNumber": 197
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "rhobUnit.setAttribute",
+          "lineNumber": 198
+        },
+        {
+          "caller": "_renderDualScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 200
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/tracks/ResistivityTrack.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 96,
+      "classes": [
+        {
+          "name": "ResistivityTrack",
+          "startLine": 8,
+          "endLine": 111,
+          "methods": [
+            "constructor",
+            "render",
+            "_renderScale"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 10
+        },
+        {
+          "caller": "render",
+          "callee": "Math.log10",
+          "lineNumber": 27
+        },
+        {
+          "caller": "render",
+          "callee": "Math.log10",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render",
+          "callee": "Math.max",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render",
+          "callee": "Math.min",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render",
+          "callee": "Math.log10",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render",
+          "callee": "document.createElementNS",
+          "lineNumber": 43
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 48
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderScale",
+          "lineNumber": 51
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.log10",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.pow",
+          "lineNumber": 61
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 70
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 72
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 74
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 76
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 78
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 79
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "val.toExponential(0).replace",
+          "lineNumber": 80
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "val.toExponential",
+          "lineNumber": 80
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 81
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.log10",
+          "lineNumber": 87
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.log10",
+          "lineNumber": 88
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 91
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "minorTick.setAttribute",
+          "lineNumber": 92
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "minorTick.setAttribute",
+          "lineNumber": 93
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "minorTick.setAttribute",
+          "lineNumber": 94
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "minorTick.setAttribute",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "minorTick.setAttribute",
+          "lineNumber": 96
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 103
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 105
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 106
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 107
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 109
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/tracks/SonicTrack.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 85,
+      "nonEmptyLines": 73,
+      "classes": [
+        {
+          "name": "SonicTrack",
+          "startLine": 8,
+          "endLine": 85,
+          "methods": [
+            "constructor",
+            "render",
+            "_renderScale"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "super",
+          "lineNumber": 10
+        },
+        {
+          "caller": "render",
+          "callee": "Math.max",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render",
+          "callee": "Math.min",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render",
+          "callee": "document.createElementNS",
+          "lineNumber": 37
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 38
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 40
+        },
+        {
+          "caller": "render",
+          "callee": "polyline.setAttribute",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 42
+        },
+        {
+          "caller": "render",
+          "callee": "this._renderScale",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 58
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 61
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 62
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "tick.setAttribute",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 64
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 70
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "label.setAttribute",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.round(val).toString",
+          "lineNumber": 72
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "Math.round",
+          "lineNumber": 72
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "document.createElementNS",
+          "lineNumber": 76
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 78
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 79
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 80
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "unit.setAttribute",
+          "lineNumber": 81
+        },
+        {
+          "caller": "_renderScale",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "apps/well-desk/src/tracks/TrackRenderer.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 311,
+      "nonEmptyLines": 266,
+      "classes": [
+        {
+          "name": "TrackRenderer",
+          "startLine": 10,
+          "endLine": 267,
+          "methods": [
+            "constructor",
+            "_initSvg",
+            "_initDepthAxis",
+            "addTrack",
+            "setDepthRange",
+            "refresh",
+            "_bindEvents",
+            "exportSvg"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TrackBase",
+          "startLine": 270,
+          "endLine": 311,
+          "methods": [
+            "constructor",
+            "setData",
+            "getValueAtDepth",
+            "_scaleValue",
+            "render"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "constructor",
+          "callee": "document.getElementById",
+          "lineNumber": 12
+        },
+        {
+          "caller": "constructor",
+          "callee": "this._initSvg",
+          "lineNumber": 34
+        },
+        {
+          "caller": "constructor",
+          "callee": "this._initDepthAxis",
+          "lineNumber": 35
+        },
+        {
+          "caller": "constructor",
+          "callee": "this._bindEvents",
+          "lineNumber": 36
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "document.createElementNS",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 46
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 48
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "this.container.appendChild",
+          "lineNumber": 51
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "document.createElementNS",
+          "lineNumber": 54
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "bg.setAttribute",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "bg.setAttribute",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "bg.setAttribute",
+          "lineNumber": 57
+        },
+        {
+          "caller": "_initSvg",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 58
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.setAttribute",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 70
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 72
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 74
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "axisLine.setAttribute",
+          "lineNumber": 76
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.appendChild",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 87
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 88
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 89
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 90
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 91
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 92
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "tick.setAttribute",
+          "lineNumber": 93
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.appendChild",
+          "lineNumber": 94
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "label.setAttribute",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "label.setAttribute",
+          "lineNumber": 99
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "label.setAttribute",
+          "lineNumber": 100
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "label.setAttribute",
+          "lineNumber": 101
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "Math.round(depthVal).toString",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "Math.round",
+          "lineNumber": 102
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.appendChild",
+          "lineNumber": 103
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 107
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 108
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 109
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 110
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 111
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 113
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "gridLine.setAttribute",
+          "lineNumber": 114
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.appendChild",
+          "lineNumber": 115
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "document.createElementNS",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "depthLabel.setAttribute",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "depthLabel.setAttribute",
+          "lineNumber": 122
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "depthLabel.setAttribute",
+          "lineNumber": 123
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "depthLabel.setAttribute",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "depthLabel.setAttribute",
+          "lineNumber": 125
+        },
+        {
+          "caller": "_initDepthAxis",
+          "callee": "this.depthAxis.appendChild",
+          "lineNumber": 127
+        },
+        {
+          "caller": "addTrack",
+          "callee": "this.tracks.push",
+          "lineNumber": 134
+        },
+        {
+          "caller": "addTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 141
+        },
+        {
+          "caller": "addTrack",
+          "callee": "trackGroup.setAttribute",
+          "lineNumber": 142
+        },
+        {
+          "caller": "addTrack",
+          "callee": "trackGroup.setAttribute",
+          "lineNumber": 143
+        },
+        {
+          "caller": "addTrack",
+          "callee": "this.svg.appendChild",
+          "lineNumber": 144
+        },
+        {
+          "caller": "addTrack",
+          "callee": "this.trackGroups.push",
+          "lineNumber": 145
+        },
+        {
+          "caller": "addTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 148
+        },
+        {
+          "caller": "addTrack",
+          "callee": "border.setAttribute",
+          "lineNumber": 149
+        },
+        {
+          "caller": "addTrack",
+          "callee": "border.setAttribute",
+          "lineNumber": 150
+        },
+        {
+          "caller": "addTrack",
+          "callee": "border.setAttribute",
+          "lineNumber": 151
+        },
+        {
+          "caller": "addTrack",
+          "callee": "border.setAttribute",
+          "lineNumber": 152
+        },
+        {
+          "caller": "addTrack",
+          "callee": "border.setAttribute",
+          "lineNumber": 153
+        },
+        {
+          "caller": "addTrack",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 154
+        },
+        {
+          "caller": "addTrack",
+          "callee": "document.createElementNS",
+          "lineNumber": 157
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 158
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 159
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 160
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 161
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 162
+        },
+        {
+          "caller": "addTrack",
+          "callee": "header.setAttribute",
+          "lineNumber": 163
+        },
+        {
+          "caller": "addTrack",
+          "callee": "trackGroup.appendChild",
+          "lineNumber": 165
+        },
+        {
+          "caller": "addTrack",
+          "callee": "trackInstance.render",
+          "lineNumber": 168
+        },
+        {
+          "caller": "addTrack",
+          "callee": "this.svg.setAttribute",
+          "lineNumber": 178
+        },
+        {
+          "caller": "setDepthRange",
+          "callee": "this.refresh",
+          "lineNumber": 189
+        },
+        {
+          "caller": "refresh",
+          "callee": "this._initDepthAxis",
+          "lineNumber": 196
+        },
+        {
+          "caller": "refresh",
+          "callee": "existingTracks.forEach",
+          "lineNumber": 200
+        },
+        {
+          "caller": "refresh",
+          "callee": "this.addTrack",
+          "lineNumber": 200
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "document.createElement",
+          "lineNumber": 206
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "this.container.appendChild",
+          "lineNumber": 215
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "this.svg.addEventListener",
+          "lineNumber": 217
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "this.svg.getBoundingClientRect",
+          "lineNumber": 218
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "Math.floor",
+          "lineNumber": 230
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "track.getValueAtDepth",
+          "lineNumber": 239
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "val.toFixed",
+          "lineNumber": 240
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "depthVal.toFixed",
+          "lineNumber": 243
+        },
+        {
+          "caller": "_bindEvents",
+          "callee": "this.svg.addEventListener",
+          "lineNumber": 249
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "serializer.serializeToString",
+          "lineNumber": 258
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "URL.createObjectURL",
+          "lineNumber": 260
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "document.createElement",
+          "lineNumber": 261
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "Date.now",
+          "lineNumber": 263
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "a.click",
+          "lineNumber": 264
+        },
+        {
+          "caller": "exportSvg",
+          "callee": "URL.revokeObjectURL",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.log10",
+          "lineNumber": 300
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.max",
+          "lineNumber": 300
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.log10",
+          "lineNumber": 301
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.max",
+          "lineNumber": 301
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.log10",
+          "lineNumber": 302
+        },
+        {
+          "caller": "_scaleValue",
+          "callee": "Math.max",
+          "lineNumber": 302
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "apps/well-desk/src/vault/VaultReceipt.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 114,
+      "nonEmptyLines": 99,
+      "classes": [
+        {
+          "name": "VaultReceipt",
+          "startLine": 8,
+          "endLine": 114,
+          "methods": [
+            "constructor",
+            "build",
+            "format",
+            "renderPanel",
+            "export",
+            "_generateId"
+          ],
+          "properties": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build",
+          "callee": "this._generateId",
+          "lineNumber": 18
+        },
+        {
+          "caller": "build",
+          "callee": "new Date().toISOString",
+          "lineNumber": 21
+        },
+        {
+          "caller": "build",
+          "callee": "this.receipts.push",
+          "lineNumber": 34
+        },
+        {
+          "caller": "format",
+          "callee": "Object.entries",
+          "lineNumber": 79
+        },
+        {
+          "caller": "renderPanel",
+          "callee": "document.getElementById",
+          "lineNumber": 92
+        },
+        {
+          "caller": "renderPanel",
+          "callee": "[...this.receipts].reverse().slice",
+          "lineNumber": 98
+        },
+        {
+          "caller": "renderPanel",
+          "callee": "[...this.receipts].reverse",
+          "lineNumber": 98
+        },
+        {
+          "caller": "renderPanel",
+          "callee": "this.format",
+          "lineNumber": 100
+        },
+        {
+          "caller": "export",
+          "callee": "JSON.stringify",
+          "lineNumber": 108
+        },
+        {
+          "caller": "_generateId",
+          "callee": "Date.now",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_generateId",
+          "callee": "Math.random().toString(36).slice",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_generateId",
+          "callee": "Math.random().toString",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_generateId",
+          "callee": "Math.random",
+          "lineNumber": 112
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "compatibility/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 5,
+      "nonEmptyLines": 5,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "compatibility/legacy_aliases.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 79,
+      "nonEmptyLines": 70,
+      "functions": [
+        {
+          "name": "get_alias_metadata",
+          "startLine": 66,
+          "endLine": 79,
+          "params": [
+            "old_name",
+            "new_name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "get_alias_metadata",
+          "line": 66,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "config/config.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 77,
+      "nonEmptyLines": 77,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "framework",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "geox",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "sites",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "agent_instructions",
+          "level": 1,
+          "line": 58
+        },
+        {
+          "heading": "agi_instructions",
+          "level": 1,
+          "line": 59
+        },
+        {
+          "heading": "copilot_studio_instructions",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "physics_9",
+          "level": 1,
+          "line": 61
+        },
+        {
+          "heading": "geox_1d_pipeline",
+          "level": 1,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "contracts/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 38,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/artifact_envelope.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 191,
+      "nonEmptyLines": 156,
+      "functions": [
+        {
+          "name": "_get_git_commit",
+          "startLine": 39,
+          "endLine": 51,
+          "params": []
+        },
+        {
+          "name": "_get_geox_version",
+          "startLine": 54,
+          "endLine": 56,
+          "params": []
+        },
+        {
+          "name": "compute_artifact_hash",
+          "startLine": 59,
+          "endLine": 69,
+          "params": [
+            "content"
+          ]
+        },
+        {
+          "name": "make_source_ref",
+          "startLine": 72,
+          "endLine": 86,
+          "params": [
+            "layer_id",
+            "checksum",
+            "source_kind",
+            "artifact_uri"
+          ]
+        },
+        {
+          "name": "stamp_envelope",
+          "startLine": 89,
+          "endLine": 143,
+          "params": [
+            "result",
+            "source_refs",
+            "scene_plan_id",
+            "scene_plan_version",
+            "tool_name",
+            "review_mode"
+          ]
+        },
+        {
+          "name": "verify_envelope",
+          "startLine": 146,
+          "endLine": 191,
+          "params": [
+            "result"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_get_git_commit",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "_get_geox_version",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "compute_artifact_hash",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "make_source_ref",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "stamp_envelope",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "verify_envelope",
+          "line": 146,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_get_git_commit",
+          "callee": "subprocess.run",
+          "lineNumber": 42
+        },
+        {
+          "caller": "_get_git_commit",
+          "callee": "os.path.dirname",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_get_git_commit",
+          "callee": "os.path.dirname",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_get_git_commit",
+          "callee": "os.path.abspath",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_get_git_commit",
+          "callee": "result.stdout.strip",
+          "lineNumber": 49
+        },
+        {
+          "caller": "_get_geox_version",
+          "callee": "os.getenv",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_get_geox_version",
+          "callee": "os.getenv",
+          "lineNumber": 56
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "isinstance",
+          "lineNumber": 61
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "json.dumps(content, sort_keys=True, default=str).encode",
+          "lineNumber": 62
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "json.dumps",
+          "lineNumber": 62
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "isinstance",
+          "lineNumber": 63
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "content.encode",
+          "lineNumber": 64
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "isinstance",
+          "lineNumber": 65
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "str(content).encode",
+          "lineNumber": 68
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "str",
+          "lineNumber": 68
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "hashlib.sha256(serialized).hexdigest",
+          "lineNumber": 69
+        },
+        {
+          "caller": "compute_artifact_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 69
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "time.strftime",
+          "lineNumber": 113
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "time.gmtime",
+          "lineNumber": 113
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "result.items",
+          "lineNumber": 116
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "compute_artifact_hash",
+          "lineNumber": 117
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "uuid.uuid4",
+          "lineNumber": 120
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "_get_geox_version",
+          "lineNumber": 126
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "_get_git_commit",
+          "lineNumber": 127
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "json.dumps",
+          "lineNumber": 135
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "s.get",
+          "lineNumber": 135
+        },
+        {
+          "caller": "stamp_envelope",
+          "callee": "compute_artifact_hash",
+          "lineNumber": 136
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "result.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "checks.append",
+          "lineNumber": 163
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "errors.append",
+          "lineNumber": 165
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "result.items",
+          "lineNumber": 168
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "compute_artifact_hash",
+          "lineNumber": 169
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "envelope.get",
+          "lineNumber": 170
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "checks.append",
+          "lineNumber": 171
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "errors.append",
+          "lineNumber": 173
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "envelope.get",
+          "lineNumber": 176
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "checks.append",
+          "lineNumber": 178
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "len",
+          "lineNumber": 178
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "enumerate",
+          "lineNumber": 179
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "errors.append",
+          "lineNumber": 181
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "errors.append",
+          "lineNumber": 183
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "checks.append",
+          "lineNumber": 185
+        },
+        {
+          "caller": "verify_envelope",
+          "callee": "len",
+          "lineNumber": 188
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/canonical_registry.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 63,
+      "nonEmptyLines": 59,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/enums/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 35,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

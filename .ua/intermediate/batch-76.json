@@ -1,0 +1,793 @@
+{
+  "nodes": [
+    {
+      "id": "file:apps/well-desk/src/bridge/WellDeskRenderAdapter.js",
+      "type": "file",
+      "name": "WellDeskRenderAdapter.js",
+      "filePath": "apps/well-desk/src/bridge/WellDeskRenderAdapter.js",
+      "summary": "javascript code file (106 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/correlation/MultiWellPanel.js",
+      "type": "file",
+      "name": "MultiWellPanel.js",
+      "filePath": "apps/well-desk/src/correlation/MultiWellPanel.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/correlation/MultiWellPanel.js:MultiWellPanel",
+      "type": "class",
+      "name": "MultiWellPanel",
+      "filePath": "apps/well-desk/src/correlation/MultiWellPanel.js",
+      "lineRange": [
+        8,
+        227
+      ],
+      "summary": "Class MultiWellPanel with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/well-desk/src/crossplot/XPlot2D.js",
+      "type": "file",
+      "name": "XPlot2D.js",
+      "filePath": "apps/well-desk/src/crossplot/XPlot2D.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/crossplot/XPlot2D.js:XPlot2D",
+      "type": "class",
+      "name": "XPlot2D",
+      "filePath": "apps/well-desk/src/crossplot/XPlot2D.js",
+      "lineRange": [
+        7,
+        191
+      ],
+      "summary": "Class XPlot2D with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/petro/PorosityCalc.js",
+      "type": "file",
+      "name": "PorosityCalc.js",
+      "filePath": "apps/well-desk/src/petro/PorosityCalc.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/petro/PorosityCalc.js:PorosityCalc",
+      "type": "class",
+      "name": "PorosityCalc",
+      "filePath": "apps/well-desk/src/petro/PorosityCalc.js",
+      "lineRange": [
+        7,
+        81
+      ],
+      "summary": "Class PorosityCalc with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/petro/SwArchie.js",
+      "type": "file",
+      "name": "SwArchie.js",
+      "filePath": "apps/well-desk/src/petro/SwArchie.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/petro/SwArchie.js:SwArchie",
+      "type": "class",
+      "name": "SwArchie",
+      "filePath": "apps/well-desk/src/petro/SwArchie.js",
+      "lineRange": [
+        7,
+        83
+      ],
+      "summary": "Class SwArchie with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/petro/VshCalc.js",
+      "type": "file",
+      "name": "VshCalc.js",
+      "filePath": "apps/well-desk/src/petro/VshCalc.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/petro/VshCalc.js:VshCalc",
+      "type": "class",
+      "name": "VshCalc",
+      "filePath": "apps/well-desk/src/petro/VshCalc.js",
+      "lineRange": [
+        7,
+        70
+      ],
+      "summary": "Class VshCalc with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/physics/Gassmann.js",
+      "type": "file",
+      "name": "Gassmann.js",
+      "filePath": "apps/well-desk/src/physics/Gassmann.js",
+      "summary": "javascript code file (112 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/physics/InverseRockPhysics.js",
+      "type": "file",
+      "name": "InverseRockPhysics.js",
+      "filePath": "apps/well-desk/src/physics/InverseRockPhysics.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/physics/InverseRockPhysics.js:InverseRockPhysics",
+      "type": "class",
+      "name": "InverseRockPhysics",
+      "filePath": "apps/well-desk/src/physics/InverseRockPhysics.js",
+      "lineRange": [
+        8,
+        165
+      ],
+      "summary": "Class InverseRockPhysics with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/physics/RockPhysicsTemplate.js",
+      "type": "file",
+      "name": "RockPhysicsTemplate.js",
+      "filePath": "apps/well-desk/src/physics/RockPhysicsTemplate.js",
+      "summary": "Defines 1 function(s)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/well-desk/src/physics/RockPhysicsTemplate.js:matchTemplate",
+      "type": "function",
+      "name": "matchTemplate",
+      "filePath": "apps/well-desk/src/physics/RockPhysicsTemplate.js",
+      "lineRange": [
+        63,
+        83
+      ],
+      "summary": "matchTemplate(computed) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:apps/well-desk/src/physics/VpVsRho.js",
+      "type": "file",
+      "name": "VpVsRho.js",
+      "filePath": "apps/well-desk/src/physics/VpVsRho.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/physics/VpVsRho.js:VpVsRho",
+      "type": "class",
+      "name": "VpVsRho",
+      "filePath": "apps/well-desk/src/physics/VpVsRho.js",
+      "lineRange": [
+        8,
+        81
+      ],
+      "summary": "Class VpVsRho with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/tracks/GRTrack.js",
+      "type": "file",
+      "name": "GRTrack.js",
+      "filePath": "apps/well-desk/src/tracks/GRTrack.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/GRTrack.js:GRTrack",
+      "type": "class",
+      "name": "GRTrack",
+      "filePath": "apps/well-desk/src/tracks/GRTrack.js",
+      "lineRange": [
+        8,
+        111
+      ],
+      "summary": "Class GRTrack with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/tracks/PoroDensityTrack.js",
+      "type": "file",
+      "name": "PoroDensityTrack.js",
+      "filePath": "apps/well-desk/src/tracks/PoroDensityTrack.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/PoroDensityTrack.js:PoroDensityTrack",
+      "type": "class",
+      "name": "PoroDensityTrack",
+      "filePath": "apps/well-desk/src/tracks/PoroDensityTrack.js",
+      "lineRange": [
+        9,
+        202
+      ],
+      "summary": "Class PoroDensityTrack with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/tracks/ResistivityTrack.js",
+      "type": "file",
+      "name": "ResistivityTrack.js",
+      "filePath": "apps/well-desk/src/tracks/ResistivityTrack.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/ResistivityTrack.js:ResistivityTrack",
+      "type": "class",
+      "name": "ResistivityTrack",
+      "filePath": "apps/well-desk/src/tracks/ResistivityTrack.js",
+      "lineRange": [
+        8,
+        111
+      ],
+      "summary": "Class ResistivityTrack with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/tracks/SonicTrack.js",
+      "type": "file",
+      "name": "SonicTrack.js",
+      "filePath": "apps/well-desk/src/tracks/SonicTrack.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/SonicTrack.js:SonicTrack",
+      "type": "class",
+      "name": "SonicTrack",
+      "filePath": "apps/well-desk/src/tracks/SonicTrack.js",
+      "lineRange": [
+        8,
+        85
+      ],
+      "summary": "Class SonicTrack with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/tracks/TrackRenderer.js",
+      "type": "file",
+      "name": "TrackRenderer.js",
+      "filePath": "apps/well-desk/src/tracks/TrackRenderer.js",
+      "summary": "2 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/TrackRenderer.js:TrackRenderer",
+      "type": "class",
+      "name": "TrackRenderer",
+      "filePath": "apps/well-desk/src/tracks/TrackRenderer.js",
+      "lineRange": [
+        10,
+        267
+      ],
+      "summary": "Class TrackRenderer with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:apps/well-desk/src/tracks/TrackRenderer.js:TrackBase",
+      "type": "class",
+      "name": "TrackBase",
+      "filePath": "apps/well-desk/src/tracks/TrackRenderer.js",
+      "lineRange": [
+        270,
+        311
+      ],
+      "summary": "Class TrackBase with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:apps/well-desk/src/vault/VaultReceipt.js",
+      "type": "file",
+      "name": "VaultReceipt.js",
+      "filePath": "apps/well-desk/src/vault/VaultReceipt.js",
+      "summary": "1 class(es)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:apps/well-desk/src/vault/VaultReceipt.js:VaultReceipt",
+      "type": "class",
+      "name": "VaultReceipt",
+      "filePath": "apps/well-desk/src/vault/VaultReceipt.js",
+      "lineRange": [
+        8,
+        114
+      ],
+      "summary": "Class VaultReceipt with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/styles/well-desk.css",
+      "type": "file",
+      "name": "well-desk.css",
+      "filePath": "apps/well-desk/styles/well-desk.css",
+      "summary": "css markup file (293 non-empty lines).",
+      "tags": [
+        "markup",
+        "css"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:artifacts/2026-09-06-sunda-arc/sunda-arc-briefing.html",
+      "type": "file",
+      "name": "sunda-arc-briefing.html",
+      "filePath": "artifacts/2026-09-06-sunda-arc/sunda-arc-briefing.html",
+      "summary": "html markup file (133 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:compatibility/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "compatibility/__init__.py",
+      "summary": "python code file (5 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:compatibility/legacy_aliases.py",
+      "type": "file",
+      "name": "legacy_aliases.py",
+      "filePath": "compatibility/legacy_aliases.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:compatibility/legacy_aliases.py:get_alias_metadata",
+      "type": "function",
+      "name": "get_alias_metadata",
+      "filePath": "compatibility/legacy_aliases.py",
+      "lineRange": [
+        66,
+        79
+      ],
+      "summary": "get_alias_metadata(old_name, new_name) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/config.json",
+      "type": "config",
+      "name": "config.json",
+      "filePath": "config/config.json",
+      "summary": "json config file (77 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/__init__.py",
+      "summary": "python code file (38 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:contracts/artifact_envelope.py",
+      "type": "file",
+      "name": "artifact_envelope.py",
+      "filePath": "contracts/artifact_envelope.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:_get_git_commit",
+      "type": "function",
+      "name": "_get_git_commit",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        39,
+        51
+      ],
+      "summary": "_get_git_commit() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:_get_geox_version",
+      "type": "function",
+      "name": "_get_geox_version",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        54,
+        56
+      ],
+      "summary": "_get_geox_version() — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:compute_artifact_hash",
+      "type": "function",
+      "name": "compute_artifact_hash",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        59,
+        69
+      ],
+      "summary": "compute_artifact_hash(content) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:make_source_ref",
+      "type": "function",
+      "name": "make_source_ref",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        72,
+        86
+      ],
+      "summary": "make_source_ref(layer_id, checksum, source_kind, artifact_uri) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:stamp_envelope",
+      "type": "function",
+      "name": "stamp_envelope",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        89,
+        143
+      ],
+      "summary": "stamp_envelope(result, source_refs, scene_plan_id, scene_plan_version, tool_name, review_mode) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:contracts/artifact_envelope.py:verify_envelope",
+      "type": "function",
+      "name": "verify_envelope",
+      "filePath": "contracts/artifact_envelope.py",
+      "lineRange": [
+        146,
+        191
+      ],
+      "summary": "verify_envelope(result) — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/canonical_registry.py",
+      "type": "file",
+      "name": "canonical_registry.py",
+      "filePath": "contracts/canonical_registry.py",
+      "summary": "python code file (59 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:contracts/enums/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "contracts/enums/__init__.py",
+      "summary": "python code file (35 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:apps/well-desk/src/correlation/MultiWellPanel.js",
+      "target": "class:apps/well-desk/src/correlation/MultiWellPanel.js:MultiWellPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/crossplot/XPlot2D.js",
+      "target": "class:apps/well-desk/src/crossplot/XPlot2D.js:XPlot2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/petro/PorosityCalc.js",
+      "target": "class:apps/well-desk/src/petro/PorosityCalc.js:PorosityCalc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/petro/SwArchie.js",
+      "target": "class:apps/well-desk/src/petro/SwArchie.js:SwArchie",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/petro/VshCalc.js",
+      "target": "class:apps/well-desk/src/petro/VshCalc.js:VshCalc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/physics/InverseRockPhysics.js",
+      "target": "class:apps/well-desk/src/physics/InverseRockPhysics.js:InverseRockPhysics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/physics/RockPhysicsTemplate.js",
+      "target": "function:apps/well-desk/src/physics/RockPhysicsTemplate.js:matchTemplate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/physics/VpVsRho.js",
+      "target": "class:apps/well-desk/src/physics/VpVsRho.js:VpVsRho",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/GRTrack.js",
+      "target": "class:apps/well-desk/src/tracks/GRTrack.js:GRTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/PoroDensityTrack.js",
+      "target": "class:apps/well-desk/src/tracks/PoroDensityTrack.js:PoroDensityTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/ResistivityTrack.js",
+      "target": "class:apps/well-desk/src/tracks/ResistivityTrack.js:ResistivityTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/SonicTrack.js",
+      "target": "class:apps/well-desk/src/tracks/SonicTrack.js:SonicTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/TrackRenderer.js",
+      "target": "class:apps/well-desk/src/tracks/TrackRenderer.js:TrackRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/tracks/TrackRenderer.js",
+      "target": "class:apps/well-desk/src/tracks/TrackRenderer.js:TrackBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/well-desk/src/vault/VaultReceipt.js",
+      "target": "class:apps/well-desk/src/vault/VaultReceipt.js:VaultReceipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:compatibility/legacy_aliases.py",
+      "target": "function:compatibility/legacy_aliases.py:get_alias_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:_get_git_commit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:_get_geox_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:compute_artifact_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:make_source_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:stamp_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:contracts/artifact_envelope.py",
+      "target": "function:contracts/artifact_envelope.py:verify_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

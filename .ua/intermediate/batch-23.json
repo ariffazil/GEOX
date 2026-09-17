@@ -1,0 +1,163 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/SECURITY.md",
+      "type": "document",
+      "name": "SECURITY.md",
+      "filePath": "docs/SECURITY.md",
+      "summary": "markdown docs file (14 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md",
+      "type": "document",
+      "name": "SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md",
+      "filePath": "docs/SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md",
+      "summary": "markdown docs file (29 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SEISMIC_SECTION_INTERPRET_ZEN.md",
+      "type": "document",
+      "name": "SEISMIC_SECTION_INTERPRET_ZEN.md",
+      "filePath": "docs/SEISMIC_SECTION_INTERPRET_ZEN.md",
+      "summary": "markdown docs file (183 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md",
+      "type": "document",
+      "name": "SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md",
+      "filePath": "docs/SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md",
+      "summary": "markdown docs file (30 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/SOT_AUDIT_2026-09-06.md",
+      "type": "document",
+      "name": "SOT_AUDIT_2026-09-06.md",
+      "filePath": "docs/SOT_AUDIT_2026-09-06.md",
+      "summary": "markdown docs file (28 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SOUL.md",
+      "type": "document",
+      "name": "SOUL.md",
+      "filePath": "docs/SOUL.md",
+      "summary": "markdown docs file (8 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/SUBSURFACE_TOPOGRAPHY_ISOMORPHISM.md",
+      "type": "document",
+      "name": "SUBSURFACE_TOPOGRAPHY_ISOMORPHISM.md",
+      "filePath": "docs/SUBSURFACE_TOPOGRAPHY_ISOMORPHISM.md",
+      "summary": "markdown docs file (34 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/ZEN_15_SURFACE.ARCHIVED.md",
+      "type": "document",
+      "name": "ZEN_15_SURFACE.ARCHIVED.md",
+      "filePath": "docs/ZEN_15_SURFACE.ARCHIVED.md",
+      "summary": "markdown docs file (5 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/ZEN_HORIZON_ARCHITECTURE.md",
+      "type": "document",
+      "name": "ZEN_HORIZON_ARCHITECTURE.md",
+      "filePath": "docs/ZEN_HORIZON_ARCHITECTURE.md",
+      "summary": "markdown docs file (84 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docs/canonical_public_tools.json",
+      "type": "config",
+      "name": "canonical_public_tools.json",
+      "filePath": "docs/canonical_public_tools.json",
+      "summary": "json config file (288 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/index.md",
+      "type": "document",
+      "name": "index.md",
+      "filePath": "docs/index.md",
+      "summary": "markdown docs file (54 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/mcp_apps_verification_matrix.md",
+      "type": "document",
+      "name": "mcp_apps_verification_matrix.md",
+      "filePath": "docs/mcp_apps_verification_matrix.md",
+      "summary": "markdown docs file (45 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/strat_datum_check.spec.md",
+      "type": "document",
+      "name": "strat_datum_check.spec.md",
+      "filePath": "docs/strat_datum_check.spec.md",
+      "summary": "markdown docs file (48 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

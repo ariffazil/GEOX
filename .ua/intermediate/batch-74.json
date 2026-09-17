@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "config:static/lem-dashboard/agent.json",
+      "type": "config",
+      "name": "agent.json",
+      "filePath": "static/lem-dashboard/agent.json",
+      "summary": "json config file (30 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:static/lem-dashboard/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "static/lem-dashboard/index.html",
+      "summary": "html markup file (94 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:static/lem-dashboard/llms.txt",
+      "type": "document",
+      "name": "llms.txt",
+      "filePath": "static/lem-dashboard/llms.txt",
+      "summary": "txt docs file (33 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

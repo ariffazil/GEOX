@@ -1,0 +1,126 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/schemas/app.json",
+      "type": "config",
+      "name": "app.json",
+      "filePath": "resources/schemas/app.json",
+      "summary": "json config file (23 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/schemas/dimensions.json",
+      "type": "config",
+      "name": "dimensions.json",
+      "filePath": "resources/schemas/dimensions.json",
+      "summary": "json config file (92 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/evidence_ref.schema.json",
+      "type": "config",
+      "name": "evidence_ref.schema.json",
+      "filePath": "resources/schemas/evidence_ref.schema.json",
+      "summary": "json config file (7 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/schemas/geox_output_envelope.schema.json",
+      "type": "config",
+      "name": "geox_output_envelope.schema.json",
+      "filePath": "resources/schemas/geox_output_envelope.schema.json",
+      "summary": "json config file (143 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/geox_ui_event.schema.json",
+      "type": "config",
+      "name": "geox_ui_event.schema.json",
+      "filePath": "resources/schemas/geox_ui_event.schema.json",
+      "summary": "json config file (55 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/las_manifest.json",
+      "type": "config",
+      "name": "las_manifest.json",
+      "filePath": "resources/schemas/las_manifest.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/process_hypothesis.schema.json",
+      "type": "config",
+      "name": "process_hypothesis.schema.json",
+      "filePath": "resources/schemas/process_hypothesis.schema.json",
+      "summary": "json config file (45 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/prospect.schema.json",
+      "type": "config",
+      "name": "prospect.schema.json",
+      "filePath": "resources/schemas/prospect.schema.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/schemas/well_desk_event_schema.json",
+      "type": "config",
+      "name": "well_desk_event_schema.json",
+      "filePath": "resources/schemas/well_desk_event_schema.json",
+      "summary": "json config file (175 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/schemas/well_log.schema.json",
+      "type": "config",
+      "name": "well_log.schema.json",
+      "filePath": "resources/schemas/well_log.schema.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -236,5 +236,198 @@
     "confidence": "MEDIUM",
     "valid_until": "2030-12-31",
     "forbidden_uses": []
+  },
+{
+  "claim_id": "CLM-MTJ-001",
+  "claim": "MTJDA Block A-18-01 new PSC: 35-year term effective 1 January 2026, awarded to PC JDA Ltd (Petronas Carigali subsidiary) + PTTEP JDX, 50/50 participating interest, exchanged 14 September 2026 in Bangkok at Gastech. Effective date PRECEDES the ceremony.",
+  "claim_type": "observed",
+  "evidence_refs": [
+    "lit://reuters/2026-09-14/mtjda-psc",
+    "lit://thestar/2026-09-14/mtjda-a18-01"
+  ],
+  "source": "Reuters 2026-09-14 | The Star 2026-09-14 | NST 2026-09-14 | PTTEP release | GEOX MTJDA dossier",
+  "confidence": "HIGH",
+  "confidence_prior": 0.95,
+  "valid_until": "2030-12-31",
+  "forbidden_uses": [
+    "site_specific_drilling"
+  ],
+  "metadata": {
+    "operational_consequence": "Nothing requiring a live contract as precondition is blocked by absence of contract. Legacy PSC runs to 20 April 2029 = three-year hand-over overlap window.",
+    "note": "Company + interest split verified against three independent press sources, not taken from the dossier.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
   }
+},
+{
+  "claim_id": "CLM-MTJ-002",
+  "claim": "Malay Basin CO2 risk: basin-wide produced-gas CO2 spans 0.92-5.5 mol%. CO2-dominated accumulations (40-90 mol%) occur only along basement-penetrating fault trends (Dulang-Melor, Bunga Raya-Bunga Pakma). Open area northern-ramp position avoids those trends -> CO2 risk assessed LOW-MODERATE, but by basin ANALOGUE judgement, not measurement.",
+  "claim_type": "interpreted",
+  "evidence_refs": [
+    "basin_profile.yaml",
+    "play_fairways.yaml"
+  ],
+  "source": "Waples & Mahadir 1996 (GSM Bulletin 39) | North Malay Basin CO2 studies | GEOX MTJDA dossier",
+  "confidence": "MEDIUM",
+  "confidence_prior": 0.62,
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "unverified_commercial_decision",
+    "direct_pos_calculation"
+  ],
+  "metadata": {
+    "evidence_for": [
+      "produced_gas_CO2_0p92_to_5p5_mol_pct_basin_wide",
+      "high_CO2_40_to_90_pct_restricted_to_basement_rooted_fault_trends",
+      "low_CO2_lt_6_mol_pct_typical_of_shallow_Groups_D_and_E_organic"
+    ],
+    "evidence_against": [
+      "open_area_assessment_is_analogue_inference_not_measurement",
+      "structure_specific_CO2_requires_mapped_fault_geometry"
+    ],
+    "missing_tests": [
+      "basement_rooting_fault_screening_on_every_lead_before_maturation",
+      "geochemical_sampling_per_structure"
+    ],
+    "risk_rule": "Any bounding fault that roots into basement = HIGH CO2 risk until tested.",
+    "falsifier": "A basement-rooting bounding fault on a lead where CO2 remains below 6 mol%",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+},
+{
+  "claim_id": "CLM-MTJ-003",
+  "claim": "Malay Basin overpressure dual compartment: (1) basin centre top-OP at 1,900-2,000 m in lower Group E sealed by Group F shale, deeper compartment through Groups K/L/M; (2) basin flank top-OP at 2,600-3,000 m sealed by Group L shale. MTJDA sits on the northern ramp -> the FLANK model applies.",
+  "claim_type": "derived",
+  "evidence_refs": [
+    "geox://resource/basins/malay_basin/basin_profile.yaml",
+    "pressure_states.yaml"
+  ],
+  "source": "Madon 2004 SPE 88455 - Overpressure history of the Malay Basin | GEOX MTJDA dossier",
+  "confidence": "HIGH",
+  "confidence_prior": 0.85,
+  "valid_until": "2030-12-31",
+  "forbidden_uses": [
+    "site_specific_drilling_without_coverage_verification"
+  ],
+  "metadata": {
+    "operational_consequence": "Pore-pressure prediction in the MTJDA open area must be built on the FLANK model. Importing basin-centre assumptions into depth conversion or mud-weight design is wrong by several hundred metres.",
+    "failure_family": "Same class as the NW Sabah mobile-shale velocity trap (Vp 1.5-2.0 vs 2.8-3.5 km/s -> 200-500 m depth error).",
+    "note": "Overlaps existing clm_overpressure_dual_compartment (claim store already held this). The ADDED content is the MTJDA-specific flank consequence, which was not previously registered.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+},
+{
+  "claim_id": "CLM-MTJ-004",
+  "claim": "Deep syn-rift fairway in the MTJDA open area: Groups K/L/M sandstones sealed by Group L and M lacustrine shales, trapped in syn-rift fault blocks and stratigraphic pinchouts. Group K is dual reservoir AND source - which removes one risk element (charge) and adds another (seal must be effective intra-formationally, not regionally). Reservoir quality below ~3,000 m is compaction/deiagenesis degraded.",
+  "claim_type": "hypothesis",
+  "evidence_refs": [
+    "play_fairways.yaml",
+    "reservoir_seal_matrix.yaml"
+  ],
+  "source": "GEOX MTJDA dossier Fig.8 | Madon 1999 | USGS OF99-50-T",
+  "confidence": "LOW",
+  "confidence_prior": 0.3,
+  "valid_until": "2027-06-06",
+  "forbidden_uses": [
+    "unverified_commercial_decision",
+    "direct_pos_calculation"
+  ],
+  "metadata": {
+    "evidence_for": [
+      "Group_K_dual_reservoir_source_TOC_0p35_to_2p0_wt_pct_HI_137_to_403",
+      "Group_L_highest_quality_lacustrine_source_HI_300_to_400_Type_II",
+      "Group_L_shale_acts_as_flank_regional_seal"
+    ],
+    "evidence_against": [
+      "permeability_degraded_below_approx_3000m_by_compaction_and_diagenesis",
+      "seal_must_be_assessed_intra_formationally_not_from_single_regional_shale",
+      "published_maturity_mapping_not_at_prospect_resolution_for_MTJDA"
+    ],
+    "missing_tests": [
+      "Faust_Gardner_parameter_checks_calibrated_against_core",
+      "high_resolution_gamma_ray_logs_and_petrophysical_uncertainty_ensembles_for_SGR",
+      "rebuild_charge_model_from_operator_geochemical_database"
+    ],
+    "binding_uncertainty": "Reservoir quality below ~3,000 m.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+},
+{
+  "claim_id": "CLM-MTJ-005",
+  "claim": "MTJDA two trap families with different risk profiles: (a) fault-bounded anticlines from compressional inversion of syn-rift normal faults - hold the bulk of discovered resource, easy to image, but seal depends on fault seal capacity (shale gouge ratio) sensitive to clay-content estimates; (b) stratigraphic pinchouts where fluvial channels pass into flood-plain claystone - emerging, high stratigraphic risk, requires good seismic resolution and amplitude support.",
+  "claim_type": "interpreted",
+  "evidence_refs": [
+    "trap_styles.yaml",
+    "uncertainty_register.yaml"
+  ],
+  "source": "Madon 1999 | GEOX MTJDA dossier regional narrative",
+  "confidence": "MEDIUM",
+  "confidence_prior": 0.68,
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "commercial_stoiip_seal"
+  ],
+  "metadata": {
+    "evidence_for": [
+      "inversion_anticlines_hold_essentially_every_producing_JDA_field",
+      "SGR_calculations_sensitive_to_clay_content_in_juxtaposed_shale_zones"
+    ],
+    "evidence_against": [
+      "pinchout_play_is_emerging_not_proven_in_the_area"
+    ],
+    "missing_tests": [
+      "high_resolution_gamma_ray_for_SGR_uncertainty_ensemble",
+      "seismic_resolution_and_amplitude_support_study_for_pinchouts"
+    ],
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+},
+{
+  "claim_id": "CLM-MTJ-006",
+  "claim": "Malay Basin is a failed rift - extension began but never progressed to seafloor spreading. ~500 km x 200 km elongate Cenozoic basin, >14 km sediment in deepest centre, ~80,000 km2, ~40% of Malaysia's hydrocarbon resources, >700 exploration wells. MTJDA occupies the northern ramp margin, a shallower more gently structured position with thinner cover and different overpressure behaviour.",
+  "claim_type": "observed",
+  "evidence_refs": [
+    "lit://gsm/bgsm72-2021-06/madon-2021-malay-basin/pdf",
+    "basin_profile.yaml"
+  ],
+  "source": "Madon 2021 (GSM Bulletin 72, doi:10.7186/bgsm72202106) | GEOX MTJDA dossier",
+  "confidence": "HIGH",
+  "confidence_prior": 0.88,
+  "valid_until": "2030-12-31",
+  "forbidden_uses": [
+    "site_specific_drilling"
+  ],
+  "metadata": {
+    "note": "Most of this was already held (clm_orig_1, clm_317a7c30873e40b7, clm_4c04b8f277854aba). NEW content registered here: the ramp-margin position and its structural/pressure consequence for MTJDA.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+},
+{
+  "claim_id": "CLM-MTJ-007",
+  "claim": "INTERNAL INCONSISTENCY in the GEOX MTJDA dossier: it states combined contracted capacity of about 700 mmscf/d across both blocks (2.2), and separately that Block A-18 alone processes approximately 790 mmscf/d at the riser (2.2 development). These two figures are not reconcilable unless one is a contractual DCQ and the other a physical riser capacity - which the document does not state.",
+  "claim_type": "interpreted",
+  "evidence_refs": [
+    "geox://artifact/mtjda_a18-01_regional_geology.pdf#p7"
+  ],
+  "source": "GEOX MTJDA dossier internal cross-check (Hermes audit 2026-09-15)",
+  "confidence": "MEDIUM",
+  "confidence_prior": 0.6,
+  "valid_until": "2027-09-15",
+  "forbidden_uses": [
+    "direct_pos_calculation",
+    "commercial_stoiip_seal"
+  ],
+  "metadata": {
+    "defect_class": "internal_capacity_inconsistency",
+    "location": "dossier section 2.2 (Figure 2 discussion)",
+    "note": "Not resolved here - flagged. Resolution requires the MTJA / operator capacity basis. Same discipline as the Kinabalu provenance annex: a document about ambiguity should be audited for its own.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes on F13 approval"
+  }
+}
 ]

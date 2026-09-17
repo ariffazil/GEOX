@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GEOX Structural Restoration — Provenance Envelope",
+  "description": "SR_INV_002 + SR_INV_013: Every restoration output must carry full provenance.",
+  "type": "object",
+  "required": [
+    "scenario_id",
+    "product_type",
+    "input_lineage",
+    "restoration_states",
+    "equation",
+    "sign_convention",
+    "units",
+    "assumptions",
+    "evidence",
+    "verdict"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["SEAL", "PARTIAL", "SABAR", "HOLD", "VOID", "UNKNOWN"]
+    },
+    "product_type": {
+      "type": "string",
+      "enum": ["accommodation", "subsidence", "fill_ratio", "thickness", "uncertainty", "fault_inheritance"]
+    },
+    "scenario_id": {
+      "type": "string",
+      "description": "RestorationScenario ID that produced this product"
+    },
+    "input_lineage": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_id": { "type": "string" },
+          "object_type": { "type": "string" },
+          "hash": { "type": "string" },
+          "vintage": { "type": "string" },
+          "provenance": { "type": "string" }
+        },
+        "required": ["object_id", "object_type"]
+      }
+    },
+    "restoration_states": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "state_id": { "type": "string" },
+          "age_ma": { "type": "number" },
+          "description": { "type": "string" }
+        },
+        "required": ["state_id"]
+      }
+    },
+    "equation": {
+      "type": "string",
+      "description": "The computation that produced this product"
+    },
+    "sign_convention": {
+      "type": "string",
+      "description": "Z convention used (positive_up, positive_down)"
+    },
+    "units": {
+      "type": "string"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "source": { "type": "string" },
+          "epistemic_label": {
+            "type": "string",
+            "enum": ["OBS", "DER", "INT", "SPEC"]
+          }
+        }
+      }
+    },
+    "interpretations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "hypothesis": { "type": "string" },
+          "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+          "evidence_for": { "type": "array", "items": { "type": "string" } },
+          "evidence_against": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "alternative_explanations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "uncertainty": {
+      "type": "object",
+      "properties": {
+        "numerical": { "type": "object" },
+        "spatial": { "type": "object" },
+        "geological": { "type": "object" }
+      }
+    },
+    "qc_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "check": { "type": "string" },
+          "result": { "type": "string", "enum": ["PASS", "FAIL", "MISSING", "WARN"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "masked_cells": {
+      "type": ["object", "null"],
+      "description": "Cells masked due to invalid computation (e.g., zero accommodation)"
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "created_output_id": {
+      "type": "string"
+    },
+    "source_objects_mutated": {
+      "type": "boolean",
+      "description": "Must always be false (SR_INV_001)"
+    },
+    "tectonic_event_id": {
+      "type": ["string", "null"],
+      "description": "Tectonic event from F0 ontology (if linked)"
+    },
+    "anomaly_flags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "diagnostic_review_required": {
+      "type": "boolean"
+    }
+  }
+}

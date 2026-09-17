@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/orchestration/orch-multi-agent-decomposition.md",
+      "type": "document",
+      "name": "orch-multi-agent-decomposition.md",
+      "filePath": "src/geox_core/skills/orchestration/orch-multi-agent-decomposition.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/orchestration/orch-void-and-data-denial.md",
+      "type": "document",
+      "name": "orch-void-and-data-denial.md",
+      "filePath": "src/geox_core/skills/orchestration/orch-void-and-data-denial.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/orchestration/orch-world-model-sync.md",
+      "type": "document",
+      "name": "orch-world-model-sync.md",
+      "filePath": "src/geox_core/skills/orchestration/orch-world-model-sync.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

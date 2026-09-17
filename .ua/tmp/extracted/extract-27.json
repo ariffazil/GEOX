@@ -1,0 +1,305 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [
+    "geox-gui/index.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": "geox-gui/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 253,
+      "nonEmptyLines": 194,
+      "sections": [
+        {
+          "heading": "GEOX Earth Witness GUI",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Quick Start",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Project Structure",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "Key Features",
+          "level": 2,
+          "line": 99
+        },
+        {
+          "heading": "1. Three-Panel Layout",
+          "level": 3,
+          "line": 101
+        },
+        {
+          "heading": "2. Constitutional Governance (F1-F13)",
+          "level": 3,
+          "line": 114
+        },
+        {
+          "heading": "3. Synchronized Cursor",
+          "level": 3,
+          "line": 122
+        },
+        {
+          "heading": "Development",
+          "level": 2,
+          "line": 128
+        },
+        {
+          "heading": "Prerequisites",
+          "level": 3,
+          "line": 130
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "Run Tests",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "Integration with GEOX MCP",
+          "level": 2,
+          "line": 151
+        },
+        {
+          "heading": "Roadmap",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "Phase 1: Foundation ✅",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "Phase 2: Maps ✅",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "Phase 3: Seismic",
+          "level": 3,
+          "line": 187
+        },
+        {
+          "heading": "Phase 4: Logs ✅",
+          "level": 3,
+          "line": 192
+        },
+        {
+          "heading": "Phase 5: 3D",
+          "level": 3,
+          "line": 200
+        },
+        {
+          "heading": "Design Principles",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "1. Evidence Before Story",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "2. Measurement Only When Grounded",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "3. Multiple Models Visible",
+          "level": 3,
+          "line": 219
+        },
+        {
+          "heading": "4. Human Decision Zone (F13)",
+          "level": 3,
+          "line": 226
+        },
+        {
+          "heading": "License",
+          "level": 2,
+          "line": 238
+        },
+        {
+          "heading": "Seal",
+          "level": 2,
+          "line": 244
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "geox-gui/package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 66,
+      "nonEmptyLines": 66,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "scripts",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "devDependencies",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "keywords",
+          "level": 1,
+          "line": 48
+        },
+        {
+          "heading": "author",
+          "level": 1,
+          "line": 59
+        },
+        {
+          "heading": "license",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "repository",
+          "level": 1,
+          "line": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "geox-gui/tsconfig.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "compilerOptions",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "include",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "exclude",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "references",
+          "level": 1,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "geox-gui/tsconfig.node.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 10,
+      "nonEmptyLines": 10,
+      "sections": [
+        {
+          "heading": "compilerOptions",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "include",
+          "level": 1,
+          "line": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    }
+  ]
+}

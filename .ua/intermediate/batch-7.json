@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:.well-known/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": ".well-known/agent-card.json",
+      "summary": "json config file (78 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.well-known/agent.json",
+      "type": "config",
+      "name": "agent.json",
+      "filePath": ".well-known/agent.json",
+      "summary": "json config file (138 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.well-known/openapi.json",
+      "type": "config",
+      "name": "openapi.json",
+      "filePath": ".well-known/openapi.json",
+      "summary": "json config file (551 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:.well-known/tools.json",
+      "type": "config",
+      "name": "tools.json",
+      "filePath": ".well-known/tools.json",
+      "summary": "json config file (967 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

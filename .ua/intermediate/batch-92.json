@@ -1,0 +1,1828 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/engines/geophysics/igrf_adapter.py",
+      "type": "file",
+      "name": "igrf_adapter.py",
+      "filePath": "src/geox_core/engines/geophysics/igrf_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/igrf_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geophysics/igrf_adapter.py",
+      "lineRange": [
+        43,
+        45
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/igrf_adapter.py:IGRFAdapter",
+      "type": "class",
+      "name": "IGRFAdapter",
+      "filePath": "src/geox_core/engines/geophysics/igrf_adapter.py",
+      "lineRange": [
+        48,
+        268
+      ],
+      "summary": "Class IGRFAdapter with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "type": "file",
+      "name": "mt_forward.py",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "summary": "Defines 5 function(s); 2 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/mt_forward.py:wait_recursion",
+      "type": "function",
+      "name": "wait_recursion",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "lineRange": [
+        54,
+        76
+      ],
+      "summary": "wait_recursion(layers, omega) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/mt_forward.py:_k",
+      "type": "function",
+      "name": "_k",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "lineRange": [
+        79,
+        82
+      ],
+      "summary": "_k(omega, rho) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_apparent_resistivity_phase",
+      "type": "function",
+      "name": "mt_apparent_resistivity_phase",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "lineRange": [
+        86,
+        98
+      ],
+      "summary": "mt_apparent_resistivity_phase(layers, omega) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_forward",
+      "type": "function",
+      "name": "mt_forward",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "lineRange": [
+        101,
+        137
+      ],
+      "summary": "mt_forward(request) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_response_from_physics9",
+      "type": "function",
+      "name": "mt_response_from_physics9",
+      "filePath": "src/geox_core/engines/geophysics/mt_forward.py",
+      "lineRange": [
+        141,
+        160
+      ],
+      "summary": "mt_response_from_physics9(cell_state, frequencies_hz, overburden_thickness_m, target_thickness_m) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "type": "file",
+      "name": "pygimli_adapter.py",
+      "filePath": "src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/pygimli_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "lineRange": [
+        45,
+        47
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/pygimli_adapter.py:PyGIMLIAdapter",
+      "type": "class",
+      "name": "PyGIMLIAdapter",
+      "filePath": "src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "lineRange": [
+        50,
+        276
+      ],
+      "summary": "Class PyGIMLIAdapter with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "type": "file",
+      "name": "simpeg_adapter.py",
+      "filePath": "src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/simpeg_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/simpeg_adapter.py:SimPEGAdapter",
+      "type": "class",
+      "name": "SimPEGAdapter",
+      "filePath": "src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "lineRange": [
+        53,
+        283
+      ],
+      "summary": "Class SimPEGAdapter with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/geospatial/gempy_adapter.py",
+      "type": "file",
+      "name": "gempy_adapter.py",
+      "filePath": "src/geox_core/engines/geospatial/gempy_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geospatial/gempy_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geospatial/gempy_adapter.py",
+      "lineRange": [
+        49,
+        51
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geospatial/gempy_adapter.py:GemPyAdapter",
+      "type": "class",
+      "name": "GemPyAdapter",
+      "filePath": "src/geox_core/engines/geospatial/gempy_adapter.py",
+      "lineRange": [
+        54,
+        201
+      ],
+      "summary": "Class GemPyAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/geospatial/gplately_adapter.py",
+      "type": "file",
+      "name": "gplately_adapter.py",
+      "filePath": "src/geox_core/engines/geospatial/gplately_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geospatial/gplately_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geospatial/gplately_adapter.py",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geospatial/gplately_adapter.py:GPlatelyAdapter",
+      "type": "class",
+      "name": "GPlatelyAdapter",
+      "filePath": "src/geox_core/engines/geospatial/gplately_adapter.py",
+      "lineRange": [
+        53,
+        214
+      ],
+      "summary": "Class GPlatelyAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "type": "file",
+      "name": "loopstructural_adapter.py",
+      "filePath": "src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geospatial/loopstructural_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "lineRange": [
+        49,
+        51
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geospatial/loopstructural_adapter.py:LoopStructuralAdapter",
+      "type": "class",
+      "name": "LoopStructuralAdapter",
+      "filePath": "src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "lineRange": [
+        54,
+        223
+      ],
+      "summary": "Class LoopStructuralAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "type": "file",
+      "name": "flopy_adapter.py",
+      "filePath": "src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/hydrogeology/flopy_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "lineRange": [
+        44,
+        46
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/hydrogeology/flopy_adapter.py:FloPyAdapter",
+      "type": "class",
+      "name": "FloPyAdapter",
+      "filePath": "src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "lineRange": [
+        49,
+        252
+      ],
+      "summary": "Class FloPyAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "summary": "Defines 7 function(s); 3 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_seismic",
+      "type": "function",
+      "name": "_forward_seismic",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        106,
+        109
+      ],
+      "summary": "_forward_seismic(state) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_gravity",
+      "type": "function",
+      "name": "_forward_gravity",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        112,
+        115
+      ],
+      "summary": "_forward_gravity(state, ref_density) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_magnetics",
+      "type": "function",
+      "name": "_forward_magnetics",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        118,
+        123
+      ],
+      "summary": "_forward_magnetics(state) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_em",
+      "type": "function",
+      "name": "_forward_em",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        126,
+        128
+      ],
+      "summary": "_forward_em(state) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:_joint_objective",
+      "type": "function",
+      "name": "_joint_objective",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        134,
+        210
+      ],
+      "summary": "_joint_objective(state_vector, observations, config, reference_states) — 76 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:run_joint_inversion",
+      "type": "function",
+      "name": "run_joint_inversion",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        216,
+        377
+      ],
+      "summary": "run_joint_inversion(observations, initial_states, config, well_constraints) — 161 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/joint_inversion/__init__.py:quick_joint_inversion",
+      "type": "function",
+      "name": "quick_joint_inversion",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        383,
+        438
+      ],
+      "summary": "quick_joint_inversion(ai_observations, gravity_observations, magnetics_observations, resistivity_observations, n_nodes, config) — 55 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/joint_inversion/__init__.py:JointInversionResult",
+      "type": "class",
+      "name": "JointInversionResult",
+      "filePath": "src/geox_core/engines/joint_inversion/__init__.py",
+      "lineRange": [
+        78,
+        100
+      ],
+      "summary": "Class JointInversionResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/lem/__init__.py",
+      "summary": "python code file (47 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/config.py",
+      "type": "file",
+      "name": "config.py",
+      "filePath": "src/geox_core/engines/lem/config.py",
+      "summary": "5 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/config.py:TokenizerConfig",
+      "type": "class",
+      "name": "TokenizerConfig",
+      "filePath": "src/geox_core/engines/lem/config.py",
+      "lineRange": [
+        18,
+        38
+      ],
+      "summary": "Class TokenizerConfig with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/config.py:PretrainConfig",
+      "type": "class",
+      "name": "PretrainConfig",
+      "filePath": "src/geox_core/engines/lem/config.py",
+      "lineRange": [
+        45,
+        83
+      ],
+      "summary": "Class PretrainConfig with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/config.py:DataConfig",
+      "type": "class",
+      "name": "DataConfig",
+      "filePath": "src/geox_core/engines/lem/config.py",
+      "lineRange": [
+        114,
+        136
+      ],
+      "summary": "Class DataConfig with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/dataset.py",
+      "type": "file",
+      "name": "dataset.py",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "summary": "Defines 5 function(s); 3 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/dataset.py:_resolve_curve",
+      "type": "function",
+      "name": "_resolve_curve",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        88,
+        97
+      ],
+      "summary": "_resolve_curve(las_data, curve_name, aliases) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/dataset.py:load_and_preprocess_well",
+      "type": "function",
+      "name": "load_and_preprocess_well",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        103,
+        216
+      ],
+      "summary": "load_and_preprocess_well(las_path, required_curves, max_null_pct, min_samples, clip_outliers, outlier_std) — 113 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/dataset.py:extract_patches",
+      "type": "function",
+      "name": "extract_patches",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        222,
+        286
+      ],
+      "summary": "extract_patches(sample, patch_length, patch_stride) — 64 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/dataset.py:create_lem_dataloader",
+      "type": "function",
+      "name": "create_lem_dataloader",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        380,
+        413
+      ],
+      "summary": "create_lem_dataloader(data_dir, batch_size, patch_length, patch_stride, num_workers, shuffle) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/dataset.py:inspect_data",
+      "type": "function",
+      "name": "inspect_data",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        416,
+        449
+      ],
+      "summary": "inspect_data(data_dir) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/dataset.py:WellLogDataset",
+      "type": "class",
+      "name": "WellLogDataset",
+      "filePath": "src/geox_core/engines/lem/dataset.py",
+      "lineRange": [
+        292,
+        374
+      ],
+      "summary": "Class WellLogDataset with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/model.py",
+      "type": "file",
+      "name": "model.py",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "summary": "5 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/model.py:SinusoidalPositionalEncoding",
+      "type": "class",
+      "name": "SinusoidalPositionalEncoding",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "lineRange": [
+        45,
+        65
+      ],
+      "summary": "Class SinusoidalPositionalEncoding with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/model.py:LearnedDepthEncoding",
+      "type": "class",
+      "name": "LearnedDepthEncoding",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "lineRange": [
+        68,
+        84
+      ],
+      "summary": "Class LearnedDepthEncoding with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/model.py:GeoLocationEmbedding",
+      "type": "class",
+      "name": "GeoLocationEmbedding",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "lineRange": [
+        90,
+        129
+      ],
+      "summary": "Class GeoLocationEmbedding with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/model.py:LEMTransformer",
+      "type": "class",
+      "name": "LEMTransformer",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "lineRange": [
+        135,
+        345
+      ],
+      "summary": "Class LEMTransformer with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/model.py:LEMLoss",
+      "type": "class",
+      "name": "LEMLoss",
+      "filePath": "src/geox_core/engines/lem/model.py",
+      "lineRange": [
+        351,
+        415
+      ],
+      "summary": "Class LEMLoss with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/physics_head.py",
+      "type": "file",
+      "name": "physics_head.py",
+      "filePath": "src/geox_core/engines/lem/physics_head.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/physics_head.py:archie_sw_torch",
+      "type": "function",
+      "name": "archie_sw_torch",
+      "filePath": "src/geox_core/engines/lem/physics_head.py",
+      "lineRange": [
+        59,
+        70
+      ],
+      "summary": "archie_sw_torch(rt, phi, rw, a, m, n) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/physics_head.py:PhysicsConstraintHead",
+      "type": "class",
+      "name": "PhysicsConstraintHead",
+      "filePath": "src/geox_core/engines/lem/physics_head.py",
+      "lineRange": [
+        85,
+        265
+      ],
+      "summary": "Class PhysicsConstraintHead with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/pretrain.py",
+      "type": "file",
+      "name": "pretrain.py",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/pretrain.py:train_tokenizer",
+      "type": "function",
+      "name": "train_tokenizer",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "lineRange": [
+        56,
+        164
+      ],
+      "summary": "train_tokenizer(config, resume_from) — 108 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/pretrain.py:tokenize_dataset",
+      "type": "function",
+      "name": "tokenize_dataset",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "lineRange": [
+        170,
+        253
+      ],
+      "summary": "tokenize_dataset(config, tokenizer_ckpt) — 83 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/pretrain.py:pretrain_transformer",
+      "type": "function",
+      "name": "pretrain_transformer",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "lineRange": [
+        259,
+        454
+      ],
+      "summary": "pretrain_transformer(config, tokenized_data_path, resume_from) — 195 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/pretrain.py:_create_masked_input",
+      "type": "function",
+      "name": "_create_masked_input",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "lineRange": [
+        460,
+        502
+      ],
+      "summary": "_create_masked_input(tokens, mask_ratio, mask_block_size, mask_token_id) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/lem/pretrain.py:run_pretraining_pipeline",
+      "type": "function",
+      "name": "run_pretraining_pipeline",
+      "filePath": "src/geox_core/engines/lem/pretrain.py",
+      "lineRange": [
+        508,
+        531
+      ],
+      "summary": "run_pretraining_pipeline(config) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/lem/tokenizer.py",
+      "type": "file",
+      "name": "tokenizer.py",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "summary": "5 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/tokenizer.py:CurveTypeEmbedding",
+      "type": "class",
+      "name": "CurveTypeEmbedding",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "lineRange": [
+        55,
+        80
+      ],
+      "summary": "Class CurveTypeEmbedding with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/tokenizer.py:VQEncoder",
+      "type": "class",
+      "name": "VQEncoder",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "lineRange": [
+        86,
+        122
+      ],
+      "summary": "Class VQEncoder with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/tokenizer.py:VQDecoder",
+      "type": "class",
+      "name": "VQDecoder",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "lineRange": [
+        125,
+        161
+      ],
+      "summary": "Class VQDecoder with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/tokenizer.py:VectorQuantizer",
+      "type": "class",
+      "name": "VectorQuantizer",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "lineRange": [
+        167,
+        225
+      ],
+      "summary": "Class VectorQuantizer with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/lem/tokenizer.py:WellLogVQVAE",
+      "type": "class",
+      "name": "WellLogVQVAE",
+      "filePath": "src/geox_core/engines/lem/tokenizer.py",
+      "lineRange": [
+        231,
+        338
+      ],
+      "summary": "Class WellLogVQVAE with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "type": "file",
+      "name": "emag2_adapter.py",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "summary": "Defines 1 function(s); 8 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/magnetometry/emag2_adapter.py:get_adapter",
+      "type": "function",
+      "name": "get_adapter",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "lineRange": [
+        454,
+        468
+      ],
+      "summary": "get_adapter() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:EMAG2Backend",
+      "type": "class",
+      "name": "EMAG2Backend",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "lineRange": [
+        107,
+        122
+      ],
+      "summary": "Class EMAG2Backend with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:MockEMAG2Backend",
+      "type": "class",
+      "name": "MockEMAG2Backend",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "lineRange": [
+        128,
+        188
+      ],
+      "summary": "Class MockEMAG2Backend with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:LiveEMAG2Backend",
+      "type": "class",
+      "name": "LiveEMAG2Backend",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "lineRange": [
+        194,
+        364
+      ],
+      "summary": "Class LiveEMAG2Backend with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:EMAG2Adapter",
+      "type": "class",
+      "name": "EMAG2Adapter",
+      "filePath": "src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "lineRange": [
+        371,
+        446
+      ],
+      "summary": "Class EMAG2Adapter with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "type": "file",
+      "name": "igrf_adapter.py",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "summary": "Defines 1 function(s); 8 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/magnetometry/igrf_adapter.py:get_adapter",
+      "type": "function",
+      "name": "get_adapter",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "lineRange": [
+        379,
+        389
+      ],
+      "summary": "get_adapter() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:IGRFBackend",
+      "type": "class",
+      "name": "IGRFBackend",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "lineRange": [
+        93,
+        108
+      ],
+      "summary": "Class IGRFBackend with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:MockIGRFBackend",
+      "type": "class",
+      "name": "MockIGRFBackend",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "lineRange": [
+        114,
+        179
+      ],
+      "summary": "Class MockIGRFBackend with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:LiveIGRFBackend",
+      "type": "class",
+      "name": "LiveIGRFBackend",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "lineRange": [
+        185,
+        266
+      ],
+      "summary": "Class LiveIGRFBackend with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:IGRFAdapter",
+      "type": "class",
+      "name": "IGRFAdapter",
+      "filePath": "src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "lineRange": [
+        273,
+        371
+      ],
+      "summary": "Class IGRFAdapter with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/modeling/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/modeling/__init__.py",
+      "summary": "python code file (12 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "type": "file",
+      "name": "biharmonic_adapter.py",
+      "filePath": "src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "summary": "Defines 3 function(s); 1 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:_grid_hash",
+      "type": "function",
+      "name": "_grid_hash",
+      "filePath": "src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "lineRange": [
+        60,
+        66
+      ],
+      "summary": "_grid_hash(arr, salt) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:_distance_decay",
+      "type": "function",
+      "name": "_distance_decay",
+      "filePath": "src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "lineRange": [
+        69,
+        92
+      ],
+      "summary": "_distance_decay(known_mask, decay_km) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:biharmonic_inpaint_grid",
+      "type": "function",
+      "name": "biharmonic_inpaint_grid",
+      "filePath": "src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "lineRange": [
+        95,
+        235
+      ],
+      "summary": "biharmonic_inpaint_grid(grid_data, nodata_value, anisotropic_weights, decay_km) — 140 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/petrophysics/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/petrophysics/__init__.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/petrophysics/anisotropy.py",
+      "type": "file",
+      "name": "anisotropy.py",
+      "filePath": "src/geox_core/engines/petrophysics/anisotropy.py",
+      "summary": "python code file (8 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "type": "file",
+      "name": "bruges_adapter.py",
+      "filePath": "src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "summary": "Defines 2 function(s); 7 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/petrophysics/bruges_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "lineRange": [
+        44,
+        46
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/petrophysics/bruges_adapter.py:BrugesAdapter",
+      "type": "class",
+      "name": "BrugesAdapter",
+      "filePath": "src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "lineRange": [
+        105,
+        393
+      ],
+      "summary": "Class BrugesAdapter with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/petrophysics/pinn.py",
+      "type": "file",
+      "name": "pinn.py",
+      "filePath": "src/geox_core/engines/petrophysics/pinn.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/petrophysics/pinn.py:PINNPetrophysics",
+      "type": "class",
+      "name": "PINNPetrophysics",
+      "filePath": "src/geox_core/engines/petrophysics/pinn.py",
+      "lineRange": [
+        55,
+        389
+      ],
+      "summary": "Class PINNPetrophysics with 12 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/petrophysics/rock_physics.py",
+      "type": "file",
+      "name": "rock_physics.py",
+      "filePath": "src/geox_core/engines/petrophysics/rock_physics.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/engines/geophysics/igrf_adapter.py",
+      "target": "function:src/geox_core/engines/geophysics/igrf_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/igrf_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/igrf_adapter.py:IGRFAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "target": "function:src/geox_core/engines/geophysics/mt_forward.py:wait_recursion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "target": "function:src/geox_core/engines/geophysics/mt_forward.py:_k",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "target": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_apparent_resistivity_phase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "target": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/mt_forward.py",
+      "target": "function:src/geox_core/engines/geophysics/mt_forward.py:mt_response_from_physics9",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "target": "function:src/geox_core/engines/geophysics/pygimli_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/pygimli_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/pygimli_adapter.py:PyGIMLIAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "target": "function:src/geox_core/engines/geophysics/simpeg_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/simpeg_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/simpeg_adapter.py:SimPEGAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/gempy_adapter.py",
+      "target": "function:src/geox_core/engines/geospatial/gempy_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/gempy_adapter.py",
+      "target": "class:src/geox_core/engines/geospatial/gempy_adapter.py:GemPyAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/gplately_adapter.py",
+      "target": "function:src/geox_core/engines/geospatial/gplately_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/gplately_adapter.py",
+      "target": "class:src/geox_core/engines/geospatial/gplately_adapter.py:GPlatelyAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "target": "function:src/geox_core/engines/geospatial/loopstructural_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geospatial/loopstructural_adapter.py",
+      "target": "class:src/geox_core/engines/geospatial/loopstructural_adapter.py:LoopStructuralAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "target": "function:src/geox_core/engines/hydrogeology/flopy_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/hydrogeology/flopy_adapter.py",
+      "target": "class:src/geox_core/engines/hydrogeology/flopy_adapter.py:FloPyAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_seismic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_gravity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_magnetics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:_forward_em",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:_joint_objective",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:run_joint_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "function:src/geox_core/engines/joint_inversion/__init__.py:quick_joint_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/joint_inversion/__init__.py",
+      "target": "class:src/geox_core/engines/joint_inversion/__init__.py:JointInversionResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/config.py",
+      "target": "class:src/geox_core/engines/lem/config.py:TokenizerConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/config.py",
+      "target": "class:src/geox_core/engines/lem/config.py:PretrainConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/config.py",
+      "target": "class:src/geox_core/engines/lem/config.py:DataConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "function:src/geox_core/engines/lem/dataset.py:_resolve_curve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "function:src/geox_core/engines/lem/dataset.py:load_and_preprocess_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "function:src/geox_core/engines/lem/dataset.py:extract_patches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "function:src/geox_core/engines/lem/dataset.py:create_lem_dataloader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "function:src/geox_core/engines/lem/dataset.py:inspect_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/dataset.py",
+      "target": "class:src/geox_core/engines/lem/dataset.py:WellLogDataset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/model.py",
+      "target": "class:src/geox_core/engines/lem/model.py:SinusoidalPositionalEncoding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/model.py",
+      "target": "class:src/geox_core/engines/lem/model.py:LearnedDepthEncoding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/model.py",
+      "target": "class:src/geox_core/engines/lem/model.py:GeoLocationEmbedding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/model.py",
+      "target": "class:src/geox_core/engines/lem/model.py:LEMTransformer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/model.py",
+      "target": "class:src/geox_core/engines/lem/model.py:LEMLoss",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/physics_head.py",
+      "target": "function:src/geox_core/engines/lem/physics_head.py:archie_sw_torch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/physics_head.py",
+      "target": "class:src/geox_core/engines/lem/physics_head.py:PhysicsConstraintHead",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/pretrain.py",
+      "target": "function:src/geox_core/engines/lem/pretrain.py:train_tokenizer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/pretrain.py",
+      "target": "function:src/geox_core/engines/lem/pretrain.py:tokenize_dataset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/pretrain.py",
+      "target": "function:src/geox_core/engines/lem/pretrain.py:pretrain_transformer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/pretrain.py",
+      "target": "function:src/geox_core/engines/lem/pretrain.py:_create_masked_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/pretrain.py",
+      "target": "function:src/geox_core/engines/lem/pretrain.py:run_pretraining_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/tokenizer.py",
+      "target": "class:src/geox_core/engines/lem/tokenizer.py:CurveTypeEmbedding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/tokenizer.py",
+      "target": "class:src/geox_core/engines/lem/tokenizer.py:VQEncoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/tokenizer.py",
+      "target": "class:src/geox_core/engines/lem/tokenizer.py:VQDecoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/tokenizer.py",
+      "target": "class:src/geox_core/engines/lem/tokenizer.py:VectorQuantizer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/lem/tokenizer.py",
+      "target": "class:src/geox_core/engines/lem/tokenizer.py:WellLogVQVAE",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "target": "function:src/geox_core/engines/magnetometry/emag2_adapter.py:get_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:EMAG2Backend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:MockEMAG2Backend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:LiveEMAG2Backend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/emag2_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/emag2_adapter.py:EMAG2Adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "target": "function:src/geox_core/engines/magnetometry/igrf_adapter.py:get_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:IGRFBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:MockIGRFBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:LiveIGRFBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/magnetometry/igrf_adapter.py",
+      "target": "class:src/geox_core/engines/magnetometry/igrf_adapter.py:IGRFAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "target": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:_grid_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "target": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:_distance_decay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/modeling/biharmonic_adapter.py",
+      "target": "function:src/geox_core/engines/modeling/biharmonic_adapter.py:biharmonic_inpaint_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "target": "function:src/geox_core/engines/petrophysics/bruges_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/petrophysics/bruges_adapter.py",
+      "target": "class:src/geox_core/engines/petrophysics/bruges_adapter.py:BrugesAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/petrophysics/pinn.py",
+      "target": "class:src/geox_core/engines/petrophysics/pinn.py:PINNPetrophysics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

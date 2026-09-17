@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/atmosphere/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/atmosphere/agent-card.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/atmosphere/atmo-radiation-and-solar.md",
+      "type": "document",
+      "name": "atmo-radiation-and-solar.md",
+      "filePath": "skills/atmosphere/atmo-radiation-and-solar.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/atmosphere/atmo-seasonality-and-monsoon.md",
+      "type": "document",
+      "name": "atmo-seasonality-and-monsoon.md",
+      "filePath": "skills/atmosphere/atmo-seasonality-and-monsoon.md",
+      "summary": "markdown docs file (34 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/atmosphere/atmo-weather-state.md",
+      "type": "document",
+      "name": "atmo-weather-state.md",
+      "filePath": "skills/atmosphere/atmo-weather-state.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

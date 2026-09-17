@@ -1,0 +1,152 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Lines below are suggestions — uncomment to activate.
+# Use ! prefix to force-include something excluded by defaults.
+#
+# Built-in defaults (always excluded unless negated):
+#   node_modules/, .git/, dist/, build/, obj/, *.lock, *.min.js, etc.
+#
+
+# --- From .gitignore (uncomment to exclude) ---
+
+# *.py[cod]
+# *$py.class
+# *.so
+# .Python
+# develop-eggs/
+# downloads/
+# eggs/
+# .eggs/
+# lib/
+# lib64/
+# parts/
+# sdist/
+# var/
+# wheels/
+# *.egg-info/
+# .installed.cfg
+# .megamemory/
+# *.egg
+# ENV/
+# *.swp
+# *.swo
+# *~
+# .DS_Store
+# Thumbs.db
+# .env
+# .env.local
+# .env.*.local
+# secrets/
+# *.pem
+# *.key
+# *.db
+# *.sqlite
+# .pytest_cache/
+# .coverage
+# htmlcov/
+# *.tar.gz
+# *.whl
+# geox-gui/node_modules/
+# **/.venv/
+# static/gui/cesium/Assets/
+# static/gui/cesium/ThirdParty/
+# static/gui/cesium/Widgets/
+# static/gui/cesium/Workers/
+# ariffazil-geox.txt
+# Copilot/
+# artifacts/
+# data/volve_wells/
+# data/renders/
+# geox/seismic/rsi/geox_out/*.png
+# data/egs/receipts/TEST-*.json
+# state/
+# src/geox_mcp/state/
+# forge_work/
+# src/geox_mcp/tools/biostrat_calibrate.py
+# CONTRIBUTING.md
+# data/egs/receipts/TEST-*.json
+# data/atlas/cache/renders/
+# *.bak.*
+# sessions/
+# *.bak-*
+# *.bak
+
+# --- Detected directories (uncomment to exclude) ---
+
+# docs/
+# fixtures/
+# scripts/
+# tests/
+
+# --- Test file patterns (uncomment to exclude) ---
+
+# JS / TS
+# *.test.*
+# *.spec.*
+# *.snap
+# C# / .NET
+# **/*Tests.cs
+# **/*Test.cs
+# **/*Fixture.cs
+# **/*.Tests.csproj
+# Java / Kotlin
+# **/src/test/**
+# **/*Test.java
+# **/*IT.java
+# **/*Spec.kt
+# Go
+# **/*_test.go
+# C++
+# **/*_test.cc
+# **/*_test.cpp
+# **/*_test.cxx
+# **/*Test.cc
+# **/*Test.cpp
+# **/*_unittest.cc
+# **/*_unittest.cpp
+# **/*_browsertest.cc
+# **/*_benchmark.cc
+# **/*Benchmark.cpp
+# Python
+# **/test_*.py
+# **/*_test.py
+# **/tests.py
+# **/conftest.py
+# Rust
+# **/tests.rs
+# **/test_*.rs
+# **/*_test.rs
+# **/bench_*.rs
+# **/*_bench.rs
+# Ruby
+# **/*_spec.rb
+# **/*_test.rb
+# **/test_*.rb
+# **/spec_helper.rb
+# **/test_helper.rb
+# **/rails_helper.rb
+# Swift
+# **/Tests/**/*.swift
+# **/Specs/**/*.swift
+
+# --- 333-AGI entropy patterns (2026-09-14, Q5 SEAL) ---
+**/pre-forged-*
+**/pre-helix-*
+**/.bak-*
+**/.quarantine-*
+**/.superseded-*
+**/.tombstoned-*
+**/.zen-archived-*
+**/.archive-*
+**/.hermes-archived-*
+*.bak-*
+
+# --- Q5 SEAL: GEOX has 5:1 file-to-LOC ratio — many small files ---
+# Fixtures + snapshots are signal-diluting (per Q5 SEAL fixture excludes)
+# Keep these ACTIVE per Arif's "unless fixture = constitutional artifact" test.
+**/fixtures/**
+**/__snapshots__/**
+**/test_data/**
+**/sample_data/**
+**/*.csv
+**/*.parquet
