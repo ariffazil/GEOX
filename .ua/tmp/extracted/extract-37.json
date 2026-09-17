@@ -1,0 +1,315 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 6,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 6
+    }
+  },
+  "results": [
+    {
+      "path": "resources/examples/bad_las_qc_failure.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 22,
+      "nonEmptyLines": 22,
+      "sections": [
+        {
+          "heading": "example_type",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "well_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "failure_mode",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "qc_report",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "lesson",
+          "level": 1,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "resources/examples/danum1_expected_summary.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 50,
+      "nonEmptyLines": 50,
+      "sections": [
+        {
+          "heading": "project",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "well_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "interval_m",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "steps_completed",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "expected_outputs",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "resources/examples/danum1_project.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 19,
+      "nonEmptyLines": 19,
+      "sections": [
+        {
+          "heading": "project",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "bin_size_m",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "min_package_thickness_m",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "p50_shift_thresh_gapi",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "gr_cut_api",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "gr_min_api",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "gr_max_api",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "well_order",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "wells",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "intervals",
+          "level": 1,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "resources/examples/gold_causal_scene.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 39,
+      "nonEmptyLines": 39,
+      "sections": [
+        {
+          "heading": "status",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "epoch",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "manifold",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "canon9",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "claims",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "truth",
+          "level": 1,
+          "line": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "resources/examples/process_abduction_shoreface.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 54,
+      "nonEmptyLines": 49,
+      "sections": [
+        {
+          "heading": "project",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "well_id",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "interval_m",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "depo_context",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "scale",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "input_evidence",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "expected_hypotheses",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "resources/examples/seismic_well_tie_example.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "project",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "well_id",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "seismic_volume",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "steps",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "claim_limits",
+          "level": 1,
+          "line": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    }
+  ]
+}

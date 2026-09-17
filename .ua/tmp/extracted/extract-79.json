@@ -1,0 +1,1145 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [
+    "data/geox_las/exfil.las",
+    "data/kl2/SYNC_WINDOWS_TO_VPS.ps1",
+    "data/real_wells/q15_15_9_19/q15_15_9_19.las",
+    "data/real_wells/q15_15_9_19/q15_dak_petro.las",
+    "data/reference/SABAH_BASIN_INTERPRETATION_CHECKLIST.xlsx",
+    "data/wells/marmousi-F02-1.las",
+    "data/wells/marmousi-F03-2.las",
+    "data/wells/marmousi-F06-1.las",
+    "docs/GEOX_LEM_ARCHITECTURE_VISUAL.mmd",
+    "docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md.sha256",
+    "docs/deploy",
+    "docs/mockups/geox-dashboard.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 13,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 13
+    }
+  },
+  "results": [
+    {
+      "path": "data/kl2/nn_datum_borneo2023.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 45,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "datum",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "boundaries",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "unresolved",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "gaps",
+          "level": 1,
+          "line": 34
+        },
+        {
+          "heading": "forbidden_groups",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "flags",
+          "level": 1,
+          "line": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "data/real_wells/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 36,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "GEOX Real Well Data",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Available on this host (2026-07-09)",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Not on this host",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Honest rule (F2)",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "GEOX-001 wiring",
+          "level": 2,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "data/seismic_sections/marmousi_synthetic_section.meta.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "n_traces_used",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "n_samples",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "dt_ms",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "backend",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "total_traces",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "png_path",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "png_sha256",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "png_bytes",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "png_shape",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "segy_path",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "segy_sha256",
+          "level": 1,
+          "line": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "docs/adr/ADR-0007-osdu-exchange-alignment.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 273,
+      "nonEmptyLines": 198,
+      "sections": [
+        {
+          "heading": "ADR-0007: GEOX ↔ OSDU Exchange Alignment",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Context",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Decision",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Layering (binding)",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "New Canonical Tools (GEOX MCP server, port 8081)",
+          "level": 3,
+          "line": 76
+        },
+        {
+          "heading": "Reference Data Mapping",
+          "level": 3,
+          "line": 91
+        },
+        {
+          "heading": "Hard Rules (binding, non-negotiable)",
+          "level": 3,
+          "line": 111
+        },
+        {
+          "heading": "Cost & Timeline (DER, 0.70 confidence)",
+          "level": 3,
+          "line": 125
+        },
+        {
+          "heading": "What GEOX Gains (DER)",
+          "level": 3,
+          "line": 137
+        },
+        {
+          "heading": "What GEOX Loses (if we adopt — INT)",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "What GEOX Would Lose (if we DON'T follow layering — INT)",
+          "level": 3,
+          "line": 150
+        },
+        {
+          "heading": "Alternatives Considered",
+          "level": 2,
+          "line": 168
+        },
+        {
+          "heading": "A1. Full OSDU substrate replacement (REJECTED, 0.92 confidence)",
+          "level": 3,
+          "line": 170
+        },
+        {
+          "heading": "A2. Stand up OSDU platform on `af-forge` (REJECTED, 0.92 confidence)",
+          "level": 3,
+          "line": 174
+        },
+        {
+          "heading": "A3. Adopt OSDU Policy (OPA/Rego) on top of GEOX (REJECTED, 0.92 confidence)",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "A4. No OSDU integration — accept partner-specific adapters (REJECTED, 0.75 confidence)",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "A5. (CHOSEN) Exchange layer only, see Decision above.",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "Consequences",
+          "level": 2,
+          "line": 190
+        },
+        {
+          "heading": "Positive",
+          "level": 3,
+          "line": 192
+        },
+        {
+          "heading": "Negative",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "Neutral",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "Verification (how we know this works)",
+          "level": 2,
+          "line": 216
+        },
+        {
+          "heading": "Open Questions",
+          "level": 2,
+          "line": 230
+        },
+        {
+          "heading": "References (evidence ledger)",
+          "level": 2,
+          "line": 238
+        },
+        {
+          "heading": "Ratification",
+          "level": 2,
+          "line": 265
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 25
+      }
+    },
+    {
+      "path": "docs/adr/ADR-0008-rls-as-floor-hardening.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 248,
+      "nonEmptyLines": 177,
+      "sections": [
+        {
+          "heading": "ADR-0008: RLS-as-Floor Hardening for arifOS Agentic Substrate",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Context",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Decision",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "The 13 Floors as DB Constraints",
+          "level": 3,
+          "line": 65
+        },
+        {
+          "heading": "Migration Plan (5 phases, each 888_HOLD-gated)",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "Hard Rules (binding)",
+          "level": 3,
+          "line": 123
+        },
+        {
+          "heading": "Estimated Cost (DER, 0.70 confidence)",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "Alternatives Considered",
+          "level": 2,
+          "line": 148
+        },
+        {
+          "heading": "A1. Continue application-layer only (REJECTED, 0.95 confidence)",
+          "level": 3,
+          "line": 150
+        },
+        {
+          "heading": "A2. Build a custom Postgres extension in Rust (`pg_arifos`) with floor logic (DEFERRED)",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "A3. Use Temporal.io for floor enforcement (REJECTED for this purpose, 0.85 confidence)",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "A4. (CHOSEN) RLS + CHECK + TRIGGER + SECURITY DEFINER functions in standard Postgres.",
+          "level": 3,
+          "line": 162
+        },
+        {
+          "heading": "Consequences",
+          "level": 2,
+          "line": 168
+        },
+        {
+          "heading": "Positive",
+          "level": 3,
+          "line": 170
+        },
+        {
+          "heading": "Negative",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "Neutral",
+          "level": 3,
+          "line": 186
+        },
+        {
+          "heading": "Verification (how we know this works)",
+          "level": 2,
+          "line": 194
+        },
+        {
+          "heading": "Open Questions",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "References (evidence ledger)",
+          "level": 2,
+          "line": 217
+        },
+        {
+          "heading": "Ratification",
+          "level": 2,
+          "line": 238
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 20
+      }
+    },
+    {
+      "path": "docs/archive/TOMBSTONE.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 48,
+      "nonEmptyLines": 48,
+      "sections": [
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "epoch",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "entries",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "last_zen",
+          "level": 1,
+          "line": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/archive/ZEN_15_SURFACE_ARCHIVED_2026-07-24.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "GEOX ZEN-15 Public Surface",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "The 15 public tools",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Doctrine (FIX BRIEF v2)",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Epistemic ladder",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Bridges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/demo/GEOX_VISION_LLM_PERCEPTUAL_DOCTRINE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 199,
+      "nonEmptyLines": 140,
+      "sections": [
+        {
+          "heading": "GEOX — How an LLM Sees a Seismic Section",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "The Principle",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "The 9 Contrast Visual Attributes",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "1. Amplitude Envelope `physical: reflection_strength`",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "2. Edge / Discontinuity Map `physical: structural_discontinuity`",
+          "level": 3,
+          "line": 28
+        },
+        {
+          "heading": "3. Texture Energy `physical: seismic_facies_character`",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "4. Horizontal Gradient `physical: lateral_amplitude_change`",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "5. Vertical Gradient `physical: impedance_transition_rate`",
+          "level": 3,
+          "line": 40
+        },
+        {
+          "heading": "6. Local Dip `physical: structure_tensor / reflector_geometry`",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "7. Phase Symmetry `physical: waveform_character_proxy`",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "8. Frequency Content `physical: resolution / attenuation`",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "9. AC_Risk Heatmap `GOVERNANCE: display_bias_audit`",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "The Pipeline",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "Demo: Synthetic Seismic — Two Basin Types",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "Input Sections",
+          "level": 3,
+          "line": 78
+        },
+        {
+          "heading": "Phase 1.1 Attribute Statistics (3 of 9)",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "RGB Composite — What the LLM Sees",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "Theory of Anomalous Contrast (ToAC) — Per ROI",
+          "level": 2,
+          "line": 110
+        },
+        {
+          "heading": "Dangerous-Similarity Detection",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "Case: 5 of 7 Dimensions Match Malay, 2 Critical Mismatches",
+          "level": 3,
+          "line": 130
+        },
+        {
+          "heading": "Garbage Detector — Attribute Statistics as QC",
+          "level": 2,
+          "line": 153
+        },
+        {
+          "heading": "Phase Roadmap",
+          "level": 2,
+          "line": 164
+        },
+        {
+          "heading": "Why This Matters",
+          "level": 2,
+          "line": 177
+        },
+        {
+          "heading": "Governance Note",
+          "level": 2,
+          "line": 190
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 24
+      }
+    },
+    {
+      "path": "docs/engines/CRITIC_SPEC.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 201,
+      "nonEmptyLines": 164,
+      "sections": [
+        {
+          "heading": "EGS Domain-Critic — Physical Falsification Engine",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "§1 Identity",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "§2 Input / Output",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "§3 Core Behaviors",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "3.1 Falsify",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "3.2 Score",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "3.3 Trigger Holds",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "3.4 Stay Non-Verbal",
+          "level": 3,
+          "line": 112
+        },
+        {
+          "heading": "§4 Contract",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "§5 MCP Tool",
+          "level": 2,
+          "line": 140
+        },
+        {
+          "heading": "§6 Falsification Checks",
+          "level": 2,
+          "line": 172
+        },
+        {
+          "heading": "§7 Integration",
+          "level": 2,
+          "line": 185
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "docs/engines/REASONER_SPEC.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 184,
+      "nonEmptyLines": 155,
+      "sections": [
+        {
+          "heading": "EGS Reasoner — Domain Hypothesis Builder",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "§1 Identity",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "§2 Input / Output",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "§3 Core Behaviors",
+          "level": 2,
+          "line": 90
+        },
+        {
+          "heading": "3.1 Generate",
+          "level": 3,
+          "line": 92
+        },
+        {
+          "heading": "3.2 Propagate Uncertainty",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "3.3 Respect Physics",
+          "level": 3,
+          "line": 101
+        },
+        {
+          "heading": "3.4 Stay Non-Verbal",
+          "level": 3,
+          "line": 108
+        },
+        {
+          "heading": "§4 Contract",
+          "level": 2,
+          "line": 113
+        },
+        {
+          "heading": "§5 MCP Tool",
+          "level": 2,
+          "line": 135
+        },
+        {
+          "heading": "§6 Integration",
+          "level": 2,
+          "line": 168
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "docs/integration/FEDERATION_NOTES.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 47,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "FEDERATION_NOTES.md — GEOX Integration State",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "GEOX MCP Status (2026-05-05)",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Verified Integration Gap",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "GEOX Bridge is SIMULATED",
+          "level": 3,
+          "line": 15
+        },
+        {
+          "heading": "What Works",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "What Needs Wiring",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Active Hold",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Routing",
+          "level": 2,
+          "line": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "docs/operations/repo-mcp-stabilization.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 105,
+      "nonEmptyLines": 78,
+      "sections": [
+        {
+          "heading": "Repo + MCP Stabilization Runbook",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Doctrine",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Branch Truth Model",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Pull Request Hygiene",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Hook Severity Ladder",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "MCP Server Constraint Model",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "Weekly Hygiene Checklist (30-45 min)",
+          "level": 2,
+          "line": 77
+        },
+        {
+          "heading": "Install and Use Guarded Pre-Push Hook",
+          "level": 2,
+          "line": 88
+        },
+        {
+          "heading": "7-Day Stabilization Sprint",
+          "level": 2,
+          "line": 97
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/plans/NEXT_FORGE_PLAN.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 852,
+      "nonEmptyLines": 664,
+      "sections": [
+        {
+          "heading": "GEOX Next Forge Plan",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Forge 1: Foundation Hardening (Weeks 1-2)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "1.1 Fix Packaging/Installation",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "1.2 Add CI/CD Pipeline",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "1.3 Verify Demo Runs Clean",
+          "level": 3,
+          "line": 69
+        },
+        {
+          "heading": "Forge 2: Macrostrat Integration (Weeks 3-4)",
+          "level": 2,
+          "line": 82
+        },
+        {
+          "heading": "2.1 Implement MacrostratTool",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "2.2 Add Macrostrat to ToolRegistry",
+          "level": 3,
+          "line": 227
+        },
+        {
+          "heading": "2.3 Add Attribution to Reports",
+          "level": 3,
+          "line": 243
+        },
+        {
+          "heading": "2.4 Test Macrostrat Integration",
+          "level": 3,
+          "line": 257
+        },
+        {
+          "heading": "Forge 3: Dual-Memory Architecture (Weeks 5-8)",
+          "level": 2,
+          "line": 280
+        },
+        {
+          "heading": "3.1 Architecture Overview",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "3.2 Implement Embedding Service (LEMBridge)",
+          "level": 3,
+          "line": 304
+        },
+        {
+          "heading": "3.3 Vector Memory Store (Qdrant Integration)",
+          "level": 3,
+          "line": 414
+        },
+        {
+          "heading": "Forge 4: Evaluation & Benchmarks (Weeks 9-10)",
+          "level": 2,
+          "line": 483
+        },
+        {
+          "heading": "4.1 Evaluation Framework",
+          "level": 3,
+          "line": 485
+        },
+        {
+          "heading": "4.2 Test Suite Structure",
+          "level": 3,
+          "line": 562
+        },
+        {
+          "heading": "Forge 5: Governance & Documentation (Weeks 11-12)",
+          "level": 2,
+          "line": 580
+        },
+        {
+          "heading": "5.1 Constitutional Floor Mapping",
+          "level": 3,
+          "line": 582
+        },
+        {
+          "heading": "5.2 Documentation Updates",
+          "level": 3,
+          "line": 593
+        },
+        {
+          "heading": "Resource Estimates",
+          "level": 2,
+          "line": 624
+        },
+        {
+          "heading": "Success Metrics",
+          "level": 2,
+          "line": 637
+        },
+        {
+          "heading": "Risk Register",
+          "level": 2,
+          "line": 651
+        },
+        {
+          "heading": "Checklist for Forge Completion",
+          "level": 2,
+          "line": 662
+        },
+        {
+          "heading": "Forge 1: Foundation",
+          "level": 3,
+          "line": 664
+        },
+        {
+          "heading": "Forge 2: Macrostrat",
+          "level": 3,
+          "line": 669
+        },
+        {
+          "heading": "Forge 3: Dual-Memory",
+          "level": 3,
+          "line": 675
+        },
+        {
+          "heading": "Forge 4: Evaluation",
+          "level": 3,
+          "line": 681
+        },
+        {
+          "heading": "Forge 5: Governance",
+          "level": 3,
+          "line": 686
+        },
+        {
+          "heading": "Forge 6: GEOX MCP Architecture + Seisinterpy Integration (Current — 2026-03-31)",
+          "level": 2,
+          "line": 699
+        },
+        {
+          "heading": "6.1 Pipeline Status",
+          "level": 3,
+          "line": 701
+        },
+        {
+          "heading": "6.2 seisinterpy Integration Strategy",
+          "level": 3,
+          "line": 715
+        },
+        {
+          "heading": "6.3 GEOX MCP Tool Verb Registry",
+          "level": 3,
+          "line": 745
+        },
+        {
+          "heading": "6.4 Updated File Map",
+          "level": 3,
+          "line": 756
+        },
+        {
+          "heading": "6.5 SeisBench Secondary Integration",
+          "level": 3,
+          "line": 775
+        },
+        {
+          "heading": "6.6 seismiqb (Later — 3D DL Segmentation)",
+          "level": 3,
+          "line": 793
+        },
+        {
+          "heading": "6.7 Hard Blocks (Never Cross)",
+          "level": 3,
+          "line": 802
+        },
+        {
+          "heading": "6.8 Constitutional Floor Mapping for Pipeline",
+          "level": 3,
+          "line": 811
+        },
+        {
+          "heading": "6.9 Remaining Tasks",
+          "level": 3,
+          "line": 824
+        },
+        {
+          "heading": "Forge 7: Validation + Documentation",
+          "level": 2,
+          "line": 836
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 41
+      }
+    }
+  ]
+}

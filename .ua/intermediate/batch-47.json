@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/geodesy/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/geodesy/agent-card.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/geodesy/geo-coordinate-frames.md",
+      "type": "document",
+      "name": "geo-coordinate-frames.md",
+      "filePath": "skills/geodesy/geo-coordinate-frames.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/geodesy/geo-position-fix-fusion.md",
+      "type": "document",
+      "name": "geo-position-fix-fusion.md",
+      "filePath": "skills/geodesy/geo-position-fix-fusion.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/geodesy/geo-scale-and-tiling.md",
+      "type": "document",
+      "name": "geo-scale-and-tiling.md",
+      "filePath": "skills/geodesy/geo-scale-and-tiling.md",
+      "summary": "markdown docs file (34 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

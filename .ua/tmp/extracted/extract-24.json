@@ -1,0 +1,468 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": "docs/analysis/GEOX_CONTRAST_ANALYSIS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 313,
+      "nonEmptyLines": 259,
+      "sections": [
+        {
+          "heading": "GEOX ↔ arifOS Full Contrast Analysis",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. Architectural Contrast",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "arifOS — The Constitutional Kernel",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "GEOX — The Earth Coprocessor",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "2. Component Mapping",
+          "level": 2,
+          "line": 74
+        },
+        {
+          "heading": "3. Pipeline Stage Comparison",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "arifOS (000–999 Pipeline)",
+          "level": 3,
+          "line": 89
+        },
+        {
+          "heading": "GEOX (Internal Pipeline)",
+          "level": 3,
+          "line": 102
+        },
+        {
+          "heading": "4. Verdict System Contrast",
+          "level": 2,
+          "line": 115
+        },
+        {
+          "heading": "arifOS Verdicts",
+          "level": 3,
+          "line": 117
+        },
+        {
+          "heading": "GEOX Verdicts (Internal)",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "5. File Structure Contrast",
+          "level": 2,
+          "line": 138
+        },
+        {
+          "heading": "arifOS (Monolithic Kernel)",
+          "level": 3,
+          "line": 140
+        },
+        {
+          "heading": "GEOX (Domain Coprocessor)",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "6. Constitutional Floor Enforcement",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "7. Integration Points",
+          "level": 2,
+          "line": 188
+        },
+        {
+          "heading": "How GEOX Plugs Into arifOS",
+          "level": 3,
+          "line": 190
+        },
+        {
+          "heading": "Dependency Injection",
+          "level": 3,
+          "line": 218
+        },
+        {
+          "heading": "8. Recommendations for Organization",
+          "level": 2,
+          "line": 226
+        },
+        {
+          "heading": "Current State",
+          "level": 3,
+          "line": 228
+        },
+        {
+          "heading": "Recommended Structure",
+          "level": 3,
+          "line": 233
+        },
+        {
+          "heading": "9. Sync Strategy",
+          "level": 2,
+          "line": 255
+        },
+        {
+          "heading": "Option A: pip install -e (Development)",
+          "level": 3,
+          "line": 257
+        },
+        {
+          "heading": "Option B: Docker Compose Integration",
+          "level": 3,
+          "line": 264
+        },
+        {
+          "heading": "Option C: Git Subtree (Advanced)",
+          "level": 3,
+          "line": 275
+        },
+        {
+          "heading": "10. Naming Convention",
+          "level": 2,
+          "line": 286
+        },
+        {
+          "heading": "Summary Matrix",
+          "level": 2,
+          "line": 298
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 28
+      }
+    },
+    {
+      "path": "docs/analysis/LAYANG_LAYANG_KINABALU_CONTRAST_NOTE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 141,
+      "nonEmptyLines": 100,
+      "sections": [
+        {
+          "heading": "Layang-Layang vs Kinabalu Basin Contrast Note",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Verdict",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "1) Horizon-by-Horizon Contrast Table",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "2) GEOX-Style Literature Review Note",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Claim 1",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "Claim 2",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "Claim 3",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "3) Regional Tectonic Synthesis",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "4) GEOX Summary",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "5) References",
+          "level": 2,
+          "line": 125
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docs/analysis/MACROSTRAT_ANALYSIS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 253,
+      "nonEmptyLines": 190,
+      "sections": [
+        {
+          "heading": "UW-Macrostrat Analysis for GEOX Integration",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What is Macrostrat?",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Scale of Data (Massive)",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Why It's Perfect for GEOX",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Direct Tool Mappings",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "API Endpoints (v2)",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "Integration Strategy (No Clone Needed)",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "Option 1: Direct API Client (Recommended)",
+          "level": 3,
+          "line": 70
+        },
+        {
+          "heading": "Option 2: Cached Local Copy (Future)",
+          "level": 3,
+          "line": 105
+        },
+        {
+          "heading": "Data Quality Assessment",
+          "level": 2,
+          "line": 119
+        },
+        {
+          "heading": "Repositories (For Reference, Not Clone)",
+          "level": 2,
+          "line": 139
+        },
+        {
+          "heading": "Constitutional Compliance (arifOS Floors)",
+          "level": 2,
+          "line": 152
+        },
+        {
+          "heading": "Implementation Sketch",
+          "level": 2,
+          "line": 166
+        },
+        {
+          "heading": "Action Items",
+          "level": 2,
+          "line": 220
+        },
+        {
+          "heading": "Immediate (Today)",
+          "level": 3,
+          "line": 222
+        },
+        {
+          "heading": "Short-term (This Week)",
+          "level": 3,
+          "line": 227
+        },
+        {
+          "heading": "Long-term (Future)",
+          "level": 3,
+          "line": 232
+        },
+        {
+          "heading": "Conclusion",
+          "level": 2,
+          "line": 239
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "docs/analysis/MACROSTRAT_REPO_ANALYSIS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 236,
+      "nonEmptyLines": 171,
+      "sections": [
+        {
+          "heading": "UW-Macrostrat/macrostrat Repository Analysis",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Repository Overview",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "What This Repository IS",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "Repository Structure",
+          "level": 3,
+          "line": 28
+        },
+        {
+          "heading": "Key Finding: This is NOT What You Need for GEOX",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "What GEOX Actually Needs",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "The Critical Difference",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "What About the Python Libraries?",
+          "level": 2,
+          "line": 74
+        },
+        {
+          "heading": "The Better Alternative: `rmacrostrat` Pattern",
+          "level": 2,
+          "line": 89
+        },
+        {
+          "heading": "Recommendation: Do NOT Clone",
+          "level": 2,
+          "line": 109
+        },
+        {
+          "heading": "Clone If:",
+          "level": 3,
+          "line": 111
+        },
+        {
+          "heading": "Use API Instead:",
+          "level": 3,
+          "line": 116
+        },
+        {
+          "heading": "What GEOX Should Actually Build",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "Option 1: Simple HTTP Client (Recommended)",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "Option 2: Use Existing Python Client (If Available)",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "Integration Strategy for GEOX",
+          "level": 2,
+          "line": 158
+        },
+        {
+          "heading": "Week 1: Build the Tool",
+          "level": 3,
+          "line": 160
+        },
+        {
+          "heading": "Week 2: Test with Real Data",
+          "level": 3,
+          "line": 193
+        },
+        {
+          "heading": "Summary Matrix",
+          "level": 2,
+          "line": 204
+        },
+        {
+          "heading": "Next Steps for GEOX",
+          "level": 2,
+          "line": 216
+        },
+        {
+          "heading": "Reference Links",
+          "level": 2,
+          "line": 225
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 21
+      }
+    }
+  ]
+}

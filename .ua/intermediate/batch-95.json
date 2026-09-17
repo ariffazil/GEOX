@@ -1,0 +1,1959 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/inference/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/inference/__init__.py",
+      "summary": "python code file (47 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/inference/emc_inversion.py",
+      "type": "file",
+      "name": "emc_inversion.py",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "summary": "Defines 12 function(s); 9 class(es); exports 21 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:fit_linear_emc",
+      "type": "function",
+      "name": "fit_linear_emc",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        142,
+        229
+      ],
+      "summary": "fit_linear_emc(X, Y, element_names, mineral_names, element_proxies) — 87 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:invert_linear",
+      "type": "function",
+      "name": "invert_linear",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        242,
+        256
+      ],
+      "summary": "invert_linear(xrf_sample, chem_result, element_names) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:invert_cls",
+      "type": "function",
+      "name": "invert_cls",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        259,
+        320
+      ],
+      "summary": "invert_cls(xrf_sample, chem_result, element_names) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:invert_lp",
+      "type": "function",
+      "name": "invert_lp",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        323,
+        333
+      ],
+      "summary": "invert_lp(xrf_sample, chem_result, element_names) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:physics_lock",
+      "type": "function",
+      "name": "physics_lock",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        336,
+        374
+      ],
+      "summary": "physics_lock(fractions, solver) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:fit_domain",
+      "type": "function",
+      "name": "fit_domain",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        385,
+        410
+      ],
+      "summary": "fit_domain(X_calibration) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:domain_lock",
+      "type": "function",
+      "name": "domain_lock",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        413,
+        440
+      ],
+      "summary": "domain_lock(xrf_sample, domain_params) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:emc_verdict",
+      "type": "function",
+      "name": "emc_verdict",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        458,
+        535
+      ],
+      "summary": "emc_verdict(chemistry, physics, domain) — 77 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:make_synthetic_calibration",
+      "type": "function",
+      "name": "make_synthetic_calibration",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        543,
+        612
+      ],
+      "summary": "make_synthetic_calibration(n_samples, seed) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:make_sabah_shift_sample",
+      "type": "function",
+      "name": "make_sabah_shift_sample",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        615,
+        644
+      ],
+      "summary": "make_sabah_shift_sample(calibration_X, element_names, seed) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_inversion.py:_self_test",
+      "type": "function",
+      "name": "_self_test",
+      "filePath": "src/geox_core/inference/emc_inversion.py",
+      "lineRange": [
+        652,
+        763
+      ],
+      "summary": "_self_test() — 111 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/inference/emc_plots.py",
+      "type": "file",
+      "name": "emc_plots.py",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "summary": "Defines 12 function(s); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:make_data",
+      "type": "function",
+      "name": "make_data",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        49,
+        72
+      ],
+      "summary": "make_data(n) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_crossplots",
+      "type": "function",
+      "name": "panel_crossplots",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        86,
+        109
+      ],
+      "summary": "panel_crossplots(ax_list, Y, elems, r2) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_r2bars",
+      "type": "function",
+      "name": "panel_r2bars",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        115,
+        131
+      ],
+      "summary": "panel_r2bars(ax, r2) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_heatmap",
+      "type": "function",
+      "name": "panel_heatmap",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        137,
+        164
+      ],
+      "summary": "panel_heatmap(ax, Y, elems) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_depthtrack",
+      "type": "function",
+      "name": "panel_depthtrack",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        170,
+        181
+      ],
+      "summary": "panel_depthtrack(ax_list, Y, pred, depth) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_residuals",
+      "type": "function",
+      "name": "panel_residuals",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        187,
+        202
+      ],
+      "summary": "panel_residuals(ax, Y, pred) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:_dummy_r2",
+      "type": "function",
+      "name": "_dummy_r2",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        205,
+        206
+      ],
+      "summary": "_dummy_r2(m) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_domain",
+      "type": "function",
+      "name": "panel_domain",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        212,
+        255
+      ],
+      "summary": "panel_domain(ax, elems) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:panel_ternary",
+      "type": "function",
+      "name": "panel_ternary",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        261,
+        296
+      ],
+      "summary": "panel_ternary(ax, Y) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/emc_plots.py:zen_all",
+      "type": "function",
+      "name": "zen_all",
+      "filePath": "src/geox_core/inference/emc_plots.py",
+      "lineRange": [
+        302,
+        384
+      ],
+      "summary": "zen_all(outfile) — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/inference/voxel_update.py",
+      "type": "file",
+      "name": "voxel_update.py",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "summary": "Defines 6 function(s); 10 class(es); exports 16 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:gaussian_likelihood",
+      "type": "function",
+      "name": "gaussian_likelihood",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        290,
+        327
+      ],
+      "summary": "gaussian_likelihood(predicted, observed) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:apply_bias_correction",
+      "type": "function",
+      "name": "apply_bias_correction",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        330,
+        361
+      ],
+      "summary": "apply_bias_correction(observation) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:bayes_update_voxel",
+      "type": "function",
+      "name": "bayes_update_voxel",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        386,
+        475
+      ],
+      "summary": "bayes_update_voxel(prior, forward_model, observation) — 89 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:bayes_update_voxel_sequence",
+      "type": "function",
+      "name": "bayes_update_voxel_sequence",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        478,
+        499
+      ],
+      "summary": "bayes_update_voxel_sequence(prior, forward_model, observations) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:ensemble_posteriors",
+      "type": "function",
+      "name": "ensemble_posteriors",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        507,
+        525
+      ],
+      "summary": "ensemble_posteriors(priors, forward_model, observation) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/inference/voxel_update.py:_self_test",
+      "type": "function",
+      "name": "_self_test",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        561,
+        636
+      ],
+      "summary": "_self_test() — 75 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/inference/voxel_update.py:Observation",
+      "type": "class",
+      "name": "Observation",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        104,
+        124
+      ],
+      "summary": "Class Observation with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/inference/voxel_update.py:ForwardModel",
+      "type": "class",
+      "name": "ForwardModel",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        153,
+        179
+      ],
+      "summary": "Class ForwardModel with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/inference/voxel_update.py:ForwardModel1D",
+      "type": "class",
+      "name": "ForwardModel1D",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        182,
+        218
+      ],
+      "summary": "Class ForwardModel1D with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/inference/voxel_update.py:ForwardModel2D",
+      "type": "class",
+      "name": "ForwardModel2D",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        221,
+        244
+      ],
+      "summary": "Class ForwardModel2D with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/inference/voxel_update.py:ForwardModel4D",
+      "type": "class",
+      "name": "ForwardModel4D",
+      "filePath": "src/geox_core/inference/voxel_update.py",
+      "lineRange": [
+        265,
+        282
+      ],
+      "summary": "Class ForwardModel4D with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ingest/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/ingest/__init__.py",
+      "summary": "python code file (28 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ingest/las_reader.py",
+      "type": "file",
+      "name": "las_reader.py",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "summary": "Defines 5 function(s); 2 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/las_reader.py:_canonicalise",
+      "type": "function",
+      "name": "_canonicalise",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "lineRange": [
+        56,
+        64
+      ],
+      "summary": "_canonicalise(arr) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/las_reader.py:_safe_curve",
+      "type": "function",
+      "name": "_safe_curve",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "lineRange": [
+        67,
+        74
+      ],
+      "summary": "_safe_curve(las) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/las_reader.py:_null_pct",
+      "type": "function",
+      "name": "_null_pct",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "lineRange": [
+        77,
+        80
+      ],
+      "summary": "_null_pct(arr) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/las_reader.py:load_las",
+      "type": "function",
+      "name": "load_las",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "lineRange": [
+        83,
+        137
+      ],
+      "summary": "load_las(filepath, well_id) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/las_reader.py:curve_manifest_from_bundle",
+      "type": "function",
+      "name": "curve_manifest_from_bundle",
+      "filePath": "src/geox_core/ingest/las_reader.py",
+      "lineRange": [
+        140,
+        166
+      ],
+      "summary": "curve_manifest_from_bundle(bundle) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ingest/legacy_ingest.py",
+      "type": "file",
+      "name": "legacy_ingest.py",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "summary": "Defines 7 function(s); 1 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:_detect_unit_system",
+      "type": "function",
+      "name": "_detect_unit_system",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        92,
+        110
+      ],
+      "summary": "_detect_unit_system(rows) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:_detect_synthetic_label",
+      "type": "function",
+      "name": "_detect_synthetic_label",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        113,
+        125
+      ],
+      "summary": "_detect_synthetic_label(rows, well_name) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:parse_xlsx_legacy",
+      "type": "function",
+      "name": "parse_xlsx_legacy",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        128,
+        223
+      ],
+      "summary": "parse_xlsx_legacy(blob, well_name) — 95 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:parse_csv_legacy",
+      "type": "function",
+      "name": "parse_csv_legacy",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        226,
+        265
+      ],
+      "summary": "parse_csv_legacy(blob, well_name) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:parse_las_legacy",
+      "type": "function",
+      "name": "parse_las_legacy",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        268,
+        325
+      ],
+      "summary": "parse_las_legacy(path) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/legacy_ingest.py:ocr_scanned_well",
+      "type": "function",
+      "name": "ocr_scanned_well",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        333,
+        366
+      ],
+      "summary": "ocr_scanned_well(path, well_name) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/ingest/legacy_ingest.py:LegacyRows",
+      "type": "class",
+      "name": "LegacyRows",
+      "filePath": "src/geox_core/ingest/legacy_ingest.py",
+      "lineRange": [
+        55,
+        81
+      ],
+      "summary": "Class LegacyRows with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ingest/plotting.py",
+      "type": "file",
+      "name": "plotting.py",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "summary": "Defines 10 function(s); 3 class(es); exports 13 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_canonicalise",
+      "type": "function",
+      "name": "_canonicalise",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        136,
+        141
+      ],
+      "summary": "_canonicalise(arr) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_safe_curve",
+      "type": "function",
+      "name": "_safe_curve",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        144,
+        152
+      ],
+      "summary": "_safe_curve(las_curves) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:load_well_bundle",
+      "type": "function",
+      "name": "load_well_bundle",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        155,
+        208
+      ],
+      "summary": "load_well_bundle(filepath, well_id) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_render_panel",
+      "type": "function",
+      "name": "_render_panel",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        214,
+        434
+      ],
+      "summary": "_render_panel(bundles, config, output_dir) — 220 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_track_color",
+      "type": "function",
+      "name": "_track_color",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        437,
+        446
+      ],
+      "summary": "_track_color(track) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_track_unit",
+      "type": "function",
+      "name": "_track_unit",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        449,
+        458
+      ],
+      "summary": "_track_unit(track) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_write_csv_summary",
+      "type": "function",
+      "name": "_write_csv_summary",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        461,
+        469
+      ],
+      "summary": "_write_csv_summary(csv_path, curve_summary) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:render_correlation_panel",
+      "type": "function",
+      "name": "render_correlation_panel",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        475,
+        562
+      ],
+      "summary": "render_correlation_panel(las_paths, well_names, tracks, output_dir, depth_range, tops, normalize, basin_hint, well_ids, output_formats) — 87 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_write_vault_receipt",
+      "type": "function",
+      "name": "_write_vault_receipt",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        565,
+        583
+      ],
+      "summary": "_write_vault_receipt(result) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/ingest/plotting.py:_sha256_file",
+      "type": "function",
+      "name": "_sha256_file",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        586,
+        591
+      ],
+      "summary": "_sha256_file(path) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ingest/plotting.py:PanelResult",
+      "type": "class",
+      "name": "PanelResult",
+      "filePath": "src/geox_core/ingest/plotting.py",
+      "lineRange": [
+        92,
+        130
+      ],
+      "summary": "Class PanelResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ingest/segy_export.py",
+      "type": "file",
+      "name": "segy_export.py",
+      "filePath": "src/geox_core/ingest/segy_export.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/ingest/segy_export.py:export_volume_to_segy",
+      "type": "function",
+      "name": "export_volume_to_segy",
+      "filePath": "src/geox_core/ingest/segy_export.py",
+      "lineRange": [
+        27,
+        132
+      ],
+      "summary": "export_volume_to_segy(output_path, volume, coordinate_system, textual_header, sample_interval_ms, overwrite) — 105 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/integrations/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/integrations/__init__.py",
+      "summary": "python code file (2 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/integrations/arifos_governance.py",
+      "type": "file",
+      "name": "arifos_governance.py",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "summary": "Defines 6 function(s); 2 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/integrations/arifos_governance.py:build_governed_payload",
+      "type": "function",
+      "name": "build_governed_payload",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        111,
+        151
+      ],
+      "summary": "build_governed_payload(tool_name, intent, parameters, evidence_refs, uncertainty, session_id, actor, irreversibility, physics9_checks) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/integrations/arifos_governance.py:is_irreversible",
+      "type": "function",
+      "name": "is_irreversible",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        154,
+        191
+      ],
+      "summary": "is_irreversible(tool_name, mode, parameters) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/integrations/arifos_governance.py:call_judge",
+      "type": "function",
+      "name": "call_judge",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        194,
+        276
+      ],
+      "summary": "call_judge(payload, judge_endpoint, timeout_ms) — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/integrations/arifos_governance.py:seal_to_vault",
+      "type": "function",
+      "name": "seal_to_vault",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        279,
+        380
+      ],
+      "summary": "seal_to_vault(result, judge_state_hash, session_id, actor, vault_endpoint, ack_irreversible, timeout_ms) — 101 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/integrations/arifos_governance.py:_summarize_for_vault",
+      "type": "function",
+      "name": "_summarize_for_vault",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        383,
+        396
+      ],
+      "summary": "_summarize_for_vault(result) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/integrations/arifos_governance.py:GovernedPayload",
+      "type": "class",
+      "name": "GovernedPayload",
+      "filePath": "src/geox_core/integrations/arifos_governance.py",
+      "lineRange": [
+        78,
+        108
+      ],
+      "summary": "Class GovernedPayload with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/geox_core/io/OFFLINE_STUBS.md",
+      "type": "document",
+      "name": "OFFLINE_STUBS.md",
+      "filePath": "src/geox_core/io/OFFLINE_STUBS.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/io/checkshot_reader.py",
+      "type": "file",
+      "name": "checkshot_reader.py",
+      "filePath": "src/geox_core/io/checkshot_reader.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/copernicus_marine_fetcher.py",
+      "type": "file",
+      "name": "copernicus_marine_fetcher.py",
+      "filePath": "src/geox_core/io/copernicus_marine_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/copernicus_marine_fetcher.py:CopernicusMarineFetcher",
+      "type": "class",
+      "name": "CopernicusMarineFetcher",
+      "filePath": "src/geox_core/io/copernicus_marine_fetcher.py",
+      "lineRange": [
+        51,
+        67
+      ],
+      "summary": "Class CopernicusMarineFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/earthchem_fetcher.py",
+      "type": "file",
+      "name": "earthchem_fetcher.py",
+      "filePath": "src/geox_core/io/earthchem_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/earthchem_fetcher.py:EarthChemFetcher",
+      "type": "class",
+      "name": "EarthChemFetcher",
+      "filePath": "src/geox_core/io/earthchem_fetcher.py",
+      "lineRange": [
+        66,
+        93
+      ],
+      "summary": "Class EarthChemFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/emag2_fetcher.py",
+      "type": "file",
+      "name": "emag2_fetcher.py",
+      "filePath": "src/geox_core/io/emag2_fetcher.py",
+      "summary": "6 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/io/emag2_fetcher.py:EMAG2Fetcher",
+      "type": "class",
+      "name": "EMAG2Fetcher",
+      "filePath": "src/geox_core/io/emag2_fetcher.py",
+      "lineRange": [
+        87,
+        193
+      ],
+      "summary": "Class EMAG2Fetcher with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/emag2_fetcher.py:ICGEMFetcher",
+      "type": "class",
+      "name": "ICGEMFetcher",
+      "filePath": "src/geox_core/io/emag2_fetcher.py",
+      "lineRange": [
+        197,
+        230
+      ],
+      "summary": "Class ICGEMFetcher with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/era5_fetcher.py",
+      "type": "file",
+      "name": "era5_fetcher.py",
+      "filePath": "src/geox_core/io/era5_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/era5_fetcher.py:ERA5Fetcher",
+      "type": "class",
+      "name": "ERA5Fetcher",
+      "filePath": "src/geox_core/io/era5_fetcher.py",
+      "lineRange": [
+        52,
+        67
+      ],
+      "summary": "Class ERA5Fetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/erddap_fetcher.py",
+      "type": "file",
+      "name": "erddap_fetcher.py",
+      "filePath": "src/geox_core/io/erddap_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/erddap_fetcher.py:ERDDAPFetcher",
+      "type": "class",
+      "name": "ERDDAPFetcher",
+      "filePath": "src/geox_core/io/erddap_fetcher.py",
+      "lineRange": [
+        54,
+        73
+      ],
+      "summary": "Class ERDDAPFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/etopo_fetcher.py",
+      "type": "file",
+      "name": "etopo_fetcher.py",
+      "filePath": "src/geox_core/io/etopo_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/io/etopo_fetcher.py:ETOPOFetcher",
+      "type": "class",
+      "name": "ETOPOFetcher",
+      "filePath": "src/geox_core/io/etopo_fetcher.py",
+      "lineRange": [
+        110,
+        278
+      ],
+      "summary": "Class ETOPOFetcher with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/io/gebco_fetcher.py",
+      "type": "file",
+      "name": "gebco_fetcher.py",
+      "filePath": "src/geox_core/io/gebco_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/io/gebco_fetcher.py:GEBCOFetcher",
+      "type": "class",
+      "name": "GEBCOFetcher",
+      "filePath": "src/geox_core/io/gebco_fetcher.py",
+      "lineRange": [
+        116,
+        321
+      ],
+      "summary": "Class GEBCOFetcher with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/io/gplates_fetcher.py",
+      "type": "file",
+      "name": "gplates_fetcher.py",
+      "filePath": "src/geox_core/io/gplates_fetcher.py",
+      "summary": "Defines 2 function(s); 7 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/io/gplates_fetcher.py:GPlatesFetcher",
+      "type": "class",
+      "name": "GPlatesFetcher",
+      "filePath": "src/geox_core/io/gplates_fetcher.py",
+      "lineRange": [
+        135,
+        455
+      ],
+      "summary": "Class GPlatesFetcher with 14 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/io/grace_fetcher.py",
+      "type": "file",
+      "name": "grace_fetcher.py",
+      "filePath": "src/geox_core/io/grace_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/grace_fetcher.py:GRACEFetcher",
+      "type": "class",
+      "name": "GRACEFetcher",
+      "filePath": "src/geox_core/io/grace_fetcher.py",
+      "lineRange": [
+        53,
+        68
+      ],
+      "summary": "Class GRACEFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/ihfc_heatflow_fetcher.py",
+      "type": "file",
+      "name": "ihfc_heatflow_fetcher.py",
+      "filePath": "src/geox_core/io/ihfc_heatflow_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/ihfc_heatflow_fetcher.py:IHFCHeatFlowFetcher",
+      "type": "class",
+      "name": "IHFCHeatFlowFetcher",
+      "filePath": "src/geox_core/io/ihfc_heatflow_fetcher.py",
+      "lineRange": [
+        70,
+        97
+      ],
+      "summary": "Class IHFCHeatFlowFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/landsat_stac_fetcher.py",
+      "type": "file",
+      "name": "landsat_stac_fetcher.py",
+      "filePath": "src/geox_core/io/landsat_stac_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/landsat_stac_fetcher.py:LandsatSTACFetcher",
+      "type": "class",
+      "name": "LandsatSTACFetcher",
+      "filePath": "src/geox_core/io/landsat_stac_fetcher.py",
+      "lineRange": [
+        54,
+        70
+      ],
+      "summary": "Class LandsatSTACFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/magic_paleomag_fetcher.py",
+      "type": "file",
+      "name": "magic_paleomag_fetcher.py",
+      "filePath": "src/geox_core/io/magic_paleomag_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/magic_paleomag_fetcher.py:MagICFetcher",
+      "type": "class",
+      "name": "MagICFetcher",
+      "filePath": "src/geox_core/io/magic_paleomag_fetcher.py",
+      "lineRange": [
+        57,
+        82
+      ],
+      "summary": "Class MagICFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:fit_linear_emc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:invert_linear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:invert_cls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:invert_lp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:physics_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:fit_domain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:domain_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:emc_verdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:make_synthetic_calibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:make_sabah_shift_sample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_inversion.py",
+      "target": "function:src/geox_core/inference/emc_inversion.py:_self_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:make_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_crossplots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_r2bars",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_heatmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_depthtrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_residuals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:_dummy_r2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_domain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:panel_ternary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/emc_plots.py",
+      "target": "function:src/geox_core/inference/emc_plots.py:zen_all",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:gaussian_likelihood",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:apply_bias_correction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:bayes_update_voxel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:bayes_update_voxel_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:ensemble_posteriors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "function:src/geox_core/inference/voxel_update.py:_self_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "class:src/geox_core/inference/voxel_update.py:Observation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "class:src/geox_core/inference/voxel_update.py:ForwardModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "class:src/geox_core/inference/voxel_update.py:ForwardModel1D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "class:src/geox_core/inference/voxel_update.py:ForwardModel2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/inference/voxel_update.py",
+      "target": "class:src/geox_core/inference/voxel_update.py:ForwardModel4D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/las_reader.py",
+      "target": "function:src/geox_core/ingest/las_reader.py:_canonicalise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/las_reader.py",
+      "target": "function:src/geox_core/ingest/las_reader.py:_safe_curve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/las_reader.py",
+      "target": "function:src/geox_core/ingest/las_reader.py:_null_pct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/las_reader.py",
+      "target": "function:src/geox_core/ingest/las_reader.py:load_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/las_reader.py",
+      "target": "function:src/geox_core/ingest/las_reader.py:curve_manifest_from_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:_detect_unit_system",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:_detect_synthetic_label",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:parse_xlsx_legacy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:parse_csv_legacy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:parse_las_legacy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "function:src/geox_core/ingest/legacy_ingest.py:ocr_scanned_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/legacy_ingest.py",
+      "target": "class:src/geox_core/ingest/legacy_ingest.py:LegacyRows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_canonicalise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_safe_curve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:load_well_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_render_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_track_color",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_track_unit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_write_csv_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:render_correlation_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_write_vault_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "function:src/geox_core/ingest/plotting.py:_sha256_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/plotting.py",
+      "target": "class:src/geox_core/ingest/plotting.py:PanelResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ingest/segy_export.py",
+      "target": "function:src/geox_core/ingest/segy_export.py:export_volume_to_segy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "function:src/geox_core/integrations/arifos_governance.py:build_governed_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "function:src/geox_core/integrations/arifos_governance.py:is_irreversible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "function:src/geox_core/integrations/arifos_governance.py:call_judge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "function:src/geox_core/integrations/arifos_governance.py:seal_to_vault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "function:src/geox_core/integrations/arifos_governance.py:_summarize_for_vault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/integrations/arifos_governance.py",
+      "target": "class:src/geox_core/integrations/arifos_governance.py:GovernedPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/copernicus_marine_fetcher.py",
+      "target": "class:src/geox_core/io/copernicus_marine_fetcher.py:CopernicusMarineFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/earthchem_fetcher.py",
+      "target": "class:src/geox_core/io/earthchem_fetcher.py:EarthChemFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/emag2_fetcher.py",
+      "target": "class:src/geox_core/io/emag2_fetcher.py:EMAG2Fetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/emag2_fetcher.py",
+      "target": "class:src/geox_core/io/emag2_fetcher.py:ICGEMFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/era5_fetcher.py",
+      "target": "class:src/geox_core/io/era5_fetcher.py:ERA5Fetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/erddap_fetcher.py",
+      "target": "class:src/geox_core/io/erddap_fetcher.py:ERDDAPFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/etopo_fetcher.py",
+      "target": "class:src/geox_core/io/etopo_fetcher.py:ETOPOFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/gebco_fetcher.py",
+      "target": "class:src/geox_core/io/gebco_fetcher.py:GEBCOFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/gplates_fetcher.py",
+      "target": "class:src/geox_core/io/gplates_fetcher.py:GPlatesFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/grace_fetcher.py",
+      "target": "class:src/geox_core/io/grace_fetcher.py:GRACEFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/ihfc_heatflow_fetcher.py",
+      "target": "class:src/geox_core/io/ihfc_heatflow_fetcher.py:IHFCHeatFlowFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/landsat_stac_fetcher.py",
+      "target": "class:src/geox_core/io/landsat_stac_fetcher.py:LandsatSTACFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/magic_paleomag_fetcher.py",
+      "target": "class:src/geox_core/io/magic_paleomag_fetcher.py:MagICFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

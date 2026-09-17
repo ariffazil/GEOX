@@ -1,0 +1,572 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 13,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 13
+    }
+  },
+  "results": [
+    {
+      "path": "docs/SECURITY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 21,
+      "nonEmptyLines": 14,
+      "sections": [
+        {
+          "heading": "Security Policy",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Supported Versions",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Reporting a Vulnerability",
+          "level": 2,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "docs/SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "Physics-validation gate spec for fault picks (K-*)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Live status",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Call",
+          "level": 2,
+          "line": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "docs/SEISMIC_SECTION_INTERPRET_ZEN.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 244,
+      "nonEmptyLines": 183,
+      "sections": [
+        {
+          "heading": "🌊 SEISMIC — Section Interpret Zen",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. Eureka (strategy lock)",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "0.1 One equation",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "1. Live surface (do not invent tools)",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "2. Architecture (zen)",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "3. K-* gates (seven kill / soft — literature-bound)",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "4. G0–G10 (structural claim ladder)",
+          "level": 2,
+          "line": 130
+        },
+        {
+          "heading": "5. Toolchain (license-safe first)",
+          "level": 2,
+          "line": 148
+        },
+        {
+          "heading": "6. Benchmarks (acceptance = human envelope, not single truth)",
+          "level": 2,
+          "line": 164
+        },
+        {
+          "heading": "7. Roadmap — map external P0/P1/P2 ↔ GEOX B→C→A",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "8. Receipt envelope (minimum fields)",
+          "level": 2,
+          "line": 201
+        },
+        {
+          "heading": "9. Explicit non-goals",
+          "level": 2,
+          "line": 209
+        },
+        {
+          "heading": "10. External source archive",
+          "level": 2,
+          "line": 224
+        },
+        {
+          "heading": "11. Agent first move (when forging next)",
+          "level": 2,
+          "line": 236
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    },
+    {
+      "path": "docs/SEISMIC_STRUCTURAL_VALIDATION_GATES_G0_G10.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 30,
+      "sections": [
+        {
+          "heading": "GEOX Structural Validation Gates G0–G10",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Related",
+          "level": 2,
+          "line": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "docs/SOT_AUDIT_2026-09-06.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 28,
+      "sections": [
+        {
+          "heading": "GEOX SOT audit — 2026-09-06",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Live (OBS)",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Document drift found",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "What GEOX is not (shadow)",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "Deploy rule",
+          "level": 2,
+          "line": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/SOUL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 14,
+      "nonEmptyLines": 8,
+      "sections": [
+        {
+          "heading": "SOUL.md — Why GEOX exists",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/SUBSURFACE_TOPOGRAPHY_ISOMORPHISM.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 50,
+      "nonEmptyLines": 34,
+      "sections": [
+        {
+          "heading": "Subsurface Topography Isomorphism — GEOX × TRC Cross-Organ Binding",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. The Core Isomorphism",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "2. Epistemic Law: Constraint Density Before Diffusion",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "3. Cross-Organ Handoff Contract",
+          "level": 2,
+          "line": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/ZEN_15_SURFACE.ARCHIVED.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "sections": [
+        {
+          "heading": "GEOX Public Surface",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/ZEN_HORIZON_ARCHITECTURE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 105,
+      "nonEmptyLines": 84,
+      "sections": [
+        {
+          "heading": "ZEN Horizon Architecture — Governed Earth-Intelligence Layer",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "🏛️ Executive Sovereign Mandate",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "1. Commercial Strategic Positioning",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "2. The Core Differentiator: Governed Earth Scene",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "3. Permanent Operational Action Plan",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "⚒️ FORGE (Build Next)",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "🔄 FLOW (Connect & Refine)",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "🚫 FORGET (Prune & Freeze)",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "4. Target Architecture Topology",
+          "level": 2,
+          "line": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/canonical_public_tools.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 288,
+      "nonEmptyLines": 288,
+      "sections": [
+        {
+          "heading": "schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "source",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "public_count",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "internal_count",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "public_tools",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "rule",
+          "level": 1,
+          "line": 287
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "docs/index.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 64,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "GEOX docs index — single entry",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Canonical (this folder)",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Root doctrine (not under docs/)",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Supplementary docs (subdirectories)",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "Archive",
+          "level": 2,
+          "line": 59
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/mcp_apps_verification_matrix.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 58,
+      "nonEmptyLines": 45,
+      "sections": [
+        {
+          "heading": "GEOX MCP Apps Verification Matrix",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Primary host apps (MCP iframe)",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Public browser URLs (Caddy `/var/www/html/geox`)",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "Gate tests",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Explicit non-goals / residual",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Deprecated / planned",
+          "level": 2,
+          "line": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "docs/strat_datum_check.spec.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 65,
+      "nonEmptyLines": 48,
+      "sections": [
+        {
+          "heading": "SPEC — geox `strat_datum_check` verb",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Purpose",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "2. Inputs",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "3. Check logic (ordered, all four run)",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "4. Output (extends the existing GEOX evidence envelope)",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "5. Wiring point",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "6. Acceptance tests (must run before wiring — test-then-seal)",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "7. Non-goals",
+          "level": 2,
+          "line": 63
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    }
+  ]
+}

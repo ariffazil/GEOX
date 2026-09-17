@@ -341,7 +341,15 @@ async def geox_prospect_evaluate(
             claim_state="JUDGE_PREVIEW",
         )
 
-    # ── SEAL PATH (irreversible constitutional adjudication) ─────────────────
+    # ── SEAL PATH (2026-09-17 jurisdiction fix — 333-AGI / JURISDICTION-001) ──
+    # BEFORE: GEOX minted constitutional verdicts locally
+    #   (GovernanceStatus.SEAL if ac_risk_score < 0.5) — domain competence
+    #   impersonating sovereign authority. VIOLATES:
+    #   Expertise(D) ⇏ Authority(D).
+    # AFTER: the PIN + ack_irreversible gates remain (defense in depth), but
+    #   the verdict itself is delegated to arifOS 888 via the existing
+    #   arifos_governance integration. GEOX outputs a DOMAIN verdict with
+    #   recommended_handoff; only arifOS can produce AUTHORIZED_TO_ACT.
     if verdict == "seal":
         import hmac
         import os
@@ -380,31 +388,66 @@ async def geox_prospect_evaluate(
                 governance_status=GovernanceStatus.HOLD,
                 claim_tag="HYPOTHESIS",
             )
-        seal_verdict = GovernanceStatus.SEAL if ac_risk_score < 0.5 else GovernanceStatus.HOLD
+
+        # DOMAIN verdict — GEOX's competence ends at physical evidence.
+        domain_verdict = "PHYSICALLY_SUPPORTED" if ac_risk_score < 0.5 else "HYPOTHESIS"
+
+        # Delegate constitutional adjudication to arifOS 888 (graceful
+        # degradation: HOLD if judge unreachable — never self-adjudicate).
+        try:
+            from geox_core.integrations.arifos_governance import (
+                build_governed_payload,
+                call_judge,
+            )
+            from geox_core.integrations.arifos_governance import IrreversibilityLevel
+
+            governed = build_governed_payload(
+                tool_name="geox_prospect_evaluate[seal]",
+                intent=f"Constitutional adjudication of prospect {prospect_ref} "
+                f"(GEOX domain verdict: {domain_verdict}, ac_risk={ac_risk_score})",
+                parameters={"prospect_ref": prospect_ref, "ac_risk_score": ac_risk_score, "mode": mode},
+                evidence_refs=refs,
+                uncertainty={"ac_risk_score": ac_risk_score, "confidence": "domain"},
+                irreversibility=IrreversibilityLevel.STRUCTURAL,
+            )
+            judge_result = await call_judge(governed)
+            arifos_verdict = str(judge_result.get("verdict", "HOLD")).upper()
+            constitutional = {
+                "adjudicated_by": "arifOS",
+                "verdict_class": "CONSTITUTIONAL",
+                "verdict": arifos_verdict,
+                "judge_state_hash": judge_result.get("judge_state_hash"),
+                "delegation": "JURISDICTION-001: domain organs never self-adjudicate",
+            }
+        except Exception as exc:  # judge unreachable → HOLD, never mint SEAL locally
+            constitutional = {
+                "adjudicated_by": "arifOS",
+                "verdict_class": "CONSTITUTIONAL",
+                "verdict": "HOLD",
+                "delegation": "JURISDICTION-001: arifOS judge unreachable — graceful HOLD",
+                "delegation_error": str(exc)[:200],
+            }
+
         artifact = {
             "ref": prospect_ref,
             "mode": mode,
             "ac_risk": ac_risk_score,
             "pos": 0.22 if mode == "screen" else 0.35,
             "stoiip_p50": 150 if mode == "screen" else 220,
-            "verdict": seal_verdict,
-            "sealed": True,
-            "f13_compliance": {
-                "Recommendation": "Proceed to Capital Execution"
-                if seal_verdict == GovernanceStatus.SEAL
-                else "Hold / Reject Prospect",
-                "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
-                "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
-                "Authority": "HUMAN",
-            },
+            "domain_verdict": domain_verdict,
+            "verdict_class": "DOMAIN",
+            "recommended_handoff": "arifOS (888 judge)",
+            "awaiting_verification": True,
+            "sealed": False,
+            "constitutional": constitutional,
         }
         return get_standard_envelope(
             artifact,
             tool_class="judge",
-            governance_status=seal_verdict,
-            artifact_status=ArtifactStatus.VERIFIED if seal_verdict == GovernanceStatus.SEAL else ArtifactStatus.DRAFT,
+            governance_status=GovernanceStatus.HOLD,
+            artifact_status=ArtifactStatus.DRAFT,
             claim_tag="CLAIM",
-            claim_state="SEALED",
+            claim_state="JUDGE_PENDING",
         )
 
     # ── COMPUTE PATH (default) ───────────────────────────────────────────────

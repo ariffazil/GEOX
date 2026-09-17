@@ -1,0 +1,101 @@
+{
+  "nodes": [
+    {
+      "id": "config:999_vault/999_SEAL.json",
+      "type": "config",
+      "name": "999_SEAL.json",
+      "filePath": "999_vault/999_SEAL.json",
+      "summary": "json config file (18 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/EMC_REAL_ROCK_SEAL.json",
+      "type": "config",
+      "name": "EMC_REAL_ROCK_SEAL.json",
+      "filePath": "999_vault/EMC_REAL_ROCK_SEAL.json",
+      "summary": "json config file (16 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/geox-registry-audit-2026-06-26.json",
+      "type": "config",
+      "name": "geox-registry-audit-2026-06-26.json",
+      "filePath": "999_vault/geox-registry-audit-2026-06-26.json",
+      "summary": "json config file (29 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/repair_anchor.json",
+      "type": "config",
+      "name": "repair_anchor.json",
+      "filePath": "999_vault/repair_anchor.json",
+      "summary": "json config file (8 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/seal_349966e7fa23.json",
+      "type": "config",
+      "name": "seal_349966e7fa23.json",
+      "filePath": "999_vault/seal_349966e7fa23.json",
+      "summary": "json config file (12 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/seal_6c9748e17445.json",
+      "type": "config",
+      "name": "seal_6c9748e17445.json",
+      "filePath": "999_vault/seal_6c9748e17445.json",
+      "summary": "json config file (12 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/seal_c9ff89c5ffac.json",
+      "type": "config",
+      "name": "seal_c9ff89c5ffac.json",
+      "filePath": "999_vault/seal_c9ff89c5ffac.json",
+      "summary": "json config file (12 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:999_vault/seal_knowledge_taxonomy_2026-07-06.json",
+      "type": "config",
+      "name": "seal_knowledge_taxonomy_2026-07-06.json",
+      "filePath": "999_vault/seal_knowledge_taxonomy_2026-07-06.json",
+      "summary": "json config file (15 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

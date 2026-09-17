@@ -1,0 +1,3942 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 14,
+  "filesSkipped": [
+    ".git_commit",
+    ".github/CODEOWNERS",
+    ".mcpignore",
+    "999_vault/audit.jsonl",
+    "CODEOWNERS",
+    "NOTICE",
+    "allowed_signers",
+    "apps/analog-digitizer/index.html",
+    "apps/earth-volume/index.html",
+    "apps/judge-console/index.html",
+    "apps/prospect-ui/index.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 14,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 6,
+      "failed": 0,
+      "skipped": 8
+    }
+  },
+  "results": [
+    {
+      "path": ".github/ISSUE_TEMPLATE/repo-hygiene.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 16,
+      "nonEmptyLines": 14,
+      "sections": [
+        {
+          "heading": "Repo Hygiene Checklist",
+          "level": 2,
+          "line": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": ".well-known/mcp/server.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 90,
+      "nonEmptyLines": 89,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "repository",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "license",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "author",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "endpoint",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "protocolVersion",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "transport",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "protocolVersions",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "oauth",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "mcpApps",
+          "level": 1,
+          "line": 68
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 63
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "GENESIS/019_SESSION_DISTILLATIONS_FUTURE_GEOX_MCP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 138,
+      "nonEmptyLines": 90,
+      "sections": [
+        {
+          "heading": "GEOX MCP — Session Distillations (Future-Binding)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Data ingestion is the gate",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "2. Evidence tiering is non-negotiable",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "3. Falsification drives EUREKA",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "4. Failed tools must propagate uncertainty",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "5. External audit is the calibration",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "6. NSPW answers OCT plumbing; OCT still needs sand + seal + trap",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "7. Surface internal tools — zero new code first",
+          "level": 2,
+          "line": 81
+        },
+        {
+          "heading": "8. Pressure connectivity is a snapshot; migration is a history",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "Infrastructure gaps closed this arc",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "Residual open loops (science / infrastructure — not silent-closed)",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "Agent boot checklist (MCP-native)",
+          "level": 2,
+          "line": 128
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "GENESIS/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 40,
+      "nonEmptyLines": 31,
+      "sections": [
+        {
+          "heading": "🌍 GEOX GENESIS — Constitutional Canon",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Canon (17 docs + 1 note)",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Note",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Paradox Reference",
+          "level": 2,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "apps/1_welldesk.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 242,
+      "nonEmptyLines": 210,
+      "functions": [
+        {
+          "name": "physics9_track",
+          "startLine": 21,
+          "endLine": 54,
+          "params": [
+            "md"
+          ]
+        },
+        {
+          "name": "physics9_at_depth",
+          "startLine": 56,
+          "endLine": 66,
+          "params": [
+            "md"
+          ]
+        },
+        {
+          "name": "plot_track",
+          "startLine": 70,
+          "endLine": 84,
+          "params": [
+            "tracks",
+            "name"
+          ]
+        },
+        {
+          "name": "build_welldesk_app",
+          "startLine": 86,
+          "endLine": 239,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "physics9_track",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "physics9_at_depth",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "plot_track",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "build_welldesk_app",
+          "line": 86,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "physics9_track",
+          "callee": "md.tolist",
+          "lineNumber": 23
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 24
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.random.default_rng",
+          "lineNumber": 25
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.any",
+          "lineNumber": 29
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.where",
+          "lineNumber": 31
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "rng.normal",
+          "lineNumber": 32
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 32
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 34
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 34
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 35
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 35
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 36
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 36
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 37
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 37
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 38
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 38
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 39
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 39
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "np.full",
+          "lineNumber": 40
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 40
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "curves.get",
+          "lineNumber": 44
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "enumerate",
+          "lineNumber": 45
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "float",
+          "lineNumber": 46
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 50
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "len",
+          "lineNumber": 52
+        },
+        {
+          "caller": "physics9_track",
+          "callee": "curves.get",
+          "lineNumber": 52
+        },
+        {
+          "caller": "physics9_at_depth",
+          "callee": "assign_layer",
+          "lineNumber": 58
+        },
+        {
+          "caller": "physics9_at_depth",
+          "callee": "Physics9State",
+          "lineNumber": 59
+        },
+        {
+          "caller": "plot_track",
+          "callee": "go.Figure",
+          "lineNumber": 71
+        },
+        {
+          "caller": "plot_track",
+          "callee": "enumerate",
+          "lineNumber": 73
+        },
+        {
+          "caller": "plot_track",
+          "callee": "fig.add_trace",
+          "lineNumber": 74
+        },
+        {
+          "caller": "plot_track",
+          "callee": "go.Scatter",
+          "lineNumber": 74
+        },
+        {
+          "caller": "plot_track",
+          "callee": "tr.get",
+          "lineNumber": 75
+        },
+        {
+          "caller": "plot_track",
+          "callee": "dict",
+          "lineNumber": 76
+        },
+        {
+          "caller": "plot_track",
+          "callee": "len",
+          "lineNumber": 76
+        },
+        {
+          "caller": "plot_track",
+          "callee": "fig.update_layout",
+          "lineNumber": 78
+        },
+        {
+          "caller": "plot_track",
+          "callee": "dict",
+          "lineNumber": 79
+        },
+        {
+          "caller": "plot_track",
+          "callee": "dict",
+          "lineNumber": 81
+        },
+        {
+          "caller": "plot_track",
+          "callee": "dict",
+          "lineNumber": 81
+        },
+        {
+          "caller": "plot_track",
+          "callee": "dict",
+          "lineNumber": 82
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.set_page_config",
+          "lineNumber": 87
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.markdown",
+          "lineNumber": 90
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.tabs",
+          "lineNumber": 98
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.columns",
+          "lineNumber": 101
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 103
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.slider",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.slider",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.button",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.linspace",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "physics9_track",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "pd.DataFrame",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.items",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.dataframe",
+          "lineNumber": 116
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "df.head",
+          "lineNumber": 116
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 120
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 120
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 121
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 123
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 123
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 124
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 124
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 125
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 125
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.columns",
+          "lineNumber": 128
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "enumerate",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "plot_track",
+          "lineNumber": 133
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.divider",
+          "lineNumber": 137
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.caption",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "physics9_at_depth",
+          "lineNumber": 143
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "forward_physics9",
+          "lineNumber": 144
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "layer_states.append",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "build_lithology_model",
+          "lineNumber": 148
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.dataframe",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "pd.DataFrame",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.subheader",
+          "lineNumber": 153
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.columns",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 156
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.slider",
+          "lineNumber": 157
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.slider",
+          "lineNumber": 158
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 159
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.number_input",
+          "lineNumber": 160
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.button",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.linspace",
+          "lineNumber": 164
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "physics9_track",
+          "lineNumber": 165
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 168
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 169
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 169
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 169
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 170
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 170
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 170
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 171
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 171
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 171
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "compute_vsh_gr",
+          "lineNumber": 173
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 174
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.clip",
+          "lineNumber": 175
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.abs",
+          "lineNumber": 175
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 177
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "vsh_arr.tolist",
+          "lineNumber": 179
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "phi_arr.tolist",
+          "lineNumber": 179
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 180
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 182
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "isinstance",
+          "lineNumber": 182
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "result.items",
+          "lineNumber": 182
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "analyze_petrophysics_results",
+          "lineNumber": 183
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.columns",
+          "lineNumber": 185
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 186
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.mean",
+          "lineNumber": 186
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.mean",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 188
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.mean",
+          "lineNumber": 188
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.metric",
+          "lineNumber": 189
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.metric",
+          "lineNumber": 190
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.metric",
+          "lineNumber": 191
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.markdown",
+          "lineNumber": 193
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "go.Figure",
+          "lineNumber": 195
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "fig.add_trace",
+          "lineNumber": 197
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "go.Scatter",
+          "lineNumber": 197
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "range",
+          "lineNumber": 198
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "range",
+          "lineNumber": 199
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "dict",
+          "lineNumber": 200
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 202
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 204
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.subheader",
+          "lineNumber": 207
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.button",
+          "lineNumber": 208
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.linspace",
+          "lineNumber": 210
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "physics9_track",
+          "lineNumber": 211
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 213
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 214
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 214
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 214
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 215
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "curves.get",
+          "lineNumber": 215
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 215
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.array",
+          "lineNumber": 216
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "max",
+          "lineNumber": 216
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "np.max",
+          "lineNumber": 216
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "range",
+          "lineNumber": 221
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 221
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "zones.append",
+          "lineNumber": 223
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 223
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 223
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "float",
+          "lineNumber": 227
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.write",
+          "lineNumber": 231
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "len",
+          "lineNumber": 231
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "assign_layer",
+          "lineNumber": 234
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "physics9_at_depth",
+          "lineNumber": 235
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "forward_physics9",
+          "lineNumber": 236
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.success",
+          "lineNumber": 237
+        },
+        {
+          "caller": "build_welldesk_app",
+          "callee": "st.json",
+          "lineNumber": 239
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/2_seismic_vision.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 164,
+      "nonEmptyLines": 144,
+      "functions": [
+        {
+          "name": "physics9_seismic_section",
+          "startLine": 17,
+          "endLine": 30,
+          "params": [
+            "section"
+          ]
+        },
+        {
+          "name": "render_seismic",
+          "startLine": 32,
+          "endLine": 64,
+          "params": [
+            "data",
+            "x_coords",
+            "t_coords",
+            "horizons",
+            "faults",
+            "title"
+          ]
+        },
+        {
+          "name": "build_seismic_vision_app",
+          "startLine": 66,
+          "endLine": 161,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "physics9_seismic_section",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "render_seismic",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "build_seismic_vision_app",
+          "line": 66,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "section.get",
+          "lineNumber": 20
+        },
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "h.get",
+          "lineNumber": 22
+        },
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "dict",
+          "lineNumber": 23
+        },
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "round",
+          "lineNumber": 27
+        },
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "abs",
+          "lineNumber": 27
+        },
+        {
+          "caller": "physics9_seismic_section",
+          "callee": "horizons_annotated.append",
+          "lineNumber": 29
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "go.Figure",
+          "lineNumber": 33
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "fig.add_trace",
+          "lineNumber": 34
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "go.Heatmap",
+          "lineNumber": 34
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 37
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "h.get",
+          "lineNumber": 42
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "h.get",
+          "lineNumber": 42
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "h.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "fig.add_trace",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "go.Scatter",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "max",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "len",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "len",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "max",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "len",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "h.get",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 48
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "f.get",
+          "lineNumber": 52
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "len",
+          "lineNumber": 52
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "fig.add_trace",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "go.Scatter",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 56
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "fig.update_layout",
+          "lineNumber": 58
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 59
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 59
+        },
+        {
+          "caller": "render_seismic",
+          "callee": "dict",
+          "lineNumber": 62
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.set_page_config",
+          "lineNumber": 67
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.markdown",
+          "lineNumber": 69
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.tabs",
+          "lineNumber": 77
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.columns",
+          "lineNumber": 80
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.selectbox",
+          "lineNumber": 82
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.checkbox",
+          "lineNumber": 83
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 84
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 85
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 86
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 87
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 88
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.button",
+          "lineNumber": 91
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "build_2d_section",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "physics9_seismic_section",
+          "lineNumber": 100
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "render_seismic",
+          "lineNumber": 101
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "section.get",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.success",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.expander",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "h.get(\"physics9\", {}).get",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "h.get",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.markdown",
+          "lineNumber": 114
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "h.get",
+          "lineNumber": 114
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "h.get",
+          "lineNumber": 114
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.subheader",
+          "lineNumber": 118
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.columns",
+          "lineNumber": 119
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.text_area",
+          "lineNumber": 121
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.text_area",
+          "lineNumber": 122
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.warning",
+          "lineNumber": 125
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.button",
+          "lineNumber": 128
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "n.strip",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "layer_names.split",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "float",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "t.strip",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "horizon_times.split",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "interpret_horizons",
+          "lineNumber": 131
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "np.array",
+          "lineNumber": 131
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "np.array",
+          "lineNumber": 132
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "render_seismic",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "s.get",
+          "lineNumber": 135
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 137
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "round",
+          "lineNumber": 140
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "abs",
+          "lineNumber": 140
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "p.get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.markdown",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "p.get",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "p.get",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.subheader",
+          "lineNumber": 146
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.slider",
+          "lineNumber": 149
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "amplitude_analysis",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "np.array",
+          "lineNumber": 151
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "np.array",
+          "lineNumber": 151
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "go.Figure",
+          "lineNumber": 153
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "fig.add_trace",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "go.Scatter",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "dict",
+          "lineNumber": 155
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "fig.add_trace",
+          "lineNumber": 156
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "go.Scatter",
+          "lineNumber": 156
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "dict",
+          "lineNumber": 157
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 158
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 160
+        },
+        {
+          "caller": "build_seismic_vision_app",
+          "callee": "st.json",
+          "lineNumber": 161
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/3_earth_volume.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 245,
+      "nonEmptyLines": 214,
+      "functions": [
+        {
+          "name": "compute_volumetrics",
+          "startLine": 25,
+          "endLine": 41,
+          "params": [
+            "area_km2",
+            "thickness_m",
+            "phi_eff",
+            "sw_res",
+            "bo",
+            "rf"
+          ]
+        },
+        {
+          "name": "render_cube_slice",
+          "startLine": 43,
+          "endLine": 46,
+          "params": [
+            "data",
+            "x",
+            "y",
+            "title",
+            "colorscale"
+          ]
+        },
+        {
+          "name": "build_earth_volume_app",
+          "startLine": 48,
+          "endLine": 242,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "compute_volumetrics",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "render_cube_slice",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "build_earth_volume_app",
+          "line": 48,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_volumetrics",
+          "callee": "round",
+          "lineNumber": 35
+        },
+        {
+          "caller": "compute_volumetrics",
+          "callee": "round",
+          "lineNumber": 36
+        },
+        {
+          "caller": "compute_volumetrics",
+          "callee": "round",
+          "lineNumber": 37
+        },
+        {
+          "caller": "compute_volumetrics",
+          "callee": "round",
+          "lineNumber": 38
+        },
+        {
+          "caller": "compute_volumetrics",
+          "callee": "round",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "go.Figure",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "go.Heatmap",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "fig.update_layout",
+          "lineNumber": 45
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.set_page_config",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 51
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.tabs",
+          "lineNumber": 59
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 65
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.selectbox",
+          "lineNumber": 67
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 68
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 69
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 70
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.checkbox",
+          "lineNumber": 71
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.button",
+          "lineNumber": 74
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "generate_3d_seismic_cube",
+          "lineNumber": 75
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "np.array",
+          "lineNumber": 83
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "render_cube_slice",
+          "lineNumber": 84
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 86
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.success",
+          "lineNumber": 87
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.expander",
+          "lineNumber": 91
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "c.get",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "h.get",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.info",
+          "lineNumber": 94
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.warning",
+          "lineNumber": 99
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "float",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "float",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "int",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "np.interp",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "range",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "len",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "np.array",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "render_cube_slice",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.subheader",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "len",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "len",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "np.array",
+          "lineNumber": 113
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "render_cube_slice",
+          "lineNumber": 114
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 119
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 121
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "compute_earth_material_catalog",
+          "lineNumber": 122
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "list",
+          "lineNumber": 123
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "catalog.keys",
+          "lineNumber": 123
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.selectbox",
+          "lineNumber": 124
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 126
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 127
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.selectbox",
+          "lineNumber": 128
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.selectbox",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "anomaly_contrast_theory",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 137
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 139
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 140
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 141
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 143
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 144
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 146
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 147
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 148
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 149
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "Physics9State",
+          "lineNumber": 152
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "build_lithology_model",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 156
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 157
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 159
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 161
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 164
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 165
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 167
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 168
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "custom.arifos_grade",
+          "lineNumber": 168
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 170
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 171
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "metabolic_loop",
+          "lineNumber": 174
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 175
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 176
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 180
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 182
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 183
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 184
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 185
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.slider",
+          "lineNumber": 186
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.number_input",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.button",
+          "lineNumber": 190
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "compute_volumetrics",
+          "lineNumber": 191
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 192
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 193
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 194
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 195
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.metric",
+          "lineNumber": 196
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.json",
+          "lineNumber": 197
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.subheader",
+          "lineNumber": 201
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 218
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 219
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 220
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.caption",
+          "lineNumber": 221
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 223
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 224
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.columns",
+          "lineNumber": 225
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "enumerate",
+          "lineNumber": 237
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.markdown",
+          "lineNumber": 239
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.divider",
+          "lineNumber": 241
+        },
+        {
+          "caller": "build_earth_volume_app",
+          "callee": "st.success",
+          "lineNumber": 242
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/4_judge_console.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 201,
+      "nonEmptyLines": 175,
+      "functions": [
+        {
+          "name": "build_judge_console_app",
+          "startLine": 25,
+          "endLine": 198,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "build_judge_console_app",
+          "line": 25,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.set_page_config",
+          "lineNumber": 26
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 28
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.tabs",
+          "lineNumber": 36
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 40
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 42
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 43
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 44
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 45
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 46
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 47
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 48
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 50
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.button",
+          "lineNumber": 53
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "gassmann_fluid_substitution",
+          "lineNumber": 54
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 60
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 61
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 62
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 63
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 64
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 67
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "fcol.get",
+          "lineNumber": 67
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "go.Figure",
+          "lineNumber": 69
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "fig.add_trace",
+          "lineNumber": 73
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "go.Bar",
+          "lineNumber": 73
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "fig.add_trace",
+          "lineNumber": 74
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "go.Bar",
+          "lineNumber": 74
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 75
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 77
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.success",
+          "lineNumber": 78
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "Physics9State",
+          "lineNumber": 81
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "Physics9State",
+          "lineNumber": 83
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "anomaly_contrast_theory",
+          "lineNumber": 85
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 86
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 90
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 93
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.button",
+          "lineNumber": 95
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "build_2d_section",
+          "lineNumber": 96
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "build_2d_section",
+          "lineNumber": 97
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "b_sec[\"data\"].tolist",
+          "lineNumber": 98
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "m_sec[\"data\"].tolist",
+          "lineNumber": 99
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "b_sec[\"x_coords\"].tolist",
+          "lineNumber": 100
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "b_sec[\"t_coords\"].tolist",
+          "lineNumber": 101
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "build_4d_cube_difference",
+          "lineNumber": 109
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "np.mean",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "np.array",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "go.Figure",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "go.Heatmap",
+          "lineNumber": 112
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 115
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 116
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 118
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 119
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 120
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 121
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 124
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "compute_4d_uncertainty",
+          "lineNumber": 126
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.json",
+          "lineNumber": 128
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 132
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 135
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 136
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.slider",
+          "lineNumber": 137
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.number_input",
+          "lineNumber": 139
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.button",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "forward_4d_simulation",
+          "lineNumber": 143
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 146
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 147
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.metric",
+          "lineNumber": 148
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 149
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.json",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.divider",
+          "lineNumber": 152
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 153
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.button",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.warning",
+          "lineNumber": 156
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "inverse_4d_from_observations",
+          "lineNumber": 158
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.json",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.subheader",
+          "lineNumber": 166
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.columns",
+          "lineNumber": 183
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 184
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 185
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.caption",
+          "lineNumber": 186
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.divider",
+          "lineNumber": 189
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 190
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.markdown",
+          "lineNumber": 194
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.divider",
+          "lineNumber": 196
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.code",
+          "lineNumber": 197
+        },
+        {
+          "caller": "build_judge_console_app",
+          "callee": "st.success",
+          "lineNumber": 198
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/5_geoprobe.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 170,
+      "nonEmptyLines": 147,
+      "functions": [
+        {
+          "name": "plot_map",
+          "startLine": 23,
+          "endLine": 26,
+          "params": [
+            "data",
+            "x",
+            "y",
+            "title",
+            "colorscale"
+          ]
+        },
+        {
+          "name": "build_geoprobe_app",
+          "startLine": 28,
+          "endLine": 167,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "plot_map",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "build_geoprobe_app",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "plot_map",
+          "callee": "go.Figure",
+          "lineNumber": 24
+        },
+        {
+          "caller": "plot_map",
+          "callee": "go.Heatmap",
+          "lineNumber": 24
+        },
+        {
+          "caller": "plot_map",
+          "callee": "fig.update_layout",
+          "lineNumber": 25
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.set_page_config",
+          "lineNumber": 29
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.markdown",
+          "lineNumber": 31
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.tabs",
+          "lineNumber": 39
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.columns",
+          "lineNumber": 43
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.slider",
+          "lineNumber": 45
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.slider",
+          "lineNumber": 46
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.number_input",
+          "lineNumber": 47
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.number_input",
+          "lineNumber": 48
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.button",
+          "lineNumber": 51
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "compute_geoid_anomalies",
+          "lineNumber": 52
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.tabs",
+          "lineNumber": 57
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "plot_map",
+          "lineNumber": 59
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.array",
+          "lineNumber": 59
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 62
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "plot_map",
+          "lineNumber": 64
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.array",
+          "lineNumber": 64
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 67
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.json",
+          "lineNumber": 68
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.warning",
+          "lineNumber": 73
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.selectbox",
+          "lineNumber": 76
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.button",
+          "lineNumber": 78
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "compute_geoid_surface",
+          "lineNumber": 79
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "go.Figure",
+          "lineNumber": 81
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "go.Surface",
+          "lineNumber": 81
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.array",
+          "lineNumber": 83
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 86
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "dict",
+          "lineNumber": 89
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 91
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.json",
+          "lineNumber": 92
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.subheader",
+          "lineNumber": 96
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.button",
+          "lineNumber": 97
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.random.default_rng",
+          "lineNumber": 99
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.zeros",
+          "lineNumber": 100
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "range",
+          "lineNumber": 101
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "range",
+          "lineNumber": 102
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "range",
+          "lineNumber": 103
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "abs",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.exp",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "rng.normal",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "rng.normal",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "cube.tolist",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace(0, 10, n_x).tolist",
+          "lineNumber": 109
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace",
+          "lineNumber": 109
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace(0, 10, n_y).tolist",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace",
+          "lineNumber": 110
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace(0, 4000, n_z).tolist",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.linspace",
+          "lineNumber": 111
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.selectbox",
+          "lineNumber": 116
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.button",
+          "lineNumber": 118
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "build_attribute_volume",
+          "lineNumber": 119
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.json",
+          "lineNumber": 120
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "len",
+          "lineNumber": 122
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "np.array",
+          "lineNumber": 123
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "plot_map",
+          "lineNumber": 124
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 125
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.subheader",
+          "lineNumber": 129
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.columns",
+          "lineNumber": 130
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.text_area",
+          "lineNumber": 132
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.selectbox",
+          "lineNumber": 134
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.button",
+          "lineNumber": 137
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "float",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "t.strip",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "horizon_times_str.split",
+          "lineNumber": 138
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "time_to_depth_conversion",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "pd.DataFrame",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "round",
+          "lineNumber": 145
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "go.Figure",
+          "lineNumber": 147
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "go.Scatter",
+          "lineNumber": 147
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "dict",
+          "lineNumber": 149
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "dict",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "fig.update_layout",
+          "lineNumber": 152
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.plotly_chart",
+          "lineNumber": 154
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.dataframe",
+          "lineNumber": 155
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.divider",
+          "lineNumber": 158
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.caption",
+          "lineNumber": 159
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "enumerate",
+          "lineNumber": 160
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "zip",
+          "lineNumber": 160
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "len",
+          "lineNumber": 161
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "Physics9State",
+          "lineNumber": 163
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "forward_physics9",
+          "lineNumber": 166
+        },
+        {
+          "caller": "build_geoprobe_app",
+          "callee": "st.markdown",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "apps/analog-digitizer/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 100,
+      "nonEmptyLines": 100,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "icon",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "optional_tools",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "auth",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "events",
+          "level": 1,
+          "line": 42
+        },
+        {
+          "heading": "fallback",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 70
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 85
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "apps/earth-volume/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 107,
+      "nonEmptyLines": 107,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "icon",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "optional_tools",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "auth",
+          "level": 1,
+          "line": 37
+        },
+        {
+          "heading": "events",
+          "level": 1,
+          "line": 48
+        },
+        {
+          "heading": "fallback",
+          "level": 1,
+          "line": 67
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 77
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 93
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "apps/judge-console/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 113,
+      "nonEmptyLines": 113,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "icon",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "optional_tools",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "auth",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "events",
+          "level": 1,
+          "line": 43
+        },
+        {
+          "heading": "fallback",
+          "level": 1,
+          "line": 61
+        },
+        {
+          "heading": "_meta",
+          "level": 1,
+          "line": 71
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 81
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 98
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "apps/prospect-ui/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 111,
+      "nonEmptyLines": 111,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "icon",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "optional_tools",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "auth",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "events",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "fallback",
+          "level": 1,
+          "line": 71
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 81
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 96
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "apps/well-desk/src/bridge/MCPBridge.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 359,
+      "nonEmptyLines": 317,
+      "callGraph": [
+        {
+          "caller": "cacheDom",
+          "callee": "document.getElementById",
+          "lineNumber": 49
+        },
+        {
+          "caller": "cacheDom",
+          "callee": "document.getElementById",
+          "lineNumber": 50
+        },
+        {
+          "caller": "cacheDom",
+          "callee": "document.getElementById",
+          "lineNumber": 51
+        },
+        {
+          "caller": "cacheDom",
+          "callee": "document.getElementById",
+          "lineNumber": 52
+        },
+        {
+          "caller": "cacheDom",
+          "callee": "document.getElementById",
+          "lineNumber": 53
+        },
+        {
+          "caller": "isPlainObject",
+          "callee": "Array.isArray",
+          "lineNumber": 58
+        },
+        {
+          "caller": "isJsonRpcMessage",
+          "callee": "isPlainObject",
+          "lineNumber": 62
+        },
+        {
+          "caller": "safeParseMessage",
+          "callee": "JSON.parse",
+          "lineNumber": 69
+        },
+        {
+          "caller": "safeParseMessage",
+          "callee": "isJsonRpcMessage",
+          "lineNumber": 72
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "Promise.reject",
+          "lineNumber": 89
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "state.pending.set",
+          "lineNumber": 94
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "Date.now",
+          "lineNumber": 94
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "window.parent.postMessage",
+          "lineNumber": 95
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "setTimeout",
+          "lineNumber": 96
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "state.pending.has",
+          "lineNumber": 97
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "state.pending.delete",
+          "lineNumber": 98
+        },
+        {
+          "caller": "sendRequest",
+          "callee": "reject",
+          "lineNumber": 99
+        },
+        {
+          "caller": "sendNotification",
+          "callee": "window.parent.postMessage",
+          "lineNumber": 107
+        },
+        {
+          "caller": "sendResponse",
+          "callee": "window.parent.postMessage",
+          "lineNumber": 112
+        },
+        {
+          "caller": "handleRpcResponse",
+          "callee": "state.pending.get",
+          "lineNumber": 117
+        },
+        {
+          "caller": "handleRpcResponse",
+          "callee": "state.pending.delete",
+          "lineNumber": 119
+        },
+        {
+          "caller": "handleRpcResponse",
+          "callee": "pending.reject",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handleRpcResponse",
+          "callee": "pending.resolve",
+          "lineNumber": 124
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "Array.isArray",
+          "lineNumber": 129
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "isPlainObject",
+          "lineNumber": 130
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "holds.filter",
+          "lineNumber": 136
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "blocking.map(h => h.reason || h.code || 'review required').join",
+          "lineNumber": 140
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "blocking.map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "holds.some",
+          "lineNumber": 160
+        },
+        {
+          "caller": "renderGovernance",
+          "callee": "disabled.includes",
+          "lineNumber": 162
+        },
+        {
+          "caller": "renderViewModel",
+          "callee": "window.dispatchEvent",
+          "lineNumber": 169
+        },
+        {
+          "caller": "handleToolResult",
+          "callee": "renderViewModel",
+          "lineNumber": 180
+        },
+        {
+          "caller": "handleToolResult",
+          "callee": "renderGovernance",
+          "lineNumber": 181
+        },
+        {
+          "caller": "handleToolResult",
+          "callee": "setStatus",
+          "lineNumber": 183
+        },
+        {
+          "caller": "handleMethod",
+          "callee": "handleToolResult",
+          "lineNumber": 197
+        },
+        {
+          "caller": "handleMethod",
+          "callee": "setError",
+          "lineNumber": 201
+        },
+        {
+          "caller": "handleMethod",
+          "callee": "sendResponse",
+          "lineNumber": 212
+        },
+        {
+          "caller": "handleMethod",
+          "callee": "teardown",
+          "lineNumber": 213
+        },
+        {
+          "caller": "handleMethod",
+          "callee": "sendResponse",
+          "lineNumber": 218
+        },
+        {
+          "caller": "teardown",
+          "callee": "setStatus",
+          "lineNumber": 232
+        },
+        {
+          "caller": "bootstrapStandalone",
+          "callee": "renderGovernance",
+          "lineNumber": 248
+        },
+        {
+          "caller": "initialize",
+          "callee": "cacheDom",
+          "lineNumber": 254
+        },
+        {
+          "caller": "initialize",
+          "callee": "setStatus",
+          "lineNumber": 257
+        },
+        {
+          "caller": "initialize",
+          "callee": "bootstrapStandalone",
+          "lineNumber": 258
+        },
+        {
+          "caller": "initialize",
+          "callee": "setStatus",
+          "lineNumber": 262
+        },
+        {
+          "caller": "initialize",
+          "callee": "sendRequest",
+          "lineNumber": 264
+        },
+        {
+          "caller": "initialize",
+          "callee": "sendNotification",
+          "lineNumber": 275
+        },
+        {
+          "caller": "initialize",
+          "callee": "setStatus",
+          "lineNumber": 276
+        },
+        {
+          "caller": "initialize",
+          "callee": "setError",
+          "lineNumber": 278
+        },
+        {
+          "caller": "initialize",
+          "callee": "String",
+          "lineNumber": 278
+        },
+        {
+          "caller": "initialize",
+          "callee": "setStatus",
+          "lineNumber": 279
+        },
+        {
+          "caller": "requestTool",
+          "callee": "sendRequest",
+          "lineNumber": 304
+        },
+        {
+          "caller": "updateModelContext",
+          "callee": "sendRequest",
+          "lineNumber": 308
+        },
+        {
+          "caller": "readResource",
+          "callee": "sendRequest",
+          "lineNumber": 312
+        },
+        {
+          "caller": "wireActions",
+          "callee": "el.promoteBtn.addEventListener",
+          "lineNumber": 329
+        },
+        {
+          "caller": "wireActions",
+          "callee": "setError",
+          "lineNumber": 330
+        },
+        {
+          "caller": "wireActions",
+          "callee": "bridge.requestTool",
+          "lineNumber": 333
+        },
+        {
+          "caller": "wireActions",
+          "callee": "handleToolResult",
+          "lineNumber": 336
+        },
+        {
+          "caller": "wireActions",
+          "callee": "setError",
+          "lineNumber": 338
+        },
+        {
+          "caller": "wireActions",
+          "callee": "String",
+          "lineNumber": 338
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

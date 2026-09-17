@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:contracts/schemas/earth/crs_datum.json",
+      "type": "config",
+      "name": "crs_datum.json",
+      "filePath": "contracts/schemas/earth/crs_datum.json",
+      "summary": "json config file (69 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/schemas/earth/earth_memory_envelope.json",
+      "type": "config",
+      "name": "earth_memory_envelope.json",
+      "filePath": "contracts/schemas/earth/earth_memory_envelope.json",
+      "summary": "json config file (284 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:contracts/schemas/earth/provenance.json",
+      "type": "config",
+      "name": "provenance.json",
+      "filePath": "contracts/schemas/earth/provenance.json",
+      "summary": "json config file (173 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:contracts/schemas/earth/units.json",
+      "type": "config",
+      "name": "units.json",
+      "filePath": "contracts/schemas/earth/units.json",
+      "summary": "json config file (130 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

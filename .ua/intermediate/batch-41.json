@@ -1,0 +1,137 @@
+{
+  "nodes": [
+    {
+      "id": "document:resources/structural_restoration/accommodation_space.md",
+      "type": "document",
+      "name": "accommodation_space.md",
+      "filePath": "resources/structural_restoration/accommodation_space.md",
+      "summary": "markdown docs file (26 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:resources/structural_restoration/basement_subsidence.md",
+      "type": "document",
+      "name": "basement_subsidence.md",
+      "filePath": "resources/structural_restoration/basement_subsidence.md",
+      "summary": "markdown docs file (20 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:resources/structural_restoration/compaction_uncertainty.md",
+      "type": "document",
+      "name": "compaction_uncertainty.md",
+      "filePath": "resources/structural_restoration/compaction_uncertainty.md",
+      "summary": "markdown docs file (30 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/distance_weighting.md",
+      "type": "document",
+      "name": "distance_weighting.md",
+      "filePath": "resources/structural_restoration/distance_weighting.md",
+      "summary": "markdown docs file (24 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:resources/structural_restoration/fault_inheritance.md",
+      "type": "document",
+      "name": "fault_inheritance.md",
+      "filePath": "resources/structural_restoration/fault_inheritance.md",
+      "summary": "markdown docs file (30 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/fill_ratio_diagnostics.md",
+      "type": "document",
+      "name": "fill_ratio_diagnostics.md",
+      "filePath": "resources/structural_restoration/fill_ratio_diagnostics.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/nw_sabah_context.md",
+      "type": "document",
+      "name": "nw_sabah_context.md",
+      "filePath": "resources/structural_restoration/nw_sabah_context.md",
+      "summary": "markdown docs file (40 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/principles.md",
+      "type": "document",
+      "name": "principles.md",
+      "filePath": "resources/structural_restoration/principles.md",
+      "summary": "markdown docs file (66 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/structural_restoration/provenance_schema.json",
+      "type": "config",
+      "name": "provenance_schema.json",
+      "filePath": "resources/structural_restoration/provenance_schema.json",
+      "summary": "json config file (148 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/qc_checklist.md",
+      "type": "document",
+      "name": "qc_checklist.md",
+      "filePath": "resources/structural_restoration/qc_checklist.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/structural_restoration/system_prompt.md",
+      "type": "document",
+      "name": "system_prompt.md",
+      "filePath": "resources/structural_restoration/system_prompt.md",
+      "summary": "markdown docs file (40 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

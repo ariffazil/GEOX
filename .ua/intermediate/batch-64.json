@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/mobility/mobility-chokepoint-detection.md",
+      "type": "document",
+      "name": "mobility-chokepoint-detection.md",
+      "filePath": "src/geox_core/skills/mobility/mobility-chokepoint-detection.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/mobility/mobility-fleet-patterns.md",
+      "type": "document",
+      "name": "mobility-fleet-patterns.md",
+      "filePath": "src/geox_core/skills/mobility/mobility-fleet-patterns.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/mobility/mobility-route-viability.md",
+      "type": "document",
+      "name": "mobility-route-viability.md",
+      "filePath": "src/geox_core/skills/mobility/mobility-route-viability.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

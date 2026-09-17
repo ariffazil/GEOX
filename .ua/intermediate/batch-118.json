@@ -1,0 +1,2751 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "type": "file",
+      "name": "test_eureka_forge_TD_2026_06_03.py",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "summary": "Defines 1 function(s); 9 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_eureka_forge_TD_2026_06_03.py:_make_synthetic_checkshot",
+      "type": "function",
+      "name": "_make_synthetic_checkshot",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        32,
+        41
+      ],
+      "summary": "_make_synthetic_checkshot(z_min, z_max, twt_at_td, n_pts, seed) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1Envelope",
+      "type": "class",
+      "name": "TestEureka1Envelope",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        47,
+        105
+      ],
+      "summary": "Class TestEureka1Envelope with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1FailClosed",
+      "type": "class",
+      "name": "TestEureka1FailClosed",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        111,
+        145
+      ],
+      "summary": "Class TestEureka1FailClosed with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1DerivativeGates",
+      "type": "class",
+      "name": "TestEureka1DerivativeGates",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        151,
+        179
+      ],
+      "summary": "Class TestEureka1DerivativeGates with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7Lineage",
+      "type": "class",
+      "name": "TestEureka7Lineage",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        185,
+        217
+      ],
+      "summary": "Class TestEureka7Lineage with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7CascadeDemote",
+      "type": "class",
+      "name": "TestEureka7CascadeDemote",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        223,
+        268
+      ],
+      "summary": "Class TestEureka7CascadeDemote with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7HonestVsLucky",
+      "type": "class",
+      "name": "TestEureka7HonestVsLucky",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        274,
+        301
+      ],
+      "summary": "Class TestEureka7HonestVsLucky with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7Reseal",
+      "type": "class",
+      "name": "TestEureka7Reseal",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        307,
+        365
+      ],
+      "summary": "Class TestEureka7Reseal with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestNoNewMCPTools",
+      "type": "class",
+      "name": "TestNoNewMCPTools",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        371,
+        415
+      ],
+      "summary": "Class TestNoNewMCPTools with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestKinabaluFixture",
+      "type": "class",
+      "name": "TestKinabaluFixture",
+      "filePath": "tests/test_eureka_forge_TD_2026_06_03.py",
+      "lineRange": [
+        421,
+        471
+      ],
+      "summary": "Class TestKinabaluFixture with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_evidence_type_guard.py",
+      "type": "file",
+      "name": "test_evidence_type_guard.py",
+      "filePath": "tests/test_evidence_type_guard.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_evidence_type_guard.py:test_string_band_does_not_crash",
+      "type": "function",
+      "name": "test_string_band_does_not_crash",
+      "filePath": "tests/test_evidence_type_guard.py",
+      "lineRange": [
+        28,
+        41
+      ],
+      "summary": "test_string_band_does_not_crash() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_evidence_type_guard.py:test_dict_uncertainty_passes_through",
+      "type": "function",
+      "name": "test_dict_uncertainty_passes_through",
+      "filePath": "tests/test_evidence_type_guard.py",
+      "lineRange": [
+        44,
+        54
+      ],
+      "summary": "test_dict_uncertainty_passes_through() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_ext_witness_stamp.py",
+      "type": "file",
+      "name": "test_ext_witness_stamp.py",
+      "filePath": "tests/test_ext_witness_stamp.py",
+      "summary": "Defines 16 function(s); exports 16 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_ext_witness_stamp.py:test_stamp_preserves_fastmcp_toolresult_to_mcp_result",
+      "type": "function",
+      "name": "test_stamp_preserves_fastmcp_toolresult_to_mcp_result",
+      "filePath": "tests/test_ext_witness_stamp.py",
+      "lineRange": [
+        130,
+        153
+      ],
+      "summary": "test_stamp_preserves_fastmcp_toolresult_to_mcp_result() — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_fail_closed_auth.py",
+      "type": "file",
+      "name": "test_fail_closed_auth.py",
+      "filePath": "tests/test_fail_closed_auth.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_fail_closed_auth.py:test_fail_closed_auth_no_token_blocks_governed_tool",
+      "type": "function",
+      "name": "test_fail_closed_auth_no_token_blocks_governed_tool",
+      "filePath": "tests/test_fail_closed_auth.py",
+      "lineRange": [
+        15,
+        31
+      ],
+      "summary": "test_fail_closed_auth_no_token_blocks_governed_tool(mcp_server) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_fail_closed_auth.py:test_fail_closed_auth_with_token_allows_governed_tool",
+      "type": "function",
+      "name": "test_fail_closed_auth_with_token_allows_governed_tool",
+      "filePath": "tests/test_fail_closed_auth.py",
+      "lineRange": [
+        35,
+        50
+      ],
+      "summary": "test_fail_closed_auth_with_token_allows_governed_tool(mcp_server) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_fastmcp.py",
+      "type": "file",
+      "name": "test_fastmcp.py",
+      "filePath": "tests/test_fastmcp.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_feature_joint_info.py",
+      "type": "file",
+      "name": "test_feature_joint_info.py",
+      "filePath": "tests/test_feature_joint_info.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_feature_joint_info.py:_make_samples",
+      "type": "function",
+      "name": "_make_samples",
+      "filePath": "tests/test_feature_joint_info.py",
+      "lineRange": [
+        23,
+        33
+      ],
+      "summary": "_make_samples(n, target_func, feature_funcs, seed) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_feature_joint_info.py:test_redundant_feature_scores_drop",
+      "type": "function",
+      "name": "test_redundant_feature_scores_drop",
+      "filePath": "tests/test_feature_joint_info.py",
+      "lineRange": [
+        46,
+        65
+      ],
+      "summary": "test_redundant_feature_scores_drop() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_feature_joint_info.py:test_genuine_new_info_scores_add",
+      "type": "function",
+      "name": "test_genuine_new_info_scores_add",
+      "filePath": "tests/test_feature_joint_info.py",
+      "lineRange": [
+        68,
+        85
+      ],
+      "summary": "test_genuine_new_info_scores_add() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_feature_joint_info.py:test_returns_required_receipt_fields",
+      "type": "function",
+      "name": "test_returns_required_receipt_fields",
+      "filePath": "tests/test_feature_joint_info.py",
+      "lineRange": [
+        99,
+        118
+      ],
+      "summary": "test_returns_required_receipt_fields() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_feature_joint_info.py:test_max_samples_downsampling",
+      "type": "function",
+      "name": "test_max_samples_downsampling",
+      "filePath": "tests/test_feature_joint_info.py",
+      "lineRange": [
+        121,
+        135
+      ],
+      "summary": "test_max_samples_downsampling() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_federation_envelope.py",
+      "type": "file",
+      "name": "test_federation_envelope.py",
+      "filePath": "tests/test_federation_envelope.py",
+      "summary": "Defines 3 function(s); 4 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_federation_envelope.py:_trace_id",
+      "type": "function",
+      "name": "_trace_id",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        45,
+        46
+      ],
+      "summary": "_trace_id() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_federation_envelope.py:_sabah_basin_geox_output",
+      "type": "function",
+      "name": "_sabah_basin_geox_output",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        49,
+        86
+      ],
+      "summary": "_sabah_basin_geox_output() — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_federation_envelope.py:_sabah_prospect_output",
+      "type": "function",
+      "name": "_sabah_prospect_output",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        89,
+        135
+      ],
+      "summary": "_sabah_prospect_output() — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_federation_envelope.py:TestFederationEnvelopeConstruction",
+      "type": "class",
+      "name": "TestFederationEnvelopeConstruction",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        141,
+        191
+      ],
+      "summary": "Class TestFederationEnvelopeConstruction with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_federation_envelope.py:TestGEOXToEnvelopeAdapter",
+      "type": "class",
+      "name": "TestGEOXToEnvelopeAdapter",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        194,
+        253
+      ],
+      "summary": "Class TestGEOXToEnvelopeAdapter with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_federation_envelope.py:TestSabahBasinMetabolicLoop",
+      "type": "class",
+      "name": "TestSabahBasinMetabolicLoop",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        256,
+        416
+      ],
+      "summary": "Class TestSabahBasinMetabolicLoop with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_federation_envelope.py:TestFloorChecks",
+      "type": "class",
+      "name": "TestFloorChecks",
+      "filePath": "tests/test_federation_envelope.py",
+      "lineRange": [
+        419,
+        477
+      ],
+      "summary": "Class TestFloorChecks with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_fix_brief_v2.py",
+      "type": "file",
+      "name": "test_fix_brief_v2.py",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_fix_brief_v2.py:test_p0_surface_attestation_public_32",
+      "type": "function",
+      "name": "test_p0_surface_attestation_public_32",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "lineRange": [
+        13,
+        27
+      ],
+      "summary": "test_p0_surface_attestation_public_32() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_fix_brief_v2.py:test_p1_anonymous_geometry_rejected",
+      "type": "function",
+      "name": "test_p1_anonymous_geometry_rejected",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "lineRange": [
+        30,
+        45
+      ],
+      "summary": "test_p1_anonymous_geometry_rejected() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_fix_brief_v2.py:test_p1_p2_sticks_reach_gates_and_cutoffs",
+      "type": "function",
+      "name": "test_p1_p2_sticks_reach_gates_and_cutoffs",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "lineRange": [
+        49,
+        120
+      ],
+      "summary": "test_p1_p2_sticks_reach_gates_and_cutoffs() — 71 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_fix_brief_v2.py:test_p2_dip_alone_does_not_kill_without_strict",
+      "type": "function",
+      "name": "test_p2_dip_alone_does_not_kill_without_strict",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "lineRange": [
+        124,
+        140
+      ],
+      "summary": "test_p2_dip_alone_does_not_kill_without_strict() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_fix_brief_v2.py:test_p4_p5_compact_and_render",
+      "type": "function",
+      "name": "test_p4_p5_compact_and_render",
+      "filePath": "tests/test_fix_brief_v2.py",
+      "lineRange": [
+        144,
+        198
+      ],
+      "summary": "test_p4_p5_compact_and_render() — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_floor_enforcement.py",
+      "type": "file",
+      "name": "test_floor_enforcement.py",
+      "filePath": "tests/test_floor_enforcement.py",
+      "summary": "8 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestHumilityCap",
+      "type": "class",
+      "name": "TestHumilityCap",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        44,
+        64
+      ],
+      "summary": "Class TestHumilityCap with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestCanonicalToolValidation",
+      "type": "class",
+      "name": "TestCanonicalToolValidation",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        72,
+        117
+      ],
+      "summary": "Class TestCanonicalToolValidation with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestSovereignAck",
+      "type": "class",
+      "name": "TestSovereignAck",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        125,
+        159
+      ],
+      "summary": "Class TestSovereignAck with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestEnvelopeStrict",
+      "type": "class",
+      "name": "TestEnvelopeStrict",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        167,
+        221
+      ],
+      "summary": "Class TestEnvelopeStrict with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestAuditLog",
+      "type": "class",
+      "name": "TestAuditLog",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        229,
+        291
+      ],
+      "summary": "Class TestAuditLog with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestIdempotency",
+      "type": "class",
+      "name": "TestIdempotency",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        299,
+        316
+      ],
+      "summary": "Class TestIdempotency with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestPostCall",
+      "type": "class",
+      "name": "TestPostCall",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        324,
+        367
+      ],
+      "summary": "Class TestPostCall with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_floor_enforcement.py:TestWrapperIntegration",
+      "type": "class",
+      "name": "TestWrapperIntegration",
+      "filePath": "tests/test_floor_enforcement.py",
+      "lineRange": [
+        375,
+        405
+      ],
+      "summary": "Class TestWrapperIntegration with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_forward_model_synthetic.py",
+      "type": "file",
+      "name": "test_forward_model_synthetic.py",
+      "filePath": "tests/test_forward_model_synthetic.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_forward_model_synthetic.py:test_forward_model_with_raw_arrays",
+      "type": "function",
+      "name": "test_forward_model_with_raw_arrays",
+      "filePath": "tests/test_forward_model_synthetic.py",
+      "lineRange": [
+        22,
+        51
+      ],
+      "summary": "test_forward_model_with_raw_arrays() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_forward_model_synthetic.py:test_forward_model_impedance_bounds",
+      "type": "function",
+      "name": "test_forward_model_impedance_bounds",
+      "filePath": "tests/test_forward_model_synthetic.py",
+      "lineRange": [
+        63,
+        76
+      ],
+      "summary": "test_forward_model_impedance_bounds() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_forward_model_synthetic.py:test_forward_model_rc_zero_for_uniform",
+      "type": "function",
+      "name": "test_forward_model_rc_zero_for_uniform",
+      "filePath": "tests/test_forward_model_synthetic.py",
+      "lineRange": [
+        80,
+        90
+      ],
+      "summary": "test_forward_model_rc_zero_for_uniform() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_gateway_authority.py",
+      "type": "file",
+      "name": "test_gateway_authority.py",
+      "filePath": "tests/test_gateway_authority.py",
+      "summary": "Defines 20 function(s); exports 20 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_authority_override_for_overwrite_arg",
+      "type": "function",
+      "name": "test_authority_override_for_overwrite_arg",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        108,
+        118
+      ],
+      "summary": "test_authority_override_for_overwrite_arg() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_rejects_no_session_for_mutate",
+      "type": "function",
+      "name": "test_rejects_no_session_for_mutate",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        129,
+        140
+      ],
+      "summary": "test_rejects_no_session_for_mutate() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_rejects_no_session_for_observe_under_mutate_args",
+      "type": "function",
+      "name": "test_rejects_no_session_for_observe_under_mutate_args",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        152,
+        163
+      ],
+      "summary": "test_rejects_no_session_for_observe_under_mutate_args() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_rejects_invalid_seal_session",
+      "type": "function",
+      "name": "test_rejects_invalid_seal_session",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        180,
+        195
+      ],
+      "summary": "test_rejects_invalid_seal_session() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_rejects_malformed_session_format",
+      "type": "function",
+      "name": "test_rejects_malformed_session_format",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        198,
+        210
+      ],
+      "summary": "test_rejects_malformed_session_format() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gateway_authority.py:test_authority_rejection_envelope_shape",
+      "type": "function",
+      "name": "test_authority_rejection_envelope_shape",
+      "filePath": "tests/test_gateway_authority.py",
+      "lineRange": [
+        228,
+        243
+      ],
+      "summary": "test_authority_rejection_envelope_shape() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geo_project_state.py",
+      "type": "file",
+      "name": "test_geo_project_state.py",
+      "filePath": "tests/test_geo_project_state.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geo_project_state.py:test_geo_project_state_creation_and_hashing",
+      "type": "function",
+      "name": "test_geo_project_state_creation_and_hashing",
+      "filePath": "tests/test_geo_project_state.py",
+      "lineRange": [
+        16,
+        42
+      ],
+      "summary": "test_geo_project_state_creation_and_hashing() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geo_project_state.py:test_human_edit_record_capture",
+      "type": "function",
+      "name": "test_human_edit_record_capture",
+      "filePath": "tests/test_geo_project_state.py",
+      "lineRange": [
+        45,
+        61
+      ],
+      "summary": "test_human_edit_record_capture() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_earth_memory.py",
+      "type": "file",
+      "name": "test_geox_earth_memory.py",
+      "filePath": "tests/test_geox_earth_memory.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_earth_memory.py:test_agent_memory_volatile",
+      "type": "function",
+      "name": "test_agent_memory_volatile",
+      "filePath": "tests/test_geox_earth_memory.py",
+      "lineRange": [
+        13,
+        24
+      ],
+      "summary": "test_agent_memory_volatile(memory_db) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_earth_memory.py:test_earth_memory_promotion_ladder",
+      "type": "function",
+      "name": "test_earth_memory_promotion_ladder",
+      "filePath": "tests/test_geox_earth_memory.py",
+      "lineRange": [
+        26,
+        84
+      ],
+      "summary": "test_earth_memory_promotion_ladder(memory_db) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_earth_memory.py:test_earth_memory_validation_failure",
+      "type": "function",
+      "name": "test_earth_memory_validation_failure",
+      "filePath": "tests/test_geox_earth_memory.py",
+      "lineRange": [
+        86,
+        100
+      ],
+      "summary": "test_earth_memory_validation_failure(memory_db) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "type": "file",
+      "name": "test_geox_fix_brief_a_b_c.py",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "summary": "Defines 11 function(s); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:_session_framework",
+      "type": "function",
+      "name": "_session_framework",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        19,
+        96
+      ],
+      "summary": "_session_framework() — 77 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:_calibration",
+      "type": "function",
+      "name": "_calibration",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        99,
+        108
+      ],
+      "summary": "_calibration() — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_a2_image_data_base64_ingestion",
+      "type": "function",
+      "name": "test_a2_image_data_base64_ingestion",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        149,
+        160
+      ],
+      "summary": "test_a2_image_data_base64_ingestion() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_a2_interpret_section_with_image_data_returns_input_hash",
+      "type": "function",
+      "name": "test_a2_interpret_section_with_image_data_returns_input_hash",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        164,
+        185
+      ],
+      "summary": "test_a2_interpret_section_with_image_data_returns_input_hash() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_a3_a4_sticks_and_name_adapt",
+      "type": "function",
+      "name": "test_a3_a4_sticks_and_name_adapt",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        191,
+        223
+      ],
+      "summary": "test_a3_a4_sticks_and_name_adapt() — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_c_acceptance_session_payload_gates_measurable",
+      "type": "function",
+      "name": "test_c_acceptance_session_payload_gates_measurable",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        230,
+        280
+      ],
+      "summary": "test_c_acceptance_session_payload_gates_measurable() — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_b_sticks_plus_calibration_populates_dip_and_throw",
+      "type": "function",
+      "name": "test_b_sticks_plus_calibration_populates_dip_and_throw",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        284,
+        304
+      ],
+      "summary": "test_b_sticks_plus_calibration_populates_dip_and_throw() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_fix_brief_a_b_c.py:test_a3_acceptance_two_horizons_one_fault_g2_not_unmeasured",
+      "type": "function",
+      "name": "test_a3_acceptance_two_horizons_one_fault_g2_not_unmeasured",
+      "filePath": "tests/test_geox_fix_brief_a_b_c.py",
+      "lineRange": [
+        308,
+        347
+      ],
+      "summary": "test_a3_acceptance_two_horizons_one_fault_g2_not_unmeasured() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_geox_mcp_benchmark.py",
+      "type": "file",
+      "name": "test_geox_mcp_benchmark.py",
+      "filePath": "tests/test_geox_mcp_benchmark.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_mcp_benchmark.py:test_benchmark_dix_physics_bounds",
+      "type": "function",
+      "name": "test_benchmark_dix_physics_bounds",
+      "filePath": "tests/test_geox_mcp_benchmark.py",
+      "lineRange": [
+        12,
+        25
+      ],
+      "summary": "test_benchmark_dix_physics_bounds() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_paleobiodb_query.py",
+      "type": "file",
+      "name": "test_geox_paleobiodb_query.py",
+      "filePath": "tests/test_geox_paleobiodb_query.py",
+      "summary": "Defines 16 function(s); exports 16 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_paleobiodb_query.py:test_manifest_governance_is_observe",
+      "type": "function",
+      "name": "test_manifest_governance_is_observe",
+      "filePath": "tests/test_geox_paleobiodb_query.py",
+      "lineRange": [
+        56,
+        68
+      ],
+      "summary": "test_manifest_governance_is_observe() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_schemas.py",
+      "type": "file",
+      "name": "test_geox_schemas.py",
+      "filePath": "tests/test_geox_schemas.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_schemas.py:get_schemas_to_test",
+      "type": "function",
+      "name": "get_schemas_to_test",
+      "filePath": "tests/test_geox_schemas.py",
+      "lineRange": [
+        24,
+        36
+      ],
+      "summary": "get_schemas_to_test() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_sovereign_e2e.py",
+      "type": "file",
+      "name": "test_geox_sovereign_e2e.py",
+      "filePath": "tests/test_geox_sovereign_e2e.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_sovereign_e2e.py:mock_helpers",
+      "type": "function",
+      "name": "mock_helpers",
+      "filePath": "tests/test_geox_sovereign_e2e.py",
+      "lineRange": [
+        15,
+        44
+      ],
+      "summary": "mock_helpers() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_sovereign_e2e.py:test_physics_guard_sabah_bounds",
+      "type": "function",
+      "name": "test_physics_guard_sabah_bounds",
+      "filePath": "tests/test_geox_sovereign_e2e.py",
+      "lineRange": [
+        82,
+        102
+      ],
+      "summary": "test_physics_guard_sabah_bounds() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_sovereign_e2e.py:test_reflectivity_deterministic_math",
+      "type": "function",
+      "name": "test_reflectivity_deterministic_math",
+      "filePath": "tests/test_geox_sovereign_e2e.py",
+      "lineRange": [
+        104,
+        114
+      ],
+      "summary": "test_reflectivity_deterministic_math() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_geox_truth_state_golden.py",
+      "type": "file",
+      "name": "test_geox_truth_state_golden.py",
+      "filePath": "tests/test_geox_truth_state_golden.py",
+      "summary": "Defines 12 function(s); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_geox_truth_state_golden.py:test_no_evidence_no_verified",
+      "type": "function",
+      "name": "test_no_evidence_no_verified",
+      "filePath": "tests/test_geox_truth_state_golden.py",
+      "lineRange": [
+        77,
+        88
+      ],
+      "summary": "test_no_evidence_no_verified() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_truth_state_golden.py:test_time4d_no_evidence_undetermined",
+      "type": "function",
+      "name": "test_time4d_no_evidence_undetermined",
+      "filePath": "tests/test_geox_truth_state_golden.py",
+      "lineRange": [
+        92,
+        102
+      ],
+      "summary": "test_time4d_no_evidence_undetermined() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_geox_truth_state_golden.py:test_dst_ingest_derives_metrics",
+      "type": "function",
+      "name": "test_dst_ingest_derives_metrics",
+      "filePath": "tests/test_geox_truth_state_golden.py",
+      "lineRange": [
+        168,
+        185
+      ],
+      "summary": "test_dst_ingest_derives_metrics() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_golden.py",
+      "type": "file",
+      "name": "test_golden.py",
+      "filePath": "tests/test_golden.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_golden.py:_load_golden",
+      "type": "function",
+      "name": "_load_golden",
+      "filePath": "tests/test_golden.py",
+      "lineRange": [
+        31,
+        34
+      ],
+      "summary": "_load_golden(name) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_golden.py:_save_golden",
+      "type": "function",
+      "name": "_save_golden",
+      "filePath": "tests/test_golden.py",
+      "lineRange": [
+        37,
+        41
+      ],
+      "summary": "_save_golden(name, data) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_golden.py:test_golden_abduction_danum1_shoreface",
+      "type": "function",
+      "name": "test_golden_abduction_danum1_shoreface",
+      "filePath": "tests/test_golden.py",
+      "lineRange": [
+        48,
+        108
+      ],
+      "summary": "test_golden_abduction_danum1_shoreface() — 60 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_golden.py:test_golden_pinn_danum1_prediction",
+      "type": "function",
+      "name": "test_golden_pinn_danum1_prediction",
+      "filePath": "tests/test_golden.py",
+      "lineRange": [
+        125,
+        216
+      ],
+      "summary": "test_golden_pinn_danum1_prediction() — 91 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_gr_cognitive.py",
+      "type": "file",
+      "name": "test_gr_cognitive.py",
+      "filePath": "tests/test_gr_cognitive.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gr_cognitive.py:test_gr_cognitive_merging",
+      "type": "function",
+      "name": "test_gr_cognitive_merging",
+      "filePath": "tests/test_gr_cognitive.py",
+      "lineRange": [
+        10,
+        45
+      ],
+      "summary": "test_gr_cognitive_merging() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_gravmag_studio_forward.py",
+      "type": "file",
+      "name": "test_gravmag_studio_forward.py",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "summary": "Defines 11 function(s); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_gravity_single_prism_mock",
+      "type": "function",
+      "name": "test_gravmag_studio_gravity_single_prism_mock",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        32,
+        74
+      ],
+      "summary": "test_gravmag_studio_gravity_single_prism_mock() — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_magnetic_single_prism_mock",
+      "type": "function",
+      "name": "test_gravmag_studio_magnetic_single_prism_mock",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        78,
+        111
+      ],
+      "summary": "test_gravmag_studio_magnetic_single_prism_mock() — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_empty_prisms_returns_flat_zero",
+      "type": "function",
+      "name": "test_gravmag_studio_empty_prisms_returns_flat_zero",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        115,
+        128
+      ],
+      "summary": "test_gravmag_studio_empty_prisms_returns_flat_zero() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_backend_selection_auto_uses_mock_when_live_unavailable",
+      "type": "function",
+      "name": "test_gravmag_studio_backend_selection_auto_uses_mock_when_live_unavailable",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        132,
+        158
+      ],
+      "summary": "test_gravmag_studio_backend_selection_auto_uses_mock_when_live_unavailable() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_invalid_grid_n_returns_void_envelope",
+      "type": "function",
+      "name": "test_gravmag_studio_invalid_grid_n_returns_void_envelope",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        162,
+        173
+      ],
+      "summary": "test_gravmag_studio_invalid_grid_n_returns_void_envelope() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_manifest_entry_is_present_and_unique",
+      "type": "function",
+      "name": "test_manifest_entry_is_present_and_unique",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        188,
+        203
+      ],
+      "summary": "test_manifest_entry_is_present_and_unique() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_contract_json_validates",
+      "type": "function",
+      "name": "test_contract_json_validates",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        206,
+        238
+      ],
+      "summary": "test_contract_json_validates() — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_html_resource_exists_and_contains_required_anchors",
+      "type": "function",
+      "name": "test_html_resource_exists_and_contains_required_anchors",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        242,
+        253
+      ],
+      "summary": "test_html_resource_exists_and_contains_required_anchors() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_forward.py:test_screen_tab_anchors_present_in_html",
+      "type": "function",
+      "name": "test_screen_tab_anchors_present_in_html",
+      "filePath": "tests/test_gravmag_studio_forward.py",
+      "lineRange": [
+        264,
+        301
+      ],
+      "summary": "test_screen_tab_anchors_present_in_html() — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_gravmag_studio_observed_sources.py",
+      "type": "file",
+      "name": "test_gravmag_studio_observed_sources.py",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:_hold_reason",
+      "type": "function",
+      "name": "_hold_reason",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        48,
+        54
+      ],
+      "summary": "_hold_reason(out) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:test_emag2v3_with_gravity_survey_holds",
+      "type": "function",
+      "name": "test_emag2v3_with_gravity_survey_holds",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        58,
+        81
+      ],
+      "summary": "test_emag2v3_with_gravity_survey_holds() — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:test_icgem_with_magnetic_survey_holds",
+      "type": "function",
+      "name": "test_icgem_with_magnetic_survey_holds",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        84,
+        105
+      ],
+      "summary": "test_icgem_with_magnetic_survey_holds() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:test_emag2v3_with_magnetic_survey_holds_until_grid_extraction",
+      "type": "function",
+      "name": "test_emag2v3_with_magnetic_survey_holds_until_grid_extraction",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        108,
+        138
+      ],
+      "summary": "test_emag2v3_with_magnetic_survey_holds_until_grid_extraction() — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:test_icgem_with_gravity_survey_holds_until_grid_extraction",
+      "type": "function",
+      "name": "test_icgem_with_gravity_survey_holds_until_grid_extraction",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        141,
+        162
+      ],
+      "summary": "test_icgem_with_gravity_survey_holds_until_grid_extraction() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_observed_sources.py:test_unrecognised_source_name_holds",
+      "type": "function",
+      "name": "test_unrecognised_source_name_holds",
+      "filePath": "tests/test_gravmag_studio_observed_sources.py",
+      "lineRange": [
+        165,
+        186
+      ],
+      "summary": "test_unrecognised_source_name_holds() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "type": "file",
+      "name": "test_gravmag_studio_sabah_regression.py",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "summary": "Defines 6 function(s); 1 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:_forward",
+      "type": "function",
+      "name": "_forward",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        33,
+        66
+      ],
+      "summary": "_forward(survey_type, prisms, grid_extent_m, grid_n, magnetization_a_m, field_declination_deg, field_inclination_deg, backend) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:_screen",
+      "type": "function",
+      "name": "_screen",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        69,
+        102
+      ],
+      "summary": "_screen(survey_type, prisms, observed_grid, grid_extent_m, grid_n, observed_source, observed_extent_m, magnetization_a_m, field_declination_deg, field_inclination_deg, backend) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:_prism",
+      "type": "function",
+      "name": "_prism",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        123,
+        141
+      ],
+      "summary": "_prism(easting, northing, depth_top, depth_bottom, width_e, width_n, density) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:_prisms_to_strings",
+      "type": "function",
+      "name": "_prisms_to_strings",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        144,
+        154
+      ],
+      "summary": "_prisms_to_strings(prisms) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:test_sabah_scenario",
+      "type": "function",
+      "name": "test_sabah_scenario",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        288,
+        329
+      ],
+      "summary": "test_sabah_scenario(case) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_sabah_regression.py:test_s6_extent_mismatch_holds",
+      "type": "function",
+      "name": "test_s6_extent_mismatch_holds",
+      "filePath": "tests/test_gravmag_studio_sabah_regression.py",
+      "lineRange": [
+        333,
+        359
+      ],
+      "summary": "test_s6_extent_mismatch_holds() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_gravmag_studio_screen.py",
+      "type": "file",
+      "name": "test_gravmag_studio_screen.py",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "summary": "Defines 13 function(s); exports 13 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:_run",
+      "type": "function",
+      "name": "_run",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        40,
+        42
+      ],
+      "summary": "_run(coro) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:_forward_grid",
+      "type": "function",
+      "name": "_forward_grid",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        45,
+        74
+      ],
+      "summary": "_forward_grid(prism_overrides, **top_level_overrides) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_perfect_model_passes_screen",
+      "type": "function",
+      "name": "test_perfect_model_passes_screen",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        78,
+        96
+      ],
+      "summary": "test_perfect_model_passes_screen() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_lateral_offset_fails_screen",
+      "type": "function",
+      "name": "test_lateral_offset_fails_screen",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        99,
+        130
+      ],
+      "summary": "test_lateral_offset_fails_screen() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_sign_flipped_density_fails_screen",
+      "type": "function",
+      "name": "test_sign_flipped_density_fails_screen",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        133,
+        153
+      ],
+      "summary": "test_sign_flipped_density_fails_screen() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_unit_mismatch_holds",
+      "type": "function",
+      "name": "test_unit_mismatch_holds",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        156,
+        172
+      ],
+      "summary": "test_unit_mismatch_holds() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_grid_mismatch_holds",
+      "type": "function",
+      "name": "test_grid_mismatch_holds",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        175,
+        190
+      ],
+      "summary": "test_grid_mismatch_holds() — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_confidence_cap_even_on_perfect_fit",
+      "type": "function",
+      "name": "test_confidence_cap_even_on_perfect_fit",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        193,
+        212
+      ],
+      "summary": "test_confidence_cap_even_on_perfect_fit() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_abduction_discipline_always_populated",
+      "type": "function",
+      "name": "test_abduction_discipline_always_populated",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        215,
+        272
+      ],
+      "summary": "test_abduction_discipline_always_populated() — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_observed_source_recorded_in_provenance",
+      "type": "function",
+      "name": "test_observed_source_recorded_in_provenance",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        275,
+        297
+      ],
+      "summary": "test_observed_source_recorded_in_provenance() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_extent_mismatch_holds",
+      "type": "function",
+      "name": "test_extent_mismatch_holds",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        300,
+        332
+      ],
+      "summary": "test_extent_mismatch_holds() — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_zero_variance_observed_grid_holds",
+      "type": "function",
+      "name": "test_zero_variance_observed_grid_holds",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        335,
+        352
+      ],
+      "summary": "test_zero_variance_observed_grid_holds() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_gravmag_studio_screen.py:test_declared_alternatives_preserved",
+      "type": "function",
+      "name": "test_declared_alternatives_preserved",
+      "filePath": "tests/test_gravmag_studio_screen.py",
+      "lineRange": [
+        355,
+        390
+      ],
+      "summary": "test_declared_alternatives_preserved() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "function:tests/test_eureka_forge_TD_2026_06_03.py:_make_synthetic_checkshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1Envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1FailClosed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka1DerivativeGates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7Lineage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7CascadeDemote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7HonestVsLucky",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestEureka7Reseal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestNoNewMCPTools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_eureka_forge_TD_2026_06_03.py",
+      "target": "class:tests/test_eureka_forge_TD_2026_06_03.py:TestKinabaluFixture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_evidence_type_guard.py",
+      "target": "function:tests/test_evidence_type_guard.py:test_string_band_does_not_crash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_evidence_type_guard.py",
+      "target": "function:tests/test_evidence_type_guard.py:test_dict_uncertainty_passes_through",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_ext_witness_stamp.py",
+      "target": "function:tests/test_ext_witness_stamp.py:test_stamp_preserves_fastmcp_toolresult_to_mcp_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fail_closed_auth.py",
+      "target": "function:tests/test_fail_closed_auth.py:test_fail_closed_auth_no_token_blocks_governed_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fail_closed_auth.py",
+      "target": "function:tests/test_fail_closed_auth.py:test_fail_closed_auth_with_token_allows_governed_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_feature_joint_info.py",
+      "target": "function:tests/test_feature_joint_info.py:_make_samples",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_feature_joint_info.py",
+      "target": "function:tests/test_feature_joint_info.py:test_redundant_feature_scores_drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_feature_joint_info.py",
+      "target": "function:tests/test_feature_joint_info.py:test_genuine_new_info_scores_add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_feature_joint_info.py",
+      "target": "function:tests/test_feature_joint_info.py:test_returns_required_receipt_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_feature_joint_info.py",
+      "target": "function:tests/test_feature_joint_info.py:test_max_samples_downsampling",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "function:tests/test_federation_envelope.py:_trace_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "function:tests/test_federation_envelope.py:_sabah_basin_geox_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "function:tests/test_federation_envelope.py:_sabah_prospect_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "class:tests/test_federation_envelope.py:TestFederationEnvelopeConstruction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "class:tests/test_federation_envelope.py:TestGEOXToEnvelopeAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "class:tests/test_federation_envelope.py:TestSabahBasinMetabolicLoop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_federation_envelope.py",
+      "target": "class:tests/test_federation_envelope.py:TestFloorChecks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fix_brief_v2.py",
+      "target": "function:tests/test_fix_brief_v2.py:test_p0_surface_attestation_public_32",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fix_brief_v2.py",
+      "target": "function:tests/test_fix_brief_v2.py:test_p1_anonymous_geometry_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fix_brief_v2.py",
+      "target": "function:tests/test_fix_brief_v2.py:test_p1_p2_sticks_reach_gates_and_cutoffs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fix_brief_v2.py",
+      "target": "function:tests/test_fix_brief_v2.py:test_p2_dip_alone_does_not_kill_without_strict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_fix_brief_v2.py",
+      "target": "function:tests/test_fix_brief_v2.py:test_p4_p5_compact_and_render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestHumilityCap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestCanonicalToolValidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestSovereignAck",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestEnvelopeStrict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestAuditLog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestIdempotency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestPostCall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_floor_enforcement.py",
+      "target": "class:tests/test_floor_enforcement.py:TestWrapperIntegration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_forward_model_synthetic.py",
+      "target": "function:tests/test_forward_model_synthetic.py:test_forward_model_with_raw_arrays",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_forward_model_synthetic.py",
+      "target": "function:tests/test_forward_model_synthetic.py:test_forward_model_impedance_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_forward_model_synthetic.py",
+      "target": "function:tests/test_forward_model_synthetic.py:test_forward_model_rc_zero_for_uniform",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_authority_override_for_overwrite_arg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_rejects_no_session_for_mutate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_rejects_no_session_for_observe_under_mutate_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_rejects_invalid_seal_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_rejects_malformed_session_format",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gateway_authority.py",
+      "target": "function:tests/test_gateway_authority.py:test_authority_rejection_envelope_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geo_project_state.py",
+      "target": "function:tests/test_geo_project_state.py:test_geo_project_state_creation_and_hashing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geo_project_state.py",
+      "target": "function:tests/test_geo_project_state.py:test_human_edit_record_capture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_earth_memory.py",
+      "target": "function:tests/test_geox_earth_memory.py:test_agent_memory_volatile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_earth_memory.py",
+      "target": "function:tests/test_geox_earth_memory.py:test_earth_memory_promotion_ladder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_earth_memory.py",
+      "target": "function:tests/test_geox_earth_memory.py:test_earth_memory_validation_failure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:_session_framework",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:_calibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_a2_image_data_base64_ingestion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_a2_interpret_section_with_image_data_returns_input_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_a3_a4_sticks_and_name_adapt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_c_acceptance_session_payload_gates_measurable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_b_sticks_plus_calibration_populates_dip_and_throw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_fix_brief_a_b_c.py",
+      "target": "function:tests/test_geox_fix_brief_a_b_c.py:test_a3_acceptance_two_horizons_one_fault_g2_not_unmeasured",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_mcp_benchmark.py",
+      "target": "function:tests/test_geox_mcp_benchmark.py:test_benchmark_dix_physics_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_paleobiodb_query.py",
+      "target": "function:tests/test_geox_paleobiodb_query.py:test_manifest_governance_is_observe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_schemas.py",
+      "target": "function:tests/test_geox_schemas.py:get_schemas_to_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_sovereign_e2e.py",
+      "target": "function:tests/test_geox_sovereign_e2e.py:mock_helpers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_sovereign_e2e.py",
+      "target": "function:tests/test_geox_sovereign_e2e.py:test_physics_guard_sabah_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_sovereign_e2e.py",
+      "target": "function:tests/test_geox_sovereign_e2e.py:test_reflectivity_deterministic_math",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_truth_state_golden.py",
+      "target": "function:tests/test_geox_truth_state_golden.py:test_no_evidence_no_verified",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_truth_state_golden.py",
+      "target": "function:tests/test_geox_truth_state_golden.py:test_time4d_no_evidence_undetermined",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_geox_truth_state_golden.py",
+      "target": "function:tests/test_geox_truth_state_golden.py:test_dst_ingest_derives_metrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_golden.py",
+      "target": "function:tests/test_golden.py:_load_golden",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_golden.py",
+      "target": "function:tests/test_golden.py:_save_golden",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_golden.py",
+      "target": "function:tests/test_golden.py:test_golden_abduction_danum1_shoreface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_golden.py",
+      "target": "function:tests/test_golden.py:test_golden_pinn_danum1_prediction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gr_cognitive.py",
+      "target": "function:tests/test_gr_cognitive.py:test_gr_cognitive_merging",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_gravity_single_prism_mock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_magnetic_single_prism_mock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_empty_prisms_returns_flat_zero",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_backend_selection_auto_uses_mock_when_live_unavailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_gravmag_studio_invalid_grid_n_returns_void_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_manifest_entry_is_present_and_unique",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_contract_json_validates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_html_resource_exists_and_contains_required_anchors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_forward.py",
+      "target": "function:tests/test_gravmag_studio_forward.py:test_screen_tab_anchors_present_in_html",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:_hold_reason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:test_emag2v3_with_gravity_survey_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:test_icgem_with_magnetic_survey_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:test_emag2v3_with_magnetic_survey_holds_until_grid_extraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:test_icgem_with_gravity_survey_holds_until_grid_extraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_observed_sources.py",
+      "target": "function:tests/test_gravmag_studio_observed_sources.py:test_unrecognised_source_name_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:_prism",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:_prisms_to_strings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:test_sabah_scenario",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_sabah_regression.py",
+      "target": "function:tests/test_gravmag_studio_sabah_regression.py:test_s6_extent_mismatch_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:_run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:_forward_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_perfect_model_passes_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_lateral_offset_fails_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_sign_flipped_density_fails_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_unit_mismatch_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_grid_mismatch_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_confidence_cap_even_on_perfect_fit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_abduction_discipline_always_populated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_observed_source_recorded_in_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_extent_mismatch_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_zero_variance_observed_grid_holds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_gravmag_studio_screen.py",
+      "target": "function:tests/test_gravmag_studio_screen.py:test_declared_alternatives_preserved",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

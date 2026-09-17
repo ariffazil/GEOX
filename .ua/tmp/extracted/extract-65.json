@@ -1,0 +1,127 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_core/skills/orchestration/orch-multi-agent-decomposition.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "orch-multi-agent-decomposition",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/skills/orchestration/orch-void-and-data-denial.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "orch-void-and-data-denial",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/skills/orchestration/orch-world-model-sync.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "orch-world-model-sync",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

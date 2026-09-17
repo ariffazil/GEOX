@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/analogs/seed_malay_basin_J_deepwater.yaml",
+      "type": "config",
+      "name": "seed_malay_basin_J_deepwater.yaml",
+      "filePath": "resources/analogs/seed_malay_basin_J_deepwater.yaml",
+      "summary": "yaml config file (51 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/analogs/seed_malay_basin_K_GroupH.yaml",
+      "type": "config",
+      "name": "seed_malay_basin_K_GroupH.yaml",
+      "filePath": "resources/analogs/seed_malay_basin_K_GroupH.yaml",
+      "summary": "yaml config file (78 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/analogs/seed_malay_basin_K_center_overpressure.yaml",
+      "type": "config",
+      "name": "seed_malay_basin_K_center_overpressure.yaml",
+      "filePath": "resources/analogs/seed_malay_basin_K_center_overpressure.yaml",
+      "summary": "yaml config file (259 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

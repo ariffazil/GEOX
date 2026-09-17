@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/infrastructure/infra-capacity-and-failure.md",
+      "type": "document",
+      "name": "infra-capacity-and-failure.md",
+      "filePath": "src/geox_core/skills/infrastructure/infra-capacity-and-failure.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/infrastructure/infra-critical-node-watch.md",
+      "type": "document",
+      "name": "infra-critical-node-watch.md",
+      "filePath": "src/geox_core/skills/infrastructure/infra-critical-node-watch.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/infrastructure/infra-network-topology.md",
+      "type": "document",
+      "name": "infra-network-topology.md",
+      "filePath": "src/geox_core/skills/infrastructure/infra-network-topology.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

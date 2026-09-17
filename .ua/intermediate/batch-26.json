@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/eureka_insights/E8_VELOCITY_AS_STRUCTURE_2026_06_03.md",
+      "type": "document",
+      "name": "E8_VELOCITY_AS_STRUCTURE_2026_06_03.md",
+      "filePath": "docs/eureka_insights/E8_VELOCITY_AS_STRUCTURE_2026_06_03.md",
+      "summary": "markdown docs file (314 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/eureka_insights/E9_IMPEDANCE_AS_FLUID_2026_06_03.md",
+      "type": "document",
+      "name": "E9_IMPEDANCE_AS_FLUID_2026_06_03.md",
+      "filePath": "docs/eureka_insights/E9_IMPEDANCE_AS_FLUID_2026_06_03.md",
+      "summary": "markdown docs file (301 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/eureka_insights/KL2_KINABALU_2026_06_03.md",
+      "type": "document",
+      "name": "KL2_KINABALU_2026_06_03.md",
+      "filePath": "docs/eureka_insights/KL2_KINABALU_2026_06_03.md",
+      "summary": "markdown docs file (84 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

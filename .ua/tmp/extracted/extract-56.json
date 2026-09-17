@@ -1,0 +1,127 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "skills/time/time-forecast-branching.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "time-forecast-branching",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/time/time-monitoring-triggers.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "time-monitoring-triggers",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/time/time-regime-shift.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "time-regime-shift",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

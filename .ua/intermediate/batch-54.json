@@ -1,0 +1,90 @@
+{
+  "nodes": [
+    {
+      "id": "document:skills/subsurface/basin-charge.md",
+      "type": "document",
+      "name": "basin-charge.md",
+      "filePath": "skills/subsurface/basin-charge.md",
+      "summary": "markdown docs file (51 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/formation-evaluation.md",
+      "type": "document",
+      "name": "formation-evaluation.md",
+      "filePath": "skills/subsurface/formation-evaluation.md",
+      "summary": "markdown docs file (49 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/posterior-integrity.md",
+      "type": "document",
+      "name": "posterior-integrity.md",
+      "filePath": "skills/subsurface/posterior-integrity.md",
+      "summary": "markdown docs file (70 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/prospect-risk.md",
+      "type": "document",
+      "name": "prospect-risk.md",
+      "filePath": "skills/subsurface/prospect-risk.md",
+      "summary": "markdown docs file (73 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/reservoir-dynamics.md",
+      "type": "document",
+      "name": "reservoir-dynamics.md",
+      "filePath": "skills/subsurface/reservoir-dynamics.md",
+      "summary": "markdown docs file (54 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/seismic-interpretation.md",
+      "type": "document",
+      "name": "seismic-interpretation.md",
+      "filePath": "skills/subsurface/seismic-interpretation.md",
+      "summary": "markdown docs file (50 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/subsurface/subsurface-gr-interval-cognitive.md",
+      "type": "document",
+      "name": "subsurface-gr-interval-cognitive.md",
+      "filePath": "skills/subsurface/subsurface-gr-interval-cognitive.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

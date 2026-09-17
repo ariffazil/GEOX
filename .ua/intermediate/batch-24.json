@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/analysis/GEOX_CONTRAST_ANALYSIS.md",
+      "type": "document",
+      "name": "GEOX_CONTRAST_ANALYSIS.md",
+      "filePath": "docs/analysis/GEOX_CONTRAST_ANALYSIS.md",
+      "summary": "markdown docs file (259 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/analysis/LAYANG_LAYANG_KINABALU_CONTRAST_NOTE.md",
+      "type": "document",
+      "name": "LAYANG_LAYANG_KINABALU_CONTRAST_NOTE.md",
+      "filePath": "docs/analysis/LAYANG_LAYANG_KINABALU_CONTRAST_NOTE.md",
+      "summary": "markdown docs file (100 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/analysis/MACROSTRAT_ANALYSIS.md",
+      "type": "document",
+      "name": "MACROSTRAT_ANALYSIS.md",
+      "filePath": "docs/analysis/MACROSTRAT_ANALYSIS.md",
+      "summary": "markdown docs file (190 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/analysis/MACROSTRAT_REPO_ANALYSIS.md",
+      "type": "document",
+      "name": "MACROSTRAT_REPO_ANALYSIS.md",
+      "filePath": "docs/analysis/MACROSTRAT_REPO_ANALYSIS.md",
+      "summary": "markdown docs file (171 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

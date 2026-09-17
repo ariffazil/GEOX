@@ -1,0 +1,60 @@
+# Fill Ratio > 1 Diagnostic — Example
+# Demonstrates the diagnostic protocol for anomalous fill ratios
+
+observation_id: "obs-fill-ratio-001"
+anomaly_type: "fill_ratio_gt_1"
+status: "PENDING_DIAGNOSTIC"
+
+possible_causes:
+  - cause: "reversed_subtraction_order"
+    test: "Verify sign convention and subtraction order"
+    evidence_required: "Source and target state labels, sign convention declaration"
+    priority: "1 (test first)"
+
+  - cause: "inconsistent_restoration_ages"
+    test: "Verify ages of both restoration states are correct"
+    evidence_required: "Age assignments, biostrat calibration"
+    priority: "2"
+
+  - cause: "mismatched_surface_extents"
+    test: "Verify both surfaces cover the same geographic area"
+    evidence_required: "Grid extents, clip boundaries"
+    priority: "3"
+
+  - cause: "unit_or_datum_mismatch"
+    test: "Verify CRS, XY units, Z units, datum, polarity"
+    evidence_required: "CRS metadata, unit declarations"
+    priority: "4"
+
+  - cause: "erosion_or_hiatus"
+    test: "Check for unconformity surfaces or erosion"
+    evidence_required: "Biostrat gaps, seismic onlap/downlap"
+    priority: "5"
+
+  - cause: "compaction_model_mismatch"
+    test: "Verify compaction curve is appropriate for lithology and depth"
+    evidence_required: "Compaction curve name, measured depth limit"
+    priority: "6"
+
+  - cause: "interpolation_artefact"
+    test: "Check grid interpolation method and cell size"
+    evidence_required: "Interpolation method, cell size, data density"
+    priority: "7"
+
+  - cause: "missing_structural_displacement"
+    test: "Check for faults not represented in restoration"
+    evidence_required: "Fault map, throw estimates"
+    priority: "8"
+
+  - cause: "inappropriate_facies_or_lithology"
+    test: "Verify lithology assignment for depositional setting"
+    evidence_required: "Facies map, well lithology logs"
+    priority: "9"
+
+  - cause: "fault_activity"
+    test: "ONLY after ALL above causes excluded"
+    evidence_required: "Independent structural evidence (seismic, gravity, stress)"
+    priority: "10 (last resort)"
+
+# tectonic_explanation is NULL until all non-tectonic causes excluded
+tectonic_explanation: null

@@ -1,0 +1,1450 @@
+{
+  "nodes": [
+    {
+      "id": "file:geox-gui/src/components/SectionCanvas/SectionCanvas.tsx",
+      "type": "file",
+      "name": "SectionCanvas.tsx",
+      "filePath": "geox-gui/src/components/SectionCanvas/SectionCanvas.tsx",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/SectionCanvas/SectionCanvas.tsx:SectionCanvas",
+      "type": "function",
+      "name": "SectionCanvas",
+      "filePath": "geox-gui/src/components/SectionCanvas/SectionCanvas.tsx",
+      "lineRange": [
+        5,
+        106
+      ],
+      "summary": "SectionCanvas() — 101 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "type": "file",
+      "name": "SeismicInterpretationCanvas.tsx",
+      "filePath": "geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx:SeismicSectionRenderer",
+      "type": "function",
+      "name": "SeismicSectionRenderer",
+      "filePath": "geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "lineRange": [
+        84,
+        262
+      ],
+      "summary": "SeismicSectionRenderer({ picks, pickMode, onCanvasClick, showHorizons, showFaults, readOnly }) — 178 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx:SeismicInterpretationCanvas",
+      "type": "function",
+      "name": "SeismicInterpretationCanvas",
+      "filePath": "geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "lineRange": [
+        268,
+        840
+      ],
+      "summary": "SeismicInterpretationCanvas() — 572 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/components/VerdictConsole/VerdictConsole.css",
+      "type": "file",
+      "name": "VerdictConsole.css",
+      "filePath": "geox-gui/src/components/VerdictConsole/VerdictConsole.css",
+      "summary": "css markup file (74 non-empty lines).",
+      "tags": [
+        "markup",
+        "css"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/components/VerdictConsole/VerdictConsole.tsx",
+      "type": "file",
+      "name": "VerdictConsole.tsx",
+      "filePath": "geox-gui/src/components/VerdictConsole/VerdictConsole.tsx",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/components/VerdictConsole/VerdictConsole.tsx:VerdictConsole",
+      "type": "function",
+      "name": "VerdictConsole",
+      "filePath": "geox-gui/src/components/VerdictConsole/VerdictConsole.tsx",
+      "lineRange": [
+        49,
+        366
+      ],
+      "summary": "VerdictConsole() — 317 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/components/VolumeRenderer.js",
+      "type": "file",
+      "name": "VolumeRenderer.js",
+      "filePath": "geox-gui/src/components/VolumeRenderer.js",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/components/VolumeRenderer.js:VolumeRenderer",
+      "type": "function",
+      "name": "VolumeRenderer",
+      "filePath": "geox-gui/src/components/VolumeRenderer.js",
+      "lineRange": [
+        10,
+        44
+      ],
+      "summary": "VolumeRenderer() — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "type": "file",
+      "name": "WellContextDesk.tsx",
+      "filePath": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "summary": "Defines 4 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:ResultRow",
+      "type": "function",
+      "name": "ResultRow",
+      "filePath": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "lineRange": [
+        63,
+        68
+      ],
+      "summary": "ResultRow({ label, value }) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:ToACResultBadge",
+      "type": "function",
+      "name": "ToACResultBadge",
+      "filePath": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "lineRange": [
+        72,
+        100
+      ],
+      "summary": "ToACResultBadge({ result }) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:McpResultPanel",
+      "type": "function",
+      "name": "McpResultPanel",
+      "filePath": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "lineRange": [
+        102,
+        180
+      ],
+      "summary": "McpResultPanel({ petro, swModel, holdCheck }) — 78 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:WellContextDesk",
+      "type": "function",
+      "name": "WellContextDesk",
+      "filePath": "geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "lineRange": [
+        186,
+        356
+      ],
+      "summary": "WellContextDesk() — 170 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "type": "file",
+      "name": "WitnessBadges.tsx",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "summary": "Defines 7 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:StatusIcon",
+      "type": "function",
+      "name": "StatusIcon",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        46,
+        59
+      ],
+      "summary": "StatusIcon({ status }) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:FloorBadge",
+      "type": "function",
+      "name": "FloorBadge",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        62,
+        135
+      ],
+      "summary": "FloorBadge({ floor }) — 73 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:StatusRibbon",
+      "type": "function",
+      "name": "StatusRibbon",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        138,
+        158
+      ],
+      "summary": "StatusRibbon() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:PerceptionBadge",
+      "type": "function",
+      "name": "PerceptionBadge",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        164,
+        248
+      ],
+      "summary": "PerceptionBadge() — 84 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:WitnessBadges",
+      "type": "function",
+      "name": "WitnessBadges",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        251,
+        314
+      ],
+      "summary": "WitnessBadges() — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:WitnessBadgesCompact",
+      "type": "function",
+      "name": "WitnessBadgesCompact",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        317,
+        377
+      ],
+      "summary": "WitnessBadgesCompact() — 60 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:GroundedBadge",
+      "type": "function",
+      "name": "GroundedBadge",
+      "filePath": "geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "lineRange": [
+        380,
+        400
+      ],
+      "summary": "GroundedBadge({ confidence, status, source }) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/domains/Domain1D.tsx",
+      "type": "file",
+      "name": "Domain1D.tsx",
+      "filePath": "geox-gui/src/domains/Domain1D.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain1D.tsx:Badge",
+      "type": "function",
+      "name": "Badge",
+      "filePath": "geox-gui/src/domains/Domain1D.tsx",
+      "lineRange": [
+        5,
+        18
+      ],
+      "summary": "Badge({ children, color = \"amber\" }) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain1D.tsx:Domain1D",
+      "type": "function",
+      "name": "Domain1D",
+      "filePath": "geox-gui/src/domains/Domain1D.tsx",
+      "lineRange": [
+        20,
+        208
+      ],
+      "summary": "Domain1D() — 188 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/domains/Domain2D.tsx",
+      "type": "file",
+      "name": "Domain2D.tsx",
+      "filePath": "geox-gui/src/domains/Domain2D.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain2D.tsx:Badge",
+      "type": "function",
+      "name": "Badge",
+      "filePath": "geox-gui/src/domains/Domain2D.tsx",
+      "lineRange": [
+        5,
+        18
+      ],
+      "summary": "Badge({ children, color = \"amber\" }) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain2D.tsx:Domain2D",
+      "type": "function",
+      "name": "Domain2D",
+      "filePath": "geox-gui/src/domains/Domain2D.tsx",
+      "lineRange": [
+        20,
+        146
+      ],
+      "summary": "Domain2D() — 126 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/domains/Domain3D.tsx",
+      "type": "file",
+      "name": "Domain3D.tsx",
+      "filePath": "geox-gui/src/domains/Domain3D.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain3D.tsx:Badge",
+      "type": "function",
+      "name": "Badge",
+      "filePath": "geox-gui/src/domains/Domain3D.tsx",
+      "lineRange": [
+        41,
+        54
+      ],
+      "summary": "Badge({ children, color = \"emerald\" }) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/domains/Domain3D.tsx:Domain3D",
+      "type": "function",
+      "name": "Domain3D",
+      "filePath": "geox-gui/src/domains/Domain3D.tsx",
+      "lineRange": [
+        56,
+        227
+      ],
+      "summary": "Domain3D() — 171 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/domains/DomainLEM.tsx",
+      "type": "file",
+      "name": "DomainLEM.tsx",
+      "filePath": "geox-gui/src/domains/DomainLEM.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/domains/DomainLEM.tsx:Badge",
+      "type": "function",
+      "name": "Badge",
+      "filePath": "geox-gui/src/domains/DomainLEM.tsx",
+      "lineRange": [
+        5,
+        15
+      ],
+      "summary": "Badge({ children, color = \"purple\" }) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/domains/DomainLEM.tsx:DomainLEM",
+      "type": "function",
+      "name": "DomainLEM",
+      "filePath": "geox-gui/src/domains/DomainLEM.tsx",
+      "lineRange": [
+        17,
+        105
+      ],
+      "summary": "DomainLEM() — 88 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/domains/DomainVoid.tsx",
+      "type": "file",
+      "name": "DomainVoid.tsx",
+      "filePath": "geox-gui/src/domains/DomainVoid.tsx",
+      "summary": "Defines 2 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/domains/DomainVoid.tsx:Badge",
+      "type": "function",
+      "name": "Badge",
+      "filePath": "geox-gui/src/domains/DomainVoid.tsx",
+      "lineRange": [
+        5,
+        17
+      ],
+      "summary": "Badge({ children, color = \"amber\" }) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox-gui/src/domains/DomainVoid.tsx:DomainVoid",
+      "type": "function",
+      "name": "DomainVoid",
+      "filePath": "geox-gui/src/domains/DomainVoid.tsx",
+      "lineRange": [
+        19,
+        155
+      ],
+      "summary": "DomainVoid() — 136 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/domains/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/domains/index.ts",
+      "summary": "exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "type": "file",
+      "name": "Domain1D.tsx",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "summary": "Defines 5 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain1D.tsx:LogTrackSVG",
+      "type": "function",
+      "name": "LogTrackSVG",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "lineRange": [
+        106,
+        300
+      ],
+      "summary": "LogTrackSVG({ track, depthRange, height, selectedDepth, onDepthClick }) — 194 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain1D.tsx:FormationStrip",
+      "type": "function",
+      "name": "FormationStrip",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "lineRange": [
+        305,
+        365
+      ],
+      "summary": "FormationStrip({ formations, depthRange, height, onFormationClick }) — 60 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain1D.tsx:DepthAxis",
+      "type": "function",
+      "name": "DepthAxis",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "lineRange": [
+        370,
+        423
+      ],
+      "summary": "DepthAxis({ range, height, reference, onReferenceChange }) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain1D.tsx:WellInfoPanel",
+      "type": "function",
+      "name": "WellInfoPanel",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "lineRange": [
+        428,
+        467
+      ],
+      "summary": "WellInfoPanel({ well }) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain1D.tsx:Domain1D",
+      "type": "function",
+      "name": "Domain1D",
+      "filePath": "geox-gui/src/forge/domain/Domain1D.tsx",
+      "lineRange": [
+        472,
+        625
+      ],
+      "summary": "Domain1D({\n  well = defaultWell,\n  tracks = defaultTracks,\n  formations = defaultFormations,\n  onDepthSelect = () => {},\n  onFormationPick = () => {},\n}) — 153 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "type": "file",
+      "name": "Domain2D.tsx",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "summary": "Defines 5 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain2D.tsx:getColorFromValue",
+      "type": "function",
+      "name": "getColorFromValue",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "lineRange": [
+        117,
+        157
+      ],
+      "summary": "getColorFromValue(value, colorMap) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain2D.tsx:SeismicCanvas",
+      "type": "function",
+      "name": "SeismicCanvas",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "lineRange": [
+        162,
+        340
+      ],
+      "summary": "SeismicCanvas({\n  data,\n  displayMode,\n  colorMap,\n  gain,\n  horizons,\n  gcps,\n  onPick,\n  width,\n  height,\n}) — 178 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain2D.tsx:AttributePanel",
+      "type": "function",
+      "name": "AttributePanel",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "lineRange": [
+        345,
+        391
+      ],
+      "summary": "AttributePanel({ attributes, onToggle, onCompute }) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain2D.tsx:DisplayControls",
+      "type": "function",
+      "name": "DisplayControls",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "lineRange": [
+        396,
+        455
+      ],
+      "summary": "DisplayControls({ displayMode, colorMap, gain, onDisplayModeChange, onColorMapChange, onGainChange }) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain2D.tsx:Domain2D",
+      "type": "function",
+      "name": "Domain2D",
+      "filePath": "geox-gui/src/forge/domain/Domain2D.tsx",
+      "lineRange": [
+        460,
+        677
+      ],
+      "summary": "Domain2D({\n  seismicData = defaultSeismicData,\n  horizons: initialHorizons = defaultHorizons,\n  gcps = defaultGCPs,\n  attributes = defaultAttributes,\n  onPick = () => {},\n  onGcpAdd = () => {},\n  onHorizonEdit = () => {},\n}) — 217 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "type": "file",
+      "name": "Domain3D.tsx",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "summary": "Defines 5 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain3D.tsx:VolumeCanvas3D",
+      "type": "function",
+      "name": "VolumeCanvas3D",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "lineRange": [
+        135,
+        317
+      ],
+      "summary": "VolumeCanvas3D({ volume, surfaces, wells, viewState, viewMode, width, height }) — 182 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain3D.tsx:BasinInfoPanel",
+      "type": "function",
+      "name": "BasinInfoPanel",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "lineRange": [
+        322,
+        380
+      ],
+      "summary": "BasinInfoPanel({ basin }) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain3D.tsx:LayerControlPanel",
+      "type": "function",
+      "name": "LayerControlPanel",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "lineRange": [
+        385,
+        448
+      ],
+      "summary": "LayerControlPanel({ surfaces, wells, onSurfaceToggle, onWellToggle }) — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain3D.tsx:ViewControls",
+      "type": "function",
+      "name": "ViewControls",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "lineRange": [
+        453,
+        546
+      ],
+      "summary": "ViewControls({ viewState, viewMode, onViewStateChange, onViewModeChange }) — 93 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/Domain3D.tsx:Domain3D",
+      "type": "function",
+      "name": "Domain3D",
+      "filePath": "geox-gui/src/forge/domain/Domain3D.tsx",
+      "lineRange": [
+        551,
+        710
+      ],
+      "summary": "Domain3D({\n  volume = defaultVolume,\n  surfaces: initialSurfaces = defaultSurfaces,\n  wells: initialWells = defaultWells,\n  basin = defaultBasin,\n  onPointSelect = () => {},\n  onSliceChange = () => {},\n}) — 159 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "type": "file",
+      "name": "DomainVoid.tsx",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "summary": "Defines 6 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:GCOSGauge",
+      "type": "function",
+      "name": "GCOSGauge",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        97,
+        153
+      ],
+      "summary": "GCOSGauge({ components }) — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:VolumetricsChart",
+      "type": "function",
+      "name": "VolumetricsChart",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        158,
+        205
+      ],
+      "summary": "VolumetricsChart({\n  distribution,\n  label,\n  unit,\n}) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:FloorStatusPanel",
+      "type": "function",
+      "name": "FloorStatusPanel",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        210,
+        253
+      ],
+      "summary": "FloorStatusPanel({ verdicts }) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:HoldGateControl",
+      "type": "function",
+      "name": "HoldGateControl",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        258,
+        353
+      ],
+      "summary": "HoldGateControl({ onHoldRequest, onSealRequest, canSeal }) — 95 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:EconomicSummary",
+      "type": "function",
+      "name": "EconomicSummary",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        358,
+        403
+      ],
+      "summary": "EconomicSummary({ metrics }) — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/forge/domain/DomainVoid.tsx:DomainVoid",
+      "type": "function",
+      "name": "DomainVoid",
+      "filePath": "geox-gui/src/forge/domain/DomainVoid.tsx",
+      "lineRange": [
+        408,
+        502
+      ],
+      "summary": "DomainVoid({\n  assessment = defaultAssessment,\n  gcos = defaultGCOS,\n  economics = defaultEconomics,\n  verdicts = defaultVerdicts,\n  onHoldRequest = () => {},\n  onSealRequest = () => {},\n}) — 94 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/forge/domain/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/forge/domain/index.ts",
+      "summary": "exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/forge/index.ts",
+      "summary": "exports 22 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/intelligence/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/forge/intelligence/index.ts",
+      "summary": "exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "type": "file",
+      "name": "useGeminiIntelligence.ts",
+      "filePath": "geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "summary": "Defines 3 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts:useGeminiIntelligence",
+      "type": "function",
+      "name": "useGeminiIntelligence",
+      "filePath": "geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "lineRange": [
+        222,
+        458
+      ],
+      "summary": "useGeminiIntelligence(config) — 236 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts:useQuickInterpretation",
+      "type": "function",
+      "name": "useQuickInterpretation",
+      "filePath": "geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "lineRange": [
+        463,
+        493
+      ],
+      "summary": "useQuickInterpretation() — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "type": "file",
+      "name": "GeoScaleEngine.ts",
+      "filePath": "geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "summary": "Defines 1 function(s); 1 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/forge/scale/GeoScaleEngine.ts:createScaleEngine",
+      "type": "function",
+      "name": "createScaleEngine",
+      "filePath": "geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "lineRange": [
+        470,
+        493
+      ],
+      "summary": "createScaleEngine(domain, options) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:geox-gui/src/forge/scale/GeoScaleEngine.ts:GeoScaleEngine",
+      "type": "class",
+      "name": "GeoScaleEngine",
+      "filePath": "geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "lineRange": [
+        153,
+        465
+      ],
+      "summary": "Class GeoScaleEngine with 13 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/forge/scale/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/forge/scale/index.ts",
+      "summary": "exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/forge/scale/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "geox-gui/src/forge/scale/types.ts",
+      "summary": "typescript code file (126 non-empty lines).",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/hooks/useGeologicalClaim.ts",
+      "type": "file",
+      "name": "useGeologicalClaim.ts",
+      "filePath": "geox-gui/src/hooks/useGeologicalClaim.ts",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/hooks/useGeologicalClaim.ts:useGeologicalClaim",
+      "type": "function",
+      "name": "useGeologicalClaim",
+      "filePath": "geox-gui/src/hooks/useGeologicalClaim.ts",
+      "lineRange": [
+        19,
+        92
+      ],
+      "summary": "useGeologicalClaim(claimType) — 73 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:geox-gui/src/components/SectionCanvas/SectionCanvas.tsx",
+      "target": "function:geox-gui/src/components/SectionCanvas/SectionCanvas.tsx:SectionCanvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "target": "function:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx:SeismicSectionRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx",
+      "target": "function:geox-gui/src/components/SectionCanvas/SeismicInterpretationCanvas.tsx:SeismicInterpretationCanvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/VerdictConsole/VerdictConsole.tsx",
+      "target": "function:geox-gui/src/components/VerdictConsole/VerdictConsole.tsx:VerdictConsole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/VolumeRenderer.js",
+      "target": "function:geox-gui/src/components/VolumeRenderer.js:VolumeRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "target": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:ResultRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "target": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:ToACResultBadge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "target": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:McpResultPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx",
+      "target": "function:geox-gui/src/components/WellContextDesk/WellContextDesk.tsx:WellContextDesk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:StatusIcon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:FloorBadge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:StatusRibbon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:PerceptionBadge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:WitnessBadges",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:WitnessBadgesCompact",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx",
+      "target": "function:geox-gui/src/components/WitnessBadges/WitnessBadges.tsx:GroundedBadge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain1D.tsx",
+      "target": "function:geox-gui/src/domains/Domain1D.tsx:Badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain1D.tsx",
+      "target": "function:geox-gui/src/domains/Domain1D.tsx:Domain1D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain2D.tsx",
+      "target": "function:geox-gui/src/domains/Domain2D.tsx:Badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain2D.tsx",
+      "target": "function:geox-gui/src/domains/Domain2D.tsx:Domain2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain3D.tsx",
+      "target": "function:geox-gui/src/domains/Domain3D.tsx:Badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/Domain3D.tsx",
+      "target": "function:geox-gui/src/domains/Domain3D.tsx:Domain3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/DomainLEM.tsx",
+      "target": "function:geox-gui/src/domains/DomainLEM.tsx:Badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/DomainLEM.tsx",
+      "target": "function:geox-gui/src/domains/DomainLEM.tsx:DomainLEM",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/DomainVoid.tsx",
+      "target": "function:geox-gui/src/domains/DomainVoid.tsx:Badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/domains/DomainVoid.tsx",
+      "target": "function:geox-gui/src/domains/DomainVoid.tsx:DomainVoid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain1D.tsx:LogTrackSVG",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain1D.tsx:FormationStrip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain1D.tsx:DepthAxis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain1D.tsx:WellInfoPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain1D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain1D.tsx:Domain1D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain2D.tsx:getColorFromValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain2D.tsx:SeismicCanvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain2D.tsx:AttributePanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain2D.tsx:DisplayControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain2D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain2D.tsx:Domain2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain3D.tsx:VolumeCanvas3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain3D.tsx:BasinInfoPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain3D.tsx:LayerControlPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain3D.tsx:ViewControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/Domain3D.tsx",
+      "target": "function:geox-gui/src/forge/domain/Domain3D.tsx:Domain3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:GCOSGauge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:VolumetricsChart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:FloorStatusPanel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:HoldGateControl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:EconomicSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/domain/DomainVoid.tsx",
+      "target": "function:geox-gui/src/forge/domain/DomainVoid.tsx:DomainVoid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "target": "function:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts:useGeminiIntelligence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts",
+      "target": "function:geox-gui/src/forge/intelligence/useGeminiIntelligence.ts:useQuickInterpretation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "target": "function:geox-gui/src/forge/scale/GeoScaleEngine.ts:createScaleEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/forge/scale/GeoScaleEngine.ts",
+      "target": "class:geox-gui/src/forge/scale/GeoScaleEngine.ts:GeoScaleEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/hooks/useGeologicalClaim.ts",
+      "target": "function:geox-gui/src/hooks/useGeologicalClaim.ts:useGeologicalClaim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

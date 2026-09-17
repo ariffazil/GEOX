@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/ontology/archie_params.yaml",
+      "type": "config",
+      "name": "archie_params.yaml",
+      "filePath": "resources/ontology/archie_params.yaml",
+      "summary": "yaml config file (354 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/biostrat_reference_stack.yaml",
+      "type": "config",
+      "name": "biostrat_reference_stack.yaml",
+      "filePath": "resources/ontology/biostrat_reference_stack.yaml",
+      "summary": "yaml config file (184 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/borehole_corrections.yaml",
+      "type": "config",
+      "name": "borehole_corrections.yaml",
+      "filePath": "resources/ontology/borehole_corrections.yaml",
+      "summary": "yaml config file (437 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/curve_aliases.yaml",
+      "type": "config",
+      "name": "curve_aliases.yaml",
+      "filePath": "resources/ontology/curve_aliases.yaml",
+      "summary": "yaml config file (29 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/ontology/depositional_env_codes.yaml",
+      "type": "config",
+      "name": "depositional_env_codes.yaml",
+      "filePath": "resources/ontology/depositional_env_codes.yaml",
+      "summary": "yaml config file (7 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/ontology/electrofacies_library.yaml",
+      "type": "config",
+      "name": "electrofacies_library.yaml",
+      "filePath": "resources/ontology/electrofacies_library.yaml",
+      "summary": "yaml config file (409 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/fluid_pvt.yaml",
+      "type": "config",
+      "name": "fluid_pvt.yaml",
+      "filePath": "resources/ontology/fluid_pvt.yaml",
+      "summary": "yaml config file (382 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/formation_water.yaml",
+      "type": "config",
+      "name": "formation_water.yaml",
+      "filePath": "resources/ontology/formation_water.yaml",
+      "summary": "yaml config file (367 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/lithology_classes.yaml",
+      "type": "config",
+      "name": "lithology_classes.yaml",
+      "filePath": "resources/ontology/lithology_classes.yaml",
+      "summary": "yaml config file (63 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/ontology/net_pay_cutoffs.yaml",
+      "type": "config",
+      "name": "net_pay_cutoffs.yaml",
+      "filePath": "resources/ontology/net_pay_cutoffs.yaml",
+      "summary": "yaml config file (372 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/petrophysics_assumptions.yaml",
+      "type": "config",
+      "name": "petrophysics_assumptions.yaml",
+      "filePath": "resources/ontology/petrophysics_assumptions.yaml",
+      "summary": "yaml config file (284 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:resources/ontology/petrophysics_report.md",
+      "type": "document",
+      "name": "petrophysics_report.md",
+      "filePath": "resources/ontology/petrophysics_report.md",
+      "summary": "markdown docs file (331 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/pressure_states.yaml",
+      "type": "config",
+      "name": "pressure_states.yaml",
+      "filePath": "resources/ontology/pressure_states.yaml",
+      "summary": "yaml config file (101 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/ontology/risk_verdicts.yaml",
+      "type": "config",
+      "name": "risk_verdicts.yaml",
+      "filePath": "resources/ontology/risk_verdicts.yaml",
+      "summary": "yaml config file (41 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/ontology/sabah_basin_strat.yaml",
+      "type": "config",
+      "name": "sabah_basin_strat.yaml",
+      "filePath": "resources/ontology/sabah_basin_strat.yaml",
+      "summary": "yaml config file (834 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/ontology/scal_correlations.yaml",
+      "type": "config",
+      "name": "scal_correlations.yaml",
+      "filePath": "resources/ontology/scal_correlations.yaml",
+      "summary": "yaml config file (470 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:resources/ontology/seismic_foundation_models.md",
+      "type": "document",
+      "name": "seismic_foundation_models.md",
+      "filePath": "resources/ontology/seismic_foundation_models.md",
+      "summary": "markdown docs file (97 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/ontology/sequence_surfaces.yaml",
+      "type": "config",
+      "name": "sequence_surfaces.yaml",
+      "filePath": "resources/ontology/sequence_surfaces.yaml",
+      "summary": "yaml config file (55 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/ontology/wlfm_vocabulary.md",
+      "type": "document",
+      "name": "wlfm_vocabulary.md",
+      "filePath": "resources/ontology/wlfm_vocabulary.md",
+      "summary": "markdown docs file (79 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

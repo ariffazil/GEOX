@@ -1,0 +1,2109 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "results": [
+    {
+      "path": "docs/ARCHITECTURE-EARTH-OS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 358,
+      "nonEmptyLines": 297,
+      "sections": [
+        {
+          "heading": "🔥 GEOX Earth OS — Architecture v1.0",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. THE SHIFT",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. HORIZONS MAP",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "2. HORIZON 1 — GUI Completion (P0-P8)",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Done This Session",
+          "level": 3,
+          "line": 40
+        },
+        {
+          "heading": "Remaining",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "3. HORIZON 2 — Workspace Memory",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "Implemented",
+          "level": 3,
+          "line": 97
+        },
+        {
+          "heading": "4. HORIZON 3 — Knowledge Graph",
+          "level": 2,
+          "line": 105
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 119
+        },
+        {
+          "heading": "Implementation Path",
+          "level": 3,
+          "line": 132
+        },
+        {
+          "heading": "5. HORIZON 4 — Earth Twin",
+          "level": 2,
+          "line": 140
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "Dependencies",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "6. HORIZON 5 — QQQ Runtime",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "Implementation Path",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "7. HORIZON 6 — Agent Society",
+          "level": 2,
+          "line": 206
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 208
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 218
+        },
+        {
+          "heading": "Dependencies",
+          "level": 3,
+          "line": 233
+        },
+        {
+          "heading": "8. HORIZON 7 — AAA Mission Control",
+          "level": 2,
+          "line": 240
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 242
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 253
+        },
+        {
+          "heading": "9. HORIZON 8 — Earth OS Convergence",
+          "level": 2,
+          "line": 280
+        },
+        {
+          "heading": "What It Is",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "10. CURRENT STATE — JULY 21, 2026",
+          "level": 2,
+          "line": 315
+        },
+        {
+          "heading": "Key Files",
+          "level": 3,
+          "line": 323
+        },
+        {
+          "heading": "Key URLs",
+          "level": 3,
+          "line": 333
+        },
+        {
+          "heading": "11. NEXT FORGE SESSION",
+          "level": 2,
+          "line": 348
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 34
+      }
+    },
+    {
+      "path": "docs/ARCHITECTURE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 368,
+      "nonEmptyLines": 287,
+      "sections": [
+        {
+          "heading": "GEOX Architecture — Earth Intelligence Core",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Design Philosophy",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "2. System Model",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "3. The 7 Tools — Detailed",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "3.1 geox_compute_ac_risk (THE CORE)",
+          "level": 3,
+          "line": 55
+        },
+        {
+          "heading": "3.2 geox_load_seismic_line",
+          "level": 3,
+          "line": 86
+        },
+        {
+          "heading": "3.3 geox_build_structural_candidates",
+          "level": 3,
+          "line": 112
+        },
+        {
+          "heading": "3.4 geox_verify_geospatial",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "3.5 geox_feasibility_check",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "3.6 geox_evaluate_prospect",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "3.7 geox_earth_signals",
+          "level": 3,
+          "line": 168
+        },
+        {
+          "heading": "4. Constitutional Enforcement",
+          "level": 2,
+          "line": 179
+        },
+        {
+          "heading": "4.1 Floor Implementation",
+          "level": 3,
+          "line": 181
+        },
+        {
+          "heading": "4.2 888_HOLD Mechanism",
+          "level": 3,
+          "line": 193
+        },
+        {
+          "heading": "5. MCP App Architecture",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "5.1 App Manifest Structure",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "5.2 Event System",
+          "level": 3,
+          "line": 226
+        },
+        {
+          "heading": "6. Data Flow",
+          "level": 2,
+          "line": 247
+        },
+        {
+          "heading": "6.1 AC_Risk Calculation Flow",
+          "level": 3,
+          "line": 249
+        },
+        {
+          "heading": "6.2 Seismic Interpretation Flow",
+          "level": 3,
+          "line": 272
+        },
+        {
+          "heading": "7. Deployment Patterns",
+          "level": 2,
+          "line": 296
+        },
+        {
+          "heading": "7.1 Research Profile",
+          "level": 3,
+          "line": 298
+        },
+        {
+          "heading": "7.2 Enterprise Profile",
+          "level": 3,
+          "line": 304
+        },
+        {
+          "heading": "8. Extension Points",
+          "level": 2,
+          "line": 313
+        },
+        {
+          "heading": "9. Testing Strategy",
+          "level": 2,
+          "line": 331
+        },
+        {
+          "heading": "9.1 Constitutional Tests",
+          "level": 3,
+          "line": 333
+        },
+        {
+          "heading": "10. Glossary",
+          "level": 2,
+          "line": 355
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/BOUNDARY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 139,
+      "nonEmptyLines": 111,
+      "sections": [
+        {
+          "heading": "BOUNDARY.md — GEOX Earth Intelligence / Governed World Model",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Owns",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Does Not Own",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Imports From",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Exports To",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "Known Boundary Violations (888 HOLD Queue)",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "Canonical Tool Surface (Live)",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "Canonical Surfaces",
+          "level": 2,
+          "line": 71
+        },
+        {
+          "heading": "Autonomous Authority Charter (AAC v1.0)",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "1. Class-A Autonomy (No Approval Needed)",
+          "level": 3,
+          "line": 83
+        },
+        {
+          "heading": "2. Class-B Sovereign Actions (Requires Arif Veto Check)",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "3. Class-C Forbidden Actions (Strictly Blocked)",
+          "level": 3,
+          "line": 100
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "docs/CAPABILITY_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 322,
+      "nonEmptyLines": 248,
+      "sections": [
+        {
+          "heading": "GEOX vs. Legacy Subsurface Stack — Workflow Capability Map",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Methodology",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Domain 1 — Seismic Interpretation & Structural",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "Integration Pattern",
+          "level": 3,
+          "line": 55
+        },
+        {
+          "heading": "Domain 2 — Petrophysics & Formation Evaluation",
+          "level": 2,
+          "line": 83
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "Integration Pattern",
+          "level": 3,
+          "line": 96
+        },
+        {
+          "heading": "Domain 3 — Geomodelling & Reservoir Characterization",
+          "level": 2,
+          "line": 129
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 131
+        },
+        {
+          "heading": "Key Constraint",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "Domain 4 — CCUS & Geothermal (Nonstationary Regimes)",
+          "level": 2,
+          "line": 153
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 155
+        },
+        {
+          "heading": "Why This Matters",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "Domain 5 — Prospect Evaluation & Risk",
+          "level": 2,
+          "line": 183
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 185
+        },
+        {
+          "heading": "Integration Pattern",
+          "level": 3,
+          "line": 196
+        },
+        {
+          "heading": "Domain 6 — Reserves & Volumetrics",
+          "level": 2,
+          "line": 223
+        },
+        {
+          "heading": "Workflow Surface",
+          "level": 3,
+          "line": 225
+        },
+        {
+          "heading": "Cross-Cutting Governance Layer",
+          "level": 2,
+          "line": 237
+        },
+        {
+          "heading": "Machine-Checkable Assertions",
+          "level": 2,
+          "line": 253
+        },
+        {
+          "heading": "Appendix A — Tool Registry Cross-Reference",
+          "level": 2,
+          "line": 287
+        },
+        {
+          "heading": "Appendix B — Incumbent Lock-In Heatmap Summary",
+          "level": 2,
+          "line": 307
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 24
+      }
+    },
+    {
+      "path": "docs/CHANGELOG.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 87,
+      "nonEmptyLines": 71,
+      "sections": [
+        {
+          "heading": "Changelog",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "[v2026.05.01] - 2026-05-01",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 8
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 18
+        },
+        {
+          "heading": "Deprecated",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "Security",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "Migration Notes",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "[v2026.05.12] - 2026-05-12",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "Security",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "[v2026.05.13] - 2026-05-13",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 58
+        },
+        {
+          "heading": "Security",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "[v2026.05.17] - 2026-05-16",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 67
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "Fixed",
+          "level": 3,
+          "line": 78
+        },
+        {
+          "heading": "Security",
+          "level": 3,
+          "line": 82
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 19
+      }
+    },
+    {
+      "path": "docs/CODE_OF_CONDUCT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "Contributor Covenant Code of Conduct",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Our Pledge",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Our Standards",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Enforcement Responsibilities",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "Scope",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Contact Information",
+          "level": 2,
+          "line": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "docs/CONSTITUTIONAL_PHYSICS_STACK.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 105,
+      "nonEmptyLines": 84,
+      "sections": [
+        {
+          "heading": "Constitutional Physics Stack",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Axiom",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "The Three Layers",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Data Flow (Metabolic Loop)",
+          "level": 2,
+          "line": 50
+        },
+        {
+          "heading": "Where Each Component Lives",
+          "level": 2,
+          "line": 72
+        },
+        {
+          "heading": "The Human Entry Point",
+          "level": 2,
+          "line": 85
+        },
+        {
+          "heading": "In One Sentence",
+          "level": 2,
+          "line": 98
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/CONTEXT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 75,
+      "nonEmptyLines": 59,
+      "sections": [
+        {
+          "heading": "CONTEXT.md — GEOX (Earth Intelligence)",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "Live State",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Canonical Tool Surface",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Key Updates (2026-07-02 FORGE)",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Production Readiness (2026-07-02)",
+          "level": 2,
+          "line": 48
+        },
+        {
+          "heading": "Dependencies",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Known Issues",
+          "level": 2,
+          "line": 66
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/CONTRIBUTING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 23,
+      "nonEmptyLines": 14,
+      "sections": [
+        {
+          "heading": "Contributing to GEOX",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Code of Conduct",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Developer Certificate of Origin (DCO)",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "How to Contribute",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Governance & License Note",
+          "level": 2,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docs/CORE_IMPORT_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 147,
+      "nonEmptyLines": 114,
+      "sections": [
+        {
+          "heading": "GEOX Core Import Map — single domain core",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "1. Canonical layout",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Import rules (agents + code)",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "2. Package roles",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "3. Membrane → core dependency map (high traffic)",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "4. `geox_core` internal map (domain law zones)",
+          "level": 2,
+          "line": 102
+        },
+        {
+          "heading": "5. Wealth bleed note (structure)",
+          "level": 2,
+          "line": 117
+        },
+        {
+          "heading": "6. Migration checklist",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "7. Agent one-liner",
+          "level": 2,
+          "line": 141
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/DATA_SOURCES_REGISTRY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 224,
+      "nonEmptyLines": 178,
+      "sections": [
+        {
+          "heading": "GEOX Open Data Sources Registry",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. WELL LOG DATA",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "2. SEISMIC DATA",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "3. GRAVITY & MAGNETICS",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "4. GEOLOGICAL MAPS & STRATIGRAPHY",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Macrostrat Key Endpoints (already wired?):",
+          "level": 3,
+          "line": 70
+        },
+        {
+          "heading": "5. GEOCHEMISTRY & PETROLOGY",
+          "level": 2,
+          "line": 81
+        },
+        {
+          "heading": "EarthChem/PetDB API v4 Endpoints:",
+          "level": 3,
+          "line": 94
+        },
+        {
+          "heading": "GEOROC 2.0 API:",
+          "level": 3,
+          "line": 103
+        },
+        {
+          "heading": "6. TECTONIC & PLATE RECONSTRUCTION",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "7. SATELLITE / REMOTE SENSING",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "8. ADDITIONAL / CROSS-CUTTING",
+          "level": 2,
+          "line": 139
+        },
+        {
+          "heading": "PRIORITY WIRING ORDER (for GEOX production)",
+          "level": 2,
+          "line": 151
+        },
+        {
+          "heading": "Tier 1 — Wire immediately (REST APIs, easy integration):",
+          "level": 3,
+          "line": 153
+        },
+        {
+          "heading": "Tier 2 — Wire with registration (portal + download):",
+          "level": 3,
+          "line": 163
+        },
+        {
+          "heading": "Tier 3 — Wire later (scattered, harder):",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "PYTHON LIBRARY QUICK REFERENCE",
+          "level": 2,
+          "line": 181
+        },
+        {
+          "heading": "NOTES",
+          "level": 2,
+          "line": 216
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "docs/EXTERNAL_INTEGRATION_GUIDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 345,
+      "nonEmptyLines": 290,
+      "sections": [
+        {
+          "heading": "GEOX Vision: External Integration Guide",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Integration Philosophy",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. Georeferencing (MapWarper + GeoReferencer)",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "External Resources",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "Integration Architecture",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "Concrete Steps",
+          "level": 3,
+          "line": 59
+        },
+        {
+          "heading": "2. Analog Digitization (WebPlotDigitizer + Geomega)",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "External Resources",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "Integration Architecture",
+          "level": 3,
+          "line": 83
+        },
+        {
+          "heading": "Concrete Steps",
+          "level": 3,
+          "line": 112
+        },
+        {
+          "heading": "3. Seismic Vision (seismiqb + Seismic-App)",
+          "level": 2,
+          "line": 129
+        },
+        {
+          "heading": "External Resources",
+          "level": 3,
+          "line": 131
+        },
+        {
+          "heading": "Integration Architecture",
+          "level": 3,
+          "line": 139
+        },
+        {
+          "heading": "Concrete Steps",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "4. Attributes from Images (2025 Nature Paper)",
+          "level": 2,
+          "line": 186
+        },
+        {
+          "heading": "External Resource",
+          "level": 3,
+          "line": 188
+        },
+        {
+          "heading": "Key Findings to Encode",
+          "level": 3,
+          "line": 191
+        },
+        {
+          "heading": "Integration",
+          "level": 3,
+          "line": 200
+        },
+        {
+          "heading": "5. Vision-Language Backends (GeoX + GeoGround + GeoPixel)",
+          "level": 2,
+          "line": 220
+        },
+        {
+          "heading": "External Resources",
+          "level": 3,
+          "line": 222
+        },
+        {
+          "heading": "Integration Pattern",
+          "level": 3,
+          "line": 231
+        },
+        {
+          "heading": "Concrete Steps",
+          "level": 3,
+          "line": 249
+        },
+        {
+          "heading": "Integration Checklist",
+          "level": 2,
+          "line": 256
+        },
+        {
+          "heading": "Week 1-2: Georeferencing",
+          "level": 3,
+          "line": 258
+        },
+        {
+          "heading": "Week 3-4: Analog Digitization",
+          "level": 3,
+          "line": 265
+        },
+        {
+          "heading": "Month 2: Seismic Vision",
+          "level": 3,
+          "line": 272
+        },
+        {
+          "heading": "Month 3: Attributes & VLM",
+          "level": 3,
+          "line": 279
+        },
+        {
+          "heading": "AC_Risk Integration Points",
+          "level": 2,
+          "line": 287
+        },
+        {
+          "heading": "Risk: External Dependencies",
+          "level": 2,
+          "line": 319
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 330
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 30
+      }
+    },
+    {
+      "path": "docs/FEDERATION_CONTRACT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 62,
+      "nonEmptyLines": 42,
+      "sections": [
+        {
+          "heading": "Federation Contract — Pointer (Consolidation Phase 888)",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "Two-Entry-Point Doctrine (GEOX-Specific, Forged 2026-07-16)",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Entry Points",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "Routing Rules",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "Why Two Paths",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "MCP Spec Alignment (2026-07-16)",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "Spec Migration Note (Draft Spec)",
+          "level": 3,
+          "line": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/FEDERATION_INTELLIGENCE_FLOW.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 396,
+      "nonEmptyLines": 299,
+      "sections": [
+        {
+          "heading": "Federation Intelligence Flow — Quantum-Level Architecture",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Core Thesis",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "What \"Quantum-Level\" Means",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Architecture (vs current)",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Current (broken) — request-response isolation",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "Quantum-level — continuous intelligence field",
+          "level": 3,
+          "line": 43
+        },
+        {
+          "heading": "IntelligenceAtom — the universal payload",
+          "level": 2,
+          "line": 82
+        },
+        {
+          "heading": "NATS Topic Map (quantum flow backbone)",
+          "level": 2,
+          "line": 118
+        },
+        {
+          "heading": "Concrete Behavior Changes",
+          "level": 2,
+          "line": 135
+        },
+        {
+          "heading": "Before (current GEOX tool call)",
+          "level": 3,
+          "line": 137
+        },
+        {
+          "heading": "After (quantum-level)",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "What This Replaces / Augments",
+          "level": 2,
+          "line": 167
+        },
+        {
+          "heading": "Infrastructure Reuse (no new components)",
+          "level": 2,
+          "line": 181
+        },
+        {
+          "heading": "Concrete Code Changes (this forge)",
+          "level": 2,
+          "line": 197
+        },
+        {
+          "heading": "1. `src/geox_core/governance/event_bus.py` (new — 200 lines)",
+          "level": 3,
+          "line": 199
+        },
+        {
+          "heading": "2. PAI Receipt wiring into universal envelope (`src/geox_mcp/tools/_register.py`)",
+          "level": 3,
+          "line": 280
+        },
+        {
+          "heading": "3. Event subscriber for cross-organ entanglement (`src/geox_mcp/events/subscriber.py`)",
+          "level": 3,
+          "line": 284
+        },
+        {
+          "heading": "4. Event publisher for tool outputs (`src/geox_mcp/events/publisher.py`)",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "Migration Path (this turn + next)",
+          "level": 2,
+          "line": 314
+        },
+        {
+          "heading": "What Stays The Same (no change)",
+          "level": 2,
+          "line": 329
+        },
+        {
+          "heading": "What I am NOT Doing (Copilot's wrong turns)",
+          "level": 2,
+          "line": 341
+        },
+        {
+          "heading": "Verification (live, after W14-α)",
+          "level": 2,
+          "line": 353
+        },
+        {
+          "heading": "References",
+          "level": 2,
+          "line": 384
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 23
+      }
+    },
+    {
+      "path": "docs/GEOX_DELTA_OMEGA_PSI_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 139,
+      "nonEmptyLines": 103,
+      "sections": [
+        {
+          "heading": "GEOX × Δ·Ω·Ψ × Multimodal × G-Compass Map",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. GEOX role in the stack",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "1. Plane map (GEOX-specific)",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "2. Multimodal Earth paths (Δ metabolism)",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "3. G-fold flow (GEOX)",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "4. Offline stubs (H7) as Ext_witness poison",
+          "level": 2,
+          "line": 71
+        },
+        {
+          "heading": "5. Protocol: GEOX multimodal turn",
+          "level": 2,
+          "line": 84
+        },
+        {
+          "heading": "6. Engineering backlog (ordered)",
+          "level": 2,
+          "line": 99
+        },
+        {
+          "heading": "P1 agent surface",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "7. Success metrics (GEOX)",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "8. One line",
+          "level": 2,
+          "line": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "docs/GEOX_DOCTRINE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 266,
+      "nonEmptyLines": 193,
+      "sections": [
+        {
+          "heading": "GEOX Eureka Doctrine — Ratified 2026-05-27",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "Core Mission",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "The 10 Eureka Principles",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "1. GEOX is not a map tool",
+          "level": 3,
+          "line": 20
+        },
+        {
+          "heading": "2. arifOS and GEOX must never be merged",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "3. GEOX's unfair advantage is not 3D visualization",
+          "level": 3,
+          "line": 34
+        },
+        {
+          "heading": "4. Wrapping software is easy; wrapping trust is hard",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "5. No naked Earth claims",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "6. Agent memory is not Earth memory",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "7. Separate observation, interpretation, abduction, decision",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "8. Abduction is the GEOX soul",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "9. Post-SaaS, not another SaaS",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "10. First product is an interpretation claim engine, not a viewer",
+          "level": 3,
+          "line": 101
+        },
+        {
+          "heading": "Memory Boundary Law",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "Promotion Ladder",
+          "level": 2,
+          "line": 125
+        },
+        {
+          "heading": "Dangerous Failure Mode",
+          "level": 2,
+          "line": 145
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 159
+        },
+        {
+          "heading": "12 Success Criteria",
+          "level": 2,
+          "line": 186
+        },
+        {
+          "heading": "End-to-End Synthetic Milestone",
+          "level": 3,
+          "line": 203
+        },
+        {
+          "heading": "Five Development Horizons",
+          "level": 2,
+          "line": 222
+        },
+        {
+          "heading": "Horizon 1 — Fix callable GEOX",
+          "level": 3,
+          "line": 224
+        },
+        {
+          "heading": "Horizon 2 — Publish canonical contract",
+          "level": 3,
+          "line": 227
+        },
+        {
+          "heading": "Horizon 3 — Enforce Earth schemas",
+          "level": 3,
+          "line": 230
+        },
+        {
+          "heading": "Horizon 4 — Build metadata inspectors first",
+          "level": 3,
+          "line": 233
+        },
+        {
+          "heading": "Horizon 5 — Build the claim engine",
+          "level": 3,
+          "line": 237
+        },
+        {
+          "heading": "Horizon 6 — Build abductive geoscience agents",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "Final Operating Command",
+          "level": 2,
+          "line": 247
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/GEOX_F1_F13_MAPPING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 194,
+      "nonEmptyLines": 148,
+      "sections": [
+        {
+          "heading": "Mapping GeoX‑derived Principles into F1–F13 arifOS Floors",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "F1 — TRUTH (τ)",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "F2 — CLARITY (ΔS ≤ 0)",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "F3 — STABILITY",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "F4 — KINDNESS (Non‑harm)",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "F5 — HUMILITY",
+          "level": 2,
+          "line": 65
+        },
+        {
+          "heading": "F6 — HONESTY",
+          "level": 2,
+          "line": 78
+        },
+        {
+          "heading": "F7 — LISTENING",
+          "level": 2,
+          "line": 89
+        },
+        {
+          "heading": "F8 — DOUBLE‑CHECK (Mirror Floor)",
+          "level": 2,
+          "line": 101
+        },
+        {
+          "heading": "F9 — NO PRETENDING",
+          "level": 2,
+          "line": 113
+        },
+        {
+          "heading": "F10 — WALL: GOVERNANCE > VELOCITY",
+          "level": 2,
+          "line": 124
+        },
+        {
+          "heading": "F11 — WALL: LIFE > OPTICS",
+          "level": 2,
+          "line": 137
+        },
+        {
+          "heading": "F12 — MIRROR: SCAR → LAW → ECHO",
+          "level": 2,
+          "line": 149
+        },
+        {
+          "heading": "F13 — HUMAN SOVEREIGNTY (Final Authority)",
+          "level": 2,
+          "line": 163
+        },
+        {
+          "heading": "🔐 Canonical Summary Table",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "Final Canon Verdict",
+          "level": 3,
+          "line": 191
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "docs/GEOX_FORGE_FLOW_AGENT_PROMPT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 252,
+      "nonEmptyLines": 192,
+      "sections": [
+        {
+          "heading": "GEOX Forge-Flow Agent Prompt",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. Mission (paste this to the next agent)",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "1. Repo audit snapshot (T₀ = tip `18e9e9ac`)",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "1.1 Structure",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "1.2 Key files (requested)",
+          "level": 3,
+          "line": 52
+        },
+        {
+          "heading": "1.3 Recent commits (GitHub main)",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "1.4 Live health (post-deploy)",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "1.5 CI (push `18e9e9ac`) — probe at forge-time",
+          "level": 3,
+          "line": 86
+        },
+        {
+          "heading": "2. Eight-fix landing verification",
+          "level": 2,
+          "line": 101
+        },
+        {
+          "heading": "3. Supabase (GEOX-relevant)",
+          "level": 2,
+          "line": 118
+        },
+        {
+          "heading": "4. Roadmap synthesis (PDF missing → zen roadmap is SOT)",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "Stale plans (`docs/plans/*`, Mar 2026)",
+          "level": 3,
+          "line": 133
+        },
+        {
+          "heading": "Live SOT (`GEOX_ZEN_ROADMAP.md`)",
+          "level": 3,
+          "line": 136
+        },
+        {
+          "heading": "Δ·Ω·Ψ map backlog remaining",
+          "level": 3,
+          "line": 143
+        },
+        {
+          "heading": "5. TRIAGE",
+          "level": 2,
+          "line": 149
+        },
+        {
+          "heading": "FIX NOW (this sprint — reversible, high entropy reduction)",
+          "level": 3,
+          "line": 151
+        },
+        {
+          "heading": "FORGE FLOW (multi-session — zen roadmap)",
+          "level": 3,
+          "line": 162
+        },
+        {
+          "heading": "FORGET NEXT (do not prioritize)",
+          "level": 3,
+          "line": 173
+        },
+        {
+          "heading": "6. Agent execution prompt (copy block)",
+          "level": 2,
+          "line": 187
+        },
+        {
+          "heading": "7. Suggested session order",
+          "level": 2,
+          "line": 225
+        },
+        {
+          "heading": "8. Success metrics (next forge)",
+          "level": 2,
+          "line": 234
+        },
+        {
+          "heading": "9. One line",
+          "level": 2,
+          "line": 248
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 22
+      }
+    },
+    {
+      "path": "docs/GEOX_PETROPHYSICS_BLUEPRINT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 944,
+      "nonEmptyLines": 746,
+      "sections": [
+        {
+          "heading": "GEOX Petrophysics Bridge: The Science of Rock Measurement",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. The Fundamental Question: What Is Petrophysics?",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1.1 Definition (Non-Negotiable)",
+          "level": 3,
+          "line": 11
+        },
+        {
+          "heading": "1.2 The Three Pillars",
+          "level": 3,
+          "line": 21
+        },
+        {
+          "heading": "2. The Ontology: What Exists in the Petrophysical Universe",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "2.1 Core Entities (Must Be First-Class Objects)",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "2.2 The Measurement Chain (From Sensor to Decision)",
+          "level": 3,
+          "line": 180
+        },
+        {
+          "heading": "3. The Physics: Models That Must Be Governed",
+          "level": 2,
+          "line": 213
+        },
+        {
+          "heading": "3.1 Porosity Physics",
+          "level": 3,
+          "line": 215
+        },
+        {
+          "heading": "3.2 Saturation Physics: The Model Hierarchy",
+          "level": 3,
+          "line": 230
+        },
+        {
+          "heading": "3.3 Permeability Physics",
+          "level": 3,
+          "line": 345
+        },
+        {
+          "heading": "4. The Cutoff Problem: From Physics to Decision",
+          "level": 2,
+          "line": 363
+        },
+        {
+          "heading": "4.1 What Cutoffs Actually Are",
+          "level": 3,
+          "line": 365
+        },
+        {
+          "heading": "4.2 The Cutoff Hierarchy",
+          "level": 3,
+          "line": 418
+        },
+        {
+          "heading": "4.3 Typical Cutoff Values (Examples Only — Field-Specific Calibration Required)",
+          "level": 3,
+          "line": 456
+        },
+        {
+          "heading": "5. The Architecture: What Needs to Be Forged",
+          "level": 2,
+          "line": 471
+        },
+        {
+          "heading": "5.1 MCP Server Architecture",
+          "level": 3,
+          "line": 473
+        },
+        {
+          "heading": "5.2 New Tools to Forge",
+          "level": 3,
+          "line": 514
+        },
+        {
+          "heading": "5.3 Schema Extensions",
+          "level": 3,
+          "line": 598
+        },
+        {
+          "heading": "6. The LLM Integration: Reasoning, Not Replacing",
+          "level": 2,
+          "line": 661
+        },
+        {
+          "heading": "6.1 What LLMs Do in GEOX Petrophysics",
+          "level": 3,
+          "line": 663
+        },
+        {
+          "heading": "6.2 LLM Prompt Template: Physics Model Selection",
+          "level": 3,
+          "line": 674
+        },
+        {
+          "heading": "7. The Governance: Constitutional Laws Applied",
+          "level": 2,
+          "line": 719
+        },
+        {
+          "heading": "7.1 Petrophysics-Specific Floor Enforcement",
+          "level": 3,
+          "line": 721
+        },
+        {
+          "heading": "7.2 Automatic 888_HOLD Triggers for Petrophysics",
+          "level": 3,
+          "line": 733
+        },
+        {
+          "heading": "8. The Integration: MCP + arifOS + LLM",
+          "level": 2,
+          "line": 781
+        },
+        {
+          "heading": "8.1 Example Workflow: From Log to Reserves",
+          "level": 3,
+          "line": 783
+        },
+        {
+          "heading": "9. Summary: What Needs to Be Forged",
+          "level": 2,
+          "line": 883
+        },
+        {
+          "heading": "9.1 Immediate Priorities (P0)",
+          "level": 3,
+          "line": 885
+        },
+        {
+          "heading": "9.2 Medium-Term (P1)",
+          "level": 3,
+          "line": 895
+        },
+        {
+          "heading": "9.3 Long-Term Vision (P2)",
+          "level": 3,
+          "line": 905
+        },
+        {
+          "heading": "10. The Scientific Manifesto",
+          "level": 2,
+          "line": 916
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 32
+      }
+    },
+    {
+      "path": "docs/GEOX_PETRO_RUNBOOK_F2.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 242,
+      "nonEmptyLines": 197,
+      "sections": [
+        {
+          "heading": "GEOX Petrophysics Runbook — F2-Compliant (Corrected)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. Verdict summary",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "1. Corrections ledger (accepted)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "1.1 API schema",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "1.2 Residual corrections on the 2026-07-24 restatement",
+          "level": 3,
+          "line": 36
+        },
+        {
+          "heading": "1.3 Data claims (withdrawn)",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "2. Corrected minimal runbook",
+          "level": 2,
+          "line": 55
+        },
+        {
+          "heading": "Phase 0 — Session",
+          "level": 3,
+          "line": 57
+        },
+        {
+          "heading": "Phase 1 — Workspace + ingest",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "Phase 2 — QC (separate tool)",
+          "level": 3,
+          "line": 91
+        },
+        {
+          "heading": "Phase 3 — Petrophysics primary path (`lem_inference`)",
+          "level": 3,
+          "line": 103
+        },
+        {
+          "heading": "Phase 3b — Generate path (vaulted evidence only)",
+          "level": 3,
+          "line": 131
+        },
+        {
+          "heading": "Phase 4 — Integrity verify (not multi-well list)",
+          "level": 3,
+          "line": 152
+        },
+        {
+          "heading": "Phase 5 — Well desk render",
+          "level": 3,
+          "line": 164
+        },
+        {
+          "heading": "3. Demo inventory (use these)",
+          "level": 2,
+          "line": 183
+        },
+        {
+          "heading": "4. Hybrid strategy (reconfirmed)",
+          "level": 2,
+          "line": 196
+        },
+        {
+          "heading": "5. Residual (non-blocking)",
+          "level": 2,
+          "line": 216
+        },
+        {
+          "heading": "6. Publication checklist",
+          "level": 2,
+          "line": 227
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/ARCHITECTURE-EARTH-OS.md",
+      "type": "document",
+      "name": "ARCHITECTURE-EARTH-OS.md",
+      "filePath": "docs/ARCHITECTURE-EARTH-OS.md",
+      "summary": "markdown docs file (297 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/ARCHITECTURE.md",
+      "type": "document",
+      "name": "ARCHITECTURE.md",
+      "filePath": "docs/ARCHITECTURE.md",
+      "summary": "markdown docs file (287 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/BOUNDARY.md",
+      "type": "document",
+      "name": "BOUNDARY.md",
+      "filePath": "docs/BOUNDARY.md",
+      "summary": "markdown docs file (111 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/CAPABILITY_MAP.md",
+      "type": "document",
+      "name": "CAPABILITY_MAP.md",
+      "filePath": "docs/CAPABILITY_MAP.md",
+      "summary": "markdown docs file (248 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/CHANGELOG.md",
+      "type": "document",
+      "name": "CHANGELOG.md",
+      "filePath": "docs/CHANGELOG.md",
+      "summary": "markdown docs file (71 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/CODE_OF_CONDUCT.md",
+      "type": "document",
+      "name": "CODE_OF_CONDUCT.md",
+      "filePath": "docs/CODE_OF_CONDUCT.md",
+      "summary": "markdown docs file (23 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/CONSTITUTIONAL_PHYSICS_STACK.md",
+      "type": "document",
+      "name": "CONSTITUTIONAL_PHYSICS_STACK.md",
+      "filePath": "docs/CONSTITUTIONAL_PHYSICS_STACK.md",
+      "summary": "markdown docs file (84 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/CONTEXT.md",
+      "type": "document",
+      "name": "CONTEXT.md",
+      "filePath": "docs/CONTEXT.md",
+      "summary": "markdown docs file (59 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/CONTRIBUTING.md",
+      "type": "document",
+      "name": "CONTRIBUTING.md",
+      "filePath": "docs/CONTRIBUTING.md",
+      "summary": "markdown docs file (14 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/CORE_IMPORT_MAP.md",
+      "type": "document",
+      "name": "CORE_IMPORT_MAP.md",
+      "filePath": "docs/CORE_IMPORT_MAP.md",
+      "summary": "markdown docs file (114 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/DATA_SOURCES_REGISTRY.md",
+      "type": "document",
+      "name": "DATA_SOURCES_REGISTRY.md",
+      "filePath": "docs/DATA_SOURCES_REGISTRY.md",
+      "summary": "markdown docs file (178 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/EXTERNAL_INTEGRATION_GUIDE.md",
+      "type": "document",
+      "name": "EXTERNAL_INTEGRATION_GUIDE.md",
+      "filePath": "docs/EXTERNAL_INTEGRATION_GUIDE.md",
+      "summary": "markdown docs file (290 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/FEDERATION_CONTRACT.md",
+      "type": "document",
+      "name": "FEDERATION_CONTRACT.md",
+      "filePath": "docs/FEDERATION_CONTRACT.md",
+      "summary": "markdown docs file (42 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/FEDERATION_INTELLIGENCE_FLOW.md",
+      "type": "document",
+      "name": "FEDERATION_INTELLIGENCE_FLOW.md",
+      "filePath": "docs/FEDERATION_INTELLIGENCE_FLOW.md",
+      "summary": "markdown docs file (299 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/GEOX_DELTA_OMEGA_PSI_MAP.md",
+      "type": "document",
+      "name": "GEOX_DELTA_OMEGA_PSI_MAP.md",
+      "filePath": "docs/GEOX_DELTA_OMEGA_PSI_MAP.md",
+      "summary": "markdown docs file (103 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/GEOX_DOCTRINE.md",
+      "type": "document",
+      "name": "GEOX_DOCTRINE.md",
+      "filePath": "docs/GEOX_DOCTRINE.md",
+      "summary": "markdown docs file (193 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/GEOX_F1_F13_MAPPING.md",
+      "type": "document",
+      "name": "GEOX_F1_F13_MAPPING.md",
+      "filePath": "docs/GEOX_F1_F13_MAPPING.md",
+      "summary": "markdown docs file (148 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/GEOX_FORGE_FLOW_AGENT_PROMPT.md",
+      "type": "document",
+      "name": "GEOX_FORGE_FLOW_AGENT_PROMPT.md",
+      "filePath": "docs/GEOX_FORGE_FLOW_AGENT_PROMPT.md",
+      "summary": "markdown docs file (192 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/GEOX_PETROPHYSICS_BLUEPRINT.md",
+      "type": "document",
+      "name": "GEOX_PETROPHYSICS_BLUEPRINT.md",
+      "filePath": "docs/GEOX_PETROPHYSICS_BLUEPRINT.md",
+      "summary": "markdown docs file (746 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/GEOX_PETRO_RUNBOOK_F2.md",
+      "type": "document",
+      "name": "GEOX_PETRO_RUNBOOK_F2.md",
+      "filePath": "docs/GEOX_PETRO_RUNBOOK_F2.md",
+      "summary": "markdown docs file (197 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

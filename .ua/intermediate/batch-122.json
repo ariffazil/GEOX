@@ -1,0 +1,2245 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/test_visual_understand_p0_truth.py",
+      "type": "file",
+      "name": "test_visual_understand_p0_truth.py",
+      "filePath": "tests/test_visual_understand_p0_truth.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_understand_p0_truth.py:test_no_backend_holds_not_fabricates",
+      "type": "function",
+      "name": "test_no_backend_holds_not_fabricates",
+      "filePath": "tests/test_visual_understand_p0_truth.py",
+      "lineRange": [
+        12,
+        22
+      ],
+      "summary": "test_no_backend_holds_not_fabricates() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visual_understand_p0_truth.py:test_mcp_schema_accepts_image_path",
+      "type": "function",
+      "name": "test_mcp_schema_accepts_image_path",
+      "filePath": "tests/test_visual_understand_p0_truth.py",
+      "lineRange": [
+        32,
+        44
+      ],
+      "summary": "test_mcp_schema_accepts_image_path() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_visualization_wave2.py",
+      "type": "file",
+      "name": "test_visualization_wave2.py",
+      "filePath": "tests/test_visualization_wave2.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_visualization_wave2.py:test_log_track_payload_builder_returns_tracks",
+      "type": "function",
+      "name": "test_log_track_payload_builder_returns_tracks",
+      "filePath": "tests/test_visualization_wave2.py",
+      "lineRange": [
+        8,
+        18
+      ],
+      "summary": "test_log_track_payload_builder_returns_tracks() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_volumetrics_wave2.py",
+      "type": "file",
+      "name": "test_volumetrics_wave2.py",
+      "filePath": "tests/test_volumetrics_wave2.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_volumetrics_wave2.py:test_probabilistic_volumetrics_returns_percentiles",
+      "type": "function",
+      "name": "test_probabilistic_volumetrics_returns_percentiles",
+      "filePath": "tests/test_volumetrics_wave2.py",
+      "lineRange": [
+        4,
+        14
+      ],
+      "summary": "test_probabilistic_volumetrics_returns_percentiles() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_wave2_capabilities.py",
+      "type": "file",
+      "name": "test_wave2_capabilities.py",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "summary": "Defines 1 function(s); 14 class(es); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_wave2_capabilities.py:_write_sample_las",
+      "type": "function",
+      "name": "_write_sample_las",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        357,
+        392
+      ],
+      "summary": "_write_sample_las(path) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestPetroEnsemble",
+      "type": "class",
+      "name": "TestPetroEnsemble",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        24,
+        78
+      ],
+      "summary": "Class TestPetroEnsemble with 11 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestProbabilisticVolumetrics",
+      "type": "class",
+      "name": "TestProbabilisticVolumetrics",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        96,
+        177
+      ],
+      "summary": "Class TestProbabilisticVolumetrics with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestBasinCharge",
+      "type": "class",
+      "name": "TestBasinCharge",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        208,
+        258
+      ],
+      "summary": "Class TestBasinCharge with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestSensitivitySweep",
+      "type": "class",
+      "name": "TestSensitivitySweep",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        276,
+        337
+      ],
+      "summary": "Class TestSensitivitySweep with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestLASIngestor",
+      "type": "class",
+      "name": "TestLASIngestor",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        395,
+        451
+      ],
+      "summary": "Class TestLASIngestor with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestLASIngestTool",
+      "type": "class",
+      "name": "TestLASIngestTool",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        454,
+        467
+      ],
+      "summary": "Class TestLASIngestTool with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestAssetMemory",
+      "type": "class",
+      "name": "TestAssetMemory",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        474,
+        531
+      ],
+      "summary": "Class TestAssetMemory with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestAssetMemoryTool",
+      "type": "class",
+      "name": "TestAssetMemoryTool",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        534,
+        554
+      ],
+      "summary": "Class TestAssetMemoryTool with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestVisualizationTools",
+      "type": "class",
+      "name": "TestVisualizationTools",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        561,
+        633
+      ],
+      "summary": "Class TestVisualizationTools with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_wave2_capabilities.py:TestToolRegistry",
+      "type": "class",
+      "name": "TestToolRegistry",
+      "filePath": "tests/test_wave2_capabilities.py",
+      "lineRange": [
+        640,
+        674
+      ],
+      "summary": "Class TestToolRegistry with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_well_desk_physics.py",
+      "type": "file",
+      "name": "test_well_desk_physics.py",
+      "filePath": "tests/test_well_desk_physics.py",
+      "summary": "Defines 4 function(s); 6 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestForward",
+      "type": "class",
+      "name": "TestForward",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        64,
+        127
+      ],
+      "summary": "Class TestForward with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestInverse",
+      "type": "class",
+      "name": "TestInverse",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        132,
+        169
+      ],
+      "summary": "Class TestInverse with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestPhysicsGuard",
+      "type": "class",
+      "name": "TestPhysicsGuard",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        174,
+        205
+      ],
+      "summary": "Class TestPhysicsGuard with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestMetabolic",
+      "type": "class",
+      "name": "TestMetabolic",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        210,
+        241
+      ],
+      "summary": "Class TestMetabolic with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestCatalog",
+      "type": "class",
+      "name": "TestCatalog",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        246,
+        265
+      ],
+      "summary": "Class TestCatalog with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_well_desk_physics.py:TestVault",
+      "type": "class",
+      "name": "TestVault",
+      "filePath": "tests/test_well_desk_physics.py",
+      "lineRange": [
+        270,
+        291
+      ],
+      "summary": "Class TestVault with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_well_mcp_hardening.py",
+      "type": "file",
+      "name": "test_well_mcp_hardening.py",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "summary": "Defines 6 function(s); 1 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:_write_gr_csv",
+      "type": "function",
+      "name": "_write_gr_csv",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        22,
+        26
+      ],
+      "summary": "_write_gr_csv(path, rows) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:_registered_tools",
+      "type": "function",
+      "name": "_registered_tools",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        29,
+        32
+      ],
+      "summary": "_registered_tools() — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:test_well_compute_gr_bins_rejects_invalid_interval",
+      "type": "function",
+      "name": "test_well_compute_gr_bins_rejects_invalid_interval",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        35,
+        49
+      ],
+      "summary": "test_well_compute_gr_bins_rejects_invalid_interval() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:test_well_compute_gr_bins_rejects_unphysical_gr",
+      "type": "function",
+      "name": "test_well_compute_gr_bins_rejects_unphysical_gr",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        52,
+        68
+      ],
+      "summary": "test_well_compute_gr_bins_rejects_unphysical_gr(tmp_path) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:test_well_analyze_sequence_success_is_gr_only_hypothesis",
+      "type": "function",
+      "name": "test_well_analyze_sequence_success_is_gr_only_hypothesis",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        71,
+        96
+      ],
+      "summary": "test_well_analyze_sequence_success_is_gr_only_hypothesis(tmp_path) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_mcp_hardening.py:test_well_infer_seq_strat_rejects_unknown_depo_env",
+      "type": "function",
+      "name": "test_well_infer_seq_strat_rejects_unknown_depo_env",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        99,
+        117
+      ],
+      "summary": "test_well_infer_seq_strat_rejects_unknown_depo_env() — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_well_mcp_hardening.py:_FakeMCP",
+      "type": "class",
+      "name": "_FakeMCP",
+      "filePath": "tests/test_well_mcp_hardening.py",
+      "lineRange": [
+        10,
+        19
+      ],
+      "summary": "Class _FakeMCP with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_well_tie_physics.py",
+      "type": "file",
+      "name": "test_well_tie_physics.py",
+      "filePath": "tests/test_well_tie_physics.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_tie_physics.py:test_reflectivity_math",
+      "type": "function",
+      "name": "test_reflectivity_math",
+      "filePath": "tests/test_well_tie_physics.py",
+      "lineRange": [
+        15,
+        35
+      ],
+      "summary": "test_reflectivity_math() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_well_view_hydrate.py",
+      "type": "file",
+      "name": "test_well_view_hydrate.py",
+      "filePath": "tests/test_well_view_hydrate.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_well_view_hydrate.py:test_hydrate_receipt_seal_path",
+      "type": "function",
+      "name": "test_hydrate_receipt_seal_path",
+      "filePath": "tests/test_well_view_hydrate.py",
+      "lineRange": [
+        29,
+        57
+      ],
+      "summary": "test_hydrate_receipt_seal_path() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_welltie.py",
+      "type": "file",
+      "name": "test_welltie.py",
+      "filePath": "tests/test_welltie.py",
+      "summary": "Defines 1 function(s); 12 class(es); exports 13 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/test_welltie.py:_write_minimal_las",
+      "type": "function",
+      "name": "_write_minimal_las",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        43,
+        81
+      ],
+      "summary": "_write_minimal_las(path, depths, dt_values, rhob_values) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestComputeVpFromSonic",
+      "type": "class",
+      "name": "TestComputeVpFromSonic",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        87,
+        120
+      ],
+      "summary": "Class TestComputeVpFromSonic with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestComputeAI",
+      "type": "class",
+      "name": "TestComputeAI",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        126,
+        141
+      ],
+      "summary": "Class TestComputeAI with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestComputeReflectivity",
+      "type": "class",
+      "name": "TestComputeReflectivity",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        147,
+        174
+      ],
+      "summary": "Class TestComputeReflectivity with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestWaveletDeterminism",
+      "type": "class",
+      "name": "TestWaveletDeterminism",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        180,
+        199
+      ],
+      "summary": "Class TestWaveletDeterminism with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestGenerateSyntheticTrace",
+      "type": "class",
+      "name": "TestGenerateSyntheticTrace",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        205,
+        228
+      ],
+      "summary": "Class TestGenerateSyntheticTrace with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestPhaseRotation",
+      "type": "class",
+      "name": "TestPhaseRotation",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        234,
+        245
+      ],
+      "summary": "Class TestPhaseRotation with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestCrossCorrelate",
+      "type": "class",
+      "name": "TestCrossCorrelate",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        251,
+        270
+      ],
+      "summary": "Class TestCrossCorrelate with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestAssessTieQuality",
+      "type": "class",
+      "name": "TestAssessTieQuality",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        276,
+        295
+      ],
+      "summary": "Class TestAssessTieQuality with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestAverageVelocityTD",
+      "type": "class",
+      "name": "TestAverageVelocityTD",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        301,
+        316
+      ],
+      "summary": "Class TestAverageVelocityTD with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestComputeWelltieFull",
+      "type": "class",
+      "name": "TestComputeWelltieFull",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        322,
+        467
+      ],
+      "summary": "Class TestComputeWelltieFull with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/test_welltie.py:TestSectionWellTieMode",
+      "type": "class",
+      "name": "TestSectionWellTieMode",
+      "filePath": "tests/test_welltie.py",
+      "lineRange": [
+        473,
+        580
+      ],
+      "summary": "Class TestSectionWellTieMode with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/test_zen_no_double_use_when.py",
+      "type": "file",
+      "name": "test_zen_no_double_use_when.py",
+      "filePath": "tests/test_zen_no_double_use_when.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_no_double_use_when.py:_all_tool_descriptions",
+      "type": "function",
+      "name": "_all_tool_descriptions",
+      "filePath": "tests/test_zen_no_double_use_when.py",
+      "lineRange": [
+        24,
+        30
+      ],
+      "summary": "_all_tool_descriptions() — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_no_double_use_when.py:test_no_double_use_when_in_descriptions",
+      "type": "function",
+      "name": "test_no_double_use_when_in_descriptions",
+      "filePath": "tests/test_zen_no_double_use_when.py",
+      "lineRange": [
+        33,
+        43
+      ],
+      "summary": "test_no_double_use_when_in_descriptions() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/test_zen_scaffolding.py",
+      "type": "file",
+      "name": "test_zen_scaffolding.py",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "summary": "Defines 23 function(s); exports 23 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/test_zen_scaffolding.py:test_classical_baseline_returns_candidate_geometry",
+      "type": "function",
+      "name": "test_classical_baseline_returns_candidate_geometry",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "lineRange": [
+        60,
+        70
+      ],
+      "summary": "test_classical_baseline_returns_candidate_geometry() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_scaffolding.py:test_add_seeds_appends_and_returns_receipt",
+      "type": "function",
+      "name": "test_add_seeds_appends_and_returns_receipt",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "lineRange": [
+        130,
+        140
+      ],
+      "summary": "test_add_seeds_appends_and_returns_receipt() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_scaffolding.py:test_rerun_gates_calls_matrix",
+      "type": "function",
+      "name": "test_rerun_gates_calls_matrix",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "lineRange": [
+        198,
+        209
+      ],
+      "summary": "test_rerun_gates_calls_matrix() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_scaffolding.py:test_artifact_ingest_emits_hash_and_chain",
+      "type": "function",
+      "name": "test_artifact_ingest_emits_hash_and_chain",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "lineRange": [
+        217,
+        228
+      ],
+      "summary": "test_artifact_ingest_emits_hash_and_chain() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/test_zen_scaffolding.py:test_calibration_state_full",
+      "type": "function",
+      "name": "test_calibration_state_full",
+      "filePath": "tests/test_zen_scaffolding.py",
+      "lineRange": [
+        239,
+        252
+      ],
+      "summary": "test_calibration_state_full() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_claimed_identity_validation.py",
+      "type": "file",
+      "name": "test_claimed_identity_validation.py",
+      "filePath": "tests/unit/test_claimed_identity_validation.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/unit/test_claimed_identity_validation.py:test_fabricated_claimed_session_is_held",
+      "type": "function",
+      "name": "test_fabricated_claimed_session_is_held",
+      "filePath": "tests/unit/test_claimed_identity_validation.py",
+      "lineRange": [
+        20,
+        40
+      ],
+      "summary": "test_fabricated_claimed_session_is_held(monkeypatch) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_claimed_identity_validation.py:test_valid_claimed_session_preserves_actor_binding",
+      "type": "function",
+      "name": "test_valid_claimed_session_preserves_actor_binding",
+      "filePath": "tests/unit/test_claimed_identity_validation.py",
+      "lineRange": [
+        43,
+        62
+      ],
+      "summary": "test_valid_claimed_session_preserves_actor_binding(monkeypatch) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_claimed_identity_validation.py:test_signed_token_is_replaced_with_canonical_session",
+      "type": "function",
+      "name": "test_signed_token_is_replaced_with_canonical_session",
+      "filePath": "tests/unit/test_claimed_identity_validation.py",
+      "lineRange": [
+        65,
+        91
+      ],
+      "summary": "test_signed_token_is_replaced_with_canonical_session(monkeypatch) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_contradiction_scan.py",
+      "type": "file",
+      "name": "test_contradiction_scan.py",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "summary": "Defines 23 function(s); exports 23 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:base_hypothesis",
+      "type": "function",
+      "name": "base_hypothesis",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        62,
+        72
+      ],
+      "summary": "base_hypothesis() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_c4_incompatible_process_pair",
+      "type": "function",
+      "name": "test_c4_incompatible_process_pair",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        104,
+        117
+      ],
+      "summary": "test_c4_incompatible_process_pair() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_c5_gr_sand_vs_dn_shale_auto_hold",
+      "type": "function",
+      "name": "test_c5_gr_sand_vs_dn_shale_auto_hold",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        124,
+        135
+      ],
+      "summary": "test_c5_gr_sand_vs_dn_shale_auto_hold() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_c5_gr_shale_vs_dn_sandstone",
+      "type": "function",
+      "name": "test_c5_gr_shale_vs_dn_sandstone",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        138,
+        148
+      ],
+      "summary": "test_c5_gr_shale_vs_dn_sandstone() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_c6_gr_shale_vs_rt_resistive_auto_hold",
+      "type": "function",
+      "name": "test_c6_gr_shale_vs_rt_resistive_auto_hold",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        151,
+        161
+      ],
+      "summary": "test_c6_gr_shale_vs_rt_resistive_auto_hold() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_c8_high_vsh_high_phi_auto_hold",
+      "type": "function",
+      "name": "test_c8_high_vsh_high_phi_auto_hold",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        176,
+        186
+      ],
+      "summary": "test_c8_high_vsh_high_phi_auto_hold() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_no_contradictions_clean_case",
+      "type": "function",
+      "name": "test_no_contradictions_clean_case",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        237,
+        256
+      ],
+      "summary": "test_no_contradictions_clean_case(base_hypothesis) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_contradiction_scan.py:test_extract_evidence_summary_hardened_fields",
+      "type": "function",
+      "name": "test_extract_evidence_summary_hardened_fields",
+      "filePath": "tests/unit/test_contradiction_scan.py",
+      "lineRange": [
+        263,
+        287
+      ],
+      "summary": "test_extract_evidence_summary_hardened_fields() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_coord_transform_tool.py",
+      "type": "file",
+      "name": "test_coord_transform_tool.py",
+      "filePath": "tests/unit/test_coord_transform_tool.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_coord_transform_tool.py:test_coord_transform_accepts_epsg_reprojection_shape",
+      "type": "function",
+      "name": "test_coord_transform_accepts_epsg_reprojection_shape",
+      "filePath": "tests/unit/test_coord_transform_tool.py",
+      "lineRange": [
+        7,
+        23
+      ],
+      "summary": "test_coord_transform_accepts_epsg_reprojection_shape() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_governed_identity_context.py",
+      "type": "file",
+      "name": "test_governed_identity_context.py",
+      "filePath": "tests/unit/test_governed_identity_context.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_governed_identity_context.py:test_standard_envelope_uses_governed_identity_context",
+      "type": "function",
+      "name": "test_standard_envelope_uses_governed_identity_context",
+      "filePath": "tests/unit/test_governed_identity_context.py",
+      "lineRange": [
+        7,
+        23
+      ],
+      "summary": "test_standard_envelope_uses_governed_identity_context() — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_las_fixture_pack.py",
+      "type": "file",
+      "name": "test_las_fixture_pack.py",
+      "filePath": "tests/unit/test_las_fixture_pack.py",
+      "summary": "Defines 1 function(s); 3 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/unit/test_las_fixture_pack.py:_read_las_file",
+      "type": "function",
+      "name": "_read_las_file",
+      "filePath": "tests/unit/test_las_fixture_pack.py",
+      "lineRange": [
+        23,
+        77
+      ],
+      "summary": "_read_las_file(filename) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureInspection",
+      "type": "class",
+      "name": "TestLASFixtureInspection",
+      "filePath": "tests/unit/test_las_fixture_pack.py",
+      "lineRange": [
+        80,
+        136
+      ],
+      "summary": "Class TestLASFixtureInspection with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureRejection",
+      "type": "class",
+      "name": "TestLASFixtureRejection",
+      "filePath": "tests/unit/test_las_fixture_pack.py",
+      "lineRange": [
+        139,
+        200
+      ],
+      "summary": "Class TestLASFixtureRejection with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureHashes",
+      "type": "class",
+      "name": "TestLASFixtureHashes",
+      "filePath": "tests/unit/test_las_fixture_pack.py",
+      "lineRange": [
+        203,
+        230
+      ],
+      "summary": "Class TestLASFixtureHashes with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_petrophysics.py",
+      "type": "file",
+      "name": "test_petrophysics.py",
+      "filePath": "tests/unit/test_petrophysics.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_petrophysics.py:test_monte_carlo_sw",
+      "type": "function",
+      "name": "test_monte_carlo_sw",
+      "filePath": "tests/unit/test_petrophysics.py",
+      "lineRange": [
+        25,
+        37
+      ],
+      "summary": "test_monte_carlo_sw() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_petrophysics.py:test_governance_trigger",
+      "type": "function",
+      "name": "test_governance_trigger",
+      "filePath": "tests/unit/test_petrophysics.py",
+      "lineRange": [
+        39,
+        51
+      ],
+      "summary": "test_governance_trigger() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_pinn.py",
+      "type": "file",
+      "name": "test_pinn.py",
+      "filePath": "tests/unit/test_pinn.py",
+      "summary": "Defines 11 function(s); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/unit/test_pinn.py:synthetic_well_logs",
+      "type": "function",
+      "name": "synthetic_well_logs",
+      "filePath": "tests/unit/test_pinn.py",
+      "lineRange": [
+        27,
+        51
+      ],
+      "summary": "synthetic_well_logs() — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_pinn.py:test_pinn_physics_loss_bounds",
+      "type": "function",
+      "name": "test_pinn_physics_loss_bounds",
+      "filePath": "tests/unit/test_pinn.py",
+      "lineRange": [
+        71,
+        81
+      ],
+      "summary": "test_pinn_physics_loss_bounds() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_pinn.py:test_pinn_physics_loss_archie_consistency",
+      "type": "function",
+      "name": "test_pinn_physics_loss_archie_consistency",
+      "filePath": "tests/unit/test_pinn.py",
+      "lineRange": [
+        84,
+        101
+      ],
+      "summary": "test_pinn_physics_loss_archie_consistency() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_pinn.py:test_pinn_predict_structure",
+      "type": "function",
+      "name": "test_pinn_predict_structure",
+      "filePath": "tests/unit/test_pinn.py",
+      "lineRange": [
+        114,
+        130
+      ],
+      "summary": "test_pinn_predict_structure(synthetic_well_logs) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_pinn.py:test_pinn_save_load_roundtrip",
+      "type": "function",
+      "name": "test_pinn_save_load_roundtrip",
+      "filePath": "tests/unit/test_pinn.py",
+      "lineRange": [
+        154,
+        169
+      ],
+      "summary": "test_pinn_save_load_roundtrip(synthetic_well_logs, tmp_path) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_registry_runtime_truth.py",
+      "type": "file",
+      "name": "test_registry_runtime_truth.py",
+      "filePath": "tests/unit/test_registry_runtime_truth.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/unit/test_registry_runtime_truth.py:TestRegistryRuntimeTruth",
+      "type": "class",
+      "name": "TestRegistryRuntimeTruth",
+      "filePath": "tests/unit/test_registry_runtime_truth.py",
+      "lineRange": [
+        11,
+        37
+      ],
+      "summary": "Class TestRegistryRuntimeTruth with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_registry_status.py",
+      "type": "file",
+      "name": "test_registry_status.py",
+      "filePath": "tests/unit/test_registry_status.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_registry_status.py:TestContradictionRegistryStatus",
+      "type": "class",
+      "name": "TestContradictionRegistryStatus",
+      "filePath": "tests/unit/test_registry_status.py",
+      "lineRange": [
+        15,
+        41
+      ],
+      "summary": "Class TestContradictionRegistryStatus with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/unit/test_registry_status.py:TestTestReceiptStatus",
+      "type": "class",
+      "name": "TestTestReceiptStatus",
+      "filePath": "tests/unit/test_registry_status.py",
+      "lineRange": [
+        44,
+        77
+      ],
+      "summary": "Class TestTestReceiptStatus with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/unit/test_registry_status.py:TestResourceRegistryStatus",
+      "type": "class",
+      "name": "TestResourceRegistryStatus",
+      "filePath": "tests/unit/test_registry_status.py",
+      "lineRange": [
+        80,
+        108
+      ],
+      "summary": "Class TestResourceRegistryStatus with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/unit/test_registry_status.py:TestBundleSecurityAudit",
+      "type": "class",
+      "name": "TestBundleSecurityAudit",
+      "filePath": "tests/unit/test_registry_status.py",
+      "lineRange": [
+        111,
+        137
+      ],
+      "summary": "Class TestBundleSecurityAudit with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_registry_truth.py",
+      "type": "file",
+      "name": "test_registry_truth.py",
+      "filePath": "tests/unit/test_registry_truth.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/unit/test_registry_truth.py:TestRegistryTruth",
+      "type": "class",
+      "name": "TestRegistryTruth",
+      "filePath": "tests/unit/test_registry_truth.py",
+      "lineRange": [
+        10,
+        27
+      ],
+      "summary": "Class TestRegistryTruth with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_render_payload_schema.py",
+      "type": "file",
+      "name": "test_render_payload_schema.py",
+      "filePath": "tests/unit/test_render_payload_schema.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_render_payload_schema.py:TestRenderPayloadBasics",
+      "type": "class",
+      "name": "TestRenderPayloadBasics",
+      "filePath": "tests/unit/test_render_payload_schema.py",
+      "lineRange": [
+        37,
+        106
+      ],
+      "summary": "Class TestRenderPayloadBasics with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_render_payload_schema.py:TestCubeManifest",
+      "type": "class",
+      "name": "TestCubeManifest",
+      "filePath": "tests/unit/test_render_payload_schema.py",
+      "lineRange": [
+        109,
+        173
+      ],
+      "summary": "Class TestCubeManifest with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_render_payload_schema.py:TestRenderBuilders",
+      "type": "class",
+      "name": "TestRenderBuilders",
+      "filePath": "tests/unit/test_render_payload_schema.py",
+      "lineRange": [
+        176,
+        214
+      ],
+      "summary": "Class TestRenderBuilders with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_route_query_policy.py",
+      "type": "file",
+      "name": "test_route_query_policy.py",
+      "filePath": "tests/unit/test_route_query_policy.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/unit/test_route_query_policy.py:test_route_query_explore_from_unknowns_phrase",
+      "type": "function",
+      "name": "test_route_query_explore_from_unknowns_phrase",
+      "filePath": "tests/unit/test_route_query_policy.py",
+      "lineRange": [
+        9,
+        22
+      ],
+      "summary": "test_route_query_explore_from_unknowns_phrase() — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_route_query_policy.py:test_route_query_exploit_for_known_lookup",
+      "type": "function",
+      "name": "test_route_query_exploit_for_known_lookup",
+      "filePath": "tests/unit/test_route_query_policy.py",
+      "lineRange": [
+        25,
+        37
+      ],
+      "summary": "test_route_query_exploit_for_known_lookup() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_route_query_policy.py:test_fallback_route_marks_partial",
+      "type": "function",
+      "name": "test_fallback_route_marks_partial",
+      "filePath": "tests/unit/test_route_query_policy.py",
+      "lineRange": [
+        40,
+        51
+      ],
+      "summary": "test_fallback_route_marks_partial() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_security_audit.py",
+      "type": "file",
+      "name": "test_security_audit.py",
+      "filePath": "tests/unit/test_security_audit.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_security_audit.py:TestSecurityAudit",
+      "type": "class",
+      "name": "TestSecurityAudit",
+      "filePath": "tests/unit/test_security_audit.py",
+      "lineRange": [
+        16,
+        93
+      ],
+      "summary": "Class TestSecurityAudit with 10 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/unit/test_session_propagation.py",
+      "type": "file",
+      "name": "test_session_propagation.py",
+      "filePath": "tests/unit/test_session_propagation.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:tests/unit/test_session_propagation.py:TestSessionPropagation",
+      "type": "class",
+      "name": "TestSessionPropagation",
+      "filePath": "tests/unit/test_session_propagation.py",
+      "lineRange": [
+        14,
+        89
+      ],
+      "summary": "Class TestSessionPropagation with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/test_visual_understand_p0_truth.py",
+      "target": "function:tests/test_visual_understand_p0_truth.py:test_no_backend_holds_not_fabricates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visual_understand_p0_truth.py",
+      "target": "function:tests/test_visual_understand_p0_truth.py:test_mcp_schema_accepts_image_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_visualization_wave2.py",
+      "target": "function:tests/test_visualization_wave2.py:test_log_track_payload_builder_returns_tracks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_volumetrics_wave2.py",
+      "target": "function:tests/test_volumetrics_wave2.py:test_probabilistic_volumetrics_returns_percentiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "function:tests/test_wave2_capabilities.py:_write_sample_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestPetroEnsemble",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestProbabilisticVolumetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestBasinCharge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestSensitivitySweep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestLASIngestor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestLASIngestTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestAssetMemory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestAssetMemoryTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestVisualizationTools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_wave2_capabilities.py",
+      "target": "class:tests/test_wave2_capabilities.py:TestToolRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestForward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestInverse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestPhysicsGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestMetabolic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestCatalog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_desk_physics.py",
+      "target": "class:tests/test_well_desk_physics.py:TestVault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:_write_gr_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:_registered_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:test_well_compute_gr_bins_rejects_invalid_interval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:test_well_compute_gr_bins_rejects_unphysical_gr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:test_well_analyze_sequence_success_is_gr_only_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "function:tests/test_well_mcp_hardening.py:test_well_infer_seq_strat_rejects_unknown_depo_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_mcp_hardening.py",
+      "target": "class:tests/test_well_mcp_hardening.py:_FakeMCP",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_tie_physics.py",
+      "target": "function:tests/test_well_tie_physics.py:test_reflectivity_math",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_well_view_hydrate.py",
+      "target": "function:tests/test_well_view_hydrate.py:test_hydrate_receipt_seal_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "function:tests/test_welltie.py:_write_minimal_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestComputeVpFromSonic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestComputeAI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestComputeReflectivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestWaveletDeterminism",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestGenerateSyntheticTrace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestPhaseRotation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestCrossCorrelate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestAssessTieQuality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestAverageVelocityTD",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestComputeWelltieFull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_welltie.py",
+      "target": "class:tests/test_welltie.py:TestSectionWellTieMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_no_double_use_when.py",
+      "target": "function:tests/test_zen_no_double_use_when.py:_all_tool_descriptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_no_double_use_when.py",
+      "target": "function:tests/test_zen_no_double_use_when.py:test_no_double_use_when_in_descriptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_scaffolding.py",
+      "target": "function:tests/test_zen_scaffolding.py:test_classical_baseline_returns_candidate_geometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_scaffolding.py",
+      "target": "function:tests/test_zen_scaffolding.py:test_add_seeds_appends_and_returns_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_scaffolding.py",
+      "target": "function:tests/test_zen_scaffolding.py:test_rerun_gates_calls_matrix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_scaffolding.py",
+      "target": "function:tests/test_zen_scaffolding.py:test_artifact_ingest_emits_hash_and_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/test_zen_scaffolding.py",
+      "target": "function:tests/test_zen_scaffolding.py:test_calibration_state_full",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_claimed_identity_validation.py",
+      "target": "function:tests/unit/test_claimed_identity_validation.py:test_fabricated_claimed_session_is_held",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_claimed_identity_validation.py",
+      "target": "function:tests/unit/test_claimed_identity_validation.py:test_valid_claimed_session_preserves_actor_binding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_claimed_identity_validation.py",
+      "target": "function:tests/unit/test_claimed_identity_validation.py:test_signed_token_is_replaced_with_canonical_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:base_hypothesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_c4_incompatible_process_pair",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_c5_gr_sand_vs_dn_shale_auto_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_c5_gr_shale_vs_dn_sandstone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_c6_gr_shale_vs_rt_resistive_auto_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_c8_high_vsh_high_phi_auto_hold",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_no_contradictions_clean_case",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_contradiction_scan.py",
+      "target": "function:tests/unit/test_contradiction_scan.py:test_extract_evidence_summary_hardened_fields",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_coord_transform_tool.py",
+      "target": "function:tests/unit/test_coord_transform_tool.py:test_coord_transform_accepts_epsg_reprojection_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_governed_identity_context.py",
+      "target": "function:tests/unit/test_governed_identity_context.py:test_standard_envelope_uses_governed_identity_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_las_fixture_pack.py",
+      "target": "function:tests/unit/test_las_fixture_pack.py:_read_las_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_las_fixture_pack.py",
+      "target": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureInspection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_las_fixture_pack.py",
+      "target": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureRejection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_las_fixture_pack.py",
+      "target": "class:tests/unit/test_las_fixture_pack.py:TestLASFixtureHashes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_petrophysics.py",
+      "target": "function:tests/unit/test_petrophysics.py:test_monte_carlo_sw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_petrophysics.py",
+      "target": "function:tests/unit/test_petrophysics.py:test_governance_trigger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_pinn.py",
+      "target": "function:tests/unit/test_pinn.py:synthetic_well_logs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_pinn.py",
+      "target": "function:tests/unit/test_pinn.py:test_pinn_physics_loss_bounds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_pinn.py",
+      "target": "function:tests/unit/test_pinn.py:test_pinn_physics_loss_archie_consistency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_pinn.py",
+      "target": "function:tests/unit/test_pinn.py:test_pinn_predict_structure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_pinn.py",
+      "target": "function:tests/unit/test_pinn.py:test_pinn_save_load_roundtrip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_runtime_truth.py",
+      "target": "class:tests/unit/test_registry_runtime_truth.py:TestRegistryRuntimeTruth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_status.py",
+      "target": "class:tests/unit/test_registry_status.py:TestContradictionRegistryStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_status.py",
+      "target": "class:tests/unit/test_registry_status.py:TestTestReceiptStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_status.py",
+      "target": "class:tests/unit/test_registry_status.py:TestResourceRegistryStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_status.py",
+      "target": "class:tests/unit/test_registry_status.py:TestBundleSecurityAudit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_registry_truth.py",
+      "target": "class:tests/unit/test_registry_truth.py:TestRegistryTruth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_render_payload_schema.py",
+      "target": "class:tests/unit/test_render_payload_schema.py:TestRenderPayloadBasics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_render_payload_schema.py",
+      "target": "class:tests/unit/test_render_payload_schema.py:TestCubeManifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_render_payload_schema.py",
+      "target": "class:tests/unit/test_render_payload_schema.py:TestRenderBuilders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_route_query_policy.py",
+      "target": "function:tests/unit/test_route_query_policy.py:test_route_query_explore_from_unknowns_phrase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_route_query_policy.py",
+      "target": "function:tests/unit/test_route_query_policy.py:test_route_query_exploit_for_known_lookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_route_query_policy.py",
+      "target": "function:tests/unit/test_route_query_policy.py:test_fallback_route_marks_partial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_security_audit.py",
+      "target": "class:tests/unit/test_security_audit.py:TestSecurityAudit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_session_propagation.py",
+      "target": "class:tests/unit/test_session_propagation.py:TestSessionPropagation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

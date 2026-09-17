@@ -1,0 +1,2272 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/core/volumetrics.py",
+      "type": "file",
+      "name": "volumetrics.py",
+      "filePath": "src/geox_core/core/volumetrics.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/core/volumetrics.py:VolumeDistribution",
+      "type": "class",
+      "name": "VolumeDistribution",
+      "filePath": "src/geox_core/core/volumetrics.py",
+      "lineRange": [
+        36,
+        85
+      ],
+      "summary": "Class VolumeDistribution with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/core/volumetrics.py:ProbabilisticVolumetrics",
+      "type": "class",
+      "name": "ProbabilisticVolumetrics",
+      "filePath": "src/geox_core/core/volumetrics.py",
+      "lineRange": [
+        88,
+        188
+      ],
+      "summary": "Class ProbabilisticVolumetrics with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/core/welltie.py",
+      "type": "file",
+      "name": "welltie.py",
+      "filePath": "src/geox_core/core/welltie.py",
+      "summary": "Defines 15 function(s); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:_load_las_curves",
+      "type": "function",
+      "name": "_load_las_curves",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        26,
+        33
+      ],
+      "summary": "_load_las_curves(las_path) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:_load_checkshot_data",
+      "type": "function",
+      "name": "_load_checkshot_data",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        36,
+        56
+      ],
+      "summary": "_load_checkshot_data(checkshot_ref) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_td_from_checkshot",
+      "type": "function",
+      "name": "compute_td_from_checkshot",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        62,
+        87
+      ],
+      "summary": "compute_td_from_checkshot(checkshot_data, depth_array) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_td_function",
+      "type": "function",
+      "name": "compute_td_function",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        93,
+        119
+      ],
+      "summary": "compute_td_function(checkshot_data, depth_array, method, **kwargs) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_average_velocity_td",
+      "type": "function",
+      "name": "compute_average_velocity_td",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        122,
+        143
+      ],
+      "summary": "compute_average_velocity_td(vp_array, depth_array) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_vp_from_sonic",
+      "type": "function",
+      "name": "compute_vp_from_sonic",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        146,
+        180
+      ],
+      "summary": "compute_vp_from_sonic(sonic_curve, depth_array, dt_unit) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_ai",
+      "type": "function",
+      "name": "compute_ai",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        183,
+        209
+      ],
+      "summary": "compute_ai(vp, rho, rho_unit) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_reflectivity",
+      "type": "function",
+      "name": "compute_reflectivity",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        212,
+        235
+      ],
+      "summary": "compute_reflectivity(ai, polarity) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:generate_synthetic_trace",
+      "type": "function",
+      "name": "generate_synthetic_trace",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        249,
+        307
+      ],
+      "summary": "generate_synthetic_trace(rc, twt_ms, wavelet_type, wavelet_freq_hz, noise_db, rng_seed) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:apply_phase_rotation",
+      "type": "function",
+      "name": "apply_phase_rotation",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        310,
+        329
+      ],
+      "summary": "apply_phase_rotation(synthetic, phase_degrees) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:cross_correlate",
+      "type": "function",
+      "name": "cross_correlate",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        332,
+        375
+      ],
+      "summary": "cross_correlate(synth, seismic) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:assess_tie_quality",
+      "type": "function",
+      "name": "assess_tie_quality",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        378,
+        417
+      ],
+      "summary": "assess_tie_quality(correlation_coefficient, residual_rms, phase_rotation_deg, polarity_reversed) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:polarity_check",
+      "type": "function",
+      "name": "polarity_check",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        420,
+        434
+      ],
+      "summary": "polarity_check(ai, seg_polarity) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie.py:compute_welltie",
+      "type": "function",
+      "name": "compute_welltie",
+      "filePath": "src/geox_core/core/welltie.py",
+      "lineRange": [
+        440,
+        675
+      ],
+      "summary": "compute_welltie(las_path, checkshot_ref, wavelet_mode, wavelet_freq_hz, phase_degrees, polarity, seismic_ref, sonic_curve, density_curve, noise_db) — 235 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/core/welltie_mcp.py",
+      "type": "file",
+      "name": "welltie_mcp.py",
+      "filePath": "src/geox_core/core/welltie_mcp.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie_mcp.py:_arr",
+      "type": "function",
+      "name": "_arr",
+      "filePath": "src/geox_core/core/welltie_mcp.py",
+      "lineRange": [
+        24,
+        25
+      ],
+      "summary": "_arr(x) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie_mcp.py:compute_mistie_rms",
+      "type": "function",
+      "name": "compute_mistie_rms",
+      "filePath": "src/geox_core/core/welltie_mcp.py",
+      "lineRange": [
+        28,
+        93
+      ],
+      "summary": "compute_mistie_rms(inp) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie_mcp.py:extract_wavelet_least_squares",
+      "type": "function",
+      "name": "extract_wavelet_least_squares",
+      "filePath": "src/geox_core/core/welltie_mcp.py",
+      "lineRange": [
+        96,
+        187
+      ],
+      "summary": "extract_wavelet_least_squares(inp) — 91 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/core/welltie_mcp.py:compute_td_calibrate",
+      "type": "function",
+      "name": "compute_td_calibrate",
+      "filePath": "src/geox_core/core/welltie_mcp.py",
+      "lineRange": [
+        190,
+        226
+      ],
+      "summary": "compute_td_calibrate(las_path, checkshot_path, checkshot_data, method, velocity_bounds, residual_threshold_pct) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/diagenesis/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/diagenesis/__init__.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/diagenesis/compaction.py",
+      "type": "file",
+      "name": "compaction.py",
+      "filePath": "src/geox_core/diagenesis/compaction.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/basin/__init__.py",
+      "summary": "python code file (67 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/backstrip.py",
+      "type": "file",
+      "name": "backstrip.py",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "summary": "Defines 5 function(s); 5 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/backstrip.py:decompact_layer",
+      "type": "function",
+      "name": "decompact_layer",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        216,
+        277
+      ],
+      "summary": "decompact_layer(layer, depth_top_present, depth_base_present, depth_top_decompacted, rho_water) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/backstrip.py:tectonic_subsidence",
+      "type": "function",
+      "name": "tectonic_subsidence",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        280,
+        302
+      ],
+      "summary": "tectonic_subsidence(sediment_thickness_m, avg_sediment_density_kg_m3, paleowater_depth_m, sea_level_change_m, rho_mantle, rho_water) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/backstrip.py:backstrip_well",
+      "type": "function",
+      "name": "backstrip_well",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        305,
+        469
+      ],
+      "summary": "backstrip_well(well_name, layers, rho_mantle, rho_water, uncertainty_realizations) — 164 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/backstrip.py:_classify_basin_type",
+      "type": "function",
+      "name": "_classify_basin_type",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        472,
+        509
+      ],
+      "summary": "_classify_basin_type(tectonic_curve) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/backstrip.py:compute_subsidencde_ratio",
+      "type": "function",
+      "name": "compute_subsidencde_ratio",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        512,
+        551
+      ],
+      "summary": "compute_subsidencde_ratio(result_a, result_b, time_ma) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/basin/backstrip.py:LithologyParams",
+      "type": "class",
+      "name": "LithologyParams",
+      "filePath": "src/geox_core/engines/basin/backstrip.py",
+      "lineRange": [
+        123,
+        149
+      ],
+      "summary": "Class LithologyParams with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/claim_graph.py",
+      "type": "file",
+      "name": "claim_graph.py",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "summary": "Defines 3 function(s); 7 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/claim_graph.py:evaluate_graph",
+      "type": "function",
+      "name": "evaluate_graph",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "lineRange": [
+        243,
+        335
+      ],
+      "summary": "evaluate_graph(graph) — 92 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/claim_graph.py:propagate_failure",
+      "type": "function",
+      "name": "propagate_failure",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "lineRange": [
+        338,
+        391
+      ],
+      "summary": "propagate_failure(graph, failed_claim_id, failure_mode) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/claim_graph.py:build_sabah_eureka_graph",
+      "type": "function",
+      "name": "build_sabah_eureka_graph",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "lineRange": [
+        394,
+        521
+      ],
+      "summary": "build_sabah_eureka_graph() — 127 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/basin/claim_graph.py:ClaimNode",
+      "type": "class",
+      "name": "ClaimNode",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "lineRange": [
+        63,
+        83
+      ],
+      "summary": "Class ClaimNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/basin/claim_graph.py:ClaimGraph",
+      "type": "class",
+      "name": "ClaimGraph",
+      "filePath": "src/geox_core/engines/basin/claim_graph.py",
+      "lineRange": [
+        112,
+        240
+      ],
+      "summary": "Class ClaimGraph with 11 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/mass_balance.py",
+      "type": "file",
+      "name": "mass_balance.py",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "summary": "Defines 4 function(s); 3 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/mass_balance.py:compaction_correction",
+      "type": "function",
+      "name": "compaction_correction",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "lineRange": [
+        102,
+        132
+      ],
+      "summary": "compaction_correction(volume_km3, avg_porosity, lithology, target_porosity) — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/mass_balance.py:source_sink_accounting",
+      "type": "function",
+      "name": "source_sink_accounting",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "lineRange": [
+        135,
+        196
+      ],
+      "summary": "source_sink_accounting(source_eroded_km3, source_density_kg_m3, preserved_volumes, bypassed_km3, dissolved_km3, dissolved_density_kg_m3) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/mass_balance.py:compute_mass_balance",
+      "type": "function",
+      "name": "compute_mass_balance",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "lineRange": [
+        199,
+        291
+      ],
+      "summary": "compute_mass_balance(basin_name, source_eroded_km3, source_density_kg_m3, preserved_volumes, bypassed_km3, dissolved_km3, routing_efficiency) — 92 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/mass_balance.py:estimate_erosion_volume",
+      "type": "function",
+      "name": "estimate_erosion_volume",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "lineRange": [
+        294,
+        315
+      ],
+      "summary": "estimate_erosion_volume(area_km2, erosion_rate_m_myr, duration_myr, rock_density_kg_m3) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/basin/mass_balance.py:SedimentBudget",
+      "type": "class",
+      "name": "SedimentBudget",
+      "filePath": "src/geox_core/engines/basin/mass_balance.py",
+      "lineRange": [
+        57,
+        80
+      ],
+      "summary": "Class SedimentBudget with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/model_comparison.py",
+      "type": "file",
+      "name": "model_comparison.py",
+      "filePath": "src/geox_core/engines/basin/model_comparison.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/model_comparison.py:bayes_factor_gaussian",
+      "type": "function",
+      "name": "bayes_factor_gaussian",
+      "filePath": "src/geox_core/engines/basin/model_comparison.py",
+      "lineRange": [
+        24,
+        66
+      ],
+      "summary": "bayes_factor_gaussian(observed, predicted_a, uncertainty_a, predicted_b, uncertainty_b) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "type": "file",
+      "name": "thermal_maturity.py",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "summary": "Defines 7 function(s); 2 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:easyro_compute",
+      "type": "function",
+      "name": "easyro_compute",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        161,
+        212
+      ],
+      "summary": "easyro_compute(temperature_history_c, time_step_myr, pre_exponential) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:tti_compute",
+      "type": "function",
+      "name": "tti_compute",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        215,
+        250
+      ],
+      "summary": "tti_compute(temperature_history_c, time_step_myr) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:tti_to_ro",
+      "type": "function",
+      "name": "tti_to_ro",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        253,
+        263
+      ],
+      "summary": "tti_to_ro(tti) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:burial_maturity_history",
+      "type": "function",
+      "name": "burial_maturity_history",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        266,
+        444
+      ],
+      "summary": "burial_maturity_history(thermal_history, time_step_myr) — 178 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:_check_time_step_convergence",
+      "type": "function",
+      "name": "_check_time_step_convergence",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        447,
+        471
+      ],
+      "summary": "_check_time_step_convergence(thermal_history, target_ro_tolerance) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/basin/thermal_maturity.py:compute_cooling_rate",
+      "type": "function",
+      "name": "compute_cooling_rate",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        474,
+        488
+      ],
+      "summary": "compute_cooling_rate(ages_ma, temperatures_c) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/basin/thermal_maturity.py:MaturityResult",
+      "type": "class",
+      "name": "MaturityResult",
+      "filePath": "src/geox_core/engines/basin/thermal_maturity.py",
+      "lineRange": [
+        117,
+        141
+      ],
+      "summary": "Class MaturityResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "type": "file",
+      "name": "gebco_adapter.py",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "summary": "Defines 1 function(s); 8 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/bathymetry/gebco_adapter.py:get_adapter",
+      "type": "function",
+      "name": "get_adapter",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "lineRange": [
+        418,
+        432
+      ],
+      "summary": "get_adapter() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:GEBCOBackend",
+      "type": "class",
+      "name": "GEBCOBackend",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "lineRange": [
+        109,
+        124
+      ],
+      "summary": "Class GEBCOBackend with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:MockGEBCOBackend",
+      "type": "class",
+      "name": "MockGEBCOBackend",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "lineRange": [
+        130,
+        194
+      ],
+      "summary": "Class MockGEBCOBackend with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:LiveGEBCOBackend",
+      "type": "class",
+      "name": "LiveGEBCOBackend",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "lineRange": [
+        200,
+        348
+      ],
+      "summary": "Class LiveGEBCOBackend with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:GEBCOAdapter",
+      "type": "class",
+      "name": "GEBCOAdapter",
+      "filePath": "src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "lineRange": [
+        355,
+        410
+      ],
+      "summary": "Class GEBCOAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/biostrat/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "summary": "Defines 4 function(s); 5 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/biostrat/__init__.py:match_species_to_zones",
+      "type": "function",
+      "name": "match_species_to_zones",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        229,
+        253
+      ],
+      "summary": "match_species_to_zones(occurrences, zone_database) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/biostrat/__init__.py:assign_zones_to_well",
+      "type": "function",
+      "name": "assign_zones_to_well",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        256,
+        363
+      ],
+      "summary": "assign_zones_to_well(occurrences, well_id, zone_database) — 107 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/biostrat/__init__.py:facies_to_physics9_constraints",
+      "type": "function",
+      "name": "facies_to_physics9_constraints",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        369,
+        397
+      ],
+      "summary": "facies_to_physics9_constraints(facies, base_state) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/biostrat/__init__.py:age_to_burial_constraints",
+      "type": "function",
+      "name": "age_to_burial_constraints",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        403,
+        443
+      ],
+      "summary": "age_to_burial_constraints(age_ma, present_depth_m, geothermal_gradient_c_km, surface_temperature_c) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/biostrat/__init__.py:BiostratZone",
+      "type": "class",
+      "name": "BiostratZone",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        50,
+        73
+      ],
+      "summary": "Class BiostratZone with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/biostrat/__init__.py:ZonationResult",
+      "type": "class",
+      "name": "ZonationResult",
+      "filePath": "src/geox_core/engines/biostrat/__init__.py",
+      "lineRange": [
+        90,
+        110
+      ],
+      "summary": "Class ZonationResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/correlation_panel.py",
+      "type": "file",
+      "name": "correlation_panel.py",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "summary": "Defines 6 function(s); 4 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:read_las_with_aliases",
+      "type": "function",
+      "name": "read_las_with_aliases",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        102,
+        146
+      ],
+      "summary": "read_las_with_aliases(path) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:check_cross_basin",
+      "type": "function",
+      "name": "check_cross_basin",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        152,
+        165
+      ],
+      "summary": "check_cross_basin(wells) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:render_correlation_panel",
+      "type": "function",
+      "name": "render_correlation_panel",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        171,
+        346
+      ],
+      "summary": "render_correlation_panel(wells, tracks, output_path, depth_range, tops, normalize, figsize) — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:_get_curve_values",
+      "type": "function",
+      "name": "_get_curve_values",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        349,
+        357
+      ],
+      "summary": "_get_curve_values(well, canonical, aliases) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:_plot_track",
+      "type": "function",
+      "name": "_plot_track",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        360,
+        372
+      ],
+      "summary": "_plot_track(ax, depths, values, track, d_min, d_max) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/correlation_panel.py:build_correlation_panel",
+      "type": "function",
+      "name": "build_correlation_panel",
+      "filePath": "src/geox_core/engines/correlation_panel.py",
+      "lineRange": [
+        378,
+        498
+      ],
+      "summary": "build_correlation_panel(las_paths, well_names, tracks, output_png, depth_range, tops) — 120 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/earth_obs/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/earth_obs/__init__.py",
+      "summary": "python code file (12 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "type": "file",
+      "name": "prithvi_adapter.py",
+      "filePath": "src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "summary": "7 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:PrithviBackend",
+      "type": "class",
+      "name": "PrithviBackend",
+      "filePath": "src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "lineRange": [
+        98,
+        102
+      ],
+      "summary": "Class PrithviBackend with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:MockPrithviBackend",
+      "type": "class",
+      "name": "MockPrithviBackend",
+      "filePath": "src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "lineRange": [
+        105,
+        148
+      ],
+      "summary": "Class MockPrithviBackend with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:LivePrithviBackend",
+      "type": "class",
+      "name": "LivePrithviBackend",
+      "filePath": "src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "lineRange": [
+        151,
+        179
+      ],
+      "summary": "Class LivePrithviBackend with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:PrithviEOAdapter",
+      "type": "class",
+      "name": "PrithviEOAdapter",
+      "filePath": "src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "lineRange": [
+        183,
+        241
+      ],
+      "summary": "Class PrithviEOAdapter with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/em/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "summary": "Defines 4 function(s); 3 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/em/__init__.py:mt_forward_1d",
+      "type": "function",
+      "name": "mt_forward_1d",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        125,
+        204
+      ],
+      "summary": "mt_forward_1d(layer_model, frequencies_hz) — 79 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/em/__init__.py:csem_forward_1d",
+      "type": "function",
+      "name": "csem_forward_1d",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        210,
+        329
+      ],
+      "summary": "csem_forward_1d(layer_model, frequencies_hz, offset_m, source_depth_m, receiver_depth_m, source_moment_am) — 119 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/em/__init__.py:csem_apparent_resistivity",
+      "type": "function",
+      "name": "csem_apparent_resistivity",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        335,
+        358
+      ],
+      "summary": "csem_apparent_resistivity(csem_result) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/em/__init__.py:mt_sensitivity_1d",
+      "type": "function",
+      "name": "mt_sensitivity_1d",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        364,
+        420
+      ],
+      "summary": "mt_sensitivity_1d(layer_model, frequencies_hz, parameter, perturbation_pct) — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/em/__init__.py:LayerModel",
+      "type": "class",
+      "name": "LayerModel",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        48,
+        67
+      ],
+      "summary": "Class LayerModel with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/em/__init__.py:CSEMResult",
+      "type": "class",
+      "name": "CSEMResult",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        71,
+        95
+      ],
+      "summary": "Class CSEMResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/em/__init__.py:MTResult",
+      "type": "class",
+      "name": "MTResult",
+      "filePath": "src/geox_core/engines/em/__init__.py",
+      "lineRange": [
+        99,
+        119
+      ],
+      "summary": "Class MTResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geomechanics/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/geomechanics/__init__.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "type": "file",
+      "name": "fault_qc.py",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "summary": "Defines 4 function(s); 2 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_azimuth_vs_stress",
+      "type": "function",
+      "name": "check_azimuth_vs_stress",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "lineRange": [
+        83,
+        111
+      ],
+      "summary": "check_azimuth_vs_stress(fault_azimuth_deg, stress_regime, sigma1_azimuth_deg) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_reactivation_viability",
+      "type": "function",
+      "name": "check_reactivation_viability",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "lineRange": [
+        114,
+        179
+      ],
+      "summary": "check_reactivation_viability(fault_strike_deg, fault_dip_deg, sigma1_azimuth_deg, sigma1_plunge_deg, sigma3_azimuth_deg, friction_coefficient) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_basement_inheritance",
+      "type": "function",
+      "name": "check_basement_inheritance",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "lineRange": [
+        182,
+        218
+      ],
+      "summary": "check_basement_inheritance(fault_azimuth_deg, basement_fabric_azimuth_deg, tolerance_deg) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_stress_rotation_evidence",
+      "type": "function",
+      "name": "check_stress_rotation_evidence",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "lineRange": [
+        221,
+        264
+      ],
+      "summary": "check_stress_rotation_evidence(fault_azimuth_deg, stress_phases) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/geomechanics/fault_qc.py:FaultQCResult",
+      "type": "class",
+      "name": "FaultQCResult",
+      "filePath": "src/geox_core/engines/geomechanics/fault_qc.py",
+      "lineRange": [
+        33,
+        80
+      ],
+      "summary": "Class FaultQCResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geomechanics/forward_inverse.py",
+      "type": "file",
+      "name": "forward_inverse.py",
+      "filePath": "src/geox_core/engines/geomechanics/forward_inverse.py",
+      "summary": "Defines 3 function(s); 3 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_forward_workflow",
+      "type": "function",
+      "name": "build_forward_workflow",
+      "filePath": "src/geox_core/engines/geomechanics/forward_inverse.py",
+      "lineRange": [
+        98,
+        178
+      ],
+      "summary": "build_forward_workflow(basin_name, stress_phases) — 80 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_inverse_workflow",
+      "type": "function",
+      "name": "build_inverse_workflow",
+      "filePath": "src/geox_core/engines/geomechanics/forward_inverse.py",
+      "lineRange": [
+        181,
+        271
+      ],
+      "summary": "build_inverse_workflow(basin_name, seismic_interpretation_ids, stress_phases) — 90 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_loop_workflow",
+      "type": "function",
+      "name": "build_loop_workflow",
+      "filePath": "src/geox_core/engines/geomechanics/forward_inverse.py",
+      "lineRange": [
+        274,
+        312
+      ],
+      "summary": "build_loop_workflow(basin_name, stress_phases, seismic_interpretation_ids) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/geomechanics/forward_inverse.py:ForwardInverseWorkflow",
+      "type": "class",
+      "name": "ForwardInverseWorkflow",
+      "filePath": "src/geox_core/engines/geomechanics/forward_inverse.py",
+      "lineRange": [
+        63,
+        90
+      ],
+      "summary": "Class ForwardInverseWorkflow with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geomechanics/stress_utils.py",
+      "type": "file",
+      "name": "stress_utils.py",
+      "filePath": "src/geox_core/engines/geomechanics/stress_utils.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/stress_utils.py:classify_fault_orientation",
+      "type": "function",
+      "name": "classify_fault_orientation",
+      "filePath": "src/geox_core/engines/geomechanics/stress_utils.py",
+      "lineRange": [
+        11,
+        98
+      ],
+      "summary": "classify_fault_orientation(fault_azimuth_deg, stress_regime, sigma1_azimuth_deg) — 87 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/geomechanics/stress_utils.py:compute_slip_tendency",
+      "type": "function",
+      "name": "compute_slip_tendency",
+      "filePath": "src/geox_core/engines/geomechanics/stress_utils.py",
+      "lineRange": [
+        101,
+        119
+      ],
+      "summary": "compute_slip_tendency(fault_strike_deg, fault_dip_deg, sigma1_deg, sigma3_deg, sigma2_deg) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/geophysics/__init__.py",
+      "summary": "python code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/biostrat_constraint.py",
+      "type": "file",
+      "name": "biostrat_constraint.py",
+      "filePath": "src/geox_core/engines/geophysics/biostrat_constraint.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/biostrat_constraint.py:evaluate_biostrat_constraint",
+      "type": "function",
+      "name": "evaluate_biostrat_constraint",
+      "filePath": "src/geox_core/engines/geophysics/biostrat_constraint.py",
+      "lineRange": [
+        147,
+        221
+      ],
+      "summary": "evaluate_biostrat_constraint(state, age_ma, zones) — 74 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "type": "file",
+      "name": "harmonica_adapter.py",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "summary": "Defines 1 function(s); 7 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/geophysics/harmonica_adapter.py:gravity_screen",
+      "type": "function",
+      "name": "gravity_screen",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "lineRange": [
+        496,
+        615
+      ],
+      "summary": "gravity_screen(observed_mGal, easting_m, northing_m, density_kg_m3, depth_top_m, depth_bottom_m, reference_density_kg_m3, claim_id, hypothesis_prior) — 119 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:HarmonICBackend",
+      "type": "class",
+      "name": "HarmonICBackend",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "lineRange": [
+        89,
+        91
+      ],
+      "summary": "Class HarmonICBackend with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:MockHarmonICBackend",
+      "type": "class",
+      "name": "MockHarmonICBackend",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "lineRange": [
+        94,
+        212
+      ],
+      "summary": "Class MockHarmonICBackend with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:LiveHarmonICBackend",
+      "type": "class",
+      "name": "LiveHarmonICBackend",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "lineRange": [
+        215,
+        442
+      ],
+      "summary": "Class LiveHarmonICBackend with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:HarmonICAdapter",
+      "type": "class",
+      "name": "HarmonICAdapter",
+      "filePath": "src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "lineRange": [
+        446,
+        490
+      ],
+      "summary": "Class HarmonICAdapter with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/core/volumetrics.py",
+      "target": "class:src/geox_core/core/volumetrics.py:VolumeDistribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/volumetrics.py",
+      "target": "class:src/geox_core/core/volumetrics.py:ProbabilisticVolumetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:_load_las_curves",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:_load_checkshot_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_td_from_checkshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_td_function",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_average_velocity_td",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_vp_from_sonic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_ai",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_reflectivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:generate_synthetic_trace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:apply_phase_rotation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:cross_correlate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:assess_tie_quality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:polarity_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie.py",
+      "target": "function:src/geox_core/core/welltie.py:compute_welltie",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie_mcp.py",
+      "target": "function:src/geox_core/core/welltie_mcp.py:_arr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie_mcp.py",
+      "target": "function:src/geox_core/core/welltie_mcp.py:compute_mistie_rms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie_mcp.py",
+      "target": "function:src/geox_core/core/welltie_mcp.py:extract_wavelet_least_squares",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/core/welltie_mcp.py",
+      "target": "function:src/geox_core/core/welltie_mcp.py:compute_td_calibrate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "function:src/geox_core/engines/basin/backstrip.py:decompact_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "function:src/geox_core/engines/basin/backstrip.py:tectonic_subsidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "function:src/geox_core/engines/basin/backstrip.py:backstrip_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "function:src/geox_core/engines/basin/backstrip.py:_classify_basin_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "function:src/geox_core/engines/basin/backstrip.py:compute_subsidencde_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/backstrip.py",
+      "target": "class:src/geox_core/engines/basin/backstrip.py:LithologyParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/claim_graph.py",
+      "target": "function:src/geox_core/engines/basin/claim_graph.py:evaluate_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/claim_graph.py",
+      "target": "function:src/geox_core/engines/basin/claim_graph.py:propagate_failure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/claim_graph.py",
+      "target": "function:src/geox_core/engines/basin/claim_graph.py:build_sabah_eureka_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/claim_graph.py",
+      "target": "class:src/geox_core/engines/basin/claim_graph.py:ClaimNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/claim_graph.py",
+      "target": "class:src/geox_core/engines/basin/claim_graph.py:ClaimGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/mass_balance.py",
+      "target": "function:src/geox_core/engines/basin/mass_balance.py:compaction_correction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/mass_balance.py",
+      "target": "function:src/geox_core/engines/basin/mass_balance.py:source_sink_accounting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/mass_balance.py",
+      "target": "function:src/geox_core/engines/basin/mass_balance.py:compute_mass_balance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/mass_balance.py",
+      "target": "function:src/geox_core/engines/basin/mass_balance.py:estimate_erosion_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/mass_balance.py",
+      "target": "class:src/geox_core/engines/basin/mass_balance.py:SedimentBudget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/model_comparison.py",
+      "target": "function:src/geox_core/engines/basin/model_comparison.py:bayes_factor_gaussian",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:easyro_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:tti_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:tti_to_ro",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:burial_maturity_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:_check_time_step_convergence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "function:src/geox_core/engines/basin/thermal_maturity.py:compute_cooling_rate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/basin/thermal_maturity.py",
+      "target": "class:src/geox_core/engines/basin/thermal_maturity.py:MaturityResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "target": "function:src/geox_core/engines/bathymetry/gebco_adapter.py:get_adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "target": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:GEBCOBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "target": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:MockGEBCOBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "target": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:LiveGEBCOBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/bathymetry/gebco_adapter.py",
+      "target": "class:src/geox_core/engines/bathymetry/gebco_adapter.py:GEBCOAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "function:src/geox_core/engines/biostrat/__init__.py:match_species_to_zones",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "function:src/geox_core/engines/biostrat/__init__.py:assign_zones_to_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "function:src/geox_core/engines/biostrat/__init__.py:facies_to_physics9_constraints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "function:src/geox_core/engines/biostrat/__init__.py:age_to_burial_constraints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "class:src/geox_core/engines/biostrat/__init__.py:BiostratZone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/biostrat/__init__.py",
+      "target": "class:src/geox_core/engines/biostrat/__init__.py:ZonationResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:read_las_with_aliases",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:check_cross_basin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:render_correlation_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:_get_curve_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:_plot_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/correlation_panel.py",
+      "target": "function:src/geox_core/engines/correlation_panel.py:build_correlation_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "target": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:PrithviBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "target": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:MockPrithviBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "target": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:LivePrithviBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/earth_obs/prithvi_adapter.py",
+      "target": "class:src/geox_core/engines/earth_obs/prithvi_adapter.py:PrithviEOAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "function:src/geox_core/engines/em/__init__.py:mt_forward_1d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "function:src/geox_core/engines/em/__init__.py:csem_forward_1d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "function:src/geox_core/engines/em/__init__.py:csem_apparent_resistivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "function:src/geox_core/engines/em/__init__.py:mt_sensitivity_1d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "class:src/geox_core/engines/em/__init__.py:LayerModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "class:src/geox_core/engines/em/__init__.py:CSEMResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/em/__init__.py",
+      "target": "class:src/geox_core/engines/em/__init__.py:MTResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "target": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_azimuth_vs_stress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "target": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_reactivation_viability",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "target": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_basement_inheritance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "target": "function:src/geox_core/engines/geomechanics/fault_qc.py:check_stress_rotation_evidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/fault_qc.py",
+      "target": "class:src/geox_core/engines/geomechanics/fault_qc.py:FaultQCResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/forward_inverse.py",
+      "target": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_forward_workflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/forward_inverse.py",
+      "target": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_inverse_workflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/forward_inverse.py",
+      "target": "function:src/geox_core/engines/geomechanics/forward_inverse.py:build_loop_workflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/forward_inverse.py",
+      "target": "class:src/geox_core/engines/geomechanics/forward_inverse.py:ForwardInverseWorkflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/stress_utils.py",
+      "target": "function:src/geox_core/engines/geomechanics/stress_utils.py:classify_fault_orientation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geomechanics/stress_utils.py",
+      "target": "function:src/geox_core/engines/geomechanics/stress_utils.py:compute_slip_tendency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/biostrat_constraint.py",
+      "target": "function:src/geox_core/engines/geophysics/biostrat_constraint.py:evaluate_biostrat_constraint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "target": "function:src/geox_core/engines/geophysics/harmonica_adapter.py:gravity_screen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:HarmonICBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:MockHarmonICBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:LiveHarmonICBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/geophysics/harmonica_adapter.py",
+      "target": "class:src/geox_core/engines/geophysics/harmonica_adapter.py:HarmonICAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}
