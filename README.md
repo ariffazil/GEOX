@@ -16,6 +16,8 @@ evidence_spine: Phase 0+1+2A+2B deployed+verified E2E (PR #177, 10 commits on ma
 
 # GEOX — Earth Intelligence Engine
 
+![GEOX-31 Canonical Tools](https://img.shields.io/badge/GEOX-31_Canonical_Tools-0b7285)
+
 Physics-grounded geological intelligence for exploration, hazard assessment, and earth science.
 
 GEOX transforms subsurface data — seismic, wells, basin models — into auditable geological evidence. Every claim is traceable. Observation, derivation, and interpretation stay separate. **GEOX computes. It does not adjudicate. It does not seal.**
