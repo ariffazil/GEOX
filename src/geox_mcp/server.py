@@ -362,6 +362,11 @@ _mcp_kwargs: dict[str, Any] = {
     "tasks": True,
     # MCP logging: SEP-2577 deprecated — maintenance only; default min warning.
     "client_log_level": "warning",
+    # MCP spec 2026-07-28 compliance: declare listChanged capabilities
+    "experimental_capabilities": {
+        "resources": {"listChanged": True},
+        "prompts": {"listChanged": True},
+    },
 }
 
 if HAS_FASTMCP_APPS:
