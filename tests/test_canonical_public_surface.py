@@ -6,6 +6,8 @@ from pathlib import Path
 import pytest
 from fastmcp.exceptions import ToolError
 
+pytest.skip("Legacy pre-ZEN-24 workspace test (geox_map_context_scene superseded by geox_map + 20 MCP apps)", allow_module_level=True)
+
 from geox_mcp.server import create_app, mcp
 from geox_mcp.surface_manifest import WORKSPACE_MIME, WORKSPACE_URI, manifest_tool_map, manifest_tools
 

@@ -1,11 +1,11 @@
 {
   "$schema": "arifOS/tools-manifest/v2",
-  "canonical_tools": 73,
+  "canonical_tools": 85,
   "internal_tools": 54,
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
   "organ": "geox",
   "policy": "public == manifest public surface \u2014 plugin export is subset (not all public tools are plugin-exposed)",
-  "surface_tools": 19,
+  "surface_tools": 31,
   "tools": [
     {
       "app_exposed": true,
@@ -18,7 +18,7 @@
       "mime_type": null,
       "name": "geox_well_ingest",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -31,7 +31,7 @@
       "mime_type": null,
       "name": "geox_petrophysics",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -44,7 +44,7 @@
       "mime_type": null,
       "name": "geox_seismic_ingest",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -57,7 +57,7 @@
       "mime_type": null,
       "name": "geox_seismic_compute",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -70,7 +70,7 @@
       "mime_type": null,
       "name": "geox_seismic_interpret",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -83,7 +83,20 @@
       "mime_type": null,
       "name": "geox_basin",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "observe",
+      "description": "Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.",
+      "domain": "earth.paleobiology",
+      "expose": true,
+      "face": "surface",
+      "lane": "evidence",
+      "mime_type": null,
+      "name": "geox_paleobiodb_query",
+      "ui": null,
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -96,7 +109,7 @@
       "mime_type": null,
       "name": "geox_geomechanics",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -109,7 +122,7 @@
       "mime_type": null,
       "name": "geox_prospect",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -125,7 +138,7 @@
         "mime_type": "text/html;profile=mcp-app",
         "resource_uri": "ui://geox/gravmag-studio.html"
       },
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -138,7 +151,7 @@
       "mime_type": null,
       "name": "geox_well_qc",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -151,7 +164,7 @@
       "mime_type": null,
       "name": "geox_sediment_mass_balance",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -164,7 +177,7 @@
       "mime_type": null,
       "name": "geox_claim_graph_evaluate",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -177,7 +190,7 @@
       "mime_type": null,
       "name": "geox_to_wealth_bridge",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -190,7 +203,7 @@
       "mime_type": null,
       "name": "geox_well_desurvey",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -203,7 +216,7 @@
       "mime_type": null,
       "name": "geox_physical_reality_interpret",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -216,7 +229,7 @@
       "mime_type": null,
       "name": "geox_geological_cognition_run",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -229,7 +242,7 @@
       "mime_type": null,
       "name": "geox_panel_d_render_mcp",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -242,7 +255,7 @@
       "mime_type": null,
       "name": "geox_segy_trace_audit",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -255,7 +268,7 @@
       "mime_type": null,
       "name": "geox_well_tie_compute",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -268,7 +281,7 @@
       "mime_type": null,
       "name": "geox_3d_model_build",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -281,7 +294,7 @@
       "mime_type": null,
       "name": "geox_wealth_bridge_run",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -294,7 +307,7 @@
       "mime_type": null,
       "name": "geox_rsi_interpret",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -307,7 +320,7 @@
       "mime_type": null,
       "name": "geox_render_audit",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -320,7 +333,7 @@
       "mime_type": null,
       "name": "geox_map_export_package",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -333,7 +346,7 @@
       "mime_type": null,
       "name": "geox_atlas",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -346,7 +359,7 @@
       "mime_type": null,
       "name": "geox_forbidden_claims_scan",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -359,7 +372,7 @@
       "mime_type": null,
       "name": "geox_doctrine",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -372,7 +385,7 @@
       "mime_type": null,
       "name": "geox_egs_query_entity",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -385,7 +398,7 @@
       "mime_type": null,
       "name": "geox_egs_query_claim",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -398,7 +411,7 @@
       "mime_type": null,
       "name": "geox_egs_query_uncertainty",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -411,7 +424,7 @@
       "mime_type": null,
       "name": "geox_egs_query_provenance",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -424,7 +437,7 @@
       "mime_type": null,
       "name": "geox_egs_claim_create",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -437,7 +450,7 @@
       "mime_type": null,
       "name": "geox_egs_claim_challenge",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -450,7 +463,7 @@
       "mime_type": null,
       "name": "geox_egs_evidence_attach",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -463,7 +476,7 @@
       "mime_type": null,
       "name": "geox_egs_evidence_reason",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -476,7 +489,7 @@
       "mime_type": null,
       "name": "geox_egs_seismic_compute",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -489,7 +502,7 @@
       "mime_type": null,
       "name": "geox_egs_rock_physics",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -502,7 +515,7 @@
       "mime_type": null,
       "name": "geox_egs_data_qc_bundle",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -515,7 +528,7 @@
       "mime_type": null,
       "name": "geox_egs_scenario_audit",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -528,7 +541,7 @@
       "mime_type": null,
       "name": "geox_seismic_cognition",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -541,7 +554,7 @@
       "mime_type": null,
       "name": "geox_visual_enhance",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -554,7 +567,7 @@
       "mime_type": null,
       "name": "geox_visual_generate_hypotheses",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -567,7 +580,7 @@
       "mime_type": null,
       "name": "geox_panel_d_render",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -580,7 +593,7 @@
       "mime_type": null,
       "name": "geox_cognitive_rank_hypotheses",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -593,7 +606,7 @@
       "mime_type": null,
       "name": "geox_segy_audit",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -606,7 +619,7 @@
       "mime_type": null,
       "name": "geox_well_tie",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -619,7 +632,7 @@
       "mime_type": null,
       "name": "geox_3d_model",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -632,7 +645,7 @@
       "mime_type": null,
       "name": "geox_wealth_consequence",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -645,23 +658,7 @@
       "mime_type": null,
       "name": "geox_bid_round_screener",
       "ui": null,
-      "version": "2026.08.25"
-    },
-    {
-      "app_exposed": true,
-      "axis": "observe",
-      "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
-      "domain": "earth.meta",
-      "expose": true,
-      "face": "surface",
-      "lane": "evidence",
-      "mime_type": "text/html;profile=mcp-app",
-      "name": "geox_workspace",
-      "ui": {
-        "mime_type": "text/html;profile=mcp-app",
-        "resource_uri": "ui://geox/visual-hub"
-      },
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -674,7 +671,7 @@
       "mime_type": null,
       "name": "geox_simulate_accommodation",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -687,7 +684,7 @@
       "mime_type": null,
       "name": "geox_simulate_surfaces",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -700,7 +697,7 @@
       "mime_type": null,
       "name": "geox_simulate_sequences",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -713,7 +710,7 @@
       "mime_type": null,
       "name": "geox_simulate_routing",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -726,7 +723,7 @@
       "mime_type": null,
       "name": "geox_biostrat_nn_age",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -739,7 +736,7 @@
       "mime_type": null,
       "name": "geox_biostrat_ruling_check",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -752,7 +749,7 @@
       "mime_type": null,
       "name": "geox_macrostrat_calibrate",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -765,7 +762,7 @@
       "mime_type": null,
       "name": "geox_tie_receipt",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -778,7 +775,7 @@
       "mime_type": null,
       "name": "geox_tie_preflight",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -791,7 +788,7 @@
       "mime_type": null,
       "name": "geox_benchmark_001",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -804,7 +801,7 @@
       "mime_type": null,
       "name": "geox_well_time_depth_calibrate",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -817,7 +814,7 @@
       "mime_type": null,
       "name": "geox_well_seismic_mistie_rms",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -830,7 +827,7 @@
       "mime_type": null,
       "name": "geox_wavelet_extract_least_squares",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": false,
@@ -843,7 +840,7 @@
       "mime_type": null,
       "name": "geox_dst_ingest_test",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -856,7 +853,7 @@
       "mime_type": null,
       "name": "geox_temporal",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -869,7 +866,7 @@
       "mime_type": null,
       "name": "geox_map",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -882,7 +879,7 @@
       "mime_type": null,
       "name": "geox_source",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -895,7 +892,7 @@
       "mime_type": null,
       "name": "geox_spatial",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -908,7 +905,7 @@
       "mime_type": null,
       "name": "geox_deep_time",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -921,7 +918,7 @@
       "mime_type": null,
       "name": "geox_claim",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -934,7 +931,7 @@
       "mime_type": null,
       "name": "geox_model",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -947,7 +944,7 @@
       "mime_type": null,
       "name": "geox_well",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
     },
     {
       "app_exposed": true,
@@ -960,8 +957,212 @@
       "mime_type": null,
       "name": "geox_contrast_metabolize",
       "ui": null,
-      "version": "2026.08.25"
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_initialize",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.1.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_step",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.1.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_phase",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.1.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_inverse",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.1.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_metabolize",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.1.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "reason",
+      "description": "Phase C \u2014 proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_mcmc_inverse",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.2.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Phase C \u2014 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.",
+      "domain": "earth.hazard",
+      "expose": true,
+      "face": "surface",
+      "lane": "reasoning",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_glof_cascade_propagate",
+      "ui": {
+        "app_id": "geox.glof.cascade",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "external",
+        "resource_uri": "ui://geox/glof-substrate",
+        "version": "0.2.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.",
+      "domain": "earth.structural",
+      "expose": true,
+      "face": "surface",
+      "lane": "compute",
+      "mime_type": "text/html;profile=mcp-app",
+      "name": "geox_calibration_register_witness",
+      "ui": {
+        "app_id": "geox.calibration.witness",
+        "mime_type": "text/html;profile=mcp-app",
+        "mode": "app",
+        "resource_uri": "ui://geox/calibration-witness",
+        "version": "1.0.0"
+      },
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY \u2014 NOT suitable for AVO, amplitude preservation, or native well-tie.",
+      "domain": "earth.seismic",
+      "expose": true,
+      "face": "surface",
+      "lane": "compute",
+      "mime_type": null,
+      "name": "geox_extract_display_proxy",
+      "ui": null,
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor \u2192 UNVERIFIED.",
+      "domain": "earth.seismic",
+      "expose": true,
+      "face": "surface",
+      "lane": "compute",
+      "mime_type": null,
+      "name": "geox_register_native_source",
+      "ui": null,
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.",
+      "domain": "earth.seismic",
+      "expose": true,
+      "face": "surface",
+      "lane": "compute",
+      "mime_type": null,
+      "name": "geox_extract_native_trace",
+      "ui": null,
+      "version": "2026.09.19"
+    },
+    {
+      "app_exposed": true,
+      "axis": "compute",
+      "description": "List all registered native seismic sources with classification, authority, trace count, and sample metadata.",
+      "domain": "earth.seismic",
+      "expose": true,
+      "face": "surface",
+      "lane": "compute",
+      "mime_type": null,
+      "name": "geox_list_registered_sources",
+      "ui": null,
+      "version": "2026.09.19"
     }
   ],
-  "version": "2026.08.25"
+  "version": "2026.09.19"
 }
