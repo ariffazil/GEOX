@@ -31,6 +31,18 @@ try:
 except ImportError:
     _LEDGER_AVAILABLE = False
 
+# ── Explanatory-class gate (claim_kernel/v1) ────────────────────────────────────
+# Axis 3 of a claim: WHAT KIND of explanation it is. Guards the two transitions
+# that turn a claim into a justification — APPROVED_INTERPRETATION and SEALED.
+from geox_mcp.tools.claim_explanation_guard import (  # noqa: E402
+    DEFAULT_EXPLANATION_CLASS,
+    ERROR_EXPLANATION_NOT_ACTION_ELIGIBLE,
+    evaluate_explanation_gate,
+    explanation_class_of,
+    guard_transition,
+    normalize_explanation_class,
+)
+
 logger = logging.getLogger("geox.claims")
 
 # ── Claim truth classes ────────────────────────────────────────────────────────
@@ -106,10 +118,15 @@ def _build_claim_envelope(
     provenance: str,
     authority: str = "GEOX_CLAIM_WORKER",
     extra_metadata: dict[str, Any] | None = None,
+    explanation_class: str = DEFAULT_EXPLANATION_CLASS,
 ) -> dict[str, Any]:
     """Build a full earth_memory_envelope-compliant claim.
 
     Args:
+        explanation_class: Explanatory kind of this claim (claim_kernel/v1):
+            MEASURED | MECHANISM | PATTERN | NARRATIVE | UNCLASSIFIED. Only the
+            first three are action-eligible; NARRATIVE and UNCLASSIFIED claims
+            are publishable but cannot be approved or sealed.
         extra_metadata: Optional dict of supplementary metadata (e.g. epistemic_label,
             forbidden_uses, source_citation, category) merged into the payload.
             Added in Phase 2.5 for literature-to-claims extraction support.
@@ -119,6 +136,9 @@ def _build_claim_envelope(
         "claim_type": claim_type,
         "claim_text": claim_text,
         "truth_class": truth_class,
+        # Explanatory kind (claim_kernel/v1) — additive key. Records written
+        # before this axis existed simply lack it and read as UNCLASSIFIED.
+        "explanation_class": normalize_explanation_class(explanation_class),
         "uncertainty": uncertainty or {},
         "evidence_ids": evidence_ids,
         "alternatives": alternatives or [],
@@ -166,6 +186,7 @@ async def geox_claim_create(
     provenance: str = "GEOX Claim Engine",
     authority: str = "GEOX_CLAIM_WORKER",
     extra_metadata: dict[str, Any] | None = None,
+    explanation_class: str = DEFAULT_EXPLANATION_CLASS,
     session_id: str | None = None,
     actor_id: str | None = None,
     **kwargs: Any,
@@ -195,6 +216,13 @@ async def geox_claim_create(
             'alternative_text' and 'alternative_evidence_ids'.
         provenance: Human-readable origin of this claim.
         authority: Which GEOX worker created this claim.
+        explanation_class: WHAT KIND of explanation this claim is
+            (claim_kernel/v1) — MEASURED | MECHANISM | PATTERN | NARRATIVE |
+            UNCLASSIFIED. Independent of truth_class (HOW it was obtained).
+            Defaults to UNCLASSIFIED, which fails closed: the claim can be
+            published and challenged, but it cannot enter
+            APPROVED_INTERPRETATION or SEALED until a class is declared.
+            Only MEASURED, MECHANISM and PATTERN are action-eligible.
         extra_metadata: Optional supplementary metadata for literature-to-claims
             extraction. Supported keys: epistemic_label, forbidden_uses,
             source_citation, category.
@@ -226,6 +254,7 @@ async def geox_claim_create(
         provenance=provenance,
         authority=authority,
         extra_metadata=extra_metadata,
+        explanation_class=explanation_class,
     )
 
     # Persist to Earth Memory store
@@ -257,6 +286,10 @@ async def geox_claim_create(
         "status": "CREATED",
         "claim_id": claim_id,
         "truth_class": truth_class,
+        "explanation_class": payload["explanation_class"],
+        "explanation_class_action_eligible": evaluate_explanation_gate(
+            claim_text, explanation_class
+        )["allowed"],
         "claim_type": claim_type,
         "claim_text": claim_text,
         "uncertainty": uncertainty,
@@ -676,10 +709,58 @@ async def geox_claim_seal(
                         }
                     )
 
+        # Gate 4: EXPLANATORY-CLASS GATE (claim_kernel/v1) ─────────────────
+        # Axis 3 of the claim: WHAT KIND of explanation it is. A claim may only
+        # become SEALED if its explanation_class is action-eligible
+        # (MEASURED | MECHANISM | PATTERN). A NARRATIVE claim may be true,
+        # valuable and worth publishing and still carry zero explanatory power;
+        # it stays held with the contract recommending REJECTED. UNCLASSIFIED
+        # fails closed. Rule: contracts/claim_state_machine.yaml#explanation_axis
+        _expl_text = (claim_payload or {}).get("claim_text", "") or ""
+        _expl_class = explanation_class_of(claim_payload)
+        explanation_verdict = guard_transition(
+            current_state=approval_state,
+            target_state="SEALED",
+            explanation_class=_expl_class,
+            claim_text=_expl_text,
+        )
+        if not explanation_verdict["allowed"]:
+            pre_seal_checks.append(
+                {
+                    "gate": "explanation_class_action_eligible",
+                    "status": "FAILED",
+                    "error_code": explanation_verdict["error_code"],
+                    "detail": (
+                        f"Claim explanation_class='{explanation_verdict['explanation_class']}' "
+                        "is not action-eligible. A claim may enter SEALED only when its "
+                        "explanation kind is MEASURED, MECHANISM or PATTERN. Reasons: "
+                        + "; ".join(explanation_verdict["reasons"] or [])
+                    ),
+                    "recovery": explanation_verdict["required_action"],
+                    "explanation_class": explanation_verdict["explanation_class"],
+                    "kernel_reasons": explanation_verdict["reasons"],
+                    "recommended_next_state": explanation_verdict["recommended_next_state"],
+                    "rule": "CLAIM_KERNEL_EXPLANATION_CLASS_v1",
+                    "contract": "contracts/claim_state_machine.yaml#explanation_axis",
+                }
+            )
+
         if pre_seal_checks:
+            # Legacy gates keep their legacy error code. When the explanatory
+            # class is the ONLY failure, surface its own code so the caller is
+            # not sent chasing an evidence problem that does not exist.
+            _legacy_failures = [
+                g for g in pre_seal_checks if g.get("gate") != "explanation_class_action_eligible"
+            ]
+            if _legacy_failures:
+                _seal_error_code = "PRE_SEAL_CONTRADICTION_GATE"
+            else:
+                _seal_error_code = (
+                    pre_seal_checks[0].get("error_code") or ERROR_EXPLANATION_NOT_ACTION_ELIGIBLE
+                )
             return {
                 "status": "HOLD",
-                "error_code": "PRE_SEAL_CONTRADICTION_GATE",
+                "error_code": _seal_error_code,
                 "message": (
                     "Federation contract §5: Mandatory contradiction discipline before SEAL. "
                     f"{len(pre_seal_checks)} gate(s) failed."
@@ -688,6 +769,8 @@ async def geox_claim_seal(
                 "approval_state": approval_state,
                 "challenge_count": len(challenges),
                 "evidence_count": len(evidence_ids) if evidence_ids else 0,
+                "explanation_class": explanation_verdict["explanation_class"],
+                "explanation_gate": explanation_verdict,
                 "failed_gates": pre_seal_checks,
                 "required_actions": [g["recovery"] for g in pre_seal_checks],
                 "next_steps": [
