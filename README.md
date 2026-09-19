@@ -98,3 +98,11 @@ ARIF = Sovereign · arifOS = Law · AAA = Institution · A-FORGE = Hands — GEO
 Full technical README (taxonomy, architecture, tool inventory): [docs/README-FULL.md](./docs/README-FULL.md) ·
 Federation card: [arifOS/docs/FEDERATION_CARD.md](https://github.com/ariffazil/arifOS/blob/main/docs/FEDERATION_CARD.md) ·
 MCP door: [geox.arif-fazil.com/mcp](https://geox.arif-fazil.com/mcp)
+
+## fastMCP
+
+- **Version:** `fastmcp[apps,tasks]==4.0.5`
+- **Bumped:** 2026-09-19 (from `==3.4.6` core pin + `>=3.4.2,<4.0` dev/extras cap)
+- **Cap relax:** the `<4.0` upper bound was relaxed to `<5` on 2026-09-19 to admit fastmcp 4.x. GEOX retains the `>=4.0` floor.
+- **Middleware reattach:** v4 reattaches the ASGI app middleware chain on every restart. Restart `geox-mcp.service` once after upgrade so the new chain binds before request load.
+- **Rollback:** revert the single commit that bumped the pin (see `/root/AAA/reports/mcp-upgrade-GEOX-2026-09-19.md`).
