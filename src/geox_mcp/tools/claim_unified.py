@@ -15,7 +15,7 @@ from typing import Any, Literal
 
 
 async def geox_claim(
-    mode: Literal["create", "validate", "challenge", "seal", "attach_evidence"] = "create",
+    mode: Literal["create", "validate", "challenge", "seal", "attach_evidence", "falsify"] = "create",
     claim_id: str = "",
     challenge_text: str = "",
     alternative_claim_text: str = "",
@@ -150,22 +150,38 @@ async def geox_claim(
             provenance=kwargs.get("provenance", "GEOX Claim Engine"),
         )
 
-    # Default: create
-    from geox_mcp.tools.claims import geox_claim_create as _impl
+    if mode == "falsify":
+        return await geox_falsify(
+            claim_text=kwargs.get("claim_text", "") or kwargs.get("claim_id", ""),
+            claim_type=kwargs.get("claim_type", "general"),
+            context=kwargs.get("context"),
+            evidence=kwargs.get("evidence"),
+        )
 
-    return await _impl(
-        claim_text=kwargs.get("claim_text", ""),
-        claim_type=kwargs.get("claim_type", "other"),
-        truth_class=kwargs.get("truth_class", "INTERPRETATION"),
-        evidence_ids=kwargs.get("evidence_ids", []),
-        uncertainty_p10=kwargs.get("uncertainty_p10"),
-        uncertainty_p50=kwargs.get("uncertainty_p50"),
-        uncertainty_p90=kwargs.get("uncertainty_p90"),
-        uncertainty_distribution=kwargs.get("uncertainty_distribution", "lognormal"),
-        alternatives=kwargs.get("alternatives"),
-        provenance=kwargs.get("provenance", "GEOX Claim Engine"),
-        authority=kwargs.get("authority", "GEOX_CLAIM_WORKER"),
-    )
+    if mode == "create":
+        from geox_mcp.tools.claims import geox_claim_create as _impl
+
+        return await _impl(
+            claim_text=kwargs.get("claim_text", ""),
+            claim_type=kwargs.get("claim_type", "other"),
+            truth_class=kwargs.get("truth_class", "INTERPRETATION"),
+            evidence_ids=kwargs.get("evidence_ids", []),
+            uncertainty_p10=kwargs.get("uncertainty_p10"),
+            uncertainty_p50=kwargs.get("uncertainty_p50"),
+            uncertainty_p90=kwargs.get("uncertainty_p90"),
+            uncertainty_distribution=kwargs.get("uncertainty_distribution", "lognormal"),
+            alternatives=kwargs.get("alternatives"),
+            provenance=kwargs.get("provenance", "GEOX Claim Engine"),
+            authority=kwargs.get("authority", "GEOX_CLAIM_WORKER"),
+        )
+
+    return {
+        "ok": False,
+        "isError": True,
+        "error_code": "UNSUPPORTED_CLAIM_MODE",
+        "message": f"Mode '{mode}' is not implemented on geox_claim. Supported modes: create, validate, challenge, seal, attach_evidence, falsify.",
+        "supported_modes": ["create", "validate", "challenge", "seal", "attach_evidence", "falsify"],
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
