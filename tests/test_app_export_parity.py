@@ -20,20 +20,20 @@ class TestAppExportParity:
         public_mcp_tools = list(CANONICAL_PUBLIC_TOOLS)
         manifest_public = public_tool_names()
 
-        assert len(exported_app_tools) == 33
-        assert len(public_mcp_tools) == 33
-        assert len(manifest_public) == 33
+        assert len(exported_app_tools) == 31
+        assert len(public_mcp_tools) == 31
+        assert len(manifest_public) == 31
         assert set(exported_app_tools) == set(public_mcp_tools) == set(manifest_public)
 
         # Required canonical names (must not vanish from app export)
         for required in (
             "geox_claim",
-            "geox_gravmag_studio",
             "geox_prospect",
-            "geox_well_desk",
-            "geox_basin_backstrip",
-            "geox_evidence",
-            "geox_falsify",
+            "geox_well",
+            "geox_basin",
+            "geox_petrophysics",
+            "geox_seismic_interpret",
+            "geox_map",
         ):
             assert required in exported_app_tools
 

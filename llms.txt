@@ -1,104 +1,42 @@
 # GEOX — Earth Intelligence Sovereign Kernel (31 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
-> Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
-> Capability families: 9 | Sprint 1 classified
+> Surface: generated from src/geox_mcp/tools_manifest.yaml
 
-## 1. Capability Graph — Tool Surface
+## 1. Canonical Tool Surface
 
-### 1. Evidence & Orientation
+1. **geox_well_ingest**: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
+2. **geox_petrophysics**: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
+3. **geox_seismic_ingest**: SEG-Y I/O, header inspection, export.
+4. **geox_seismic_compute**: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
+5. **geox_seismic_interpret**: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
+6. **geox_basin**: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
+7. **geox_paleobiodb_query**: Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.
+8. **geox_geomechanics**: Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.
+9. **geox_prospect**: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
+10. **geox_well_qc**: Quality control for well data: depth monotonicity, null %, physical range checks.
+11. **geox_temporal**: Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.
+12. **geox_map**: Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.
+13. **geox_source**: Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.
+14. **geox_spatial**: Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.
+15. **geox_deep_time**: Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.
+16. **geox_claim**: Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.
+17. **geox_model**: Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.
+18. **geox_well**: Well intelligence: view curves, open desk, desurvey. Modes: view, desk.
+19. **geox_contrast_metabolize**: Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS seals.
+20. **geox_glof_cascade_initialize**: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.
+21. **geox_glof_cascade_step**: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+22. **geox_glof_cascade_phase**: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
+23. **geox_glof_cascade_inverse**: Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
+24. **geox_glof_cascade_metabolize**: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.
+25. **geox_glof_cascade_mcmc_inverse**: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
+26. **geox_glof_cascade_propagate**: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
+27. **geox_calibration_register_witness**: Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.
+28. **geox_extract_display_proxy**: Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.
+29. **geox_register_native_source**: Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.
+30. **geox_extract_native_trace**: Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.
+31. **geox_list_registered_sources**: List all registered native seismic sources with classification, authority, trace count, and sample metadata.
 
-- **geox_basin** [Tier A — Core]: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
-- **geox_claim** [Tier A — Core]: Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.
-- **geox_deep_time** [Tier A — Core]: Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.
-- **geox_paleobiodb_query** [Tier B — Specialist]: Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.
-- **geox_source** [Tier A — Core]: Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.
-- **geox_spatial** [Tier A — Core]: Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.
-- **geox_temporal** [Tier A — Core]: Temporal analytics: decline curve, RRR, basin lifecycle, cadence. Modes: decline, rrr, basin_lifecycle, cadence.
-
-### 2. Data Intake & QC
-
-- **geox_seismic_ingest** [Tier B — Specialist]: SEG-Y I/O, header inspection, export.
-- **geox_well_ingest** [Tier B — Specialist]: Load well log data from LAS, SEG-Y, DST, deviation, or tops files. Auto-detects format.
-- **geox_well_qc** [Tier A — Core]: Quality control for well data: depth monotonicity, null %, physical range checks.
-
-### 3. Earth Interpretation
-
-- **geox_contrast_metabolize** [Tier B — Specialist]: Unified anomalous contrast metabolic pipeline. Binds three stages into one call: ISOLATE (deterministic acoustic impedance contrast detection) then MEASURE (AVO gradient + LMR estimates) then CLASSIFY (>=3 stratigraphic trap hypotheses). substrate_class=INERT. Local max QUALIFIED_CANDIDATE - arifOS seals.
-- **geox_geomechanics** [Tier B — Specialist]: Geomechanical analysis: bulk/shear/young modulus, poisson ratio, acoustic impedance, stress polygon.
-- **geox_petrophysics** [Tier A — Core]: Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.
-- **geox_seismic_compute** [Tier B — Specialist]: Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.
-- **geox_seismic_interpret** [Tier A — Core]: One semantic capability — propose geometry, physics-gate, compare hypotheses (NOT autonomous SEAL). Live modes: horizon_contrast, fault_sticks, volume_frame, blend, structure_validate, interpret (interpretation_bundle ≥3 hyps), interpret_section/rsi_pipeline (INT_SEISMIC), segy_slice. Gates return PASS|WARN|KILL|UNMEASURED + receipt_hash. preferred_hypothesis always null from GEOX. Local max QUALIFIED_CANDIDATE — arifOS seals only.
-- **geox_well** [Tier A — Core]: Well intelligence: view curves, open desk, desurvey. Modes: view, desk.
-
-### 4. Integration & Models
-
-- **geox_model** [Tier A — Core]: Geological modeling: subsurface inversion, 2D cross-sections, GemPy 3D. Modes: subsurface, geological_generate, gempy_3d.
-
-### 5. Prospect & Decision
-
-- **geox_prospect** [Tier A — Core]: Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes: screen, evaluate.
-
-### 6. Presentation
-
-- **geox_map** [Tier A — Core]: Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.
-
-### 7. Research / Cascade Lab
-
-- **geox_glof_cascade_initialize** [Tier C — Research]: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.
-- **geox_glof_cascade_inverse** [Tier C — Research]: Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
-- **geox_glof_cascade_mcmc_inverse** [Tier C — Research]: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
-- **geox_glof_cascade_metabolize** [Tier C — Research]: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.
-- **geox_glof_cascade_phase** [Tier C — Research]: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
-- **geox_glof_cascade_propagate** [Tier C — Research]: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
-- **geox_glof_cascade_step** [Tier C — Research]: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
-
-### 8. Seismic Sources & Traces
-
-- **geox_extract_display_proxy** [Tier B — Specialist]: Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.
-- **geox_extract_native_trace** [Tier B — Specialist]: Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.
-- **geox_list_registered_sources** [Tier B — Specialist]: List all registered native seismic sources with classification, authority, trace count, and sample metadata.
-- **geox_register_native_source** [Tier B — Specialist]: Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.
-
-### 9. Structural Calibration
-
-- **geox_calibration_register_witness** [Tier B — Specialist]: Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.
-
-## 2. Tier Legend
-- **Tier A (Core)**: Default discovery. All agents see these.
-- **Tier B (Specialist)**: Opt-in after task declaration.
-- **Tier C (Research)**: Advanced/research. Not visible by default.
-
-## 3. Capability Packs
-
-### earth_core (Tier A — 13 tools)
-Default discovery surface. Basin context, data validation, well/seismic interpretation, prospect assessment.
-
-### earth_specialist (Tier B — 6 tools)
-Opt-in. Seismic computation, geomechanics, data ingestion, paleobiology.
-
-### earth_research (Tier C — 7 tools)
-Advanced/research only. Sub-packs:
-- **cascade** (5): GLOF cascade simulation (initialize, step, phase, metabolize, propagate)
-- **inversion** (2): Bayesian inference (inverse, mcmc_inverse)
-- **restoration** (0): Structural restoration (PLANNED)
-- **simulation** (0): Stratigraphic simulation (PLANNED)
-- **uncertainty** (0): Uncertainty quantification (PLANNED)
-
-## 4. Workflow Packs
-
-### well_to_correlation (7 steps → CorrelationPackage)
-basin → well → well_qc → petrophysics → deep_time → model → map
-
-### seismic_to_prospect (8 steps → ProspectEvidencePackage)
-basin → seismic_ingest → seismic_compute → seismic_interpret → geomechanics → model → prospect → claim
-
-### basin_screening (8 steps → PlayFairwaySummary)
-basin → spatial → temporal → source → deep_time → claim → prospect → map
-
-### glof_uncertainty (6 steps → UncertaintyReport)
-initialize → propagate → phase → inverse → mcmc_inverse → metabolize
-
-## 5. Agent Reasoning Logic
+## 2. Agent Reasoning Logic
 - Evidence before interpretation.
 - Governance stays server-side.
 - App-enabled workspace URI: `ui://geox/workspace-v1.html` (text/html;profile=mcp-app).

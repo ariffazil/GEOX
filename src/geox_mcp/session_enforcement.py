@@ -376,7 +376,7 @@ def validate_session(
         )
 
     # ── PATH 1: SCT token — authoritative federation validation ────────
-    if session_id.startswith("act_v1."):
+    if session_id.startswith(("act_v1.", "sct_v1.")):
         try:
             verification = _verify_sct_authoritatively(
                 session_id,

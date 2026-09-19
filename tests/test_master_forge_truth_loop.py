@@ -275,17 +275,20 @@ async def test_t6_independent_witnesses_no_averaging():
 # ── T9 surface truth ────────────────────────────────────────────────────────
 
 
-def test_t9_surface_truth_32():
+def test_t9_surface_truth_31():
     from geox_mcp.surface_manifest import load_surface_manifest, public_tool_names
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
-    assert len(names) == 32
+    assert len(names) == 31
     snap = json.loads(Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json").read_text())
-    assert snap["public_count"] == 32
+    assert snap["public_count"] == 31
     assert set(snap["public_tools"]) == set(names)
     # ZEN_15 archived
-    zen = Path("/root/GEOX/docs/ZEN_15_SURFACE.md").read_text()
+    zen_path = Path("/root/GEOX/docs/ZEN_15_SURFACE.ARCHIVED.md")
+    if not zen_path.exists():
+        zen_path = Path("/root/GEOX/docs/archive/ZEN_15_SURFACE_ARCHIVED_2026-07-24.md")
+    zen = zen_path.read_text()
     assert "ARCHIVED" in zen or "NOT RUNTIME" in zen.upper()
 
 
