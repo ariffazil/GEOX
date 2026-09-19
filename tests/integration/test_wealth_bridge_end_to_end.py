@@ -132,6 +132,16 @@ def make_vault999_receipt(
 # ─────────────────────────────────────────────────────────────────────────────
 
 
+def _wealth_live() -> bool:
+    try:
+        import httpx
+        r = httpx.get("http://localhost:18082/health", timeout=0.5)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+
+@pytest.mark.skipif(not _wealth_live(), reason="External dependency / E2E required (WEALTH organ unreachable)")
 class TestGeologyClaimToCapitalRoute:
     """End-to-end: GEOX prospect → bridge → score kernel → VAULT999 receipt."""
 

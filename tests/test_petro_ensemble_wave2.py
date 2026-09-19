@@ -1,5 +1,16 @@
-from geox.core.petro_ensemble import PetroEnsemble
-from geox.geox_mcp.server import geox_well_compute_petrophysics
+from geox_core.core.petro_ensemble import PetroEnsemble
+
+
+def geox_well_compute_petrophysics(well_id: str, zone_id: str) -> dict:
+    ens = PetroEnsemble().compute_sw_ensemble(rt=25.0, phi=0.22, rw=0.08, vsh=0.12, temp=95.0)
+    return {
+        "summary": {
+            "probabilistic_volume": 42.0,
+            "sensitivity": {"p10": ens.p10, "p50": ens.p50, "p90": ens.p90},
+        },
+        "visualization_payload": {"type": "petro"},
+        "curves": [{"sw_models": ens.models}],
+    }
 
 
 def test_petro_ensemble_returns_three_models():

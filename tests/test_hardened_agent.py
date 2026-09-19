@@ -1,12 +1,11 @@
 import asyncio
+import pytest
 from typing import Any
 
 try:
     from arifos.geox.geox_hardened import HardenedGeoxAgent
 except ImportError:
     pytest.skip("Legacy arifos.geox module not available", allow_module_level=True)
-
-import pytest
 
 @pytest.mark.asyncio
 async def test_hardened_agent():

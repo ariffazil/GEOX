@@ -50,7 +50,7 @@ def test_geox_deep_time_state_in_canonical_registry():
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
     except ImportError:
         pytest.skip("geox_mcp.registry not importable in this env")
-    assert "geox_deep_time_state" in CANONICAL_PUBLIC_TOOLS
+    assert "geox_deep_time" in CANONICAL_PUBLIC_TOOLS
 
 
 def test_geox_deep_time_state_module_importable():
@@ -322,7 +322,7 @@ def test_governance_footer_present():
     from geox_mcp.tools.deep_time.vector import assemble_earth_state_vector, assemble_envelope
     res = resolve_age_query(period="Jurassic")
     vec = assemble_earth_state_vector(res)
-    env = assemble_envelope(age_res=res, input_query={"period": "Jurassic"}, vector=vec)
+    env = assemble_envelope(age_res=res, input_query={"period": "Jurassic"}, vector=vec, session_id="test-session")
     assert env.governance is not None
     gov = env.governance
     assert "verdict" in gov

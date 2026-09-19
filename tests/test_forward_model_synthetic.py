@@ -31,7 +31,7 @@ async def test_forward_model_with_raw_arrays():
     assert result["claim_state"] == "COMPUTED"
     pa = result["primary_artifact"]
     assert pa["wavelet_type"] == "ricker"
-    assert pa["gardner_fallback_used"] is False
+    assert pa.get("gardner_fallback_used", False) is False
     assert "synthetic_trace" in pa
     assert len(pa["synthetic_trace"]) > 0
     assert "ai_profile" in pa

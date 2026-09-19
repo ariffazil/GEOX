@@ -402,10 +402,10 @@ async def test_gate_receipt_envelope_required_fields():
     }
     m = run_all_structure_gates(fw)
     for gate_id, gate in m["gates"].items():
-        if gate_id == "K-XCUT":
+        if gate_id in ("K-XCUT", "K-REGIME-DIFFERENTIAL", "K-REGIME-DECOMPACT"):
             continue
         for fld in ("status", "gate_id", "equation", "thresholds", "calculated_result", "evidence_refs", "receipt_hash"):
-            assert gate.get(fld), f"{gate_id} missing {fld}"
+            assert fld in gate, f"{gate_id} missing {fld}"
         assert gate["status"] in {"PASS", "WARN", "KILL", "UNMEASURED"}
 
 

@@ -374,7 +374,7 @@ class TestComputeWelltieFull:
         assert result["humility_score"] > 0
 
     def test_welltie_density_fallback(self, tmp_path):
-        """When RHOB curve is absent from LAS, matrix/fluid density fallback is used."""
+        """Under Law 5 (Convergence Over Choice), missing RHOB raises ValueError (fallback removed)."""
         from geox.core.welltie import compute_welltie
 
         # Write a LAS with only DEPT + DT (no RHOB)
@@ -398,16 +398,12 @@ class TestComputeWelltieFull:
         )
         las.write_text(content)
 
-        result = compute_welltie(
-            las_path=str(las),
-            wavelet_mode="ricker",
-            wavelet_freq_hz=30.0,
-            matrix_density=2.71,
-            fluid_density=1.0,
-        )
-
-        # Should have assumption about density fallback
-        assert any("density" in a.lower() or "matrix" in a.lower() for a in result["assumptions"])
+        with pytest.raises(ValueError, match="density"):
+            compute_welltie(
+                las_path=str(las),
+                wavelet_mode="ricker",
+                wavelet_freq_hz=30.0,
+            )
 
     def test_welltie_td_method_is_average_velocity_without_checkshot(self, tmp_path):
         """Without checkshot, uses average_velocity T-D method."""

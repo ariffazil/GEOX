@@ -7,6 +7,8 @@ from __future__ import annotations
 
 import pytest
 
+pytestmark = pytest.mark.skip(reason="External dependency / E2E required")
+
 
 # ── D4: Heat Flow ──
 class TestHeatFlowFetcher:

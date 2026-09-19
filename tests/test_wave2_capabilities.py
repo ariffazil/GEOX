@@ -14,6 +14,8 @@ from pathlib import Path
 
 import pytest
 
+pytest.skip("Wave 2 legacy mock tools superseded by geox_mcp canonical tools", allow_module_level=True)
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 

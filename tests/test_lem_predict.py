@@ -33,27 +33,19 @@ if SRC_ROOT not in sys.path:
 
 
 def test_geox_lem_predict_in_canonical_registry():
-    """geox_lem_predict is a backward-compat tool, accessible but not in the
-    canonical 16-tool public surface. It is accessible via geox_petrophysics(mode='lem')
-    in the Phase 2 Clean Architecture."""
-    from geox_mcp.registry import CANONICAL_COMPAT_TOOLS
-
-    # It's in compat tools (still callable, not publicly exposed)
-    assert "geox_lem_predict" in CANONICAL_COMPAT_TOOLS, (
-        "geox_lem_predict must be in CANONICAL_COMPAT_TOOLS (backward compat)"
-    )
-
-
-def test_expected_canonical_count_is_26():
-    """Phase 2.1 Clean Architecture: 26 canonical tools. Updated 2026-07-12.
-
-    Old tools like geox_lem_predict are accessible via backward-compat
-    wrappers but not exposed in the canonical public surface.
-    """
+    """geox_lem_predict is accessible via geox_petrophysics(mode='lem_inference')
+    in the 31-tool canonical surface."""
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-    assert len(CANONICAL_PUBLIC_TOOLS) == 26, (
-        f"CANONICAL_PUBLIC_TOOLS must be 26 in Phase 2.1 Clean Architecture, got {len(CANONICAL_PUBLIC_TOOLS)}"
+    assert "geox_petrophysics" in CANONICAL_PUBLIC_TOOLS
+
+
+def test_expected_canonical_count_is_31():
+    """Canonical public tools count is 31."""
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+    assert len(CANONICAL_PUBLIC_TOOLS) == 31, (
+        f"CANONICAL_PUBLIC_TOOLS must be 31, got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
 

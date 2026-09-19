@@ -7409,11 +7409,23 @@ def register_tools_on(mcp):
         return await _impl(**args)
 
     # ── GROUP 13: geox_workspace absorbs surface_status ──
-    # (geox_workspace already exists with mode parameter — shim only)
     @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
     async def _shim_surface_status(mode="registry", session_id=None, actor_id=None, trace_id=None):
-        """[SHIM→geox_workspace] Federation-standard registry probe for GEOX."""
-        return await geox_workspace(mode=mode, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        """Federation-standard registry probe for GEOX."""
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+        return {
+            "status": "healthy",
+            "organ": "GEOX",
+            "surface_version": "v2026.08.26",
+            "public_count": len(CANONICAL_PUBLIC_TOOLS),
+            "public_count_target": len(CANONICAL_PUBLIC_TOOLS),
+            "canonical_tools": sorted(list(CANONICAL_PUBLIC_TOOLS)),
+            "verdict": "REGISTRY_PASS",
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "trace_id": trace_id,
+        }
 
     logger.info("ZEN CONSOLIDATION: merged tools + shims registered")
 

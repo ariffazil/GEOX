@@ -227,4 +227,55 @@ class AssetMemoryStore(EarthMemoryStore):
             claim_tag: str
             vault_receipt: dict[str, Any]
 
-        return MockRecallResult(asset_id, [], "CLAIM", _receipt("geox_memory_recall_asset", {}, "SEAL"))
+    def store_record(
+        self,
+        asset_id: str,
+        eval_type: str,
+        payload: dict[str, Any],
+        vault_receipt: str | None = None,
+        authorized: bool = True,
+    ) -> dict[str, Any]:
+        if not authorized:
+            raise PermissionError("F11: Authorization required to store asset memory record")
+        record_id = f"rec_{uuid.uuid4().hex[:12]}"
+        timestamp = datetime.now(UTC).isoformat()
+        with self._connect() as conn:
+            conn.execute(
+                "INSERT INTO earth_memory (id, asset_id, memory_type, truth_class, approval_state, payload, vault_receipt, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    record_id,
+                    asset_id,
+                    eval_type,
+                    "interpretation",
+                    "stored",
+                    json.dumps(payload),
+                    vault_receipt,
+                    timestamp,
+                ),
+            )
+        return {"stored": True, "record_id": record_id, "vault_receipt": vault_receipt}
+
+    def recall_asset(self, asset_id: str) -> list[Any]:
+        @dataclass
+        class RecalledRecord:
+            id: str
+            asset_id: str
+            payload: dict[str, Any]
+            vault_receipt: str | None
+            timestamp: str
+
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT id, asset_id, payload, vault_receipt, timestamp FROM earth_memory WHERE asset_id = ?",
+                (asset_id,),
+            ).fetchall()
+        return [
+            RecalledRecord(
+                id=r[0],
+                asset_id=r[1],
+                payload=json.loads(r[2]),
+                vault_receipt=r[3],
+                timestamp=r[4],
+            )
+            for r in rows
+        ]

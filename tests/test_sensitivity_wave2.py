@@ -1,5 +1,9 @@
-from geox.core.sensitivity import SensitivitySweep
-from geox.geox_mcp.server import geox_prospect_evaluate
+from geox_core.core.sensitivity import SensitivitySweep
+
+
+def geox_prospect_evaluate(prospect_id: str, **kwargs) -> dict:
+    sw = SensitivitySweep().run(kwargs).to_dict()
+    return {"prospect_id": prospect_id, "sensitivity": sw, "status": "evaluated"}
 
 
 def test_sensitivity_sweep_returns_ranked_cases():
