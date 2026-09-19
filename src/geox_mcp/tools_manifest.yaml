@@ -2,6 +2,9 @@ manifest_version: 2026.07.24-truth-loop-hardening
 generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this repair
 public_transport: mcp
 public_count_target: 31
+compat_tools:
+- geox_well_desk
+- geox_well_view
 tools:
 - name: geox_well_ingest
   domain: earth.well

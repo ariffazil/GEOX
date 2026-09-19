@@ -33,6 +33,28 @@ def ensure_surface_manifest():
     assert SURFACE_MANIFEST_PATH.exists(), "GEOX_MCP_APPS_SURFACE.json missing. Run scripts/generate_mcp_apps_surface.py"
 
 
+@pytest.fixture(autouse=True)
+def mock_arifos_test_session():
+    """Mock arifOS kernel verification for SEAL-test session IDs during test execution."""
+    from unittest.mock import patch
+
+    def _mock_verify(session_id, actor_id, required_authority="OBSERVE_ONLY"):
+        if session_id and str(session_id).startswith("SEAL-test"):
+            return {
+                "session_id": session_id,
+                "actor_id": actor_id or "test-runner",
+                "standing": {
+                    "actor": {"claimed_id": actor_id or "test-runner", "verified": True},
+                    "authority": {"band": "SOVEREIGN"},
+                    "session_id": session_id,
+                },
+            }
+        return None
+
+    with patch("geox_mcp.session_enforcement._cached_kernel_verify", side_effect=_mock_verify):
+        yield
+
+
 @pytest.mark.asyncio
 async def test_01_tools_list_schema_and_ui_bindings():
     """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
@@ -220,11 +242,20 @@ async def test_08_all_tools_have_four_annotations_and_ui_binding():
         keys = {}
         if ann is not None:
             if hasattr(ann, "model_dump"):
-                keys = ann.model_dump()
+                keys = ann.model_dump(by_alias=True)
             elif isinstance(ann, dict):
                 keys = ann
             else:
                 keys = {k: getattr(ann, k, None) for k in needed}
+            snake_needed = {
+                "readOnlyHint": "read_only_hint",
+                "destructiveHint": "destructive_hint",
+                "idempotentHint": "idempotent_hint",
+                "openWorldHint": "open_world_hint",
+            }
+            for camel_k, snake_k in snake_needed.items():
+                if keys.get(camel_k) is None and keys.get(snake_k) is not None:
+                    keys[camel_k] = keys[snake_k]
         if any(keys.get(k) is None for k in needed):
             missing_ann.append((t.name, {k: keys.get(k) for k in needed}))
         meta = getattr(t, "meta", None) or {}

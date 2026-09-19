@@ -17,6 +17,7 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 
 from __future__ import annotations
 
+from collections import defaultdict
 import logging
 from pathlib import Path
 from typing import Any
@@ -937,23 +938,23 @@ def list_apps() -> list[dict[str, Any]]:
 _app_to_tool: dict[str, str] = {
     # Core visual tools (original 7)
     "well_desk": "geox_petrophysics",
-    "seismic_vision": "geox_seismic_compute",
-    "earth_volume": "geox_seismic_compute",
-    "judge_console": "geox_falsify",
-    "geoprobe": "geox_prospect",
+    "seismic_vision": "geox_seismic_interpret",
+    "earth_volume": "geox_deep_time",
+    "judge_console": "geox_claim",
+    "geoprobe": "geox_geomechanics",
     "basin_explorer": "geox_basin",
-    "earth_map": "geox_map_layers_list",
+    "earth_map": "geox_map",
     "prospect_studio": "geox_prospect",
-    "risk_console": "geox_claim",
+    "risk_console": "geox_claim_graph_evaluate",
     # H1 P0: Map remaining apps to their primary tools
-    "visual_hub": "geox_visual_understand",
-    "catalog": "geox_surface_status",
+    "visual_hub": "geox_extract_display_proxy",
+    "catalog": "geox_list_registered_sources",
     # Batch F: former zero-bound actives
     "gravmag_studio": "geox_gravmag_studio",
     "workspace_v1": "geox_workspace",
-    "workbench_v1": "geox_map_layers_list",
+    "workbench_v1": "geox_map",
     "prospect_ui": "geox_prospect",
-    "well_witness": "geox_petrophysics",
+    "well_witness": "geox_calibration_register_witness",
     "analog_digitizer": "geox_well_ingest",
 }
 
@@ -961,50 +962,76 @@ _app_to_tool: dict[str, str] = {
 # Each entry maps tool_name → app_id (the GEOX_APPS key to use for UI)
 _tool_app_fallback: dict[str, str] = {
     # Well tools → WellDesk
+    "geox_well": "well_desk",
     "geox_well_ingest": "well_desk",
     "geox_well_desk": "well_desk",
-    "geox_well_qc": "well_desk",  # P0 2026-07-24: only public tool previously unbound
+    "geox_well_qc": "well_desk",
     "geox_well_desurvey": "well_desk",
-    "geox_lem_predict": "well_desk",  # PR3: LEM → Well Witness
+    "geox_petrophysics": "well_desk",
+    "geox_lem_predict": "well_desk",
+    "geox_well_view": "well_desk",
     # Seismic tools → Seismic Vision
     "geox_seismic_ingest": "seismic_vision",
     "geox_seismic_interpret": "seismic_vision",
+    "geox_seismic_compute": "seismic_vision",
+    "geox_extract_native_trace": "seismic_vision",
     # Basin tools → Basin Explorer
+    "geox_basin": "basin_explorer",
+    "geox_source": "basin_explorer",
+    "geox_source_rock": "basin_explorer",
+    "geox_paleobiodb_query": "basin_explorer",
     "geox_basin_backstrip": "basin_explorer",
     "geox_sediment_mass_balance": "basin_explorer",
     "geox_thermal_maturity_history": "basin_explorer",
-    "geox_deep_time_state": "earth_volume",
-    # Sequence → Basin Explorer
     "geox_sequence": "basin_explorer",
+    "geox_dde_reason": "basin_explorer",
     # Map chain → Earth Map
+    "geox_map": "earth_map",
+    "geox_spatial": "earth_map",
+    "geox_map_layers_list": "earth_map",
     "geox_map_scene_plan": "earth_map",
     "geox_map_render_preview": "earth_map",
     "geox_map_export_package": "earth_map",
-    # Evidence → Judge Console
-    "geox_evidence": "judge_console",
-    "geox_contradiction_scan": "judge_console",
-    "geox_claim_graph_evaluate": "risk_console",
-    # Geomechanics & modeling → GeoProbe
-    "geox_geomechanics": "geoprobe",
-    "geox_subsurface_model": "earth_volume",
-    # Batch F: gravmag owns dedicated studio (was geoprobe — F601 dup fixed 2026-07-24)
-    "geox_gravmag_studio": "gravmag_studio",
-    # H2: Workspace tool → dedicated workspace shell (Batch F)
-    "geox_workspace": "workspace_v1",
-    # Bridge → Prospect Studio
-    "geox_to_wealth_bridge": "geoprobe",
-    # PR3: visual cognition → visual hub
-    "geox_visual_understand": "visual_hub",
-    "geox_visual_generate_hypotheses": "visual_hub",
-    "geox_surface_status": "catalog",
-    # P1: tools added post-PR3 — safe fallback binding
-    "geox_well_view": "well_desk",
+    "geox_h3_spatial_index": "earth_map",
+    "geox_stac_discover": "earth_map",
+    # Earth Volume / Deep Time / GLOF / 3D models → Earth Volume
+    "geox_deep_time": "earth_volume",
+    "geox_deep_time_state": "earth_volume",
+    "geox_temporal": "earth_volume",
+    "geox_model": "earth_volume",
     "geox_geological_model_generate": "earth_volume",
     "geox_gempy_implicit_3d": "earth_volume",
-    "geox_h3_spatial_index": "earth_map",
+    "geox_subsurface_model": "earth_volume",
+    "geox_glof_cascade_initialize": "earth_volume",
+    "geox_glof_cascade_step": "earth_volume",
+    "geox_glof_cascade_phase": "earth_volume",
+    "geox_glof_cascade_inverse": "earth_volume",
+    "geox_glof_cascade_metabolize": "earth_volume",
+    "geox_glof_cascade_mcmc_inverse": "earth_volume",
+    "geox_glof_cascade_propagate": "earth_volume",
+    # Evidence & Judgment → Judge Console & Risk Console
+    "geox_claim": "judge_console",
+    "geox_evidence": "judge_console",
+    "geox_contradiction_scan": "judge_console",
+    "geox_falsify": "judge_console",
+    "geox_contrast_metabolize": "judge_console",
+    "geox_claim_graph_evaluate": "risk_console",
+    "geox_calibration_register_witness": "well_witness",
+    # Geomechanics & Prospect → GeoProbe & Prospect Studio
+    "geox_geomechanics": "geoprobe",
+    "geox_prospect": "prospect_studio",
+    "geox_to_wealth_bridge": "geoprobe",
+    # Visual Cognition & Catalog
+    "geox_extract_display_proxy": "visual_hub",
+    "geox_visual_understand": "visual_hub",
+    "geox_visual_generate_hypotheses": "visual_hub",
     "geox_lancedb_embed_store": "visual_hub",
-    "geox_stac_discover": "earth_map",
-    "geox_dde_reason": "basin_explorer",
+    "geox_list_registered_sources": "catalog",
+    "geox_register_native_source": "catalog",
+    "geox_surface_status": "catalog",
+    # Batch F: gravmag owns dedicated studio, workspace
+    "geox_gravmag_studio": "gravmag_studio",
+    "geox_workspace": "workspace_v1",
 }
 
 
@@ -1335,19 +1362,23 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
     if local_p and local_p not in providers:
         providers.insert(0, local_p)
 
-    all_components: dict[str, Any] = {}
+    all_components: dict[str, list[Any]] = defaultdict(list)
     for p in providers:
         comps = getattr(p, "_components", {})
         if isinstance(comps, dict):
-            all_components.update(comps)
+            for k, v in comps.items():
+                all_components[k].append(v)
         sub_server = getattr(p, "server", None)
         if sub_server:
             sub_comps = getattr(getattr(sub_server, "_local_provider", None), "_components", {})
             if isinstance(sub_comps, dict):
-                all_components.update(sub_comps)
+                for k, v in sub_comps.items():
+                    all_components[k].append(v)
 
     def _inject_widget_meta(comp: Any, app_info: dict[str, Any], uri: str) -> None:
         """Inject ChatGPT widget metadata into a tool component's meta dict."""
+        if not hasattr(comp, "meta") or comp.meta is None:
+            comp.meta = {}
         comp.meta["ui"] = {
             "resourceUri": uri,
             "title": app_info["title"],
@@ -1378,53 +1409,50 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
     for app_id, tool_name in _app_to_tool.items():
         key = f"tool:{tool_name}@"
         if key in all_components:
-            comp = all_components[key]
             app_info = GEOX_APPS.get(app_id)
             if not app_info:
                 continue
             uri = app_info["uri"]
-            if not hasattr(comp, "meta") or comp.meta is None:
-                comp.meta = {}
-            _inject_widget_meta(comp, app_info, uri)
-            count += 1
+            for comp in all_components[key]:
+                _inject_widget_meta(comp, app_info, uri)
+                count += 1
 
     # H1 P0: Enrich tools via fallback mapping (every tool gets a visual landing zone)
     for tool_name, app_id in _tool_app_fallback.items():
         key = f"tool:{tool_name}@"
         if key in all_components and key not in {f"tool:{t}@" for t in _app_to_tool.values()}:
-            comp = all_components[key]
             app_info = GEOX_APPS.get(app_id)
             if not app_info:
                 continue
             uri = app_info["uri"]
-            if not hasattr(comp, "meta") or comp.meta is None:
-                comp.meta = {}
-            if "ui" not in comp.meta:  # Don't overwrite explicit mappings
-                _inject_widget_meta(comp, app_info, uri)
-                count += 1
+            for comp in all_components[key]:
+                if not hasattr(comp, "meta") or comp.meta is None or "ui" not in comp.meta:
+                    _inject_widget_meta(comp, app_info, uri)
+                    count += 1
 
     # Second: also scan all registered components across all providers/sub-servers
-    for key, comp in all_components.items():
+    for key, comps in all_components.items():
         if key.startswith("tool:"):
-            ui_uri = None
-            if hasattr(comp, "app") and comp.app and getattr(comp.app, "resource_uri", None):
-                ui_uri = comp.app.resource_uri
-            elif hasattr(comp, "meta") and isinstance(comp.meta, dict) and "ui" in comp.meta:
-                ui_uri = comp.meta["ui"].get("resourceUri")
-            elif hasattr(comp, "annotations") and comp.annotations and getattr(comp.annotations, "ui", None):
-                ui_info = comp.annotations.ui
-                if isinstance(ui_info, dict):
-                    ui_uri = ui_info.get("resourceUri")
-                elif hasattr(ui_info, "resourceUri"):
-                    ui_uri = ui_info.resourceUri
+            for comp in comps:
+                ui_uri = None
+                if hasattr(comp, "app") and comp.app and getattr(comp.app, "resource_uri", None):
+                    ui_uri = comp.app.resource_uri
+                elif hasattr(comp, "meta") and isinstance(comp.meta, dict) and "ui" in comp.meta:
+                    ui_uri = comp.meta["ui"].get("resourceUri")
+                elif hasattr(comp, "annotations") and comp.annotations and getattr(comp.annotations, "ui", None):
+                    ui_info = comp.annotations.ui
+                    if isinstance(ui_info, dict):
+                        ui_uri = ui_info.get("resourceUri")
+                    elif hasattr(ui_info, "resourceUri"):
+                        ui_uri = ui_info.resourceUri
 
-            if ui_uri:
-                if not hasattr(comp, "meta") or comp.meta is None:
-                    comp.meta = {}
-                if "ui" not in comp.meta:
-                    comp.meta["ui"] = {"resourceUri": ui_uri}
-                comp.meta["openai/outputTemplate"] = ui_uri
-                comp.meta.setdefault("openai/toolInvocation/invoking", "Rendering interactive UI...")
-                comp.meta.setdefault("openai/toolInvocation/invoked", "UI ready")
+                if ui_uri:
+                    if not hasattr(comp, "meta") or comp.meta is None:
+                        comp.meta = {}
+                    if "ui" not in comp.meta:
+                        comp.meta["ui"] = {"resourceUri": ui_uri}
+                    comp.meta["openai/outputTemplate"] = ui_uri
+                    comp.meta.setdefault("openai/toolInvocation/invoking", "Rendering interactive UI...")
+                    comp.meta.setdefault("openai/toolInvocation/invoked", "UI ready")
 
     logger.info("Enriched %d tools with MCP Apps UI metadata", count)
