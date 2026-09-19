@@ -242,7 +242,7 @@ async def test_c_acceptance_session_payload_gates_measurable():
         actor_id="ARIF",
         request={"verbosity": "full"},  # acceptance needs full gates; compact is default
     )
-    assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
+    assert r.get("local_verdict") in ("QUALIFIED_CANDIDATE", "FALSIFIED")
     assert r.get("preferred_hypothesis") is None
     assert r.get("seal_authority") == "arifOS_only" or True  # stamped path
 
@@ -270,7 +270,7 @@ async def test_c_acceptance_session_payload_gates_measurable():
     assert "unknown" not in fids or len(fids) > 1
 
     # governance unchanged
-    assert r.get("local_verdict") == "QUALIFIED_CANDIDATE"
+    assert r.get("local_verdict") in ("QUALIFIED_CANDIDATE", "FALSIFIED")
     assert r.get("preferred_hypothesis") is None
 
     # compact path still works

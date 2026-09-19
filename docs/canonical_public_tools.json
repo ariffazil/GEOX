@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-08-26T09:42:15.099410+00:00",
+  "generated_at": "2026-09-19T02:20:55.974575+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 20,
+  "public_count": 31,
   "internal_count": 54,
   "public_tools": [
     "geox_well_ingest",
@@ -15,7 +15,6 @@
     "geox_geomechanics",
     "geox_prospect",
     "geox_well_qc",
-    "geox_workspace",
     "geox_temporal",
     "geox_map",
     "geox_source",
@@ -24,7 +23,19 @@
     "geox_claim",
     "geox_model",
     "geox_well",
-    "geox_contrast_metabolize"
+    "geox_contrast_metabolize",
+    "geox_glof_cascade_initialize",
+    "geox_glof_cascade_step",
+    "geox_glof_cascade_phase",
+    "geox_glof_cascade_inverse",
+    "geox_glof_cascade_metabolize",
+    "geox_glof_cascade_mcmc_inverse",
+    "geox_glof_cascade_propagate",
+    "geox_calibration_register_witness",
+    "geox_extract_display_proxy",
+    "geox_register_native_source",
+    "geox_extract_native_trace",
+    "geox_list_registered_sources"
   ],
   "tools": [
     {
@@ -158,22 +169,6 @@
       }
     },
     {
-      "name": "geox_workspace",
-      "domain": "earth.meta",
-      "axis": "observe",
-      "lane": "evidence",
-      "description": "GEOX Workspace \u2014 persistent geological context across all tools. Set basin/play/well once; every tool inherits. Modes: set, view, history, evidence, relations, reset.",
-      "ui": {
-        "resource_uri": "ui://geox/visual-hub",
-        "mime_type": "text/html;profile=mcp-app"
-      },
-      "governance": {
-        "action_class": "OBSERVE",
-        "mutation": false,
-        "physics_guard_required": false
-      }
-    },
-    {
       "name": "geox_temporal",
       "domain": "earth.temporal",
       "axis": "compute",
@@ -281,6 +276,214 @@
         "mutation": false,
         "physics_guard_required": true,
         "substrate_class": "INERT"
+      }
+    },
+    {
+      "name": "geox_glof_cascade_initialize",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_step",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_phase",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_inverse",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_metabolize",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.1.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "MUTATE",
+        "mutation": true,
+        "physics_guard_required": true,
+        "zen_33": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_mcmc_inverse",
+      "domain": "earth.hazard",
+      "axis": "reason",
+      "lane": "reasoning",
+      "description": "Phase C \u2014 proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, t",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.2.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true,
+        "phase_c": true
+      }
+    },
+    {
+      "name": "geox_glof_cascade_propagate",
+      "domain": "earth.hazard",
+      "axis": "compute",
+      "lane": "reasoning",
+      "description": "Phase C \u2014 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak do",
+      "ui": {
+        "resource_uri": "ui://geox/glof-substrate",
+        "mode": "external",
+        "app_id": "geox.glof.cascade",
+        "version": "0.2.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true,
+        "zen_33": true,
+        "phase_c": true
+      }
+    },
+    {
+      "name": "geox_calibration_register_witness",
+      "domain": "earth.structural",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibrati",
+      "ui": {
+        "resource_uri": "ui://geox/calibration-witness",
+        "mode": "app",
+        "app_id": "geox.calibration.witness",
+        "version": "1.0.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_extract_display_proxy",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY \u2014 NOT suitable for AVO, amplitude preservation, or native well-tie.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_register_native_source",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor \u2192 UNVERIFIED.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_extract_native_trace",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_list_registered_sources",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "List all registered native seismic sources with classification, authority, trace count, and sample metadata.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
       }
     }
   ],

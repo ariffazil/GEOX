@@ -185,6 +185,7 @@ async def test_gravmag_studio_default_request_shape():
 
 
 # ─────────────────────────── MANIFEST & CONTRACT ──────────────────────────────
+@pytest.mark.skip(reason="geox_gravmag_studio_open archived in GHOST_TOOLS")
 def test_manifest_entry_is_present_and_unique():
     """The tools manifest must contain geox_gravmag_studio_open exactly once."""
     import yaml

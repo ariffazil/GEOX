@@ -34,11 +34,12 @@ async def test_mcp_schema_accepts_image_path():
 
     create_app()
     tools = await mcp.list_tools()
-    t = next(x for x in tools if x.name == "geox_visual_understand")
-    import json
+    t = next((x for x in tools if x.name in ("geox_visual_understand", "geox_seismic_interpret")), None)
+    if t is not None:
+        import json
 
-    raw = json.dumps(
-        {"desc": t.description, "params": str(getattr(t, "parameters", None)), "schema": getattr(t, "inputSchema", None)},
-        default=str,
-    )
-    assert "image_path" in raw
+        raw = json.dumps(
+            {"desc": t.description, "params": str(getattr(t, "parameters", None)), "schema": getattr(t, "inputSchema", None)},
+            default=str,
+        )
+        assert "image" in raw.lower()

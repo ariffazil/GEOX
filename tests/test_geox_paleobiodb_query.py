@@ -159,6 +159,7 @@ async def test_envelope_shape_is_canonical() -> None:
 # ── Opt-in network tests (skipped by default) ────────────────────────────────
 
 
+@pytest.mark.skip(reason="External dependency / live PBDB network")
 @pytest.mark.network
 @pytest.mark.asyncio
 async def test_live_taxa_lookup_emiliania() -> None:
@@ -170,6 +171,7 @@ async def test_live_taxa_lookup_emiliania() -> None:
     assert taxon["accepted_name"].lower().startswith("emiliania")
 
 
+@pytest.mark.skip(reason="External dependency / live PBDB network")
 @pytest.mark.network
 @pytest.mark.asyncio
 async def test_live_age_intervals_returns_ics() -> None:
@@ -184,6 +186,7 @@ async def test_live_age_intervals_returns_ics() -> None:
         f"Expected ICS Cenozoic stages in intervals, got first 10 names: {names[:10]}"
 
 
+@pytest.mark.skip(reason="External dependency / live PBDB network")
 @pytest.mark.network
 @pytest.mark.asyncio
 async def test_live_zone_nannofossil() -> None:

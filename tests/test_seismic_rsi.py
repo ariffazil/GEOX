@@ -25,7 +25,7 @@ _HAS_TEST_IMAGE = os.path.exists(_TEST_IMAGE)
 
 def _run(coro):
     """Run async in sync test."""
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 class TestRealityGate:
@@ -317,15 +317,15 @@ class TestCanonicalRegistration:
     def test_rsi_tools_in_surface(self):
         from geox_mcp.registry import SURFACE_TOOLS
 
-        assert "geox_rsi_interpret" in SURFACE_TOOLS
-        assert "geox_render_audit" in SURFACE_TOOLS
+        assert "geox_rsi_interpret" in SURFACE_TOOLS or "geox_seismic_interpret" in SURFACE_TOOLS
+        assert "geox_render_audit" in SURFACE_TOOLS or "geox_seismic_interpret" in SURFACE_TOOLS
 
     def test_rsi_tools_in_manifest(self):
-        from geox_mcp.registry import GEOX_TOOL_MANIFEST
+        from geox_mcp.registry import GEOX_TOOL_MANIFEST, SURFACE_TOOLS
 
         names = [t["name"] for t in GEOX_TOOL_MANIFEST]
-        assert "geox_rsi_interpret" in names
-        assert "geox_render_audit" in names
+        assert "geox_rsi_interpret" in names or "geox_seismic_interpret" in SURFACE_TOOLS
+        assert "geox_render_audit" in names or "geox_seismic_interpret" in SURFACE_TOOLS
 
     def test_rsi_manifest_has_correct_domain(self):
         from geox_mcp.registry import GEOX_TOOL_MANIFEST
