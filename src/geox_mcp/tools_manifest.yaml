@@ -1522,14 +1522,49 @@ tools:
   ui: null
   family: interpret
   tier: B
-- name: geox_glof_cascade_initialize
+- name: geox_glof
   domain: earth.hazard
   axis: compute
   lane: reasoning
   face: surface
   visibility: public
-  description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33.
-    Returns session state_id.
+  description: >-
+    Unified GLOF multi-phase cascade simulation. Multi-phase physics: solid dam →
+    granular debris → liquid flood (Mohr-Coulomb + Saint-Venant + 33D zen-33 state).
+    Modes: run (full cascade in one call), inverse (Bayesian grid-search), mcmc
+    (MCMC posterior), propagate (Saint-Venant 1D), phase (yield surface debug).
+    Replaces 7 individual geox_glof_cascade_* tools (333 ARCHITECT 2026-09-19).
+  input_schema_source: callable
+  annotations:
+    read_only: false
+    destructive: false
+    idempotent: true
+  governance:
+    action_class: MUTATE
+    mutation: true
+    physics_guard_required: true
+    zen_33: true
+    phase_c: true
+    unified_mode: true
+  plugin:
+    exposed: true
+  ui:
+    resource_uri: ui://geox/glof-substrate
+    mode: external
+    app_id: geox.glof.cascade
+    version: 1.0.0
+  family: research
+  tier: C
+  subfamily: cascade
+# INTERNAL: geox_glof_cascade_* — kept as internal tools, not public surface
+# (333 ARCHITECT collapse 2026-09-19: 7→1 unified geox_glof)
+- name: geox_glof_cascade_initialize
+  domain: earth.hazard
+  axis: compute
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='run'). GLOF cascade init — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1541,12 +1576,8 @@ tools:
     physics_guard_required: true
     zen_33: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.1.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: cascade
@@ -1554,10 +1585,9 @@ tools:
   domain: earth.hazard
   axis: compute
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B).
-    Returns evolved 33D state.
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='run'). GLOF step — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1569,12 +1599,8 @@ tools:
     physics_guard_required: true
     zen_33: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.1.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: cascade
@@ -1582,10 +1608,9 @@ tools:
   domain: earth.hazard
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D,
-    hydro_fracture indicator.
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='phase'). Yield surface — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1597,12 +1622,8 @@ tools:
     physics_guard_required: true
     zen_33: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.1.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: cascade
@@ -1610,10 +1631,9 @@ tools:
   domain: earth.hazard
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat
-    + log_likelihood + posterior_summary.
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='inverse'). Grid-search — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1625,12 +1645,8 @@ tools:
     physics_guard_required: true
     zen_33: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.1.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: inversion
@@ -1638,9 +1654,9 @@ tools:
   domain: earth.hazard
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='run'). F-I-M loop — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: false
@@ -1652,12 +1668,8 @@ tools:
     physics_guard_required: true
     zen_33: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.1.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: cascade
@@ -1665,10 +1677,9 @@ tools:
   domain: earth.hazard
   axis: reason
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior
-    mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='mcmc'). MCMC — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1681,12 +1692,8 @@ tools:
     zen_33: true
     phase_c: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.2.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: inversion
@@ -1694,10 +1701,9 @@ tools:
   domain: earth.hazard
   axis: compute
   lane: reasoning
-  face: surface
-  visibility: public
-  description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume
-    solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
+  face: internal
+  visibility: internal
+  description: "[INTERNAL] DEPRECATED: use geox_glof(mode='propagate'). Saint-Venant — internal plumbing."
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1710,12 +1716,8 @@ tools:
     zen_33: true
     phase_c: true
   plugin:
-    exposed: true
-  ui:
-    resource_uri: ui://geox/glof-substrate
-    mode: external
-    app_id: geox.glof.cascade
-    version: 0.2.0
+    exposed: false
+  ui: null
   family: research
   tier: C
   subfamily: cascade
@@ -1847,22 +1849,17 @@ capability_packs:
   earth_research:
     tier: C
     label: Earth Research
-    description: Advanced/research only. GLOF cascade simulation, Bayesian inversion.
+    description: Advanced/research only. GLOF multi-phase cascade simulation, Bayesian inversion.
     intent: Run experimental Earth-science computations under bounded resources.
     sub_packs:
       cascade:
         label: GLOF Cascade Simulation
         tools:
-        - geox_glof_cascade_initialize
-        - geox_glof_cascade_step
-        - geox_glof_cascade_phase
-        - geox_glof_cascade_metabolize
-        - geox_glof_cascade_propagate
+        - geox_glof
       inversion:
-        label: Bayesian Inversion
+        label: Bayesian Inversion (via geox_glof modes)
         tools:
-        - geox_glof_cascade_inverse
-        - geox_glof_cascade_mcmc_inverse
+        - geox_glof
       restoration:
         label: Structural Restoration (PLANNED)
         tools: []
@@ -1873,13 +1870,7 @@ capability_packs:
         label: Uncertainty Quantification (PLANNED)
         tools: []
     tools:
-    - geox_glof_cascade_initialize
-    - geox_glof_cascade_step
-    - geox_glof_cascade_phase
-    - geox_glof_cascade_inverse
-    - geox_glof_cascade_mcmc_inverse
-    - geox_glof_cascade_metabolize
-    - geox_glof_cascade_propagate
+    - geox_glof
 workflow_packs:
   well_to_correlation:
     label: Well → Correlation
@@ -1994,18 +1985,16 @@ workflow_packs:
     - earth_research
     optional_packs: []
     steps:
-    - tool: geox_glof_cascade_initialize
-      purpose: Initialize 33D GLOF state
-    - tool: geox_glof_cascade_propagate
-      purpose: 1D Saint-Venant wave propagation
-    - tool: geox_glof_cascade_phase
-      purpose: Yield surface evaluation
-    - tool: geox_glof_cascade_inverse
-      purpose: Bayesian grid-search inference
-    - tool: geox_glof_cascade_mcmc_inverse
-      purpose: Full MCMC posterior sampling
-    - tool: geox_glof_cascade_metabolize
-      purpose: Close F-I-M loop, emit receipt
+    - tool: geox_glof
+      purpose: "Full cascade run: init→step→metabolize (mode='run')"
+    - tool: geox_glof
+      purpose: "Bayesian grid-search inference from observations (mode='inverse')"
+    - tool: geox_glof
+      purpose: "Full MCMC posterior sampling (mode='mcmc')"
+    - tool: geox_glof
+      purpose: "1D Saint-Venant wave propagation (mode='propagate')"
+    - tool: geox_glof
+      purpose: "Yield surface evaluation (mode='phase')"
     output_contract: UncertaintyReport
     output_fields:
     - posterior_parameter_distributions
@@ -2099,41 +2088,11 @@ earth_capability_graph:
       family: view
       role: presentation_node
       description: Map rendering and visualization
-    geox_glof_cascade_initialize:
-      family: research
-      role: entry_point
-      subfamily: cascade
-      description: GLOF state initialization
-    geox_glof_cascade_step:
-      family: research
-      role: reasoning_node
-      subfamily: cascade
-      description: State advancement
-    geox_glof_cascade_phase:
-      family: research
-      role: reasoning_node
-      subfamily: cascade
-      description: Yield surface evaluation
-    geox_glof_cascade_propagate:
-      family: research
-      role: reasoning_node
-      subfamily: cascade
-      description: Wave propagation
-    geox_glof_cascade_inverse:
-      family: research
-      role: reasoning_node
-      subfamily: inversion
-      description: Grid-search inference
-    geox_glof_cascade_mcmc_inverse:
-      family: research
-      role: decision_point
-      subfamily: inversion
-      description: MCMC posterior sampling
-    geox_glof_cascade_metabolize:
+    geox_glof:
       family: research
       role: integration_node
       subfamily: cascade
-      description: F-I-M loop closure
+      description: "Unified GLOF cascade (modes: run/inverse/mcmc/propagate/phase)"
   edges:
   - from: geox_basin
     to: geox_spatial
