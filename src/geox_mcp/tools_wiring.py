@@ -1608,6 +1608,7 @@ def register_tools_on(mcp):
         claim_text: str = "",
         claim_type: str = "other",
         truth_class: str = "INTERPRETATION",
+        explanation_class: str = "UNCLASSIFIED",  # claim_kernel/v1 explanatory-kind axis
         evidence_ids: list[str] | None = None,
         uncertainty_p10: float | None = None,
         uncertainty_p50: float | None = None,
@@ -1646,6 +1647,7 @@ def register_tools_on(mcp):
                 "claim_text": claim_text,
                 "claim_type": claim_type,
                 "truth_class": truth_class,
+                "explanation_class": explanation_class,
                 "evidence_ids": evidence_ids,
                 "uncertainty_p10": uncertainty_p10,
                 "uncertainty_p50": uncertainty_p50,
@@ -6439,6 +6441,7 @@ def register_tools_on(mcp):
         claim_text: str = "",
         claim_type: str = "other",
         truth_class: str = "INTERPRETATION",
+        explanation_class: str = "UNCLASSIFIED",  # claim_kernel/v1 explanatory-kind axis
         evidence_ids: list[str] | None = None,
         uncertainty_p10: float | None = None,
         uncertainty_p50: float | None = None,
@@ -6503,6 +6506,7 @@ def register_tools_on(mcp):
                 claim_text=claim_text,
                 claim_type=claim_type,
                 truth_class=truth_class,
+                explanation_class=explanation_class,
                 evidence_ids=evidence_ids,
                 uncertainty_p10=uncertainty_p10,
                 uncertainty_p50=uncertainty_p50,

@@ -1,11 +1,79 @@
 # GEOX ClaimCard State Machine v1
 # DITEMPA BUKAN DIBERI
-# Canonical lifecycle: 9 states, 8 transitions, 7 error codes
+# Canonical lifecycle: 9 states, 8 transitions, 9 error codes
 # 
 # Rule: A claim SHALL NOT advance beyond DRAFT or AI_INFERRED
 # if EvidencePack is in NO_VALID_EVIDENCE or QC_FAILED state.
+#
+# This machine tracks WHERE a claim is in review. It does not, by itself,
+# track WHAT KIND of claim it is. The explanatory-kind axis (claim_kernel/v1)
+# is declared under `explanation_axis` below and gates exactly two of the eight
+# transitions: REVIEW_PENDING|CHALLENGED -> APPROVED_INTERPRETATION, and
+# APPROVED_INTERPRETATION -> SEALED. Both are guarded, because both turn a
+# claim into a justification. No other state or transition is altered.
 
 spec_version: geox-claim-state-machine/v1
+
+# =============================================================================
+# explanation_axis - WHAT KIND of explanation the claim is (claim_kernel/v1)
+# Orthogonal to claim_state (WHERE it is) and to truth_class (HOW it was
+# obtained). Declared on the claim record as `explanation_class`.
+# Enforced in code by geox_mcp/tools/claim_explanation_guard.py via
+# guard_transition(), called from geox_mcp/tools/claims.py (geox_claim_seal)
+# before any SEALED transition.
+# =============================================================================
+
+explanation_axis:
+  schema: claim_kernel/v1
+  field: explanation_class
+  default: UNCLASSIFIED
+  fail_closed: true
+
+  classes:
+    - name: MEASURED
+      description: A quantity or observation carrying a number and a source.
+      action_eligible: true
+    - name: MECHANISM
+      description: A testable cause with a stated pathway.
+      action_eligible: true
+    - name: PATTERN
+      description: A regularity that recurs across cases; the cause remains contested.
+      action_eligible: true
+    - name: NARRATIVE
+      description: No mechanism, no measure, not falsifiable.
+      action_eligible: false
+    - name: UNCLASSIFIED
+      description: Undeclared. Absent on every claim record written before this axis existed.
+      action_eligible: false
+
+  guarded_transitions:
+    - from: [REVIEW_PENDING, CHALLENGED]
+      to: APPROVED_INTERPRETATION
+      error_code_on_fail: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
+    - from: [APPROVED_INTERPRETATION]
+      to: SEALED
+      error_code_on_fail: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
+
+  rule: >-
+    A claim SHALL NOT enter APPROVED_INTERPRETATION or SEALED unless its
+    explanation_class is action-eligible (MEASURED, MECHANISM or PATTERN).
+    A NARRATIVE claim may be published, read and cited, and it may never be the
+    sole justification for entering either state.
+
+  on_narrative: >-
+    HOLD, with the contract recommending a transition to REJECTED (transitions:
+    from ANY, to REJECTED). A NARRATIVE claim carries zero explanatory power;
+    it is publishable but not actionable.
+
+  on_unclassified: >-
+    HOLD. UNCLASSIFIED fails closed. The claim stays held until a class is
+    declared; it is not rejected, because the class is unknown rather than
+    known to be narrative.
+
+  rewrite_of_preexisting_records: none
+  kernel_unavailable_posture: >-
+    Fail closed with error code HOLD_EXPLANATION_KERNEL_UNAVAILABLE. An
+    unverifiable gate is a closed gate; it is never silently skipped.
 
 states:
   - name: DRAFT
@@ -56,6 +124,7 @@ states:
     entry_conditions:
       - "ReviewAction must have action=approve_as_interpretation"
       - "actor_id must match reviewer role"
+      - "explanation_class must be action-eligible (MEASURED | MECHANISM | PATTERN); UNCLASSIFIED and NARRATIVE are refused with HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE"
     requires_evidence_pack: true
     requires_human: true
     exit_allowed: [SEALED, CHALLENGED, REJECTED]
@@ -65,6 +134,7 @@ states:
     entry_conditions:
       - "ack_irreversible must be true"
       - "Policy must allow sealing"
+      - "explanation_class must be action-eligible (MEASURED | MECHANISM | PATTERN); UNCLASSIFIED and NARRATIVE are refused with HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE"
     requires_evidence_pack: true
     requires_human: true
     exit_allowed: [REVOKED]
@@ -110,11 +180,25 @@ transitions:
     to: APPROVED_INTERPRETATION
     condition: "Reviewer approves. All mandatory gates pass."
     error_code_on_fail: HOLD_HUMAN_REVIEW_REQUIRED
+    # explanatory-kind guard (claim_kernel/v1) — see explanation_axis above
+    requires_explanation_class: action_eligible
+    error_code_on_explanation_fail: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
+
+  - from: CHALLENGED
+    to: APPROVED_INTERPRETATION
+    condition: "Challenge resolved and reviewer approves."
+    error_code_on_fail: HOLD_HUMAN_REVIEW_REQUIRED
+    # explanatory-kind guard (claim_kernel/v1)
+    requires_explanation_class: action_eligible
+    error_code_on_explanation_fail: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
 
   - from: APPROVED_INTERPRETATION
     to: SEALED
     condition: "ack_irreversible true AND policy allows seal"
     error_code_on_fail: HOLD_SEAL_NOT_PERMITTED
+    # explanatory-kind guard (claim_kernel/v1)
+    requires_explanation_class: action_eligible
+    error_code_on_explanation_fail: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
 
   - from: SEALED
     to: REVOKED
@@ -134,6 +218,10 @@ default:
     - CHALLENGED
     - APPROVED_INTERPRETATION
     - SEALED
+  blocked_if_explanation_not_action_eligible:
+    - APPROVED_INTERPRETATION
+    - SEALED
+  default_explanation_class: UNCLASSIFIED
 
 error_codes:
   - code: HOLD_IDENTITY_REQUIRED
@@ -177,3 +265,24 @@ error_codes:
     layer: production_authority
     message_template: "Seal policy denied. Either ack_irreversible is false or policy conditions are unmet."
     recovery: "Set ack_irreversible=true. Verify all mandatory gates pass (identity, scope, evidence, CRS)."
+
+  # -- Explanatory-kind guards (claim_kernel/v1) ------------------------------
+  - code: HOLD_EXPLANATION_NOT_ACTION_ELIGIBLE
+    severity: critical
+    layer: geox_mcp_core
+    axis: explanation_class
+    kernel: claim_kernel/v1
+    raised_by: geox_mcp/tools/claim_explanation_guard.py
+    message_template: "Claim explanation_class is not action-eligible. A claim may enter APPROVED_INTERPRETATION or SEALED only when its explanation kind is MEASURED, MECHANISM or PATTERN. NARRATIVE claims may be published but never used as the sole justification for a mutation; UNCLASSIFIED fails closed."
+    recovery: "Declare explanation_class on the claim (MEASURED: number + source | MECHANISM: stated pathway | PATTERN: recurrence across named cases) and retry. For a NARRATIVE claim, transition to REJECTED instead of approving or sealing."
+    substrate: false
+
+  - code: HOLD_EXPLANATION_KERNEL_UNAVAILABLE
+    severity: high
+    layer: geox_mcp_core
+    axis: explanation_class
+    kernel: claim_kernel/v1
+    raised_by: geox_mcp/tools/claim_explanation_guard.py
+    message_template: "claim_kernel did not resolve, so the explanatory-class gate cannot be evaluated. An unverifiable gate is a closed gate: the claim is held rather than approved or sealed."
+    recovery: "Resolve the claim_kernel package (expected at /root/AAA/lib/claim_kernel) and retry."
+    substrate: false

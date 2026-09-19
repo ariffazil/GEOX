@@ -38,6 +38,7 @@ async def geox_claim(
     uncertainty_distribution: str = "lognormal",
     alternatives: list[dict[str, Any]] | None = None,
     authority: str = "GEOX_CLAIM_WORKER",
+    explanation_class: str = "UNCLASSIFIED",  # claim_kernel/v1 explanatory-kind axis
     voxel_state: dict[str, Any] | None = None,  # H3 fix: required for seal mode
 ) -> dict[str, Any]:
     """Unified claim lifecycle — DRAFT → VALIDATED → SEALED.
@@ -173,6 +174,7 @@ async def geox_claim(
             alternatives=kwargs.get("alternatives"),
             provenance=kwargs.get("provenance", "GEOX Claim Engine"),
             authority=kwargs.get("authority", "GEOX_CLAIM_WORKER"),
+            explanation_class=kwargs.get("explanation_class", "UNCLASSIFIED"),
         )
 
     return {
