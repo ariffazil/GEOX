@@ -9,9 +9,9 @@ name: "GEOX · Earth Intelligence CI"
 
 on:
   push:
-    branches: [main]
+    branches: [main, "feat/**", "fix/**", "chore/**"]
   pull_request:
-    branches: [main]
+    branches: [main, "feat/**"]
   workflow_dispatch:
 
 permissions:
@@ -91,7 +91,7 @@ jobs:
     if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
     name: "Test (Pytest)"
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     needs: [lint, import-check]
     steps:
       - uses: actions/checkout@v7
@@ -100,12 +100,19 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: pip install -e ".[dev]" 2>/dev/null || pip install -e .
-      - name: Test
+      - name: "Full Suite — 31-tool canonical surface"
         run: |
           set -o pipefail
-          # W0 ship gate: make readiness-test suite + alignment
-          # (full suite + canonical_public_surface have pre-existing debt)
+          PYTHONPATH=src python -m pytest tests/ \
+            -q --tb=short \
+            -o cache_dir=/tmp/.pytest_cache \
+            --ignore=tests/benchmarks \
+            2>&1 | tail -20
+      - name: "Readiness Gate — W0 ship checks"
+        run: |
+          set -o pipefail
           PYTHONPATH=src python -m pytest -q --tb=short \
+            -o cache_dir=/tmp/.pytest_cache \
             tests/test_mcp_apps_readiness.py \
             tests/test_demo_well_hydrate.py \
             tests/test_visual_image_publish.py \
