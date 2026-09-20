@@ -15,7 +15,7 @@ logger = logging.getLogger("geox.canonical.prospect")
 
 async def geox_prospect_evaluate(
     prospect_ref: str,
-    mode: Literal["screen", "appraise", "develop"] = "screen",
+    mode: Literal["screen", "appraise", "develop", "decompose", "trajectory"] = "screen",
     evidence_refs: list[str] | None = None,
     verdict: Literal["compute", "preview", "seal"] = "compute",
     ack_irreversible: bool = False,
@@ -63,6 +63,75 @@ async def geox_prospect_evaluate(
     if _err is not None:
         return _err
     refs = evidence_refs or []
+
+    # ── NEW MODES (F13-ratified 2026-09-20): chance-factor decomposition + maturation curve
+    # These modes do NOT require evidence_refs — they are pure POS mathematics.
+    # Inserted before the existing mode dispatch so they short-circuit cleanly.
+    # No mutation, no seal, no judgement — just math.
+    if mode == "decompose":
+        # Extract chance factors from kwargs that may be passed via power_params
+        # (since Literal doesn't allow custom keys) or via a dedicated factors dict.
+        # For simplicity, we accept them via a single dict in power_params["factors"]
+        # OR via dedicated params structural_map_inline["chance_factors"].
+        # Cleanest path: structural_map_inline carries the chance factors.
+        factors = {}
+        if structural_map_inline and isinstance(structural_map_inline, dict):
+            factors = structural_map_inline.get("chance_factors", {}) or {}
+        if not factors and power_params and isinstance(power_params, dict):
+            factors = power_params.get("chance_factors", {}) or {}
+        artifact = pos_decompose(
+            source=factors.get("source", 1.0),
+            migration=factors.get("migration", 1.0),
+            reservoir=factors.get("reservoir", 1.0),
+            trap=factors.get("trap", 1.0),
+            seal=factors.get("seal", 1.0),
+        )
+        artifact["tool"] = "geox_prospect_evaluate"
+        artifact["mode"] = "decompose"
+        artifact["prospect_ref"] = prospect_ref
+        artifact["note"] = (
+            "Rose 2001 chance-factor decomposition. POS = source × migration × reservoir × trap × seal. "
+            "Independence assumption: factors do not compensate. "
+            "Risk drivers returned as the lowest-2 factors (where uncertainty lives)."
+        )
+        return get_standard_envelope(
+            artifact,
+            tool_class="compute",
+            governance_status=GovernanceStatus.QUALIFY,
+            artifact_status=ArtifactStatus.VERIFIED,
+            claim_tag="DERIVED",
+            claim_state="COMPUTED",
+        )
+
+    if mode == "trajectory":
+        # Maturation params via structural_map_inline["maturation_params"]
+        mparams = {}
+        if structural_map_inline and isinstance(structural_map_inline, dict):
+            mparams = structural_map_inline.get("maturation_params", {}) or {}
+        artifact = pos_trajectory(
+            po_prior=mparams.get("po_prior", 0.95),
+            po_asymptote=mparams.get("po_asymptote", 0.70),
+            po_decay_rate=mparams.get("po_decay_rate", 5.0),
+            ps_max=mparams.get("ps_max", 0.85),
+            ps_growth_rate=mparams.get("ps_growth_rate", 6.0),
+        )
+        artifact["tool"] = "geox_prospect_evaluate"
+        artifact["mode"] = "trajectory"
+        artifact["prospect_ref"] = prospect_ref
+        artifact["note"] = (
+            "Rose 2001 bullhorn curve: Po(t) × Ps(t) over execution maturity axis. "
+            "Po decays sigmoidally (advertised → residual after wells). "
+            "Ps grows logistically (no prospects at frontier → ceiling after delineation). "
+            "Combined G(t) = Po × Ps. Frontier scalar POS hides the trajectory."
+        )
+        return get_standard_envelope(
+            artifact,
+            tool_class="compute",
+            governance_status=GovernanceStatus.QUALIFY,
+            artifact_status=ArtifactStatus.VERIFIED,
+            claim_tag="DERIVED",
+            claim_state="COMPUTED",
+        )
 
     if mode in ("appraise", "develop") and not refs:
         # Agentic recovery (Fix #1, #5 - Arif 2026-05-16)
@@ -432,8 +501,14 @@ async def geox_prospect_evaluate(
             "ref": prospect_ref,
             "mode": mode,
             "ac_risk": ac_risk_score,
+            # NOTE (F13-ratified 2026-09-20): the 0.22/0.35 placeholder values are
+            # a *screen-mode default heuristic*, NOT a real POS. For a real POS,
+            # call mode="decompose" with chance factors. Same default is used in
+            # the compute path below for backward compatibility.
             "pos": 0.22 if mode == "screen" else 0.35,
+            "pos_default_heuristic": True,
             "stoiip_p50": 150 if mode == "screen" else 220,
+            "stoiip_p50_default_heuristic": True,
             "domain_verdict": domain_verdict,
             "verdict_class": "DOMAIN",
             "recommended_handoff": "arifOS (888 judge)",
@@ -455,11 +530,15 @@ async def geox_prospect_evaluate(
         "ref": prospect_ref,
         "mode": mode,
         "ac_risk": ac_risk_score,
+        # NOTE (F13-ratified 2026-09-20): the 0.22/0.35 values are a *screen-mode
+        # default heuristic*, NOT a real POS. For real POS use mode="decompose".
         "pos": 0.22 if mode == "screen" else 0.35,
+        "pos_default_heuristic": True,
         "stoiip_p50": 150 if mode == "screen" else 220,
+        "stoiip_p50_default_heuristic": True,
         "score_type": "heuristic_screening" if mode == "screen" else "appraisal",
         "verdict_available": True,
-        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitucional seal.",
+        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitucional seal. For real POS use mode='decompose' with chance factors.",
     }
 
     # ── EUREKA 2026-06-05 (Burlamaque Step 4): stratum-confidence ribbon ──
@@ -764,6 +843,160 @@ def _gini_coefficient(values: list[int | float]) -> float:
     for i, v in enumerate(sorted_vals, start=1):
         cum += (2 * i - n - 1) * v
     return cum / (n * sum(sorted_vals))
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# POS CHANCE-FACTOR DECOMPOSITION (Rose 2001 — Risk and Reliance in Exploration)
+# ═══════════════════════════════════════════════════════════════════════════════
+# eureka_ref: GEOX_PROSPECT_DECOMPOSE_2026_09_20
+# Doctrine:
+#   POS = P(source) × P(migration) × P(reservoir) × P(trap) × P(seal)
+#   Each factor ∈ [0, 1]. Independence assumption: factors do not compensate.
+#   Honest reporting: surface the LOWEST factors as risk drivers, not the product.
+# Reference: Rose, P.R., 2001, "Risk and Reliance in Exploration"
+#            AAPG Hedberg Research Conference Proceedings.
+
+
+def pos_decompose(
+    source: float = 1.0,
+    migration: float = 1.0,
+    reservoir: float = 1.0,
+    trap: float = 1.0,
+    seal: float = 1.0,
+) -> dict:
+    """Compute POS via Rose 2001 chance-factor decomposition.
+
+    Returns dict with:
+      - pos: scalar product of all factors
+      - factors: {factor_name: value} each rounded
+      - risk_drivers: top-2 lowest factors (where uncertainty lives)
+      - independence_assumption: True (Rose 2001)
+    """
+    factors_raw = {
+        "source": float(source),
+        "migration": float(migration),
+        "reservoir": float(reservoir),
+        "trap": float(trap),
+        "seal": float(seal),
+    }
+
+    # Validate bounds — factors must be probabilities ∈ [0, 1]
+    invalid = {k: v for k, v in factors_raw.items() if not (0.0 <= v <= 1.0)}
+    if invalid:
+        return {
+            "error": "INVALID_FACTOR_BOUNDS",
+            "message": "Each chance factor must be in [0, 1]",
+            "invalid": invalid,
+            "factors_supplied": factors_raw,
+        }
+
+    pos = 1.0
+    for v in factors_raw.values():
+        pos *= v
+
+    # Risk drivers: the 2 LOWEST factors (the ones dragging POS down).
+    # This is the key teaching from Rose: scalar POS hides which factor kills it.
+    sorted_factors = sorted(factors_raw.items(), key=lambda x: x[1])
+    risk_drivers = [{"factor": k, "value": round(v, 3), "delta_to_1": round(1.0 - v, 3)} for k, v in sorted_factors[:2]]
+
+    return {
+        "pos": round(pos, 4),
+        "factors": {k: round(v, 3) for k, v in factors_raw.items()},
+        "risk_drivers": risk_drivers,
+        "independence_assumption": True,
+        "doctrine_ref": "ROSE_2001_RISK_AND_RELIANCE",
+        "eureka_ref": "GEOX_PROSPECT_DECOMPOSE_2026_09_20",
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# POS MATURATION TRAJECTORY (Rose 2001 — Bullhorn Diagram)
+# ═══════════════════════════════════════════════════════════════════════════════
+# eureka_ref: GEOX_PROSPECT_TRAJECTORY_2026_09_20
+# Doctrine:
+#   The bullhorn is the missing primitive. Scalar POS collapses a trajectory.
+#   Po (play chance) decays sigmoidally: high at frontier, asymptotes after wells.
+#   Ps (prospect chance) grows logistically: 0 at frontier, ceiling after delineation.
+#   Combined G(t) = Po(t) × Ps(t). Peak in mid-maturity is where decision is sharpest.
+# Reference: Rose, P.R., 2001, AAPG Hedberg.
+#            Binns & Adams, 2003, "Risk, Reliability and Confidence".
+
+
+def pos_trajectory(
+    po_prior: float = 0.95,
+    po_asymptote: float = 0.70,
+    po_decay_rate: float = 5.0,
+    ps_max: float = 0.85,
+    ps_growth_rate: float = 6.0,
+    maturity_points: int = 11,
+) -> dict:
+    """Compute Po(t), Ps(t), G(t) = Po×Ps over execution maturity axis ∈ [0, 1].
+
+    Parameters:
+      po_prior:       advertised Po at frontier (m=0). Usually high (geological optimism).
+      po_asymptote:   residual Po after wells. Lower means wells bit down hard.
+      po_decay_rate:  how fast Po bites down. Higher = faster correction.
+      ps_max:         ceiling of prospect-specific chance. Typically 0.7-0.9.
+      ps_growth_rate: logistic steepness. Higher = faster prospect delineation.
+      maturity_points: number of samples on the X axis.
+
+    Returns dict with three curves + peak location.
+    """
+    import math
+
+    if maturity_points < 2:
+        return {
+            "error": "INVALID_MATURITY_POINTS",
+            "message": "maturity_points must be >= 2",
+        }
+
+    maturities = [i / (maturity_points - 1) for i in range(maturity_points)]
+    po_curve = []
+    ps_curve = []
+    combined = []
+
+    for m in maturities:
+        # Sigmoidal decay: Po(m) = asymptote + (prior - asymptote) * exp(-decay_rate * m)
+        po = po_asymptote + (po_prior - po_asymptote) * math.exp(-po_decay_rate * m)
+        # Logistic growth: Ps(m) = max / (1 + exp(-growth_rate * (m - 0.5)))
+        ps = ps_max / (1.0 + math.exp(-ps_growth_rate * (m - 0.5)))
+        po_curve.append({"m": round(m, 3), "Po": round(po, 4)})
+        ps_curve.append({"m": round(m, 3), "Ps": round(ps, 4)})
+        combined.append(
+            {
+                "m": round(m, 3),
+                "Po": round(po, 4),
+                "Ps": round(ps, 4),
+                "G_t": round(po * ps, 4),
+            }
+        )
+
+    peak_idx = max(range(len(combined)), key=lambda i: combined[i]["G_t"])
+
+    # The maturity where G_t first exceeds 0.5 — proxy for "decision is sharp"
+    decision_sharp_idx = next(
+        (i for i, c in enumerate(combined) if c["G_t"] >= 0.5),
+        None,
+    )
+
+    return {
+        "parameters": {
+            "po_prior": po_prior,
+            "po_asymptote": po_asymptote,
+            "po_decay_rate": po_decay_rate,
+            "ps_max": ps_max,
+            "ps_growth_rate": ps_growth_rate,
+            "maturity_points": maturity_points,
+        },
+        "maturation_axis": "maturity ∈ [0, 1] — 0 = frontier (no wells), 1 = fully appraised",
+        "po_curve": po_curve,
+        "ps_curve": ps_curve,
+        "combined": combined,
+        "peak": {"m": combined[peak_idx]["m"], "G_t": combined[peak_idx]["G_t"]},
+        "decision_sharp_at": (combined[decision_sharp_idx]["m"] if decision_sharp_idx is not None else None),
+        "doctrine_ref": "ROSE_2001_BULLHORN",
+        "eureka_ref": "GEOX_PROSPECT_TRAJECTORY_2026_09_20",
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
