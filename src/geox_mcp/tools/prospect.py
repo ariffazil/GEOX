@@ -389,8 +389,13 @@ async def geox_prospect_evaluate(
             "ref": prospect_ref,
             "mode": mode,
             "ac_risk": ac_risk_score,
+            # NOTE: screen-mode default heuristic, NOT a real POS. Flagged so the
+            # reversible-advisory consumer does not mistake it for decomposed POS.
+            # (555-ASI verify 2026-09-20 found this path missing the flag.)
             "pos": 0.22 if mode == "screen" else 0.35,
+            "pos_default_heuristic": True,
             "stoiip_p50": 150 if mode == "screen" else 220,
+            "stoiip_p50_default_heuristic": True,
             "preview_verdict": preview_verdict,
             "reversible": True,
             "note": "This is a preview only. Call verdict='seal' with ack_irreversible=True to make irreversible.",
