@@ -894,6 +894,11 @@ def pos_decompose(
     for v in factors_raw.values():
         pos *= v
 
+    # Charge = source × migration (composite). F13-accepted term order:
+    # source, migration, reservoir, trap, seal. Charge rides AFTER migration —
+    # it never replaces the explicit source/migration factors.
+    charge = factors_raw["source"] * factors_raw["migration"]
+
     # Risk drivers: the 2 LOWEST factors (the ones dragging POS down).
     # This is the key teaching from Rose: scalar POS hides which factor kills it.
     sorted_factors = sorted(factors_raw.items(), key=lambda x: x[1])
@@ -902,6 +907,9 @@ def pos_decompose(
     return {
         "pos": round(pos, 4),
         "factors": {k: round(v, 3) for k, v in factors_raw.items()},
+        "charge": round(charge, 3),
+        "charge_definition": "source × migration",
+        "factor_order": ["source", "migration", "reservoir", "trap", "seal"],
         "risk_drivers": risk_drivers,
         "independence_assumption": True,
         "doctrine_ref": "ROSE_2001_RISK_AND_RELIANCE",
