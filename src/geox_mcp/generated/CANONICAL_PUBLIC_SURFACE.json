@@ -1,14 +1,17 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-09-15T06:06:21.570591+00:00",
+  "generated_at": "2026-09-22T07:36:19.682433+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
-  "public_count": 26,
+  "public_count": 31,
   "internal_count": 22,
   "public_tools": [
     "geox_basin",
+    "geox_calibration_register_witness",
     "geox_claim",
     "geox_contrast_metabolize",
     "geox_deep_time",
+    "geox_extract_display_proxy",
+    "geox_extract_native_trace",
     "geox_geomechanics",
     "geox_glof_cascade_initialize",
     "geox_glof_cascade_inverse",
@@ -17,11 +20,13 @@
     "geox_glof_cascade_phase",
     "geox_glof_cascade_propagate",
     "geox_glof_cascade_step",
+    "geox_list_registered_sources",
     "geox_map",
     "geox_model",
     "geox_paleobiodb_query",
     "geox_petrophysics",
     "geox_prospect",
+    "geox_register_native_source",
     "geox_seismic_compute",
     "geox_seismic_ingest",
     "geox_seismic_interpret",
@@ -46,6 +51,26 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_calibration_register_witness",
+      "domain": "earth.structural",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "structural",
+      "tier": "B",
+      "description": "Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.",
+      "ui": {
+        "resource_uri": "ui://geox/calibration-witness",
+        "mode": "app",
+        "app_id": "geox.calibration.witness",
+        "version": "1.0.0",
+        "mime_type": "text/html;profile=mcp-app"
+      },
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
       }
     },
     {
@@ -86,6 +111,34 @@
       "family": "evidence",
       "tier": "A",
       "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_extract_display_proxy",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "seismic",
+      "tier": "B",
+      "description": "Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
+      "name": "geox_extract_native_trace",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "seismic",
+      "tier": "B",
+      "description": "Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -271,6 +324,20 @@
       "subfamily": "cascade"
     },
     {
+      "name": "geox_list_registered_sources",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "seismic",
+      "tier": "B",
+      "description": "List all registered native seismic sources with classification, authority, trace count, and sample metadata.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
+      }
+    },
+    {
       "name": "geox_map",
       "domain": "earth.spatial",
       "axis": "compute",
@@ -341,6 +408,20 @@
         "action_class": "OBSERVE",
         "mutation": false,
         "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_register_native_source",
+      "domain": "earth.seismic",
+      "axis": "compute",
+      "lane": "compute",
+      "family": "seismic",
+      "tier": "B",
+      "description": "Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
       }
     },
     {
@@ -482,6 +563,8 @@
     "model",
     "prospect",
     "research",
+    "seismic",
+    "structural",
     "view"
   ],
   "tier_distribution": {
@@ -501,9 +584,14 @@
       "geox_well_qc"
     ],
     "B": [
+      "geox_calibration_register_witness",
       "geox_contrast_metabolize",
+      "geox_extract_display_proxy",
+      "geox_extract_native_trace",
       "geox_geomechanics",
+      "geox_list_registered_sources",
       "geox_paleobiodb_query",
+      "geox_register_native_source",
       "geox_seismic_compute",
       "geox_seismic_ingest",
       "geox_well_ingest"

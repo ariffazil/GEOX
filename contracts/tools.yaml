@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-09-15T06:06:21.570591+00:00
+# Regenerated: 2026-09-22T07:36:19.682433+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.09.15
+schema_version: 2026.09.22
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 26
-contract_epoch: 2026-09-15-GEOX-26TOOLS-ZEN
+canonical_tool_count: 31
+contract_epoch: 2026-09-22-GEOX-31TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -31,6 +31,15 @@ tools:
     risk_tier: readonly
     description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
       mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+  geox_calibration_register_witness:
+    category: earth.structural
+    lane: compute
+    family: structural
+    capability_tier: B
+    risk_tier: readonly
+    description: Register a CalibrationWitness for structural interpretation. Validates
+      schema, checks completeness blockers (missing axes, depth-without-velocity).
+      Returns VOID on bad input, HOLD on missing calibration.
   geox_claim:
     category: earth.governance
     lane: reasoning
@@ -59,6 +68,24 @@ tools:
     risk_tier: readonly
     description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes:
       dde_reason.'
+  geox_extract_display_proxy:
+    category: earth.seismic
+    lane: compute
+    family: seismic
+    capability_tier: B
+    risk_tier: readonly
+    description: Extract display-derived proxy from raster seismic image. Requires
+      CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for
+      AVO, amplitude preservation, or native well-tie.
+  geox_extract_native_trace:
+    category: earth.seismic
+    lane: compute
+    family: seismic
+    capability_tier: B
+    risk_tier: readonly
+    description: Extract a native seismic trace from a registered source. Returns
+      NativeTraceRef with full provenance. HOLD for unverified authority, restricted
+      data, or missing source.
   geox_geomechanics:
     category: earth.structure
     lane: reasoning
@@ -125,6 +152,14 @@ tools:
     risk_tier: readonly
     description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics
       to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+  geox_list_registered_sources:
+    category: earth.seismic
+    lane: compute
+    family: seismic
+    capability_tier: B
+    risk_tier: readonly
+    description: List all registered native seismic sources with classification, authority,
+      trace count, and sample metadata.
   geox_map:
     category: earth.spatial
     lane: compute
@@ -167,6 +202,15 @@ tools:
     risk_tier: readonly
     description: 'Prospect evaluation: volumetrics, POS, EVOI, risk assessment. Modes:
       screen, evaluate.'
+  geox_register_native_source:
+    category: earth.seismic
+    lane: compute
+    family: seismic
+    capability_tier: B
+    risk_tier: readonly
+    description: 'Register a native SEG-Y source for trace extraction. Validates file
+      existence, computes SHA256, extracts binary header metadata. Authority downgrade:
+      OPERATOR_APPROVED without actor → UNVERIFIED.'
   geox_seismic_compute:
     category: earth.seismic
     lane: reasoning
