@@ -1301,7 +1301,7 @@ wheels = [
 
 [[package]]
 name = "devito"
-version = "4.8.22"
+version = "4.8.23"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anytree" },
@@ -1315,9 +1315,9 @@ dependencies = [
     { name = "py-cpuinfo" },
     { name = "sympy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3a/19/185a9ca0f347f835557f15cc406704b42d450c5225c311d0960be45cf5fa/devito-4.8.22.tar.gz", hash = "sha256:b4cf0751ecce68a3c0f665ddeb8e96c6e1915b4d702facd4511ad4ac62b3958f", size = 36058119, upload-time = "2026-06-22T16:54:31.004Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4e/6f/712e42686d7279af28f844236ff3b7a6599ba3c5793a02cf0ffca30143af/devito-4.8.23.tar.gz", hash = "sha256:9d14c6f22a98fa805d540bcaddb83bffa40f7c6f045b00e42784567e2440e43a", size = 36269024, upload-time = "2026-08-07T18:33:50.261Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/13/87/6b53ab7e2ced8629c78a35ff37dd18fea8073a28f9e99fb85c1138a368e9/devito-4.8.22-py3-none-any.whl", hash = "sha256:e11c716b4c236f6a5042eb94353d84d734cc9ffc18ddb50435c65402bdd81063", size = 35898995, upload-time = "2026-06-22T16:54:27.907Z" },
+    { url = "https://files.pythonhosted.org/packages/96/24/574946e1bd59f96a2e4309cca18e0545c6531ac3e90f4364dfdf055e34e9/devito-4.8.23-py3-none-any.whl", hash = "sha256:de5e7ce9026edefe214295216ecc13e0592139c6942a02a4bbf93c3cc8910a3d", size = 36104794, upload-time = "2026-08-07T18:33:47.363Z" },
 ]
 
 [[package]]
