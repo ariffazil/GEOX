@@ -1,7 +1,7 @@
-# GEOX — Earth Intelligence Sovereign Kernel (26 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (31 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
-> Capability families: 7 | Sprint 1 classified
+> Capability families: 9 | Sprint 1 classified
 
 ## 1. Capability Graph — Tool Surface
 
