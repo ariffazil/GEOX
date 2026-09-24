@@ -6,6 +6,16 @@
 **Sibling spec:** `docs/SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md`
 **Code (scaffold only):** `src/geox_mcp/tools/amplitude_gates/`
 
+> **Note on K-preseden (fork observed during A-* draft, 2026-09-24).**
+> `SEISMIC_FAULT_PHYSICS_GATES_K_SPEC.md` shows `structure_validate` as a mode on
+> `geox_seismic_interpret`. The committed `src/geox_mcp` carries that capability as a
+> **standalone tool** (`geox_structure_validate` at `src/geox_mcp/tools/structure_validate.py`)
+> — the mode-on-interpret surface is not in code. This is an unresolved fork in the
+> K-spec, not in the A-spec.
+> A-* therefore defers the live call signature until that fork is settled (see §5).
+> Until then, `run_all_amplitude_gates(framework)` in `src/geox_mcp/tools/amplitude_gates/__init__.py`
+> is the **only** callable surface, and it is wired nowhere.
+
 Each gate returns the same verdict enum as the K-* family:
 `PASS | WARN | KILL | UNMEASURED | NOT_APPLICABLE | PARTIALLY_MEASURED | COMPUTABLE`
 plus a `receipt_hash` produced by `geox_mcp.domain.seismic_physics.receipts.make_gate_receipt` /
@@ -85,8 +95,15 @@ All 13 rows currently report `DRAFT — not wired`.
 
 ## 5. Call (documentation; not live)
 
+**The live call signature is intentionally deferred.** Two candidate shapes are
+documented; neither is wired. The choice is F13-bound and depends on the outcome of
+the K-spec ↔ K-code fork noted at the top of this file.
+
+**Candidate A — mode on `geox_seismic_interpret`** (matches K-spec doc, not K-code):
+
 ```python
-# NOT LIVE — router not registered. This is the intended signature.
+# NOT LIVE — router not registered. This is the intended signature IF the
+# K-preseden is decided in favour of mode-on-interpret.
 await geox_seismic_interpret(
     mode="amplitude_validate",
     framework={
@@ -107,6 +124,23 @@ await geox_seismic_interpret(
 #   "preferred_hypothesis": None,
 # }
 ```
+
+**Candidate B — standalone tool** (matches K-code, not K-spec doc):
+
+```python
+# NOT LIVE — tool not registered in registry.py. This is the intended signature IF
+# the K-preseden is decided in favour of standalone-tool, mirroring
+# geox_structure_validate at src/geox_mcp/tools/structure_validate.py.
+from geox_mcp.tools.amplitude_gates import run_all_amplitude_gates
+
+result = await run_all_amplitude_gates(framework={...})
+# result shape mirrors the dict above (gates / combined_verdict / hypothesis_status /
+# local_verdict / seal_authority / preferred_hypothesis).
+```
+
+**Until the K-preseden is decided:** the only callable surface is the in-process
+`run_all_amplitude_gates(framework)` at `src/geox_mcp/tools/amplitude_gates/__init__.py`,
+which is wired nowhere.
 
 ---
 
