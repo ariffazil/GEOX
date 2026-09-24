@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-24T09:53:01.505308+00:00",
+  "trace_id": "VR-20260924T095301-f38675f26d2a58f0",
+  "source_file": "/root/GEOX/voice/out/VR-20260924T095301-f38675f26d2a58f0.txt",
+  "source_sha256": "3042953f7f3bbe8f",
+  "category": "THIRD_PARTY",
+  "guard": {
+    "category": "THIRD_PARTY",
+    "sink": "QUARANTINE",
+    "confidence": 0.8,
+    "reasons": [
+      "OVERRIDE_third_party=['bekas', 'bekas staf', 'laletha', 'oral history', 'petronas']",
+      "perlukan_consent_F13_sebelum_ingest",
+      "kenal_pasti_hak_IP_PETRONAS"
+    ],
+    "named_persons": [
+      "laletha"
+    ],
+    "proprietary_flag": true
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

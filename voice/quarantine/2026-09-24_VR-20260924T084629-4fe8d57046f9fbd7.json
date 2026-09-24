@@ -1,0 +1,23 @@
+{
+  "ts": "2026-09-24T08:46:29.882827+00:00",
+  "trace_id": "VR-20260924T084629-4fe8d57046f9fbd7",
+  "source_file": "/root/.hermes/workspace/syed-shadow-agency.ogg",
+  "source_sha256": "b777505868822b88",
+  "category": "PERSONAL",
+  "guard": {
+    "category": "PERSONAL",
+    "sink": "QUARANTINE",
+    "confidence": 0.8,
+    "reasons": [
+      "PRA_ASR_filename_personal",
+      "F5_private_bukan_geox",
+      "kuota_tidak_dibakar"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "extract": {},
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}
