@@ -89,6 +89,9 @@ steps:
 # ─────────────────────────────────────────────────────────────────────────────
 
 claim_limits:
+  - "Live call signature is DEFERRED (see A_SPEC §5). This playbook runs against
+    `run_all_amplitude_gates(framework)` directly until the K-spec ↔ K-code fork is
+    resolved and an F13-bound decision picks mode-on-interpret vs standalone-tool."
   - "Without a well tie, A-POL and A-PHASE cannot pass — the playbook halts at Class I."
   - "`unknown` is terminal for the corresponding gate — never collapses to PASS."
   - "AVO class is DERIVED, never asserted. < 3 usable angle stacks → A-AVO = UNMEASURED."
