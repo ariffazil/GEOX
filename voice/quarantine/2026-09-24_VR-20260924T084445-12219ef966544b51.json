@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-24T08:44:51.841596+00:00",
+  "trace_id": "VR-20260924T084445-12219ef966544b51",
+  "source_file": "/root/.hermes/workspace/syed-wallet-close-loop.ogg",
+  "source_sha256": "7ada167010cceb8f",
+  "category": "PERSONAL",
+  "guard": {
+    "category": "PERSONAL",
+    "sink": "QUARANTINE",
+    "confidence": 0.85,
+    "reasons": [
+      "OVERRIDE_personal=['ayah', 'keluarga', 'wallet']",
+      "F5_private_bukan_geox"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "extract": {},
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

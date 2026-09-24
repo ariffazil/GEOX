@@ -1,0 +1,1 @@
+WAKID-3: trap bocor pada horizon E, fault seal tidak diuji, 35 juta dolar hangus. Kekangan: jangan matangkan prospect tanpa ujian fault seal.

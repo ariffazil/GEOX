@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-24T09:53:01.506304+00:00",
+  "trace_id": "VR-20260924T095301-65a3a08b6e7cb835",
+  "source_file": "/root/GEOX/voice/out/VR-20260924T095301-65a3a08b6e7cb835.txt",
+  "source_sha256": "fae86820f89fe191",
+  "category": "UNKNOWN",
+  "guard": {
+    "category": "UNKNOWN",
+    "sink": "QUARANTINE",
+    "confidence": 0.4,
+    "reasons": [
+      "tiada_isyarat_mencukupi",
+      "jangan_teka"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

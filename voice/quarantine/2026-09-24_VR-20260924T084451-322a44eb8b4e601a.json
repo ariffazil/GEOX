@@ -1,0 +1,22 @@
+{
+  "ts": "2026-09-24T08:44:58.238275+00:00",
+  "trace_id": "VR-20260924T084451-322a44eb8b4e601a",
+  "source_file": "/root/.hermes/workspace/magnesium-anxiety.ogg",
+  "source_sha256": "603f6635f666197a",
+  "category": "PERSONAL",
+  "guard": {
+    "category": "PERSONAL",
+    "sink": "QUARANTINE",
+    "confidence": 0.85,
+    "reasons": [
+      "OVERRIDE_personal=['anxiety', 'magnesium']",
+      "F5_private_bukan_geox"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "extract": {},
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}
