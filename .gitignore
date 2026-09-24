@@ -107,3 +107,4 @@ sessions/
 # Backup files (forensic, not source)
 *.bak-*
 *.bak
+voice/quarantine/
