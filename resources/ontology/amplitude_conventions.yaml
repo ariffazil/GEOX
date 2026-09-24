@@ -1,0 +1,223 @@
+# GEOX Amplitude Conventions Registry
+# DITEMPA BUKAN DIBERI
+#
+# PURPOSE: Central registry of amplitude-related conventions and defaults used by the A-*
+# physics gate family (docs/SEISMIC_AMPLITUDE_PHYSICS_GATES_A_SPEC.md). Every field below
+# is an EXPLICIT assumption. Where evidence is missing, the value is `unknown` and the
+# corresponding gate MUST return UNMEASURED — never PASS.
+#
+# F4 CLARITY: Every amplitude claim must be traceable to a convention here or to a
+# declared external declaration (well tie, processing vintage, calibration chain).
+# F7 HUMILITY: Every empirical range is tagged with calibration scope.
+#
+# CLAIM LIMITS:
+#   * `unknown` is a TERMINAL state for the corresponding gate.
+#   * `default` values here are ORDER-OF-MAGNITUDE priors. They are not a substitute for
+#     measured polarity / phase / scalar / vintage.
+#   * Final DHI interpretation MUST replace these defaults with measured + tie-anchored
+#     values where available.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POLARITY CONVENTION
+# ─────────────────────────────────────────────────────────────────────────────
+
+polarity_defaults:
+  description: "SEG-Y amplitude sign convention. A positive reflection coefficient may
+    appear as either a positive or a negative sample depending on processing. Sign is
+    MEANINGLESS without a declaration tied to a well synthetic."
+
+  # Enum the value space. `unknown` MUST be the default when not declared.
+  enum:
+    - SEG_NORMAL          # SEG standard — positive RC = positive sample (zero-phase peak)
+    - SEG_REVERSE         # Australian / reverse polarity; voluminous DA = negative sample
+    - UNKNOWN             # terminal for A-POL
+
+  default: UNKNOWN
+  source: "SEG Technical Standards Committee; well tie (geox_well_tie) is the only authority"
+  epistemic_status: compiled_convention
+  caution: "A-POL returns UNMEASURED whenever polarity != {SEG_NORMAL, SEG_REVERSE}."
+
+  by_convention:
+    SEG_NORMAL:
+      description: "SEG normal polarity — positive RC gives a positive sample"
+      well_tie_required: true
+      typical_signal_at_start: "Peak water trough"
+    SEG_REVERSE:
+      description: "Reverse / Australian polarity — positive RC gives a negative sample"
+      well_tie_required: true
+      typical_signal_at_start: "Trough water reflection"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WAVELET PHASE STATE
+# ─────────────────────────────────────────────────────────────────────────────
+
+phase_state_defaults:
+  description: "Phase state of the seismic wavelet. Phase is an EXTRACTED measurement,
+    not an assumption. Zero-phase is the only state under which simple peak-picking is
+    admissible."
+
+  enum:
+    - ZERO_PHASE          # demonstrated zero-phase via wavelet extraction + phase residual bound
+    - MINIMUM_PHASE        # causal, well-defined
+    - MIXED_PHASE          # intermediate
+    - UNKNOWN              # terminal for A-PHASE
+
+  default: UNKNOWN
+  source: "geox_seismic_compute(mode=well_tie) extracts wavelet and reports phase residual"
+  epistemic_status: compiled_convention
+  caution: "A-PHASE returns UNMEASURED when phase_state == UNKNOWN OR
+    phase_residual_deg > TODO: cite bound."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AMPLITUDE SCALAR CALIBRATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+amplitude_scalar_calibration_defaults:
+  description: "Whether absolute amplitudes are calibrated to a true-amplitude reference
+    (geometric-spreading correction, source/receiver calibration, no AGC) and tied to a well."
+
+  enum:
+    - TRUE_AMPLITUDE      # true-amplitude chain + well tie present
+    - RELATIVE_ONLY       # relative amplitudes only; absolute claims inadmissible
+    - UNKNOWN             # terminal for A-SCALE
+
+  default: UNKNOWN
+  source: "geox_seismic_compute(mode=synthetic) and well tie (geox_well_tie)"
+  epistemic_status: compiled_convention
+  caution: "A-SCALE returns UNMEASURED when calibration != TRUE_AMPLITUDE."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROCESSING VINTAGE
+# ─────────────────────────────────────────────────────────────────────────────
+
+processing_vintage_defaults:
+  description: "Identifier of the processing vintage (sequence number + reprocessing
+    epoch + processing company / contractor). Cross-vintage amplitude claims require a
+    cross-equalisation / mistie receipt."
+
+  fields:
+    vintage_id:           # free-text, e.g. "PGS-2018-Q3-reproc2"
+      type: string
+      default: UNKNOWN
+    vintage_start_date:   # ISO 8601, when this vintage processing began
+      type: string
+      default: UNKNOWN
+    reprocessing_epoch:   # integer; 0 = original, 1+ = reprocess
+      type: integer
+      default: UNKNOWN
+    contractor:           # free-text
+      type: string
+      default: UNKNOWN
+
+  default_vintage_id: UNKNOWN
+  source: "processing crew + contractor reports + SEG-Y textual header"
+  epistemic_status: compiled_convention
+  caution: "A-PROV returns UNMEASURED when comparing amplitudes across two volumes and
+    vintage_id is UNKNOWN for either, OR no mistie receipt is provided."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANGLE RANGES
+# ─────────────────────────────────────────────────────────────────────────────
+
+angle_range_defaults:
+  description: "Usable pre-stack angle range, in degrees, free of mute and NMO stretch.
+    Used by A-OFFSET (gradient validity) and A-AVO (≥3 angle stacks check)."
+
+  fields:
+    angle_min_deg:        # smallest usable angle after mute and NMO-stretch cut
+      type: number
+      default: UNKNOWN
+      units: degrees
+    angle_max_deg:        # largest usable angle before mute
+      type: number
+      default: UNKNOWN
+      units: degrees
+    n_usable_stacks:      # count of angle stacks inside [angle_min_deg, angle_max_deg]
+      type: integer
+      default: UNKNOWN
+
+  source: "geox_seismic_compute(velocity analysis) and acquisition geometry"
+  epistemic_status: compiled_convention
+  caution: "A-OFFSET returns UNMEASURED when angle_min_deg == UNKNOWN OR angle_max_deg == UNKNOWN.
+    A-AVO returns UNMEASURED when n_usable_stacks < 3."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AVO CLASS DEFINITIONS
+# ─────────────────────────────────────────────────────────────────────────────
+
+avo_class_definitions:
+  description: "Rutherford–Williams (1989) / Castagna–Smith (1994) AVO classes.
+    AVO class is DERIVED, never asserted. The mapping below is the canonical vocabulary;
+    A-AVO requires Vp/Vs evidence to assign any class."
+
+  enum:
+    - CLASS_I    # high impedance contrast; positive RC at all angles
+    - CLASS_II   # near-zero RC at small angles; large positive or negative at high
+    - CLASS_III  # negative RC at all angles; magnitude grows with angle
+    - CLASS_IV   # negative RC at all angles; magnitude DECREASES with angle (Class IV
+                 # false-negative hazard — Castagna 1998)
+    - UNKNOWN    # terminal for A-AVO class assignment
+
+  default: UNKNOWN
+  source: "Rutherford–Williams 1989; Castagna–Smith 1994; Castagna 1998 (Class IV caveat)"
+  epistemic_status: compiled_convention
+  caution: "A-AVO returns UNMEASURED whenever derived_class == UNKNOWN, regardless of
+    what the interpreter wrote on the section."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BASIN BACKGROUND TREND
+# ─────────────────────────────────────────────────────────────────────────────
+
+background_trend_defaults:
+  description: "Basin-local AVO background trend (intercept, gradient). The trend is the
+    regional expectation; fluid deviation is the A-AVO residual above this trend."
+
+  fields:
+    basin_id:               # e.g. "sabah", "malay", "sunda"
+      type: string
+      default: UNKNOWN
+    intercept_prior:        # regional intercept prior
+      type: number
+      default: UNKNOWN
+    gradient_prior:          # regional gradient prior
+      type: number
+      default: UNKNOWN
+    admissible_fluid_deviation:  # maximum allowed deviation before flagging
+      type: number
+      default: UNKNOWN
+    source_well_ids:        # wells used to derive the trend
+      type: array
+      items: string
+      default: []
+
+  source: "basin-level priors, e.g. resources/basins/sabah_basin/petroleum_system.yaml"
+  epistemic_status: compiled_convention
+  caution: "A-AVO returns UNMEASURED when basin_id == UNKNOWN OR when any of
+    intercept_prior, gradient_prior, admissible_fluid_deviation == UNKNOWN."
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UNITS + VALID RANGES + EPISTEMIC TAGS
+# ─────────────────────────────────────────────────────────────────────────────
+
+units:
+  polarity: "enum (SEG_NORMAL | SEG_REVERSE | UNKNOWN)"
+  phase: "enum (ZERO_PHASE | MINIMUM_PHASE | MIXED_PHASE | UNKNOWN)"
+  amplitude_scalar: "enum (TRUE_AMPLITUDE | RELATIVE_ONLY | UNKNOWN)"
+  angle: "degrees"
+  intercept: "dimensionless RC (normal incidence)"
+  gradient: "dimensionless RC per degree (Shuey linear term)"
+
+valid_ranges:
+  angle_min_deg: [0.0, 89.0]
+  angle_max_deg: [1.0, 89.0]
+  n_usable_stacks: [0, 100]
+  intercept_prior: [-1.0, 1.0]
+  gradient_prior: [-1.0, 1.0]
+  admissible_fluid_deviation: [0.0, 1.0]
+
+epistemic_tags:
+  all_defaults:
+    status: compiled_convention
+    calibrated_for: "ORDER-OF-MAGNITUDE priors — not a substitute for measured conventions"
+    caution: "Every final amplitude claim must replace these defaults with measured,
+      tie-anchored values where available. `unknown` is terminal for the corresponding gate."

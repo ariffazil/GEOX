@@ -1,0 +1,101 @@
+# GEOX Playbook: Amplitude DHI Validation
+# DITEMPA BUKAN DIBERI
+#
+# Spec: docs/SEISMIC_AMPLITUDE_PHYSICS_GATES_A_SPEC.md
+# Conventions: resources/ontology/amplitude_conventions.yaml
+#
+# ORDERING (load-bearing):
+#   1. Class I (representation) — what is the number?
+#   2. Class II (physics)       — what must it obey?
+#   3. Class III (discrimination) — what could fake it?
+#
+# HARD STOP RULE: If ANY Class I gate returns UNMEASURED, the playbook halts and does NOT
+# proceed to Class II. Reasoning: without Class I invariants, every downstream quantity
+# is undefined, not wrong — running Class II on undefined numbers is a Class I violation.
+
+name: amplitude_dhi
+version: "0.1"
+description: "Validate an amplitude DHI candidate against the A-* physics gate family.
+  Representation → Physics → Discrimination."
+epistemic_layers: [DERIVED, INTERPRETED_LOCAL]
+
+prerequisites:
+  playbook: seismic_well_tie
+  condition: "well_tie.completion == PASS and RHOB_available and DTC_available"
+  # Without a well tie there is no polarity / phase / scalar anchor. A-POL and A-PHASE
+  # cannot pass.
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CLASS I — REPRESENTATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+steps:
+  - id: class_i_representation
+    description: "Declare the conventions that give the amplitude number its meaning.
+      Hard stop if any gate is UNMEASURED."
+    gates:
+      - A-POL
+      - A-PHASE
+      - A-SCALE
+      - A-PROV
+    halt_on: ["UNMEASURED", "KILL"]
+    next: class_ii_physics
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CLASS II — PHYSICS
+  # ─────────────────────────────────────────────────────────────────────────────
+
+  - id: class_ii_physics
+    description: "Bind the amplitude to admissible rock physics (PHYSICS_9), AVO theory,
+      and propagation compensation."
+    gates:
+      - A-IMP
+      - A-AVO
+      - A-OFFSET
+      - A-TUNING
+      - A-PROP
+    halt_on: ["KILL"]        # WARN allowed to proceed to Class III for discrimination
+    next: class_iii_discrimination
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # CLASS III — DISCRIMINATION
+  # ─────────────────────────────────────────────────────────────────────────────
+
+  - id: class_iii_discrimination
+    description: "Test what could fake the anomaly — footprint, multiples, sideswipe,
+      velocity artifacts, repeatability noise."
+    gates:
+      - A-SNR
+      - A-ARTIFACT
+      - A-CONFORM
+      - A-4D
+    halt_on: ["KILL"]
+    next: claim_handoff
+
+  - id: claim_handoff
+    tool: geox_claim
+    description: "Hand off the A-* receipt set to the claim lifecycle. The claim carries
+      type=amplitude_dhi and the full receipt matrix."
+    inputs:
+      evidence_refs: ["${step.class_i_representation.receipts}", "${step.class_ii_physics.receipts}", "${step.class_iii_discrimination.receipts}"]
+      claim_type: amplitude_dhi
+      local_verdict: QUALIFIED_CANDIDATE
+      seal_authority: arifOS_only
+    outputs: [claim_record, receipts]
+    next: END
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CLAIM LIMITS
+# ─────────────────────────────────────────────────────────────────────────────
+
+claim_limits:
+  - "Without a well tie, A-POL and A-PHASE cannot pass — the playbook halts at Class I."
+  - "`unknown` is terminal for the corresponding gate — never collapses to PASS."
+  - "AVO class is DERIVED, never asserted. < 3 usable angle stacks → A-AVO = UNMEASURED."
+  - "Cross-vintage amplitude comparison requires a cross-equalisation / mistie receipt."
+  - "Absolute-amplitude claims require A-SCALE = TRUE_AMPLITUDE (calibrated + tied)."
+  - "Flat spot is a depth-domain claim — TWT-only is not admissible for A-CONFORM."
+  - "Time-lapse amplitude change must exceed the NRMS repeatability floor."
+  - "WARN is a legitimate outcome — WARN does NOT auto-promote to PASS."
+  - "preferred_hypothesis is always null from GEOX — arifOS seals."
+  - "Local max verdict: QUALIFIED_CANDIDATE — GEOX never self-seals amplitude DHI."
