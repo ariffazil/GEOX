@@ -32,6 +32,50 @@
     },
     "datum": {
       "type": "string"
+    },
+    "polarity": {
+      "type": "string",
+      "enum": ["SEG_NORMAL", "SEG_REVERSE", "UNKNOWN"],
+      "default": "UNKNOWN",
+      "description": "Amplitude polarity convention. A-POL gate returns UNMEASURED when value is UNKNOWN or when not reproducible from a well tie. Optional in this draft; promotion to required is a separate F13-bound patch."
+    },
+    "phase_state": {
+      "type": "string",
+      "enum": ["ZERO_PHASE", "MINIMUM_PHASE", "MIXED_PHASE", "UNKNOWN"],
+      "default": "UNKNOWN",
+      "description": "Wavelet phase state. A-PHASE gate returns UNMEASURED when UNKNOWN or when phase residual is unbounded. Optional in this draft."
+    },
+    "amplitude_scalar_calibration": {
+      "type": "string",
+      "enum": ["TRUE_AMPLITUDE", "RELATIVE_ONLY", "UNKNOWN"],
+      "default": "UNKNOWN",
+      "description": "Whether absolute amplitudes are calibrated and well-tied. A-SCALE gate returns UNMEASURED when not TRUE_AMPLITUDE. Optional in this draft."
+    },
+    "processing_vintage": {
+      "type": "object",
+      "properties": {
+        "vintage_id": {"type": "string", "default": "UNKNOWN"},
+        "vintage_start_date": {"type": "string", "default": "UNKNOWN"},
+        "reprocessing_epoch": {"type": "integer", "default": 0},
+        "contractor": {"type": "string", "default": "UNKNOWN"}
+      },
+      "default": {
+        "vintage_id": "UNKNOWN",
+        "vintage_start_date": "UNKNOWN",
+        "reprocessing_epoch": 0,
+        "contractor": "UNKNOWN"
+      },
+      "description": "Processing vintage identifier. A-PROV gate refuses cross-vintage amplitude claims without a mistie receipt. Optional in this draft."
+    },
+    "angle_ranges": {
+      "type": "object",
+      "properties": {
+        "angle_min_deg": {"type": "number", "default": 0.0},
+        "angle_max_deg": {"type": "number", "default": 0.0},
+        "n_usable_stacks": {"type": "integer", "default": 0}
+      },
+      "default": {"angle_min_deg": 0.0, "angle_max_deg": 0.0, "n_usable_stacks": 0},
+      "description": "Usable pre-stack angle range, in degrees, free of mute and NMO stretch. A-OFFSET requires declared bounds; A-AVO requires n_usable_stacks >= 3. Optional in this draft."
     }
   },
   "required": [
