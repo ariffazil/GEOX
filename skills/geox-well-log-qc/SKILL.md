@@ -2,7 +2,7 @@
 id: geox-well-log-qc
 name: GEOX Well Log QC Lane
 version: 1.0.0
-description: Well log ingestion and QC lane — LAS/DST/deviation/tops into interpretable curves. USE WHEN: 'load LAS', 'QC well logs', 'depth monotonicity', 'null fraction', 'petrophysical interpretation'. Covers: geox_well_ingest (auto-detect, standardize_curves, normalize_units, qc_strict) → geox_well_qc (depth monotonicity, null %, physical range) → geox_well (view/desk hydrate tracks with petrophysics) → geox_petrophysics (Vsh/porosity/Sw/permeability/net-pay, canon9 profiles, lem_inference). Iron rules: QC before interpretation always; qc_strict=True default; never interpret logs that fail physical range checks; label interpretations INTERPRETATION truth-class.
+description: "Well log ingestion and QC lane — LAS/DST/deviation/tops into interpretable curves. USE WHEN: 'load LAS', 'QC well logs', 'depth monotonicity', 'null fraction', 'petrophysical interpretation'. Covers: geox_well_ingest (auto-detect, standardize_curves, normalize_units, qc_strict) → geox_well_qc (depth monotonicity, null %, physical range) → geox_well (view/desk hydrate tracks with petrophysics) → geox_petrophysics (Vsh/porosity/Sw/permeability/net-pay, canon9 profiles, lem_inference). Iron rules: QC before interpretation always; qc_strict=True default; never interpret logs that fail physical range checks; label interpretations INTERPRETATION truth-class."
 owner: 333-AGI
 risk_tier: low
 floor_scope: [F1, F2, F7, F11]
