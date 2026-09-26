@@ -12,9 +12,12 @@ Architecture: thin Python wrapper that calls the deployed
 the PerceptualInventory contract.
 
 Why this backend:
-1. MiniMax-M3 is the federation primary model (per session config,
-   CONTEXT.md 2026-06-07). It has vision capability per ASI's probe
-   (verify_image_understand returned valid PONG).
+1. MiniMax-M3 provides verified vision capability per ASI's probe
+   (verify_image_understand returned valid PONG). [Correction 2026-09-25
+   FI-008 under F13 directive "ok fix all": prior text claimed MiniMax-M3
+   was "the federation primary model (per session config, CONTEXT.md
+   2026-06-07)" — that designation is stale; model-identity SOT is
+   /root/AAA/registries/models/FEDERATION_MODEL.json.]
 2. The minimax-code MCP server is deployed as a systemd service
    (port 18091) with a documented vision tool surface.
 3. Using the in-house model avoids vendor API spend, which would be
@@ -197,7 +200,10 @@ class VisionResult:
 
 
 class MiniMaxVLMAdapter:
-    """Real VLM adapter for the federation primary model (MiniMax-M3).
+    """Real VLM adapter for the MiniMax-M3 vision backend (in-house
+    minimax-code MCP, :18091). ["federation primary model" designation
+    retired 2026-09-25 FI-008 — model-identity SOT:
+    /root/AAA/registries/models/FEDERATION_MODEL.json]
 
     Wraps the `minimax-code_understand_image` MCP tool (port 18091) which
     exposes the `understand_image(prompt, image_source)` surface.
