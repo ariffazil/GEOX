@@ -4782,15 +4782,16 @@ wheels = [
 
 [[package]]
 name = "pygimli"
-version = "1.6.0"
+version = "1.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "numpy" },
     { name = "pgcore" },
     { name = "scooby" },
     { name = "setuptools" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0a/d4/039eb78f270c7d5f2deb5153b062b514be90b411a1c831e975f82e1f609c/pygimli-1.6.0-py3-none-any.whl", hash = "sha256:8a471ce01c0c544335934ac2e98b24a9aca4829b2d37700fff61268cd9341ca1", size = 543645, upload-time = "2026-05-11T19:41:54.759Z" },
+    { url = "https://files.pythonhosted.org/packages/47/64/55dd05de3cb440ab35f4df327bce20fd361792e67037c35bd091a710e088/pygimli-1.6.1-py3-none-any.whl", hash = "sha256:3c404356fe4a9782e4492badf5a049b15ce7010d41ff01e6254a1a17d75901e0", size = 546724, upload-time = "2026-09-18T13:26:06.037Z" },
 ]
 
 [[package]]
