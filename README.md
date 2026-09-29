@@ -275,6 +275,62 @@ Topology SOT: `/root/AAA/federation/organs.yaml` (machine) and `/root/AAA/docs/O
 
 ---
 
+## Forge additions (2026-09-29 — `forge/amplitude-gates-a-family`)
+
+Branch `forge/amplitude-gates-a-family` carries 8 commits (since `cc643e2e`). Per truth-rule above, the live `/health` endpoint is the SOT — these are the additions pending F13 SOVEREIGN SEAL before merge to `main`.
+
+### Capability contracts v1.0 (commit `d8ab1129`)
+
+Stable capability contracts (replaceable implementations). `VolumeManifest`, `DerivedVolumeManifest`, `QCReceipt`, `VOI`, `VoxelMask`, `Polyline`, `Polygon`, `SurfaceMesh`, `PointSet`, `PolarityPhaseRegister`. With parent/children DAG for supersession lineage. Claim lifecycles: `CANDIDATE → ACTIVE → CONTESTED → SUPERSEDED → DORMANT → DELIBERATELY_OPEN → REVOKED → FORGOTTEN`.
+
+### 9 new MCP tools
+
+| Tool | evidence_class | claim_ceiling | Purpose |
+|---|---|---|---|
+| `geox_seismic_polarity_register.v1` | OBSERVATION | REGISTRATION | Polarity/phase declaration with kurtosis_max + amplitude_spectrum_max |
+| `geox_seismic_artifact_get.v1` | OBSERVATION | READ | Universal artifact reader (6 schema kinds) |
+| `geox_seismic_attribute_compute.v1` | OBSERVATION | HYPOTHESIS | 13 L0 attributes via single MCP dispatch by capability_id |
+| `geox_seismic_display_trace.v1` | DISPLAY_PROXY | GEOMETRY | PNG → Polyline via color mask + Chaikin smoothing |
+| `geox_seismic_age_assign.v1` | OBSERVATION | HYPOTHESIS | Morley 2023 ages + thickness gate (>400 ms → HOLD) |
+| `geox_seismic_render_publication.v1` | DISPLAY_PROXY | GEOMETRY | Deterministic render, label collision avoidance |
+| `geox_seismic_alternative_interpret.v1` | DISPLAY_PROXY | HYPOTHESIS | ≥3 hypothesis cards (all HOLD, no auto-verdict) |
+| `geox_seismic_volume_register.v1` | OBSERVATION | REGISTRATION | SEG-Y Rev 2 → VolumeManifest (segyio-backed) |
+| `geox_seismic_horizon_track.v1` | OBSERVATION | HYPOTHESIS | Seed-based 3D tracker → SurfaceMesh with per-vertex confidence |
+| `geox_seismic_display_spectral_character.v1` | DISPLAY_PROXY | CHARACTER (cannot promote) | PNG → ordinal zone table; no absolute Hz; refuses PETRONAS on VPS |
+
+### 5 new resources
+
+`geox://conventions/seismic_display`, `geox://stratigraphy/nw_sabah/surfaces`, `geox://discriminators/north_sabah/diapir_thrust_miiec`, `geox://survey_segments/registry`, `geox://conventions/colormaps/registry`.
+
+### 5 Copilot prototype fixtures
+
+At `tests/fixtures/copilot_prototypes/`: v3 (geometrical) → v4 (interpretation) → v5 (horizons + thickness gate) → v6 (frequency proxy) → v7 (RGB blend + sweetness). Public synthetic data only.
+
+### Validation
+
+- **179 unit tests** pass (45 contracts + 20 polarity/artifact + 34 attribute + 29 section-image + 13 bridge + 29 display-spectral + 1 exit integration + 8 cross-cutting)
+- **Hermes witness**: claim `hc-221fe039` — verdict PASS, evidence SUPPORTED, rung SOURCED_CHECKABLE
+- **Pre-commit gates**: 5/5 LSP clean, 12 supply-chain pins, MUSYAWARAH ~3,961 dry-run violations NOT enforced (F13 2026-09-15 OBSERVE_ONLY policy), F2 TRUTH/F4 ΔS≤0/Scar-001 all guarded
+- **AAA flow**: hermes_handoff_package(target=arifOS) returned OK; arif_observe blocked on MCP streamable_http transport SYNCHRONIZATION_FAULT (out of session authority)
+
+### HOLD gates (out of forge session authority)
+
+- F13 SOVEREIGN "SAH" → production deployment
+- PETRONAS data residency Path A/B decision → real Block H 3D
+- Public F3 SEG-Y download → real-data validation
+- hermes-gateway.service restart (FAILED 17h)
+- Calibrated thresholds (chaos cut-off, rim/core ratio, shell radius)
+
+### Artifacts (separate from GEOX repo)
+
+- `/root/AAA/specs/mcp-2026-07-28/GEOX-MCP-SOT-2026-09-29.md` — source-of-truth
+- `/root/AAA/specs/mcp-2026-07-28/REALITY-GRAPH-2026-09-29.md` — machine-readable graph
+- `/root/AAA/specs/mcp-2026-07-28/AGI-ASI-APEX-LOOP-RECEIPT.md` — chain witness
+- `/root/AAA/specs/mcp-2026-07-28/CLOSE-OUT-2026-09-29.md` — final close-out
+- `/root/AAA/specs/mcp-2026-07-28/madon2022_figure4_edo.png` + `madon2022_figure7_edo.png` — Madon 2022 figure reinterpretations
+
+---
+
 ## Documentation
 
 - [SOT audit 2026-09-06](docs/SOT_AUDIT_2026-09-06.md)
@@ -282,6 +338,7 @@ Topology SOT: `/root/AAA/federation/organs.yaml` (machine) and `/root/AAA/docs/O
 - [Deployment](DEPLOYMENT.md)
 - [Changelog](CHANGELOG.md)
 - [Security](SECURITY.md)
+- **GeoSOT post-forge**: `/root/AAA/specs/mcp-2026-07-28/GEOX-MCP-SOT-2026-09-29.md`
 
 ## License
 
