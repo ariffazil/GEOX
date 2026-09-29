@@ -384,6 +384,52 @@ else:
 
 mcp = FastMCP(**_mcp_kwargs)
 
+# ── Forge 2026-09-29 — Section-Image Slice + Bridge tools (kimi-code/FI-008) ──
+# Capability contracts + display_proxy tools + SEG-Y bridge.
+# Per APEX-ZEN: govern capabilities, not implementations.
+from geox_mcp.tools.seismic_polarity_register import register_with_mcp as _register_polarity
+from geox_mcp.tools.seismic_artifact_get import register_with_mcp as _register_artifact_get
+from geox_mcp.tools.seismic_attribute_compute import register_with_mcp as _register_attribute_compute
+from geox_mcp.tools.seismic_display_trace import register_with_mcp as _register_display_trace
+from geox_mcp.tools.seismic_age_assign import register_with_mcp as _register_age_assign
+from geox_mcp.tools.seismic_render_publication import register_with_mcp as _register_render_publication
+from geox_mcp.tools.seismic_alternative_interpret import register_with_mcp as _register_alternative_interpret
+from geox_mcp.tools.seismic_volume_register import register_with_mcp as _register_volume_register
+from geox_mcp.tools.seismic_horizon_track import register_with_mcp as _register_horizon_track
+
+# Register new tools (idempotent)
+_register_polarity(mcp)
+_register_artifact_get(mcp)
+_register_attribute_compute(mcp)
+_register_display_trace(mcp)
+_register_age_assign(mcp)
+_register_render_publication(mcp)
+_register_alternative_interpret(mcp)
+_register_volume_register(mcp)
+_register_horizon_track(mcp)
+
+# Register section-image resources (knowledge base; public Morley 2023 stratigraphy)
+import json
+from pathlib import Path as _Path
+_RESOURCES_DIR = _Path(__file__).parent / "resources"
+
+@mcp.resource("geox://conventions/seismic_display", description="Seismic display conventions (palettes, dash/line rules, label conventions). Claim ceiling = GEOMETRY.", mime_type="application/json")
+def _resource_seismic_display() -> dict:
+    """Seismic display conventions for section-image slice."""
+    return json.loads((_RESOURCES_DIR / "section_slice_conventions.json").read_text(encoding="utf-8"))
+
+@mcp.resource("geox://stratigraphy/nw_sabah/surfaces", description="NW Sabah published surface ages (Morley 2023). DRU/LIU/UIU/SRU/H-III/TOP_IVC with age ranges and citations.", mime_type="application/json")
+def _resource_nw_sabah_surfaces() -> dict:
+    """NW Sabah stratigraphy — Morley 2023 published ages."""
+    return json.loads((_RESOURCES_DIR / "nw_sabah_surfaces.json").read_text(encoding="utf-8"))
+
+@mcp.resource("geox://discriminators/north_sabah/diapir_thrust_miiec", description="Discriminator set: NW Sabah diapir vs thrust-cored anticline vs MIEC feeder. ≥3 hypotheses with required observations, falsifiers, best tests.", mime_type="application/json")
+def _resource_north_sabah_discriminators() -> dict:
+    """NW Sabah three-way discriminator set."""
+    return json.loads((_RESOURCES_DIR / "discriminators_north_sabah.json").read_text(encoding="utf-8"))
+
+logger.info("Registered 9 forge tools + 3 section-image resources")
+
 # Completions CANCELLED 2026-07-09 — agent surface uses full tool JSON.
 
 # ── EGS Runtime (2026-06-28) ─────────────────────────────────────────────────
