@@ -1,0 +1,45 @@
+{
+  "$schema": "geox.mcp.resource.v1",
+  "schema_uri": "geox://survey_segments/registry",
+  "name": "survey_segment_registry",
+  "title": "Survey segment registry — required before any attribute compute",
+  "version": "1.0.0",
+  "issued_at": "2026-09-29",
+  "issued_by": "kimi-code/FI-008",
+  "description": "Per the display_spectral_character.v1 spec: survey-segment must be registered before any attribute compute. This file is the single source of truth.",
+  "segments": {
+    "north_block_h_dip_line": {
+      "name": "NW-SE regional line through North Block H",
+      "source_artifact": "geox://artifact/section/north-block-h-v6",
+      "calibration_required": true,
+      "calibration_unit": "ms_per_pixel_row",
+      "calibration_default_value": 8.27,
+      "owner": "Petronas Carigali / Morley et al. 2023 (PUBLIC REFERENCE)",
+      "classification": "PUBLIC_REFERENCE",
+      "registered_at": "2026-09-29"
+    },
+    "kinabalu_closure": {
+      "name": "Kinabalu Basin closure (well A + well B section)",
+      "source_artifact": "geox://artifact/section/kinabalu-closure",
+      "calibration_required": true,
+      "calibration_unit": "ms_per_pixel_row",
+      "calibration_default_value": null,
+      "owner": "PETRONAS INTERNAL (mode-600 sovereign gate)",
+      "classification": "PETRONAS_INTERNAL",
+      "registered_at": "2026-09-29"
+    },
+    "synthetic_nw_se_sabah_v6": {
+      "name": "Synthetic NW-SE Sabah profile (exit-test substitute)",
+      "source_artifact": "geox://artifact/section/synthetic-nw-se-sabah-v6",
+      "calibration_required": true,
+      "calibration_unit": "ms_per_pixel_row",
+      "calibration_default_value": 8.27,
+      "owner": "kimi-code/FI-008 (synthetic)",
+      "classification": "PUBLIC_SYNTHETIC",
+      "registered_at": "2026-09-29"
+    }
+  },
+  "claim_ceiling_note": "Registration does not authorize processing of any segment. The display_spectral_character.v1 tool checks the segment's classification before computing attributes.",
+  "claim_ceiling": "REGISTRATION",
+  "notes": "Mandatory before display_spectral_character.v1 will compute. Adding a segment requires F13 SOVEREIGN authorization."
+}
