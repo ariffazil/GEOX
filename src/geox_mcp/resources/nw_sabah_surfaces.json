@@ -1,0 +1,82 @@
+{
+  "$schema": "geox.mcp.resource.v1",
+  "schema_uri": "geox://stratigraphy/nw_sabah/surfaces",
+  "name": "nw_sabah_surfaces",
+  "title": "NW Sabah published surface ages (Morley et al. 2023)",
+  "version": "1.0.0",
+  "issued_at": "2026-09-29",
+  "issued_by": "kimi-code/FI-008",
+  "canon_reference": "geox.mcp.resource.v1 + geox.seismic.geometry.v1",
+  "citation": "Morley, C.K., et al. (2023), Geosphere, v.19, no.1, https://doi.org/10.1130/GES02518.1",
+  "description": "Published ages of regional surfaces in NW Sabah (North Block H reference section). Ages are ranges from the paper; depth ranges are typical but vary by line. PUBLIC-REFERENCE only — no well- or line-specific picks. Drives geox_seismic_age_assign.v1.",
+  "basin": "NW Sabah / North Block H",
+  "surfaces": {
+    "DRU": {
+      "label": "Deep Regional Unconformity",
+      "age_ma_min": 12.0,
+      "age_ma_max": 13.5,
+      "typical_age_ma": 12.5,
+      "semantic": "Base of mini-basin deposition; pre-NSPW mobile-shale detachment",
+      "morphology": "Single surface; not folded; underlies all mini-basins",
+      "thickness_max_ivc_ms": 400,
+      "thickness_max_ivc_source": "Morley 2023 §6.2, fig.16 — IVC thickness max ~0.4 s TWT"
+    },
+    "LIU": {
+      "label": "Lower Intra-IVC Unconformity",
+      "age_ma_min": 10.0,
+      "age_ma_max": 10.5,
+      "typical_age_ma": 10.2,
+      "semantic": "Mid-IVC intra-stage boundary; separates lower IVC from upper mud-canopy phase",
+      "morphology": "Subtle; often below resolution of regional lines; visible only on PSDM"
+    },
+    "UIU": {
+      "label": "Upper Intra-IVC Unconformity",
+      "age_ma_min": 10.5,
+      "age_ma_max": 11.0,
+      "typical_age_ma": 10.8,
+      "semantic": "Top of mini-basin fill; base of IVC mud-canopy basin; thrusting ends mini-basin phase",
+      "morphology": "Onlapping relationship to mobile-shale highs; truncates older reflectors near diapir crests"
+    },
+    "SRU": {
+      "label": "Shallow Regional Unconformity",
+      "age_ma_min": 8.5,
+      "age_ma_max": 9.0,
+      "typical_age_ma": 8.7,
+      "semantic": "Top of IVC mud-canopy basin; pre-Stage IVD drape",
+      "morphology": "Approximately planar; underlies post-IVC drape"
+    },
+    "H-III": {
+      "label": "Horizon III (intra-IVD)",
+      "age_ma_min": 7.5,
+      "age_ma_max": 8.0,
+      "typical_age_ma": 7.7,
+      "semantic": "Intra-IVD marker; younger than SRU; useful for post-canopy drape geometry",
+      "morphology": "Continuous regional reflector; often bright red on Morley figures"
+    },
+    "TOP_IVC": {
+      "label": "Top IVC",
+      "age_ma_min": 8.0,
+      "age_ma_max": 8.5,
+      "typical_age_ma": 8.2,
+      "semantic": "Top of mud-canopy basin; base of post-canopy drape sequence (IVD–IVG)",
+      "morphology": "Often merged with SRU where compaction is high"
+    }
+  },
+  "stages": {
+    "IVA": {"age_ma_min": 11.0, "age_ma_max": 12.0, "thickness_max_ms": 250},
+    "IVB": {"age_ma_min": 10.5, "age_ma_max": 11.0, "thickness_max_ms": 200},
+    "IVC": {"age_ma_min": 8.0, "age_ma_max": 10.5, "thickness_max_ms": 400},
+    "IVD": {"age_ma_min": 7.5, "age_ma_max": 8.0, "thickness_max_ms": 200},
+    "IVE": {"age_ma_min": 6.5, "age_ma_max": 7.5, "thickness_max_ms": 200},
+    "IVF": {"age_ma_min": 5.5, "age_ma_max": 6.5, "thickness_max_ms": 200},
+    "IVG": {"age_ma_min": 0.0, "age_ma_max": 5.5, "thickness_max_ms": 300}
+  },
+  "evidence_class": "REFERENCE",
+  "claim_ceiling": "OBSERVATION",
+  "prohibited_uses": [
+    "well-specific_pick_substitution",
+    "line-specific_pick_substitution",
+    "depth_conversion_without_local_velocity"
+  ],
+  "notes": "REFERENCE-only resource. Ages are ranges from the published paper; thickness_max are typical (TWT ms) and vary by line. Use geox_seismic_age_assign.v1 with a thickness plausibility gate — exceeding thickness_max_ivc_ms returns HOLD, not a forced assignment."
+}

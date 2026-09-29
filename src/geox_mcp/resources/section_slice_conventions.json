@@ -1,0 +1,93 @@
+{
+  "$schema": "geox.mcp.resource.v1",
+  "schema_uri": "geox://conventions/seismic_display",
+  "name": "seismic_display",
+  "title": "GEOX Seismic Display Conventions",
+  "version": "1.0.0",
+  "issued_at": "2026-09-29",
+  "issued_by": "kimi-code/FI-008",
+  "canon_reference": "geox.mcp.resource.v1 + geox.seismic.geometry.v1",
+  "citation": "GEOX Seismic Interpretation Forge Package; Morley et al. 2023 (Geosphere v19 no.1)",
+  "description": "Display conventions for seismic section images and horizons. Drives geox_seismic_render_publication.v1 dash styles, line widths, label fonts, and color palette. This is the SEISMIC-DISPLAY-ONLY resource — it carries NO amplitude, attribute, or AVO interpretation. Claim ceiling: GEOMETRY.",
+  "color_classes": {
+    "horizon.sru": {
+      "rgb": [255, 140, 0],
+      "label": "SRU",
+      "line_style": "dashed",
+      "line_width_px": 4,
+      "semantic": "Shallow Regional Unconformity (~8.5–9 Ma, NW Sabah)"
+    },
+    "horizon.uiu": {
+      "rgb": [0, 210, 255],
+      "label": "UIU",
+      "line_style": "solid",
+      "line_width_px": 3,
+      "semantic": "Upper Intra-IVC Unconformity (~10.5–11 Ma, base IVC / top mini-basin fill)"
+    },
+    "horizon.dru": {
+      "rgb": [31, 42, 107],
+      "label": "DRU",
+      "line_style": "solid",
+      "line_width_px": 5,
+      "semantic": "Deep Regional Unconformity (~12–13 Ma, base mini-basin)"
+    },
+    "horizon.uncertain": {
+      "rgb": [230, 230, 230],
+      "label": "uncertain",
+      "line_style": "dashed",
+      "line_width_px": 2,
+      "semantic": "Hypothesis horizon; not pinned to canonical stage"
+    },
+    "geobody.mobile_shale": {
+      "rgb": [156, 122, 78],
+      "fill_alpha": 100,
+      "outline": [123, 63, 160],
+      "line_width_px": 4,
+      "semantic": "NSPW mobile shale / diapir body (geometry only)"
+    },
+    "feature.gas_chimney": {
+      "rgb": [244, 166, 166],
+      "fill_alpha": 120,
+      "outline": [160, 40, 40],
+      "line_width_px": 2,
+      "semantic": "Gas/fluid chimney column (geometry only)"
+    }
+  },
+  "font": {
+    "family": "DejaVu Sans",
+    "sizes": {"small": 11, "medium": 12, "large": 13, "title": 16},
+    "stroke_px": 3,
+    "stroke_color": "rgba(0,0,0,255)"
+  },
+  "dash_style": {
+    "solid": [],
+    "dashed": {"dash_px": 12, "gap_px": 7},
+    "confidence_high": [],
+    "confidence_medium": {"dash_px": 14, "gap_px": 6},
+    "confidence_low": {"dash_px": 6, "gap_px": 6}
+  },
+  "line_widths": {
+    "horizon_high_confidence": 4,
+    "horizon_medium_confidence": 3,
+    "horizon_low_confidence": 2,
+    "fault": 3,
+    "geobody_outline": 4,
+    "annotation_arrow": 3
+  },
+  "label_collision": {
+    "min_vertical_separation_px": 18,
+    "preferred_offset_px": 8,
+    "leader_line": "auto"
+  },
+  "evidence_class": "DISPLAY_PROXY",
+  "claim_ceiling": "GEOMETRY",
+  "prohibited_uses": [
+    "amplitude_preservation_validation",
+    "AVO_classification",
+    "phase_certification",
+    "native_seismic_to_well_tie_acceptance",
+    "quantitative_prospect_decision",
+    "quantitative_fault_seal_decision"
+  ],
+  "notes": "Display-proxy resource. Claim ceiling = GEOMETRY only. Any request to derive amplitudes, attributes, AVO, or quantitative decisions from a rendered image is REFUSED at the tool layer (evidence_class enforcement)."
+}
