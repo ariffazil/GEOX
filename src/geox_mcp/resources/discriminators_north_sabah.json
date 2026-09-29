@@ -1,0 +1,69 @@
+{
+  "$schema": "geox.mcp.resource.v1",
+  "schema_uri": "geox://discriminators/north_sabah/diapir_thrust_miiec",
+  "name": "north_sabah_diapir_thrust_miiec",
+  "title": "Discriminator set: NW Sabah diapir vs thrust-cored anticline vs MIEC feeder",
+  "version": "1.0.0",
+  "issued_at": "2026-09-29",
+  "issued_by": "kimi-code/FI-008",
+  "canon_reference": "geox.mcp.resource.v1 + topo_x_strat EUREKA (2026-09-29)",
+  "citation": "Morley et al. 2023 (Geosphere v19 no.1) §6 + Figs 5–22; van der Baan & Fomel 2009",
+  "description": "Three-way discriminator set for NW Sabah high-amplitude packages: mobile-shale diapir (A) vs thrust-cored anticline (B) vs mud-volcano / MIEC feeder (C). Each hypothesis lists REQUIRED OBSERVATIONS (if present, hypothesis stays alive), FALSIFIERS (if present, hypothesis is rejected), and BEST TEST (cheapest discriminating probe). Drives geox_seismic_alternative_interpret.v1.",
+  "hypotheses": [
+    {
+      "id": "A_mobile_shale_diaper",
+      "summary": "Highs are mobile-shale diapirs; mini-basins are withdrawal synclines downbuilt into underlying mobile shale.",
+      "required_observations": [
+        "Velocity low under each high (≥5% drop vs flanks, Morley Fig 22)",
+        "Continuous reflectors across apparent sags between highs (no real separation)",
+        "Crestal graben / extensional fault swarm above single-rising diapir",
+        "DRU remains as a single unfolded surface"
+      ],
+      "falsifiers": [
+        "DRU appears folded or thrust-repeated",
+        "Velocity is NORMAL under highs (no V low)",
+        "Continuous reflectors do NOT cross sags between highs"
+      ],
+      "best_test": "Interval velocity cube pull-up/down check at each high; expect DOWN (push-down) for shale diapir.",
+      "reference": "Morley 2023 §6.2 + Fig 22"
+    },
+    {
+      "id": "B_thrust_cored_anticline",
+      "summary": "Highs are thrust-cored anticlines; mini-basins are piggyback synclines on a weak detachment.",
+      "required_observations": [
+        "DRU appears folded, possibly thrust-repeated",
+        "Reflectors offset across apparent highs (not piercing, but folded-over)",
+        "Velocity is NORMAL under highs (no V low)",
+        "Thrust faults visible on flanks of highs"
+      ],
+      "falsifiers": [
+        "DRU is not folded",
+        "Velocity low under highs",
+        "Highs show piercing structures (mud pipes)"
+      ],
+      "best_test": "DRU continuity check across each high; expect OFFSET across thrust.",
+      "reference": "NSPW 18–10 Ma; fold-thrust belt post-SRU."
+    },
+    {
+      "id": "C_mud_volcano_miiec_feeder",
+      "summary": "Highs are mud-volcano edifices on narrow feeders; mobile shale below is thinner; canopy at UIU level.",
+      "required_observations": [
+        "Transparent cores with bright zig-zag margins at UIU/IVC level",
+        "Vertical feeder pipes extending from below (chaos column)",
+        "Onlap of IVC reflectors onto edifice flanks",
+        "Gas chimneys above edifices (amplitude attenuation, low frequency)"
+      ],
+      "falsifiers": [
+        "DRU appears folded, not pierced",
+        "No vertical pipes visible (coherence continuity)",
+        "Gas chimneys absent AND onlap absent"
+      ],
+      "best_test": "Vertical coherence-disruption column test above each high.",
+      "reference": "Morley 2023 Fig 5–13 (mud volcanoes); Chopra & Marfurt 2007."
+    }
+  ],
+  "output_policy": "all_hypotheses_start_HOLD; no_auto_verdict; downstream seal required",
+  "claim_ceiling": "HYPOTHESIS",
+  "evidence_class": "ALTERNATIVE_INTERPRETATION",
+  "notes": "Discriminator resource — drives multi-hypothesis interpretation. Per the topo_x_strat EUREKA, the unit of interpretation is the body's relationship to its neighbors, NOT the body alone. Each hypothesis requires ≥3 hypotheses to be generated; no auto-verdict; humans (or hermes witness) must seal."
+}
