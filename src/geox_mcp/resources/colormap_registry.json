@@ -1,0 +1,44 @@
+{
+  "$schema": "geox.mcp.resource.v1",
+  "schema_uri": "geox://conventions/colormaps/registry",
+  "name": "colormap_registry",
+  "title": "Colormap registration — required before any attribute overlay",
+  "version": "1.0.0",
+  "issued_at": "2026-09-29",
+  "issued_by": "kimi-code/FI-008",
+  "description": "Per the display_spectral_character.v1 spec: colormap must be registered before any attribute overlay. Each colormap has a name, version, citation, and ordinal encoding.",
+  "colormaps": {
+    "ordinal_5_tier": {
+      "name": "ordinal_5_tier",
+      "version": "1.0.0",
+      "description": "5-tier ordinal colormap for sweetness/amplitude/character display",
+      "tiers": ["highest", "high", "mid", "low", "lowest", "no_evidence"],
+      "color_mapping": {
+        "highest": [255, 80, 30],
+        "high":     [255, 180, 50],
+        "mid":      [240, 230, 130],
+        "low":      [180, 200, 220],
+        "lowest":   [80, 110, 180],
+        "no_evidence": [60, 60, 60]
+      },
+      "citation": "Chopra & Marfurt 2007 + display convention v1.0.0",
+      "evidence_class": "DISPLAY_PROXY",
+      "claim_ceiling": "CHARACTER"
+    },
+    "rgb_blend_10_20_30hz": {
+      "name": "rgb_blend_10_20_30hz",
+      "version": "1.0.0",
+      "description": "RGB blend with R=30 Hz, G=20 Hz, B=10 Hz (Copilot v7 convention)",
+      "channels": {
+        "R": {"band_hz": 30, "weight": 1.0},
+        "G": {"band_hz": 20, "weight": 1.0},
+        "B": {"band_hz": 10, "weight": 1.0}
+      },
+      "citation": "Copilot prototype v7 (2026-09-29); Morley 2023 frequency-proxy principle",
+      "evidence_class": "DISPLAY_PROXY",
+      "claim_ceiling": "CHARACTER"
+    }
+  },
+  "claim_ceiling": "CHARACTER",
+  "notes": "Mandatory before display_spectral_character.v1 will render any overlay. Adding a colormap requires versioning + citation."
+}
