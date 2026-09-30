@@ -38,5 +38,25 @@
     "confidence": "MED-HIGH",
     "valid_until": "2028-12-31",
     "forbidden_uses": []
+  },
+  {
+    "claim_id": "trf_clm_5",
+    "claim": "FALSIFICATION RESULT 2026-09-30 (F13-ordered): Arif's hypothesis 'a young (<10 Ma) extensional spreading center in the Sabah Trough drives Kinabalu uplift + DWFTB + trap leakage' is INVALIDATED AS LABELLED. Vectors: (1) no magnetic anomalies younger than ~15.5 Ma anywhere in the embayment (Briais 1993; Barckhausen 2010; Seton 2012; local EMAG2 = offline stub, UNKNOWN not absence); (2) trough axis flanked by thrust sheets + high-density underplate (Franke 2008) = convergence signature; (3) young magmatism is CRUSTAL granite, not basalt/OCT — spreading makes the opposite rock; (4) GPS motion is asymmetric NW collapse-accommodation, not symmetric axial divergence; (5) no axial heat-flow anomaly reported.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "system kin_clm_6/sys_clm_6 lineage", "GEOX emag2+icgem probes 2026-09-30"],
+    "source": "FI-003 falsification battery 2026-09-30 (trace trace-5b295ce212f74cbf; kernel judge returned band-HOLD, not a geology verdict)",
+    "confidence": "MED-HIGH",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["cite_spreading_center_as_mechanism", "use_before_first_trough_well_hits_basalt"]
+  },
+  {
+    "claim_id": "trf_clm_6",
+    "claim": "What SURVIVES the falsification is the eureka, renamed: the <10 Ma deformation of NW Borneo is driven by gravitational collapse of the BANGKIT-uplifted orogen + shale-detachment gravity tectonics — extension up-dip (Arif's young normal-fault evidence), thrusts down-dip (DWFTB soled on 5–8 km detachment at mean dip 3.8°, GSA Bull 2009), mixed with crustal shortening inboard (Ogawa 2022: gravity south / crustal north; Batmanathan & Shah 2020: tectonic-vs-gravity formally open). Arif's structural observations are VALID; the engine is gravity returning the orogen's potential energy, not mantle accretion. Consequence: seal integrity is a present-tense process — charge-vs-breach race against active faulting and shale conduits, not a post-collisional decay assumption.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["trf_clm_5", "system proposed_events BANGKIT/GEMPA (ADOPTED_F13)", "GSAB 121:939", "Tectonophysics 841:29574", "GFZ YES19"],
+    "source": "FI-003 synthesis of Arif hypothesis + falsification battery 2026-09-30",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["seal_without_trough_well_or_dip_line_test", "extension_only_label_inboard"]
   }
 ]
