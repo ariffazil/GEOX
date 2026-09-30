@@ -10,6 +10,11 @@
 
 GEOX is the **Earth Intelligence** organ of the arifOS federation. It computes geological evidence. It does not adjudicate.
 
+```yaml
+role: DOMAIN
+layer: L3
+```
+
 For the full federation architecture, planes, organ taxonomy, and boundary classification, see the canonical source above.
 
 ---
