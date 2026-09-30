@@ -241,7 +241,20 @@ async def geox_basin_resolve(
             "interpreted": {
                 f"'{profile_data.get('basin_name', name)}' resolves to {profile_data.get('basin_id', normalized.upper())}": {
                     "refs": [f"basins/{normalized}/basin_profile.yaml"],
-                }
+                },
+                # middleware compaction drops non-evidence top-level keys from
+                # the MCP view; the registry card must ride inside interpreted
+                # to be visible to callers (same lane profile mode uses).
+                "registry_card": {
+                    "basin_id": profile_data.get("basin_id", normalized.upper()),
+                    "aliases": aliases,
+                    "bbox": bbox,
+                    "entity_type": profile_data.get("entity_type", "basin"),
+                    "parent_system": profile_data.get("parent_system", ""),
+                    "structural_position": profile_data.get("structural_position", ""),
+                    "geometry_precision": profile_data.get("geometry_precision", ""),
+                    "neighbor_basins": neighbors,
+                },
             },
         }
 
