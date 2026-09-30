@@ -202,14 +202,47 @@ async def geox_basin_resolve(
         with open(profile_file) as f:
             profile_data = yaml.safe_load(f) or {}
 
-        # Default properties
+        # Registry fields read generically from basin_profile.yaml;
+        # the legacy Malay hardcodes survive only as fallbacks.
+        prof_aliases = profile_data.get("aliases") or []
+        if normalized == "malay_basin":
+            aliases = prof_aliases or [profile_data.get("basin_name", name), "Basin Melayu"]
+        else:
+            aliases = prof_aliases or [profile_data.get("basin_name", name) or name]
+        prof_bbox = profile_data.get("coarse_bbox_wsen") or profile_data.get("bbox")
+        if prof_bbox is None and normalized == "malay_basin":
+            prof_bbox = [102.0, 4.0, 106.5, 8.5]
+        bbox = prof_bbox or [0.0, 0.0, 0.0, 0.0]
+        neighbors = profile_data.get("neighboring_basins")
+        if neighbors is None and normalized == "malay_basin":
+            neighbors = ["Penyu", "Gulf of Thailand", "West Natuna"]
+        neighbors = neighbors or []
+
         result = {
             "basin_id": profile_data.get("basin_id", normalized.upper()),
-            "aliases": [profile_data.get("basin_name", name), "Basin Melayu"] if normalized == "malay_basin" else [name],
-            "bbox": [102.0, 4.0, 106.5, 8.5] if normalized == "malay_basin" else [0.0, 0.0, 0.0, 0.0],
+            "aliases": aliases,
+            "bbox": bbox,
             "polygon_ref": f"geox://resource/basins/{normalized}/polygon.geojson" if polygon_file.exists() else "",
-            "neighbor_basins": ["Penyu", "Gulf of Thailand", "West Natuna"] if normalized == "malay_basin" else [],
+            "neighbor_basins": neighbors,
             "confidence": "HIGH" if profile_file.exists() else "MEDIUM",
+            "entity_type": profile_data.get("entity_type", "basin"),
+            "parent_system": profile_data.get("parent_system", ""),
+            "structural_position": profile_data.get("structural_position", ""),
+            "geometry_precision": profile_data.get("geometry_precision", ""),
+            # geox-evidence-postcondition-v1 rejects any SUCCESS payload without
+            # observed/derived/interpreted/process_hypotheses content; resolve
+            # historically shipped none and was downgraded for every basin.
+            "observed": {
+                f"registry entry present: resources/basins/{normalized}/basin_profile.yaml": {
+                    "refs": [f"basins/{normalized}/basin_profile.yaml"]
+                    + ([f"basins/{normalized}/polygon.geojson"] if polygon_file.exists() else []),
+                }
+            },
+            "interpreted": {
+                f"'{profile_data.get('basin_name', name)}' resolves to {profile_data.get('basin_id', normalized.upper())}": {
+                    "refs": [f"basins/{normalized}/basin_profile.yaml"],
+                }
+            },
         }
 
         return get_standard_envelope(
