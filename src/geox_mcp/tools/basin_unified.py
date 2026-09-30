@@ -159,14 +159,20 @@ async def geox_basin(
         )
 
     if mode == "emag2":
-        from geox_mcp.tools.geophysics_nonseismic import geox_emag2_ingest as _impl
+        from geox_mcp.tools.geophysics_nonseismic import (
+            EMAG2FetchRequest,
+            geox_emag2_ingest as _impl,
+        )
 
-        return await _impl(force=kwargs.get("force", False))
+        return await _impl(EMAG2FetchRequest(force=kwargs.get("force", False)))
 
     if mode == "icgem":
-        from geox_mcp.tools.geophysics_nonseismic import geox_icgem_models as _impl
+        from geox_mcp.tools.geophysics_nonseismic import (
+            ICGEMListRequest,
+            geox_icgem_models as _impl,
+        )
 
-        return await _impl()
+        return await _impl(ICGEMListRequest())
 
     if mode == "intake":
         from geox_mcp.tools.basin import geox_query_intake as _impl

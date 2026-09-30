@@ -121,6 +121,30 @@ events:
       kinabalu_basin: {surface: —, form: "gentle anticlines and crestal faults outboard"}
     confidence: MED
 
+# ── EVENTS ADOPTED BY F13 RULING 2026-09-30 (Arif, this session) ──
+# BANGKIT adopted at the EVIDENCE window 8–3 Ma (not BizChat's 9–7).
+# GEMPA adopted as an event. Names INVENTED (BizChat), ages as verified.
+proposed_events:
+  - event_id: BANGKIT_LM_REBALANCING   # status: ADOPTED_F13_2026-09-30
+    name_proposed: "BANGKIT (bangkit — rise)"
+    age_bracket: "uplift/exhumation ~8–3 Ma CONFIRMED (Menier et al. 2017 >7 mm/yr Late-Miocene–Pliocene; JGS 2000 Late-Miocene apatite+zircon cooling of Crocker belt). BizChat window 9–7 Ma NARROWER than evidence. Kinabalu granite INTRUSION age UNVERIFIED — K-Ar range up to 14 Ma contested (Hall review); 2026 geochemistry paper (RG 15-Jul-2026) not yet full-text-read."
+    origin: "Lithospheric rebalancing beneath Sabah — mechanism OPEN: slab break-off vs delamination vs dripping vs crustal melting. Physical substrate CONFIRMED: PSCS slab remnant beneath Sabah (Cornwell et al. 2025 JGR: W-dipping discontinuity 45–55 km, 75–100 km wide; Pilia et al. 2023 W Sabah HVA; Yu et al. 2021 SE-dipping HVA; Shi et al. 2020)."
+    expressions:
+      kinabalu_basin: {surface: "SRU candidate + Crocker sediment surge", form: "inboard uplift + new source — may be a SEPARATE driver, not collision echo"}
+      sabah_trough: {surface: "renewed distal fill", form: "?"}
+      layang_layang: {surface: "none expected", form: "lower plate decoupled from mantle event"}
+    relation_to_adopted: "SRU/SENJA (9–8.5) sits at ONSET EDGE of the 8–3 Ma window — BANGKIT as SRU's driver is plausible, unproven. Ordering test: detrital zircon/apatite FT of IVD–IVE sands vs granite age; surge-before-granite ⇒ BANGKIT VOID as SRU driver."
+    confidence: HYPOTHESIS
+  - event_id: GEMPA_PRESENT_DAY        # status: ADOPTED_F13_2026-09-30
+    name_proposed: "GEMPA (quake)"
+    age_bracket: "Pliocene–Recent, active now"
+    origin: "Present-day intraplate deformation. CONFIRMED: 2015 Ranau Mw 6.0; GPS shows coastal Sabah moving NW; uplift-driven gravitational collapse with extension accommodation (Wikipedia/GPS literature); GSM Ranau GNSS: BOTH NW-SE compression AND extension documented."
+    expressions:
+      kinabalu_basin: {surface: "Ranau faults, active mud volcanoes, seafloor-reaching thrusts", form: "mixed regime — do NOT label extension-only"}
+      layang_layang: {surface: "DG seismicity", form: "?"}
+      sabah_trough: {surface: "—", form: "—"}
+    confidence: OBSERVED (activity) / OPEN (regime partition)
+
 standing_holds:
   - "HOLD — subduction polarity and timing: older model = SE-directed subduction of proto-SCS beneath NW Borneo; newer model = underthrusting of CONTINENTAL crust from ~base Miocene. Both in literature. Do not average; do not pick without new evidence."
   - "HOLD — Stage III correlation across the trough until a dip line with well tie physically crosses it."
