@@ -7,13 +7,13 @@
     "source": "Arif ENTERPRISE relay 2026-09-30; Steuer 2012",
     "confidence": "MED-HIGH",
     "valid_until": "2028-12-31",
-    "forbidden_uses": ["crystalline_bassment_default"]
+    "forbidden_uses": ["crystalline_basement_default"]
   },
   {
     "claim_id": "dgr_clm_2",
     "claim": "Rifted DG crust continues SE beneath Neogene Borneo sediments at least halfway to the slope toe; Kinabalu partly stacked on it at depth (hypothesis, untested).",
     "claim_type": "hypothesis",
-    "evidence_refs": ["tectonic_history.md", "../../nw_borneo_collision_system/claims.json"],
+    "evidence_refs": ["tectonic_history.md", "../nw_borneo_collision_system/claims.json"],
     "source": "Arif ENTERPRISE relay 2026-09-30 (EVIDENCE-classed in source relay; GEOX holds it as hypothesis pending dip-line test)",
     "confidence": "low",
     "valid_until": "2027-06-30",
