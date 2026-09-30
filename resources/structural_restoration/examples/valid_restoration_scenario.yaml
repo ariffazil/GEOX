@@ -1,0 +1,71 @@
+# Valid Restoration Scenario — Example
+# Demonstrates minimum required metadata for a valid restoration
+
+scenario_id: "sabah-kinabalu-restore-001"
+name: "Kinabalu Basin — ASAS to KAPUR restoration"
+description: "Restore present-day geometry to syn-rift depositional state"
+
+source_state:
+  surface_id: "top-crocker-present"
+  name: "Top Crocker Fm (present day)"
+  age_ma: 15.0
+  surface_type: "horizon"
+  is_source_geometry: true
+  crs:
+    crs_epsg: 32650
+    crs_name: "WGS84 / UTM Zone 50N"
+    xy_units: "m"
+    z_units: "m"
+    z_convention: "positive_down"
+    vertical_datum: "MSL"
+  grid_extent: { xmin: 500000, xmax: 550000, ymin: 600000, ymax: 650000 }
+  hash: "sha256:abc123..."
+
+target_state:
+  surface_id: "top-crocker-restored-23ma"
+  name: "Top Crocker Fm (restored to23 Ma depositional state)"
+  age_ma: 23.0
+  surface_type: "horizon"
+  is_source_geometry: false
+  crs:
+    crs_epsg: 32650
+    crs_name: "WGS84 / UTM Zone 50N"
+    xy_units: "m"
+    z_units: "m"
+    z_convention: "positive_down"
+    vertical_datum: "MSL"
+  hash: "sha256:def456..."
+
+source_age_ma: 15.0
+target_age_ma: 23.0
+stratigraphic_order: ["Basement", "Panas Thicknessnam", "Nido Limestone", "Crocker Fm"]
+
+crs_proof:
+  crs_epsg: 32650
+  xy_units: "m"
+  z_units: "m"
+  z_convention: "positive_down"
+  vertical_datum: "MSL"
+
+compaction_scenario:
+  scenario_name: "sclater-christie-shale"
+  reference_curve: "Sclater & Christie1980"
+  measured_depth_limit_m: 1700
+  extrapolation_end_depth_m: 3500
+  porosity_adjustment:
+    type: "absolute_porosity_points"
+    value: 5
+  evidence_class: "PUBLISHED"
+  uniform_lithology: true
+  dominant_lithology: "shale"
+
+restoration_type: "3d_surface"
+tectonic_event_id: "KAPUR"
+
+created_at: "2026-09-14T12:00:00Z"
+created_by: "FI-003"
+assumptions:
+  - "Airy isostasy (no flexural rigidity)"
+  - "Uniform lithology: shale (SR_INV_012)"
+  - "Compaction from Sclater & Christie1980"
+  - "Restoration to collision onset age (23 Ma)"

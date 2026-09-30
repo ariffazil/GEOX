@@ -1,0 +1,568 @@
+# ==============================================================================
+# regime_invariants.yaml
+# GEOX Tectonic-Regime Invariant Registry — F0 Companion Layer
+#
+# Sits BESIDE tectonic_invariants.yaml (TECT-001–012).
+#   TECT-* answers: may GEOX present this as explanation?   (reasoning doctrine)
+#   REG-*  answers: how far up the epistemic ladder may this claim travel?
+#                   And which tests may REJECT vs which may only return UNMEASURED.
+#
+# Doctrine:
+#   A single horizon carries a kinematic snapshot, never a tectonic regime.
+#   Dynamics is an INVERSION, not an observation.
+#   Kinematics (observed) < Strain (restoration-dependent) < Dynamics (inferred).
+#   A deficit is not a contradiction. Absence of a signature is not evidence of
+#   absence — it is UNMEASURED until the observation window is covered.
+#
+# Forged: 2026-09-18
+# Architect: Muhammad Arif bin Fazil (F13 Sovereign)
+# Provenance: metabolised from F13-supplied regime-deduction structure,
+#             audited against Anderson (1905), Byerlee (1978), Dahlstrom (1969),
+#             Suppe (1983), Wallace–Bott, Etchecopar/Angelier (4-param reduced
+#             stress tensor), Widess (1973) / Rayleigh λ/4 tuning, Steno (1669).
+#             Four defects in the source structure were corrected — see
+#             corrections_log below. Corrections are part of the artifact.
+# ==============================================================================
+
+meta:
+  artifact_id: geox_regime_invariants_v1
+  version: "1.0.0"
+  forged_at: "2026-09-18T00:00:00+00:00"
+  author: "ariffazil"
+  space: "GEOX — Tectonic Regime Deduction"
+  layer: "F0 companion — beside tectonic_invariants.yaml, above structural_restoration F1"
+  paradigm_counterpart: "tectonic_invariants.yaml#TECT-001 (Observation ≠ Explanation)"
+  seal: "DITEMPA BUKAN DIBERI"
+
+# ==============================================================================
+# I. EPISTEMIC LADDER — three tiers, each with an entry gate
+# A claim may not be asserted at tier N unless tier N-1 gate is PASS or WARN.
+# This is mechanically enforced in regime_deduction.py::check_ladder.
+# ==============================================================================
+
+epistemic_tiers:
+
+  E1_KINEMATIC:
+    name: "Kinematics — observed displacement field"
+    epistemic_tag: OBS
+    strength: "strongest available from geometry"
+    what_it_is: >
+      Geometry of faults and horizons, cutoff pairs, throw/heave, dip,
+      curvature, vergence, azimuth distribution, cross-cutting order,
+      terminations. Directly measurable from the volume.
+    entry_gate: E-DOMAIN
+    entry_condition: >
+      Observation must live in an explicit coordinate domain. Depth-domain
+      claims require conversion_basis ∈ {checkshot, vsp, velocity_model}.
+      Time-domain observations may not be reported as true dip or true
+      subsidence without a T–D conversion.
+    cannot_do: >
+      May not assert stress, mechanism, or regime. A kinematic snapshot is
+      compatible with many mechanisms.
+    known_blindspots:
+      - "Bandwidth: beds below λ/4 (best case λ/8, Widess 1973) are model, not observation."
+      - "Sub-resolution fault throw appears as flexure/monocline — flexure ≠ fault."
+      - "Section obliquity: apparent dip on an oblique line ≠ true dip."
+    caveat: >
+      'Strongest' is relative, not absolute. Kinematics from seismic is still
+      band-limited, depth-converted and interpretation-dependent (correlation
+      and pick are operator choices). Strong ≠ assumption-free.
+
+  E2_STRAIN:
+    name: "Strain — finite strain and rotation"
+    epistemic_tag: DER
+    strength: "moderate — contingent on restoration assumptions"
+    what_it_is: >
+      Extension/shortening magnitudes, block rotation, β factor, strain
+      ellipsoid from restored sections and maps.
+    entry_gate: E-STRAIN
+    entry_condition: >
+      Requires a restoration that satisfies Dahlstrom admissibility at the
+      declared level (see REG-004) AND declares whether it used line-length
+      balance (fault-bend folding) or area balance (detachment folding).
+      Two methods, two domains — never mixed silently.
+    cannot_do: >
+      May not, alone, yield the stress tensor. Strain ≠ stress: finite strain
+      measures displacement, not the force state that produced it.
+    required_declaration:
+      - "plane_strain.assumed: true|false"
+      - "balance_method: line_length|area"
+      - "ductile_units_in_section: true|false"
+      - "erosion_at_crest: true|false"
+    known_blindspots:
+      - "Ductile units (salt, overpressured shale) invalidate area/bed-length conservation."
+      - "Out-of-plane (3-D transfer) flow breaks 2-D balance."
+      - "Erosion removes section — area is NOT conserved across an unconformity."
+      - "Balancing is an admissibility test, not a proof of correctness."
+
+  E3_DYNAMIC:
+    name: "Dynamics — stress tensor"
+    epistemic_tag: INT
+    strength: "weakest and under-determined"
+    what_it_is: >
+      Orientation of σ1, σ2, σ3 and the shape ratio R, inferred from fault
+      plane geometry plus slip vectors.
+    entry_gate: E-DYNAMIC
+    entry_condition: >
+      Requires ≥5 independent fault planes carrying measured slip vectors
+      (from hanging-wall/footwall cutoff separation in 3-D), plus an explicit
+      Wallace–Bott assumption statement, plus Byerlee friction anchoring for
+      any magnitude claim. Seismic alone supplies plane orientation; the slip
+      vector requires cutoff-line geometry, so 2-D data can NEVER enter this
+      tier.
+    degrees_of_freedom: >
+      Reduced stress tensor = 4 parameters (3 principal-axis orientations +
+      1 shape ratio R). The full tensor has 6 independent components. The
+      absolute magnitude (isotropic part + scale) is NOT resolvable from fault
+      data — it must be anchored externally (friction law, borehole,
+      focal mechanism). Never report a stress magnitude from geometry.
+    cannot_do: >
+      May not be reported as observed. It is an inversion product, and
+      magnitude is unrecoverable.
+    known_blindspots:
+      - "Fault azimuth distribution = current stress ∩ inherited basement fabric. Never stress alone."
+      - "Andersonian triples hold for NEW faults, isotropic rock, near-surface, free surface. Stress rotates with depth; σh can exceed σv."
+      - "Coaxial overprint: a second phase coaxial with the first leaves minimum interference — undetectable."
+
+# ==============================================================================
+# II. EXTRACTION AXES — the evidence-coverage contract
+# A regime call requires coverage across axes. Coverage = measured/applicable.
+# Low coverage caps the verdict at WARN. Never promote on a single axis.
+# ==============================================================================
+
+extraction_axes:
+
+  A_SHAPE:
+    name: "Shape — single-surface geometry"
+    measures: ["dip", "curvature", "vergence", "axial trace", "fault plane form (planar/listric/ramp-flat)"]
+    source_fields: ["Horizon.time_geometry|depth_geometry", "Fault.geometry", "Fault.apparent_section_dip_deg"]
+    domain_guard: "dip in time domain is not true dip"
+
+  B_DIFFERENTIAL:
+    name: "Differential — the time axis"
+    measures: ["isochore/isopach change", "expansion index EI", "dip divergence / fanning", "onlap and truncation"]
+    source_fields: ["claims.expansion_index", "horizon pairs across a fault or fold"]
+    note: >
+      THIS IS THE ONLY RELIABLE DATING SIGNAL. Not fault position, not
+      dip, not azimuth. Interval thickness difference localised to structure,
+      supported by depositional terminations, brackets the deformation.
+
+  C_ORIENTATION:
+    name: "Orientation — spatial population statistics"
+    measures: ["fault strike/dip rose", "conjugate set bisector", "Riedel R/R'/P", "fold hinge azimuth", "obliquity of fold axes to master fault"]
+    source_fields: ["Fault.fault_strike_deg", "Fault.section_azimuth_deg", "Fault.dip_direction"]
+    domain_guard: "azimuth from a time slice without velocity correction is meaningless"
+    note: "Population statistics give the regional axis. A single fault gives nothing."
+
+  D_SUPERPOSITION:
+    name: "Superposition — relative chronology"
+    measures: ["cross-cutting", "truncation", "onlap onto structure", "fault abutting vs offsetting"]
+    source_fields: ["G2 topology gate", "cutoff pairs", "horizon-fault relationships"]
+    yield: "PARTIAL ORDER only — relative, not absolute. Absolute age requires biostratigraphy/geochronology."
+    pitfall: "A horizon ABUTTING a fault with no offset is SYNCHRONOUS with it, not younger."
+
+# ==============================================================================
+# III. HARD INVARIANTS
+# Physics and mathematics. Where a hard invariant is violated, the model is
+# inadmissible — but the on_violation action is tier-specific, not blanket KILL.
+# ==============================================================================
+
+hard_invariants:
+
+  REG-001:
+    name: "Andersonian Failure Geometry"
+    statement: >
+      With a free surface, one principal stress axis is vertical. Therefore:
+      σ1 vertical → normal fault, dip ≈ 60°; σ3 vertical → thrust, dip ≈ 30°;
+      σ2 vertical → strike-slip, dip ≈ 90°.
+    derivation: "θ = 45° − φ/2 from σ1; vertical σ1 ⇒ plane at 60° from horizontal"
+    validity_domain: "New faults · isotropic rock · near-surface · free surface · Anderson (1905)"
+    on_violation: "WARN — cap regime confidence, do not KILL"
+    epistemic_tag: DER
+    floor_ref: [F2, F9]
+    gate: E-DIP-FAMILY
+
+  REG-002:
+    name: "Coulomb Failure Angle"
+    statement: "θ = 45° − φ/2 measured from σ1. f(φ) with Byerlee μ = 0.6–0.85 gives φ ≈ 31°–40°, θ ≈ 25°–29.5°."
+    validity_domain: "New shear fracture in intact isotropic rock, μ by Byerlee (1978)"
+    on_violation: "WARN — enumerate alternatives, never conclude 'different regime'"
+    alternatives_for_deviation:
+      - "pre-existing fabric / reactivation (fabric beats stress)"
+      - "weak substrate or overpressure (low effective normal stress)"
+      - "block rotation — domino/bookshelf rotation makes normal faults progressively shallower while remaining pure extension"
+      - "oblique / transtensional stress state"
+      - "depth-dependent stress rotation (σh crossing σv)"
+      - "rock friction ≠ Byerlee range"
+    warning: >
+      A ±15° deviation band is a RULE OF THUMB, not a derivation. It was
+      asserted with false precision in the source structure. The justified
+      statement is: deviation from the Andersonian triple requires explanation
+      from the alternatives list above — NOT the conclusion that regime changed.
+    threshold_source: RULE_OF_THUMB
+    epistemic_tag: INT
+
+  REG-003:
+    name: "Tuning-Limit Resolution Floor"
+    statement: "Beds thinner than λ/4 at dominant frequency are unresolvable; λ/8 (Widess 1973) is the absolute floor. Sub-resolution fault throw appears as flexure."
+    consequence: "Sub-tuning geometry output is INTERPRETED, never OBSERVED."
+    on_violation: "WARN — downgrade epistemic tag, do not KILL"
+    involution: "Absence of a growth wedge at sub-tuning scale is NOT absence of growth."
+    epistemic_tag: OBS
+    gate: E-TUNING
+
+  REG-004:
+    name: "Dahlstrom Conservation — Conditional"
+    statement: >
+      Bed length and area are conserved in a balanced 2-D section parallel to
+      tectonic transport. Violation ⇒ picking or fault linkage is wrong
+      (missing fault, layer-parallel shear, out-of-plane movement).
+    validity_domain: >
+      Plane strain · section parallel to transport · no penetrative strain ·
+      no mobile ductile unit in section · no erosion across an unconformity.
+    invalidated_by: ["salt", "overpressured mobile shale", "basement-involved 3-D flow", "pressure solution", "crestal erosion during inversion"]
+    on_violation: "HOLD — NOT_APPLICABLE when a ductile unit is in section, NOT KILL"
+    warning: >
+      Where a ductile unit decouples the section, this invariant is
+      INAPPLICABLE, not failed. Running it anyway manufactures a false kill.
+      Balancing is an admissibility test, not proof of correctness — many
+      balanced sections are still wrong.
+    epistemic_tag: DER
+    gate: E-RESTORE
+
+  REG-005:
+    name: "Domain Fidelity (Time ≠ Depth)"
+    statement: >
+      A time section carries apparent dip, not true dip. For an unmigrated
+      display: tan θ_app = (v_display / v_true) · tan θ_true. For a MIGRATED
+      display the relation is sin, not tan: tan θ_app = (v_display / v_true) · sin θ_true.
+    dimension_note: >
+      v_display/v_true is a DIMENSIONLESS RATIO of display velocity to true
+      velocity. Writing it as a bare 'V' is dimensionally invalid — the
+      equation then equates a dimensionless quantity to a velocity.
+    consequence: "Depth conversion precedes every azimuth, vergence, interlimb-angle or strain claim. Time-slice azimuth is not strike."
+    on_violation: "HOLD"
+    epistemic_tag: DER
+    gate: E-DOMAIN
+
+  REG-006:
+    name: "Termination Law (Steno)"
+    statement: "A structure is younger than the youngest unit it offsets and older than the oldest unit that drapes it undeformed."
+    attribution: >
+      Steno (1669) — superposition and cross-cutting. NOT Walther's Law.
+      Walther (1894) governs lateral continuity of vertically stacked
+      conformable facies. The source structure mis-attributed this; correct
+      attribution is part of the artifact.
+    yield: "Partial order — relative only"
+    on_violation: "HOLD"
+    epistemic_tag: OBS
+    gate: K-XCUT
+
+  REG-007:
+    name: "Tectonic vs Eustatic Discrimination — Corrected"
+    statement: >
+      A tectonic control requires spatially DIFFERENTIAL interval thickness
+      change localised to a structure, supported by growth terminations
+      (fanning, onlap onto the growing feature).
+    corrected_claim: >
+      'Uniform interval ⇒ eustasy' is FALSE. A uniform interval is also
+      produced by steady sediment supply, thermal subsidence, pure strike-slip
+      (which creates little thickness change), and post-depositional sag.
+      The reliable eustatic test is a REGIONALLY CORRELATIVE surface with
+      synchronous onlap/truncation at a consistent stratigraphic level across
+      unrelated structures — not the absence of thickness change.
+    on_violation: "WARN — do not attribute a uniform interval to eustasy"
+    epistemic_tag: INT
+    gate: E-DIFFERENTIAL
+
+  REG-008:
+    name: "Null-Point Conservation — Local, Not Universal"
+    statement: >
+      In a closed gravity-driven system over a discrete rigid décollement,
+      updip extension is accommodated by downdip shortening: ΔL_ext = ΔL_comp
+      at the system null point.
+    two_distinct_null_points:
+      gravity_system: "point on the décollement where displacement = 0 — a system-scale location"
+      inversion: "point along a fault where separation changes sign; MIGRATES upward as inversion proceeds — a per-fault kinematic marker"
+    validity_domain: "Local to the closed system. NOT a crustal or basin-wide law — material crosses the section, isostasy and thermal subsidence operate independently."
+    on_violation: "KILL for the gravity hypothesis within the system; DO NOT generalise the equality basin-wide"
+    epistemic_tag: DER
+    gate: E-NULLPOINT
+
+# ==============================================================================
+# IV. SOFT INVARIANTS — empirical, high probability, never a kill
+# ==============================================================================
+
+soft_invariants:
+
+  REG-S01:
+    name: "Inheritance Outranks Current Stress for Reactivation"
+    statement: "Pre-existing faults optimally oriented for slip under the current stress reactivate first; low-cohesion faults slip at unfavourable angles too."
+    consequence: "Fault azimuth distribution = stress ∩ inherited fabric. A rose diagram is not a stress indicator on its own."
+    open_tension: "Low-angle (<30° dip) normal faults are mechanically problematic under Andersonian theory — require high pore pressure, weak material, or rotation."
+    on_violation: "WARN"
+
+  REG-S02:
+    name: "Depositional Dip Must Be Removed"
+    statement: >
+      Clinoform foreset dips are depositional, not structural.
+      Uplift-induced tilt may only be claimed after removing depositional dip.
+    envelope: "Siliciclastic foresets commonly 1–25°; carbonate platform margins up to ~35°. These are envelopes, not constants."
+    consequence: "Foreset dip beyond the envelope ⇒ oversteepening (tectonic tilt or margin collapse) — a candidate, not a conclusion."
+    on_violation: "WARN"
+
+  REG-S03:
+    name: "Growth Signature — Corrected"
+    statement: >
+      A growth wedge (EI > 1) localised to a structure with fanning terminations
+      IS syn-tectonic. Its absence is UNMEASURED, not evidence of absence.
+    corrected_claim: >
+      'Symmetric isochore ⇒ post-depositional sag' is FALSE. Symmetric
+      thickness is also produced by differential compaction over a paleo-high,
+      a symmetric graben with both bounding faults active, and strike-slip
+      basins. Asymmetry is not the discriminator — the discriminator is
+      thickness change LOCALISED to structure plus depositional terminations.
+    on_violation: "WARN"
+
+  REG-S04:
+    name: "Obliquity Limit"
+    statement: "A section not parallel to transport under-estimates strain and misreports dip. Section azimuth must be declared against the structural grain."
+    on_violation: "WARN — cap strain magnitude claims"
+    gate: E-OBLIQUITY
+
+# ==============================================================================
+# V. DECOUPLING MECHANISMS
+# Not tectonic regimes. They MASK the tectonic regime. When active, regime
+# deduction at the decoupled level is not merely uncertain — it is UNDEFINED.
+# ==============================================================================
+
+decoupling_mechanisms:
+
+  M-SALT:
+    name: "Halokinesis"
+    driver: "Differential sediment loading is the trigger; density inversion is only a prerequisite. Buoyancy alone does not drive it."
+    signatures: ["turtle structure", "rim syncline with onlap migration (the clock)", "salt weld", "crestal graben", "evacuation surface", "truncation against diapir wall"]
+    consequence: >
+      Salt decouples supra-salt deformation from sub-salt structure. A regime
+      inferred above a salt weld says NOTHING about the stress state below it.
+      Salt MASKS the tectonic signal; it does not express it.
+    invariant_effect: "REG-004 (Dahlstrom) becomes NOT_APPLICABLE, not violated"
+    verdict_when_active: DECOUPLED
+
+  M-SAG:
+    name: "Thermal / Post-Rift Subsidence"
+    driver: "Lithospheric cooling after rifting (McKenzie β)"
+    signatures: ["saucer geometry", "regional onlap toward margin", "NO growth wedge"]
+    warning: "Frequently misread as extension. Absence of a growth wedge plus regional sag geometry is sag, not rift."
+    verdict_when_active: NOT_TECTONIC
+
+# ==============================================================================
+# VI. FALSIFIER REGISTRY — THE DIRECTION RULE
+#
+# THE CRITICAL MECHANISM. Two directions, two different epistemic consequences:
+#
+#   CONTRADICTION — positive counter-evidence is PRESENT and MEASURED.
+#                   → may return KILL. May reject a hypothesis.
+#
+#   DEFICIT       — an expected signature is ABSENT.
+#                   → may only return UNMEASURED. May NEVER kill.
+#
+# Rationale: an absence test fires on thin data as readily as on a true
+# negative. Wiring a deficit into `kills` makes the engine reject true
+# hypotheses whenever the volume is poor. The observation window must be
+# COVERED before absence carries any information.
+#
+# Deficit tests are additionally gated on coverage_fraction:
+#   coverage_fraction >= 0.7  → absence is informative → still only WARN
+#   coverage_fraction <  0.7  → return UNMEASURED, with a resolution note
+# ==============================================================================
+
+falsifier_registry:
+
+  R-EXT:
+    regime: "Extensional"
+    stress_axis_vertical: "σ1"
+    required_positive_evidence: ["syn-kinematic growth wedge with apex at the fault (EI > 1)", "hanging-wall rollover on listric systems", "dip family ~60° for newly formed planar faults"]
+    contradiction_tests:
+      CONTRADICTION_EI_BELOW_ONE:
+        test: "Measured expansion index < 1 across all covered intervals at the fault — thickness DECREASES toward the fault while growth is claimed"
+        returns: KILL
+        requires: "expansion_index measured on ≥1 covered interval"
+      CONTRADICTION_REVERSE_SAME_LEVEL:
+        test: "Measured reverse separation on the same fault at the same structural level, with restored shortening > 0"
+        returns: KILL
+    deficit_tests:
+      DEFICIT_NO_GROWTH_WEDGE:
+        test: "No fanning / no thickness divergence detected"
+        returns: UNMEASURED
+        why_not_kill: "REG-003 — sub-tuning growth is invisible. Absence ≠ absence."
+      DEFICIT_NO_LISTRIC:
+        test: "Fault planes all planar, no rollover"
+        returns: UNMEASURED
+        why_not_kill: "Planar domino-rotation extension is a valid extensional mode with no listric geometry."
+
+  R-COMP:
+    regime: "Contractional"
+    stress_axis_vertical: "σ3"
+    required_positive_evidence: ["restored shortening > 0 with area admissibility", "ramp-flat / duplex / fault-bend fold geometry", "foreland-verging syn-tectonic wedge into the foredeep", "progressive unconformity (truncation increasing upward)"]
+    contradiction_tests:
+      CONTRADICTION_NO_SHORTENING:
+        test: "Restored bed length ≥ undeformed bed length with area conserved, on a section valid under REG-004"
+        returns: KILL
+        requires: "REG-004 validity conditions all met — otherwise NOT_APPLICABLE"
+      CONTRADICTION_EXTENSION_AT_LEVEL:
+        test: "Measured net extension at the same structural level, with extensional growth wedges"
+        returns: KILL
+    deficit_tests:
+      DEFICIT_NO_FOREDEEP_WEDGE:
+        test: "No syn-tectonic wedge thickening toward the foredeep"
+        returns: UNMEASURED
+      DEFICIT_NO_VERGENCE:
+        test: "No consistent structural vergence"
+        returns: UNMEASURED
+    critical_correction: >
+      CRESTAL THINNING IS NOT EVIDENCE OF COMPRESSION. In most basins crestal
+      thinning is EROSION (truncation — missing section) or reduced
+      accommodation on a pre-existing topographic high. Truncation is a
+      superposition observation (D axis); thinning is a differential
+      observation (B axis). The source structure conflated the two. Test them
+      separately; a truncated crest with no shortening is uplift + erosion,
+      which may be inversion, salt withdrawal, or epeirogeny.
+
+  R-WRENCH:
+    regime: "Strike-Slip"
+    stress_axis_vertical: "σ2"
+    required_positive_evidence: ["near-vertical fault planes", "positive or negative flower geometry", "en-échelon folds oblique to the master fault", "Riedel R ~15°, R' ~75°, P ~10–15°", "measurable horizontal displacement from cutoff-line separation in map view", "localised pull-apart or push-up along strike"]
+    contradiction_tests:
+      CONTRADICTION_ALL_DIP_SLIP:
+        test: "Measured slip vectors on ≥3 independent fault planes are all dip-slip dominant (pitch > 75° or < 15°) with a consistent dip-slip sense"
+        returns: KILL
+        requires: "3-D cutoff-line slip vectors — 2-D data cannot run this test and must return UNMEASURED"
+    deficit_tests:
+      DEFICIT_NO_FLOWER:
+        test: "No flower structure imaged"
+        returns: UNMEASURED
+        why_not_kill: "Flower geometry is often below resolution or out of the section plane. A 2-D line cutting a flower obliquely can resemble normal or thrust geometry."
+      DEFICIT_NO_EN_ECHELON:
+        test: "No en-échelon fold train"
+        returns: UNMEASURED
+    structural_note: >
+      Strike-slip is the regime MOST OFTEN MISREAD on 2-D data. Near-vertical
+      dip plus small vertical offset means an oblique section mimics dip-slip
+      geometry. Pure strike-slip with no vertical component produces NO growth
+      strata and NO thickness change at all — a genuinely invisible regime.
+      Map-view horizontal displacement is the only decisive discriminator.
+
+  R-INV:
+    regime: "Inversion"
+    stress_axis_vertical: "changes: σ1(V) → σ1(H) / σ3(H) → σ3(V)"
+    notation_correction: >
+      'σ1 shifts to σ3' is WRONG. Principal axes are defined by magnitude
+      ordering — σ1 cannot become σ3. What happens is that the VERTICAL AXIS
+      changes from largest to smallest: σ1(V) becomes σ1(H), and σ3(H) becomes
+      σ3(V). The axes rotate; the labels exchange. State it correctly or the
+      physics is misstated.
+    required_positive_evidence: ["net extensional growth at depth (syn-rift wedge) REACTIVATED by later shortening", "reverse separation selectively reactivating an extensional fault", "null point migrating upward", "crestal uplift with erosion/unconformity passing laterally to conformity", "shortcut faults", "crestal collapse graben"]
+    contradiction_tests:
+      CONTRADICTION_NO_PRIOR_EXTENSION:
+        test: "No extensional growth wedge at depth across a covered window — the pre-condition for inversion does not exist"
+        returns: KILL
+        why_this_kills: "Inversion is DEFINED as reactivation of an extensional phase. No prior extension ⇒ it is a new thrust or a wrench structure, not inversion."
+        coverage_requirement: "requires coverage_fraction >= 0.7 on the deep interval"
+      CONTRADICTION_NO_REVERSAL_ANYWHERE:
+        test: "Reverse separation absent across the entire covered fault length at all levels, AND no crestal truncation measured"
+        returns: KILL
+        coverage_requirement: "requires the fault length coverage to include the reversal candidate"
+    deficit_tests:
+      DEFICIT_NO_ISOPACH_REVERSAL:
+        test: "No thickness reversal across the level of interest"
+        returns: UNMEASURED
+        correction: >
+          'Isopach reversal' conflates TWO different observations: thickness
+          change (B axis) and truncation / missing section (D axis).
+          Separation sense is a THIRD independent observation. Keep all three
+          separate; do not let one stand in for another.
+
+  R-GRAV:
+    regime: "Gravity / Slope"
+    stress_axis_vertical: "not a tectonic stress regime — gravitational body force"
+    required_positive_evidence: ["listric growth fault updip", "rollover anticline", "toe thrust or contractional toe downdip", "a common décollement between them", "simultaneity — both operate on the same system"]
+    contradiction_tests:
+      CONTRADICTION_CONSERVATION_VIOLATED:
+        test: "Measured downdip shortening exceeds measured updip extension beyond tolerance (ΔL_comp > ΔL_ext · (1+tol))"
+        returns: KILL
+        scope: "within the closed system only — REG-008 is local, never basin-wide"
+    deficit_tests:
+      DEFICIT_NO_TOE_THRUST:
+        test: "No toe thrust imaged"
+        returns: UNMEASURED
+        why_not_kill: "The toe may lie beyond the survey, be eroded, or be resolved as diffuse shortening. Partial preservation is common."
+    structural_note: >
+      Gravity systems are a DIFFERENT FAMILY from tectonic extension, not a
+      subtype. They require the décollement to be identified. Without it the
+      conservation test of REG-008 has no frame of reference.
+
+# ==============================================================================
+# VII. CORRECTIONS LOG — defects found in the supplied source structure
+# Retained deliberately: a correction that is not recorded can regress.
+# ==============================================================================
+
+corrections_log:
+
+  - id: CORR-01
+    defect: "Crestal thinning listed as evidence FOR compression"
+    verdict: "UNSOUND"
+    reason: "Crestal thinning is usually erosion (truncation) or reduced accommodation on a paleo-high, not compression. Truncation and thinning are different observation classes."
+    fix: "Separate B-axis (thickness) from D-axis (truncation). Compression requires measured shortening, not thin crests."
+
+  - id: CORR-02
+    defect: "'σ1 shifts to σ3' in inversion"
+    verdict: "IMPOSSIBLE AS WRITTEN"
+    reason: "Principal axes are ordered by magnitude. Axes rotate; labels exchange."
+    fix: "σ1(V) → σ1(H) and σ3(H) → σ3(V)."
+
+  - id: CORR-03
+    defect: "Cross-cutting attributed to Walther's Law"
+    verdict: "WRONG ATTRIBUTION"
+    reason: "Walther (1894) governs lateral continuity of vertically stacked conformable facies. Cross-cutting is Steno (1669)."
+    fix: "Cite Steno for REG-006. Keep Walther for facies correlation only."
+
+  - id: CORR-04
+    defect: "tan θ_app = V · tan θ_true"
+    verdict: "DIMENSIONALLY INVALID, AND WRONG OPERATOR FOR MIGRATED DATA"
+    reason: >
+      V is not a velocity here — it is the dimensionless ratio
+      v_display/v_true. Written as a velocity the equation equates a
+      dimensionless quantity to m/s. Separately, migrated data follow a
+      sin relation, not tan.
+    fix: "tan θ_app = (v_display/v_true)·tan θ_true (unmigrated) | ·sin θ_true (migrated)."
+
+  - id: CORR-05
+    defect: "±15° Coulomb deviation band presented as a hard invariant"
+    verdict: "FALSE PRECISION"
+    reason: "No source. Deviation has several legitimate causes, including block rotation that preserves pure extension."
+    fix: "Downgraded to RULE_OF_THUMB soft warning. Enumerate alternatives; never conclude 'regime changed'."
+
+  - id: CORR-06
+    defect: "'Uniform interval = eustasy'"
+    verdict: "FALSE NEGATIVE GENERATOR"
+    reason: "Uniform thickness also arises from steady supply, thermal subsidence, pure strike-slip, and post-depositional sag."
+    fix: "Eustatic test = regionally correlative surface with synchronous onlap. Not absence of thickness change."
+
+  - id: CORR-07
+    defect: "All falsifiers phrased as absence tests ('mati kalau TIADA …')"
+    verdict: "EPISTEMICALLY UNSOUND AS A KILL SET"
+    reason: "Absence tests fire on thin data as readily as on true negatives. Wiring them into `kills` rejects true hypotheses at poor data quality — the engine would be confident and wrong."
+    fix: "FALSIFIER DIRECTION RULE. Contradiction → may KILL. Deficit → UNMEASURED only, gated on coverage_fraction."
+
+  - id: CORR-08
+    defect: "Halokinesis listed inside 'Tectonic Regimes'"
+    verdict: "CATEGORY ERROR"
+    reason: "Salt does not express the regional stress field — it decouples and MASKS it. Buoyancy is not even the driver; differential loading is."
+    fix: "Moved to decoupling_mechanisms. Verdict DECOUPLED, not a regime. REG-004 → NOT_APPLICABLE where salt is in section."
+
+# ==============================================================================
+# DITEMPA BUKAN DIBERI
+# A single horizon carries a kinematic snapshot. Never a regime.
+# Dynamics is an inversion. Absence is not contradiction.
+# ==============================================================================

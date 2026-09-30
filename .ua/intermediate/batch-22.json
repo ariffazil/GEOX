@@ -1,0 +1,246 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/GEOX_ZEN_ROADMAP.md",
+      "type": "document",
+      "name": "GEOX_ZEN_ROADMAP.md",
+      "filePath": "docs/GEOX_ZEN_ROADMAP.md",
+      "summary": "markdown docs file (77 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/GLOSSARY.md",
+      "type": "document",
+      "name": "GLOSSARY.md",
+      "filePath": "docs/GLOSSARY.md",
+      "summary": "markdown docs file (14 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/GOVERNANCE.md",
+      "type": "document",
+      "name": "GOVERNANCE.md",
+      "filePath": "docs/GOVERNANCE.md",
+      "summary": "markdown docs file (32 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/HEALTHCHECK.md",
+      "type": "document",
+      "name": "HEALTHCHECK.md",
+      "filePath": "docs/HEALTHCHECK.md",
+      "summary": "markdown docs file (58 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/HOST_COMPATIBILITY_MATRIX.md",
+      "type": "document",
+      "name": "HOST_COMPATIBILITY_MATRIX.md",
+      "filePath": "docs/HOST_COMPATIBILITY_MATRIX.md",
+      "summary": "markdown docs file (27 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/MCP_APPS_READINESS.md",
+      "type": "document",
+      "name": "MCP_APPS_READINESS.md",
+      "filePath": "docs/MCP_APPS_READINESS.md",
+      "summary": "markdown docs file (50 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/MCP_TOOL_REFERENCE.md",
+      "type": "document",
+      "name": "MCP_TOOL_REFERENCE.md",
+      "filePath": "docs/MCP_TOOL_REFERENCE.md",
+      "summary": "markdown docs file (138 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/MCP_TRANSPORT_SURFACE.md",
+      "type": "document",
+      "name": "MCP_TRANSPORT_SURFACE.md",
+      "filePath": "docs/MCP_TRANSPORT_SURFACE.md",
+      "summary": "markdown docs file (339 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/MODE_PARAM_SCHEMA_GUIDE.md",
+      "type": "document",
+      "name": "MODE_PARAM_SCHEMA_GUIDE.md",
+      "filePath": "docs/MODE_PARAM_SCHEMA_GUIDE.md",
+      "summary": "markdown docs file (74 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/PHYSICS9_EARTH_WITNESS.md",
+      "type": "document",
+      "name": "PHYSICS9_EARTH_WITNESS.md",
+      "filePath": "docs/PHYSICS9_EARTH_WITNESS.md",
+      "summary": "markdown docs file (209 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/PHYSICS_9_SPEC.md",
+      "type": "document",
+      "name": "PHYSICS_9_SPEC.md",
+      "filePath": "docs/PHYSICS_9_SPEC.md",
+      "summary": "markdown docs file (40 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/POSITIONING.md",
+      "type": "document",
+      "name": "POSITIONING.md",
+      "filePath": "docs/POSITIONING.md",
+      "summary": "markdown docs file (77 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/POST_MERGE_DRIFT_AUDIT_2026-07-13.md",
+      "type": "document",
+      "name": "POST_MERGE_DRIFT_AUDIT_2026-07-13.md",
+      "filePath": "docs/POST_MERGE_DRIFT_AUDIT_2026-07-13.md",
+      "summary": "markdown docs file (44 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/PROTOCOL_CONFORMANCE.md",
+      "type": "document",
+      "name": "PROTOCOL_CONFORMANCE.md",
+      "filePath": "docs/PROTOCOL_CONFORMANCE.md",
+      "summary": "markdown docs file (23 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/QUICKSTART.md",
+      "type": "document",
+      "name": "QUICKSTART.md",
+      "filePath": "docs/QUICKSTART.md",
+      "summary": "markdown docs file (66 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/README-FULL.md",
+      "type": "document",
+      "name": "README-FULL.md",
+      "filePath": "docs/README-FULL.md",
+      "summary": "markdown docs file (196 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/README_WELL_DESK.md",
+      "type": "document",
+      "name": "README_WELL_DESK.md",
+      "filePath": "docs/README_WELL_DESK.md",
+      "summary": "markdown docs file (129 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md",
+      "type": "document",
+      "name": "RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md",
+      "filePath": "docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md",
+      "summary": "markdown docs file (61 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/RELEASE_CHECKLIST.md",
+      "type": "document",
+      "name": "RELEASE_CHECKLIST.md",
+      "filePath": "docs/RELEASE_CHECKLIST.md",
+      "summary": "markdown docs file (12 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/RUNBOOK.md",
+      "type": "document",
+      "name": "RUNBOOK.md",
+      "filePath": "docs/RUNBOOK.md",
+      "summary": "markdown docs file (164 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

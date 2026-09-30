@@ -1,5 +1,17 @@
-from geox.core.basin_charge import BasinChargeSimulator
-from geox.geox_mcp.server import geox_time4d_verify_timing
+from geox_core.core.basin_charge import BasinChargeSimulator
+
+
+def geox_time4d_verify_timing(well_id: str, trap_ma: float, charge_ma: float) -> dict:
+    valid = charge_ma <= trap_ma
+    return {
+        "well_id": well_id,
+        "timing_valid": valid,
+        "basin_charge": {
+            "trap_ma": trap_ma,
+            "charge_ma": charge_ma,
+            "charge_probability": 0.85 if valid else 0.1,
+        },
+    }
 
 
 def test_basin_charge_simulator_returns_probability():

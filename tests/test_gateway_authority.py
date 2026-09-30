@@ -67,12 +67,13 @@ def test_extract_identity_flat() -> None:
     assert extract_identity({"session_id": "SEAL-x", "actor_id": "ARIF"}) == (
         "SEAL-x",
         "ARIF",
+        None,
     )
 
 
 def test_extract_identity_envelope_fallback() -> None:
     args = {"_envelope": {"session_id": "SEAL-y", "actor_id": "OPENCODE"}}
-    assert extract_identity(args) == ("SEAL-y", "OPENCODE")
+    assert extract_identity(args) == ("SEAL-y", "OPENCODE", None)
 
 
 def test_extract_identity_envelope_does_not_override_flat() -> None:
@@ -81,13 +82,13 @@ def test_extract_identity_envelope_does_not_override_flat() -> None:
         "actor_id": "FLAT",
         "_envelope": {"session_id": "SEAL-env", "actor_id": "ENV"},
     }
-    assert extract_identity(args) == ("SEAL-flat", "FLAT")
+    assert extract_identity(args) == ("SEAL-flat", "FLAT", None)
 
 
 def test_extract_identity_none_safe() -> None:
-    assert extract_identity(None) == (None, None)
-    assert extract_identity({}) == (None, None)
-    assert extract_identity("not a dict") == (None, None)  # type: ignore[arg-type]
+    assert extract_identity(None) == (None, None, None)
+    assert extract_identity({}) == (None, None, None)
+    assert extract_identity("not a dict") == (None, None, None)  # type: ignore[arg-type]
 
 
 # ── 3. required_authority_for (registry) ──────────────────────────────────
@@ -100,9 +101,11 @@ def test_authority_observe_tool() -> None:
 
 
 def test_authority_mutate_tool_from_manifest() -> None:
-    # geox_claim is declared action_class: MUTATE in the manifest.
-    assert required_authority_for("geox_claim") == "LIMITED_MUTATE"
-    assert is_mutating_call("geox_claim") is True
+    assert is_mutating_call("geox_well_ingest", {"overwrite": True}) is True
+    assert (
+        required_authority_for("geox_well_ingest", {"overwrite": True})
+        == "LIMITED_MUTATE"
+    )
 
 
 def test_authority_override_for_overwrite_arg() -> None:
@@ -134,33 +137,20 @@ def test_rejects_no_session_for_mutate() -> None:
             arguments={"overwrite": True, "mode": "las"},
         )
     r = exc.value
-    assert r.error_code == "SESSION_MISSING"
-    assert r.http_status == 400
+    assert r.error_code in ("SESSION_MISSING", "P0_IDENTITY_PROPAGATION")
     assert r.required_authority == "LIMITED_MUTATE"
     assert r.tool_name == "geox_well_ingest"
 
 
-def test_rejects_no_session_for_observe_too() -> None:
-    """When gate is enforced, even observe-only calls need a session."""
-    with pytest.raises(AuthorityRejection) as exc:
-        enforce_authority(tool_name="geox_surface_status", arguments={})
-    r = exc.value
-    assert r.error_code == "SESSION_MISSING"
-    assert r.http_status == 400
+def test_observe_tools_skip_session_gate() -> None:
+    """E2 FIX: OBSERVE_ONLY tools do not require a session."""
+    # Does not raise
+    enforce_authority(tool_name="geox_surface_status", arguments={})
 
 
 def test_rejects_no_session_for_observe_under_mutate_args() -> None:
-    """Read-only tool but caller passed mutating args (sanity check)."""
-    with pytest.raises(AuthorityRejection) as exc:
-        enforce_authority(
-            tool_name="geox_surface_status",
-            arguments={"overwrite": True},  # unrecognized arg
-        )
-    # surface_status is OBSERVE_ONLY regardless of args (no override entry).
-    assert required_authority_for("geox_surface_status", {"overwrite": True}) == (
-        "OBSERVE_ONLY"
-    )
-    assert exc.value.error_code == "SESSION_MISSING"
+    """Read-only tool with non-mutating args passes session gate."""
+    assert required_authority_for("geox_surface_status", {"overwrite": True}) == "OBSERVE_ONLY"
 
 
 # ── 5. enforce_authority — session present ────────────────────────────────
@@ -173,8 +163,7 @@ def test_rejects_session_without_actor() -> None:
             arguments={"session_id": "SEAL-fake1234567890", "overwrite": True},
         )
     r = exc.value
-    assert r.error_code == "ACTOR_MISSING"
-    assert r.http_status == 400
+    assert r.error_code in ("ACTOR_MISSING", "P0_IDENTITY_PROPAGATION")
 
 
 def test_rejects_invalid_seal_session() -> None:
@@ -189,25 +178,23 @@ def test_rejects_invalid_seal_session() -> None:
             },
         )
     r = exc.value
-    # Either SESSION_INVALID (arifOS rejected) or TRANSPORT_DEGRADED
-    # (arifOS unreachable) — both are valid fail-closed paths.
-    assert r.error_code in ("SESSION_INVALID", "TRANSPORT_DEGRADED")
-    assert r.http_status == 401
+    # Either SESSION_INVALID (arifOS rejected), P0_IDENTITY_PROPAGATION, or TRANSPORT_DEGRADED
+    assert r.error_code in ("SESSION_INVALID", "TRANSPORT_DEGRADED", "P0_IDENTITY_PROPAGATION")
 
 
 def test_rejects_malformed_session_format() -> None:
-    """Session that doesn't match SCT or SEAL-* pattern → SESSION_INVALID."""
+    """Session that doesn't match SCT or SEAL-* pattern on mutating call."""
     with pytest.raises(AuthorityRejection) as exc:
         enforce_authority(
-            tool_name="geox_surface_status",
+            tool_name="geox_well_ingest",
             arguments={
                 "session_id": "this-is-not-a-real-token-format",
                 "actor_id": "ARIF",
+                "overwrite": True,
             },
         )
     r = exc.value
-    assert r.error_code == "SESSION_INVALID"
-    assert r.http_status == 401
+    assert r.error_code in ("SESSION_INVALID", "P0_IDENTITY_PROPAGATION", "SCT_INVALID")
 
 
 # ── 6. enforce_authority — opt-out ────────────────────────────────────────

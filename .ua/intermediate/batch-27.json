@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "document:geox-gui/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "geox-gui/README.md",
+      "summary": "markdown docs file (194 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/index.html",
+      "summary": "html markup file (9 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:geox-gui/package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "geox-gui/package.json",
+      "summary": "json config file (66 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:geox-gui/tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "geox-gui/tsconfig.json",
+      "summary": "json config file (29 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:geox-gui/tsconfig.node.json",
+      "type": "config",
+      "name": "tsconfig.node.json",
+      "filePath": "geox-gui/tsconfig.node.json",
+      "summary": "json config file (10 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

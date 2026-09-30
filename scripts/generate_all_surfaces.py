@@ -261,11 +261,25 @@ def regenerate_llms_txt(dry_run: bool) -> None:
         "prospect": "5. Prospect & Decision",
         "view": "6. Presentation",
         "research": "7. Research / Cascade Lab",
+        "seismic": "8. Seismic Sources & Traces",
+        "structural": "9. Structural Calibration",
     }
     tier_labels = {"A": "Core", "B": "Specialist", "C": "Research", "Z": "Internal"}
 
     tool_lines = []
-    for fam_key in ["evidence", "ingest", "interpret", "model", "prospect", "view", "research"]:
+    ordered_families = [
+        "evidence",
+        "ingest",
+        "interpret",
+        "model",
+        "prospect",
+        "view",
+        "research",
+        "seismic",
+        "structural",
+    ]
+    leftover_families = [f for f in family_groups if f not in ordered_families]
+    for fam_key in ordered_families + leftover_families:
         group = family_groups.get(fam_key, [])
         if not group:
             continue
@@ -414,12 +428,21 @@ def regenerate_readme_badge(dry_run: bool) -> None:
     text = path.read_text()
     original = text
 
-    # Fix badge: GEOX-NN Canonical Tools
-    text = re.sub(
-        r"GEOX-\d+\s+Canonical\s+Tools",
-        f"GEOX-{TRUTH_COUNT} Canonical Tools",
-        text,
-    )
+    # Fix badge: GEOX-NN Canonical Tools (self-heal: insert after title if absent)
+    if re.search(r"GEOX-\d+\s+Canonical\s+Tools", text):
+        text = re.sub(
+            r"GEOX-\d+\s+Canonical\s+Tools",
+            f"GEOX-{TRUTH_COUNT} Canonical Tools",
+            text,
+        )
+    else:
+        text = re.sub(
+            r"(^# .+$)",
+            rf"\1\n\n![GEOX-{TRUTH_COUNT} Canonical Tools](https://img.shields.io/badge/GEOX-{TRUTH_COUNT}_Canonical_Tools-0b7285)",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
 
     # Fix capabilities heading: Core Capabilities (N Tools)
     text = re.sub(

@@ -1,0 +1,31 @@
+# Invalid Surface Subtraction — Example
+# Demonstrates CRS mismatch that triggers SR_INV_003 VOID
+
+scenario_id: "INVALID-crs-mismatch"
+name: "Example of CRS mismatch (should be rejected)"
+
+source_state:
+  surface_id: "surface-a"
+  name: "Surface A"
+  crs:
+    crs_epsg: 4326        # WGS84 geographic
+    xy_units: "deg"       # degrees
+    z_units: "m"
+    z_convention: "positive_down"
+
+target_state:
+  surface_id: "surface-b"
+  name: "Surface B"
+  crs:
+    crs_epsg: 32650       # UTM Zone 50N
+    xy_units: "m"         # metres
+    z_units: "m"
+    z_convention: "positive_up"  # DIFFERENT from source
+
+# Expected validation result:
+# verdict: VOID
+# mismatches:
+#   - "CRS EPSG mismatch: 4326 vs 32650"
+#   - "XY units mismatch: deg vs m"
+#   - "Z convention mismatch: positive_down vs positive_up"
+# blocked_calculations: ALL

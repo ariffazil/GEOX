@@ -6,31 +6,9 @@ from __future__ import annotations
 # Phase 2 Clean Architecture (2026-06-22): 16 mode-consolidated tools
 # ═══════════════════════════════════════════════════════════════════════════════
 
-CANONICAL_PUBLIC_TOOLS: list[str] = [
-    # ── WELL DOMAIN (4 tools) ──
-    "geox_well_ingest",
-    "geox_well_qc",
-    "geox_petrophysics",
-    "geox_sequence",
-    # ── SEISMIC DOMAIN (4 tools) ──
-    "geox_seismic_ingest",
-    "geox_seismic_compute",
-    "geox_seismic_interpret",
-    "geox_vision",
-    # ── MODEL DOMAIN (2 tools) ──
-    "geox_subsurface_model",
-    "geox_geomechanics",
-    # ── BASIN DOMAIN (2 tools) ──
-    "geox_basin",
-    "geox_deep_time_state",
-    # ── GOVERNANCE DOMAIN (2 tools) ──
-    "geox_claim",
-    "geox_evidence",
-    # ── EVALUATION DOMAIN (1 tool) ──
-    "geox_prospect",
-    # ── DOCTRINE DOMAIN (1 tool) ──
-    "geox_doctrine",
-]
+from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS as _SOT_PUBLIC_TOOLS
+
+CANONICAL_PUBLIC_TOOLS: list[str] = list(_SOT_PUBLIC_TOOLS)
 
 # Backward-compat names (Phase 2 transition — removed in Phase 4)
 # These are accepted by the middleware for backward compat but NOT exposed

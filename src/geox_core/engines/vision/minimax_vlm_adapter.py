@@ -136,8 +136,6 @@ Return STRICT JSON with this exact shape (no markdown fences, no prose before/af
       "type": "normal" | "reverse" | "strike-slip" | "wrench" | "unknown",
       "lateral_extent_inlines": [start, end],
       "twt_range_ms": [min, max],
-      "strike_dip_deg": null_or_0_to_90,
-      "throw_ms": null_or_number,
       "confidence": 0.0-0.90,
       "notes": "optional"
     }}
@@ -372,8 +370,14 @@ class MiniMaxVLMAdapter:
                         type=f.get("type", "unknown"),
                         lateral_extent_inlines=tuple(f["lateral_extent_inlines"]),
                         twt_range_ms=tuple(f["twt_range_ms"]),
-                        strike_dip_deg=f.get("strike_dip_deg"),
-                        throw_ms=f.get("throw_ms"),
+                        # strike_dip_deg / throw_ms are deliberately NOT populated
+                        # from VLM output. A vision-language model cannot measure a
+                        # dip in degrees or a throw in milliseconds from a picture;
+                        # soliciting them produced hallucinated geometry that was
+                        # piped into K-DIP / K-THROW / K-EXT-DIP. Both fields stay
+                        # None here. Deterministic lanes remain their only
+                        # producers: seismic_classical.structure_tensor and
+                        # structure_gates.calibration_derive.
                         confidence=float(f.get("confidence", 0.4)),
                         notes=f.get("notes"),
                     )

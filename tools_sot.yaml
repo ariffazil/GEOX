@@ -1,15 +1,15 @@
 organ: GEOX
-version: 2026.09.22
+version: 2026.09.30
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 31
-regenerated: '2026-09-22T07:36:19.682433+00:00'
+public_count: 26
+regenerated: '2026-09-30T15:51:06.827312+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
-  A: 13
+  A: 14
   B: 11
-  C: 7
+  C: 1
 tools:
 - name: geox_basin
   domain: earth.basin
@@ -120,95 +120,18 @@ tools:
     read_only: true
     destructive: false
     idempotent: true
-- name: geox_glof_cascade_initialize
+- name: geox_glof
   domain: earth.hazard
   axis: compute
   lane: reasoning
   family: research
   tier: C
   access: public
-  description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6
-    zen-33) or defaults to himalayan_glof_33. Returns session state_id.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_inverse
-  domain: earth.hazard
-  axis: reason
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Bayesian grid-search inference on 33D posterior from wave observations
-    (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_mcmc_inverse
-  domain: earth.hazard
-  axis: reason
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings
-    MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS,
-    accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_metabolize
-  domain: earth.hazard
-  axis: reason
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score,
-    phase transitions, cycle_id.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_phase
-  domain: earth.hazard
-  axis: reason
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict
-    + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_propagate
-  domain: earth.hazard
-  axis: compute
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach
-    to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns
-    time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
-  annotations:
-    read_only: true
-    destructive: false
-    idempotent: true
-- name: geox_glof_cascade_step
-  domain: earth.hazard
-  axis: compute
-  lane: reasoning
-  family: research
-  tier: C
-  access: public
-  description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics
-    to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+  description: 'Unified GLOF multi-phase cascade simulation. Multi-phase physics:
+    solid dam → granular debris → liquid flood (Mohr-Coulomb + Saint-Venant + 33D
+    zen-33 state). Modes: run (full cascade in one call), inverse (Bayesian grid-search),
+    mcmc (MCMC posterior), propagate (Saint-Venant 1D), phase (yield surface debug).
+    Replaces 7 individual geox_glof_cascade_* tools (333 ARCHITECT 2026-09-19).'
   annotations:
     read_only: true
     destructive: false
@@ -371,6 +294,19 @@ tools:
   access: public
   description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
     stac_discover.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_surface_status
+  domain: earth.registry
+  axis: compute
+  lane: compute
+  family: view
+  tier: A
+  access: public
+  description: 'Canonical registry probe: public surface truth (count, canonical_tools,
+    verdict). Self-witness for surface SOT.'
   annotations:
     read_only: true
     destructive: false

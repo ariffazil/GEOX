@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/orchestration/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/orchestration/agent-card.json",
+      "summary": "json config file (94 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/orchestration/forge_geox_mcp_app.md",
+      "type": "document",
+      "name": "forge_geox_mcp_app.md",
+      "filePath": "skills/orchestration/forge_geox_mcp_app.md",
+      "summary": "markdown docs file (218 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:skills/orchestration/orch-multi-agent-decomposition.md",
+      "type": "document",
+      "name": "orch-multi-agent-decomposition.md",
+      "filePath": "skills/orchestration/orch-multi-agent-decomposition.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/orchestration/orch-void-and-data-denial.md",
+      "type": "document",
+      "name": "orch-void-and-data-denial.md",
+      "filePath": "skills/orchestration/orch-void-and-data-denial.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/orchestration/orch-world-model-sync.md",
+      "type": "document",
+      "name": "orch-world-model-sync.md",
+      "filePath": "skills/orchestration/orch-world-model-sync.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

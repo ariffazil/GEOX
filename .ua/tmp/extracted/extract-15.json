@@ -1,0 +1,409 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "results": [
+    {
+      "path": "contracts/GEOX_EMC.mcp.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 446,
+      "nonEmptyLines": 418,
+      "sections": [
+        {
+          "heading": "contract_version",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "contract_date",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "engine_path",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "gate_path",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "mcp_surface_version_target",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "domain_registration",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "integration",
+          "level": 1,
+          "line": 401
+        },
+        {
+          "heading": "honest_debts",
+          "level": 1,
+          "line": 428
+        },
+        {
+          "heading": "floor_alignment",
+          "level": 1,
+          "line": 438
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "contracts/IMAGE_METABOLIZER_DESIGN.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 405,
+      "nonEmptyLines": 335,
+      "sections": [
+        {
+          "heading": "GEOX Image Metabolizer — Tool Design",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. THE THREE DIRECTIONS",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "2. GENERATE — `geox_render_*` Tools (P0)",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "2.1 `geox_render_well_panel`",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "2.2 `geox_render_seismic_section`",
+          "level": 3,
+          "line": 97
+        },
+        {
+          "heading": "2.3 `geox_render_attribute_map`",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "2.4 `geox_render_comparison`",
+          "level": 3,
+          "line": 201
+        },
+        {
+          "heading": "3. CONSUME — `geox_vision_*` Tools (BUILT ✅)",
+          "level": 2,
+          "line": 218
+        },
+        {
+          "heading": "4. METABOLIZE — `geox_export_*` Tools (P1)",
+          "level": 2,
+          "line": 232
+        },
+        {
+          "heading": "4.1 `geox_export_annotated_image`",
+          "level": 3,
+          "line": 234
+        },
+        {
+          "heading": "4.2 `geox_export_comparison`",
+          "level": 3,
+          "line": 278
+        },
+        {
+          "heading": "5. METADATA EMBEDDING",
+          "level": 2,
+          "line": 284
+        },
+        {
+          "heading": "PNG tEXt Chunks",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "Sidecar JSON (Optional)",
+          "level": 3,
+          "line": 303
+        },
+        {
+          "heading": "6. INTEGRATION WITH MCP APPS",
+          "level": 2,
+          "line": 321
+        },
+        {
+          "heading": "Well-Desk Integration",
+          "level": 3,
+          "line": 323
+        },
+        {
+          "heading": "Host Integration",
+          "level": 3,
+          "line": 333
+        },
+        {
+          "heading": "7. IMPLEMENTATION PLAN",
+          "level": 2,
+          "line": 357
+        },
+        {
+          "heading": "P0 (This Week)",
+          "level": 3,
+          "line": 359
+        },
+        {
+          "heading": "P1 (Next 2 Weeks)",
+          "level": 3,
+          "line": 365
+        },
+        {
+          "heading": "P2 (Next Month)",
+          "level": 3,
+          "line": 371
+        },
+        {
+          "heading": "8. EXTERNAL COMPARISON",
+          "level": 2,
+          "line": 378
+        },
+        {
+          "heading": "9. CONFIDENCE",
+          "level": 2,
+          "line": 392
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 23
+      }
+    },
+    {
+      "path": "contracts/claim_state_machine.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 179,
+      "nonEmptyLines": 153,
+      "sections": [
+        {
+          "heading": "spec_version",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "states",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "transitions",
+          "level": 1,
+          "line": 88
+        },
+        {
+          "heading": "default",
+          "level": 1,
+          "line": 129
+        },
+        {
+          "heading": "error_codes",
+          "level": 1,
+          "line": 138
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "contracts/mcp_surface.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 113,
+      "nonEmptyLines": 109,
+      "sections": [
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "kind",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "owner_repo",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "status",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "regenerated_by",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "runtime_surface",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "authority",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "canonical_tool_count",
+          "level": 1,
+          "line": 58
+        },
+        {
+          "heading": "internal_tool_count",
+          "level": 1,
+          "line": 59
+        },
+        {
+          "heading": "canonical_tools",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "mcp_conformance",
+          "level": 1,
+          "line": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "contracts/tools.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 147,
+      "nonEmptyLines": 146,
+      "sections": [
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "authority",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "mcp_transport",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "mcp_endpoints",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "health_endpoint",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "canonical_tool_count",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "contract_epoch",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "source_of_truth",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "floor_enforcement",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "physics_boundary",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    }
+  ]
+}

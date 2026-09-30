@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "file:geox-gui/public/malay_basin_workflow.html",
+      "type": "file",
+      "name": "malay_basin_workflow.html",
+      "filePath": "geox-gui/public/malay_basin_workflow.html",
+      "summary": "html markup file (257 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/manifest-e2e.json",
+      "type": "config",
+      "name": "manifest-e2e.json",
+      "filePath": "geox-gui/public/manifest-e2e.json",
+      "summary": "json config file (43 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/public/manifesto.html",
+      "type": "file",
+      "name": "manifesto.html",
+      "filePath": "geox-gui/public/manifesto.html",
+      "summary": "html markup file (266 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/webmcp.manifest.json",
+      "type": "config",
+      "name": "webmcp.manifest.json",
+      "filePath": "geox-gui/public/webmcp.manifest.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

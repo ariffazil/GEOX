@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
@@ -30,7 +31,7 @@ from geox_core.schemas.geox_1d_mcp import (
 )
 
 # Receipt store (filesystem EGS lite — not VAULT999 seal)
-_EGS_DIR = Path("/root/geox/data/egs/receipts")
+_EGS_DIR = Path(os.environ.get("GEOX_EGS_DIR", "/tmp/geox/data/egs/receipts"))
 MethodArg = Literal["linear", "polynomial", "vo_k", "layer_cake"]
 
 

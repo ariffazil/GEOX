@@ -1,0 +1,192 @@
+# ==============================================================================
+# structural_restoration/invariants.yaml
+# GEOX Structural Restoration Invariants — F1 Layer
+# Beneath tectonic invariants (F0 = tectonic_invariants.yaml)
+# Above operational invariants (F2 = geox_invariants.yaml)
+#
+# Forged: 2026-09-14
+# Source: Dr Shahram 3D Restoration Method in NW Sabah
+#         + Kinabalu Basin tectonic reasoning
+# Doctrine: Geometry, chronology, physics, uncertainty, provenance
+#            must remain mutually consistent.
+# ==============================================================================
+
+meta:
+  artifact_id: geox_structural_restoration_invariants_v1
+  version: "1.0.0"
+  forged_at: "2026-09-14T00:00:00+00:00"
+  author: "ariffazil"
+  space: "GEOX Structural Restoration"
+  layer: "F1 — beneath tectonic F0, above operational F2"
+  doctrine: >
+    A restoration is admissible only when geometry, chronology,
+    physics, uncertainty and provenance remain mutually consistent.
+    A visually plausible map is not evidence of a valid restoration.
+  seal: "DITEMPA BUKAN DIBERI"
+
+# ==============================================================================
+# STRUCTURAL RESTORATION INVARIANTS (SR_INV)
+# These govern how GEOX computes restoration products.
+# Tectonic interpretation is governed by F0 (TECT-001–012).
+# Operational behaviour is governed by F2 (geox_invariants.yaml).
+# ==============================================================================
+
+structural_restoration_invariants:
+
+  SR_INV_001:
+    name: "Immutable Source Geometry"
+    rule: "Never overwrite source surfaces, faults, or vertex coordinates."
+    on_violation: VOID
+    epistemic_tag: SPEC
+    floor_ref: [F1, F2]
+    eureka_ref: "EUREKA-10"
+    implementation: "All transformations create new immutable scenario-derived objects"
+
+  SR_INV_002:
+    name: "Explicit Lineage"
+    rule: "Every output must reference input object IDs and restoration scenario ID."
+    on_violation: HOLD
+    epistemic_tag: DER
+    floor_ref: [F1, F2]
+
+  SR_INV_003:
+    name: "Consistent Coordinate System"
+    rule: "Surface subtraction requires matching CRS, XY units, Z units, datum and polarity."
+    on_violation: VOID
+    epistemic_tag: SPEC
+    floor_ref: [F1, F2]
+    implementation: "validate_restoration_inputs must check all six before computation"
+
+  SR_INV_004:
+    name: "Explicit Restoration Ages"
+    rule: "Restoration ages and stratigraphic ordering must be explicit."
+    on_violation: HOLD
+    epistemic_tag: DER
+    floor_ref: [F1, F2]
+
+  SR_INV_005:
+    name: "Distinct Properties"
+    rule: "Accommodation, sediment thickness and basement subsidence are distinct properties."
+    on_violation: VOID
+    epistemic_tag: SPEC
+    floor_ref: [F2, F9]
+    eureka_ref: "EUREKA-02"
+    note: "Sediment thickness alone is not accommodation. Accommodation contains combined consequences of subsidence, deposition, compaction, erosion, water depth and structural deformation."
+
+  SR_INV_006:
+    name: "Safe Division"
+    rule: "Division requires a positive accommodation denominator above numerical tolerance."
+    on_violation: MASK_AND_REPORT
+    epistemic_tag: DER
+    floor_ref: [F2]
+    implementation: "Mask invalid cells, report count, do not crash"
+
+  SR_INV_007:
+    name: "Fill Ratio Diagnostic Guard"
+    rule: "Fill ratio outside the expected range is an anomaly, not an automatic tectonic interpretation."
+    on_violation: DIAGNOSTIC_REVIEW
+    epistemic_tag: INT
+    floor_ref: [F2, F9]
+    eureka_ref: "EUREKA-03"
+    note: >
+      fill_ratio > 1 triggers DIAGNOSTIC_REVIEW.
+      It NEVER returns FAULT_ACTIVITY_CONFIRMED without independent structural evidence.
+      See FILL_RATIO_GT1_CHECKLIST in event_schema.py for the10-item diagnostic sequence.
+
+  SR_INV_008:
+    name: "Fault Generation from Relational Evidence"
+    rule: "Fault generation cannot be assigned from azimuth alone."
+    on_violation: HOLD
+    epistemic_tag: INT
+    floor_ref: [F2, F9]
+    eureka_ref: "EUREKA-04"
+    required_evidence:
+      - "cross-cutting relationships"
+      - "termination against older structures"
+      - "bending along basement trends"
+      - "segmentation and linkage patterns"
+      - "displacement changes along strike"
+      - "agreement with independent stress indicators"
+
+  SR_INV_009:
+    name: "Compaction Scenario Envelope"
+    rule: "Compaction extrapolation must produce low, reference and high scenarios."
+    on_violation: HOLD
+    epistemic_tag: DER
+    floor_ref: [F2]
+    eureka_ref: "EUREKA-07"
+    note: "Small porosity differences integrated over thick sediment columns create material restoration differences"
+
+  SR_INV_010:
+    name: "Distinguishable Parameter Classes"
+    rule: "Measured, published, extrapolated and assumed parameters must remain distinguishable."
+    on_violation: VOID
+    epistemic_tag: SPEC
+    floor_ref: [F2, F9]
+    eureka_ref: "EUREKA-07"
+    classes: ["MEASURED", "PUBLISHED", "EXTRAPOLATED", "ASSUMED"]
+
+  SR_INV_011:
+    name: "Scenario Parameters, Not Basin Constants"
+    rule: "Distance-based uncertainty parameters are scenario inputs, never basin constants."
+    on_violation: HOLD
+    epistemic_tag: DER
+    floor_ref: [F2]
+    eureka_ref: "EUREKA-08"
+    note: "10 km and 300 m were modelling assumptions in Dr Shahram's exercise, not NW Sabah universal constants"
+
+  SR_INV_012:
+    name: "Declared Facies Simplification"
+    rule: "Uniform lithology or facies behaviour must be declared."
+    on_violation: PARTIAL
+    epistemic_tag: DER
+    floor_ref: [F2]
+    eureka_ref: "EUREKA-09"
+    label: "UNIFORM_LITHOLOGY_ASSUMPTION"
+
+  SR_INV_013:
+    name: "Mandatory Uncertainty and Provenance"
+    rule: "All derived maps must carry uncertainty and provenance metadata."
+    on_violation: HOLD
+    epistemic_tag: DER
+    floor_ref: [F2]
+
+  SR_INV_014:
+    name: "Independent Structural Validation"
+    rule: "Independent geological evidence must be used for structural validation."
+    on_violation: PARTIAL
+    epistemic_tag: INT
+    floor_ref: [F2, F9]
+    eureka_ref: "EUREKA-06"
+    note: "Stress orientation is a QC constraint, not a forced answer"
+
+  SR_INV_015:
+    name: "Resolution Bound"
+    rule: "No interpretation may exceed the resolution and support of its input data."
+    on_violation: HOLD
+    epistemic_tag: INT
+    floor_ref: [F2, F9]
+
+# ==============================================================================
+# RELATIONSHIP TO F0 AND F2
+#
+# F0: tectonic_invariants.yaml (TECT-001–012)
+#     → governs tectonic reasoning (observation ≠ explanation)
+#
+# F1: THIS FILE (SR_INV_001–015)
+#     → governs restoration computation (geometry consistency)
+#
+# F2: geox_invariants.yaml (PI/EI/CG/OI)
+#     → governs operational behaviour (system invariants)
+#
+# F0 constrains F1: restoration products are observations (TECT-001),
+#     not explanations (TECT-001), and support multiple hypotheses (TECT-007).
+# F1 constrains F2: restoration outputs must be version-controlled (OI-01),
+#     epistemically tagged (EI-01), and carry uncertainty (SR_INV_013).
+# ==============================================================================
+
+# ==============================================================================
+# DITEMPA BUKAN DIBERI — Forged, Not Given
+# Geometry, chronology, physics, uncertainty, provenance.
+# All five must hold. One missing = inadmissible.
+# ==============================================================================

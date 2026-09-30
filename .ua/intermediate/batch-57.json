@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:skills/water/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/water/agent-card.json",
+      "summary": "json config file (48 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/water/flood_model.md",
+      "type": "document",
+      "name": "flood_model.md",
+      "filePath": "skills/water/flood_model.md",
+      "summary": "markdown docs file (72 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/water/water-floodplain-and-flow.md",
+      "type": "document",
+      "name": "water-floodplain-and-flow.md",
+      "filePath": "skills/water/water-floodplain-and-flow.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/water/water-hydrology-basics.md",
+      "type": "document",
+      "name": "water-hydrology-basics.md",
+      "filePath": "skills/water/water-hydrology-basics.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:skills/water/water-maritime-state.md",
+      "type": "document",
+      "name": "water-maritime-state.md",
+      "filePath": "skills/water/water-maritime-state.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

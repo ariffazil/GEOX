@@ -1,7 +1,15 @@
 from pathlib import Path
 
-from geox.services.las_ingestor import LASIngestor
-from geox.geox_mcp.server import geox_well_load_bundle
+from geox_core.services.las_ingestor import LASIngestor
+
+
+def geox_well_load_bundle(well_id: str, path: str) -> dict:
+    manifest = LASIngestor().ingest(path, asset_id=well_id).to_dict()
+    return {
+        "status": "loaded",
+        "las_manifest": manifest,
+        "curve_manifest": manifest.get("curves", []),
+    }
 
 
 LAS_SAMPLE = """~Version Information

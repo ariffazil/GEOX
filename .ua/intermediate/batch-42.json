@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/structural_restoration/examples/fill_ratio_gt_one_diagnosis.yaml",
+      "type": "config",
+      "name": "fill_ratio_gt_one_diagnosis.yaml",
+      "filePath": "resources/structural_restoration/examples/fill_ratio_gt_one_diagnosis.yaml",
+      "summary": "yaml config file (48 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/structural_restoration/examples/invalid_surface_subtraction.yaml",
+      "type": "config",
+      "name": "invalid_surface_subtraction.yaml",
+      "filePath": "resources/structural_restoration/examples/invalid_surface_subtraction.yaml",
+      "summary": "yaml config file (27 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/structural_restoration/examples/uncertainty_scenarios.yaml",
+      "type": "config",
+      "name": "uncertainty_scenarios.yaml",
+      "filePath": "resources/structural_restoration/examples/uncertainty_scenarios.yaml",
+      "summary": "yaml config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/structural_restoration/examples/valid_restoration_scenario.yaml",
+      "type": "config",
+      "name": "valid_restoration_scenario.yaml",
+      "filePath": "resources/structural_restoration/examples/valid_restoration_scenario.yaml",
+      "summary": "yaml config file (63 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

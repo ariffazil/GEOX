@@ -113,6 +113,37 @@ async def geox_petrophysics(
     CLAIM (runtime): well_id is a single string, not a multi-well array.
     For exploratory Archie/Vsh/phi on curves without evidence store, use lem_inference.
     """
+    # F2 PATCH (2026-09-18 · 333-AGI): mode-requirements validator.
+    # Previously the signature advertised params (well_id, curves, depth_m, ...)
+    # that were silently dropped when mode="generate" (the default). Now we
+    # validate mode-vs-required-params BEFORE any work, and emit a single
+    # explicit INVALID listing what's missing — no silent param drops.
+    _MODE_REQUIREMENTS: dict[str, tuple[str, ...]] = {
+        "generate": ("target_class", "evidence_refs"),
+        "verify": ("candidate_ref", "domain"),
+        "lem_inference": ("well_id", "curves", "depth_m"),
+        "stoip_feed": ("cell_states",),
+        "well_curves": ("well_id", "curves", "depth_m"),
+        "causal_closure": ("well_id", "curves", "depth_m", "stratigraphic_tops"),
+        "sv_integration": ("depth_m", "rhob_curve_g_cm3"),
+        "multi_mineral": ("mineral_names",),
+        "multi_mineral_zone": ("mineral_names",),
+    }
+    _required = _MODE_REQUIREMENTS.get(mode)
+    if _required is None:
+        return {
+            "status": "INVALID",
+            "errors": [f"unknown mode={mode!r}. Valid: {', '.join(sorted(_MODE_REQUIREMENTS))}"],
+        }
+    _missing = [n for n in _required if locals().get(n) is None]
+    if _missing:
+        return {
+            "status": "INVALID",
+            "mode": mode,
+            "errors": [f"mode={mode!r} requires: {', '.join(_required)}. Missing: {', '.join(_missing)}"],
+            "_mode_requirements_satisfied": False,
+        }
+
     if mode == "lem_inference":
         if not well_id or not curves or not depth_m:
             return {"status": "INVALID", "errors": ["well_id, curves, and depth_m required for lem_inference mode"]}

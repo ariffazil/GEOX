@@ -1,0 +1,3014 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_mcp/tools/collision_zone.py",
+      "type": "file",
+      "name": "collision_zone.py",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "summary": "Defines 7 function(s); 2 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:_accommodation",
+      "type": "function",
+      "name": "_accommodation",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        68,
+        73
+      ],
+      "summary": "_accommodation(b, dur_ma) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:_mass",
+      "type": "function",
+      "name": "_mass",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        76,
+        80
+      ],
+      "summary": "_mass(b, dur_ma, bypass) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:_signature",
+      "type": "function",
+      "name": "_signature",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        83,
+        88
+      ],
+      "summary": "_signature(ar, lr) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:_bifurcate",
+      "type": "function",
+      "name": "_bifurcate",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        91,
+        94
+      ],
+      "summary": "_bifurcate(r, a, b) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:_eurekas",
+      "type": "function",
+      "name": "_eurekas",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        97,
+        111
+      ],
+      "summary": "_eurekas(r) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:compute_collision",
+      "type": "function",
+      "name": "compute_collision",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        114,
+        210
+      ],
+      "summary": "compute_collision(domain_a, domain_b, suture_name, duration_ma, bypass_fraction) — 96 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/collision_zone.py:compute_collision_chronology",
+      "type": "function",
+      "name": "compute_collision_chronology",
+      "filePath": "src/geox_mcp/tools/collision_zone.py",
+      "lineRange": [
+        213,
+        232
+      ],
+      "summary": "compute_collision_chronology(events) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/compat.py",
+      "type": "file",
+      "name": "compat.py",
+      "filePath": "src/geox_mcp/tools/compat.py",
+      "summary": "Defines 70 function(s); exports 70 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/contradiction_scan.py",
+      "type": "file",
+      "name": "contradiction_scan.py",
+      "filePath": "src/geox_mcp/tools/contradiction_scan.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contradiction_scan.py:_classify_contradiction",
+      "type": "function",
+      "name": "_classify_contradiction",
+      "filePath": "src/geox_mcp/tools/contradiction_scan.py",
+      "lineRange": [
+        39,
+        101
+      ],
+      "summary": "_classify_contradiction(claim_a, claim_b) — 62 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contradiction_scan.py:_build_record",
+      "type": "function",
+      "name": "_build_record",
+      "filePath": "src/geox_mcp/tools/contradiction_scan.py",
+      "lineRange": [
+        104,
+        146
+      ],
+      "summary": "_build_record(claim_a, claim_b, contradiction_type, reason, session_id) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contradiction_scan.py:geox_contradiction_scan",
+      "type": "function",
+      "name": "geox_contradiction_scan",
+      "filePath": "src/geox_mcp/tools/contradiction_scan.py",
+      "lineRange": [
+        149,
+        231
+      ],
+      "summary": "geox_contradiction_scan(claims, mode, session_id, actor_id) — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/contrast_detect.py",
+      "type": "file",
+      "name": "contrast_detect.py",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "summary": "Defines 10 function(s); 6 class(es); exports 16 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:compute_contrast",
+      "type": "function",
+      "name": "compute_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        131,
+        165
+      ],
+      "summary": "compute_contrast(predicted, observed, threshold, normalize) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:classify_severity",
+      "type": "function",
+      "name": "classify_severity",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        168,
+        188
+      ],
+      "summary": "classify_severity(contrast, threshold) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:detect_mass_contrast",
+      "type": "function",
+      "name": "detect_mass_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        191,
+        265
+      ],
+      "summary": "detect_mass_contrast(sediment_production, sediment_accumulation, erosion_estimate, threshold) — 74 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:detect_energy_contrast",
+      "type": "function",
+      "name": "detect_energy_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        268,
+        346
+      ],
+      "summary": "detect_energy_contrast(predicted_stress, observed_stress, predicted_temperature, observed_temperature, threshold) — 78 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:detect_time_contrast",
+      "type": "function",
+      "name": "detect_time_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        349,
+        427
+      ],
+      "summary": "detect_time_contrast(expected_age_ma, measured_age_ma, uncertainty_ma, threshold) — 78 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:detect_absence_contrast",
+      "type": "function",
+      "name": "detect_absence_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        430,
+        516
+      ],
+      "summary": "detect_absence_contrast(expected_record_thickness, observed_record_thickness, expected_time_span_ma, observed_time_span_ma, threshold) — 86 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:audit_dimensional_consistency",
+      "type": "function",
+      "name": "audit_dimensional_consistency",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        524,
+        624
+      ],
+      "summary": "audit_dimensional_consistency(contrasts) — 100 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:_resolve_scalar_or_p50",
+      "type": "function",
+      "name": "_resolve_scalar_or_p50",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        632,
+        650
+      ],
+      "summary": "_resolve_scalar_or_p50(scalar, dist) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:_distribution_spread_ratio",
+      "type": "function",
+      "name": "_distribution_spread_ratio",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        653,
+        658
+      ],
+      "summary": "_distribution_spread_ratio(dist) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_detect.py:contrast_detect",
+      "type": "function",
+      "name": "contrast_detect",
+      "filePath": "src/geox_mcp/tools/contrast_detect.py",
+      "lineRange": [
+        661,
+        836
+      ],
+      "summary": "contrast_detect(dimension, mass_predicted, mass_observed, energy_predicted_stress, energy_observed_stress, energy_predicted_temp, energy_observed_temp, time_expected_ma, time_measured_ma, absence_expected_thickness, absence_observed_thickness, absence_expected_timespan, absence_observed_timespan, threshold, mass_predicted_dist, mass_observed_dist, energy_predicted_temp_dist, energy_observed_temp_dist, time_expected_dist, time_measured_dist, confidence_index, data_quality) — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "type": "file",
+      "name": "contrast_metabolize.py",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage1_isolate_contrast",
+      "type": "function",
+      "name": "_stage1_isolate_contrast",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "lineRange": [
+        49,
+        112
+      ],
+      "summary": "_stage1_isolate_contrast(impedance, depth_m, sensitivity) — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage2_measure",
+      "type": "function",
+      "name": "_stage2_measure",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "lineRange": [
+        120,
+        178
+      ],
+      "summary": "_stage2_measure(impedance, depth_m, anomalies, vp_default, vs_default, rho_default) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage3_classify",
+      "type": "function",
+      "name": "_stage3_classify",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "lineRange": [
+        186,
+        288
+      ],
+      "summary": "_stage3_classify(anomalies, measurements, hypothesis_count) — 102 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_metabolize.py:_generate_synthetic_profile",
+      "type": "function",
+      "name": "_generate_synthetic_profile",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "lineRange": [
+        296,
+        322
+      ],
+      "summary": "_generate_synthetic_profile(depth_max_m, n_samples, seed) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_metabolize.py:geox_contrast_metabolize",
+      "type": "function",
+      "name": "geox_contrast_metabolize",
+      "filePath": "src/geox_mcp/tools/contrast_metabolize.py",
+      "lineRange": [
+        330,
+        462
+      ],
+      "summary": "geox_contrast_metabolize(mode, impedance_profile, depth_profile, segy_path, inline_range, xline_range, sensitivity, hypothesis_count, stages, session_id, actor_id) — 132 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/contrast_views.py",
+      "type": "file",
+      "name": "contrast_views.py",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "summary": "Defines 13 function(s); 1 class(es); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_load_raster",
+      "type": "function",
+      "name": "_load_raster",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        105,
+        133
+      ],
+      "summary": "_load_raster(source) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_amplitude_envelope",
+      "type": "function",
+      "name": "_amplitude_envelope",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        141,
+        149
+      ],
+      "summary": "_amplitude_envelope(img) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_edge_map",
+      "type": "function",
+      "name": "_edge_map",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        152,
+        162
+      ],
+      "summary": "_edge_map(img, sigma) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_texture_energy",
+      "type": "function",
+      "name": "_texture_energy",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        165,
+        177
+      ],
+      "summary": "_texture_energy(img, window) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_horizontal_gradient",
+      "type": "function",
+      "name": "_horizontal_gradient",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        180,
+        183
+      ],
+      "summary": "_horizontal_gradient(img, sigma) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_vertical_gradient",
+      "type": "function",
+      "name": "_vertical_gradient",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        186,
+        189
+      ],
+      "summary": "_vertical_gradient(img, sigma) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_local_dip",
+      "type": "function",
+      "name": "_local_dip",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        192,
+        200
+      ],
+      "summary": "_local_dip(img, sigma, smooth_sigma) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_gabor_kernel",
+      "type": "function",
+      "name": "_gabor_kernel",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        203,
+        216
+      ],
+      "summary": "_gabor_kernel(wavelength, sigma) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_phase_symmetry",
+      "type": "function",
+      "name": "_phase_symmetry",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        219,
+        233
+      ],
+      "summary": "_phase_symmetry(img, sigma, wavelength) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_frequency_content",
+      "type": "function",
+      "name": "_frequency_content",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        236,
+        273
+      ],
+      "summary": "_frequency_content(img, window) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_ac_risk_heatmap",
+      "type": "function",
+      "name": "_ac_risk_heatmap",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        276,
+        329
+      ],
+      "summary": "_ac_risk_heatmap(img, sigma, window) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:_downsample_for_thumbnail",
+      "type": "function",
+      "name": "_downsample_for_thumbnail",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        383,
+        391
+      ],
+      "summary": "_downsample_for_thumbnail(arr, max_dim) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/contrast_views.py:geox_contrast_views",
+      "type": "function",
+      "name": "geox_contrast_views",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        394,
+        683
+      ],
+      "summary": "geox_contrast_views(source, modes, edge_sigma, texture_window, image_provenance, basin_context) — 289 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/contrast_views.py:AttributeImage",
+      "type": "class",
+      "name": "AttributeImage",
+      "filePath": "src/geox_mcp/tools/contrast_views.py",
+      "lineRange": [
+        351,
+        380
+      ],
+      "summary": "Class AttributeImage with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "type": "file",
+      "name": "crustal_domain_classify.py",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "summary": "Defines 2 function(s); 4 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/crustal_domain_classify.py:_observation_hash",
+      "type": "function",
+      "name": "_observation_hash",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "lineRange": [
+        232,
+        248
+      ],
+      "summary": "_observation_hash(cells) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/crustal_domain_classify.py:geox_crustal_domain_classify",
+      "type": "function",
+      "name": "geox_crustal_domain_classify",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "lineRange": [
+        256,
+        318
+      ],
+      "summary": "geox_crustal_domain_classify(request) — 62 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustCellObservation",
+      "type": "class",
+      "name": "CrustCellObservation",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "lineRange": [
+        89,
+        150
+      ],
+      "summary": "Class CrustCellObservation with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustDomainRequest",
+      "type": "class",
+      "name": "CrustDomainRequest",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "lineRange": [
+        153,
+        174
+      ],
+      "summary": "Class CrustDomainRequest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustDomainMap",
+      "type": "class",
+      "name": "CrustDomainMap",
+      "filePath": "src/geox_mcp/tools/crustal_domain_classify.py",
+      "lineRange": [
+        195,
+        224
+      ],
+      "summary": "Class CrustDomainMap with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/data.py",
+      "type": "file",
+      "name": "data.py",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:_safe_filename",
+      "type": "function",
+      "name": "_safe_filename",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        33,
+        42
+      ],
+      "summary": "_safe_filename(well_id) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:_make_metabolic_return",
+      "type": "function",
+      "name": "_make_metabolic_return",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        45,
+        76
+      ],
+      "summary": "_make_metabolic_return(source_crs, depth_datum) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:geox_data_ingest_bundle",
+      "type": "function",
+      "name": "geox_data_ingest_bundle",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        79,
+        851
+      ],
+      "summary": "geox_data_ingest_bundle(source_uri, source_type, well_id, standardize_curves, normalize_units, content_base64, filename, target_dir, overwrite, batch_mode, artifact_refs, qc_strict, source_crs, depth_datum) — 772 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:geox_task_ingest_las_batch",
+      "type": "function",
+      "name": "geox_task_ingest_las_batch",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        859,
+        872
+      ],
+      "summary": "geox_task_ingest_las_batch(artifact_refs, qc_strict, standardize_curves, normalize_units) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:geox_evidence_discover",
+      "type": "function",
+      "name": "geox_evidence_discover",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        875,
+        975
+      ],
+      "summary": "geox_evidence_discover(query, scope, permission_level) — 100 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/data.py:geox_report_to_workflow",
+      "type": "function",
+      "name": "geox_report_to_workflow",
+      "filePath": "src/geox_mcp/tools/data.py",
+      "lineRange": [
+        978,
+        1078
+      ],
+      "summary": "geox_report_to_workflow(report_ref, intent) — 100 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/dde_reason.py",
+      "type": "file",
+      "name": "dde_reason.py",
+      "filePath": "src/geox_mcp/tools/dde_reason.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/dde_reason.py:_cache_key",
+      "type": "function",
+      "name": "_cache_key",
+      "filePath": "src/geox_mcp/tools/dde_reason.py",
+      "lineRange": [
+        30,
+        32
+      ],
+      "summary": "_cache_key() — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/dde_reason.py:_cache_load",
+      "type": "function",
+      "name": "_cache_load",
+      "filePath": "src/geox_mcp/tools/dde_reason.py",
+      "lineRange": [
+        35,
+        41
+      ],
+      "summary": "_cache_load(key) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/dde_reason.py:_cache_save",
+      "type": "function",
+      "name": "_cache_save",
+      "filePath": "src/geox_mcp/tools/dde_reason.py",
+      "lineRange": [
+        44,
+        45
+      ],
+      "summary": "_cache_save(key, data) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/dde_reason.py:geox_dde_reason",
+      "type": "function",
+      "name": "geox_dde_reason",
+      "filePath": "src/geox_mcp/tools/dde_reason.py",
+      "lineRange": [
+        48,
+        564
+      ],
+      "summary": "geox_dde_reason(mode, bbox, lat, lng, formation, known_units, ontology_term, section_params, delta_age_ma, limit, session_id, actor_id, trace_id) — 516 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/tools/deep_time/__init__.py",
+      "summary": "python code file (61 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "type": "file",
+      "name": "age_resolver.py",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_from_unit",
+      "type": "function",
+      "name": "_from_unit",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "lineRange": [
+        55,
+        73
+      ],
+      "summary": "_from_unit(unit, matched_input, method, chart_version, confidence) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_from_point",
+      "type": "function",
+      "name": "_from_point",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "lineRange": [
+        76,
+        106
+      ],
+      "summary": "_from_point(age_ma, matched_input, method, chart, window_myr, confidence) — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/age_resolver.py:resolve_age_query",
+      "type": "function",
+      "name": "resolve_age_query",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "lineRange": [
+        112,
+        250
+      ],
+      "summary": "resolve_age_query(age_ma, age_top_ma, age_bot_ma, period, query, chart) — 138 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_lookup_unit_by_name",
+      "type": "function",
+      "name": "_lookup_unit_by_name",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "lineRange": [
+        253,
+        265
+      ],
+      "summary": "_lookup_unit_by_name(name, chart) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/age_resolver.py:AgeResolution",
+      "type": "class",
+      "name": "AgeResolution",
+      "filePath": "src/geox_mcp/tools/deep_time/age_resolver.py",
+      "lineRange": [
+        24,
+        49
+      ],
+      "summary": "Class AgeResolution with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "type": "file",
+      "name": "data_loaders.py",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "summary": "Defines 23 function(s); exports 23 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_load_gpts_table",
+      "type": "function",
+      "name": "_load_gpts_table",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        41,
+        52
+      ],
+      "summary": "_load_gpts_table(csv_path) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_load_csv_table",
+      "type": "function",
+      "name": "_load_csv_table",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        55,
+        61
+      ],
+      "summary": "_load_csv_table(csv_path) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_interpolate_from_table",
+      "type": "function",
+      "name": "_interpolate_from_table",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        64,
+        116
+      ],
+      "summary": "_interpolate_from_table(rows, target_age_ma, age_col, value_col) — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_derive_polarity_from_abbrev",
+      "type": "function",
+      "name": "_derive_polarity_from_abbrev",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        119,
+        158
+      ],
+      "summary": "_derive_polarity_from_abbrev(abbrev, name) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_get_chrons",
+      "type": "function",
+      "name": "_get_chrons",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        168,
+        172
+      ],
+      "summary": "_get_chrons() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_get_subchrons",
+      "type": "function",
+      "name": "_get_subchrons",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        175,
+        179
+      ],
+      "summary": "_get_subchrons() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_is_unknown_at_age",
+      "type": "function",
+      "name": "_is_unknown_at_age",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        278,
+        293
+      ],
+      "summary": "_is_unknown_at_age(param, age_ma) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_lookup_chron_at_age",
+      "type": "function",
+      "name": "_lookup_chron_at_age",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        299,
+        313
+      ],
+      "summary": "_lookup_chron_at_age(age_ma) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_lookup_subchron_at_age",
+      "type": "function",
+      "name": "_lookup_subchron_at_age",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        316,
+        329
+      ],
+      "summary": "_lookup_subchron_at_age(age_ma) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_chrons_in_interval",
+      "type": "function",
+      "name": "_chrons_in_interval",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        332,
+        347
+      ],
+      "summary": "_chrons_in_interval(top_ma, base_ma) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_subchrons_in_interval",
+      "type": "function",
+      "name": "_subchrons_in_interval",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        350,
+        361
+      ],
+      "summary": "_subchrons_in_interval(top_ma, base_ma) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_polarity_for_chron",
+      "type": "function",
+      "name": "_polarity_for_chron",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        364,
+        390
+      ],
+      "summary": "_polarity_for_chron(chron_row) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:resolve_polarity_state",
+      "type": "function",
+      "name": "resolve_polarity_state",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        393,
+        510
+      ],
+      "summary": "resolve_polarity_state(age_ma, interval_top_ma, interval_base_ma) — 117 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_wrap_distribution",
+      "type": "function",
+      "name": "_wrap_distribution",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        516,
+        553
+      ],
+      "summary": "_wrap_distribution(variable_name, units, age_res_top, age_res_base, duration_myr, is_interval, n_proxy_points, trend, pending_dataset_key, epistemic_level, notes) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_co2_estimate",
+      "type": "function",
+      "name": "load_co2_estimate",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        559,
+        628
+      ],
+      "summary": "load_co2_estimate(age_ma, age_top_ma, age_base_ma, duration_myr) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_benthic_d18O",
+      "type": "function",
+      "name": "load_benthic_d18O",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        631,
+        695
+      ],
+      "summary": "load_benthic_d18O(age_ma, age_top_ma, age_base_ma, duration_myr) — 64 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_temperature_estimate",
+      "type": "function",
+      "name": "load_temperature_estimate",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        698,
+        769
+      ],
+      "summary": "load_temperature_estimate(age_ma, age_top_ma, age_base_ma, duration_myr) — 71 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_sea_level_estimate",
+      "type": "function",
+      "name": "load_sea_level_estimate",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        772,
+        852
+      ],
+      "summary": "load_sea_level_estimate(age_ma, age_top_ma, age_base_ma, duration_myr) — 80 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_magnetic_polarity",
+      "type": "function",
+      "name": "load_magnetic_polarity",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        855,
+        917
+      ],
+      "summary": "load_magnetic_polarity(age_ma, age_top_ma, age_base_ma, duration_myr) — 62 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_atmospheric_o2",
+      "type": "function",
+      "name": "load_atmospheric_o2",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        920,
+        984
+      ],
+      "summary": "load_atmospheric_o2(age_ma, age_top_ma, age_base_ma, duration_myr) — 64 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_supercontinent_state",
+      "type": "function",
+      "name": "load_supercontinent_state",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        987,
+        1024
+      ],
+      "summary": "load_supercontinent_state(age_ma) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_biotic_realm",
+      "type": "function",
+      "name": "load_biotic_realm",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        1027,
+        1079
+      ],
+      "summary": "load_biotic_realm(age_ma) — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_ice_extent",
+      "type": "function",
+      "name": "load_ice_extent",
+      "filePath": "src/geox_mcp/tools/deep_time/data_loaders.py",
+      "lineRange": [
+        1082,
+        1152
+      ],
+      "summary": "load_ice_extent(age_ma) — 70 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/epistemic.py",
+      "type": "file",
+      "name": "epistemic.py",
+      "filePath": "src/geox_mcp/tools/deep_time/epistemic.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/epistemic.py:tag_epistemic_level",
+      "type": "function",
+      "name": "tag_epistemic_level",
+      "filePath": "src/geox_mcp/tools/deep_time/epistemic.py",
+      "lineRange": [
+        19,
+        56
+      ],
+      "summary": "tag_epistemic_level(age_ma, source_type, has_external_evidence) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/epistemic.py:cap_confidence",
+      "type": "function",
+      "name": "cap_confidence",
+      "filePath": "src/geox_mcp/tools/deep_time/epistemic.py",
+      "lineRange": [
+        59,
+        70
+      ],
+      "summary": "cap_confidence(epistemic, claimed) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "type": "file",
+      "name": "formulas.py",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:solar_luminosity_fraction",
+      "type": "function",
+      "name": "solar_luminosity_fraction",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        31,
+        51
+      ],
+      "summary": "solar_luminosity_fraction(age_ma) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:day_length_hours",
+      "type": "function",
+      "name": "day_length_hours",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        72,
+        88
+      ],
+      "summary": "day_length_hours(age_ma) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:orbital_eccentricity_approx",
+      "type": "function",
+      "name": "orbital_eccentricity_approx",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        108,
+        120
+      ],
+      "summary": "orbital_eccentricity_approx(age_ma) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_solar_luminosity",
+      "type": "function",
+      "name": "wrap_solar_luminosity",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        141,
+        155
+      ],
+      "summary": "wrap_solar_luminosity(age_ma) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_day_length",
+      "type": "function",
+      "name": "wrap_day_length",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        158,
+        171
+      ],
+      "summary": "wrap_day_length(age_ma) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_orbital_eccentricity",
+      "type": "function",
+      "name": "wrap_orbital_eccentricity",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        174,
+        196
+      ],
+      "summary": "wrap_orbital_eccentricity(age_ma) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_orbital_obliquity",
+      "type": "function",
+      "name": "wrap_orbital_obliquity",
+      "filePath": "src/geox_mcp/tools/deep_time/formulas.py",
+      "lineRange": [
+        199,
+        212
+      ],
+      "summary": "wrap_orbital_obliquity(age_ma) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/ics_chart.py",
+      "type": "file",
+      "name": "ics_chart.py",
+      "filePath": "src/geox_mcp/tools/deep_time/ics_chart.py",
+      "summary": "2 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/ics_chart.py:ChronostratUnit",
+      "type": "class",
+      "name": "ChronostratUnit",
+      "filePath": "src/geox_mcp/tools/deep_time/ics_chart.py",
+      "lineRange": [
+        21,
+        45
+      ],
+      "summary": "Class ChronostratUnit with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "type": "file",
+      "name": "physics_consistency.py",
+      "filePath": "src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "summary": "Defines 3 function(s); 1 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/physics_consistency.py:check_physics_consistency",
+      "type": "function",
+      "name": "check_physics_consistency",
+      "filePath": "src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "lineRange": [
+        30,
+        103
+      ],
+      "summary": "check_physics_consistency(age_ma, co2_ppm, temp_anomaly_c, ice_extent, sea_level_m) — 73 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/physics_consistency.py:_ice_has_ice",
+      "type": "function",
+      "name": "_ice_has_ice",
+      "filePath": "src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "lineRange": [
+        106,
+        128
+      ],
+      "summary": "_ice_has_ice(ice_str) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "type": "file",
+      "name": "schemas.py",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "summary": "Defines 1 function(s); 6 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/schemas.py:cap_confidence",
+      "type": "function",
+      "name": "cap_confidence",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "lineRange": [
+        55,
+        75
+      ],
+      "summary": "cap_confidence(epistemic_level, raw_confidence) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateVariable",
+      "type": "class",
+      "name": "EarthStateVariable",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "lineRange": [
+        112,
+        147
+      ],
+      "summary": "Class EarthStateVariable with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateVector",
+      "type": "class",
+      "name": "EarthStateVector",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "lineRange": [
+        153,
+        194
+      ],
+      "summary": "Class EarthStateVector with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/schemas.py:GovernanceFooter",
+      "type": "class",
+      "name": "GovernanceFooter",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "lineRange": [
+        200,
+        225
+      ],
+      "summary": "Class GovernanceFooter with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateEnvelope",
+      "type": "class",
+      "name": "EarthStateEnvelope",
+      "filePath": "src/geox_mcp/tools/deep_time/schemas.py",
+      "lineRange": [
+        231,
+        253
+      ],
+      "summary": "Class EarthStateEnvelope with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "type": "file",
+      "name": "sea_level_ensemble.py",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "summary": "Defines 7 function(s); 3 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:_load_csv",
+      "type": "function",
+      "name": "_load_csv",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        59,
+        72
+      ],
+      "summary": "_load_csv(filename) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:_interpolate",
+      "type": "function",
+      "name": "_interpolate",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        75,
+        98
+      ],
+      "summary": "_interpolate(rows, age_ma, age_key, val_key) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_miller_2020",
+      "type": "function",
+      "name": "load_miller_2020",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        101,
+        117
+      ],
+      "summary": "load_miller_2020(age_ma) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_haq_ogg_2024",
+      "type": "function",
+      "name": "load_haq_ogg_2024",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        120,
+        148
+      ],
+      "summary": "load_haq_ogg_2024(age_ma) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sea_level_ensemble",
+      "type": "function",
+      "name": "load_sea_level_ensemble",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        151,
+        201
+      ],
+      "summary": "load_sea_level_ensemble(age_ma) — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sequence_boundaries",
+      "type": "function",
+      "name": "load_sequence_boundaries",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        204,
+        240
+      ],
+      "summary": "load_sequence_boundaries(age_min_ma, age_max_ma, min_amplitude) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sabah_boundary_correlation",
+      "type": "function",
+      "name": "load_sabah_boundary_correlation",
+      "filePath": "src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "lineRange": [
+        253,
+        279
+      ],
+      "summary": "load_sabah_boundary_correlation() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "type": "file",
+      "name": "vector.py",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/vector.py:_mass_extinctions_in_interval",
+      "type": "function",
+      "name": "_mass_extinctions_in_interval",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "lineRange": [
+        102,
+        125
+      ],
+      "summary": "_mass_extinctions_in_interval(top_ma, base_ma) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/vector.py:_compute_seal",
+      "type": "function",
+      "name": "_compute_seal",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "lineRange": [
+        128,
+        152
+      ],
+      "summary": "_compute_seal(envelope_dict, ics_chart_version, session_id, actor_id) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/vector.py:assemble_earth_state_vector",
+      "type": "function",
+      "name": "assemble_earth_state_vector",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "lineRange": [
+        155,
+        308
+      ],
+      "summary": "assemble_earth_state_vector(age_res) — 153 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/vector.py:_build_governance_footer",
+      "type": "function",
+      "name": "_build_governance_footer",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "lineRange": [
+        311,
+        386
+      ],
+      "summary": "_build_governance_footer(vector, age_res, session_id) — 75 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time/vector.py:assemble_envelope",
+      "type": "function",
+      "name": "assemble_envelope",
+      "filePath": "src/geox_mcp/tools/deep_time/vector.py",
+      "lineRange": [
+        389,
+        565
+      ],
+      "summary": "assemble_envelope(age_res, input_query, vector, pending_datasets, session_id) — 176 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/deep_time_state.py",
+      "type": "file",
+      "name": "deep_time_state.py",
+      "filePath": "src/geox_mcp/tools/deep_time_state.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time_state.py:geox_deep_time_state",
+      "type": "function",
+      "name": "geox_deep_time_state",
+      "filePath": "src/geox_mcp/tools/deep_time_state.py",
+      "lineRange": [
+        46,
+        221
+      ],
+      "summary": "geox_deep_time_state(age_ma, age_top_ma, age_bot_ma, period, query, biozone, include_pending_datasets, session_id) — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/deep_time_state.py:geox_time4d_reconstruct_paleo",
+      "type": "function",
+      "name": "geox_time4d_reconstruct_paleo",
+      "filePath": "src/geox_mcp/tools/deep_time_state.py",
+      "lineRange": [
+        226,
+        245
+      ],
+      "summary": "geox_time4d_reconstruct_paleo(age_ma, age_top_ma, age_bot_ma, period, query, **kwargs) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/diagenesis.py",
+      "type": "file",
+      "name": "diagenesis.py",
+      "filePath": "src/geox_mcp/tools/diagenesis.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/diagenesis.py:geox_diagenesis",
+      "type": "function",
+      "name": "geox_diagenesis",
+      "filePath": "src/geox_mcp/tools/diagenesis.py",
+      "lineRange": [
+        22,
+        115
+      ],
+      "summary": "geox_diagenesis(mode, depth_m, measured_porosity, lithology, surface_porosity, session_id, actor_id, trace_id) — 93 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/diagnose.py",
+      "type": "file",
+      "name": "diagnose.py",
+      "filePath": "src/geox_mcp/tools/diagnose.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/diagnose.py:_scan_evidence_stores",
+      "type": "function",
+      "name": "_scan_evidence_stores",
+      "filePath": "src/geox_mcp/tools/diagnose.py",
+      "lineRange": [
+        29,
+        60
+      ],
+      "summary": "_scan_evidence_stores() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/diagnose.py:diagnose",
+      "type": "function",
+      "name": "diagnose",
+      "filePath": "src/geox_mcp/tools/diagnose.py",
+      "lineRange": [
+        63,
+        165
+      ],
+      "summary": "diagnose(query, domain, location, basin, required_evidence) — 102 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/discovery/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/tools/discovery/__init__.py",
+      "summary": "python code file (19 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "type": "file",
+      "name": "audit_logger.py",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_route_decision",
+      "type": "function",
+      "name": "log_route_decision",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "lineRange": [
+        12,
+        34
+      ],
+      "summary": "log_route_decision(request_id, user_id, query_snippet, intent, mode, risk_level, reason_code, policy_flags) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_retrieval_completion",
+      "type": "function",
+      "name": "log_retrieval_completion",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "lineRange": [
+        37,
+        59
+      ],
+      "summary": "log_retrieval_completion(request_id, tools_invoked, exploit_docs, explore_docs, contradiction_docs, top_k, status, policy_violations) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_governance_check",
+      "type": "function",
+      "name": "log_governance_check",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "lineRange": [
+        62,
+        78
+      ],
+      "summary": "log_governance_check(request_id, claim_snippet, epistemic_tag, approved, overclaim_flags) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/audit_logger.py:_emit",
+      "type": "function",
+      "name": "_emit",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "lineRange": [
+        92,
+        94
+      ],
+      "summary": "_emit(record) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/audit_logger.py:_hash",
+      "type": "function",
+      "name": "_hash",
+      "filePath": "src/geox_mcp/tools/discovery/audit_logger.py",
+      "lineRange": [
+        97,
+        98
+      ],
+      "summary": "_hash(value) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/discovery/guard.py",
+      "type": "file",
+      "name": "guard.py",
+      "filePath": "src/geox_mcp/tools/discovery/guard.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/guard.py:require_router",
+      "type": "function",
+      "name": "require_router",
+      "filePath": "src/geox_mcp/tools/discovery/guard.py",
+      "lineRange": [
+        26,
+        52
+      ],
+      "summary": "require_router(request_id, calling_tool) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/discovery/guard.py:_purge",
+      "type": "function",
+      "name": "_purge",
+      "filePath": "src/geox_mcp/tools/discovery/guard.py",
+      "lineRange": [
+        55,
+        59
+      ],
+      "summary": "_purge() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:_accommodation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:_mass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:_signature",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:_bifurcate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:_eurekas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:compute_collision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/collision_zone.py",
+      "target": "function:src/geox_mcp/tools/collision_zone.py:compute_collision_chronology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contradiction_scan.py",
+      "target": "function:src/geox_mcp/tools/contradiction_scan.py:_classify_contradiction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contradiction_scan.py",
+      "target": "function:src/geox_mcp/tools/contradiction_scan.py:_build_record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contradiction_scan.py",
+      "target": "function:src/geox_mcp/tools/contradiction_scan.py:geox_contradiction_scan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:compute_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:classify_severity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:detect_mass_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:detect_energy_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:detect_time_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:detect_absence_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:audit_dimensional_consistency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:_resolve_scalar_or_p50",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:_distribution_spread_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_detect.py",
+      "target": "function:src/geox_mcp/tools/contrast_detect.py:contrast_detect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "target": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage1_isolate_contrast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "target": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage2_measure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "target": "function:src/geox_mcp/tools/contrast_metabolize.py:_stage3_classify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "target": "function:src/geox_mcp/tools/contrast_metabolize.py:_generate_synthetic_profile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_metabolize.py",
+      "target": "function:src/geox_mcp/tools/contrast_metabolize.py:geox_contrast_metabolize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_load_raster",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_amplitude_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_edge_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_texture_energy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_horizontal_gradient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_vertical_gradient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_local_dip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_gabor_kernel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_phase_symmetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_frequency_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_ac_risk_heatmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:_downsample_for_thumbnail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "function:src/geox_mcp/tools/contrast_views.py:geox_contrast_views",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/contrast_views.py",
+      "target": "class:src/geox_mcp/tools/contrast_views.py:AttributeImage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "target": "function:src/geox_mcp/tools/crustal_domain_classify.py:_observation_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "target": "function:src/geox_mcp/tools/crustal_domain_classify.py:geox_crustal_domain_classify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "target": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustCellObservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "target": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustDomainRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/crustal_domain_classify.py",
+      "target": "class:src/geox_mcp/tools/crustal_domain_classify.py:CrustDomainMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:_safe_filename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:_make_metabolic_return",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:geox_data_ingest_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:geox_task_ingest_las_batch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:geox_evidence_discover",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/data.py",
+      "target": "function:src/geox_mcp/tools/data.py:geox_report_to_workflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/dde_reason.py",
+      "target": "function:src/geox_mcp/tools/dde_reason.py:_cache_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/dde_reason.py",
+      "target": "function:src/geox_mcp/tools/dde_reason.py:_cache_load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/dde_reason.py",
+      "target": "function:src/geox_mcp/tools/dde_reason.py:_cache_save",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/dde_reason.py",
+      "target": "function:src/geox_mcp/tools/dde_reason.py:geox_dde_reason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "target": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_from_unit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "target": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_from_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "target": "function:src/geox_mcp/tools/deep_time/age_resolver.py:resolve_age_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "target": "function:src/geox_mcp/tools/deep_time/age_resolver.py:_lookup_unit_by_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/age_resolver.py",
+      "target": "class:src/geox_mcp/tools/deep_time/age_resolver.py:AgeResolution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_load_gpts_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_load_csv_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_interpolate_from_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_derive_polarity_from_abbrev",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_get_chrons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_get_subchrons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_is_unknown_at_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_lookup_chron_at_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_lookup_subchron_at_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_chrons_in_interval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_subchrons_in_interval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_polarity_for_chron",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:resolve_polarity_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:_wrap_distribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_co2_estimate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_benthic_d18O",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_temperature_estimate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_sea_level_estimate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_magnetic_polarity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_atmospheric_o2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_supercontinent_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_biotic_realm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/data_loaders.py",
+      "target": "function:src/geox_mcp/tools/deep_time/data_loaders.py:load_ice_extent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/epistemic.py",
+      "target": "function:src/geox_mcp/tools/deep_time/epistemic.py:tag_epistemic_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/epistemic.py",
+      "target": "function:src/geox_mcp/tools/deep_time/epistemic.py:cap_confidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:solar_luminosity_fraction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:day_length_hours",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:orbital_eccentricity_approx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_solar_luminosity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_day_length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_orbital_eccentricity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/formulas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/formulas.py:wrap_orbital_obliquity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/ics_chart.py",
+      "target": "class:src/geox_mcp/tools/deep_time/ics_chart.py:ChronostratUnit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "target": "function:src/geox_mcp/tools/deep_time/physics_consistency.py:check_physics_consistency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/physics_consistency.py",
+      "target": "function:src/geox_mcp/tools/deep_time/physics_consistency.py:_ice_has_ice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "target": "function:src/geox_mcp/tools/deep_time/schemas.py:cap_confidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "target": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateVariable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "target": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateVector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "target": "class:src/geox_mcp/tools/deep_time/schemas.py:GovernanceFooter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/schemas.py",
+      "target": "class:src/geox_mcp/tools/deep_time/schemas.py:EarthStateEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:_load_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:_interpolate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_miller_2020",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_haq_ogg_2024",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sea_level_ensemble",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sequence_boundaries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/sea_level_ensemble.py",
+      "target": "function:src/geox_mcp/tools/deep_time/sea_level_ensemble.py:load_sabah_boundary_correlation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "target": "function:src/geox_mcp/tools/deep_time/vector.py:_mass_extinctions_in_interval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "target": "function:src/geox_mcp/tools/deep_time/vector.py:_compute_seal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "target": "function:src/geox_mcp/tools/deep_time/vector.py:assemble_earth_state_vector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "target": "function:src/geox_mcp/tools/deep_time/vector.py:_build_governance_footer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time/vector.py",
+      "target": "function:src/geox_mcp/tools/deep_time/vector.py:assemble_envelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time_state.py",
+      "target": "function:src/geox_mcp/tools/deep_time_state.py:geox_deep_time_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/deep_time_state.py",
+      "target": "function:src/geox_mcp/tools/deep_time_state.py:geox_time4d_reconstruct_paleo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/diagenesis.py",
+      "target": "function:src/geox_mcp/tools/diagenesis.py:geox_diagenesis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/diagnose.py",
+      "target": "function:src/geox_mcp/tools/diagnose.py:_scan_evidence_stores",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/diagnose.py",
+      "target": "function:src/geox_mcp/tools/diagnose.py:diagnose",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "target": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_route_decision",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "target": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_retrieval_completion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "target": "function:src/geox_mcp/tools/discovery/audit_logger.py:log_governance_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "target": "function:src/geox_mcp/tools/discovery/audit_logger.py:_emit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/audit_logger.py",
+      "target": "function:src/geox_mcp/tools/discovery/audit_logger.py:_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/guard.py",
+      "target": "function:src/geox_mcp/tools/discovery/guard.py:require_router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/discovery/guard.py",
+      "target": "function:src/geox_mcp/tools/discovery/guard.py:_purge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

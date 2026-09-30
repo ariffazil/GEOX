@@ -1,0 +1,1519 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/map_tools.py",
+      "type": "file",
+      "name": "map_tools.py",
+      "filePath": "scripts/map_tools.py",
+      "summary": "python code file (61 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/marmousi2_stoiip_mc_p1.py",
+      "type": "file",
+      "name": "marmousi2_stoiip_mc_p1.py",
+      "filePath": "scripts/marmousi2_stoiip_mc_p1.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/marmousi2_stoiip_mc_p1.py:load_las_curves",
+      "type": "function",
+      "name": "load_las_curves",
+      "filePath": "scripts/marmousi2_stoiip_mc_p1.py",
+      "lineRange": [
+        46,
+        70
+      ],
+      "summary": "load_las_curves(path) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/marmousi2_stoiip_mc_p1.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/marmousi2_stoiip_mc_p1.py",
+      "lineRange": [
+        73,
+        208
+      ],
+      "summary": "main() — 135 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/marmousi2_well_tie_validate.py",
+      "type": "file",
+      "name": "marmousi2_well_tie_validate.py",
+      "filePath": "scripts/marmousi2_well_tie_validate.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/marmousi2_well_tie_validate.py:load_las",
+      "type": "function",
+      "name": "load_las",
+      "filePath": "scripts/marmousi2_well_tie_validate.py",
+      "lineRange": [
+        37,
+        57
+      ],
+      "summary": "load_las(path) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/marmousi2_well_tie_validate.py:make_synth",
+      "type": "function",
+      "name": "make_synth",
+      "filePath": "scripts/marmousi2_well_tie_validate.py",
+      "lineRange": [
+        79,
+        92
+      ],
+      "summary": "make_synth(ai, twt_ms, t_grid, freq, dt) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/marmousi2_well_tie_validate.py:pearson_lag",
+      "type": "function",
+      "name": "pearson_lag",
+      "filePath": "scripts/marmousi2_well_tie_validate.py",
+      "lineRange": [
+        95,
+        113
+      ],
+      "summary": "pearson_lag(a, b, max_lag) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/marmousi2_well_tie_validate.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/marmousi2_well_tie_validate.py",
+      "lineRange": [
+        116,
+        170
+      ],
+      "summary": "main() — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/migrate_las_to_zarr.py",
+      "type": "file",
+      "name": "migrate_las_to_zarr.py",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/migrate_las_to_zarr.py:discover_las_files",
+      "type": "function",
+      "name": "discover_las_files",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "lineRange": [
+        66,
+        89
+      ],
+      "summary": "discover_las_files() — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/migrate_las_to_zarr.py:_infer_units",
+      "type": "function",
+      "name": "_infer_units",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "lineRange": [
+        107,
+        129
+      ],
+      "summary": "_infer_units(mnemonic) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/migrate_las_to_zarr.py:build_xr_dataset_from_las",
+      "type": "function",
+      "name": "build_xr_dataset_from_las",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "lineRange": [
+        132,
+        199
+      ],
+      "summary": "build_xr_dataset_from_las(las_path) — 67 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_las_to_zarr.py:migrate_one",
+      "type": "function",
+      "name": "migrate_one",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "lineRange": [
+        205,
+        227
+      ],
+      "summary": "migrate_one(store, las_path, actor_id) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/migrate_las_to_zarr.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/migrate_las_to_zarr.py",
+      "lineRange": [
+        230,
+        268
+      ],
+      "summary": "main() — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/migrate_to_low_entropy.py",
+      "type": "file",
+      "name": "migrate_to_low_entropy.py",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "summary": "Defines 12 function(s); exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:copy_tree_with_rewrite",
+      "type": "function",
+      "name": "copy_tree_with_rewrite",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        93,
+        115
+      ],
+      "summary": "copy_tree_with_rewrite(src, dst, rename_map) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_0_create_directories",
+      "type": "function",
+      "name": "phase_0_create_directories",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        125,
+        174
+      ],
+      "summary": "phase_0_create_directories() — 49 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_1_migrate_core",
+      "type": "function",
+      "name": "phase_1_migrate_core",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        177,
+        225
+      ],
+      "summary": "phase_1_migrate_core() — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_2_migrate_mcp",
+      "type": "function",
+      "name": "phase_2_migrate_mcp",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        228,
+        325
+      ],
+      "summary": "phase_2_migrate_mcp() — 97 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_3_create_resources",
+      "type": "function",
+      "name": "phase_3_create_resources",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        328,
+        618
+      ],
+      "summary": "phase_3_create_resources() — 290 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_4_move_docs",
+      "type": "function",
+      "name": "phase_4_move_docs",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        621,
+        682
+      ],
+      "summary": "phase_4_move_docs() — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_5_archive_surfaces",
+      "type": "function",
+      "name": "phase_5_archive_surfaces",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        685,
+        735
+      ],
+      "summary": "phase_5_archive_surfaces() — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_6_init_files",
+      "type": "function",
+      "name": "phase_6_init_files",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        738,
+        778
+      ],
+      "summary": "phase_6_init_files() — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:phase_7_update_pyproject",
+      "type": "function",
+      "name": "phase_7_update_pyproject",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        781,
+        800
+      ],
+      "summary": "phase_7_update_pyproject() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/migrate_to_low_entropy.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/migrate_to_low_entropy.py",
+      "lineRange": [
+        803,
+        825
+      ],
+      "summary": "main() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/probe_canonical_surface.py",
+      "type": "file",
+      "name": "probe_canonical_surface.py",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/probe_canonical_surface.py:probe_http_tools",
+      "type": "function",
+      "name": "probe_http_tools",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "lineRange": [
+        67,
+        77
+      ],
+      "summary": "probe_http_tools(base_url, timeout) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/probe_canonical_surface.py:probe_mcp_tools_list",
+      "type": "function",
+      "name": "probe_mcp_tools_list",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "lineRange": [
+        80,
+        154
+      ],
+      "summary": "probe_mcp_tools_list(rpc_url, timeout) — 74 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/probe_canonical_surface.py:probe_drift_endpoint",
+      "type": "function",
+      "name": "probe_drift_endpoint",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "lineRange": [
+        157,
+        170
+      ],
+      "summary": "probe_drift_endpoint(base_url, timeout) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/probe_canonical_surface.py:format_report",
+      "type": "function",
+      "name": "format_report",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "lineRange": [
+        176,
+        219
+      ],
+      "summary": "format_report(report, json_mode) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/probe_canonical_surface.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/probe_canonical_surface.py",
+      "lineRange": [
+        237,
+        324
+      ],
+      "summary": "main(argv) — 87 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/regenerate_surface.py",
+      "type": "file",
+      "name": "regenerate_surface.py",
+      "filePath": "scripts/regenerate_surface.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:_load_manifest",
+      "type": "function",
+      "name": "_load_manifest",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        34,
+        38
+      ],
+      "summary": "_load_manifest() — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:_public_tools",
+      "type": "function",
+      "name": "_public_tools",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        41,
+        42
+      ],
+      "summary": "_public_tools(manifest) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:_regenerate_canonical",
+      "type": "function",
+      "name": "_regenerate_canonical",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        45,
+        70
+      ],
+      "summary": "_regenerate_canonical(manifest) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:_regenerate_well_known",
+      "type": "function",
+      "name": "_regenerate_well_known",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        73,
+        96
+      ],
+      "summary": "_regenerate_well_known(manifest) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:_update_mcp_surface_yaml",
+      "type": "function",
+      "name": "_update_mcp_surface_yaml",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        99,
+        112
+      ],
+      "summary": "_update_mcp_surface_yaml(public_count) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/regenerate_surface.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/regenerate_surface.py",
+      "lineRange": [
+        115,
+        146
+      ],
+      "summary": "main() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/render_public_surface.py",
+      "type": "file",
+      "name": "render_public_surface.py",
+      "filePath": "scripts/render_public_surface.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/render_public_surface.py:_load_manifest",
+      "type": "function",
+      "name": "_load_manifest",
+      "filePath": "scripts/render_public_surface.py",
+      "lineRange": [
+        36,
+        37
+      ],
+      "summary": "_load_manifest() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/render_public_surface.py:_build_sitemap",
+      "type": "function",
+      "name": "_build_sitemap",
+      "filePath": "scripts/render_public_surface.py",
+      "lineRange": [
+        40,
+        54
+      ],
+      "summary": "_build_sitemap(manifest) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/render_public_surface.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/render_public_surface.py",
+      "lineRange": [
+        62,
+        83
+      ],
+      "summary": "main() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/seed_demo_evidence.py",
+      "type": "file",
+      "name": "seed_demo_evidence.py",
+      "filePath": "scripts/seed_demo_evidence.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed_demo_evidence.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/seed_demo_evidence.py",
+      "lineRange": [
+        28,
+        76
+      ],
+      "summary": "main() — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/seed_evidence.py",
+      "type": "file",
+      "name": "seed_evidence.py",
+      "filePath": "scripts/seed_evidence.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed_evidence.py:seed",
+      "type": "function",
+      "name": "seed",
+      "filePath": "scripts/seed_evidence.py",
+      "lineRange": [
+        12,
+        73
+      ],
+      "summary": "seed() — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/smoke_mcp_tool_roundtrip.py",
+      "type": "file",
+      "name": "smoke_mcp_tool_roundtrip.py",
+      "filePath": "scripts/smoke_mcp_tool_roundtrip.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke_mcp_tool_roundtrip.py:_http_json",
+      "type": "function",
+      "name": "_http_json",
+      "filePath": "scripts/smoke_mcp_tool_roundtrip.py",
+      "lineRange": [
+        36,
+        64
+      ],
+      "summary": "_http_json(method, url, payload, headers) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke_mcp_tool_roundtrip.py:check_inprocess",
+      "type": "function",
+      "name": "check_inprocess",
+      "filePath": "scripts/smoke_mcp_tool_roundtrip.py",
+      "lineRange": [
+        67,
+        92
+      ],
+      "summary": "check_inprocess() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke_mcp_tool_roundtrip.py:check_live_mcp",
+      "type": "function",
+      "name": "check_live_mcp",
+      "filePath": "scripts/smoke_mcp_tool_roundtrip.py",
+      "lineRange": [
+        95,
+        186
+      ],
+      "summary": "check_live_mcp() — 91 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke_mcp_tool_roundtrip.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/smoke_mcp_tool_roundtrip.py",
+      "lineRange": [
+        189,
+        200
+      ],
+      "summary": "main() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/smoke_require_live.py",
+      "type": "file",
+      "name": "smoke_require_live.py",
+      "filePath": "scripts/smoke_require_live.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke_require_live.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/smoke_require_live.py",
+      "lineRange": [
+        25,
+        96
+      ],
+      "summary": "main() — 71 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/smoke_test.py",
+      "type": "file",
+      "name": "smoke_test.py",
+      "filePath": "scripts/smoke_test.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke_test.py:_req",
+      "type": "function",
+      "name": "_req",
+      "filePath": "scripts/smoke_test.py",
+      "lineRange": [
+        28,
+        42
+      ],
+      "summary": "_req(method, path, payload) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke_test.py:_mcp_call",
+      "type": "function",
+      "name": "_mcp_call",
+      "filePath": "scripts/smoke_test.py",
+      "lineRange": [
+        45,
+        74
+      ],
+      "summary": "_mcp_call(tool_name, arguments) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke_test.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/smoke_test.py",
+      "lineRange": [
+        77,
+        213
+      ],
+      "summary": "main() — 136 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/test_judge.py",
+      "type": "file",
+      "name": "test_judge.py",
+      "filePath": "scripts/test_judge.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test_judge.py:test",
+      "type": "function",
+      "name": "test",
+      "filePath": "scripts/test_judge.py",
+      "lineRange": [
+        12,
+        31
+      ],
+      "summary": "test() — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/validate_openapi.py",
+      "type": "file",
+      "name": "validate_openapi.py",
+      "filePath": "scripts/validate_openapi.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/validate_openapi.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/validate_openapi.py",
+      "lineRange": [
+        37,
+        88
+      ],
+      "summary": "main() — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/verify_dependencies.py",
+      "type": "file",
+      "name": "verify_dependencies.py",
+      "filePath": "scripts/verify_dependencies.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/verify_dependencies.py:test_dependency",
+      "type": "function",
+      "name": "test_dependency",
+      "filePath": "scripts/verify_dependencies.py",
+      "lineRange": [
+        7,
+        42
+      ],
+      "summary": "test_dependency() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/verify_h1_q2.py",
+      "type": "file",
+      "name": "verify_h1_q2.py",
+      "filePath": "scripts/verify_h1_q2.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/verify_manifest.py",
+      "type": "file",
+      "name": "verify_manifest.py",
+      "filePath": "scripts/verify_manifest.py",
+      "summary": "python code file (7 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/verify_scar.py",
+      "type": "file",
+      "name": "verify_scar.py",
+      "filePath": "scripts/verify_scar.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/verify_scar.py:test_scar_canonisation",
+      "type": "function",
+      "name": "test_scar_canonisation",
+      "filePath": "scripts/verify_scar.py",
+      "lineRange": [
+        6,
+        34
+      ],
+      "summary": "test_scar_canonisation() — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/verify_scar_integration.py",
+      "type": "file",
+      "name": "verify_scar_integration.py",
+      "filePath": "scripts/verify_scar_integration.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/verify_scar_integration.py:test_ac_risk_scar_enforcement",
+      "type": "function",
+      "name": "test_ac_risk_scar_enforcement",
+      "filePath": "scripts/verify_scar_integration.py",
+      "lineRange": [
+        5,
+        27
+      ],
+      "summary": "test_ac_risk_scar_enforcement() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/verify_sunnah.py",
+      "type": "file",
+      "name": "verify_sunnah.py",
+      "filePath": "scripts/verify_sunnah.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/verify_sunnah.py:test_advisory_mode",
+      "type": "function",
+      "name": "test_advisory_mode",
+      "filePath": "scripts/verify_sunnah.py",
+      "lineRange": [
+        4,
+        21
+      ],
+      "summary": "test_advisory_mode() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/verify_wajib.py",
+      "type": "file",
+      "name": "verify_wajib.py",
+      "filePath": "scripts/verify_wajib.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/verify_wajib.py:test_wajib_forge",
+      "type": "function",
+      "name": "test_wajib_forge",
+      "filePath": "scripts/verify_wajib.py",
+      "lineRange": [
+        7,
+        34
+      ],
+      "summary": "test_wajib_forge() — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:skills/SHARED_SKILL_SOURCE.md",
+      "type": "document",
+      "name": "SHARED_SKILL_SOURCE.md",
+      "filePath": "skills/SHARED_SKILL_SOURCE.md",
+      "summary": "markdown docs file (5 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:skills/earth_science/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "skills/earth_science/__init__.py",
+      "summary": "Defines 2 function(s); 1 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:skills/earth_science/__init__.py:_lazy_import",
+      "type": "function",
+      "name": "_lazy_import",
+      "filePath": "skills/earth_science/__init__.py",
+      "lineRange": [
+        46,
+        54
+      ],
+      "summary": "_lazy_import(name) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:skills/earth_science/__init__.py:health_check",
+      "type": "function",
+      "name": "health_check",
+      "filePath": "skills/earth_science/__init__.py",
+      "lineRange": [
+        88,
+        119
+      ],
+      "summary": "health_check() — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:skills/earth_science/__init__.py:_LazyModule",
+      "type": "class",
+      "name": "_LazyModule",
+      "filePath": "skills/earth_science/__init__.py",
+      "lineRange": [
+        57,
+        73
+      ],
+      "summary": "Class _LazyModule with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:skills/geox-basin-evaluation/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "skills/geox-basin-evaluation/SKILL.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/marmousi2_stoiip_mc_p1.py",
+      "target": "function:scripts/marmousi2_stoiip_mc_p1.py:load_las_curves",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/marmousi2_stoiip_mc_p1.py",
+      "target": "function:scripts/marmousi2_stoiip_mc_p1.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/marmousi2_well_tie_validate.py",
+      "target": "function:scripts/marmousi2_well_tie_validate.py:load_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/marmousi2_well_tie_validate.py",
+      "target": "function:scripts/marmousi2_well_tie_validate.py:make_synth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/marmousi2_well_tie_validate.py",
+      "target": "function:scripts/marmousi2_well_tie_validate.py:pearson_lag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/marmousi2_well_tie_validate.py",
+      "target": "function:scripts/marmousi2_well_tie_validate.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_las_to_zarr.py",
+      "target": "function:scripts/migrate_las_to_zarr.py:discover_las_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_las_to_zarr.py",
+      "target": "function:scripts/migrate_las_to_zarr.py:_infer_units",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_las_to_zarr.py",
+      "target": "function:scripts/migrate_las_to_zarr.py:build_xr_dataset_from_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_las_to_zarr.py",
+      "target": "function:scripts/migrate_las_to_zarr.py:migrate_one",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_las_to_zarr.py",
+      "target": "function:scripts/migrate_las_to_zarr.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:copy_tree_with_rewrite",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_0_create_directories",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_1_migrate_core",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_2_migrate_mcp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_3_create_resources",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_4_move_docs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_5_archive_surfaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_6_init_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:phase_7_update_pyproject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/migrate_to_low_entropy.py",
+      "target": "function:scripts/migrate_to_low_entropy.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/probe_canonical_surface.py",
+      "target": "function:scripts/probe_canonical_surface.py:probe_http_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/probe_canonical_surface.py",
+      "target": "function:scripts/probe_canonical_surface.py:probe_mcp_tools_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/probe_canonical_surface.py",
+      "target": "function:scripts/probe_canonical_surface.py:probe_drift_endpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/probe_canonical_surface.py",
+      "target": "function:scripts/probe_canonical_surface.py:format_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/probe_canonical_surface.py",
+      "target": "function:scripts/probe_canonical_surface.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:_load_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:_public_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:_regenerate_canonical",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:_regenerate_well_known",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:_update_mcp_surface_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/regenerate_surface.py",
+      "target": "function:scripts/regenerate_surface.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/render_public_surface.py",
+      "target": "function:scripts/render_public_surface.py:_load_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/render_public_surface.py",
+      "target": "function:scripts/render_public_surface.py:_build_sitemap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/render_public_surface.py",
+      "target": "function:scripts/render_public_surface.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/seed_demo_evidence.py",
+      "target": "function:scripts/seed_demo_evidence.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/seed_evidence.py",
+      "target": "function:scripts/seed_evidence.py:seed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_mcp_tool_roundtrip.py",
+      "target": "function:scripts/smoke_mcp_tool_roundtrip.py:_http_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_mcp_tool_roundtrip.py",
+      "target": "function:scripts/smoke_mcp_tool_roundtrip.py:check_inprocess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_mcp_tool_roundtrip.py",
+      "target": "function:scripts/smoke_mcp_tool_roundtrip.py:check_live_mcp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_mcp_tool_roundtrip.py",
+      "target": "function:scripts/smoke_mcp_tool_roundtrip.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_require_live.py",
+      "target": "function:scripts/smoke_require_live.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_test.py",
+      "target": "function:scripts/smoke_test.py:_req",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_test.py",
+      "target": "function:scripts/smoke_test.py:_mcp_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/smoke_test.py",
+      "target": "function:scripts/smoke_test.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test_judge.py",
+      "target": "function:scripts/test_judge.py:test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/validate_openapi.py",
+      "target": "function:scripts/validate_openapi.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/verify_dependencies.py",
+      "target": "function:scripts/verify_dependencies.py:test_dependency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/verify_scar.py",
+      "target": "function:scripts/verify_scar.py:test_scar_canonisation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/verify_scar_integration.py",
+      "target": "function:scripts/verify_scar_integration.py:test_ac_risk_scar_enforcement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/verify_sunnah.py",
+      "target": "function:scripts/verify_sunnah.py:test_advisory_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/verify_wajib.py",
+      "target": "function:scripts/verify_wajib.py:test_wajib_forge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:skills/earth_science/__init__.py",
+      "target": "function:skills/earth_science/__init__.py:_lazy_import",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:skills/earth_science/__init__.py",
+      "target": "function:skills/earth_science/__init__.py:health_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:skills/earth_science/__init__.py",
+      "target": "class:skills/earth_science/__init__.py:_LazyModule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

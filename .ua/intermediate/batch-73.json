@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "file:static/gui/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "static/gui/index.html",
+      "summary": "html markup file (10 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:static/gui/malay_basin_workflow.html",
+      "type": "file",
+      "name": "malay_basin_workflow.html",
+      "filePath": "static/gui/malay_basin_workflow.html",
+      "summary": "html markup file (257 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:static/gui/manifest-e2e.json",
+      "type": "config",
+      "name": "manifest-e2e.json",
+      "filePath": "static/gui/manifest-e2e.json",
+      "summary": "json config file (43 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:static/gui/manifesto.html",
+      "type": "file",
+      "name": "manifesto.html",
+      "filePath": "static/gui/manifesto.html",
+      "summary": "html markup file (266 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:static/gui/webmcp.manifest.json",
+      "type": "config",
+      "name": "webmcp.manifest.json",
+      "filePath": "static/gui/webmcp.manifest.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

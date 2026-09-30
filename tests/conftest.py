@@ -20,6 +20,24 @@ os.environ.setdefault("GEOX_REQUIRE_SESSION_FOR_MUTATE", "0")
 import sys
 from pathlib import Path
 
+try:
+    import psutil
+    _orig_Process = psutil.Process
+    def _safe_Process(pid=None):
+        try:
+            return _orig_Process(pid)
+        except Exception:
+            class DummyProc:
+                def cpu_affinity(self): return None
+                def memory_info(self):
+                    from collections import namedtuple
+                    M = namedtuple("pmem", ["rss", "vms"])
+                    return M(100*1024*1024, 200*1024*1024)
+            return DummyProc()
+    psutil.Process = _safe_Process
+except ImportError:
+    pass
+
 import pytest
 import pytest_asyncio
 

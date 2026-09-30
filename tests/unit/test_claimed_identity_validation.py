@@ -6,15 +6,27 @@ from geox_mcp import organ_governance
 from geox_mcp.session_enforcement import ValidationResult
 
 
-def test_anonymous_evidence_lane_remains_read_only_accessible():
+def test_anonymous_evidence_lane_in_sandbox_accessible(monkeypatch):
+    monkeypatch.setattr(organ_governance, "ASSET_MODE", "sandbox")
     verdict, error = organ_governance._check_identity_propagation(
         "geox_evidence",
         session_id=None,
         actor_id="geox-governed",
     )
 
-    assert verdict == "SEAL"
+    assert verdict == "TRANSPORT_OK"
     assert error is None
+
+
+def test_anonymous_evidence_lane_in_prod_requires_session():
+    verdict, error = organ_governance._check_identity_propagation(
+        "geox_evidence",
+        session_id=None,
+        actor_id="geox-governed",
+    )
+
+    assert verdict == "HOLD"
+    assert error is not None
 
 
 def test_fabricated_claimed_session_is_held(monkeypatch):
@@ -58,7 +70,7 @@ def test_valid_claimed_session_preserves_actor_binding(monkeypatch):
         actor_id="ARIF",
     )
 
-    assert verdict == "SEAL"
+    assert verdict == "TRANSPORT_OK"
     assert error is None
 
 
@@ -85,7 +97,7 @@ def test_signed_token_is_replaced_with_canonical_session(monkeypatch):
         arguments=arguments,
     )
 
-    assert verdict == "SEAL"
+    assert verdict == "TRANSPORT_OK"
     assert error is None
     assert arguments["session_id"] == "SEAL-canonical-session-0001"
     assert not arguments["session_id"].startswith("sct_v1.")

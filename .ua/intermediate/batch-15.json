@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:contracts/GEOX_EMC.mcp.yaml",
+      "type": "config",
+      "name": "GEOX_EMC.mcp.yaml",
+      "filePath": "contracts/GEOX_EMC.mcp.yaml",
+      "summary": "yaml config file (418 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:contracts/IMAGE_METABOLIZER_DESIGN.md",
+      "type": "document",
+      "name": "IMAGE_METABOLIZER_DESIGN.md",
+      "filePath": "contracts/IMAGE_METABOLIZER_DESIGN.md",
+      "summary": "markdown docs file (335 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:contracts/claim_state_machine.yaml",
+      "type": "config",
+      "name": "claim_state_machine.yaml",
+      "filePath": "contracts/claim_state_machine.yaml",
+      "summary": "yaml config file (153 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:contracts/mcp_surface.yaml",
+      "type": "config",
+      "name": "mcp_surface.yaml",
+      "filePath": "contracts/mcp_surface.yaml",
+      "summary": "yaml config file (109 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:contracts/tools.yaml",
+      "type": "config",
+      "name": "tools.yaml",
+      "filePath": "contracts/tools.yaml",
+      "summary": "yaml config file (146 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

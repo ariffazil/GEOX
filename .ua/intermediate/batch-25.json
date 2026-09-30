@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/benchmarks/GEOX-001_MODEL_DESERVES_TO_LIVE.md",
+      "type": "document",
+      "name": "GEOX-001_MODEL_DESERVES_TO_LIVE.md",
+      "filePath": "docs/benchmarks/GEOX-001_MODEL_DESERVES_TO_LIVE.md",
+      "summary": "markdown docs file (15 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/benchmarks/GEOX_1D_MCP_SURFACE.md",
+      "type": "document",
+      "name": "GEOX_1D_MCP_SURFACE.md",
+      "filePath": "docs/benchmarks/GEOX_1D_MCP_SURFACE.md",
+      "summary": "markdown docs file (21 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/benchmarks/MARMOUSI2-P1-STOIIP-MC.md",
+      "type": "document",
+      "name": "MARMOUSI2-P1-STOIIP-MC.md",
+      "filePath": "docs/benchmarks/MARMOUSI2-P1-STOIIP-MC.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/benchmarks/MARMOUSI2-WELL-TIE-VALIDATE.md",
+      "type": "document",
+      "name": "MARMOUSI2-WELL-TIE-VALIDATE.md",
+      "filePath": "docs/benchmarks/MARMOUSI2-WELL-TIE-VALIDATE.md",
+      "summary": "markdown docs file (32 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/demo_wells.json",
+      "type": "config",
+      "name": "demo_wells.json",
+      "filePath": "resources/demo_wells.json",
+      "summary": "json config file (68 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/fastmcp.json",
+      "type": "config",
+      "name": "fastmcp.json",
+      "filePath": "resources/fastmcp.json",
+      "summary": "json config file (20 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:resources/llms.txt",
+      "type": "document",
+      "name": "llms.txt",
+      "filePath": "resources/llms.txt",
+      "summary": "txt docs file (81 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/server-card.json",
+      "type": "config",
+      "name": "server-card.json",
+      "filePath": "resources/server-card.json",
+      "summary": "json config file (34 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/smithery.yaml",
+      "type": "config",
+      "name": "smithery.yaml",
+      "filePath": "resources/smithery.yaml",
+      "summary": "yaml config file (351 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

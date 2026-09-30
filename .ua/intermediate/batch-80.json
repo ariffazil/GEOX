@@ -1,0 +1,306 @@
+{
+  "nodes": [
+    {
+      "id": "document:docs/plans/UNIFIED_ROADMAP.md",
+      "type": "document",
+      "name": "UNIFIED_ROADMAP.md",
+      "filePath": "docs/plans/UNIFIED_ROADMAP.md",
+      "summary": "markdown docs file (52 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-03-31-single-line-structural-interpreter.md",
+      "type": "document",
+      "name": "2026-03-31-single-line-structural-interpreter.md",
+      "filePath": "docs/superpowers/plans/2026-03-31-single-line-structural-interpreter.md",
+      "summary": "markdown docs file (1626 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/superpowers/plans/2026-04-24-geox-tool-registry.md",
+      "type": "document",
+      "name": "2026-04-24-geox-tool-registry.md",
+      "filePath": "docs/superpowers/plans/2026-04-24-geox-tool-registry.md",
+      "summary": "markdown docs file (442 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/superpowers/specs/2026-03-31-single-line-structural-interpreter-design.md",
+      "type": "document",
+      "name": "2026-03-31-single-line-structural-interpreter-design.md",
+      "filePath": "docs/superpowers/specs/2026-03-31-single-line-structural-interpreter-design.md",
+      "summary": "markdown docs file (199 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/theory/E8_VELOCITY_AS_STRUCTURE.md",
+      "type": "document",
+      "name": "E8_VELOCITY_AS_STRUCTURE.md",
+      "filePath": "docs/theory/E8_VELOCITY_AS_STRUCTURE.md",
+      "summary": "markdown docs file (172 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/theory/E8_VELOCITY_AS_STRUCTURE_THEORY.md",
+      "type": "document",
+      "name": "E8_VELOCITY_AS_STRUCTURE_THEORY.md",
+      "filePath": "docs/theory/E8_VELOCITY_AS_STRUCTURE_THEORY.md",
+      "summary": "markdown docs file (166 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:federation-manifests/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "federation-manifests/manifest.json",
+      "summary": "json config file (18 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/.eslintignore",
+      "type": "file",
+      "name": ".eslintignore",
+      "filePath": "geox-gui/.eslintignore",
+      "summary": "unknown code file (5 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:geox-gui/docs/GEOX_GUI_ARCHITECTURE.md",
+      "type": "document",
+      "name": "GEOX_GUI_ARCHITECTURE.md",
+      "filePath": "geox-gui/docs/GEOX_GUI_ARCHITECTURE.md",
+      "summary": "markdown docs file (559 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/nginx.conf",
+      "type": "file",
+      "name": "nginx.conf",
+      "filePath": "geox-gui/nginx.conf",
+      "summary": "conf code file (23 non-empty lines).",
+      "tags": [
+        "code",
+        "conf"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/postcss.config.js",
+      "type": "file",
+      "name": "postcss.config.js",
+      "filePath": "geox-gui/postcss.config.js",
+      "summary": "javascript code file (6 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/public/ac_risk_console/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/ac_risk_console/index.html",
+      "summary": "html markup file (583 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/ac_risk_console/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "geox-gui/public/ac_risk_console/manifest.json",
+      "summary": "json config file (103 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/public/assets/geox-mcp-bridge.js",
+      "type": "file",
+      "name": "geox-mcp-bridge.js",
+      "filePath": "geox-gui/public/assets/geox-mcp-bridge.js",
+      "summary": "javascript code file (225 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/public/basin_explorer/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/basin_explorer/index.html",
+      "summary": "html markup file (380 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/basin_explorer/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "geox-gui/public/basin_explorer/manifest.json",
+      "summary": "json config file (111 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/public/cesium/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/cesium/index.html",
+      "summary": "html markup file (205 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/cesium/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "geox-gui/public/cesium/manifest.json",
+      "summary": "json config file (41 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/public/seismic_viewer/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/seismic_viewer/index.html",
+      "summary": "html markup file (289 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/seismic_viewer/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "geox-gui/public/seismic_viewer/manifest.json",
+      "summary": "json config file (107 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/public/webmcp/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/webmcp/index.html",
+      "summary": "html markup file (224 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/public/well_context_desk/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "geox-gui/public/well_context_desk/index.html",
+      "summary": "html markup file (701 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox-gui/public/well_context_desk/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "geox-gui/public/well_context_desk/manifest.json",
+      "summary": "json config file (115 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/scripts/copy-cesium-runtime.mjs",
+      "type": "file",
+      "name": "copy-cesium-runtime.mjs",
+      "filePath": "geox-gui/scripts/copy-cesium-runtime.mjs",
+      "summary": "javascript code file (13 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/App.css",
+      "type": "file",
+      "name": "App.css",
+      "filePath": "geox-gui/src/App.css",
+      "summary": "css markup file (164 non-empty lines).",
+      "tags": [
+        "markup",
+        "css"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

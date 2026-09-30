@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/governance/gov-human-in-loop-888.md",
+      "type": "document",
+      "name": "gov-human-in-loop-888.md",
+      "filePath": "src/geox_core/skills/governance/gov-human-in-loop-888.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/governance/gov-legal-jurisdiction.md",
+      "type": "document",
+      "name": "gov-legal-jurisdiction.md",
+      "filePath": "src/geox_core/skills/governance/gov-legal-jurisdiction.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/governance/gov-peace-maruah-screen.md",
+      "type": "document",
+      "name": "gov-peace-maruah-screen.md",
+      "filePath": "src/geox_core/skills/governance/gov-peace-maruah-screen.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

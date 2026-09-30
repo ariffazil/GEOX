@@ -18,6 +18,12 @@ from pydantic import BaseModel, ConfigDict, Field
 from geox.egs.models.provenance import EvidenceRef, ProvenanceRecord
 from geox.egs.models.uncertainty import ConfidenceGrade, ScenarioSet, UncertainValue
 
+# Explanatory-KIND axis (claim_kernel/v1). Owned by geox_core so that the MCP
+# claim engine, this EGS model and the state-machine contract share one
+# vocabulary. Additive: the field below defaults to UNCLASSIFIED, so every
+# pre-existing ClaimEnvelope record stays valid and unchanged.
+from geox_core.enums.statuses import ClaimExplanationClass
+
 # ═══════════════════════════════════════════════════════════════════════════════
 # Claim Status Lifecycle
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -77,6 +83,21 @@ class ClaimEnvelope(BaseModel):
     status: ClaimStatus = Field(default=ClaimStatus.DRAFT, description="Lifecycle status")
     grade: ConfidenceGrade = Field(default=ConfidenceGrade.NOT_GRADED, description="Confidence grade")
     confidence_score: float = Field(default=0.5, ge=0.0, le=1.0, description="Numerical confidence")
+
+    # Explanatory kind - WHAT KIND of explanation this claim is (claim_kernel/v1).
+    # Independent of `status` (WHERE it is in review): a claim may be ACCEPTED in
+    # review and still be NARRATIVE, in which case it may be published but may
+    # never justify a mutation into APPROVED_INTERPRETATION or SEALED.
+    # Defaults to UNCLASSIFIED so pre-existing records are unaffected and fail
+    # closed rather than being silently treated as action-eligible.
+    explanation_class: ClaimExplanationClass = Field(
+        default=ClaimExplanationClass.UNCLASSIFIED,
+        description=(
+            "Explanatory kind (claim_kernel/v1): MEASURED | MECHANISM | PATTERN | "
+            "NARRATIVE | UNCLASSIFIED. Only MEASURED, MECHANISM and PATTERN are "
+            "action-eligible; the others are publishable but cannot be approved or sealed."
+        ),
+    )
 
     # Entity binding — what earth entity this claim is about
     entity_type: str | None = Field(default=None, description="Type of earth entity")

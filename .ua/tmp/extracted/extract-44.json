@@ -1,0 +1,1243 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 19,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 19,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 19
+    }
+  },
+  "results": [
+    {
+      "path": "schemas/earth/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 23,
+      "nonEmptyLines": 19,
+      "sections": [
+        {
+          "heading": "GEOX Earth Schemas",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Schema Validation Pipeline",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Testing and Validation",
+          "level": 3,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "schemas/earth/crs_datum.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 54,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "schemas/earth/dataset_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/deviation_survey.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 81,
+      "nonEmptyLines": 81,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "additionalProperties",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "schemas/earth/earth_claim.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 57,
+      "nonEmptyLines": 57,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 39
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/fault.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 108,
+      "nonEmptyLines": 108,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 77
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 85
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/horizon.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 94,
+      "nonEmptyLines": 94,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 65
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 74
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/interpretation_claim.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 88,
+      "nonEmptyLines": 88,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 55
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 72
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/measurement.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 35,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/memory_envelope.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 99,
+      "nonEmptyLines": 99,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "allOf",
+          "level": 1,
+          "line": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "schemas/earth/provenance.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 62,
+      "nonEmptyLines": 62,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 33
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "schemas/earth/sample_sealed_interpretation_claim.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 17,
+      "nonEmptyLines": 17,
+      "sections": [
+        {
+          "heading": "claim_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "provenance",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "confidence",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "evidence",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "schemas/earth/segy_metadata.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 156,
+      "nonEmptyLines": 156,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "additionalProperties",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "schemas/earth/seismic_volume_metadata.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 71,
+      "nonEmptyLines": 71,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 42
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/uncertainty.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 40,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 35
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/units.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 55,
+      "nonEmptyLines": 55,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "schemas/earth/well_header.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 83,
+      "nonEmptyLines": 83,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 56
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 70
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/well_log_curve.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 39,
+      "nonEmptyLines": 39,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "schema_id",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "changelog",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "examples",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "invalid_examples",
+          "level": 1,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    },
+    {
+      "path": "schemas/earth/well_tops.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 109,
+      "nonEmptyLines": 109,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "$id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "type",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "additionalProperties",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "properties",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

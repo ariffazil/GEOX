@@ -1,0 +1,495 @@
+{
+  "nodes": [
+    {
+      "id": "file:tests/unit/test_tasks.py",
+      "type": "file",
+      "name": "test_tasks.py",
+      "filePath": "tests/unit/test_tasks.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/unit/test_tasks.py:mcp_server",
+      "type": "function",
+      "name": "mcp_server",
+      "filePath": "tests/unit/test_tasks.py",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "mcp_server() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_tasks.py:test_task_tool_task_config",
+      "type": "function",
+      "name": "test_task_tool_task_config",
+      "filePath": "tests/unit/test_tasks.py",
+      "lineRange": [
+        87,
+        99
+      ],
+      "summary": "test_task_tool_task_config(mcp_server) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/unit/test_thermal_maturity.py",
+      "type": "file",
+      "name": "test_thermal_maturity.py",
+      "filePath": "tests/unit/test_thermal_maturity.py",
+      "summary": "Defines 10 function(s); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/unit/test_thermal_maturity.py:_make_thermal",
+      "type": "function",
+      "name": "_make_thermal",
+      "filePath": "tests/unit/test_thermal_maturity.py",
+      "lineRange": [
+        29,
+        45
+      ],
+      "summary": "_make_thermal(name, ages, depths, gradient) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/unit/test_thermal_maturity.py:test_hydrocarbon_windows_tracked",
+      "type": "function",
+      "name": "test_hydrocarbon_windows_tracked",
+      "filePath": "tests/unit/test_thermal_maturity.py",
+      "lineRange": [
+        99,
+        109
+      ],
+      "summary": "test_hydrocarbon_windows_tracked() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tests/verify_harness_sync.py",
+      "type": "file",
+      "name": "verify_harness_sync.py",
+      "filePath": "tests/verify_harness_sync.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/verify_harness_sync.py:test_harness_governance",
+      "type": "function",
+      "name": "test_harness_governance",
+      "filePath": "tests/verify_harness_sync.py",
+      "lineRange": [
+        8,
+        50
+      ],
+      "summary": "test_harness_governance() — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/verify_integrated_stack.py",
+      "type": "file",
+      "name": "verify_integrated_stack.py",
+      "filePath": "tests/verify_integrated_stack.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/verify_integrated_stack.py:test_integrated_stack",
+      "type": "function",
+      "name": "test_integrated_stack",
+      "filePath": "tests/verify_integrated_stack.py",
+      "lineRange": [
+        9,
+        56
+      ],
+      "summary": "test_integrated_stack() — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tests/well/test_desurvey.py",
+      "type": "file",
+      "name": "test_desurvey.py",
+      "filePath": "tests/well/test_desurvey.py",
+      "summary": "Defines 7 function(s); 1 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_1_vertical_well",
+      "type": "function",
+      "name": "test_1_vertical_well",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        34,
+        69
+      ],
+      "summary": "test_1_vertical_well() — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_2_straight_inclined_well",
+      "type": "function",
+      "name": "test_2_straight_inclined_well",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        73,
+        99
+      ],
+      "summary": "test_2_straight_inclined_well() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_3_build_and_hold_horizontal",
+      "type": "function",
+      "name": "test_3_build_and_hold_horizontal",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        103,
+        144
+      ],
+      "summary": "test_3_build_and_hold_horizontal() — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_4_magnetic_declination_application",
+      "type": "function",
+      "name": "test_4_magnetic_declination_application",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        148,
+        174
+      ],
+      "summary": "test_4_magnetic_declination_application() — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_5_survey_gap_escalates_estimate",
+      "type": "function",
+      "name": "test_5_survey_gap_escalates_estimate",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        178,
+        217
+      ],
+      "summary": "test_5_survey_gap_escalates_estimate() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_6_kb_missing_escalates",
+      "type": "function",
+      "name": "test_6_kb_missing_escalates",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        221,
+        258
+      ],
+      "summary": "test_6_kb_missing_escalates() — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tests/well/test_desurvey.py:test_bonus_tangential_method",
+      "type": "function",
+      "name": "test_bonus_tangential_method",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        262,
+        284
+      ],
+      "summary": "test_bonus_tangential_method() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:tests/well/test_desurvey.py:TestValidationFailures",
+      "type": "class",
+      "name": "TestValidationFailures",
+      "filePath": "tests/well/test_desurvey.py",
+      "lineRange": [
+        288,
+        318
+      ],
+      "summary": "Class TestValidationFailures with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tools/extract_gsm_figures.py",
+      "type": "file",
+      "name": "extract_gsm_figures.py",
+      "filePath": "tools/extract_gsm_figures.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tools/extract_gsm_figures.py:extract_figures",
+      "type": "function",
+      "name": "extract_figures",
+      "filePath": "tools/extract_gsm_figures.py",
+      "lineRange": [
+        20,
+        66
+      ],
+      "summary": "extract_figures(pdf_path, output_dir, dpi) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:tools/georeference_map.py",
+      "type": "file",
+      "name": "georeference_map.py",
+      "filePath": "tools/georeference_map.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:tools/georeference_map.py:georeference_map",
+      "type": "function",
+      "name": "georeference_map",
+      "filePath": "tools/georeference_map.py",
+      "lineRange": [
+        21,
+        62
+      ],
+      "summary": "georeference_map(input_path, output_path, bounds) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ui/geox-dashboard.html",
+      "type": "file",
+      "name": "geox-dashboard.html",
+      "filePath": "ui/geox-dashboard.html",
+      "summary": "html markup file (45 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ui/well-dashboard.html",
+      "type": "file",
+      "name": "well-dashboard.html",
+      "filePath": "ui/well-dashboard.html",
+      "summary": "html markup file (22 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:vision/earth_substrate_v1.md",
+      "type": "document",
+      "name": "earth_substrate_v1.md",
+      "filePath": "vision/earth_substrate_v1.md",
+      "summary": "markdown docs file (60 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:well-correlation-rigor/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "well-correlation-rigor/SKILL.md",
+      "summary": "markdown docs file (99 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:tests/unit/test_tasks.py",
+      "target": "function:tests/unit/test_tasks.py:mcp_server",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_tasks.py",
+      "target": "function:tests/unit/test_tasks.py:test_task_tool_task_config",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_thermal_maturity.py",
+      "target": "function:tests/unit/test_thermal_maturity.py:_make_thermal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/unit/test_thermal_maturity.py",
+      "target": "function:tests/unit/test_thermal_maturity.py:test_hydrocarbon_windows_tracked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/verify_harness_sync.py",
+      "target": "function:tests/verify_harness_sync.py:test_harness_governance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/verify_integrated_stack.py",
+      "target": "function:tests/verify_integrated_stack.py:test_integrated_stack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_1_vertical_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_2_straight_inclined_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_3_build_and_hold_horizontal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_4_magnetic_declination_application",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_5_survey_gap_escalates_estimate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_6_kb_missing_escalates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "function:tests/well/test_desurvey.py:test_bonus_tangential_method",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tests/well/test_desurvey.py",
+      "target": "class:tests/well/test_desurvey.py:TestValidationFailures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tools/extract_gsm_figures.py",
+      "target": "function:tools/extract_gsm_figures.py:extract_figures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:tools/georeference_map.py",
+      "target": "function:tools/georeference_map.py:georeference_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

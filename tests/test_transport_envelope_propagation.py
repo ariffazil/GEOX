@@ -71,7 +71,7 @@ async def test_transport_reaches_response_provenance():
     """A caller passing transport kwargs must see them stamped into the response."""
     r = await geox_seismic_interpret(
         mode="interpret_section",
-        image_path="/root/GEOX/data/atlas/cache/renders/8a5b232559341756.png",
+        image_path="/root/GEOX/data/seismic_sections/marmousi_synthetic_section.png",
         session_id="probe-sess-001",
         actor_id="arif-fazil",
         trace_id="trc-sov-1",
@@ -89,7 +89,7 @@ async def test_transport_omitted_does_not_clobber_existing_provenance():
     """If caller omits transport, we must not stamp None over existing provenance."""
     r = await geox_seismic_interpret(
         mode="interpret_section",
-        image_path="/root/GEOX/data/atlas/cache/renders/8a5b232559341756.png",
+        image_path="/root/GEOX/data/seismic_sections/marmousi_synthetic_section.png",
     )
     prov = r.get("provenance") or {}
     # The R1 stage may set its own session_id via code_sha256; ours must

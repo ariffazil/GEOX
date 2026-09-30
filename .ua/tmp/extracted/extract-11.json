@@ -1,0 +1,357 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [
+    "apps/geox-mcp-visual/index.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 6,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 6
+    }
+  },
+  "results": [
+    {
+      "path": "apps/geox-mcp-visual/cubeprobe_data.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 7601,
+      "nonEmptyLines": 7601,
+      "sections": [
+        {
+          "heading": "cube",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "inline",
+          "level": 1,
+          "line": 1693
+        },
+        {
+          "heading": "crossline",
+          "level": 1,
+          "line": 4159
+        },
+        {
+          "heading": "time_slice",
+          "level": 1,
+          "line": 6625
+        },
+        {
+          "heading": "physics9",
+          "level": 1,
+          "line": 7594
+        },
+        {
+          "heading": "constitution",
+          "level": 1,
+          "line": 7599
+        },
+        {
+          "heading": "dimension",
+          "level": 1,
+          "line": 7600
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "apps/geox-mcp-visual/manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 23,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "app_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "display_name",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "ui_entry",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "required_tools",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "optional_tools",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "arifos",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "apps/geox-mcp-visual/physiccore_data.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 295,
+      "nonEmptyLines": 295,
+      "sections": [
+        {
+          "heading": "materials",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "canon9_schema",
+          "level": 1,
+          "line": 164
+        },
+        {
+          "heading": "ac_matrix",
+          "level": 1,
+          "line": 211
+        },
+        {
+          "heading": "metabolic_loop",
+          "level": 1,
+          "line": 246
+        },
+        {
+          "heading": "constitution",
+          "level": 1,
+          "line": 292
+        },
+        {
+          "heading": "dimension",
+          "level": 1,
+          "line": 293
+        },
+        {
+          "heading": "arifos_version",
+          "level": 1,
+          "line": 294
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "apps/geox-mcp-visual/seisvis_data.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 5405,
+      "nonEmptyLines": 5405,
+      "sections": [
+        {
+          "heading": "seismic_data",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "horizon_picks",
+          "level": 1,
+          "line": 5365
+        },
+        {
+          "heading": "constitution",
+          "level": 1,
+          "line": 5403
+        },
+        {
+          "heading": "dimension",
+          "level": 1,
+          "line": 5404
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "apps/geox-mcp-visual/timelapse_data.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 56,
+      "nonEmptyLines": 56,
+      "sections": [
+        {
+          "heading": "gassmann",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "forward",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "difference",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "surveys",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "physics9",
+          "level": 1,
+          "line": 47
+        },
+        {
+          "heading": "constitution",
+          "level": 1,
+          "line": 53
+        },
+        {
+          "heading": "dimension",
+          "level": 1,
+          "line": 54
+        },
+        {
+          "heading": "arifos_version",
+          "level": 1,
+          "line": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "apps/geox-mcp-visual/welldesk_data.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 3471,
+      "nonEmptyLines": 3471,
+      "sections": [
+        {
+          "heading": "well_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "permit",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "field",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "company",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "country",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "track_data",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "pay_zones",
+          "level": 1,
+          "line": 3441
+        },
+        {
+          "heading": "summary",
+          "level": 1,
+          "line": 3448
+        },
+        {
+          "heading": "physics9",
+          "level": 1,
+          "line": 3457
+        },
+        {
+          "heading": "constitution",
+          "level": 1,
+          "line": 3468
+        },
+        {
+          "heading": "dimension",
+          "level": 1,
+          "line": 3469
+        },
+        {
+          "heading": "arifos_version",
+          "level": 1,
+          "line": 3470
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 12
+      }
+    }
+  ]
+}

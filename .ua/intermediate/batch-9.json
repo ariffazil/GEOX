@@ -1,0 +1,245 @@
+{
+  "nodes": [
+    {
+      "id": "document:GENESIS/000_MANIFESTO.md",
+      "type": "document",
+      "name": "000_MANIFESTO.md",
+      "filePath": "GENESIS/000_MANIFESTO.md",
+      "summary": "markdown docs file (85 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/001_KILL_MAP.md",
+      "type": "document",
+      "name": "001_KILL_MAP.md",
+      "filePath": "GENESIS/001_KILL_MAP.md",
+      "summary": "markdown docs file (95 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/002_FIRST_PRINCIPLES.md",
+      "type": "document",
+      "name": "002_FIRST_PRINCIPLES.md",
+      "filePath": "GENESIS/002_FIRST_PRINCIPLES.md",
+      "summary": "markdown docs file (110 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md",
+      "type": "document",
+      "name": "003_CONSTITUTIONAL_ALIGNMENT.md",
+      "filePath": "GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md",
+      "summary": "markdown docs file (257 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/003a_PHYSICS_MANIFEST.md",
+      "type": "document",
+      "name": "003a_PHYSICS_MANIFEST.md",
+      "filePath": "GENESIS/003a_PHYSICS_MANIFEST.md",
+      "summary": "markdown docs file (4 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:GENESIS/004_BOUNDARIES.md",
+      "type": "document",
+      "name": "004_BOUNDARIES.md",
+      "filePath": "GENESIS/004_BOUNDARIES.md",
+      "summary": "markdown docs file (97 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/005_AGI_LOOP_RESEARCH.md",
+      "type": "document",
+      "name": "005_AGI_LOOP_RESEARCH.md",
+      "filePath": "GENESIS/005_AGI_LOOP_RESEARCH.md",
+      "summary": "markdown docs file (365 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/006_AGI_LOOP.md",
+      "type": "document",
+      "name": "006_AGI_LOOP.md",
+      "filePath": "GENESIS/006_AGI_LOOP.md",
+      "summary": "markdown docs file (393 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/007_GEOX_CHARTER.md",
+      "type": "document",
+      "name": "007_GEOX_CHARTER.md",
+      "filePath": "GENESIS/007_GEOX_CHARTER.md",
+      "summary": "markdown docs file (14 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:GENESIS/008_FULL_EARTH_MODEL_LOOP.md",
+      "type": "document",
+      "name": "008_FULL_EARTH_MODEL_LOOP.md",
+      "filePath": "GENESIS/008_FULL_EARTH_MODEL_LOOP.md",
+      "summary": "markdown docs file (49 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/009_EARTH_ORGAN_CONTRACT.md",
+      "type": "document",
+      "name": "009_EARTH_ORGAN_CONTRACT.md",
+      "filePath": "GENESIS/009_EARTH_ORGAN_CONTRACT.md",
+      "summary": "markdown docs file (28 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:GENESIS/010_AEI_GOVERNANCE.md",
+      "type": "document",
+      "name": "010_AEI_GOVERNANCE.md",
+      "filePath": "GENESIS/010_AEI_GOVERNANCE.md",
+      "summary": "markdown docs file (241 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/011_COMPETITIVE_LAYER_MAP.md",
+      "type": "document",
+      "name": "011_COMPETITIVE_LAYER_MAP.md",
+      "filePath": "GENESIS/011_COMPETITIVE_LAYER_MAP.md",
+      "summary": "markdown docs file (198 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md",
+      "type": "document",
+      "name": "012_GEOX_001_WELL_SEISMIC_TRUTH.md",
+      "filePath": "GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md",
+      "summary": "markdown docs file (125 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/013_GEOX_METABOLIC_SURFACE.md",
+      "type": "document",
+      "name": "013_GEOX_METABOLIC_SURFACE.md",
+      "filePath": "GENESIS/013_GEOX_METABOLIC_SURFACE.md",
+      "summary": "markdown docs file (71 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/014_PETREL_DSG_DELTA.md",
+      "type": "document",
+      "name": "014_PETREL_DSG_DELTA.md",
+      "filePath": "GENESIS/014_PETREL_DSG_DELTA.md",
+      "summary": "markdown docs file (39 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/015_AGENTIC_GEOLOGY_DOCTRINE.md",
+      "type": "document",
+      "name": "015_AGENTIC_GEOLOGY_DOCTRINE.md",
+      "filePath": "GENESIS/015_AGENTIC_GEOLOGY_DOCTRINE.md",
+      "summary": "markdown docs file (149 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md",
+      "type": "document",
+      "name": "016_CONSTITUTIONAL_PROMPT_STANDARD.md",
+      "filePath": "GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md",
+      "summary": "markdown docs file (204 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/017_EARTHOS_CONSTITUTION.md",
+      "type": "document",
+      "name": "017_EARTHOS_CONSTITUTION.md",
+      "filePath": "GENESIS/017_EARTHOS_CONSTITUTION.md",
+      "summary": "markdown docs file (314 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:GENESIS/018_DELTA_OMEGA_PSI_GEOX_HARDENING.md",
+      "type": "document",
+      "name": "018_DELTA_OMEGA_PSI_GEOX_HARDENING.md",
+      "filePath": "GENESIS/018_DELTA_OMEGA_PSI_GEOX_HARDENING.md",
+      "summary": "markdown docs file (161 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

@@ -52,7 +52,7 @@ def live_with_drift(canonical_names: set[str]) -> list[dict[str, Any]]:
         {"name": "geox_las_inspect", "description": "drift"},  # audit-named
         {"name": "geox_data_ingest_bundle", "description": "drift"},  # audit-named
         {"name": "geox_blockspace_resolution_tool", "description": "drift"},  # audit-named
-        {"name": "geox_workspace", "description": "ok"},
+        {"name": "geox_petrophysics", "description": "ok"},
     ]
 
 
@@ -69,8 +69,8 @@ def test_canonical_set_includes_well_known_tools() -> None:
         "geox_well_ingest",
         "geox_well_qc",
         "geox_seismic_compute",
-        "geox_surface_status",
-        "geox_workspace",
+        "geox_petrophysics",
+        "geox_basin",
         "geox_claim",
         "geox_prospect",
     }
@@ -113,7 +113,7 @@ def test_filter_strips_drift(live_with_drift: list[dict[str, Any]]) -> None:
     """filter_tools_list removes non-canonical entries from the live list."""
     filtered = filter_tools_list(live_with_drift, log_drift=False)
     kept_names = {t["name"] for t in filtered}
-    assert kept_names == {"geox_well_ingest", "geox_workspace"}
+    assert kept_names == {"geox_well_ingest", "geox_petrophysics"}
     # No drift entries survive.
     for entry in filtered:
         assert is_canonical(entry["name"]), f"{entry['name']!r} survived the filter"
@@ -175,11 +175,11 @@ def test_drift_report_detects_live_extras(
 
 def test_drift_report_detects_canonical_gaps(canonical_names: set[str]) -> None:
     """Gap = names in canonical but NOT in live."""
-    sparse = ["geox_well_ingest", "geox_workspace"]
+    sparse = ["geox_well_ingest", "geox_petrophysics"]
     report = drift_report(sparse)
     assert report["gap_count"] == len(canonical_names) - len(sparse)
     assert "geox_well_ingest" not in report["missing"]
-    assert "geox_workspace" not in report["missing"]
+    assert "geox_petrophysics" not in report["missing"]
     assert report["ok"] is False
 
 

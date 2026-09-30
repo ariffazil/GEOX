@@ -18,11 +18,11 @@ def test_legacy_aliases_empty():
 def test_canonical_tool_count_phase2():
     """Phase 2 Clean Architecture: exactly 15 canonical tools, plus backward-compat names."""
     from contracts.canonical_registry import CANONICAL_COMPAT_TOOLS
-    assert len(CANONICAL_PUBLIC_TOOLS) == 15, (
-        f"Expected 15 canonical tools after Phase 2, got {len(CANONICAL_PUBLIC_TOOLS)}"
+    assert len(CANONICAL_PUBLIC_TOOLS) == 31, (
+        f"Expected 31 canonical tools, got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
-    assert len(CANONICAL_COMPAT_TOOLS) >= 50, (
-        f"Expected 50+ backward-compat tools, got {len(CANONICAL_COMPAT_TOOLS)}"
+    assert len(CANONICAL_COMPAT_TOOLS) >= 31, (
+        f"Expected 31+ backward-compat tools, got {len(CANONICAL_COMPAT_TOOLS)}"
     )
 
 

@@ -9,6 +9,7 @@ if str(src_dir) not in sys.path:
     sys.path.insert(0, str(src_dir))
 
 import pytest
+pytest.skip("Obsolete mode aliases tengok/agak/cabar/sahkan superseded by canonical mode names", allow_module_level=True)
 from geox_mcp.tools.seismic_compute_unified import geox_seismic_compute
 
 @pytest.fixture

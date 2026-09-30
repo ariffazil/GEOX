@@ -1,0 +1,158 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": "docs/benchmarks/GEOX-001_MODEL_DESERVES_TO_LIVE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 23,
+      "nonEmptyLines": 15,
+      "sections": [
+        {
+          "heading": "GEOX-001: Model Deserves To Live",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Run",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "MCP",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Thesis",
+          "level": 2,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/benchmarks/GEOX_1D_MCP_SURFACE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 31,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "GEOX 1D MCP Surface",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Boundary rules",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Models",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Headless GEOX-001",
+          "level": 2,
+          "line": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/benchmarks/MARMOUSI2-P1-STOIIP-MC.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 23,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "Marmousi2 P1 — Monte Carlo STOIIP / EMV",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Epistemic",
+          "level": 2,
+          "line": 13
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "docs/benchmarks/MARMOUSI2-WELL-TIE-VALIDATE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "Marmousi2 Known-Answer Well-Tie Validation",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What this proves",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Orthogonal Base path exercised",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "Next",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Run",
+          "level": 2,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 7,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 7
+    }
+  },
+  "results": [
+    {
+      "path": "skills/subsurface/basin-charge.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 63,
+      "nonEmptyLines": 51,
+      "sections": [
+        {
+          "heading": "subsurface.basin-charge",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Charge Timing Validation",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Maturity Windows",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "Refusal Logic",
+          "level": 2,
+          "line": 55
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "skills/subsurface/formation-evaluation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 61,
+      "nonEmptyLines": 49,
+      "sections": [
+        {
+          "heading": "subsurface.formation-evaluation",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Physics Constraints (MUST BE ENFORCED, NOT ADVISORY)",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Uncertainty Requirements",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "Refusal Logic",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "skills/subsurface/posterior-integrity.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 89,
+      "nonEmptyLines": 70,
+      "sections": [
+        {
+          "heading": "subsurface.posterior-integrity",
+          "level": 1,
+          "line": 37
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Integrity Score Computation",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "Threshold Actions",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "Requirement",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "Model Lineage Hash",
+          "level": 2,
+          "line": 74
+        },
+        {
+          "heading": "Refusal Logic",
+          "level": 2,
+          "line": 81
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 86
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "skills/subsurface/prospect-risk.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 90,
+      "nonEmptyLines": 73,
+      "sections": [
+        {
+          "heading": "subsurface.prospect-risk",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "PoS Formula",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Independence Enforcement",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "Output Schema",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "Posterior Breadth",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 85
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "skills/subsurface/reservoir-dynamics.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 68,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "subsurface.reservoir-dynamics",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Upstream Dependency Enforcement",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Net Pay Flagging Rules",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "Output Requirements",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "skills/subsurface/seismic-interpretation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 64,
+      "nonEmptyLines": 50,
+      "sections": [
+        {
+          "heading": "subsurface.seismic-interpretation",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Key Principle",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "Forge SOT (2026-07-23)",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "Constraints",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "Refusal Logic",
+          "level": 2,
+          "line": 55
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "skills/subsurface/subsurface-gr-interval-cognitive.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 44,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "subsurface.gr-interval-cognitive",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Constraints",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

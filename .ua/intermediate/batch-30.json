@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "document:ingest/macrostrat-malaysia/SUBMISSION_PROPOSAL.md",
+      "type": "document",
+      "name": "SUBMISSION_PROPOSAL.md",
+      "filePath": "ingest/macrostrat-malaysia/SUBMISSION_PROPOSAL.md",
+      "summary": "markdown docs file (59 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ingest/macrostrat-malaysia/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "ingest/macrostrat-malaysia/index.html",
+      "summary": "html markup file (328 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:ingest/macrostrat-malaysia/jmg_malaysia_states_summary.json",
+      "type": "config",
+      "name": "jmg_malaysia_states_summary.json",
+      "filePath": "ingest/macrostrat-malaysia/jmg_malaysia_states_summary.json",
+      "summary": "json config file (522 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:ingest/macrostrat-malaysia/macrostrat_ingestion_manifest.json",
+      "type": "config",
+      "name": "macrostrat_ingestion_manifest.json",
+      "filePath": "ingest/macrostrat-malaysia/macrostrat_ingestion_manifest.json",
+      "summary": "json config file (84 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

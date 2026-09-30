@@ -1,0 +1,213 @@
+{
+  "nodes": [
+    {
+      "id": "pipeline:.github/workflows/07-publish-pypi.yml",
+      "type": "pipeline",
+      "name": "07-publish-pypi.yml",
+      "filePath": ".github/workflows/07-publish-pypi.yml",
+      "summary": "yaml infra file (39 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/agentic-ci.yml",
+      "type": "pipeline",
+      "name": "agentic-ci.yml",
+      "filePath": ".github/workflows/agentic-ci.yml",
+      "summary": "yaml infra file (287 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "pipeline:.github/workflows/auto-merge-dependabot.yml",
+      "type": "pipeline",
+      "name": "auto-merge-dependabot.yml",
+      "filePath": ".github/workflows/auto-merge-dependabot.yml",
+      "summary": "yaml infra file (117 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/auto-tag-date.yml",
+      "type": "pipeline",
+      "name": "auto-tag-date.yml",
+      "filePath": ".github/workflows/auto-tag-date.yml",
+      "summary": "yaml infra file (33 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/ci-uv-lock-invariant.yml",
+      "type": "pipeline",
+      "name": "ci-uv-lock-invariant.yml",
+      "filePath": ".github/workflows/ci-uv-lock-invariant.yml",
+      "summary": "yaml infra file (74 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/copilot-setup-steps.yml",
+      "type": "pipeline",
+      "name": "copilot-setup-steps.yml",
+      "filePath": ".github/workflows/copilot-setup-steps.yml",
+      "summary": "yaml infra file (47 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/dependabot-ci.yml",
+      "type": "pipeline",
+      "name": "dependabot-ci.yml",
+      "filePath": ".github/workflows/dependabot-ci.yml",
+      "summary": "yaml infra file (137 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/domain-ci.yml",
+      "type": "pipeline",
+      "name": "domain-ci.yml",
+      "filePath": ".github/workflows/domain-ci.yml",
+      "summary": "yaml infra file (70 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/external-witness.yml",
+      "type": "pipeline",
+      "name": "external-witness.yml",
+      "filePath": ".github/workflows/external-witness.yml",
+      "summary": "yaml infra file (60 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/forge.yml",
+      "type": "pipeline",
+      "name": "forge.yml",
+      "filePath": ".github/workflows/forge.yml",
+      "summary": "yaml infra file (153 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/geox-ci.yml",
+      "type": "pipeline",
+      "name": "geox-ci.yml",
+      "filePath": ".github/workflows/geox-ci.yml",
+      "summary": "yaml infra file (143 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/governance-gate.yml",
+      "type": "pipeline",
+      "name": "governance-gate.yml",
+      "filePath": ".github/workflows/governance-gate.yml",
+      "summary": "yaml infra file (38 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/publish-image.yml",
+      "type": "pipeline",
+      "name": "publish-image.yml",
+      "filePath": ".github/workflows/publish-image.yml",
+      "summary": "yaml infra file (34 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "pipeline:.github/workflows/repo-hygiene-weekly.yml",
+      "type": "pipeline",
+      "name": "repo-hygiene-weekly.yml",
+      "filePath": ".github/workflows/repo-hygiene-weekly.yml",
+      "summary": "yaml infra file (83 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/repo-routing-validation.yml",
+      "type": "pipeline",
+      "name": "repo-routing-validation.yml",
+      "filePath": ".github/workflows/repo-routing-validation.yml",
+      "summary": "yaml infra file (59 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "pipeline:.github/workflows/sentinel-premerge-gate.yml",
+      "type": "pipeline",
+      "name": "sentinel-premerge-gate.yml",
+      "filePath": ".github/workflows/sentinel-premerge-gate.yml",
+      "summary": "yaml infra file (241 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

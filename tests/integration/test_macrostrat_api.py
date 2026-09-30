@@ -52,8 +52,14 @@ pytestmark_api_alive = pytest.mark.skipif(
            'Integration test requires live, populated responses.',
 )
 
+def _dns_reachable() -> bool:
+    try:
+        return bool(__import__("socket").getaddrinfo("macrostrat.org", 443))
+    except Exception:
+        return False
+
 pytestmark_dns = pytest.mark.skipif(
-    not __import__("socket").getaddrinfo("macrostrat.org", 443),
+    not _dns_reachable(),
     reason="Macrostrat.org not reachable",
 )
 

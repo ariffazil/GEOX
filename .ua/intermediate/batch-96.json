@@ -1,0 +1,1303 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/io/noaa_swpc_fetcher.py",
+      "type": "file",
+      "name": "noaa_swpc_fetcher.py",
+      "filePath": "src/geox_core/io/noaa_swpc_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/noaa_swpc_fetcher.py:NOAASWPCFetcher",
+      "type": "class",
+      "name": "NOAASWPCFetcher",
+      "filePath": "src/geox_core/io/noaa_swpc_fetcher.py",
+      "lineRange": [
+        47,
+        77
+      ],
+      "summary": "Class NOAASWPCFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/nsta_uk_fetcher.py",
+      "type": "file",
+      "name": "nsta_uk_fetcher.py",
+      "filePath": "src/geox_core/io/nsta_uk_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/nsta_uk_fetcher.py:NSTAUKFetcher",
+      "type": "class",
+      "name": "NSTAUKFetcher",
+      "filePath": "src/geox_core/io/nsta_uk_fetcher.py",
+      "lineRange": [
+        66,
+        90
+      ],
+      "summary": "Class NSTAUKFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/onegeology_fetcher.py",
+      "type": "file",
+      "name": "onegeology_fetcher.py",
+      "filePath": "src/geox_core/io/onegeology_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/onegeology_fetcher.py:OneGeologyFetcher",
+      "type": "class",
+      "name": "OneGeologyFetcher",
+      "filePath": "src/geox_core/io/onegeology_fetcher.py",
+      "lineRange": [
+        54,
+        70
+      ],
+      "summary": "Class OneGeologyFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/usgs_earthquake_fetcher.py",
+      "type": "file",
+      "name": "usgs_earthquake_fetcher.py",
+      "filePath": "src/geox_core/io/usgs_earthquake_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/io/usgs_earthquake_fetcher.py:EarthquakeQuery",
+      "type": "class",
+      "name": "EarthquakeQuery",
+      "filePath": "src/geox_core/io/usgs_earthquake_fetcher.py",
+      "lineRange": [
+        98,
+        118
+      ],
+      "summary": "Class EarthquakeQuery with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/io/usgs_earthquake_fetcher.py:USGSEarthquakeFetcher",
+      "type": "class",
+      "name": "USGSEarthquakeFetcher",
+      "filePath": "src/geox_core/io/usgs_earthquake_fetcher.py",
+      "lineRange": [
+        122,
+        264
+      ],
+      "summary": "Class USGSEarthquakeFetcher with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/io/usgs_water_fetcher.py",
+      "type": "file",
+      "name": "usgs_water_fetcher.py",
+      "filePath": "src/geox_core/io/usgs_water_fetcher.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/usgs_water_fetcher.py:USGSWaterFetcher",
+      "type": "class",
+      "name": "USGSWaterFetcher",
+      "filePath": "src/geox_core/io/usgs_water_fetcher.py",
+      "lineRange": [
+        56,
+        81
+      ],
+      "summary": "Class USGSWaterFetcher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/io/wsm_stress_fetcher.py",
+      "type": "file",
+      "name": "wsm_stress_fetcher.py",
+      "filePath": "src/geox_core/io/wsm_stress_fetcher.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/io/wsm_stress_fetcher.py:WSMStressFetcher",
+      "type": "class",
+      "name": "WSMStressFetcher",
+      "filePath": "src/geox_core/io/wsm_stress_fetcher.py",
+      "lineRange": [
+        71,
+        96
+      ],
+      "summary": "Class WSMStressFetcher with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/jobs/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/jobs/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/jobs/calibration_sync.py",
+      "type": "file",
+      "name": "calibration_sync.py",
+      "filePath": "src/geox_core/jobs/calibration_sync.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/jobs/calibration_sync.py:CalibrationSync",
+      "type": "class",
+      "name": "CalibrationSync",
+      "filePath": "src/geox_core/jobs/calibration_sync.py",
+      "lineRange": [
+        15,
+        86
+      ],
+      "summary": "Class CalibrationSync with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/laws/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/laws/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/laws/physics_guard.py",
+      "type": "file",
+      "name": "physics_guard.py",
+      "filePath": "src/geox_core/laws/physics_guard.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/laws/physics_guard.py:PhysicsGuard",
+      "type": "class",
+      "name": "PhysicsGuard",
+      "filePath": "src/geox_core/laws/physics_guard.py",
+      "lineRange": [
+        54,
+        209
+      ],
+      "summary": "Class PhysicsGuard with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/lem/organ_physics.py",
+      "type": "file",
+      "name": "organ_physics.py",
+      "filePath": "src/geox_core/lem/organ_physics.py",
+      "summary": "7 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/lem/organ_physics.py:PhysicsTeacher",
+      "type": "class",
+      "name": "PhysicsTeacher",
+      "filePath": "src/geox_core/lem/organ_physics.py",
+      "lineRange": [
+        68,
+        169
+      ],
+      "summary": "Class PhysicsTeacher with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/lem/organ_physics.py:PhysicsGuard",
+      "type": "class",
+      "name": "PhysicsGuard",
+      "filePath": "src/geox_core/lem/organ_physics.py",
+      "lineRange": [
+        185,
+        294
+      ],
+      "summary": "Class PhysicsGuard with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/lem/organ_physics.py:PhysicsScorer",
+      "type": "class",
+      "name": "PhysicsScorer",
+      "filePath": "src/geox_core/lem/organ_physics.py",
+      "lineRange": [
+        310,
+        363
+      ],
+      "summary": "Class PhysicsScorer with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/lem/organ_physics.py:PhysicsOrgan",
+      "type": "class",
+      "name": "PhysicsOrgan",
+      "filePath": "src/geox_core/lem/organ_physics.py",
+      "lineRange": [
+        369,
+        399
+      ],
+      "summary": "Class PhysicsOrgan with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/geox_core/lem/schemas/fusion_architecture.json",
+      "type": "config",
+      "name": "fusion_architecture.json",
+      "filePath": "src/geox_core/lem/schemas/fusion_architecture.json",
+      "summary": "json config file (188 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/ontology/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/ontology/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ontology/earth_reality_graph/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/__init__.py",
+      "summary": "python code file (14 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "type": "file",
+      "name": "graph_schema.py",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "summary": "26 class(es); exports 26 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:EarthNode",
+      "type": "class",
+      "name": "EarthNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        88,
+        151
+      ],
+      "summary": "Class EarthNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:StressTensorNode",
+      "type": "class",
+      "name": "StressTensorNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        159,
+        187
+      ],
+      "summary": "Class StressTensorNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:MechanicalLayerNode",
+      "type": "class",
+      "name": "MechanicalLayerNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        243,
+        264
+      ],
+      "summary": "Class MechanicalLayerNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FaultReactivationNode",
+      "type": "class",
+      "name": "FaultReactivationNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        284,
+        314
+      ],
+      "summary": "Class FaultReactivationNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FaultInterpretationNode",
+      "type": "class",
+      "name": "FaultInterpretationNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        343,
+        366
+      ],
+      "summary": "Class FaultInterpretationNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:SubsidenceNode",
+      "type": "class",
+      "name": "SubsidenceNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        415,
+        435
+      ],
+      "summary": "Class SubsidenceNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FillRatioNode",
+      "type": "class",
+      "name": "FillRatioNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        457,
+        481
+      ],
+      "summary": "Class FillRatioNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:InterpretationNode",
+      "type": "class",
+      "name": "InterpretationNode",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        551,
+        571
+      ],
+      "summary": "Class InterpretationNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:GraphEdge",
+      "type": "class",
+      "name": "GraphEdge",
+      "filePath": "src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "lineRange": [
+        616,
+        636
+      ],
+      "summary": "Class GraphEdge with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ontology/tectonic_events/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/ontology/tectonic_events/__init__.py",
+      "summary": "python code file (7 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "type": "file",
+      "name": "event_schema.py",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "summary": "8 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicEventClass",
+      "type": "class",
+      "name": "TectonicEventClass",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        26,
+        49
+      ],
+      "summary": "Class TectonicEventClass with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicEvent",
+      "type": "class",
+      "name": "TectonicEvent",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        78,
+        115
+      ],
+      "summary": "Class TectonicEvent with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:EventTransition",
+      "type": "class",
+      "name": "EventTransition",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        118,
+        150
+      ],
+      "summary": "Class EventTransition with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicScenario",
+      "type": "class",
+      "name": "TectonicScenario",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        153,
+        194
+      ],
+      "summary": "Class TectonicScenario with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:RestorationObservation",
+      "type": "class",
+      "name": "RestorationObservation",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        197,
+        258
+      ],
+      "summary": "Class RestorationObservation with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/ontology/tectonic_events/event_schema.py:DiagnosticChecklist",
+      "type": "class",
+      "name": "DiagnosticChecklist",
+      "filePath": "src/geox_core/ontology/tectonic_events/event_schema.py",
+      "lineRange": [
+        266,
+        294
+      ],
+      "summary": "Class DiagnosticChecklist with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/geox_core/ontology/tectonic_events/tectonic_invariants.yaml",
+      "type": "config",
+      "name": "tectonic_invariants.yaml",
+      "filePath": "src/geox_core/ontology/tectonic_events/tectonic_invariants.yaml",
+      "summary": "yaml config file (334 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/orchestration/__init__.py",
+      "summary": "python code file (51 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "type": "file",
+      "name": "basin_synthesis_pipeline.py",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "summary": "Defines 5 function(s); 4 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_mock_hash",
+      "type": "function",
+      "name": "_mock_hash",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        349,
+        351
+      ],
+      "summary": "_mock_hash(data) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_mock_latency",
+      "type": "function",
+      "name": "_mock_latency",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        354,
+        356
+      ],
+      "summary": "_mock_latency() — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_compute_model_spread",
+      "type": "function",
+      "name": "_compute_model_spread",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        359,
+        383
+      ],
+      "summary": "_compute_model_spread(recon_results) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:physics9_fill_for_lithology",
+      "type": "function",
+      "name": "physics9_fill_for_lithology",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        389,
+        424
+      ],
+      "summary": "physics9_fill_for_lithology(litho_name, provenance, field_prefix) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_abort_report",
+      "type": "function",
+      "name": "_abort_report",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        1437,
+        1459
+      ],
+      "summary": "_abort_report(state, provenance, gap_registry, cascade, basin_name, bbox, age_ma) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:BasinSynthesisReport",
+      "type": "class",
+      "name": "BasinSynthesisReport",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        181,
+        239
+      ],
+      "summary": "Class BasinSynthesisReport with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:FetcherManager",
+      "type": "class",
+      "name": "FetcherManager",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        245,
+        343
+      ],
+      "summary": "Class FetcherManager with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:BasinSynthesisPipeline",
+      "type": "class",
+      "name": "BasinSynthesisPipeline",
+      "filePath": "src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "lineRange": [
+        430,
+        1434
+      ],
+      "summary": "Class BasinSynthesisPipeline with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/gap_registry.py",
+      "type": "file",
+      "name": "gap_registry.py",
+      "filePath": "src/geox_core/orchestration/gap_registry.py",
+      "summary": "3 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/gap_registry.py:GapEntry",
+      "type": "class",
+      "name": "GapEntry",
+      "filePath": "src/geox_core/orchestration/gap_registry.py",
+      "lineRange": [
+        63,
+        91
+      ],
+      "summary": "Class GapEntry with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/gap_registry.py:GapRegistry",
+      "type": "class",
+      "name": "GapRegistry",
+      "filePath": "src/geox_core/orchestration/gap_registry.py",
+      "lineRange": [
+        94,
+        168
+      ],
+      "summary": "Class GapRegistry with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/provenance_ledger.py",
+      "type": "file",
+      "name": "provenance_ledger.py",
+      "filePath": "src/geox_core/orchestration/provenance_ledger.py",
+      "summary": "2 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/provenance_ledger.py:ProvenanceEntry",
+      "type": "class",
+      "name": "ProvenanceEntry",
+      "filePath": "src/geox_core/orchestration/provenance_ledger.py",
+      "lineRange": [
+        28,
+        122
+      ],
+      "summary": "Class ProvenanceEntry with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/provenance_ledger.py:ProvenanceLedger",
+      "type": "class",
+      "name": "ProvenanceLedger",
+      "filePath": "src/geox_core/orchestration/provenance_ledger.py",
+      "lineRange": [
+        125,
+        228
+      ],
+      "summary": "Class ProvenanceLedger with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/synthesis_state.py",
+      "type": "file",
+      "name": "synthesis_state.py",
+      "filePath": "src/geox_core/orchestration/synthesis_state.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/synthesis_state.py:SynthesisState",
+      "type": "class",
+      "name": "SynthesisState",
+      "filePath": "src/geox_core/orchestration/synthesis_state.py",
+      "lineRange": [
+        73,
+        259
+      ],
+      "summary": "Class SynthesisState with 8 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/orchestration/uncertainty_cascade.py",
+      "type": "file",
+      "name": "uncertainty_cascade.py",
+      "filePath": "src/geox_core/orchestration/uncertainty_cascade.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_serial",
+      "type": "function",
+      "name": "cascade_serial",
+      "filePath": "src/geox_core/orchestration/uncertainty_cascade.py",
+      "lineRange": [
+        48,
+        70
+      ],
+      "summary": "cascade_serial(confidences) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_parallel",
+      "type": "function",
+      "name": "cascade_parallel",
+      "filePath": "src/geox_core/orchestration/uncertainty_cascade.py",
+      "lineRange": [
+        73,
+        93
+      ],
+      "summary": "cascade_parallel(confidences) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_noisy_or",
+      "type": "function",
+      "name": "cascade_noisy_or",
+      "filePath": "src/geox_core/orchestration/uncertainty_cascade.py",
+      "lineRange": [
+        96,
+        118
+      ],
+      "summary": "cascade_noisy_or(confidences, leak) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/orchestration/uncertainty_cascade.py:UncertaintyCascade",
+      "type": "class",
+      "name": "UncertaintyCascade",
+      "filePath": "src/geox_core/orchestration/uncertainty_cascade.py",
+      "lineRange": [
+        124,
+        191
+      ],
+      "summary": "Class UncertaintyCascade with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/parity/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/parity/__init__.py",
+      "summary": "python code file (8 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/io/noaa_swpc_fetcher.py",
+      "target": "class:src/geox_core/io/noaa_swpc_fetcher.py:NOAASWPCFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/nsta_uk_fetcher.py",
+      "target": "class:src/geox_core/io/nsta_uk_fetcher.py:NSTAUKFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/onegeology_fetcher.py",
+      "target": "class:src/geox_core/io/onegeology_fetcher.py:OneGeologyFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/usgs_earthquake_fetcher.py",
+      "target": "class:src/geox_core/io/usgs_earthquake_fetcher.py:EarthquakeQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/usgs_earthquake_fetcher.py",
+      "target": "class:src/geox_core/io/usgs_earthquake_fetcher.py:USGSEarthquakeFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/usgs_water_fetcher.py",
+      "target": "class:src/geox_core/io/usgs_water_fetcher.py:USGSWaterFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/io/wsm_stress_fetcher.py",
+      "target": "class:src/geox_core/io/wsm_stress_fetcher.py:WSMStressFetcher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/jobs/calibration_sync.py",
+      "target": "class:src/geox_core/jobs/calibration_sync.py:CalibrationSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/laws/physics_guard.py",
+      "target": "class:src/geox_core/laws/physics_guard.py:PhysicsGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/lem/organ_physics.py",
+      "target": "class:src/geox_core/lem/organ_physics.py:PhysicsTeacher",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/lem/organ_physics.py",
+      "target": "class:src/geox_core/lem/organ_physics.py:PhysicsGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/lem/organ_physics.py",
+      "target": "class:src/geox_core/lem/organ_physics.py:PhysicsScorer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/lem/organ_physics.py",
+      "target": "class:src/geox_core/lem/organ_physics.py:PhysicsOrgan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:EarthNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:StressTensorNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:MechanicalLayerNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FaultReactivationNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FaultInterpretationNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:SubsidenceNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:FillRatioNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:InterpretationNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/earth_reality_graph/graph_schema.py",
+      "target": "class:src/geox_core/ontology/earth_reality_graph/graph_schema.py:GraphEdge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicEventClass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:EventTransition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:TectonicScenario",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:RestorationObservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/ontology/tectonic_events/event_schema.py",
+      "target": "class:src/geox_core/ontology/tectonic_events/event_schema.py:DiagnosticChecklist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_mock_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_mock_latency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_compute_model_spread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:physics9_fill_for_lithology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "function:src/geox_core/orchestration/basin_synthesis_pipeline.py:_abort_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:BasinSynthesisReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:FetcherManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/basin_synthesis_pipeline.py",
+      "target": "class:src/geox_core/orchestration/basin_synthesis_pipeline.py:BasinSynthesisPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/gap_registry.py",
+      "target": "class:src/geox_core/orchestration/gap_registry.py:GapEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/gap_registry.py",
+      "target": "class:src/geox_core/orchestration/gap_registry.py:GapRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/provenance_ledger.py",
+      "target": "class:src/geox_core/orchestration/provenance_ledger.py:ProvenanceEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/provenance_ledger.py",
+      "target": "class:src/geox_core/orchestration/provenance_ledger.py:ProvenanceLedger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/synthesis_state.py",
+      "target": "class:src/geox_core/orchestration/synthesis_state.py:SynthesisState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/uncertainty_cascade.py",
+      "target": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_serial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/uncertainty_cascade.py",
+      "target": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_parallel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/uncertainty_cascade.py",
+      "target": "function:src/geox_core/orchestration/uncertainty_cascade.py:cascade_noisy_or",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/orchestration/uncertainty_cascade.py",
+      "target": "class:src/geox_core/orchestration/uncertainty_cascade.py:UncertaintyCascade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

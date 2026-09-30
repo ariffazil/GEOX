@@ -1,0 +1,31 @@
+{
+  "ts": "2026-09-24T11:26:54.475951+00:00",
+  "trace_id": "VR-20260924T112652-f7c647b5d9f1a722",
+  "source_file": "/root/.hermes/cache/audio/audio_88d006dc4612.ogg",
+  "source_sha256": "7b47e57e93e2d3a4",
+  "category": "UNKNOWN",
+  "guard": {
+    "category": "UNKNOWN",
+    "sink": "QUARANTINE",
+    "confidence": 0.65,
+    "reasons": [
+      "ops_cue=['esok']",
+      "metabolize_reject=Transkrip bukan geosains; ia refleksi peribadi tentang Arif, MSS, keletihan, dan keputusan komunikasi."
+    ],
+    "named_persons": [
+      "Dan Lepas",
+      "Tidur Lena",
+      "arif"
+    ],
+    "proprietary_flag": false
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

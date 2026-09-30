@@ -33,28 +33,18 @@ if SRC_ROOT not in sys.path:
 
 
 def test_geox_lem_predict_in_canonical_registry():
-    """geox_lem_predict is a backward-compat tool, accessible but not in the
-    canonical 16-tool public surface. It is accessible via geox_petrophysics(mode='lem')
-    in the Phase 2 Clean Architecture."""
-    from geox_mcp.registry import CANONICAL_COMPAT_TOOLS
-
-    # It's in compat tools (still callable, not publicly exposed)
-    assert "geox_lem_predict" in CANONICAL_COMPAT_TOOLS, (
-        "geox_lem_predict must be in CANONICAL_COMPAT_TOOLS (backward compat)"
-    )
-
-
-def test_expected_canonical_count_is_26():
-    """Phase 2.1 Clean Architecture: 26 canonical tools. Updated 2026-07-12.
-
-    Old tools like geox_lem_predict are accessible via backward-compat
-    wrappers but not exposed in the canonical public surface.
-    """
+    """geox_lem_predict is accessible via geox_petrophysics(mode='lem_inference')
+    in the 31-tool canonical surface."""
     from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-    assert len(CANONICAL_PUBLIC_TOOLS) == 26, (
-        f"CANONICAL_PUBLIC_TOOLS must be 26 in Phase 2.1 Clean Architecture, got {len(CANONICAL_PUBLIC_TOOLS)}"
-    )
+    assert "geox_petrophysics" in CANONICAL_PUBLIC_TOOLS
+
+
+def test_expected_canonical_count_derives_from_registry():
+    """Canonical count must derive from the registry SOT — no hardcoded numbers (BL surface ruling 2026-09-30)."""
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, SURFACE_TOOLS
+
+    assert len(CANONICAL_PUBLIC_TOOLS) == len(SURFACE_TOOLS), "count must derive from registry SOT"
 
 
 # ── 2. Mock-default mode ─────────────────────────────────────────────────
@@ -202,9 +192,7 @@ async def test_high_ac_risk_sets_human_review_required():
     ac_overall = pa.get("ac_risk_overall")
     pg = result.get("physics_guard", {})
     if ac_overall is not None and ac_overall > 0.5:
-        assert pg.get("human_review_required") is True, (
-            "AC_Risk > 0.5 must set human_review_required"
-        )
+        assert pg.get("human_review_required") is True, "AC_Risk > 0.5 must set human_review_required"
 
 
 # ── 6. Universal envelope contract ───────────────────────────────────────
@@ -238,8 +226,13 @@ async def test_universal_envelope_has_required_fields():
     assert result["execution_status"] == "SUCCESS"
     assert result["claim_state"] in {"DRAFT", "VALIDATED", "SEALED", "QUALIFIED", "HOLD", "VOID"}
     assert result["claim_tag"] in {
-        "CLAIM", "PLAUSIBLE", "HYPOTHESIS", "ESTIMATE", "UNKNOWN",
-        "FACT", "INTERPRETATION",
+        "CLAIM",
+        "PLAUSIBLE",
+        "HYPOTHESIS",
+        "ESTIMATE",
+        "UNKNOWN",
+        "FACT",
+        "INTERPRETATION",
     }
     # Primary artifact carries the well + mode + audit_receipt with tool_name
     pa = result["primary_artifact"]

@@ -1,0 +1,31 @@
+{
+  "nodes": [
+    {
+      "id": "service:geox-gui/.dockerignore",
+      "type": "service",
+      "name": ".dockerignore",
+      "filePath": "geox-gui/.dockerignore",
+      "summary": "unknown infra file (2 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:geox-gui/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "geox-gui/Dockerfile",
+      "summary": "dockerfile infra file (20 non-empty lines).",
+      "tags": [
+        "infrastructure",
+        "dockerfile",
+        "containerization",
+        "deployment"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

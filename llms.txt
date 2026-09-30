@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (31 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (26 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
 > Capability families: 9 | Sprint 1 classified
@@ -41,16 +41,22 @@
 ### 6. Presentation
 
 - **geox_map** [Tier A — Core]: Map intelligence: layer discovery, scene composition, preview. Modes: layers_list, scene_plan, render_preview.
+- **geox_surface_status** [Tier A — Core]: Canonical registry probe: public surface truth (count, canonical_tools, verdict). Self-witness for surface SOT.
 
 ### 7. Research / Cascade Lab
 
-- **geox_glof_cascade_initialize** [Tier C — Research]: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6 zen-33) or defaults to himalayan_glof_33. Returns session state_id.
-- **geox_glof_cascade_inverse** [Tier C — Research]: Bayesian grid-search inference on 33D posterior from wave observations (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
-- **geox_glof_cascade_mcmc_inverse** [Tier C — Research]: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat, ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
-- **geox_glof_cascade_metabolize** [Tier C — Research]: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness G-score, phase transitions, cycle_id.
-- **geox_glof_cascade_phase** [Tier C — Research]: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
-- **geox_glof_cascade_propagate** [Tier C — Research]: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
-- **geox_glof_cascade_step** [Tier C — Research]: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+- **geox_glof** [Tier C — Research]: Unified GLOF multi-phase cascade simulation. Multi-phase physics: solid dam → granular debris → liquid flood (Mohr-Coulomb + Saint-Venant + 33D zen-33 state). Modes: run (full cascade in one call), inverse (Bayesian grid-search), mcmc (MCMC posterior), propagate (Saint-Venant 1D), phase (yield surface debug). Replaces 7 individual geox_glof_cascade_* tools (333 ARCHITECT 2026-09-19).
+
+### 8. Seismic Sources & Traces
+
+- **geox_extract_display_proxy** [Tier B — Specialist]: Extract display-derived proxy from raster seismic image. Requires CalibrationWitness. Output labeled DISPLAY_DERIVED_PROXY — NOT suitable for AVO, amplitude preservation, or native well-tie.
+- **geox_extract_native_trace** [Tier B — Specialist]: Extract a native seismic trace from a registered source. Returns NativeTraceRef with full provenance. HOLD for unverified authority, restricted data, or missing source.
+- **geox_list_registered_sources** [Tier B — Specialist]: List all registered native seismic sources with classification, authority, trace count, and sample metadata.
+- **geox_register_native_source** [Tier B — Specialist]: Register a native SEG-Y source for trace extraction. Validates file existence, computes SHA256, extracts binary header metadata. Authority downgrade: OPERATOR_APPROVED without actor → UNVERIFIED.
+
+### 9. Structural Calibration
+
+- **geox_calibration_register_witness** [Tier B — Specialist]: Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.
 
 ## 2. Tier Legend
 - **Tier A (Core)**: Default discovery. All agents see these.

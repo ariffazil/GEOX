@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-09-22T07:36:19.682433+00:00
+# Regenerated: 2026-09-30T15:51:06.827312+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.09.22
+schema_version: 2026.09.30
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 31
-contract_epoch: 2026-09-22-GEOX-31TOOLS-ZEN
+canonical_tool_count: 26
+contract_epoch: 2026-09-30-GEOX-26TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -94,64 +94,17 @@ tools:
     risk_tier: readonly
     description: 'Geomechanical analysis: bulk/shear/young modulus, poisson ratio,
       acoustic impedance, stress polygon.'
-  geox_glof_cascade_initialize:
+  geox_glof:
     category: earth.hazard
     lane: reasoning
     family: research
     capability_tier: C
     risk_tier: readonly
-    description: GLOF cascade simulation init. Accepts 33D GEOXEarthState33 (M9+P9+W9+X6
-      zen-33) or defaults to himalayan_glof_33. Returns session state_id.
-  geox_glof_cascade_inverse:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Bayesian grid-search inference on 33D posterior from wave observations
-      (W obs). Returns inferred theta_hat + log_likelihood + posterior_summary.
-  geox_glof_cascade_mcmc_inverse:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings
-      MCMC. Replaces grid search. Returns posterior mean, std, percentiles, R-hat,
-      ESS, accept_rate, n_samples. Sampling on (E, c, phi, tau_0, sigma_t, phi_p).
-  geox_glof_cascade_metabolize:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Close F-I-M loop on 33D state. Emit FIMReceipt33 with tri-witness
-      G-score, phase transitions, cycle_id.
-  geox_glof_cascade_phase:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Yield surface eval on 33D state. Returns Mohr-Coulomb/Voellmy verdict
-      + 33D-derived sigma_eff, tau_max, breach_probability_33D, hydro_fracture indicator.
-  geox_glof_cascade_propagate:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Phase C — 1D Saint-Venant (shallow-water) wave propagation from breach
-      to downstream. Lax-Friedrichs finite-volume solver with Manning friction. Returns
-      time series of (h, u, Q) along domain + peak downstream Q/time/depth/velocity.
-  geox_glof_cascade_step:
-    category: earth.hazard
-    lane: reasoning
-    family: research
-    capability_tier: C
-    risk_tier: readonly
-    description: Advance 33D GLOF state by n_steps. Uses metabolize_33 closure + forward_kinematics
-      to derive W (Vp,Vs,alpha_B). Returns evolved 33D state.
+    description: 'Unified GLOF multi-phase cascade simulation. Multi-phase physics:
+      solid dam → granular debris → liquid flood (Mohr-Coulomb + Saint-Venant + 33D
+      zen-33 state). Modes: run (full cascade in one call), inverse (Bayesian grid-search),
+      mcmc (MCMC posterior), propagate (Saint-Venant 1D), phase (yield surface debug).
+      Replaces 7 individual geox_glof_cascade_* tools (333 ARCHITECT 2026-09-19).'
   geox_list_registered_sources:
     category: earth.seismic
     lane: compute
@@ -254,6 +207,14 @@ tools:
     risk_tier: readonly
     description: 'Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store,
       stac_discover.'
+  geox_surface_status:
+    category: earth.registry
+    lane: compute
+    family: view
+    capability_tier: A
+    risk_tier: readonly
+    description: 'Canonical registry probe: public surface truth (count, canonical_tools,
+      verdict). Self-witness for surface SOT.'
   geox_temporal:
     category: earth.temporal
     lane: compute

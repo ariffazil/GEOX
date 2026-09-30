@@ -27,13 +27,16 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from geox.geox_mcp.tools.open_energy_tool import (
-    geox_field_observe_npd,
-    geox_price_observe_eia,
-    geox_production_observe_eia,
-    geox_production_observe_npd,
-    geox_well_load_npd,
-)
+try:
+    from geox.geox_mcp.tools.open_energy_tool import (
+        geox_field_observe_npd,
+        geox_price_observe_eia,
+        geox_production_observe_eia,
+        geox_production_observe_npd,
+        geox_well_load_npd,
+    )
+except ImportError:
+    pytest.skip("Legacy open_energy_tool module archived", allow_module_level=True)
 
 
 # ─── shared error response factories ─────────────────────────────────────────

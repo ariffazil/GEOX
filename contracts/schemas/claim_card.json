@@ -2,14 +2,25 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "geox-claimcard/v2",
   "title": "GEOX ClaimCard v2",
-  "description": "The atomic governed object for subsurface claims. Every geological assertion is a ClaimCard. CLAIM: claim_id, claim_text, claim_type, truth_class, claim_state, uncertainty, contradictions, actor_id, session_id, asset_id, basin_id, review_status, seal_status, reversible.",
+  "description": "The atomic governed object for subsurface claims. Every geological assertion is a ClaimCard. CLAIM: claim_id, claim_text, claim_type, truth_class, claim_state, uncertainty, contradictions, actor_id, session_id, asset_id, basin_id, review_status, seal_status, reversible. Axis 3 (explanation_class, claim_kernel/v1) records WHAT KIND of explanation the claim is; it is additive and defaults to UNCLASSIFIED.",
   "type": "object",
   "required": [
-    "claim_id", "claim_text", "claim_type", "truth_class", "claim_state",
-    "uncertainty", "contradictions",
-    "actor_id", "session_id", "asset_id", "basin_id",
-    "review_status", "seal_status", "reversible",
-    "created_at", "updated_at"
+    "claim_id",
+    "claim_text",
+    "claim_type",
+    "truth_class",
+    "claim_state",
+    "uncertainty",
+    "contradictions",
+    "actor_id",
+    "session_id",
+    "asset_id",
+    "basin_id",
+    "review_status",
+    "seal_status",
+    "reversible",
+    "created_at",
+    "updated_at"
   ],
   "properties": {
     "spec_version": {
@@ -25,26 +36,58 @@
       "type": "string",
       "description": "Human-readable statement of the claim.",
       "minLength": 1,
-      "examples": ["Channel sand at 2.5s TWT, Malay Basin"]
+      "examples": [
+        "Channel sand at 2.5s TWT, Malay Basin"
+      ]
     },
     "claim_type": {
       "type": "string",
       "enum": [
-        "structural", "stratigraphic", "petrophysical", "volumetric",
-        "prospect", "crs", "seismic", "geomechanical", "other"
+        "structural",
+        "stratigraphic",
+        "petrophysical",
+        "volumetric",
+        "prospect",
+        "crs",
+        "seismic",
+        "geomechanical",
+        "other"
       ],
       "description": "Governed type classification of the claim domain."
     },
     "truth_class": {
       "type": "string",
-      "enum": ["FACT", "INTERPRETATION", "SPECULATION", "COMPUTED", "VALIDATED"],
+      "enum": [
+        "FACT",
+        "INTERPRETATION",
+        "SPECULATION",
+        "COMPUTED",
+        "VALIDATED"
+      ],
       "description": "FACT: directly observed. INTERPRETATION: physics-derived. SPECULATION: inferred. COMPUTED: algorithmic transform. VALIDATED: cross-checked against independent data."
+    },
+    "explanation_class": {
+      "type": "string",
+      "enum": [
+        "MEASURED",
+        "MECHANISM",
+        "PATTERN",
+        "NARRATIVE",
+        "UNCLASSIFIED"
+      ],
+      "default": "UNCLASSIFIED",
+      "description": "Explanatory kind (claim_kernel/v1) -- WHAT KIND of explanation the claim is, orthogonal to claim_state (WHERE it is in review) and truth_class (HOW it was obtained). Only MEASURED, MECHANISM and PATTERN are action-eligible: a claim may enter APPROVED_INTERPRETATION or SEALED only with one of those. NARRATIVE claims are publishable but never the sole justification for a mutation. UNCLASSIFIED (the default) fails closed. Absent on records written before this axis existed -- readers must treat a missing value as UNCLASSIFIED."
     },
     "claim_state": {
       "type": "string",
       "enum": [
-        "DRAFT", "AI_INFERRED", "REVIEW_PENDING", "CHALLENGED",
-        "APPROVED_INTERPRETATION", "SEALED", "REJECTED"
+        "DRAFT",
+        "AI_INFERRED",
+        "REVIEW_PENDING",
+        "CHALLENGED",
+        "APPROVED_INTERPRETATION",
+        "SEALED",
+        "REJECTED"
       ],
       "description": "Lifecycle state of the claim.",
       "default": "DRAFT"
@@ -52,36 +95,63 @@
     "uncertainty": {
       "type": "object",
       "description": "Confidence range, key assumptions, and unresolved ambiguities.",
-      "required": ["epistemic_tag"],
+      "required": [
+        "epistemic_tag"
+      ],
       "properties": {
-        "p10": { "type": "number", "description": "P10 (optimistic) value" },
-        "p50": { "type": "number", "description": "P50 (median) value" },
-        "p90": { "type": "number", "description": "P90 (pessimistic) value" },
+        "p10": {
+          "type": "number",
+          "description": "P10 (optimistic) value"
+        },
+        "p50": {
+          "type": "number",
+          "description": "P50 (median) value"
+        },
+        "p90": {
+          "type": "number",
+          "description": "P90 (pessimistic) value"
+        },
         "distribution": {
           "type": "string",
-          "enum": ["lognormal", "normal", "triangular"],
+          "enum": [
+            "lognormal",
+            "normal",
+            "triangular"
+          ],
           "default": "lognormal"
         },
         "epistemic_tag": {
           "type": "string",
-          "enum": ["CLAIM", "PLAUSIBLE", "HYPOTHESIS", "ESTIMATE", "UNKNOWN"],
+          "enum": [
+            "CLAIM",
+            "PLAUSIBLE",
+            "HYPOTHESIS",
+            "ESTIMATE",
+            "UNKNOWN"
+          ],
           "description": "Epistemic confidence classification."
         },
         "assumptions": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Key assumptions underlying this claim."
         },
         "unresolved_ambiguities": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Known ambiguities not yet resolved."
         }
       }
     },
     "contradictions": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Known conflicting evidence artifact IDs or competing claim IDs.",
       "default": []
     },
@@ -89,14 +159,23 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["claim_text", "evidence_refs"],
+        "required": [
+          "claim_text",
+          "evidence_refs"
+        ],
         "properties": {
-          "claim_text": { "type": "string" },
+          "claim_text": {
+            "type": "string"
+          },
           "evidence_refs": {
             "type": "array",
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
-          "uncertainty": { "$ref": "#/properties/uncertainty" }
+          "uncertainty": {
+            "$ref": "#/properties/uncertainty"
+          }
         }
       },
       "description": "Rival candidate interpretations or scenarios."
@@ -133,13 +212,24 @@
     },
     "review_status": {
       "type": "string",
-      "enum": ["NONE", "IN_REVIEW", "NEEDS_EVIDENCE", "APPROVED", "REJECTED"],
+      "enum": [
+        "NONE",
+        "IN_REVIEW",
+        "NEEDS_EVIDENCE",
+        "APPROVED",
+        "REJECTED"
+      ],
       "default": "NONE",
       "description": "Human review status of this claim."
     },
     "seal_status": {
       "type": "string",
-      "enum": ["UNSEALED", "PREPARED", "SEALED", "REVOKED"],
+      "enum": [
+        "UNSEALED",
+        "PREPARED",
+        "SEALED",
+        "REVOKED"
+      ],
       "default": "UNSEALED",
       "description": "Vault seal status."
     },

@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "file:apps/site/catalog.html",
+      "type": "file",
+      "name": "catalog.html",
+      "filePath": "apps/site/catalog.html",
+      "summary": "html markup file (56 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:apps/site/robots.txt",
+      "type": "document",
+      "name": "robots.txt",
+      "filePath": "apps/site/robots.txt",
+      "summary": "txt docs file (2 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:apps/site/sitemap.xml",
+      "type": "config",
+      "name": "sitemap.xml",
+      "filePath": "apps/site/sitemap.xml",
+      "summary": "xml config file (93 non-empty lines).",
+      "tags": [
+        "configuration",
+        "xml"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

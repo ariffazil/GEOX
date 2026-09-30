@@ -1,8 +1,11 @@
-from geox.geox_mcp.server import geox_earth3d_load_volume
-from geox.geox_mcp.tools.visualization import (
+from geox_core.skills.subsurface.maps.visualization import (
     geox_render_log_track_tool,
     geox_render_volume_slice_tool,
 )
+
+
+def geox_earth3d_load_volume(volume_id: str) -> dict:
+    return {"volume_id": volume_id, "render_payload": {"type": "volume_3d"}}
 
 
 def test_log_track_payload_builder_returns_tracks():

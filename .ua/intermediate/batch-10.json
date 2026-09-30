@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:apps/apps.json",
+      "type": "config",
+      "name": "apps.json",
+      "filePath": "apps/apps.json",
+      "summary": "json config file (132 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/index.html",
+      "summary": "html markup file (52 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:apps/ui_resources.json",
+      "type": "config",
+      "name": "ui_resources.json",
+      "filePath": "apps/ui_resources.json",
+      "summary": "json config file (578 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/well-witness.html",
+      "type": "file",
+      "name": "well-witness.html",
+      "filePath": "apps/well-witness.html",
+      "summary": "html markup file (183 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/workbench-v1.html",
+      "type": "file",
+      "name": "workbench-v1.html",
+      "filePath": "apps/workbench-v1.html",
+      "summary": "html markup file (212 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

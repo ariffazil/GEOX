@@ -1,0 +1,1681 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/shared/contracts/schema-pack-v1.ts",
+      "type": "file",
+      "name": "schema-pack-v1.ts",
+      "filePath": "src/geox_core/shared/contracts/schema-pack-v1.ts",
+      "summary": "exports 12 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/shared/contracts/schemas.py",
+      "type": "file",
+      "name": "schemas.py",
+      "filePath": "src/geox_core/shared/contracts/schemas.py",
+      "summary": "17 class(es); exports 17 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/shared/schemas/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/shared/schemas/__init__.py",
+      "summary": "python code file (2 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/shared/schemas/foundation.py",
+      "type": "file",
+      "name": "foundation.py",
+      "filePath": "src/geox_core/shared/schemas/foundation.py",
+      "summary": "44 class(es); exports 44 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/shared/schemas/foundation.py:SamplingAxis",
+      "type": "class",
+      "name": "SamplingAxis",
+      "filePath": "src/geox_core/shared/schemas/foundation.py",
+      "lineRange": [
+        209,
+        229
+      ],
+      "summary": "Class SamplingAxis with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/shared/schemas/foundation.py:PolicyBand",
+      "type": "class",
+      "name": "PolicyBand",
+      "filePath": "src/geox_core/shared/schemas/foundation.py",
+      "lineRange": [
+        335,
+        361
+      ],
+      "summary": "Class PolicyBand with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/shared/schemas/foundation.py:IntentEnvelope",
+      "type": "class",
+      "name": "IntentEnvelope",
+      "filePath": "src/geox_core/shared/schemas/foundation.py",
+      "lineRange": [
+        550,
+        570
+      ],
+      "summary": "Class IntentEnvelope with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/shared/schemas/foundation.py:ContrastVerdict",
+      "type": "class",
+      "name": "ContrastVerdict",
+      "filePath": "src/geox_core/shared/schemas/foundation.py",
+      "lineRange": [
+        646,
+        673
+      ],
+      "summary": "Class ContrastVerdict with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/earth_science/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/earth_science/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "type": "file",
+      "name": "seismic_wrappers.py",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "summary": "Defines 10 function(s); 1 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:make_vault_receipt",
+      "type": "function",
+      "name": "make_vault_receipt",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        41,
+        54
+      ],
+      "summary": "make_vault_receipt(tool_name, payload, verdict) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:classify_claim_tag",
+      "type": "function",
+      "name": "classify_claim_tag",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        60,
+        72
+      ],
+      "summary": "classify_claim_tag(confidence, hold_enforced) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_admissibility_gate",
+      "type": "function",
+      "name": "_admissibility_gate",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        105,
+        118
+      ],
+      "summary": "_admissibility_gate(provenance, required_present) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_load_volume",
+      "type": "function",
+      "name": "seismic_load_volume",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        126,
+        244
+      ],
+      "summary": "seismic_load_volume(segy_path, volume_id, survey_name, inline_axis, crossline_axis, sample_axis, memory_map, provenance) — 118 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_compute_segy_hash",
+      "type": "function",
+      "name": "_compute_segy_hash",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        247,
+        254
+      ],
+      "summary": "_compute_segy_hash(segy_path) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_scaffold_seismic_volume",
+      "type": "function",
+      "name": "_scaffold_seismic_volume",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        257,
+        315
+      ],
+      "summary": "_scaffold_seismic_volume(volume_id, survey_name, provenance, limitations, claim_state) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_compute_attribute",
+      "type": "function",
+      "name": "seismic_compute_attribute",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        357,
+        532
+      ],
+      "summary": "seismic_compute_attribute(volume_id, attribute, inline, crossline, slice_data, source_volume_id, window_samples, window_center_ms, provenance) — 175 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_render_volume_slice",
+      "type": "function",
+      "name": "seismic_render_volume_slice",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        540,
+        628
+      ],
+      "summary": "seismic_render_volume_slice(volume_id, orientation, slice_index, attribute, display_mode, domain_flag, physical_extents, provenance) — 88 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_health_check",
+      "type": "function",
+      "name": "seismic_health_check",
+      "filePath": "src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "lineRange": [
+        634,
+        645
+      ],
+      "summary": "seismic_health_check() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/subsurface/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "type": "file",
+      "name": "asset_memory_tool.py",
+      "filePath": "src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/asset_memory_tool.py:geox_memory_store_asset_tool",
+      "type": "function",
+      "name": "geox_memory_store_asset_tool",
+      "filePath": "src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "lineRange": [
+        11,
+        29
+      ],
+      "summary": "geox_memory_store_asset_tool(asset_id, eval_type, payload, db_path, authorized) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/asset_memory_tool.py:geox_memory_recall_asset_tool",
+      "type": "function",
+      "name": "geox_memory_recall_asset_tool",
+      "filePath": "src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "lineRange": [
+        32,
+        50
+      ],
+      "summary": "geox_memory_recall_asset_tool(asset_id, eval_type, query, db_path, limit) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "type": "file",
+      "name": "backstrip_decompaction.py",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "summary": "Defines 7 function(s); 4 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:_lithology_params",
+      "type": "function",
+      "name": "_lithology_params",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        47,
+        50
+      ],
+      "summary": "_lithology_params(lithology) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:porosity_at_depth",
+      "type": "function",
+      "name": "porosity_at_depth",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        202,
+        219
+      ],
+      "summary": "porosity_at_depth(z_km, phi0, c_per_km) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:average_porosity",
+      "type": "function",
+      "name": "average_porosity",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        222,
+        236
+      ],
+      "summary": "average_porosity(z_top_km, z_base_km, phi0, c_per_km) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:decompact_thickness",
+      "type": "function",
+      "name": "decompact_thickness",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        239,
+        281
+      ],
+      "summary": "decompact_thickness(present_thickness_m, present_base_depth_m, phi0, c_per_km) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:backstrip_sediment_load",
+      "type": "function",
+      "name": "backstrip_sediment_load",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        284,
+        323
+      ],
+      "summary": "backstrip_sediment_load(total_subsidence_km, sediment_thickness_km, rho_sediment_kgm3, rho_mantle_kgm3, rho_water_kgm3) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:decompact_result",
+      "type": "function",
+      "name": "decompact_result",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        326,
+        381
+      ],
+      "summary": "decompact_result(present_thickness_m, present_base_depth_m, lithology, phi0, c_per_km) — 55 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:compute_subsidence_history",
+      "type": "function",
+      "name": "compute_subsidence_history",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        384,
+        543
+      ],
+      "summary": "compute_subsidence_history(stratigraphic_column, water_depth_m, rho_sediment_kgm3, rho_mantle_kgm3, rho_water_kgm3) — 159 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:BackstripRequest",
+      "type": "class",
+      "name": "BackstripRequest",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        58,
+        94
+      ],
+      "summary": "Class BackstripRequest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:DecompactionResult",
+      "type": "class",
+      "name": "DecompactionResult",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        97,
+        138
+      ],
+      "summary": "Class DecompactionResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:SubsidenceHistory",
+      "type": "class",
+      "name": "SubsidenceHistory",
+      "filePath": "src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "lineRange": [
+        159,
+        194
+      ],
+      "summary": "Class SubsidenceHistory with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "type": "file",
+      "name": "fault_sticks.py",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "summary": "Defines 2 function(s); 3 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/faults/fault_sticks.py:ingest_fault_sticks_from_csv",
+      "type": "function",
+      "name": "ingest_fault_sticks_from_csv",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "lineRange": [
+        165,
+        216
+      ],
+      "summary": "ingest_fault_sticks_from_csv(csv_path) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/faults/fault_sticks.py:ingest_fault_sticks_from_json",
+      "type": "function",
+      "name": "ingest_fault_sticks_from_json",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "lineRange": [
+        219,
+        250
+      ],
+      "summary": "ingest_fault_sticks_from_json(json_path) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:FaultStick",
+      "type": "class",
+      "name": "FaultStick",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "lineRange": [
+        28,
+        42
+      ],
+      "summary": "Class FaultStick with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:Fault3d",
+      "type": "class",
+      "name": "Fault3d",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "lineRange": [
+        46,
+        101
+      ],
+      "summary": "Class Fault3d with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:FaultSet3d",
+      "type": "class",
+      "name": "FaultSet3d",
+      "filePath": "src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "lineRange": [
+        105,
+        159
+      ],
+      "summary": "Class FaultSet3d with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/maps/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/subsurface/maps/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/maps/visualization.py",
+      "type": "file",
+      "name": "visualization.py",
+      "filePath": "src/geox_core/skills/subsurface/maps/visualization.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maps/visualization.py:geox_render_log_track_tool",
+      "type": "function",
+      "name": "geox_render_log_track_tool",
+      "filePath": "src/geox_core/skills/subsurface/maps/visualization.py",
+      "lineRange": [
+        14,
+        61
+      ],
+      "summary": "geox_render_log_track_tool(curves, title, intervals) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maps/visualization.py:geox_render_volume_slice_tool",
+      "type": "function",
+      "name": "geox_render_volume_slice_tool",
+      "filePath": "src/geox_core/skills/subsurface/maps/visualization.py",
+      "lineRange": [
+        64,
+        90
+      ],
+      "summary": "geox_render_volume_slice_tool(volume, orientation, slice_index) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "type": "file",
+      "name": "maturity_kinetics.py",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "summary": "Defines 9 function(s); 5 class(es); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_tti",
+      "type": "function",
+      "name": "compute_tti",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        221,
+        231
+      ],
+      "summary": "compute_tti(burial_history) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_present_day_heat_flow",
+      "type": "function",
+      "name": "compute_present_day_heat_flow",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        256,
+        309
+      ],
+      "summary": "compute_present_day_heat_flow(beta, heat_flow_base_mw_m2, asthenosphere_temp_c) — 53 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_temperature_history",
+      "type": "function",
+      "name": "compute_temperature_history",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        312,
+        350
+      ],
+      "summary": "compute_temperature_history(burial_depth_km_list, heat_flow_mw_m2, surface_temp_c, thermal_conductivity) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:build_burial_history_from_stratigraphy",
+      "type": "function",
+      "name": "build_burial_history_from_stratigraphy",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        353,
+        412
+      ],
+      "summary": "build_burial_history_from_stratigraphy(strat_column, ages_ma, heat_flow_mw_m2, surface_temp_c) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:classify_maturity",
+      "type": "function",
+      "name": "classify_maturity",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        415,
+        454
+      ],
+      "summary": "classify_maturity(easy_ro) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_maturity_full",
+      "type": "function",
+      "name": "compute_maturity_full",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        457,
+        626
+      ],
+      "summary": "compute_maturity_full(burial_history, heat_flow_mw_m2, beta, strat_column, ages_ma, backstrip_result, source_rock_age_ma) — 169 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_heatflow_through_time",
+      "type": "function",
+      "name": "compute_heatflow_through_time",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        629,
+        676
+      ],
+      "summary": "compute_heatflow_through_time(beta, rift_age_ma, lithosphere_thickness_km, thermal_diffusivity_m2_s) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:BurialStep",
+      "type": "class",
+      "name": "BurialStep",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        56,
+        85
+      ],
+      "summary": "Class BurialStep with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:HeatFlowResult",
+      "type": "class",
+      "name": "HeatFlowResult",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        88,
+        118
+      ],
+      "summary": "Class HeatFlowResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:MaturityRequest",
+      "type": "class",
+      "name": "MaturityRequest",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        121,
+        156
+      ],
+      "summary": "Class MaturityRequest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:MaturityResult",
+      "type": "class",
+      "name": "MaturityResult",
+      "filePath": "src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "lineRange": [
+        159,
+        213
+      ],
+      "summary": "Class MaturityResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/petro/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/subsurface/petro/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "type": "file",
+      "name": "gr_intervals.py",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:smooth_gr",
+      "type": "function",
+      "name": "smooth_gr",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        24,
+        39
+      ],
+      "summary": "smooth_gr(gr, depth, window_m, poly) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:detect_boundaries",
+      "type": "function",
+      "name": "detect_boundaries",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        42,
+        60
+      ],
+      "summary": "detect_boundaries(depth, gr_smooth, min_interval) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:merge_intervals",
+      "type": "function",
+      "name": "merge_intervals",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        63,
+        78
+      ],
+      "summary": "merge_intervals(intervals, depth, min_interval) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:classify_motif",
+      "type": "function",
+      "name": "classify_motif",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        81,
+        94
+      ],
+      "summary": "classify_motif(gr_segment) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:attach_nn",
+      "type": "function",
+      "name": "attach_nn",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        97,
+        112
+      ],
+      "summary": "attach_nn(intervals_data, biostrat) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:run_gr_cognitive_pipeline",
+      "type": "function",
+      "name": "run_gr_cognitive_pipeline",
+      "filePath": "src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "lineRange": [
+        115,
+        146
+      ],
+      "summary": "run_gr_cognitive_pipeline(depth_or_data, gr_array, biostrat, min_interval_m, smoothing_window_m) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/petro/las_ingest.py",
+      "type": "file",
+      "name": "las_ingest.py",
+      "filePath": "src/geox_core/skills/subsurface/petro/las_ingest.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/las_ingest.py:geox_ingest_las_tool",
+      "type": "function",
+      "name": "geox_ingest_las_tool",
+      "filePath": "src/geox_core/skills/subsurface/petro/las_ingest.py",
+      "lineRange": [
+        13,
+        47
+      ],
+      "summary": "geox_ingest_las_tool(path, asset_id, chunk_size) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/petro/petro_ensemble.py",
+      "type": "file",
+      "name": "petro_ensemble.py",
+      "filePath": "src/geox_core/skills/subsurface/petro/petro_ensemble.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/petro/petro_ensemble.py:geox_compute_sw_ensemble_tool",
+      "type": "function",
+      "name": "geox_compute_sw_ensemble_tool",
+      "filePath": "src/geox_core/skills/subsurface/petro/petro_ensemble.py",
+      "lineRange": [
+        11,
+        55
+      ],
+      "summary": "geox_compute_sw_ensemble_tool(rt, phi, rw, vsh, temp, a, m, n, rsh, required_curves, top_md, bottom_md, qc_state_ref) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/prospect/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/subsurface/prospect/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "test",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "type": "file",
+      "name": "basin_charge.py",
+      "filePath": "src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/prospect/basin_charge.py:geox_simulate_basin_charge_tool",
+      "type": "function",
+      "name": "geox_simulate_basin_charge_tool",
+      "filePath": "src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "lineRange": [
+        11,
+        28
+      ],
+      "summary": "geox_simulate_basin_charge_tool(burial_history, trap_age_ma, carrier_permeability_md, buoyancy_pressure_mpa, seal_capacity_mpa, fault_density) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/prospect/basin_charge.py:geox_time4d_verify_timing_tool",
+      "type": "function",
+      "name": "geox_time4d_verify_timing_tool",
+      "filePath": "src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "lineRange": [
+        31,
+        58
+      ],
+      "summary": "geox_time4d_verify_timing_tool(burial_history, trap_age_ma, carrier_permeability_md, buoyancy_pressure_mpa, seal_capacity_mpa, fault_density) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "type": "file",
+      "name": "evaluate.py",
+      "filePath": "src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/prospect/evaluate.py:_make_receipt",
+      "type": "function",
+      "name": "_make_receipt",
+      "filePath": "src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "lineRange": [
+        34,
+        43
+      ],
+      "summary": "_make_receipt(tool, payload, verdict) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/prospect/evaluate.py:geox_prospect_evaluate",
+      "type": "function",
+      "name": "geox_prospect_evaluate",
+      "filePath": "src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "lineRange": [
+        46,
+        292
+      ],
+      "summary": "geox_prospect_evaluate(prospect_name, burial_history, trap_age_ma, carrier_permeability_md, buoyancy_pressure_mpa, seal_capacity_mpa, fault_density, grv_dist, ntg_dist, phi_dist, sw_dist, fvf_dist, u_ambiguity, echo_score, evidence_credit, truth_score, execute_888) — 246 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/reservoir_dynamics.py",
+      "type": "file",
+      "name": "reservoir_dynamics.py",
+      "filePath": "src/geox_core/skills/subsurface/reservoir_dynamics.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "type": "file",
+      "name": "rift_kinematics.py",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "summary": "Defines 5 function(s); 4 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/rift_kinematics.py:compute_beta",
+      "type": "function",
+      "name": "compute_beta",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        124,
+        142
+      ],
+      "summary": "compute_beta(crust_thickness_initial_km, crust_thickness_current_km) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/rift_kinematics.py:initial_subsidence",
+      "type": "function",
+      "name": "initial_subsidence",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        145,
+        167
+      ],
+      "summary": "initial_subsidence(beta) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/rift_kinematics.py:thermal_subsidence",
+      "type": "function",
+      "name": "thermal_subsidence",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        170,
+        185
+      ],
+      "summary": "thermal_subsidence(beta, time_ma, tau_ma) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/rift_kinematics.py:classify_rift_phase",
+      "type": "function",
+      "name": "classify_rift_phase",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        188,
+        230
+      ],
+      "summary": "classify_rift_phase(beta, subsidence_rate_mm_yr) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/rift_kinematics.py:compute_rift_kinematics",
+      "type": "function",
+      "name": "compute_rift_kinematics",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        233,
+        283
+      ],
+      "summary": "compute_rift_kinematics(crust_thickness_initial_km, crust_thickness_current_km, time_since_rift_ma, tau_ma, subsidence_rate_mm_yr) — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/skills/subsurface/rift_kinematics.py:RiftKinematicsResult",
+      "type": "class",
+      "name": "RiftKinematicsResult",
+      "filePath": "src/geox_core/skills/subsurface/rift_kinematics.py",
+      "lineRange": [
+        89,
+        116
+      ],
+      "summary": "Class RiftKinematicsResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/seismic/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/skills/subsurface/seismic/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/skills/subsurface/seismic/structural_interpretation.py",
+      "type": "file",
+      "name": "structural_interpretation.py",
+      "filePath": "src/geox_core/skills/subsurface/seismic/structural_interpretation.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/skills/subsurface/seismic/structural_interpretation.py:detect_fault_segments",
+      "type": "function",
+      "name": "detect_fault_segments",
+      "filePath": "src/geox_core/skills/subsurface/seismic/structural_interpretation.py",
+      "lineRange": [
+        9,
+        26
+      ],
+      "summary": "detect_fault_segments(variance_cube, threshold) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/shared/schemas/foundation.py",
+      "target": "class:src/geox_core/shared/schemas/foundation.py:SamplingAxis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/shared/schemas/foundation.py",
+      "target": "class:src/geox_core/shared/schemas/foundation.py:PolicyBand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/shared/schemas/foundation.py",
+      "target": "class:src/geox_core/shared/schemas/foundation.py:IntentEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/shared/schemas/foundation.py",
+      "target": "class:src/geox_core/shared/schemas/foundation.py:ContrastVerdict",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:make_vault_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:classify_claim_tag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_admissibility_gate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_load_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_compute_segy_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:_scaffold_seismic_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_compute_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_render_volume_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/earth_science/seismic_wrappers.py",
+      "target": "function:src/geox_core/skills/earth_science/seismic_wrappers.py:seismic_health_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "target": "function:src/geox_core/skills/subsurface/asset_memory_tool.py:geox_memory_store_asset_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/asset_memory_tool.py",
+      "target": "function:src/geox_core/skills/subsurface/asset_memory_tool.py:geox_memory_recall_asset_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:_lithology_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:porosity_at_depth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:average_porosity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:decompact_thickness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:backstrip_sediment_load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:decompact_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "function:src/geox_core/skills/subsurface/backstrip_decompaction.py:compute_subsidence_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:BackstripRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:DecompactionResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/backstrip_decompaction.py",
+      "target": "class:src/geox_core/skills/subsurface/backstrip_decompaction.py:SubsidenceHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "target": "function:src/geox_core/skills/subsurface/faults/fault_sticks.py:ingest_fault_sticks_from_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "target": "function:src/geox_core/skills/subsurface/faults/fault_sticks.py:ingest_fault_sticks_from_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "target": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:FaultStick",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "target": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:Fault3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/faults/fault_sticks.py",
+      "target": "class:src/geox_core/skills/subsurface/faults/fault_sticks.py:FaultSet3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maps/visualization.py",
+      "target": "function:src/geox_core/skills/subsurface/maps/visualization.py:geox_render_log_track_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maps/visualization.py",
+      "target": "function:src/geox_core/skills/subsurface/maps/visualization.py:geox_render_volume_slice_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_tti",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_present_day_heat_flow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_temperature_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:build_burial_history_from_stratigraphy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:classify_maturity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_maturity_full",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "function:src/geox_core/skills/subsurface/maturity_kinetics.py:compute_heatflow_through_time",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:BurialStep",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:HeatFlowResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:MaturityRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/maturity_kinetics.py",
+      "target": "class:src/geox_core/skills/subsurface/maturity_kinetics.py:MaturityResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:smooth_gr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:detect_boundaries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:merge_intervals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:classify_motif",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:attach_nn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/gr_intervals.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/gr_intervals.py:run_gr_cognitive_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/las_ingest.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/las_ingest.py:geox_ingest_las_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/petro/petro_ensemble.py",
+      "target": "function:src/geox_core/skills/subsurface/petro/petro_ensemble.py:geox_compute_sw_ensemble_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "target": "function:src/geox_core/skills/subsurface/prospect/basin_charge.py:geox_simulate_basin_charge_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/prospect/basin_charge.py",
+      "target": "function:src/geox_core/skills/subsurface/prospect/basin_charge.py:geox_time4d_verify_timing_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "target": "function:src/geox_core/skills/subsurface/prospect/evaluate.py:_make_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/prospect/evaluate.py",
+      "target": "function:src/geox_core/skills/subsurface/prospect/evaluate.py:geox_prospect_evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "function:src/geox_core/skills/subsurface/rift_kinematics.py:compute_beta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "function:src/geox_core/skills/subsurface/rift_kinematics.py:initial_subsidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "function:src/geox_core/skills/subsurface/rift_kinematics.py:thermal_subsidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "function:src/geox_core/skills/subsurface/rift_kinematics.py:classify_rift_phase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "function:src/geox_core/skills/subsurface/rift_kinematics.py:compute_rift_kinematics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/rift_kinematics.py",
+      "target": "class:src/geox_core/skills/subsurface/rift_kinematics.py:RiftKinematicsResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/skills/subsurface/seismic/structural_interpretation.py",
+      "target": "function:src/geox_core/skills/subsurface/seismic/structural_interpretation.py:detect_fault_segments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

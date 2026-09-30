@@ -65,6 +65,10 @@ CANONICAL_COMPAT_TOOLS: list[str] = list(compat_tools())
 
 # Public = discoverable MCP surface.
 CANONICAL_PUBLIC_TOOLS: list[str] = list(SURFACE_TOOLS)
+# A5 (F13 2026-09-22, "all as recommended"): geox_contradiction_scan is
+# intentionally ABSENT from this list — audit-internal-only. The 13-type
+# contradiction ontology classifier has no external consumer; RT1_GUARD
+# rejecting external calls is the design, not a bug. Do not "fix" by adding.
 
 # Runtime = public + explicitly internal tools.
 CANONICAL_RUNTIME_TOOLS: list[str] = runtime_tool_names()

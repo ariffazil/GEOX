@@ -86,5 +86,201 @@
         "PGE_REE_geochemistry_plateau_vs_MORB_discriminant"
       ]
     }
+  },
+{
+  "claim_id": "CLM-NWS-004",
+  "claim": "H1 - Deep crust beneath the NW Sabah accretionary wedge is a remnant of Proto-South China Sea oceanic lithosphere (ophiolitic). STRONGEST of the four competing hypotheses.",
+  "claim_type": "hypothesis",
+  "confidence_prior": 0.45,
+  "confidence": "LOW",
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "site_specific_drilling",
+    "commercial_resource_estimate"
+  ],
+  "evidence_refs": [
+    "tectonic_history.md",
+    "sabah_two_oceanics.yaml"
+  ],
+  "source": "Pilia 2023 (Gondwana Research) | Franke 2008 | Lahad Datu ophiolites (N-MORB, low-K tholeiite)",
+  "metadata": {
+    "evidence_for": [
+      "Lahad_Datu_N_MORB_low_K_tholeiite_ophiolites",
+      "tomographic_high_velocity_anomaly_western_Sabah_upper_mantle_Pilia_2023",
+      "KT_6_Moho_26_to_33_km_NW_Sabah_NON_KILL",
+      "prior_PSCS_scorecard_3_DIRECT_4_CONSISTENT_0_CONTRADICTED"
+    ],
+    "evidence_against": [
+      "no_seismic_refraction_Vp_through_wedge_specifically",
+      "ophiolite_Vp_5p0_to_6p5_overlaps_lower_crustal_continental_Vp_at_comparable_depths (depth CONTESTED — dossier places KT-7 at 12-21 km; federation code + CLM-NWS-002 place it at 6-8 km; see CLM-NWS-008)"
+    ],
+    "missing_tests": [
+      "KT_7_depth_conversion_BLOCKED_velocity_unresolved",
+      "OBS_wide_angle_refraction_150km_across_Sabah_Trough"
+    ],
+    "uncertainty_band": {
+      "p10": 0.25,
+      "p50": 0.45,
+      "p90": 0.7,
+      "basis": "published point value INT 0.45 (dossier p.25, UNTESTED); bands are brackets, not a posterior"
+    },
+    "falsifier": "Depth-converted KT-7 with Vp outside 5.0-6.5 km/s, or OBS line showing no ophiolitic Vp through the wedge",
+    "residual_ambiguity": "KT-7 narrows H1-vs-H2 only; it does not kill H2",
+    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8 / p.25",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
   }
+},
+{
+  "claim_id": "CLM-NWS-005",
+  "claim": "H2 - Deep structure is continental margin succeeded by a thrust detachment; no significant oceanic crust in place. MODERATE alignment.",
+  "claim_type": "hypothesis",
+  "confidence_prior": 0.33,
+  "confidence": "LOW",
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "site_specific_drilling",
+    "commercial_resource_estimate"
+  ],
+  "evidence_refs": [
+    "basin_profile.yaml",
+    "tectonic_history.md"
+  ],
+  "source": "Franke 2008 (detachment at 6-8 km, FTB triangle zone) | Madon 2025 (continental Moho 26-33 km)",
+  "metadata": {
+    "evidence_for": [
+      "Franke_2008_6_to_8km_reflector_interpreted_as_thrust_detachment_in_TZ",
+      "KT_6_Moho_NW_Sabah_continental_26_to_33_km_NON_KILL_for_continental_substrate"
+    ],
+    "evidence_against": [
+      "shares_falsifier_window_with_H1_velocity_overlap_may_not_separate",
+      "ophiolite_slivers_documented_onshore_at_Lahad_Datu"
+    ],
+    "missing_tests": [
+      "KT_7_depth_conversion_BLOCKED",
+      "OBS_wide_angle_refraction"
+    ],
+    "uncertainty_band": {
+      "p10": 0.15,
+      "p50": 0.33,
+      "p90": 0.55,
+      "basis": "QUALITATIVE_ONLY - dossier ranks 'moderate', publishes no numeric value; p50 is an a-priori bracket flagged for correction"
+    },
+    "falsifier": "KT-7 depth conversion or OBS Vp profile showing ophiolitic velocities (5.0-6.5 km/s) through the wedge with no detachment surface",
+    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
+  }
+},
+{
+  "claim_id": "CLM-NWS-006",
+  "claim": "H3 - Deep crust is rifted / volcanic continental basement. WEAKEST of the four; cheapest to falsify.",
+  "claim_type": "hypothesis",
+  "confidence_prior": 0.18,
+  "confidence": "LOW",
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "site_specific_drilling",
+    "commercial_resource_estimate"
+  ],
+  "evidence_refs": [
+    "sabah_two_oceanics.yaml"
+  ],
+  "source": "no direct supporting dataset identified in dossier evidence base",
+  "metadata": {
+    "evidence_for": [
+      "none_identified_in_dossier_evidence_base"
+    ],
+    "evidence_against": [
+      "weaker_alignment_than_H1_H2_H4_on_present_evidence"
+    ],
+    "missing_tests": [
+      "reprocess_public_magnetic_and_gravity_offshore_Sabah_near_zero_cost_approx_6_months"
+    ],
+    "uncertainty_band": {
+      "p10": 0.05,
+      "p50": 0.18,
+      "p90": 0.38,
+      "basis": "QUALITATIVE_ONLY - dossier ranks 'weakest', publishes no numeric value; p50 is an a-priori bracket flagged for correction"
+    },
+    "falsifier": "Reprocessed public magnetic and gravity data - a volcanic-continental signature can be killed or strengthened at near-zero cost",
+    "sequencing_note": "Cheapest hypothesis to kill. Should be sequenced before any acquisition spend.",
+    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
+  }
+},
+{
+  "claim_id": "CLM-NWS-007",
+  "claim": "H4 - Deep structure reflects shale tectonics and gravity-driven collapse rather than a primary crustal architecture. MODERATE alignment; hardest to falsify with seismic velocity alone.",
+  "claim_type": "hypothesis",
+  "confidence_prior": 0.32,
+  "confidence": "LOW",
+  "valid_until": "2028-06-27",
+  "forbidden_uses": [
+    "site_specific_drilling",
+    "commercial_resource_estimate"
+  ],
+  "evidence_refs": [
+    "tectonic_history.md",
+    "sabah_two_oceanics.yaml"
+  ],
+  "source": "Morley 2024 (NSPW syn-collisional mobile-shale wedge, 8-9 km over 75,000 km2) | Morley 2023 (1,900 km2 mud canopy, ~50 centres)",
+  "metadata": {
+    "evidence_for": [
+      "NSPW_mobile_shale_dominated_wedge_8_to_9km_over_75000_km2_Morley_2024",
+      "mud_canopy_1900_km2_from_approx_50_centres_Morley_2023",
+      "documented_wedge_overpressure_in_Miocene_shales"
+    ],
+    "evidence_against": [
+      "mobile_shale_low_velocity_zones_1p5_to_2p0_kms_contaminate_velocity_discriminators"
+    ],
+    "missing_tests": [
+      "OBS_refraction_Vp_profile_penetrating_below_mobile_shale_interval_to_image_Moho"
+    ],
+    "uncertainty_band": {
+      "p10": 0.15,
+      "p50": 0.32,
+      "p90": 0.55,
+      "basis": "QUALITATIVE_ONLY - dossier ranks 'moderate', publishes no numeric value; p50 is an a-priori bracket flagged for correction"
+    },
+    "falsifier": "OBS refraction Vp profile penetrating below the mobile-shale interval to image primary crustal structure and Moho",
+    "residual_ambiguity": "Mobile-shale low-velocity zones will themselves contaminate any velocity-based discriminator",
+    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
+  }
+},
+{
+  "claim_id": "CLM-NWS-008",
+  "claim": "DECISION TEST: KT-7 depth-conversion discriminates H1-H4 (CLM-NWS-004..007) — UNTESTED, currently UNRUNNABLE, and federation-internal depth contradiction OPEN (6-8 km in code + CLM-NWS-002 vs 12-21 km in the external Kinabalu dossier).",
+  "claim_type": "other",
+  "confidence_prior": 0.6,
+  "confidence": "LOW",
+  "valid_until": "2027-09-15",
+  "forbidden_uses": [
+    "site_specific_drilling",
+    "commercial_resource_estimate",
+    "unverified_commercial_decision"
+  ],
+  "evidence_refs": [
+    "sabah_basin/claims.json#CLM-NWS-004..007",
+    "geox://skill/subsurface/petro/sabah_prospect_discriminator.py"
+  ],
+  "source": "GEOX Kinabalu Basin Geologist Dossier Fig.8 + p.19 | Franke et al. 2008 MPG 25 606-624 | sabah_prospect_discriminator._default_pscs_filter()",
+  "metadata": {
+    "test_status": "BLOCKED — not merely unrun",
+    "blockers": [
+      "pscs_velocity_available=False — exact Vp inversion sequence (3200->3760->6041 m/s) NOT PUBLISHED",
+      "depth_geometry_contradiction_open: code+CLM-NWS-002 place the Franke 2008 high-Vp body at 6-8 km; the dossier places KT-7 at 12-21 km. Same source paper, two geometries, unreconciled.",
+      "no executable depth-conversion routine found on host — the 'code is written' claim resolves to a dataclass filter with a PENDING slot, not a runnable tool"
+    ],
+    "discrimination_power": "PARTIAL — even if run, ophiolite Vp 5.0-6.5 km/s overlaps lower-crustal continental Vp at 12-21 km, so KT-7 narrows H1-vs-H2 only. The dossier's claim that it 'separates all four hypotheses' is an overclaim.",
+    "downstream_effect": "PSCS confidence is reduced whenever kt7_result='PENDING' and the prospect requires Vp for confirmation (discriminator line 857).",
+    "auto_upgrade_condition": "This claim upgrades from BLOCKED to RUNNABLE the moment a Vp profile for the KT-7 reflector is published, OR the 6-8 km vs 12-21 km geometry is reconciled against Franke et al. 2008 full text.",
+    "sequencing": "Per dossier doctrine (information per dollar): KT-7 first once unblocked, then mag/grav reprocessing for H3, then the USD 5-10M OBS line.",
+    "registered_at": "2026-09-15",
+    "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
+  }
+}
 ]

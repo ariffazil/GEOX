@@ -1,0 +1,2344 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [
+    "data/atlas/countries.geojson",
+    "data/atlas/malaysia.geojson",
+    "data/atlas/sea_neighbors.geojson",
+    "data/egs/receipts/index.jsonl",
+    "data/emc_real/IODP386_M0087B_XRD.tab",
+    "data/emc_real/IODP386_M0087B_XRF.tab",
+    "data/emc_real/Volve_15_9-F-11A.LAS",
+    "data/emc_real/emc_real_provenance.jsonl",
+    "data/geox_las/CHATGPT_POST_PUSH_SMOKE.las",
+    "data/geox_las/CHATGPT_VALIDATION_VOLVE_15_9_19.las",
+    "data/geox_las/LIVE_HARDENED_BAD.las",
+    "data/geox_las/LIVE_HARDENED_PASS.las",
+    "data/geox_las/QQQ_FFF_test_well.las",
+    "data/geox_las/bad_well.las",
+    "data/geox_las/empty_well.las"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 10,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 7,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "contracts/tools/canonical/prospect.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 276,
+      "nonEmptyLines": 257,
+      "functions": [
+        {
+          "name": "geox_prospect_evaluate",
+          "startLine": 16,
+          "endLine": 149,
+          "params": [
+            "prospect_ref",
+            "mode",
+            "evidence_refs"
+          ]
+        },
+        {
+          "name": "geox_prospect_judge_preview",
+          "startLine": 152,
+          "endLine": 181,
+          "params": [
+            "prospect_ref",
+            "ac_risk_score"
+          ]
+        },
+        {
+          "name": "geox_prospect_judge_seal",
+          "startLine": 184,
+          "endLine": 257,
+          "params": [
+            "prospect_ref",
+            "ac_risk_score",
+            "ack_irreversible",
+            "judge_pin"
+          ]
+        },
+        {
+          "name": "geox_prospect_judge_verdict",
+          "startLine": 261,
+          "endLine": 276,
+          "params": [
+            "prospect_ref",
+            "ac_risk_score",
+            "ack_irreversible",
+            "judge_pin"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_prospect_evaluate",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "geox_prospect_judge_preview",
+          "line": 152,
+          "isDefault": false
+        },
+        {
+          "name": "geox_prospect_judge_seal",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "geox_prospect_judge_verdict",
+          "line": 261,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_prospect_evaluate",
+          "callee": "get_standard_envelope",
+          "lineNumber": 36
+        },
+        {
+          "caller": "geox_prospect_evaluate",
+          "callee": "get_standard_envelope",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_prospect_evaluate",
+          "callee": "get_standard_envelope",
+          "lineNumber": 141
+        },
+        {
+          "caller": "geox_prospect_evaluate",
+          "callee": "round",
+          "lineNumber": 147
+        },
+        {
+          "caller": "geox_prospect_judge_preview",
+          "callee": "get_standard_envelope",
+          "lineNumber": 174
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "os.environ.get",
+          "lineNumber": 199
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "hmac.compare_digest",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "str",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "get_standard_envelope",
+          "lineNumber": 202
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "get_standard_envelope",
+          "lineNumber": 219
+        },
+        {
+          "caller": "geox_prospect_judge_seal",
+          "callee": "get_standard_envelope",
+          "lineNumber": 250
+        },
+        {
+          "caller": "geox_prospect_judge_verdict",
+          "callee": "geox_prospect_judge_seal",
+          "lineNumber": 271
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/qc.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 356,
+      "nonEmptyLines": 323,
+      "functions": [
+        {
+          "name": "geox_data_qc_bundle",
+          "startLine": 26,
+          "endLine": 356,
+          "params": [
+            "artifact_ref",
+            "artifact_type",
+            "qc_mode"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_data_qc_bundle",
+          "line": 26,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_artifact_exists",
+          "lineNumber": 54
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 55
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 72
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_get_artifact",
+          "lineNumber": 74
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "store_entry.get",
+          "lineNumber": 75
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "os.path.exists",
+          "lineNumber": 78
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_record_latest_qc",
+          "lineNumber": 79
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 89
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 105
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "sys.path.insert",
+          "lineNumber": 110
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "os.environ.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "lasio.read",
+          "lineNumber": 116
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "las.keys",
+          "lineNumber": 118
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "key.upper",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.array",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str(las.well.get(\"WELL\", \"\")).strip",
+          "lineNumber": 131
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str",
+          "lineNumber": 131
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "las.well.get",
+          "lineNumber": 131
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str(las.well.get(\"UWI\", \"\")).strip",
+          "lineNumber": 132
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str",
+          "lineNumber": 132
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "las.well.get",
+          "lineNumber": 132
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str(las.well.get(\"LOC\", \"\")).strip",
+          "lineNumber": 133
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str",
+          "lineNumber": 133
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "las.well.get",
+          "lineNumber": 133
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str(las.well.get(\"DATUM\", \"\")).strip",
+          "lineNumber": 134
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "str",
+          "lineNumber": 134
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "las.well.get",
+          "lineNumber": 134
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_detect_depth_unit",
+          "lineNumber": 135
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "sum",
+          "lineNumber": 137
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 139
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 141
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 142
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 143
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "round",
+          "lineNumber": 146
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.diff",
+          "lineNumber": 157
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 158
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.all",
+          "lineNumber": 158
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.all",
+          "lineNumber": 158
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.mean",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.abs",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "len",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 160
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.std",
+          "lineNumber": 160
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.abs",
+          "lineNumber": 160
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "len",
+          "lineNumber": 160
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "int",
+          "lineNumber": 161
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.sum",
+          "lineNumber": 161
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "round",
+          "lineNumber": 164
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "round",
+          "lineNumber": 165
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 167
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 167
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "raw_curves.items",
+          "lineNumber": 173
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.asarray",
+          "lineNumber": 176
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.isnan",
+          "lineNumber": 177
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "int",
+          "lineNumber": 179
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "round",
+          "lineNumber": 180
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 180
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.isnan(arr_float).sum",
+          "lineNumber": 180
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.isnan",
+          "lineNumber": 180
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "max",
+          "lineNumber": 180
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 181
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.nanmin",
+          "lineNumber": 181
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 182
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.nanmax",
+          "lineNumber": 182
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_CURVE_RANGES.items",
+          "lineNumber": 184
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "CANONICAL_ALIASES.get",
+          "lineNumber": 187
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.isnan",
+          "lineNumber": 193
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "len",
+          "lineNumber": 194
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "curve_warnings.append",
+          "lineNumber": 195
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 197
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.min",
+          "lineNumber": 197
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "curve_warnings.append",
+          "lineNumber": 198
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 198
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.min",
+          "lineNumber": 198
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 199
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.max",
+          "lineNumber": 199
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "curve_warnings.append",
+          "lineNumber": 200
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 200
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.max",
+          "lineNumber": 200
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "float",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "np.min",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "curve_warnings.append",
+          "lineNumber": 202
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "k.upper",
+          "lineNumber": 205
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "raw_curves.keys",
+          "lineNumber": 205
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "CANONICAL_ALIASES.items",
+          "lineNumber": 208
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "any",
+          "lineNumber": 209
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "present_curves.append",
+          "lineNumber": 211
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "missing_curves.append",
+          "lineNumber": 213
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "round",
+          "lineNumber": 214
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "len",
+          "lineNumber": 214
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "len",
+          "lineNumber": 214
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "LASIngestor",
+          "lineNumber": 224
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "ingestor.ingest",
+          "lineNumber": 225
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "ingestor.qc_logs",
+          "lineNumber": 226
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "qc_result.to_dict",
+          "lineNumber": 227
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "qc_dict.get",
+          "lineNumber": 229
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "(store_entry or {}).get",
+          "lineNumber": 230
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "list",
+          "lineNumber": 231
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_diagnostics.get",
+          "lineNumber": 231
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_diagnostics.get",
+          "lineNumber": 232
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "int",
+          "lineNumber": 233
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_diagnostics.get",
+          "lineNumber": 233
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "hasattr",
+          "lineNumber": 235
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "getattr",
+          "lineNumber": 239
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_diagnostics.get",
+          "lineNumber": 242
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_flags.append",
+          "lineNumber": 243
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_flags.append",
+          "lineNumber": 245
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "inherited_flags.append",
+          "lineNumber": 247
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "sorted",
+          "lineNumber": 249
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "set",
+          "lineNumber": 249
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "sorted",
+          "lineNumber": 250
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "set",
+          "lineNumber": 250
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "list",
+          "lineNumber": 250
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "qc_dict.get",
+          "lineNumber": 250
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "bool",
+          "lineNumber": 253
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "depth_qc.get",
+          "lineNumber": 254
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_record_latest_qc",
+          "lineNumber": 277
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 288
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "store_entry.get",
+          "lineNumber": 291
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "c.to_dict",
+          "lineNumber": 297
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "hasattr",
+          "lineNumber": 297
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "dict",
+          "lineNumber": 297
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "qc_dict.get",
+          "lineNumber": 301
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "qc_dict.get",
+          "lineNumber": 303
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 327
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "_record_latest_qc",
+          "lineNumber": 330
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 340
+        },
+        {
+          "caller": "geox_data_qc_bundle",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 356
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/registry.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 246,
+      "nonEmptyLines": 214,
+      "functions": [
+        {
+          "name": "geox_system_registry_status",
+          "startLine": 18,
+          "endLine": 78,
+          "params": [
+            "session_id",
+            "actor_id"
+          ]
+        },
+        {
+          "name": "geox_history_audit",
+          "startLine": 82,
+          "endLine": 244,
+          "params": [
+            "query",
+            "limit",
+            "actor_id",
+            "session_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_system_registry_status",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "geox_history_audit",
+          "line": 82,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "os.getenv(\"GEOX_SHOW_LEGACY_ALIASES\", \"false\").lower",
+          "lineNumber": 35
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "os.getenv",
+          "lineNumber": 35
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "e.get",
+          "lineNumber": 46
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "set",
+          "lineNumber": 47
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "sorted",
+          "lineNumber": 48
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "sorted",
+          "lineNumber": 49
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "len",
+          "lineNumber": 53
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "len",
+          "lineNumber": 54
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "len",
+          "lineNumber": 55
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "len",
+          "lineNumber": 63
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "len",
+          "lineNumber": 64
+        },
+        {
+          "caller": "geox_system_registry_status",
+          "callee": "get_standard_envelope",
+          "lineNumber": 78
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "logging.getLogger",
+          "lineNumber": 106
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "clean_query.replace",
+          "lineNumber": 109
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "max",
+          "lineNumber": 110
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "min",
+          "lineNumber": 110
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "clean_query.lower",
+          "lineNumber": 111
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "set",
+          "lineNumber": 115
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.join",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.getcwd",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.join",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.dirname",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.getcwd",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.exists",
+          "lineNumber": 127
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "open",
+          "lineNumber": 130
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "line.strip",
+          "lineNumber": 132
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.loads",
+          "lineNumber": 136
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.dumps(entry, default=str).lower",
+          "lineNumber": 137
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.dumps",
+          "lineNumber": 137
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "str",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "seen.add",
+          "lineNumber": 143
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "records.append",
+          "lineNumber": 144
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.basename",
+          "lineNumber": 145
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 149
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 149
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 150
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 151
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 154
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 155
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "logger.warning",
+          "lineNumber": 162
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "_artifact_store.items",
+          "lineNumber": 166
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 167
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.dumps(entry, default=str).lower",
+          "lineNumber": 169
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.dumps",
+          "lineNumber": 169
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "all_artifacts.append",
+          "lineNumber": 172
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 175
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "seen.add",
+          "lineNumber": 178
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 179
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 179
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "latest_qc.get",
+          "lineNumber": 184
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get(\"diagnostics\", {}).get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get(\"diagnostics\", {}).get",
+          "lineNumber": 186
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 186
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 188
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 189
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 190
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 191
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 192
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "latest_qc.get",
+          "lineNumber": 193
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "list",
+          "lineNumber": 194
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "latest_qc.get",
+          "lineNumber": 194
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "list",
+          "lineNumber": 195
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "latest_qc.get",
+          "lineNumber": 195
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "list",
+          "lineNumber": 196
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "entry.get",
+          "lineNumber": 196
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "records.append",
+          "lineNumber": 198
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "records.sort",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "str",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "r.get",
+          "lineNumber": 201
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "len",
+          "lineNumber": 202
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "json.dumps",
+          "lineNumber": 209
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "base64.b64encode(cursor_payload.encode()).decode",
+          "lineNumber": 210
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "base64.b64encode",
+          "lineNumber": 210
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "cursor_payload.encode",
+          "lineNumber": 210
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "len",
+          "lineNumber": 215
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.basename",
+          "lineNumber": 219
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "os.path.exists",
+          "lineNumber": 219
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "get_standard_envelope",
+          "lineNumber": 222
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "logger.exception",
+          "lineNumber": 230
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "get_standard_envelope",
+          "lineNumber": 231
+        },
+        {
+          "caller": "geox_history_audit",
+          "callee": "str",
+          "lineNumber": 235
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/subsurface.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 176,
+      "nonEmptyLines": 165,
+      "functions": [
+        {
+          "name": "geox_subsurface_generate_candidates",
+          "startLine": 22,
+          "endLine": 140,
+          "params": [
+            "target_class",
+            "evidence_refs",
+            "realizations",
+            "gr_clean",
+            "gr_shale",
+            "vsh_method",
+            "matrix_density",
+            "fluid_density",
+            "sw_model",
+            "rw",
+            "archie_a",
+            "archie_m",
+            "archie_n",
+            "vsh_cutoff",
+            "phi_cutoff",
+            "sw_cutoff",
+            "rt_cutoff",
+            "zone_top_m",
+            "zone_base_m"
+          ]
+        },
+        {
+          "name": "geox_subsurface_verify_integrity",
+          "startLine": 143,
+          "endLine": 176,
+          "params": [
+            "candidate_ref",
+            "domain"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_subsurface_generate_candidates",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "geox_subsurface_verify_integrity",
+          "line": 143,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "get_standard_envelope",
+          "lineNumber": 60
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 75
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "_compute_subsurface_candidates",
+          "lineNumber": 77
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "_inject_ensemble_residual_evidence",
+          "lineNumber": 98
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "result.get",
+          "lineNumber": 114
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "get_standard_envelope",
+          "lineNumber": 115
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "result.get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "result.get",
+          "lineNumber": 124
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 127
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "get_standard_envelope",
+          "lineNumber": 131
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "result.get",
+          "lineNumber": 137
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "(result.get(\"value_contract\") or {}).get",
+          "lineNumber": 138
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "result.get",
+          "lineNumber": 138
+        },
+        {
+          "caller": "geox_subsurface_generate_candidates",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_subsurface_verify_integrity",
+          "callee": "_artifact_exists",
+          "lineNumber": 150
+        },
+        {
+          "caller": "geox_subsurface_verify_integrity",
+          "callee": "get_standard_envelope",
+          "lineNumber": 152
+        },
+        {
+          "caller": "geox_subsurface_verify_integrity",
+          "callee": "get_standard_envelope",
+          "lineNumber": 168
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/time4d.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 46,
+      "functions": [
+        {
+          "name": "geox_time4d_analyze_system",
+          "startLine": 12,
+          "endLine": 52,
+          "params": [
+            "prospect_ref",
+            "mode",
+            "evidence_refs"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_time4d_analyze_system",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_time4d_analyze_system",
+          "callee": "get_standard_envelope",
+          "lineNumber": 30
+        },
+        {
+          "caller": "geox_time4d_analyze_system",
+          "callee": "get_standard_envelope",
+          "lineNumber": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/unified_13.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 177,
+      "nonEmptyLines": 149,
+      "functions": [
+        {
+          "name": "dispatch_alias",
+          "startLine": 53,
+          "endLine": 74,
+          "params": [
+            "old_name",
+            "canonical_name"
+          ]
+        },
+        {
+          "name": "geox_health_check",
+          "startLine": 78,
+          "endLine": 92,
+          "params": []
+        },
+        {
+          "name": "register_unified_tools",
+          "startLine": 123,
+          "endLine": 177,
+          "params": [
+            "mcp",
+            "profile"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dispatch_alias",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "geox_health_check",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "register_unified_tools",
+          "line": 123,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 57
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 57
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 57
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "geox_data_ingest_bundle",
+          "lineNumber": 58
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 59
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 63
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 63
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "geox_subsurface_generate_candidates",
+          "lineNumber": 64
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "geox_system_registry_status",
+          "lineNumber": 66
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "geox_prospect_evaluate",
+          "lineNumber": 68
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "kwargs.get",
+          "lineNumber": 68
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "get_alias_metadata",
+          "lineNumber": 72
+        },
+        {
+          "caller": "dispatch_alias",
+          "callee": "res.update",
+          "lineNumber": 73
+        },
+        {
+          "caller": "geox_health_check",
+          "callee": "len",
+          "lineNumber": 90
+        },
+        {
+          "caller": "geox_health_check",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 91
+        },
+        {
+          "caller": "geox_health_check",
+          "callee": "datetime.now",
+          "lineNumber": 91
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "mcp.tool",
+          "lineNumber": 128
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "len",
+          "lineNumber": 133
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "len",
+          "lineNumber": 135
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "os.getenv(\"GEOX_SHOW_LEGACY_ALIASES\", \"false\").lower",
+          "lineNumber": 139
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "os.getenv",
+          "lineNumber": 139
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "logger.info",
+          "lineNumber": 141
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "LEGACY_ALIAS_MAP.items",
+          "lineNumber": 143
+        },
+        {
+          "caller": "alias_func",
+          "callee": "dispatch_alias",
+          "lineNumber": 154
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "mcp.tool",
+          "lineNumber": 168
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "make_alias",
+          "lineNumber": 172
+        },
+        {
+          "caller": "register_unified_tools",
+          "callee": "register_well_correlation_tools",
+          "lineNumber": 177
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/well_correlation.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 397,
+      "nonEmptyLines": 350,
+      "functions": [
+        {
+          "name": "register_well_correlation_tools",
+          "startLine": 25,
+          "endLine": 348,
+          "params": [
+            "mcp"
+          ]
+        },
+        {
+          "name": "_error_response",
+          "startLine": 353,
+          "endLine": 362,
+          "params": [
+            "error_code",
+            "message",
+            "wells_failed"
+          ]
+        },
+        {
+          "name": "_curve_unit",
+          "startLine": 365,
+          "endLine": 374,
+          "params": [
+            "canon"
+          ]
+        },
+        {
+          "name": "_make_vault_receipt",
+          "startLine": 377,
+          "endLine": 392,
+          "params": [
+            "tool_name",
+            "payload"
+          ]
+        },
+        {
+          "name": "_json_deterministic",
+          "startLine": 395,
+          "endLine": 397,
+          "params": [
+            "obj"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "register_well_correlation_tools",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "_error_response",
+          "line": 353,
+          "isDefault": false
+        },
+        {
+          "name": "_curve_unit",
+          "line": 365,
+          "isDefault": false
+        },
+        {
+          "name": "_make_vault_receipt",
+          "line": 377,
+          "isDefault": false
+        },
+        {
+          "name": "_json_deterministic",
+          "line": 395,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "register_well_correlation_tools",
+          "callee": "mcp.tool",
+          "lineNumber": 32
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_error_response",
+          "lineNumber": 106
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "enumerate",
+          "lineNumber": 114
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "resolved_paths.append",
+          "lineNumber": 116
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "materialize_las_source",
+          "lineNumber": 117
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "logger.warning",
+          "lineNumber": 120
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "resolved_paths.append",
+          "lineNumber": 122
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "validate_output_path",
+          "lineNumber": 127
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_error_response",
+          "lineNumber": 129
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "str",
+          "lineNumber": 131
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "os.path.dirname",
+          "lineNumber": 134
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "validate_output_path",
+          "lineNumber": 139
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "os.path.join",
+          "lineNumber": 140
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_error_response",
+          "lineNumber": 144
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "str",
+          "lineNumber": 146
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "build_well_panel_plot_spec",
+          "lineNumber": 151
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_error_response",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "str",
+          "lineNumber": 161
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "render_multiwell_correlation_panel",
+          "lineNumber": 167
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "RenderRequest",
+          "lineNumber": 168
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "spec.model_dump",
+          "lineNumber": 182
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 184
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "len",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "spec.depth.model_dump",
+          "lineNumber": 199
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "track.model_dump",
+          "lineNumber": 200
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 206
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "len",
+          "lineNumber": 207
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 207
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "logger.exception",
+          "lineNumber": 213
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_error_response",
+          "lineNumber": 214
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 222
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 231
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "response.get",
+          "lineNumber": 233
+        },
+        {
+          "caller": "geox_well_correlation_panel",
+          "callee": "_make_vault_receipt",
+          "lineNumber": 243
+        },
+        {
+          "caller": "register_well_correlation_tools",
+          "callee": "mcp.tool",
+          "lineNumber": 249
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "materialize_las_source",
+          "lineNumber": 289
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "_error_response",
+          "lineNumber": 291
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "str",
+          "lineNumber": 293
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "load_well_bundle",
+          "lineNumber": 298
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "_error_response",
+          "lineNumber": 300
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "CURVE_ALIASES.items",
+          "lineNumber": 308
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "bundle.null_pct.items",
+          "lineNumber": 314
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "qc_flags.append",
+          "lineNumber": 316
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "round",
+          "lineNumber": 316
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "qc_flags.append",
+          "lineNumber": 318
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "round",
+          "lineNumber": 318
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "qc_flags.append",
+          "lineNumber": 323
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "found_aliases.get",
+          "lineNumber": 336
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "bundle.null_pct.get",
+          "lineNumber": 337
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "_curve_unit",
+          "lineNumber": 338
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "_make_vault_receipt",
+          "lineNumber": 344
+        },
+        {
+          "caller": "geox_las_curve_inventory",
+          "callee": "len",
+          "lineNumber": 346
+        },
+        {
+          "caller": "_curve_unit",
+          "callee": "{\n        \"GR\":   \"gAPI\",\n        \"RT\":   \"ohm.m\",\n        \"RHOB\": \"g/cc\",\n        \"NPHI\": \"v/v\",\n        \"DT\":   \"us/ft\",\n        \"CAL\":  \"in\",\n        \"SP\":   \"mV\",\n    }.get",
+          "lineNumber": 366
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "_json_deterministic",
+          "lineNumber": 379
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "hashlib.sha256(payload_str.encode()).hexdigest",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "hashlib.sha256",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "payload_str.encode",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 384
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "datetime.now",
+          "lineNumber": 384
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_make_vault_receipt",
+          "callee": "datetime.now",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_json_deterministic",
+          "callee": "json.dumps",
+          "lineNumber": 397
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "data/atlas/layers/earth_layers.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 354,
+      "nonEmptyLines": 354,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "license_note",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "truth_classes",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "themes",
+          "level": 1,
+          "line": 312
+        },
+        {
+          "heading": "style_profiles",
+          "level": 1,
+          "line": 322
+        },
+        {
+          "heading": "guardrails",
+          "level": 1,
+          "line": 345
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "data/evidence/PROSPECT_ALPHA.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 52,
+      "nonEmptyLines": 52,
+      "sections": [
+        {
+          "heading": "ref",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "context",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "payload",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "metadata",
+          "level": 1,
+          "line": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "data/evidence/W-101.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 58,
+      "nonEmptyLines": 58,
+      "sections": [
+        {
+          "heading": "ref",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "context",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "payload",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "metadata",
+          "level": 1,
+          "line": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

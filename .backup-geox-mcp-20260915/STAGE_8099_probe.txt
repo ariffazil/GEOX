@@ -1,0 +1,41 @@
+############ PROBE SUITE against http://127.0.0.1:8099 ############
+
+===== [1] MODERN stateless server/discover (MCP-Protocol-Version: 2026-07-28 + Mcp-Method) =====
+{"jsonrpc":"2.0","id":1,"result":{"resultType":"complete","supportedVersions":["2026-07-28","2025-11-25","2025-06-18","2025-03-26","2024-11-05"],"capabilities":{"experimental":{},"logging":{},"prompts":{"listChanged":true},"resources":{"subscribe":false,"listChanged":true},"tools":{"listChanged":true},"extensions":{"io.modelcontextprotocol/ui":{}}},"instructions":"Canonical GEOX Registry & MCP App Control Plane (Sovereign 30). DITEMPA BUKAN DIBERI \u2014 One Sovereign Kernel.","ttlMs":300000,"cacheScope":"public","_meta":{"io.modelcontextprotocol/serverInfo":{"name":"GEOX Earth Intelligence","version":"v2026.08.26","websiteUrl":"https://geox.arif-fazil.com"},"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/transport":"streamable-http (dual-era: 2026-07-28 stateless + 2025-11-25 stateful)","io.geox/surface":{"public_tools":31,"source":"geox_mcp.registry.CANONICAL_PUBLIC_TOOLS"}}}}
+--HTTP 200--
+
+===== [1b] MODERN headers dump for [1] =====
+HTTP/1.1 200 OK
+content-type: application/json
+mcp-protocol-version: 2026-07-28
+x-mcp-era: stateless-2026-07-28
+
+===== [2] LEGACY 2025-11-25 initialize =====
+--HTTP 200--
+negotiated protocolVersion = 2025-11-25
+serverInfo = GEOX v2026.08.26
+mcp-session-id = e93d05e025cb4b968b4f05eb89334d66
+--- [2b] legacy notifications/initialized ---
+--HTTP 202--
+--- [2c] legacy tools/list (session) ---
+--HTTP 200--
+LEGACY tools/list count = 31
+names = geox_basin,geox_calibration_register_witness,geox_claim,geox_contrast_metabolize,geox_deep_time,geox_extract_display_proxy,geox_extract_native_trace,geox_geomechanics,geox_glof_cascade_initialize,geox_glof_cascade_inverse,geox_glof_cascade_mcmc_inverse,geox_glof_cascade_metabolize,geox_glof_cascade_phase,geox_glof_cascade_propagate,geox_glof_cascade_step,geox_list_registered_sources,geox_map,geox_model,geox_paleobiodb_query,geox_petrophysics,geox_prospect,geox_register_native_source,geox_seismic_compute,geox_seismic_ingest,geox_seismic_interpret,geox_source,geox_spatial,geox_temporal,geox_well,geox_well_ingest,geox_well_qc
+ttlMs present = False
+
+===== [3] MODERN stateless tools/list (no session id, era-declared) =====
+--HTTP 200--
+STATELESS tools/list count = 31
+first5 = ['geox_geomechanics', 'geox_glof_cascade_initialize', 'geox_glof_cascade_step', 'geox_glof_cascade_phase', 'geox_glof_cascade_inverse']
+
+===== [4] MODERN stateless tools/call (no session id) =====
+--HTTP 200--
+{"jsonrpc":"2.0","id":5,"result":{"content":[{"type":"text","text":"{\"_well_conformance\": {\"claim_state\": \"HOLD\", \"witness_type\": \"AI\", \"organ_type\": \"GEOX\", \"conformance_version\": \"v1.0\", \"conformant\": true}, \"result\": {\"tool_name\": \"geox_list_registered_sources\", \"n_sources\": 0, \"sources\": [], \"session_id\": \"ANON-081562891108449b\", \"actor_id\": \"auto-anon\"}, \"epistemic_tag\": \"UNKNOWN\", \"evidence_quality\": 0.3, \"source_attribution\": [\"GEOX:src/geox_
+
+===== [5] HEALTH =====
+
+--HTTP 200--
+status = healthy | kernel_verdict = SEAL | version = v2026.08.26
+surface_drift = {"canonical_count": 31, "live_count": 31, "drift_count": 0, "gap_count": 0, "ok": true, "source": "geox_mcp:/health (snapshot of last /mcp/ tools/list observation)"}
+canonical==live==31 ? True
+############ END ############

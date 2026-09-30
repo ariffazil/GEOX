@@ -1,0 +1,373 @@
+{
+  "nodes": [
+    {
+      "id": "config:infra/geox-static.yml",
+      "type": "config",
+      "name": "geox-static.yml",
+      "filePath": "infra/geox-static.yml",
+      "summary": "yaml config file (47 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ingest/macrostrat-malaysia/export_jmg_macrostrat.py",
+      "type": "file",
+      "name": "export_jmg_macrostrat.py",
+      "filePath": "ingest/macrostrat-malaysia/export_jmg_macrostrat.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ingest/macrostrat-malaysia/export_jmg_macrostrat.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "ingest/macrostrat-malaysia/export_jmg_macrostrat.py",
+      "lineRange": [
+        58,
+        83
+      ],
+      "summary": "main() — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:oauth/geox-scope-annotations.yaml",
+      "type": "config",
+      "name": "geox-scope-annotations.yaml",
+      "filePath": "oauth/geox-scope-annotations.yaml",
+      "summary": "yaml config file (266 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:oauth/oauth-protected-resource.json",
+      "type": "config",
+      "name": "oauth-protected-resource.json",
+      "filePath": "oauth/oauth-protected-resource.json",
+      "summary": "json config file (54 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:oauth/validate.py",
+      "type": "file",
+      "name": "validate.py",
+      "filePath": "oauth/validate.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:oauth/validate.py:check_write_verb_in_observe",
+      "type": "function",
+      "name": "check_write_verb_in_observe",
+      "filePath": "oauth/validate.py",
+      "lineRange": [
+        65,
+        83
+      ],
+      "summary": "check_write_verb_in_observe(tools, ci) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:oauth/validate.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "oauth/validate.py",
+      "lineRange": [
+        86,
+        206
+      ],
+      "summary": "main() — 120 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:okf/geox.md",
+      "type": "document",
+      "name": "geox.md",
+      "filePath": "okf/geox.md",
+      "summary": "markdown docs file (40 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:okf/sabah-basin/basins/nw-sabah.md",
+      "type": "document",
+      "name": "nw-sabah.md",
+      "filePath": "okf/sabah-basin/basins/nw-sabah.md",
+      "summary": "markdown docs file (23 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/evidence/morley-2023.md",
+      "type": "document",
+      "name": "morley-2023.md",
+      "filePath": "okf/sabah-basin/evidence/morley-2023.md",
+      "summary": "markdown docs file (25 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/evidence/nspw-mud-canopy.md",
+      "type": "document",
+      "name": "nspw-mud-canopy.md",
+      "filePath": "okf/sabah-basin/evidence/nspw-mud-canopy.md",
+      "summary": "markdown docs file (23 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/index.md",
+      "type": "document",
+      "name": "index.md",
+      "filePath": "okf/sabah-basin/index.md",
+      "summary": "markdown docs file (9 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/log.md",
+      "type": "document",
+      "name": "log.md",
+      "filePath": "okf/sabah-basin/log.md",
+      "summary": "markdown docs file (6 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/prospects/kinabalu.md",
+      "type": "document",
+      "name": "kinabalu.md",
+      "filePath": "okf/sabah-basin/prospects/kinabalu.md",
+      "summary": "markdown docs file (25 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:okf/sabah-basin/stratigraphy/sabah-ladder.md",
+      "type": "document",
+      "name": "sabah-ladder.md",
+      "filePath": "okf/sabah-basin/stratigraphy/sabah-ladder.md",
+      "summary": "markdown docs file (31 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:okf/sabah-basin/wells/bekantan-1.md",
+      "type": "document",
+      "name": "bekantan-1.md",
+      "filePath": "okf/sabah-basin/wells/bekantan-1.md",
+      "summary": "markdown docs file (25 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:ops/DEPLOY_COMMANDS.txt",
+      "type": "document",
+      "name": "DEPLOY_COMMANDS.txt",
+      "filePath": "ops/DEPLOY_COMMANDS.txt",
+      "summary": "txt docs file (60 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:outputs/kl2_kinabalu/_audit_extract.py",
+      "type": "file",
+      "name": "_audit_extract.py",
+      "filePath": "outputs/kl2_kinabalu/_audit_extract.py",
+      "summary": "python code file (60 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:outputs/kl2_kinabalu/_canonize_atomic.py",
+      "type": "file",
+      "name": "_canonize_atomic.py",
+      "filePath": "outputs/kl2_kinabalu/_canonize_atomic.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:outputs/kl2_kinabalu/_canonize_stdio_driver.py",
+      "type": "file",
+      "name": "_canonize_stdio_driver.py",
+      "filePath": "outputs/kl2_kinabalu/_canonize_stdio_driver.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:outputs/kl2_kinabalu/kl2_kinabalu_penetration_v2.py",
+      "type": "file",
+      "name": "kl2_kinabalu_penetration_v2.py",
+      "filePath": "outputs/kl2_kinabalu/kl2_kinabalu_penetration_v2.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:outputs/kl2_kinabalu/kl2_kinabalu_well_data_v2.xlsx",
+      "type": "file",
+      "name": "kl2_kinabalu_well_data_v2.xlsx",
+      "filePath": "outputs/kl2_kinabalu/kl2_kinabalu_well_data_v2.xlsx",
+      "summary": "xlsx code file (45 non-empty lines).",
+      "tags": [
+        "code",
+        "xlsx"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:outputs/kl2_kinabalu/wells_summary.json",
+      "type": "config",
+      "name": "wells_summary.json",
+      "filePath": "outputs/kl2_kinabalu/wells_summary.json",
+      "summary": "json config file (158 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:prompts/GEOX_CONSTITUTIONAL_PROMPT_BLOCK.yaml",
+      "type": "config",
+      "name": "GEOX_CONSTITUTIONAL_PROMPT_BLOCK.yaml",
+      "filePath": "prompts/GEOX_CONSTITUTIONAL_PROMPT_BLOCK.yaml",
+      "summary": "yaml config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:reality_contracts/geox_reality_contract.yaml",
+      "type": "config",
+      "name": "geox_reality_contract.yaml",
+      "filePath": "reality_contracts/geox_reality_contract.yaml",
+      "summary": "yaml config file (746 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:registry/graph.json",
+      "type": "config",
+      "name": "graph.json",
+      "filePath": "registry/graph.json",
+      "summary": "json config file (90 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:registry/registry.json",
+      "type": "config",
+      "name": "registry.json",
+      "filePath": "registry/registry.json",
+      "summary": "json config file (316 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ingest/macrostrat-malaysia/export_jmg_macrostrat.py",
+      "target": "function:ingest/macrostrat-malaysia/export_jmg_macrostrat.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:oauth/validate.py",
+      "target": "function:oauth/validate.py:check_write_verb_in_observe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:oauth/validate.py",
+      "target": "function:oauth/validate.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

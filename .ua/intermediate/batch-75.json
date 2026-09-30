@@ -1,0 +1,550 @@
+{
+  "nodes": [
+    {
+      "id": "file:.git_commit",
+      "type": "file",
+      "name": ".git_commit",
+      "filePath": ".git_commit",
+      "summary": "unknown code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.github/CODEOWNERS",
+      "type": "file",
+      "name": "CODEOWNERS",
+      "filePath": ".github/CODEOWNERS",
+      "summary": "unknown code file (14 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:.github/ISSUE_TEMPLATE/repo-hygiene.md",
+      "type": "document",
+      "name": "repo-hygiene.md",
+      "filePath": ".github/ISSUE_TEMPLATE/repo-hygiene.md",
+      "summary": "markdown docs file (14 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:.mcpignore",
+      "type": "file",
+      "name": ".mcpignore",
+      "filePath": ".mcpignore",
+      "summary": "unknown code file (28 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.well-known/mcp/server.json",
+      "type": "config",
+      "name": "server.json",
+      "filePath": ".well-known/mcp/server.json",
+      "summary": "json config file (89 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:999_vault/audit.jsonl",
+      "type": "file",
+      "name": "audit.jsonl",
+      "filePath": "999_vault/audit.jsonl",
+      "summary": "jsonl code file (83 non-empty lines).",
+      "tags": [
+        "code",
+        "jsonl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:CODEOWNERS",
+      "type": "file",
+      "name": "CODEOWNERS",
+      "filePath": "CODEOWNERS",
+      "summary": "unknown code file (14 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:GENESIS/019_SESSION_DISTILLATIONS_FUTURE_GEOX_MCP.md",
+      "type": "document",
+      "name": "019_SESSION_DISTILLATIONS_FUTURE_GEOX_MCP.md",
+      "filePath": "GENESIS/019_SESSION_DISTILLATIONS_FUTURE_GEOX_MCP.md",
+      "summary": "markdown docs file (90 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:GENESIS/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "GENESIS/README.md",
+      "summary": "markdown docs file (31 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:NOTICE",
+      "type": "file",
+      "name": "NOTICE",
+      "filePath": "NOTICE",
+      "summary": "unknown code file (18 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:allowed_signers",
+      "type": "file",
+      "name": "allowed_signers",
+      "filePath": "allowed_signers",
+      "summary": "unknown code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:apps/1_welldesk.py",
+      "type": "file",
+      "name": "1_welldesk.py",
+      "filePath": "apps/1_welldesk.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:apps/1_welldesk.py:physics9_track",
+      "type": "function",
+      "name": "physics9_track",
+      "filePath": "apps/1_welldesk.py",
+      "lineRange": [
+        21,
+        54
+      ],
+      "summary": "physics9_track(md) — 33 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/1_welldesk.py:physics9_at_depth",
+      "type": "function",
+      "name": "physics9_at_depth",
+      "filePath": "apps/1_welldesk.py",
+      "lineRange": [
+        56,
+        66
+      ],
+      "summary": "physics9_at_depth(md) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:apps/1_welldesk.py:plot_track",
+      "type": "function",
+      "name": "plot_track",
+      "filePath": "apps/1_welldesk.py",
+      "lineRange": [
+        70,
+        84
+      ],
+      "summary": "plot_track(tracks, name) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:apps/1_welldesk.py:build_welldesk_app",
+      "type": "function",
+      "name": "build_welldesk_app",
+      "filePath": "apps/1_welldesk.py",
+      "lineRange": [
+        86,
+        239
+      ],
+      "summary": "build_welldesk_app() — 153 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/2_seismic_vision.py",
+      "type": "file",
+      "name": "2_seismic_vision.py",
+      "filePath": "apps/2_seismic_vision.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/2_seismic_vision.py:physics9_seismic_section",
+      "type": "function",
+      "name": "physics9_seismic_section",
+      "filePath": "apps/2_seismic_vision.py",
+      "lineRange": [
+        17,
+        30
+      ],
+      "summary": "physics9_seismic_section(section) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:apps/2_seismic_vision.py:render_seismic",
+      "type": "function",
+      "name": "render_seismic",
+      "filePath": "apps/2_seismic_vision.py",
+      "lineRange": [
+        32,
+        64
+      ],
+      "summary": "render_seismic(data, x_coords, t_coords, horizons, faults, title) — 32 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/2_seismic_vision.py:build_seismic_vision_app",
+      "type": "function",
+      "name": "build_seismic_vision_app",
+      "filePath": "apps/2_seismic_vision.py",
+      "lineRange": [
+        66,
+        161
+      ],
+      "summary": "build_seismic_vision_app() — 95 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/3_earth_volume.py",
+      "type": "file",
+      "name": "3_earth_volume.py",
+      "filePath": "apps/3_earth_volume.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:apps/3_earth_volume.py:compute_volumetrics",
+      "type": "function",
+      "name": "compute_volumetrics",
+      "filePath": "apps/3_earth_volume.py",
+      "lineRange": [
+        25,
+        41
+      ],
+      "summary": "compute_volumetrics(area_km2, thickness_m, phi_eff, sw_res, bo, rf) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:apps/3_earth_volume.py:build_earth_volume_app",
+      "type": "function",
+      "name": "build_earth_volume_app",
+      "filePath": "apps/3_earth_volume.py",
+      "lineRange": [
+        48,
+        242
+      ],
+      "summary": "build_earth_volume_app() — 194 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/4_judge_console.py",
+      "type": "file",
+      "name": "4_judge_console.py",
+      "filePath": "apps/4_judge_console.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/4_judge_console.py:build_judge_console_app",
+      "type": "function",
+      "name": "build_judge_console_app",
+      "filePath": "apps/4_judge_console.py",
+      "lineRange": [
+        25,
+        198
+      ],
+      "summary": "build_judge_console_app() — 173 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/5_geoprobe.py",
+      "type": "file",
+      "name": "5_geoprobe.py",
+      "filePath": "apps/5_geoprobe.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:apps/5_geoprobe.py:build_geoprobe_app",
+      "type": "function",
+      "name": "build_geoprobe_app",
+      "filePath": "apps/5_geoprobe.py",
+      "lineRange": [
+        28,
+        167
+      ],
+      "summary": "build_geoprobe_app() — 139 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/analog-digitizer/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/analog-digitizer/index.html",
+      "summary": "html markup file (198 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:apps/analog-digitizer/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/analog-digitizer/manifest.json",
+      "summary": "json config file (100 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/earth-volume/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/earth-volume/index.html",
+      "summary": "html markup file (148 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:apps/earth-volume/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/earth-volume/manifest.json",
+      "summary": "json config file (107 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/judge-console/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/judge-console/index.html",
+      "summary": "html markup file (695 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:apps/judge-console/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/judge-console/manifest.json",
+      "summary": "json config file (113 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/prospect-ui/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/prospect-ui/index.html",
+      "summary": "html markup file (636 non-empty lines).",
+      "tags": [
+        "markup",
+        "html",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:apps/prospect-ui/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/prospect-ui/manifest.json",
+      "summary": "json config file (111 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/src/bridge/MCPBridge.js",
+      "type": "file",
+      "name": "MCPBridge.js",
+      "filePath": "apps/well-desk/src/bridge/MCPBridge.js",
+      "summary": "javascript code file (317 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:apps/1_welldesk.py",
+      "target": "function:apps/1_welldesk.py:physics9_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/1_welldesk.py",
+      "target": "function:apps/1_welldesk.py:physics9_at_depth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/1_welldesk.py",
+      "target": "function:apps/1_welldesk.py:plot_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/1_welldesk.py",
+      "target": "function:apps/1_welldesk.py:build_welldesk_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/2_seismic_vision.py",
+      "target": "function:apps/2_seismic_vision.py:physics9_seismic_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/2_seismic_vision.py",
+      "target": "function:apps/2_seismic_vision.py:render_seismic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/2_seismic_vision.py",
+      "target": "function:apps/2_seismic_vision.py:build_seismic_vision_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/3_earth_volume.py",
+      "target": "function:apps/3_earth_volume.py:compute_volumetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/3_earth_volume.py",
+      "target": "function:apps/3_earth_volume.py:build_earth_volume_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/4_judge_console.py",
+      "target": "function:apps/4_judge_console.py:build_judge_console_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:apps/5_geoprobe.py",
+      "target": "function:apps/5_geoprobe.py:build_geoprobe_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

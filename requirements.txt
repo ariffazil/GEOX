@@ -1,0 +1,33 @@
+# requirements.txt — GEOX (arifos-geox): MCP-relevant DIRECT dependencies
+#
+# CREATED 2026-09-15 (KVM8) — GEOX had NO requirements.txt. Its MCP stack was
+# declared only in pyproject.toml (`fastmcp[apps,tasks]==3.4.6`), so declared vs
+# installed could not be compared without reading uv.lock.
+#
+# AUTHORITY: pyproject.toml + uv.lock remain the SOLE resolver authority for GEOX
+# (see .github/dependabot.yml and .github/workflows/ci-uv-lock-invariant.yml).
+# This file is an informational freeze of the MCP-relevant direct dependencies AS
+# INSTALLED in /root/GEOX/.venv on 2026-09-15. It is deliberately NOT a full venv
+# freeze: no transitive deps, no scientific/geoscience stack.
+#
+# Evidence: GEOX source imports FastMCP, fastmcp.apps.{AppConfig, ResourceCSP},
+# fastmcp.exceptions.ToolError, fastmcp.server.middleware.{Middleware, CallNext,
+# MiddlewareContext}, fastmcp.server.dependencies.get_context, fastmcp.prompts.base
+# .Message, fastmcp.tools.base.ToolResult, mcp.server.fastmcp.FastMCP and
+# mcp.types.{ListToolsResult, TextContent, EmbeddedResource, TextResourceContents}
+# — all 18 symbols resolve against the versions pinned below.
+#
+# fastapi is intentionally ABSENT: GEOX neither declares nor installs it.
+#
+# KNOWN PRE-EXISTING INSTALL DRIFT (not fixed here — needs an install change,
+# owned by the separate stateless-protocol upgrade workstream):
+#   `uv pip check` reports: fastmcp-tasks requires fastmcp-slim[server]==4.0.0b1,
+#   but 3.4.6 is installed.
+#
+# mcp NOTE: uv.lock resolves mcp 1.29.1; 1.29.0 is what is actually installed.
+mcp==1.29.0
+fastmcp==3.4.6
+fastmcp-slim==3.4.6
+pydantic==2.13.4
+uvicorn==0.52.1
+starlette==1.3.1

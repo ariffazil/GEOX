@@ -4,7 +4,7 @@ import asyncio
 import csv
 from pathlib import Path
 
-from geox.well.mcp_tools import register_well_tools
+from geox_mcp.tools.well import register_well_tools
 
 
 class _FakeMCP:

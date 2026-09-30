@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/biostrat/facies_matrix.json",
+      "type": "config",
+      "name": "facies_matrix.json",
+      "filePath": "resources/biostrat/facies_matrix.json",
+      "summary": "json config file (144 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/biostrat/nn_zones.json",
+      "type": "config",
+      "name": "nn_zones.json",
+      "filePath": "resources/biostrat/nn_zones.json",
+      "summary": "json config file (52 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/biostrat/palynology_pr_zones.json",
+      "type": "config",
+      "name": "palynology_pr_zones.json",
+      "filePath": "resources/biostrat/palynology_pr_zones.json",
+      "summary": "json config file (207 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:resources/biostrat/rulings.md",
+      "type": "document",
+      "name": "rulings.md",
+      "filePath": "resources/biostrat/rulings.md",
+      "summary": "markdown docs file (67 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

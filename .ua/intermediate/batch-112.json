@@ -1,0 +1,1914 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_mcp/tools/source_rock.py",
+      "type": "file",
+      "name": "source_rock.py",
+      "filePath": "src/geox_mcp/tools/source_rock.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/source_rock.py:geox_source_rock",
+      "type": "function",
+      "name": "geox_source_rock",
+      "filePath": "src/geox_mcp/tools/source_rock.py",
+      "lineRange": [
+        23,
+        174
+      ],
+      "summary": "geox_source_rock(mode, toc_wt_pct, hydrogen_index, oxygen_index, tmax_c, kerogen_type, density_neutron_separation, baseline_resistivity, shale_resistivity, baseline_density, session_id, actor_id, trace_id) — 151 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/spatial_block.py",
+      "type": "file",
+      "name": "spatial_block.py",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:_haversine_km",
+      "type": "function",
+      "name": "_haversine_km",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        26,
+        33
+      ],
+      "summary": "_haversine_km(lat1, lon1, lat2, lon2) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:_assign_blocks",
+      "type": "function",
+      "name": "_assign_blocks",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        36,
+        60
+      ],
+      "summary": "_assign_blocks(coords, block_size_km) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:_assign_folds",
+      "type": "function",
+      "name": "_assign_folds",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        63,
+        76
+      ],
+      "summary": "_assign_folds(block_ids, n_folds) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:_safe_random_forest",
+      "type": "function",
+      "name": "_safe_random_forest",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        79,
+        107
+      ],
+      "summary": "_safe_random_forest(X_train, y_train, X_test, n_estimators, max_depth, random_state) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:_percentiles",
+      "type": "function",
+      "name": "_percentiles",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        110,
+        119
+      ],
+      "summary": "_percentiles(values) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/spatial_block.py:run_spatial_block_validate",
+      "type": "function",
+      "name": "run_spatial_block_validate",
+      "filePath": "src/geox_mcp/tools/spatial_block.py",
+      "lineRange": [
+        122,
+        319
+      ],
+      "summary": "run_spatial_block_validate(samples, block_size_km, n_folds, target_key, feature_keys, random_seed, max_samples) — 197 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/stac_discover.py",
+      "type": "file",
+      "name": "stac_discover.py",
+      "filePath": "src/geox_mcp/tools/stac_discover.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/stac_discover.py:geox_stac_discover",
+      "type": "function",
+      "name": "geox_stac_discover",
+      "filePath": "src/geox_mcp/tools/stac_discover.py",
+      "lineRange": [
+        32,
+        244
+      ],
+      "summary": "geox_stac_discover(mode, catalog, bbox, datetime_range, collections, max_items, item_id, collection_id, query_bands, limit, session_id, actor_id, trace_id) — 212 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/stratigraphy.py",
+      "type": "file",
+      "name": "stratigraphy.py",
+      "filePath": "src/geox_mcp/tools/stratigraphy.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/stratigraphy.py:register_stratigraphy_tools",
+      "type": "function",
+      "name": "register_stratigraphy_tools",
+      "filePath": "src/geox_mcp/tools/stratigraphy.py",
+      "lineRange": [
+        31,
+        248
+      ],
+      "summary": "register_stratigraphy_tools(mcp) — 217 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structural_restoration/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/tools/structural_restoration/__init__.py",
+      "summary": "python code file (5 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structural_restoration/wiring.py",
+      "type": "file",
+      "name": "wiring.py",
+      "filePath": "src/geox_mcp/tools/structural_restoration/wiring.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structural_restoration/wiring.py:register_structural_restoration_tools",
+      "type": "function",
+      "name": "register_structural_restoration_tools",
+      "filePath": "src/geox_mcp/tools/structural_restoration/wiring.py",
+      "lineRange": [
+        20,
+        382
+      ],
+      "summary": "register_structural_restoration_tools(mcp, _geox_annotations, _safe_forward) — 362 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/__init__.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/__init__.py:aggregate_hypothesis_status",
+      "type": "function",
+      "name": "aggregate_hypothesis_status",
+      "filePath": "src/geox_mcp/tools/structure_gates/__init__.py",
+      "lineRange": [
+        55,
+        74
+      ],
+      "summary": "aggregate_hypothesis_status(gates, kills, passes, warns, unmeasured) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/__init__.py:run_all_structure_gates",
+      "type": "function",
+      "name": "run_all_structure_gates",
+      "filePath": "src/geox_mcp/tools/structure_gates/__init__.py",
+      "lineRange": [
+        77,
+        182
+      ],
+      "summary": "run_all_structure_gates(framework) — 105 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "type": "file",
+      "name": "calibration_derive.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "summary": "Defines 15 function(s); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_f",
+      "type": "function",
+      "name": "_f",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        40,
+        46
+      ],
+      "summary": "_f(v) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_points_xy",
+      "type": "function",
+      "name": "_points_xy",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        49,
+        60
+      ],
+      "summary": "_points_xy(obj) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_interp_depth",
+      "type": "function",
+      "name": "_interp_depth",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        63,
+        91
+      ],
+      "summary": "_interp_depth(twt_ms, td) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_parse_td",
+      "type": "function",
+      "name": "_parse_td",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        94,
+        110
+      ],
+      "summary": "_parse_td(cal) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_synthetic_linear_td",
+      "type": "function",
+      "name": "_synthetic_linear_td",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        113,
+        115
+      ],
+      "summary": "_synthetic_linear_td(v_m_s, max_twt) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_polyline_length_m",
+      "type": "function",
+      "name": "_polyline_length_m",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        118,
+        138
+      ],
+      "summary": "_polyline_length_m(pts, bin_m, td) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_apparent_dip_deg",
+      "type": "function",
+      "name": "_apparent_dip_deg",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        141,
+        185
+      ],
+      "summary": "_apparent_dip_deg(pts, bin_m, td, ve) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_fault_cmp_at_twt",
+      "type": "function",
+      "name": "_fault_cmp_at_twt",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        188,
+        205
+      ],
+      "summary": "_fault_cmp_at_twt(fault_pts, twt) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_horizon_twt_near",
+      "type": "function",
+      "name": "_horizon_twt_near",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        208,
+        219
+      ],
+      "summary": "_horizon_twt_near(h_pts, cmp, side, window) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_throw_profile_for_fault",
+      "type": "function",
+      "name": "_throw_profile_for_fault",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        222,
+        307
+      ],
+      "summary": "_throw_profile_for_fault(fault_pts, horizons, bin_m, td) — 85 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_line_lengths_across_fault",
+      "type": "function",
+      "name": "_line_lengths_across_fault",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        310,
+        344
+      ],
+      "summary": "_line_lengths_across_fault(fault_pts, horizons, bin_m, td) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_expansion_index",
+      "type": "function",
+      "name": "_expansion_index",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        347,
+        402
+      ],
+      "summary": "_expansion_index(fault_pts, horizons, td) — 55 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_velocity_from_td",
+      "type": "function",
+      "name": "_velocity_from_td",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        405,
+        430
+      ],
+      "summary": "_velocity_from_td(td) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:apply_calibration",
+      "type": "function",
+      "name": "apply_calibration",
+      "filePath": "src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "lineRange": [
+        433,
+        579
+      ],
+      "summary": "apply_calibration(framework, calibration) — 146 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "type": "file",
+      "name": "cutoff.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_f",
+      "type": "function",
+      "name": "_f",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        21,
+        25
+      ],
+      "summary": "_f(v) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_points",
+      "type": "function",
+      "name": "_points",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        28,
+        39
+      ],
+      "summary": "_points(obj) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_fault_cmp_at_twt",
+      "type": "function",
+      "name": "_fault_cmp_at_twt",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        42,
+        58
+      ],
+      "summary": "_fault_cmp_at_twt(fault_pts, twt) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_side_mean_twt",
+      "type": "function",
+      "name": "_side_mean_twt",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        61,
+        68
+      ],
+      "summary": "_side_mean_twt(h_pts, fcmp, side) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:derive_cutoff_pairs",
+      "type": "function",
+      "name": "derive_cutoff_pairs",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        71,
+        170
+      ],
+      "summary": "derive_cutoff_pairs(faults, horizons) — 99 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:polarity_from_cutoffs",
+      "type": "function",
+      "name": "polarity_from_cutoffs",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        173,
+        187
+      ],
+      "summary": "polarity_from_cutoffs(cutoffs, fault_id) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/cutoff.py:gate_k_polarity",
+      "type": "function",
+      "name": "gate_k_polarity",
+      "filePath": "src/geox_mcp/tools/structure_gates/cutoff.py",
+      "lineRange": [
+        190,
+        309
+      ],
+      "summary": "gate_k_polarity(framework) — 119 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "type": "file",
+      "name": "geometry_adapt.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:_as_float",
+      "type": "function",
+      "name": "_as_float",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        22,
+        28
+      ],
+      "summary": "_as_float(v) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:_point_from_item",
+      "type": "function",
+      "name": "_point_from_item",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        31,
+        54
+      ],
+      "summary": "_point_from_item(p, index) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:sticks_or_picks_to_points",
+      "type": "function",
+      "name": "sticks_or_picks_to_points",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        57,
+        85
+      ],
+      "summary": "sticks_or_picks_to_points(obj) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_fault",
+      "type": "function",
+      "name": "adapt_fault",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        88,
+        142
+      ],
+      "summary": "adapt_fault(fault, reject_anonymous) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_horizon",
+      "type": "function",
+      "name": "adapt_horizon",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        145,
+        168
+      ],
+      "summary": "adapt_horizon(horizon, reject_anonymous) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_framework_geometry",
+      "type": "function",
+      "name": "adapt_framework_geometry",
+      "filePath": "src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "lineRange": [
+        171,
+        217
+      ],
+      "summary": "adapt_framework_geometry(framework) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/growth.py",
+      "type": "file",
+      "name": "growth.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/growth.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/growth.py:gate_k_growth",
+      "type": "function",
+      "name": "gate_k_growth",
+      "filePath": "src/geox_mcp/tools/structure_gates/growth.py",
+      "lineRange": [
+        12,
+        106
+      ],
+      "summary": "gate_k_growth(framework) — 94 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "type": "file",
+      "name": "k_dip.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dip.py:validate_k_dip",
+      "type": "function",
+      "name": "validate_k_dip",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "lineRange": [
+        31,
+        89
+      ],
+      "summary": "validate_k_dip(coords, regime) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_ve_of",
+      "type": "function",
+      "name": "_ve_of",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "lineRange": [
+        92,
+        112
+      ],
+      "summary": "_ve_of(framework, fault) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_is_calibrated",
+      "type": "function",
+      "name": "_is_calibrated",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "lineRange": [
+        115,
+        127
+      ],
+      "summary": "_is_calibrated(framework, fault) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_true_dip",
+      "type": "function",
+      "name": "_true_dip",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "lineRange": [
+        130,
+        187
+      ],
+      "summary": "_true_dip(fault, framework) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dip.py:gate_k_dip",
+      "type": "function",
+      "name": "gate_k_dip",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dip.py",
+      "lineRange": [
+        190,
+        367
+      ],
+      "summary": "gate_k_dip(framework) — 177 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/k_dl.py",
+      "type": "file",
+      "name": "k_dl.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dl.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dl.py:validate_k_scale",
+      "type": "function",
+      "name": "validate_k_scale",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dl.py",
+      "lineRange": [
+        21,
+        44
+      ],
+      "summary": "validate_k_scale(max_displacement, fault_length) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_dl.py:gate_k_dl",
+      "type": "function",
+      "name": "gate_k_dl",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_dl.py",
+      "lineRange": [
+        47,
+        188
+      ],
+      "summary": "gate_k_dl(framework) — 141 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/k_throw.py",
+      "type": "file",
+      "name": "k_throw.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_throw.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_throw.py:validate_k_taper",
+      "type": "function",
+      "name": "validate_k_taper",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_throw.py",
+      "lineRange": [
+        21,
+        78
+      ],
+      "summary": "validate_k_taper(distances, displacements, max_displacement, half_length) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_throw.py:_profile_values",
+      "type": "function",
+      "name": "_profile_values",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_throw.py",
+      "lineRange": [
+        81,
+        101
+      ],
+      "summary": "_profile_values(fault) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_throw.py:_tip_taper_ok",
+      "type": "function",
+      "name": "_tip_taper_ok",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_throw.py",
+      "lineRange": [
+        104,
+        122
+      ],
+      "summary": "_tip_taper_ok(vals) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/k_throw.py:gate_k_throw",
+      "type": "function",
+      "name": "gate_k_throw",
+      "filePath": "src/geox_mcp/tools/structure_gates/k_throw.py",
+      "lineRange": [
+        125,
+        210
+      ],
+      "summary": "gate_k_throw(framework) — 85 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/normalize.py",
+      "type": "file",
+      "name": "normalize.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/normalize.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/normalize.py:_first",
+      "type": "function",
+      "name": "_first",
+      "filePath": "src/geox_mcp/tools/structure_gates/normalize.py",
+      "lineRange": [
+        66,
+        70
+      ],
+      "summary": "_first(d, keys) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/normalize.py:normalize_fault",
+      "type": "function",
+      "name": "normalize_fault",
+      "filePath": "src/geox_mcp/tools/structure_gates/normalize.py",
+      "lineRange": [
+        73,
+        107
+      ],
+      "summary": "normalize_fault(fault) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/normalize.py:normalize_framework",
+      "type": "function",
+      "name": "normalize_framework",
+      "filePath": "src/geox_mcp/tools/structure_gates/normalize.py",
+      "lineRange": [
+        117,
+        137
+      ],
+      "summary": "normalize_framework(framework) — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "type": "file",
+      "name": "restore.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/restore.py:_fault_lengths",
+      "type": "function",
+      "name": "_fault_lengths",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "lineRange": [
+        38,
+        72
+      ],
+      "summary": "_fault_lengths(fault) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/restore.py:_fault_areas",
+      "type": "function",
+      "name": "_fault_areas",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "lineRange": [
+        75,
+        80
+      ],
+      "summary": "_fault_areas(fault) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/restore.py:_line_length_residual",
+      "type": "function",
+      "name": "_line_length_residual",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "lineRange": [
+        83,
+        86
+      ],
+      "summary": "_line_length_residual(hw, fw) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/restore.py:_area_residual",
+      "type": "function",
+      "name": "_area_residual",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "lineRange": [
+        89,
+        92
+      ],
+      "summary": "_area_residual(a_above, a_below) — 3 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/restore.py:gate_k_restore",
+      "type": "function",
+      "name": "gate_k_restore",
+      "filePath": "src/geox_mcp/tools/structure_gates/restore.py",
+      "lineRange": [
+        95,
+        228
+      ],
+      "summary": "gate_k_restore(framework) — 133 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/topology.py",
+      "type": "file",
+      "name": "topology.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/topology.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/topology.py:_ys",
+      "type": "function",
+      "name": "_ys",
+      "filePath": "src/geox_mcp/tools/structure_gates/topology.py",
+      "lineRange": [
+        16,
+        29
+      ],
+      "summary": "_ys(horizon) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/topology.py:_to_xy",
+      "type": "function",
+      "name": "_to_xy",
+      "filePath": "src/geox_mcp/tools/structure_gates/topology.py",
+      "lineRange": [
+        32,
+        46
+      ],
+      "summary": "_to_xy(horizon) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/topology.py:_segments_cross",
+      "type": "function",
+      "name": "_segments_cross",
+      "filePath": "src/geox_mcp/tools/structure_gates/topology.py",
+      "lineRange": [
+        49,
+        75
+      ],
+      "summary": "_segments_cross(a, b) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/topology.py:gate_g2_topology",
+      "type": "function",
+      "name": "gate_g2_topology",
+      "filePath": "src/geox_mcp/tools/structure_gates/topology.py",
+      "lineRange": [
+        78,
+        194
+      ],
+      "summary": "gate_g2_topology(framework) — 116 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/velocity.py",
+      "type": "file",
+      "name": "velocity.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/velocity.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/velocity.py:gate_k_vel",
+      "type": "function",
+      "name": "gate_k_vel",
+      "filePath": "src/geox_mcp/tools/structure_gates/velocity.py",
+      "lineRange": [
+        22,
+        103
+      ],
+      "summary": "gate_k_vel(framework) — 81 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_gates/witness.py",
+      "type": "file",
+      "name": "witness.py",
+      "filePath": "src/geox_mcp/tools/structure_gates/witness.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/witness.py:register_witnesses",
+      "type": "function",
+      "name": "register_witnesses",
+      "filePath": "src/geox_mcp/tools/structure_gates/witness.py",
+      "lineRange": [
+        17,
+        51
+      ],
+      "summary": "register_witnesses(section_framework, witnesses) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_gates/witness.py:gate_all_witnesses",
+      "type": "function",
+      "name": "gate_all_witnesses",
+      "filePath": "src/geox_mcp/tools/structure_gates/witness.py",
+      "lineRange": [
+        54,
+        90
+      ],
+      "summary": "gate_all_witnesses(witnesses, calibration) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/structure_validate.py",
+      "type": "file",
+      "name": "structure_validate.py",
+      "filePath": "src/geox_mcp/tools/structure_validate.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/structure_validate.py:geox_structure_validate",
+      "type": "function",
+      "name": "geox_structure_validate",
+      "filePath": "src/geox_mcp/tools/structure_validate.py",
+      "lineRange": [
+        16,
+        195
+      ],
+      "summary": "geox_structure_validate(framework, faults, horizons, measurement_context, calibration, earth_constraints, gates, claim_text, emit_bundle, hypothesis_count) — 179 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/sts.py",
+      "type": "file",
+      "name": "sts.py",
+      "filePath": "src/geox_mcp/tools/sts.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sts.py:_get_or_create_graph",
+      "type": "function",
+      "name": "_get_or_create_graph",
+      "filePath": "src/geox_mcp/tools/sts.py",
+      "lineRange": [
+        39,
+        43
+      ],
+      "summary": "_get_or_create_graph(graph_id, name, basin_id) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/sts.py:geox_sts",
+      "type": "function",
+      "name": "geox_sts",
+      "filePath": "src/geox_mcp/tools/sts.py",
+      "lineRange": [
+        46,
+        196
+      ],
+      "summary": "geox_sts(graph_id, mode, node_name, node_states, node_bbox, node_description, parent_basin_id, basin_node_id, from_state, to_state, evidence_types, age_min_ma, age_max_ma, diachroneity_class, translation_schemes, sts_confidence, token, from_scheme, to_scheme, translation_id, sts_a_id, sts_b_id, contrast_metric, contrast_threshold, contrast_delta, graph_name, basin_ref_id) — 150 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/subsurface_model.py",
+      "type": "file",
+      "name": "subsurface_model.py",
+      "filePath": "src/geox_mcp/tools/subsurface_model.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/subsurface_model.py:geox_subsurface_model",
+      "type": "function",
+      "name": "geox_subsurface_model",
+      "filePath": "src/geox_mcp/tools/subsurface_model.py",
+      "lineRange": [
+        16,
+        72
+      ],
+      "summary": "geox_subsurface_model(mode, survey_type, easting_m, northing_m, prisms, magnetization_a_m, field_declination_deg, field_inclination_deg, layers, frequencies_hz, observations, prior, max_iter, tolerance) — 56 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/time4d.py",
+      "type": "file",
+      "name": "time4d.py",
+      "filePath": "src/geox_mcp/tools/time4d.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/time4d.py:geox_time4d_analyze_system",
+      "type": "function",
+      "name": "geox_time4d_analyze_system",
+      "filePath": "src/geox_mcp/tools/time4d.py",
+      "lineRange": [
+        12,
+        82
+      ],
+      "summary": "geox_time4d_analyze_system(prospect_ref, mode, time_ma, T_C, TOC_wt, initial_smectite_frac, evidence_refs) — 70 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/ui_applets.py",
+      "type": "file",
+      "name": "ui_applets.py",
+      "filePath": "src/geox_mcp/tools/ui_applets.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/ui_applets.py:register_ui_applets",
+      "type": "function",
+      "name": "register_ui_applets",
+      "filePath": "src/geox_mcp/tools/ui_applets.py",
+      "lineRange": [
+        6,
+        18
+      ],
+      "summary": "register_ui_applets(mcp) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/tools/velocity_structural_qc.py",
+      "type": "file",
+      "name": "velocity_structural_qc.py",
+      "filePath": "src/geox_mcp/tools/velocity_structural_qc.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/tools/velocity_structural_qc.py:register_velocity_tools",
+      "type": "function",
+      "name": "register_velocity_tools",
+      "filePath": "src/geox_mcp/tools/velocity_structural_qc.py",
+      "lineRange": [
+        9,
+        55
+      ],
+      "summary": "register_velocity_tools(mcp) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_mcp/tools/source_rock.py",
+      "target": "function:src/geox_mcp/tools/source_rock.py:geox_source_rock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:_haversine_km",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:_assign_blocks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:_assign_folds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:_safe_random_forest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:_percentiles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/spatial_block.py",
+      "target": "function:src/geox_mcp/tools/spatial_block.py:run_spatial_block_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/stac_discover.py",
+      "target": "function:src/geox_mcp/tools/stac_discover.py:geox_stac_discover",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/stratigraphy.py",
+      "target": "function:src/geox_mcp/tools/stratigraphy.py:register_stratigraphy_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structural_restoration/wiring.py",
+      "target": "function:src/geox_mcp/tools/structural_restoration/wiring.py:register_structural_restoration_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/__init__.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/__init__.py:aggregate_hypothesis_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/__init__.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/__init__.py:run_all_structure_gates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_f",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_points_xy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_interp_depth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_parse_td",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_synthetic_linear_td",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_polyline_length_m",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_apparent_dip_deg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_fault_cmp_at_twt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_horizon_twt_near",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_throw_profile_for_fault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_line_lengths_across_fault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_expansion_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:_velocity_from_td",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/calibration_derive.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/calibration_derive.py:apply_calibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_f",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_points",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_fault_cmp_at_twt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:_side_mean_twt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:derive_cutoff_pairs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:polarity_from_cutoffs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/cutoff.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/cutoff.py:gate_k_polarity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:_as_float",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:_point_from_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:sticks_or_picks_to_points",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_fault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_horizon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/geometry_adapt.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/geometry_adapt.py:adapt_framework_geometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/growth.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/growth.py:gate_k_growth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dip.py:validate_k_dip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_ve_of",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_is_calibrated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dip.py:_true_dip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dip.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dip.py:gate_k_dip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dl.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dl.py:validate_k_scale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_dl.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_dl.py:gate_k_dl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_throw.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_throw.py:validate_k_taper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_throw.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_throw.py:_profile_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_throw.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_throw.py:_tip_taper_ok",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/k_throw.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/k_throw.py:gate_k_throw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/normalize.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/normalize.py:_first",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/normalize.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/normalize.py:normalize_fault",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/normalize.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/normalize.py:normalize_framework",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/restore.py:_fault_lengths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/restore.py:_fault_areas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/restore.py:_line_length_residual",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/restore.py:_area_residual",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/restore.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/restore.py:gate_k_restore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/topology.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/topology.py:_ys",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/topology.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/topology.py:_to_xy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/topology.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/topology.py:_segments_cross",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/topology.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/topology.py:gate_g2_topology",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/velocity.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/velocity.py:gate_k_vel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/witness.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/witness.py:register_witnesses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_gates/witness.py",
+      "target": "function:src/geox_mcp/tools/structure_gates/witness.py:gate_all_witnesses",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/structure_validate.py",
+      "target": "function:src/geox_mcp/tools/structure_validate.py:geox_structure_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sts.py",
+      "target": "function:src/geox_mcp/tools/sts.py:_get_or_create_graph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/sts.py",
+      "target": "function:src/geox_mcp/tools/sts.py:geox_sts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/subsurface_model.py",
+      "target": "function:src/geox_mcp/tools/subsurface_model.py:geox_subsurface_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/time4d.py",
+      "target": "function:src/geox_mcp/tools/time4d.py:geox_time4d_analyze_system",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/ui_applets.py",
+      "target": "function:src/geox_mcp/tools/ui_applets.py:register_ui_applets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/tools/velocity_structural_qc.py",
+      "target": "function:src/geox_mcp/tools/velocity_structural_qc.py:register_velocity_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -17,9 +17,10 @@ from pathlib import Path
 import pytest
 
 GEOX_ROOT = Path(__file__).resolve().parent.parent
-WORKSPACE_HTML = GEOX_ROOT / "src" / "geox_mcp" / "ui" / "workspace_v1.html"
-
-pytestmark = pytest.mark.e2e
+pytestmark = [
+    pytest.mark.e2e,
+    pytest.mark.skip(reason="External dependency / E2E required (Playwright browser)"),
+]
 
 # ═══════════════════════════════════════════════════════════════
 # Server fixture

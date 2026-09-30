@@ -81,7 +81,9 @@ async def geox_avo_forward(
     def _run_zoeppritz() -> dict[str, Any] | None:
         missing = _require_interface(["vp1", "vs1", "rho1", "vp2", "vs2", "rho2", "theta_deg"])
         if missing:
-            errors.append(f"mode=zoeppritz missing: {missing}")
+            # F2 PATCH (2026-09-18 · 333-AGI): public-facing message lists
+            # required parameters without exposing internal naming scheme.
+            errors.append("avo_forward zoeppritz requires vp1, vs1, rho1, vp2, vs2, rho2, theta_deg")
             return None
         # af-fix #6: accept scalar or list theta_deg (the unified wiring
         # declares theta_deg: list[float] — a list previously raised

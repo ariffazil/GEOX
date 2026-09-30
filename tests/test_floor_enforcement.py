@@ -90,9 +90,8 @@ class TestCanonicalToolValidation:
 
     def test_old_compat_name_passes_f9(self) -> None:
         """Backward-compat names are in CANONICAL_COMPAT_TOOLS → F9 allows them."""
-        assert validate_canonical_tool("geox_data_ingest_bundle") is True
-        assert validate_canonical_tool("geox_claim_seal") is True
-        assert validate_canonical_tool("geox_system_registry_status") is True
+        assert validate_canonical_tool("geox_well_desk") is True
+        assert validate_canonical_tool("geox_well_view") is True
 
     def test_registry_unavailable_passes(self) -> None:
         # Cold start: registry not importable → fail-open (defensive)

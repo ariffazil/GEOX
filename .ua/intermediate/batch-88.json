@@ -1,0 +1,1304 @@
+{
+  "nodes": [
+    {
+      "id": "document:skills/geox-claim-falsification/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "skills/geox-claim-falsification/SKILL.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:skills/geox-prospect-evaluation/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "skills/geox-prospect-evaluation/SKILL.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:skills/geox-seismic-interpretation/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "skills/geox-seismic-interpretation/SKILL.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:skills/geox-well-log-qc/SKILL.md",
+      "type": "document",
+      "name": "SKILL.md",
+      "filePath": "skills/geox-well-log-qc/SKILL.md",
+      "summary": "markdown docs file (16 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:skills/planner/agent-card.json",
+      "type": "config",
+      "name": "agent-card.json",
+      "filePath": "skills/planner/agent-card.json",
+      "summary": "json config file (86 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox/egs/__init__.py",
+      "summary": "python code file (8 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/engines/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox/egs/engines/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/engines/geometry.py",
+      "type": "file",
+      "name": "geometry.py",
+      "filePath": "src/geox/egs/engines/geometry.py",
+      "summary": "Defines 8 function(s); 1 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/engines/geometry.py:SpatialIndex",
+      "type": "class",
+      "name": "SpatialIndex",
+      "filePath": "src/geox/egs/engines/geometry.py",
+      "lineRange": [
+        108,
+        135
+      ],
+      "summary": "Class SpatialIndex with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/engines/physics.py",
+      "type": "file",
+      "name": "physics.py",
+      "filePath": "src/geox/egs/engines/physics.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/engines/physics.py:brine_density",
+      "type": "function",
+      "name": "brine_density",
+      "filePath": "src/geox/egs/engines/physics.py",
+      "lineRange": [
+        19,
+        44
+      ],
+      "summary": "brine_density(temperature_c, salinity_ppm, pressure_mpa) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox/egs/engines/physics.py:gas_density",
+      "type": "function",
+      "name": "gas_density",
+      "filePath": "src/geox/egs/engines/physics.py",
+      "lineRange": [
+        58,
+        87
+      ],
+      "summary": "gas_density(temperature_c, pressure_mpa, gas_gravity) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox/egs/engines/physics.py:voigt_reuss_hill",
+      "type": "function",
+      "name": "voigt_reuss_hill",
+      "filePath": "src/geox/egs/engines/physics.py",
+      "lineRange": [
+        123,
+        140
+      ],
+      "summary": "voigt_reuss_hill(vp_mineral, vp_fluid, phi, rho_mineral, rho_fluid) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/engines/update_ops.py",
+      "type": "file",
+      "name": "update_ops.py",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "summary": "6 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox/egs/engines/update_ops.py:UpdateStratColumn",
+      "type": "class",
+      "name": "UpdateStratColumn",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "lineRange": [
+        61,
+        115
+      ],
+      "summary": "Class UpdateStratColumn with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/engines/update_ops.py:UpdateHorizonGeom",
+      "type": "class",
+      "name": "UpdateHorizonGeom",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "lineRange": [
+        118,
+        171
+      ],
+      "summary": "Class UpdateHorizonGeom with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/engines/update_ops.py:UpdateFaultModel",
+      "type": "class",
+      "name": "UpdateFaultModel",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "lineRange": [
+        174,
+        222
+      ],
+      "summary": "Class UpdateFaultModel with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/engines/update_ops.py:UpdateReservoirProperties",
+      "type": "class",
+      "name": "UpdateReservoirProperties",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "lineRange": [
+        225,
+        283
+      ],
+      "summary": "Class UpdateReservoirProperties with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/engines/update_ops.py:UpdateChargeModel",
+      "type": "class",
+      "name": "UpdateChargeModel",
+      "filePath": "src/geox/egs/engines/update_ops.py",
+      "lineRange": [
+        286,
+        338
+      ],
+      "summary": "Class UpdateChargeModel with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/models/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox/egs/models/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/models/claims.py",
+      "type": "file",
+      "name": "claims.py",
+      "filePath": "src/geox/egs/models/claims.py",
+      "summary": "5 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/models/claims.py:ClaimEnvelope",
+      "type": "class",
+      "name": "ClaimEnvelope",
+      "filePath": "src/geox/egs/models/claims.py",
+      "lineRange": [
+        64,
+        130
+      ],
+      "summary": "Class ClaimEnvelope with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/models/entities.py",
+      "type": "file",
+      "name": "entities.py",
+      "filePath": "src/geox/egs/models/entities.py",
+      "summary": "15 class(es); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox/egs/models/entities.py:SurfaceMesh3D",
+      "type": "class",
+      "name": "SurfaceMesh3D",
+      "filePath": "src/geox/egs/models/entities.py",
+      "lineRange": [
+        34,
+        59
+      ],
+      "summary": "Class SurfaceMesh3D with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/models/entities.py:EarthGraph",
+      "type": "class",
+      "name": "EarthGraph",
+      "filePath": "src/geox/egs/models/entities.py",
+      "lineRange": [
+        241,
+        303
+      ],
+      "summary": "Class EarthGraph with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/models/provenance.py",
+      "type": "file",
+      "name": "provenance.py",
+      "filePath": "src/geox/egs/models/provenance.py",
+      "summary": "7 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/models/provenance.py:EvidenceKind",
+      "type": "class",
+      "name": "EvidenceKind",
+      "filePath": "src/geox/egs/models/provenance.py",
+      "lineRange": [
+        76,
+        96
+      ],
+      "summary": "Class EvidenceKind with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/models/provenance.py:ProvenanceChain",
+      "type": "class",
+      "name": "ProvenanceChain",
+      "filePath": "src/geox/egs/models/provenance.py",
+      "lineRange": [
+        134,
+        157
+      ],
+      "summary": "Class ProvenanceChain with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/models/uncertainty.py",
+      "type": "file",
+      "name": "uncertainty.py",
+      "filePath": "src/geox/egs/models/uncertainty.py",
+      "summary": "10 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox/egs/models/uncertainty.py:IntervalUncertainty",
+      "type": "class",
+      "name": "IntervalUncertainty",
+      "filePath": "src/geox/egs/models/uncertainty.py",
+      "lineRange": [
+        58,
+        87
+      ],
+      "summary": "Class IntervalUncertainty with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/models/uncertainty.py:DistributionUncertainty",
+      "type": "class",
+      "name": "DistributionUncertainty",
+      "filePath": "src/geox/egs/models/uncertainty.py",
+      "lineRange": [
+        102,
+        146
+      ],
+      "summary": "Class DistributionUncertainty with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/models/uncertainty.py:UncertainValue",
+      "type": "class",
+      "name": "UncertainValue",
+      "filePath": "src/geox/egs/models/uncertainty.py",
+      "lineRange": [
+        188,
+        211
+      ],
+      "summary": "Class UncertainValue with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox/egs/models/uncertainty.py:UncertaintyBudget",
+      "type": "class",
+      "name": "UncertaintyBudget",
+      "filePath": "src/geox/egs/models/uncertainty.py",
+      "lineRange": [
+        214,
+        226
+      ],
+      "summary": "Class UncertaintyBudget with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/registry.py",
+      "type": "file",
+      "name": "registry.py",
+      "filePath": "src/geox/egs/registry.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/registry.py:init_egs_state",
+      "type": "function",
+      "name": "init_egs_state",
+      "filePath": "src/geox/egs/registry.py",
+      "lineRange": [
+        52,
+        64
+      ],
+      "summary": "init_egs_state() — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox/egs/registry.py:egs_surface_status",
+      "type": "function",
+      "name": "egs_surface_status",
+      "filePath": "src/geox/egs/registry.py",
+      "lineRange": [
+        67,
+        87
+      ],
+      "summary": "egs_surface_status() — 20 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/tools/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox/egs/tools/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/tools/claims.py",
+      "type": "file",
+      "name": "claims.py",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox/egs/tools/claims.py:egs_claim_create",
+      "type": "function",
+      "name": "egs_claim_create",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "lineRange": [
+        42,
+        110
+      ],
+      "summary": "egs_claim_create(title, statement, domain, author, entity_type, entity_id, confidence_score, tags) — 68 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/claims.py:egs_claim_challenge",
+      "type": "function",
+      "name": "egs_claim_challenge",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "lineRange": [
+        113,
+        178
+      ],
+      "summary": "egs_claim_challenge(claim_id, challenge_statement, challenger, evidence_description, evidence_kind) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/claims.py:egs_evidence_attach",
+      "type": "function",
+      "name": "egs_evidence_attach",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "lineRange": [
+        181,
+        251
+      ],
+      "summary": "egs_evidence_attach(claim_id, description, evidence_kind, supporting, source, created_by, strength, url) — 70 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/claims.py:egs_evidence_reason",
+      "type": "function",
+      "name": "egs_evidence_reason",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "lineRange": [
+        254,
+        331
+      ],
+      "summary": "egs_evidence_reason(claim_id, reason_type, include_alternatives) — 77 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/claims.py:_suggest_grade",
+      "type": "function",
+      "name": "_suggest_grade",
+      "filePath": "src/geox/egs/tools/claims.py",
+      "lineRange": [
+        334,
+        346
+      ],
+      "summary": "_suggest_grade(direct, multiple, single, analogue, speculative) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/tools/compute.py",
+      "type": "file",
+      "name": "compute.py",
+      "filePath": "src/geox/egs/tools/compute.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/compute.py:egs_seismic_compute",
+      "type": "function",
+      "name": "egs_seismic_compute",
+      "filePath": "src/geox/egs/tools/compute.py",
+      "lineRange": [
+        38,
+        82
+      ],
+      "summary": "egs_seismic_compute(vp_m_s, rho_g_cc, vs_m_s, compute_ai, compute_ei, chi, use_gardner) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/compute.py:egs_rock_physics",
+      "type": "function",
+      "name": "egs_rock_physics",
+      "filePath": "src/geox/egs/tools/compute.py",
+      "lineRange": [
+        85,
+        101
+      ],
+      "summary": "egs_rock_physics(vp_mineral, vp_fluid, porosity, rho_mineral, rho_fluid) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox/egs/tools/qc.py",
+      "type": "file",
+      "name": "qc.py",
+      "filePath": "src/geox/egs/tools/qc.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox/egs/tools/qc.py:egs_data_qc_bundle",
+      "type": "function",
+      "name": "egs_data_qc_bundle",
+      "filePath": "src/geox/egs/tools/qc.py",
+      "lineRange": [
+        29,
+        155
+      ],
+      "summary": "egs_data_qc_bundle(entity_type, entity_id, qc_mode) — 126 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox/egs/tools/qc.py:egs_scenario_audit",
+      "type": "function",
+      "name": "egs_scenario_audit",
+      "filePath": "src/geox/egs/tools/qc.py",
+      "lineRange": [
+        158,
+        197
+      ],
+      "summary": "egs_scenario_audit(entity_id, claim_id) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/tools/query.py",
+      "type": "file",
+      "name": "query.py",
+      "filePath": "src/geox/egs/tools/query.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox/egs/tools/query.py:egs_query_entity",
+      "type": "function",
+      "name": "egs_query_entity",
+      "filePath": "src/geox/egs/tools/query.py",
+      "lineRange": [
+        54,
+        126
+      ],
+      "summary": "egs_query_entity(entity_id, entity_type, name_contains, bbox, active_only, limit) — 72 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/query.py:egs_query_claim",
+      "type": "function",
+      "name": "egs_query_claim",
+      "filePath": "src/geox/egs/tools/query.py",
+      "lineRange": [
+        129,
+        181
+      ],
+      "summary": "egs_query_claim(claim_id, status, domain, entity_id, author, limit) — 52 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/query.py:egs_query_uncertainty",
+      "type": "function",
+      "name": "egs_query_uncertainty",
+      "filePath": "src/geox/egs/tools/query.py",
+      "lineRange": [
+        184,
+        218
+      ],
+      "summary": "egs_query_uncertainty(entity_id, entity_type) — 34 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/query.py:egs_query_provenance",
+      "type": "function",
+      "name": "egs_query_provenance",
+      "filePath": "src/geox/egs/tools/query.py",
+      "lineRange": [
+        221,
+        260
+      ],
+      "summary": "egs_query_provenance(entity_id, entity_type, limit) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox/egs/tools/temporal.py",
+      "type": "file",
+      "name": "temporal.py",
+      "filePath": "src/geox/egs/tools/temporal.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox/egs/tools/temporal.py:temporal_decline",
+      "type": "function",
+      "name": "temporal_decline",
+      "filePath": "src/geox/egs/tools/temporal.py",
+      "lineRange": [
+        30,
+        113
+      ],
+      "summary": "temporal_decline(production_data, forecast_years, threshold_bpd) — 83 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/temporal.py:temporal_rrr",
+      "type": "function",
+      "name": "temporal_rrr",
+      "filePath": "src/geox/egs/tools/temporal.py",
+      "lineRange": [
+        121,
+        172
+      ],
+      "summary": "temporal_rrr(reserves_start, additions, production) — 51 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/temporal.py:temporal_basin_lifecycle",
+      "type": "function",
+      "name": "temporal_basin_lifecycle",
+      "filePath": "src/geox/egs/tools/temporal.py",
+      "lineRange": [
+        180,
+        249
+      ],
+      "summary": "temporal_basin_lifecycle(basin_name, peak_production, current_production, discovery_year, peak_year) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox/egs/tools/temporal.py:temporal_cadence",
+      "type": "function",
+      "name": "temporal_cadence",
+      "filePath": "src/geox/egs/tools/temporal.py",
+      "lineRange": [
+        257,
+        318
+      ],
+      "summary": "temporal_cadence(blocks_offered, blocks_awarded, years_span, average_cycle_time_years) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/__init__.py",
+      "summary": "python code file (21 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/adapters/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/adapters/__init__.py",
+      "summary": "python code file (6 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "type": "file",
+      "name": "test_wealth_bridge.py",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "summary": "Defines 2 function(s); 6 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/adapters/test_wealth_bridge.py:make_mock_node",
+      "type": "function",
+      "name": "make_mock_node",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        29,
+        76
+      ],
+      "summary": "make_mock_node(admissibility_status, risk_geo, epistemic_geo, sigma_policy, required_modifications) — 47 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/adapters/test_wealth_bridge.py:make_mock_telemetry",
+      "type": "function",
+      "name": "make_mock_telemetry",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        79,
+        96
+      ],
+      "summary": "make_mock_telemetry() — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestEpistemicTagPreservation",
+      "type": "class",
+      "name": "TestEpistemicTagPreservation",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        99,
+        125
+      ],
+      "summary": "Class TestEpistemicTagPreservation with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestAdmissibilityFilter",
+      "type": "class",
+      "name": "TestAdmissibilityFilter",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        128,
+        153
+      ],
+      "summary": "Class TestAdmissibilityFilter with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestMaruahDerivation",
+      "type": "class",
+      "name": "TestMaruahDerivation",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        156,
+        186
+      ],
+      "summary": "Class TestMaruahDerivation with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestIrreversibility",
+      "type": "class",
+      "name": "TestIrreversibility",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        189,
+        204
+      ],
+      "summary": "Class TestIrreversibility with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestWealthSignals",
+      "type": "class",
+      "name": "TestWealthSignals",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        207,
+        225
+      ],
+      "summary": "Class TestWealthSignals with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/adapters/test_wealth_bridge.py:TestExtractiveSignals",
+      "type": "class",
+      "name": "TestExtractiveSignals",
+      "filePath": "src/geox_core/adapters/test_wealth_bridge.py",
+      "lineRange": [
+        228,
+        244
+      ],
+      "summary": "Class TestExtractiveSignals with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox/egs/engines/geometry.py",
+      "target": "class:src/geox/egs/engines/geometry.py:SpatialIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/physics.py",
+      "target": "function:src/geox/egs/engines/physics.py:brine_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/physics.py",
+      "target": "function:src/geox/egs/engines/physics.py:gas_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/physics.py",
+      "target": "function:src/geox/egs/engines/physics.py:voigt_reuss_hill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/update_ops.py",
+      "target": "class:src/geox/egs/engines/update_ops.py:UpdateStratColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/update_ops.py",
+      "target": "class:src/geox/egs/engines/update_ops.py:UpdateHorizonGeom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/update_ops.py",
+      "target": "class:src/geox/egs/engines/update_ops.py:UpdateFaultModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/update_ops.py",
+      "target": "class:src/geox/egs/engines/update_ops.py:UpdateReservoirProperties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/engines/update_ops.py",
+      "target": "class:src/geox/egs/engines/update_ops.py:UpdateChargeModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/claims.py",
+      "target": "class:src/geox/egs/models/claims.py:ClaimEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/entities.py",
+      "target": "class:src/geox/egs/models/entities.py:SurfaceMesh3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/entities.py",
+      "target": "class:src/geox/egs/models/entities.py:EarthGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/provenance.py",
+      "target": "class:src/geox/egs/models/provenance.py:EvidenceKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/provenance.py",
+      "target": "class:src/geox/egs/models/provenance.py:ProvenanceChain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/uncertainty.py",
+      "target": "class:src/geox/egs/models/uncertainty.py:IntervalUncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/uncertainty.py",
+      "target": "class:src/geox/egs/models/uncertainty.py:DistributionUncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/uncertainty.py",
+      "target": "class:src/geox/egs/models/uncertainty.py:UncertainValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/models/uncertainty.py",
+      "target": "class:src/geox/egs/models/uncertainty.py:UncertaintyBudget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/registry.py",
+      "target": "function:src/geox/egs/registry.py:init_egs_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/registry.py",
+      "target": "function:src/geox/egs/registry.py:egs_surface_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/claims.py",
+      "target": "function:src/geox/egs/tools/claims.py:egs_claim_create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/claims.py",
+      "target": "function:src/geox/egs/tools/claims.py:egs_claim_challenge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/claims.py",
+      "target": "function:src/geox/egs/tools/claims.py:egs_evidence_attach",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/claims.py",
+      "target": "function:src/geox/egs/tools/claims.py:egs_evidence_reason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/claims.py",
+      "target": "function:src/geox/egs/tools/claims.py:_suggest_grade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/compute.py",
+      "target": "function:src/geox/egs/tools/compute.py:egs_seismic_compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/compute.py",
+      "target": "function:src/geox/egs/tools/compute.py:egs_rock_physics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/qc.py",
+      "target": "function:src/geox/egs/tools/qc.py:egs_data_qc_bundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/qc.py",
+      "target": "function:src/geox/egs/tools/qc.py:egs_scenario_audit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/query.py",
+      "target": "function:src/geox/egs/tools/query.py:egs_query_entity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/query.py",
+      "target": "function:src/geox/egs/tools/query.py:egs_query_claim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/query.py",
+      "target": "function:src/geox/egs/tools/query.py:egs_query_uncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/query.py",
+      "target": "function:src/geox/egs/tools/query.py:egs_query_provenance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/temporal.py",
+      "target": "function:src/geox/egs/tools/temporal.py:temporal_decline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/temporal.py",
+      "target": "function:src/geox/egs/tools/temporal.py:temporal_rrr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/temporal.py",
+      "target": "function:src/geox/egs/tools/temporal.py:temporal_basin_lifecycle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox/egs/tools/temporal.py",
+      "target": "function:src/geox/egs/tools/temporal.py:temporal_cadence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "function:src/geox_core/adapters/test_wealth_bridge.py:make_mock_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "function:src/geox_core/adapters/test_wealth_bridge.py:make_mock_telemetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestEpistemicTagPreservation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestAdmissibilityFilter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestMaruahDerivation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestIrreversibility",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestWealthSignals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/adapters/test_wealth_bridge.py",
+      "target": "class:src/geox_core/adapters/test_wealth_bridge.py:TestExtractiveSignals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

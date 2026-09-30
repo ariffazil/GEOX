@@ -1,0 +1,38 @@
+############ PROBE SUITE against http://127.0.0.1:8081 ############
+
+===== [1] MODERN stateless server/discover (MCP-Protocol-Version: 2026-07-28 + Mcp-Method) =====
+{"jsonrpc":"2.0","id":"server-error","error":{"code":-32600,"message":"Bad Request: Missing session ID"}}
+--HTTP 400--
+
+===== [1b] MODERN headers dump for [1] =====
+HTTP/1.1 400 Bad Request
+content-type: application/json
+
+===== [2] LEGACY 2025-11-25 initialize =====
+--HTTP 200--
+negotiated protocolVersion = 2025-11-25
+serverInfo = GEOX v2026.08.26
+mcp-session-id = d93fcfdad3e8460ebac2f15861d43d39
+--- [2b] legacy notifications/initialized ---
+--HTTP 202--
+--- [2c] legacy tools/list (session) ---
+--HTTP 200--
+LEGACY tools/list count = 31
+names = geox_basin,geox_calibration_register_witness,geox_claim,geox_contrast_metabolize,geox_deep_time,geox_extract_display_proxy,geox_extract_native_trace,geox_geomechanics,geox_glof_cascade_initialize,geox_glof_cascade_inverse,geox_glof_cascade_mcmc_inverse,geox_glof_cascade_metabolize,geox_glof_cascade_phase,geox_glof_cascade_propagate,geox_glof_cascade_step,geox_list_registered_sources,geox_map,geox_model,geox_paleobiodb_query,geox_petrophysics,geox_prospect,geox_register_native_source,geox_seismic_compute,geox_seismic_ingest,geox_seismic_interpret,geox_source,geox_spatial,geox_temporal,geox_well,geox_well_ingest,geox_well_qc
+ttlMs present = False
+
+===== [3] MODERN stateless tools/list (no session id, era-declared) =====
+--HTTP 400--
+ERROR payload: {"jsonrpc": "2.0", "id": "server-error", "error": {"code": -32600, "message": "Bad Request: Missing session ID"}}
+
+===== [4] MODERN stateless tools/call (no session id) =====
+--HTTP 400--
+{"jsonrpc":"2.0","id":"server-error","error":{"code":-32600,"message":"Bad Request: Missing session ID"}}
+
+===== [5] HEALTH =====
+
+--HTTP 200--
+status = degraded | kernel_verdict = UNKNOWN | version = v2026.08.26
+surface_drift = {"canonical_count": 31, "live_count": 31, "drift_count": 0, "gap_count": 0, "ok": true, "source": "geox_mcp:/health (snapshot of last /mcp/ tools/list observation)"}
+canonical==live==31 ? True
+############ END ############

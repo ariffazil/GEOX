@@ -31,6 +31,7 @@ from geox_mcp.epistemic.contradiction_ontology import (
     ContradictionSeverity,
     ContradictionType,
     ResolutionPath,
+    classify_contradiction as _ontology_classify,
 )
 
 logger = logging.getLogger("geox.contradiction_scan")
@@ -97,7 +98,21 @@ def _classify_contradiction(
     if claim_a.get("confidence", 0) > 0.9 and a_rung > 3:
         return ContradictionType.BEAUTIFUL_ONE_DRIFT, f"High confidence ({claim_a['confidence']}) at rung {a_rung}"
 
-    # Default
+    # Default — F2 PATCH (2026-09-18 · 333-AGI): fall back to the rung-based
+    # ontology classifier so derived-vs-interpreted (rung 4 vs rung 6) and
+    # other rung-arithmetic inconsistencies surface even when no string rule
+    # matches. Original ontology signatures (claim_a_rung / claim_b_rung /
+    # claim_a_type / claim_b_type) take the same dict fields we already
+    # extracted above.
+    ontology_type = _ontology_classify(
+        claim_a_rung=a_rung,
+        claim_b_rung=b_rung,
+        claim_a_type=a_type,
+        claim_b_type=b_type,
+    )
+    if ontology_type != ContradictionType.UNKNOWN:
+        return ontology_type, (f"rung/arithmetic mismatch: rung {a_rung} ({a_type}) vs rung {b_rung} ({b_type})")
+
     return ContradictionType.UNKNOWN, "Unable to classify contradiction automatically"
 
 
@@ -179,6 +194,51 @@ async def geox_contradiction_scan(
     sid = session_id or "unknown"
     contradictions = []
 
+    # F2 PATCH (2026-09-18 · 333-AGI): intradocument scan.
+    # A single claim payload may carry multiple rungs (OBSERVED/DERIVED/
+    # INTERPRETED/HYPOTHESIS) as nested blocks. Cross-rung inconsistency
+    # within one document — e.g. "Group C absent" (DERIVED) vs
+    # "Pliocene transgression of Group A,B,C" (INTERPRETED) in the same
+    # basin payload — must surface. Previous pairwise-only logic missed it.
+    def _scan_intradocument(claim: dict[str, Any], origin_idx: int) -> list[dict[str, Any]]:
+        blocks = claim.get("blocks")
+        if not isinstance(blocks, list) or len(blocks) < 2:
+            return []
+        pseudo = [
+            {
+                "text": b.get("text", "") if isinstance(b, dict) else "",
+                "type": (b.get("type", "") if isinstance(b, dict) else "").lower(),
+                "tool": claim.get("tool", "unknown"),
+                "epistemic_rung": (
+                    b.get("rung", claim.get("epistemic_rung", 5)) if isinstance(b, dict) else claim.get("epistemic_rung", 5)
+                ),
+                "evidence_refs": (
+                    b.get("evidence_refs", claim.get("evidence_refs", []))
+                    if isinstance(b, dict)
+                    else claim.get("evidence_refs", [])
+                ),
+                "confidence": (
+                    b.get("confidence", claim.get("confidence", 0.7)) if isinstance(b, dict) else claim.get("confidence", 0.7)
+                ),
+                "value": b.get("value") if isinstance(b, dict) else None,
+                "ref": b.get("ref") if isinstance(b, dict) else None,
+                "modality": (b.get("modality", claim.get("modality", "")) if isinstance(b, dict) else claim.get("modality", "")),
+                "tolerance": (b.get("tolerance", 0.1) if isinstance(b, dict) else 0.1),
+            }
+            for b in blocks
+        ]
+        out: list[dict[str, Any]] = []
+        for j in range(len(pseudo)):
+            for k in range(j + 1, len(pseudo)):
+                ctype, reason = _classify_contradiction(pseudo[j], pseudo[k])
+                if ctype != ContradictionType.UNKNOWN:
+                    record = _build_record(pseudo[j], pseudo[k], ctype, reason, sid)
+                    record["scan_scope"] = "intradocument"
+                    record["origin_claim_index"] = origin_idx
+                    record["origin_claim_id"] = claim.get("claim_id", claim.get("id", f"claim_{origin_idx}"))
+                    out.append(record)
+        return out
+
     if mode == "pairwise":
         for i in range(len(claims)):
             for j in range(i + 1, len(claims)):
@@ -186,12 +246,26 @@ async def geox_contradiction_scan(
                 if ctype != ContradictionType.UNKNOWN:
                     record = _build_record(claims[i], claims[j], ctype, reason, sid)
                     contradictions.append(record)
+        # Intradocument scan augments pairwise without double-counting
+        # cross-document pairs.
+        for i, claim in enumerate(claims):
+            if isinstance(claim, dict):
+                contradictions.extend(_scan_intradocument(claim, i))
     elif mode == "sequential":
         for i in range(len(claims) - 1):
             ctype, reason = _classify_contradiction(claims[i], claims[i + 1])
             if ctype != ContradictionType.UNKNOWN:
                 record = _build_record(claims[i], claims[i + 1], ctype, reason, sid)
                 contradictions.append(record)
+        for i, claim in enumerate(claims):
+            if isinstance(claim, dict):
+                contradictions.extend(_scan_intradocument(claim, i))
+    elif mode == "intradocument":
+        # Explicit intradocument-only scan (e.g. caller knows the document
+        # is multi-rung and wants only within-doc inconsistency).
+        for i, claim in enumerate(claims):
+            if isinstance(claim, dict):
+                contradictions.extend(_scan_intradocument(claim, i))
 
     # Severity summary
     fatal_count = sum(1 for c in contradictions if c["severity"] == "fatal")

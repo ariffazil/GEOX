@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/hazards/hazard-anomaly-detection.md",
+      "type": "document",
+      "name": "hazard-anomaly-detection.md",
+      "filePath": "src/geox_core/skills/hazards/hazard-anomaly-detection.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/hazards/hazard-multi-risk-escalation.md",
+      "type": "document",
+      "name": "hazard-multi-risk-escalation.md",
+      "filePath": "src/geox_core/skills/hazards/hazard-multi-risk-escalation.md",
+      "summary": "markdown docs file (37 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/hazards/hazard-seismic-and-ground-shift.md",
+      "type": "document",
+      "name": "hazard-seismic-and-ground-shift.md",
+      "filePath": "src/geox_core/skills/hazards/hazard-seismic-and-ground-shift.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

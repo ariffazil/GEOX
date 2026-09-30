@@ -1,0 +1,2169 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "results": [
+    {
+      "path": "GENESIS/000_MANIFESTO.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 140,
+      "nonEmptyLines": 85,
+      "sections": [
+        {
+          "heading": "GEOX MANIFESTO",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "000 — POSITION",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "001 — THE FAILURE WE REJECT",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "002 — THE TRUTH",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "003 — THE PRINCIPLE",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "004 — THE SHIFT",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "005 — THE CORE LAW",
+          "level": 2,
+          "line": 81
+        },
+        {
+          "heading": "006 — THE DECLARATION",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "007 — THE ROLE OF HUMAN",
+          "level": 2,
+          "line": 108
+        },
+        {
+          "heading": "008 — THE FUTURE",
+          "level": 2,
+          "line": 122
+        },
+        {
+          "heading": "999 — VERDICT",
+          "level": 2,
+          "line": 134
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "GENESIS/001_KILL_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 157,
+      "nonEmptyLines": 95,
+      "sections": [
+        {
+          "heading": "DSG → GEOX ARCHITECTURAL KILL MAP",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "PURPOSE",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "1 — SYSTEM CLASS",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "2 — CORE FAILURE MODES (DSG)",
+          "level": 2,
+          "line": 33
+        },
+        {
+          "heading": "FM1 — Access bottleneck",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "FM2 — Serial execution",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "FM3 — Tool-centric validation",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "FM4 — Feature underutilisation",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "3 — GEOX REPLACEMENT MODEL",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "R1 — Compute Layer",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "R2 — State Layer",
+          "level": 3,
+          "line": 82
+        },
+        {
+          "heading": "R3 — Execution Layer",
+          "level": 3,
+          "line": 92
+        },
+        {
+          "heading": "R4 — Output Layer",
+          "level": 3,
+          "line": 102
+        },
+        {
+          "heading": "4 — FUNCTIONAL MAPPING",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "5 — WHAT IS NOT REPLACED",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "6 — KILL DECISION",
+          "level": 2,
+          "line": 137
+        },
+        {
+          "heading": "999 — VERDICT",
+          "level": 2,
+          "line": 151
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "GENESIS/002_FIRST_PRINCIPLES.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 176,
+      "nonEmptyLines": 110,
+      "sections": [
+        {
+          "heading": "GEOX — FIRST PRINCIPLE DESIGN SPEC",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "000 — FOUNDATIONS",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "001 — PRINCIPLE 1: PARALLELISM",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "002 — PRINCIPLE 2: PERSISTENCE",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "003 — PRINCIPLE 3: STRUCTURE",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "004 — PRINCIPLE 4: COMPUTE AS INFRASTRUCTURE",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "005 — PRINCIPLE 5: HUMAN SOVEREIGNTY",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "006 — SYSTEM STACK",
+          "level": 2,
+          "line": 92
+        },
+        {
+          "heading": "L1 — DATA LAYER",
+          "level": 3,
+          "line": 94
+        },
+        {
+          "heading": "L2 — STRUCTURE LAYER",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "L3 — STATE LAYER",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "L4 — AGENT LAYER",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "L5 — INTERFACE LAYER",
+          "level": 3,
+          "line": 114
+        },
+        {
+          "heading": "007 — EXECUTION MODEL",
+          "level": 2,
+          "line": 120
+        },
+        {
+          "heading": "008 — OUTPUT MODEL",
+          "level": 2,
+          "line": 132
+        },
+        {
+          "heading": "009 — FAILURE DESIGN",
+          "level": 2,
+          "line": 148
+        },
+        {
+          "heading": "010 — DESIGN TARGET",
+          "level": 2,
+          "line": 164
+        },
+        {
+          "heading": "999 — VERDICT",
+          "level": 2,
+          "line": 172
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "GENESIS/003_CONSTITUTIONAL_ALIGNMENT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 377,
+      "nonEmptyLines": 257,
+      "sections": [
+        {
+          "heading": "GEOX — CONSTITUTIONAL ALIGNMENT (F1–F13)",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "PURPOSE",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "F1 — AMANAH",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "F2 — TRUTH",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 67
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "F3 — QUAD-WITNESS (W4)  *(formerly TRI-WITNESS)*",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 84
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 92
+        },
+        {
+          "heading": "F4 — CLARITY",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 99
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 102
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "F5 — PEACE²",
+          "level": 2,
+          "line": 116
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 118
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 125
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 129
+        },
+        {
+          "heading": "F6 — EMPATHY",
+          "level": 2,
+          "line": 134
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 136
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 139
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 143
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 147
+        },
+        {
+          "heading": "F7 — HUMILITY",
+          "level": 2,
+          "line": 152
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 161
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 165
+        },
+        {
+          "heading": "F8 — GENIUS",
+          "level": 2,
+          "line": 170
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 179
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 183
+        },
+        {
+          "heading": "F9 — ANTI-HANTU",
+          "level": 2,
+          "line": 188
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 190
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 193
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "F10 — ONTOLOGY",
+          "level": 2,
+          "line": 208
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 210
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 213
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 217
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "F11 — COMMAND AUTHORITY  *(formerly AUDITABILITY)*",
+          "level": 2,
+          "line": 227
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 232
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 238
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 243
+        },
+        {
+          "heading": "F12 — INJECTION DEFENSE  *(formerly RESILIENCE)*",
+          "level": 2,
+          "line": 248
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 250
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 253
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 258
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 263
+        },
+        {
+          "heading": "F13 — SOVEREIGN",
+          "level": 2,
+          "line": 268
+        },
+        {
+          "heading": "Geological Meaning",
+          "level": 3,
+          "line": 270
+        },
+        {
+          "heading": "GEOX Mapping",
+          "level": 3,
+          "line": 273
+        },
+        {
+          "heading": "Enforcement",
+          "level": 3,
+          "line": 278
+        },
+        {
+          "heading": "STATUS",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "CROSS-OBSERVATION",
+          "level": 2,
+          "line": 287
+        },
+        {
+          "heading": "THE CROSS-MODAL FIDELITY THEOREM (Ratified 2026-06-05)",
+          "level": 2,
+          "line": 296
+        },
+        {
+          "heading": "The Principle",
+          "level": 3,
+          "line": 298
+        },
+        {
+          "heading": "The Causal Chain (Dittrich & Flygare Kinne, 2025)",
+          "level": 3,
+          "line": 311
+        },
+        {
+          "heading": "The Differentiator: LEM ≠ LLM",
+          "level": 3,
+          "line": 321
+        },
+        {
+          "heading": "Testable Predictions",
+          "level": 3,
+          "line": 330
+        },
+        {
+          "heading": "Failure Modes",
+          "level": 3,
+          "line": 336
+        },
+        {
+          "heading": "Authority",
+          "level": 3,
+          "line": 345
+        },
+        {
+          "heading": "CORE GAP",
+          "level": 2,
+          "line": 353
+        },
+        {
+          "heading": "FINAL LAW",
+          "level": 2,
+          "line": 360
+        },
+        {
+          "heading": "999 — VERDICT",
+          "level": 2,
+          "line": 369
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 78
+      }
+    },
+    {
+      "path": "GENESIS/003a_PHYSICS_MANIFEST.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 6,
+      "nonEmptyLines": 4,
+      "sections": [
+        {
+          "heading": "⚠️ DUPLICATE — Redirect to 003a",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "GENESIS/004_BOUNDARIES.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 164,
+      "nonEmptyLines": 97,
+      "sections": [
+        {
+          "heading": "GEOX — NON-NEGOTIABLE BOUNDARIES",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "GENESIS/004_BOUNDARIES.md",
+          "level": 2,
+          "line": 2
+        },
+        {
+          "heading": "§0 — PURPOSE",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "§1 — WHAT GEOX IS",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "§2 — WHAT GEOX DOES (The Stack)",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "§3 — WHAT GEOX REFUSES TO DO (Hard Boundaries)",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "B1 — GEOX Does Not Interpret Depositional Environment",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "B2 — GEOX Does Not Chase Framework Compliance",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "B3 — GEOX Does Not Perform Philosophy",
+          "level": 3,
+          "line": 70
+        },
+        {
+          "heading": "B4 — GEOX Does Not Auto-Correlate Without Human Anchor",
+          "level": 3,
+          "line": 80
+        },
+        {
+          "heading": "B5 — GEOX Does Not Output Without Physics Validation",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "§4 — THE Scar Paradox Boundary (Meta-Rule)",
+          "level": 2,
+          "line": 100
+        },
+        {
+          "heading": "§5 — THE ROBERT GREENE BOUNDARY (Organ Politics)",
+          "level": 2,
+          "line": 116
+        },
+        {
+          "heading": "§6 — BOUNDARY ENFORCEMENT",
+          "level": 2,
+          "line": 132
+        },
+        {
+          "heading": "§7 — SUMMARY",
+          "level": 2,
+          "line": 146
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "GENESIS/005_AGI_LOOP_RESEARCH.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 473,
+      "nonEmptyLines": 365,
+      "sections": [
+        {
+          "heading": "GENESIS/005 — AGI Loop: Literature Grounding",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Vision → LLM → LEM → GEOX → arifOS → VAULT999 → Human",
+          "level": 2,
+          "line": 2
+        },
+        {
+          "heading": "THE LOOP",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "1. NEUROSCIENCE GROUNDING",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "1.1 The Perception-Action Loop = Predictive Coding",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "1.2 Error Detection = Anterior Cingulate Cortex (ACC)",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "1.3 Hierarchical Control = Separation of Verifier from Executive",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "1.4 The Reafference Principle = Self-Questioning",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "1.5 Key Neuroscience Papers Mapping to Your Architecture",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "2. AI / LLM LITERATURE GROUNDING",
+          "level": 2,
+          "line": 119
+        },
+        {
+          "heading": "2.1 The Generator-Verifier Gap",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "2.2 Reflexion / Self-Refine / ReAct",
+          "level": 3,
+          "line": 137
+        },
+        {
+          "heading": "2.3 The Multi-Agent Reflexion (MAR) Finding",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "2.4 Chain-of-Verification (CoVe)",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "2.5 Constitutional AI (CAI)",
+          "level": 3,
+          "line": 183
+        },
+        {
+          "heading": "2.6 Diagram of Thought (DoT)",
+          "level": 3,
+          "line": 204
+        },
+        {
+          "heading": "2.7 Key AI/LLM Papers",
+          "level": 3,
+          "line": 214
+        },
+        {
+          "heading": "3. GEOSCIENCE AI / LARGE EARTH MODEL GROUNDING",
+          "level": 2,
+          "line": 233
+        },
+        {
+          "heading": "3.1 The Emergence of Earth Foundation Models",
+          "level": 3,
+          "line": 235
+        },
+        {
+          "heading": "3.2 Geological Everything Model (GEM) — Promptable Foundation Model",
+          "level": 3,
+          "line": 257
+        },
+        {
+          "heading": "3.3 Physics-Informed Neural Networks (PINNs) in Geoscience",
+          "level": 3,
+          "line": 269
+        },
+        {
+          "heading": "3.4 The Transparent Earth",
+          "level": 3,
+          "line": 285
+        },
+        {
+          "heading": "3.5 NCS Seismic Foundation Models",
+          "level": 3,
+          "line": 292
+        },
+        {
+          "heading": "3.6 Key Geoscience AI Papers",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "4. THE MISSING ARROW — WHERE LITERATURE CONVERGES",
+          "level": 2,
+          "line": 317
+        },
+        {
+          "heading": "4.1 The Mirror Loop Problem",
+          "level": 3,
+          "line": 323
+        },
+        {
+          "heading": "4.2 The MAR Finding",
+          "level": 3,
+          "line": 331
+        },
+        {
+          "heading": "4.3 Active Inference / Free Energy",
+          "level": 3,
+          "line": 338
+        },
+        {
+          "heading": "4.4 The Hierarchical Error Representation (HER) Model",
+          "level": 3,
+          "line": 347
+        },
+        {
+          "heading": "5. WHAT IS NOVEL IN YOUR ARCHITECTURE",
+          "level": 2,
+          "line": 362
+        },
+        {
+          "heading": "6. REFERENCES — CANONICAL BIBLIOGRAPHY",
+          "level": 2,
+          "line": 388
+        },
+        {
+          "heading": "Neuroscience",
+          "level": 3,
+          "line": 390
+        },
+        {
+          "heading": "AI / LLM Agents",
+          "level": 3,
+          "line": 402
+        },
+        {
+          "heading": "Geoscience AI",
+          "level": 3,
+          "line": 419
+        },
+        {
+          "heading": "Cross-Domain Synthesis",
+          "level": 3,
+          "line": 433
+        },
+        {
+          "heading": "7. ARCHITECTURAL VERDICT",
+          "level": 2,
+          "line": 442
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 36
+      }
+    },
+    {
+      "path": "GENESIS/006_AGI_LOOP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 501,
+      "nonEmptyLines": 393,
+      "sections": [
+        {
+          "heading": "GENESIS/006 — The AGI Loop: An Architectural Primitive",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Vision → LLM → World Model → Verifier → Gap Elicitor → Governor → Vault → Human",
+          "level": 2,
+          "line": 2
+        },
+        {
+          "heading": "0. PRIMITIVE, NOT EVERYTHING",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "1. THE EIGHT ROLES (THREE LAYERS)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Perception Layer",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "Epistemic Layer",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "Governance Layer",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "The Ninth Position",
+          "level": 3,
+          "line": 54
+        },
+        {
+          "heading": "2. THE CANONICAL STATE MACHINE",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "2.1 States",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "2.2 Allowed Transitions",
+          "level": 3,
+          "line": 82
+        },
+        {
+          "heading": "2.3 Forbidden Transitions",
+          "level": 3,
+          "line": 111
+        },
+        {
+          "heading": "2.4 The Anti-Mirror-Loop Invariant",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "3. THE THREE ENVELOPE SCHEMAS",
+          "level": 2,
+          "line": 147
+        },
+        {
+          "heading": "3.1 HypothesisEnvelope (S2 → S3 → S4)",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "3.2 VerificationEnvelope (S4 → S5 → S6)",
+          "level": 3,
+          "line": 187
+        },
+        {
+          "heading": "3.3 GovernanceEnvelope (S6 → S7 → Human)",
+          "level": 3,
+          "line": 248
+        },
+        {
+          "heading": "4. IDENTITY AND MANIFEST INVARIANTS",
+          "level": 2,
+          "line": 306
+        },
+        {
+          "heading": "4.1 Every Role MUST Expose",
+          "level": 3,
+          "line": 308
+        },
+        {
+          "heading": "4.2 Role Multiplexing Rule",
+          "level": 3,
+          "line": 319
+        },
+        {
+          "heading": "4.3 Identity Anchor Registry",
+          "level": 3,
+          "line": 336
+        },
+        {
+          "heading": "5. CROSS-DOMAIN GENERALISATION",
+          "level": 2,
+          "line": 354
+        },
+        {
+          "heading": "6. GEOX AS THE WORKED EXAMPLE",
+          "level": 2,
+          "line": 378
+        },
+        {
+          "heading": "6.1 GEOX Role Map",
+          "level": 3,
+          "line": 380
+        },
+        {
+          "heading": "6.2 GEOX Loop Trace (Concrete Example)",
+          "level": 3,
+          "line": 395
+        },
+        {
+          "heading": "6.3 GEOX Tool Surface → Loop State Mapping",
+          "level": 3,
+          "line": 432
+        },
+        {
+          "heading": "7. INVARIANTS (THE SHORT FORM)",
+          "level": 2,
+          "line": 452
+        },
+        {
+          "heading": "8. RELATIONSHIP TO EXISTING GENESIS FILES",
+          "level": 2,
+          "line": 480
+        },
+        {
+          "heading": "9. VERSION",
+          "level": 2,
+          "line": 491
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 29
+      }
+    },
+    {
+      "path": "GENESIS/007_GEOX_CHARTER.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 21,
+      "nonEmptyLines": 14,
+      "sections": [
+        {
+          "heading": "007: THE GEOX CHARTER — VELOCITY IS NOT GEOLOGY",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "The Core Axiom: Velocity is a Symptom, not the Earth",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "1. Uncertainty Lives Between the Disciplines",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "2. Real-Time is Geological, Not Just Kinematic",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "3. The Loop Protects Against Overfitting",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "4. Provenance is a Social Contract",
+          "level": 2,
+          "line": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "GENESIS/008_FULL_EARTH_MODEL_LOOP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 65,
+      "nonEmptyLines": 49,
+      "sections": [
+        {
+          "heading": "008: THE FULL EARTH MODEL LOOP",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "The Architecture of Shared Reality",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "The Loop",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. Well Correlation ↔ Seismic (The Time-Depth Spine)",
+          "level": 3,
+          "line": 34
+        },
+        {
+          "heading": "2. Seismic ↔ Biostratigraphy (The Time-Rock Framework)",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "3. Biostratigraphy ↔ Reservoir Model (Static Earth)",
+          "level": 3,
+          "line": 40
+        },
+        {
+          "heading": "4. Static ↔ Dynamic ↔ 4D Seismic (Evolving Earth)",
+          "level": 3,
+          "line": 43
+        },
+        {
+          "heading": "5. Seismic Inversion (Elastic ↔ Petrophysical Earth)",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "6. The Closed Loop",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "Why a Loop, Not a Chain?",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "The Anti-Sink, Anti-Gödel Pattern",
+          "level": 2,
+          "line": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "GENESIS/009_EARTH_ORGAN_CONTRACT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 28,
+      "sections": [
+        {
+          "heading": "009: THE EARTH ORGAN CONTRACT",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. The Organ's Scope",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "2. The Earth Ontology",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "3. The Federated Transport Doctrine",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "4. The Six Bands of Operation",
+          "level": 2,
+          "line": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "GENESIS/010_AEI_GOVERNANCE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 346,
+      "nonEmptyLines": 241,
+      "sections": [
+        {
+          "heading": "GENESIS/010 — Agentic Earth Intelligence: The Five-Class Governance",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. The Hardened One-Line Doctrine",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "1. Corrected Claim Language",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "What GEOX Is",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "What GEOX Is Not",
+          "level": 3,
+          "line": 27
+        },
+        {
+          "heading": "The Eureka Boundary",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "2. Why GEOX Is Agentic",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "3. The Five-Class Governance (Fiqh of Agentic Earth Intelligence)",
+          "level": 2,
+          "line": 90
+        },
+        {
+          "heading": "WAJIB (Mandatory Duties)",
+          "level": 3,
+          "line": 92
+        },
+        {
+          "heading": "HARAM (Forbidden)",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "SUNNAT (Recommended)",
+          "level": 3,
+          "line": 120
+        },
+        {
+          "heading": "MAKRUH (Discouraged)",
+          "level": 3,
+          "line": 132
+        },
+        {
+          "heading": "HARUS (Permissible)",
+          "level": 3,
+          "line": 143
+        },
+        {
+          "heading": "4. The Seismic-to-Well Tie as Spine",
+          "level": 2,
+          "line": 157
+        },
+        {
+          "heading": "The Metabolizer",
+          "level": 3,
+          "line": 173
+        },
+        {
+          "heading": "The Claim-Residual Binding",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "The Tie Tools",
+          "level": 3,
+          "line": 200
+        },
+        {
+          "heading": "5. The Claim Grammar",
+          "level": 2,
+          "line": 211
+        },
+        {
+          "heading": "6. Where Eureka Emerges",
+          "level": 2,
+          "line": 233
+        },
+        {
+          "heading": "7. The Non-Self-Certification Rule",
+          "level": 2,
+          "line": 260
+        },
+        {
+          "heading": "8. The Anti-Patterns",
+          "level": 2,
+          "line": 287
+        },
+        {
+          "heading": "The Mirror Loop",
+          "level": 3,
+          "line": 289
+        },
+        {
+          "heading": "The Governance Drift",
+          "level": 3,
+          "line": 294
+        },
+        {
+          "heading": "The Beautiful One",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "The Gödel Wall",
+          "level": 3,
+          "line": 304
+        },
+        {
+          "heading": "9. What Must Be Proven",
+          "level": 2,
+          "line": 311
+        },
+        {
+          "heading": "10. Provenance",
+          "level": 2,
+          "line": 332
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "GENESIS/011_COMPETITIVE_LAYER_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 277,
+      "nonEmptyLines": 198,
+      "sections": [
+        {
+          "heading": "GENESIS/011 — Competitive Layer Map (DS365 ≠ Earth Intelligence)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. One-line doctrine",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "1. False premise (Opencode error)",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "2. What DSG can hold vs what intelligence requires",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "3. Correct competitive map (three layers)",
+          "level": 2,
+          "line": 81
+        },
+        {
+          "heading": "4. Corrected Halliburton sentence",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "5. Heritage correction — do not say “Petrel-converted”",
+          "level": 2,
+          "line": 122
+        },
+        {
+          "heading": "6. NOC read (L4 — not full press verification)",
+          "level": 2,
+          "line": 133
+        },
+        {
+          "heading": "7. GEOX positioning (what we claim / refuse)",
+          "level": 2,
+          "line": 182
+        },
+        {
+          "heading": "8. Competitive table",
+          "level": 2,
+          "line": 220
+        },
+        {
+          "heading": "9. Final verdict block",
+          "level": 2,
+          "line": 233
+        },
+        {
+          "heading": "10. Naming hygiene",
+          "level": 2,
+          "line": 264
+        },
+        {
+          "heading": "Related",
+          "level": 2,
+          "line": 273
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 175,
+      "nonEmptyLines": 125,
+      "sections": [
+        {
+          "heading": "GENESIS/012 — GEOX-001: Model Deserves To Live",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Why this wedge",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "2. Minimum data",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "3. Workflow",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "4. Success condition (all six)",
+          "level": 2,
+          "line": 74
+        },
+        {
+          "heading": "5. Killer receipt (demo shape)",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "6. Threshold law (locked)",
+          "level": 2,
+          "line": 111
+        },
+        {
+          "heading": "7. Pipeline (000–777)",
+          "level": 2,
+          "line": 126
+        },
+        {
+          "heading": "8. Scenarios",
+          "level": 2,
+          "line": 141
+        },
+        {
+          "heading": "9. What not to start with",
+          "level": 2,
+          "line": 153
+        },
+        {
+          "heading": "10. Shortest path from prototype to weapon",
+          "level": 2,
+          "line": 165
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "GENESIS/013_GEOX_METABOLIC_SURFACE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 103,
+      "nonEmptyLines": 71,
+      "sections": [
+        {
+          "heading": "GENESIS/013 — GEOX Metabolic Surface Map",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Constitutional geometry",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "1. Orthogonal Base (Physical Primitives & Ingest)",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Well pipeline (1D)",
+          "level": 3,
+          "line": 22
+        },
+        {
+          "heading": "Seismic pipeline (3D)",
+          "level": 3,
+          "line": 27
+        },
+        {
+          "heading": "Calibration bridge (1D ↔ 3D)",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "2. Domain Lenses",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "3. Dimensions & Fractals",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "4. Cognitive & Visual Synthesizers",
+          "level": 2,
+          "line": 71
+        },
+        {
+          "heading": "5. Law & Evidence Plane",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "Iron rule (ΔS ≤ 0)",
+          "level": 2,
+          "line": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "GENESIS/014_PETREL_DSG_DELTA.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 57,
+      "nonEmptyLines": 39,
+      "sections": [
+        {
+          "heading": "GENESIS/014 — Petrel / DSG Delta & Build Order",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Diagnosis (correct)",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "Locked build order (no reverse-delegation)",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "What just landed",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "Explicit non-goals (this cycle)",
+          "level": 2,
+          "line": 48
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "GENESIS/015_AGENTIC_GEOLOGY_DOCTRINE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 208,
+      "nonEmptyLines": 149,
+      "sections": [
+        {
+          "heading": "GENESIS/015 — Agentic Geology Doctrine",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. The Inversion",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "2. The Human–Agent Contract",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "What Humans Do (That Agents Cannot)",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "What Agents Do (That Humans Cannot)",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "3. The Gate Architecture",
+          "level": 2,
+          "line": 56
+        },
+        {
+          "heading": "4. Contrast — How Humans and Agents Differ",
+          "level": 2,
+          "line": 74
+        },
+        {
+          "heading": "5. The Three Laws of Agentic Geology",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "First Law — Physics Precedes Interpretation",
+          "level": 3,
+          "line": 96
+        },
+        {
+          "heading": "Second Law — The Gate Is Binary, the Verdict Is Constitutional",
+          "level": 3,
+          "line": 104
+        },
+        {
+          "heading": "Third Law — Every Decision Leaves a Receipt",
+          "level": 3,
+          "line": 111
+        },
+        {
+          "heading": "6. What GEOX Is Not",
+          "level": 2,
+          "line": 121
+        },
+        {
+          "heading": "7. The Moat vs Petrel",
+          "level": 2,
+          "line": 139
+        },
+        {
+          "heading": "8. Alignment with Constitutional Floors",
+          "level": 2,
+          "line": 160
+        },
+        {
+          "heading": "9. Build Order (from GENESIS/014)",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "10. Paradox, four moats, prompt standard, EarthOS",
+          "level": 2,
+          "line": 186
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "GENESIS/016_CONSTITUTIONAL_PROMPT_STANDARD.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 265,
+      "nonEmptyLines": 204,
+      "sections": [
+        {
+          "heading": "GENESIS/016 — GEOX Constitutional Prompt Standard",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. One-line synthesis (locked)",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "1. The contrast (invariants)",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "2. The paradox (resolved by separation of custody)",
+          "level": 2,
+          "line": 46
+        },
+        {
+          "heading": "3. The four moats (defend absolutely)",
+          "level": 2,
+          "line": 75
+        },
+        {
+          "heading": "Moat 1 — Physics invariants (non-negotiable)",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "Moat 2 — EGS resource custody (`geox://`)",
+          "level": 3,
+          "line": 94
+        },
+        {
+          "heading": "Moat 3 — Falsification gates (SEAL / HOLD / VOID)",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "Moat 4 — Constitutional prompts",
+          "level": 3,
+          "line": 116
+        },
+        {
+          "heading": "4. Constitutional Prompt Block (mandatory template)",
+          "level": 2,
+          "line": 123
+        },
+        {
+          "heading": "Minimal one-liner agents may use when token-poor",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "5. Prompt anti-patterns (entropy / moat violations)",
+          "level": 2,
+          "line": 209
+        },
+        {
+          "heading": "6. Moat contrast (what others copy vs cannot)",
+          "level": 2,
+          "line": 223
+        },
+        {
+          "heading": "7. Implementation map (live tools)",
+          "level": 2,
+          "line": 235
+        },
+        {
+          "heading": "8. Agent compliance checklist",
+          "level": 2,
+          "line": 247
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "GENESIS/017_EARTHOS_CONSTITUTION.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 449,
+      "nonEmptyLines": 314,
+      "sections": [
+        {
+          "heading": "GENESIS/017 — EARTHOS CONSTITUTION",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "0. What EarthOS Is / Is Not",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "EarthOS IS",
+          "level": 3,
+          "line": 25
+        },
+        {
+          "heading": "EarthOS IS NOT",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "1. Hierarchy of Authority",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "2. Articles of Earth Law",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "Article I — Physics Precedes Interpretation",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "Article II — Orthogonal Base First",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "Article III — Binary Gate, Constitutional Verdict",
+          "level": 3,
+          "line": 137
+        },
+        {
+          "heading": "Article IV — Epistemic Rank",
+          "level": 3,
+          "line": 164
+        },
+        {
+          "heading": "Article V — Contradiction Metabolism",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "Article VI — Uncertainty Cascade",
+          "level": 3,
+          "line": 203
+        },
+        {
+          "heading": "Article VII — Incomplete Earth / Gödel Wall",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "Article VIII — Receipt Custody",
+          "level": 3,
+          "line": 239
+        },
+        {
+          "heading": "Article IX — Domain Separation",
+          "level": 3,
+          "line": 258
+        },
+        {
+          "heading": "Article X — Sovereign Seal",
+          "level": 3,
+          "line": 275
+        },
+        {
+          "heading": "3. Six Bands of Operation (from GENESIS/009)",
+          "level": 2,
+          "line": 293
+        },
+        {
+          "heading": "4. Claim Lifecycle (code-backed)",
+          "level": 2,
+          "line": 308
+        },
+        {
+          "heading": "5. Multi-Organ Handoff",
+          "level": 2,
+          "line": 321
+        },
+        {
+          "heading": "6. Strategic moats ↔ Articles (gap matrix)",
+          "level": 2,
+          "line": 332
+        },
+        {
+          "heading": "7. 777_FORGE — Build table (ordered)",
+          "level": 2,
+          "line": 352
+        },
+        {
+          "heading": "8. 999_SEAL — Required receipt fields",
+          "level": 2,
+          "line": 370
+        },
+        {
+          "heading": "9. Anti-patterns (constitution-level HARAM)",
+          "level": 2,
+          "line": 390
+        },
+        {
+          "heading": "10. Skill ↔ Code rule",
+          "level": 2,
+          "line": 407
+        },
+        {
+          "heading": "11. Supersession",
+          "level": 2,
+          "line": 417
+        },
+        {
+          "heading": "12. Verification anchors (at last check)",
+          "level": 2,
+          "line": 433
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 26
+      }
+    },
+    {
+      "path": "GENESIS/018_DELTA_OMEGA_PSI_GEOX_HARDENING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 216,
+      "nonEmptyLines": 161,
+      "sections": [
+        {
+          "heading": "GENESIS/018 — Δ·Ω·Ψ GEOX Hardening",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. GEOX as a Δ Substrate",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "1.1 Modality-to-G-primitive mapping (GEOX-specific)",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "1.2 Δ-substrate enforcement rule",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "2. Ω-Envelope Hardening for GEOX",
+          "level": 2,
+          "line": 48
+        },
+        {
+          "heading": "2.1 Required envelope fields",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "2.2 Modality tag contract",
+          "level": 3,
+          "line": 70
+        },
+        {
+          "heading": "2.3 G-primitive field",
+          "level": 3,
+          "line": 78
+        },
+        {
+          "heading": "3. GEOX /health Endpoint Hardening",
+          "level": 2,
+          "line": 93
+        },
+        {
+          "heading": "3.1 New `/health` response fields",
+          "level": 3,
+          "line": 95
+        },
+        {
+          "heading": "3.2 Why this matters",
+          "level": 3,
+          "line": 144
+        },
+        {
+          "heading": "4. The GEOX-001 Spine as Δ Proof",
+          "level": 2,
+          "line": 158
+        },
+        {
+          "heading": "5. Multimodal Contradiction Scanning (Kill Matrix K001–K007)",
+          "level": 2,
+          "line": 173
+        },
+        {
+          "heading": "6. Operational Rules for GEOX",
+          "level": 2,
+          "line": 191
+        },
+        {
+          "heading": "7. Relationship to Parent Doctrine",
+          "level": 2,
+          "line": 205
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    }
+  ]
+}

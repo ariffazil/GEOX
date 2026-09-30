@@ -1,0 +1,7872 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 25,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 24,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_core/engines/structural_restoration/state.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 388,
+      "nonEmptyLines": 333,
+      "classes": [
+        {
+          "name": "ZConvention",
+          "startLine": 27,
+          "endLine": 31,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CRSProof",
+          "startLine": 34,
+          "endLine": 86,
+          "methods": [
+            "is_compatible_with"
+          ],
+          "properties": [
+            "crs_epsg",
+            "crs_name",
+            "xy_units",
+            "z_units",
+            "z_convention",
+            "vertical_datum",
+            "horizontal_datum"
+          ]
+        },
+        {
+          "name": "SurfaceIdentity",
+          "startLine": 94,
+          "endLine": 136,
+          "methods": [],
+          "properties": [
+            "surface_id",
+            "name",
+            "age_ma",
+            "age_uncertainty_ma",
+            "stratigraphic_unit",
+            "surface_type",
+            "is_source_geometry",
+            "crs",
+            "grid_extent",
+            "grid_cells",
+            "cell_size_m",
+            "data_source",
+            "hash"
+          ]
+        },
+        {
+          "name": "FaultIdentity",
+          "startLine": 139,
+          "endLine": 172,
+          "methods": [],
+          "properties": [
+            "fault_id",
+            "name",
+            "mapped_azimuth_deg",
+            "proposed_generation",
+            "active_interval_ma",
+            "reactivation_status",
+            "confidence",
+            "relational_evidence",
+            "crs"
+          ]
+        },
+        {
+          "name": "EvidenceClass",
+          "startLine": 180,
+          "endLine": 186,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CompactionScenario",
+          "startLine": 189,
+          "endLine": 248,
+          "methods": [],
+          "properties": [
+            "scenario_name",
+            "reference_curve",
+            "measured_depth_limit_m",
+            "extrapolation_end_depth_m",
+            "porosity_adjustment",
+            "depth_interval_m",
+            "surface_porosity",
+            "compaction_coefficient",
+            "dominant_lithology",
+            "evidence_class",
+            "uniform_lithology",
+            "facies_domains"
+          ]
+        },
+        {
+          "name": "UncertaintyEnvelope",
+          "startLine": 251,
+          "endLine": 278,
+          "methods": [],
+          "properties": [
+            "numerical",
+            "spatial",
+            "geological",
+            "compaction"
+          ]
+        },
+        {
+          "name": "RestorationScenario",
+          "startLine": 286,
+          "endLine": 388,
+          "methods": [],
+          "properties": [
+            "scenario_id",
+            "name",
+            "description",
+            "source_state",
+            "target_state",
+            "basement_source",
+            "basement_target",
+            "source_age_ma",
+            "target_age_ma",
+            "stratigraphic_order",
+            "crs_proof",
+            "crs_mismatches",
+            "compaction_scenario",
+            "faults",
+            "uncertainty",
+            "tectonic_event_id",
+            "restoration_type",
+            "created_at",
+            "created_by",
+            "provenance",
+            "assumptions",
+            "immutable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ZConvention",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "CRSProof",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "SurfaceIdentity",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "FaultIdentity",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceClass",
+          "line": 180,
+          "isDefault": false
+        },
+        {
+          "name": "CompactionScenario",
+          "line": 189,
+          "isDefault": false
+        },
+        {
+          "name": "UncertaintyEnvelope",
+          "line": 251,
+          "isDefault": false
+        },
+        {
+          "name": "RestorationScenario",
+          "line": 286,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "is_compatible_with",
+          "callee": "mismatches.append",
+          "lineNumber": 67
+        },
+        {
+          "caller": "is_compatible_with",
+          "callee": "mismatches.append",
+          "lineNumber": 71
+        },
+        {
+          "caller": "is_compatible_with",
+          "callee": "mismatches.append",
+          "lineNumber": 75
+        },
+        {
+          "caller": "is_compatible_with",
+          "callee": "mismatches.append",
+          "lineNumber": 79
+        },
+        {
+          "caller": "is_compatible_with",
+          "callee": "mismatches.append",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 0,
+        "classCount": 8
+      }
+    },
+    {
+      "path": "src/geox_core/engines/structural_restoration/validate_inputs.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 304,
+      "nonEmptyLines": 260,
+      "functions": [
+        {
+          "name": "validate_restoration_inputs",
+          "startLine": 64,
+          "endLine": 249,
+          "params": [
+            "scenario"
+          ]
+        },
+        {
+          "name": "_check_crs_completeness",
+          "startLine": 257,
+          "endLine": 272,
+          "params": [
+            "crs",
+            "label",
+            "missing",
+            "checks_missing"
+          ]
+        },
+        {
+          "name": "_validate_surface",
+          "startLine": 275,
+          "endLine": 297,
+          "params": [
+            "surface",
+            "label",
+            "checks_passed",
+            "checks_failed",
+            "missing"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ValidationVerdict",
+          "startLine": 23,
+          "endLine": 29,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ValidationResult",
+          "startLine": 32,
+          "endLine": 61,
+          "methods": [],
+          "properties": [
+            "verdict",
+            "checks_passed",
+            "checks_failed",
+            "checks_missing",
+            "mismatches",
+            "missing_metadata",
+            "permitted_calculations",
+            "blocked_calculations",
+            "details"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ValidationVerdict",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "ValidationResult",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "validate_restoration_inputs",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "_check_crs_completeness",
+          "line": 257,
+          "isDefault": false
+        },
+        {
+          "name": "_validate_surface",
+          "line": 275,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 84
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_failed.append",
+          "lineNumber": 86
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "mismatches.append",
+          "lineNumber": 87
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 93
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_failed.append",
+          "lineNumber": 95
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "mismatches.append",
+          "lineNumber": 96
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "source_crs.is_compatible_with",
+          "lineNumber": 102
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_failed.append",
+          "lineNumber": 105
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "mismatches.append",
+          "lineNumber": 106
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 108
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "_check_crs_completeness",
+          "lineNumber": 111
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "_check_crs_completeness",
+          "lineNumber": 112
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 116
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_failed.append",
+          "lineNumber": 126
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "mismatches.append",
+          "lineNumber": 127
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_missing.append",
+          "lineNumber": 132
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "missing_metadata.append",
+          "lineNumber": 133
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_missing.append",
+          "lineNumber": 135
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "missing_metadata.append",
+          "lineNumber": 136
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 140
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_missing.append",
+          "lineNumber": 143
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "missing_metadata.append",
+          "lineNumber": 144
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "_validate_surface",
+          "lineNumber": 147
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "_validate_surface",
+          "lineNumber": 149
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 155
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_failed.append",
+          "lineNumber": 158
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "mismatches.append",
+          "lineNumber": 159
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 172
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_missing.append",
+          "lineNumber": 175
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "missing_metadata.append",
+          "lineNumber": 176
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 179
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_passed.append",
+          "lineNumber": 188
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "checks_missing.append",
+          "lineNumber": 192
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "missing_metadata.append",
+          "lineNumber": 193
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "any",
+          "lineNumber": 196
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "permitted.extend",
+          "lineNumber": 212
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "permitted.append",
+          "lineNumber": 222
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "blocked.append",
+          "lineNumber": 224
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "blocked.extend",
+          "lineNumber": 228
+        },
+        {
+          "caller": "validate_restoration_inputs",
+          "callee": "ValidationResult",
+          "lineNumber": 239
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "missing.append",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "checks_missing.append",
+          "lineNumber": 266
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "missing.append",
+          "lineNumber": 268
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "checks_missing.append",
+          "lineNumber": 269
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "missing.append",
+          "lineNumber": 271
+        },
+        {
+          "caller": "_check_crs_completeness",
+          "callee": "checks_missing.append",
+          "lineNumber": 272
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "checks_passed.append",
+          "lineNumber": 284
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "checks_failed.append",
+          "lineNumber": 286
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "missing.append",
+          "lineNumber": 287
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "checks_passed.append",
+          "lineNumber": 290
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "missing.append",
+          "lineNumber": 292
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "checks_passed.append",
+          "lineNumber": 295
+        },
+        {
+          "caller": "_validate_surface",
+          "callee": "missing.append",
+          "lineNumber": 297
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 5,
+        "functionCount": 3,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 123,
+      "nonEmptyLines": 111,
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/mimo_vlm_adapter.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 702,
+      "nonEmptyLines": 606,
+      "functions": [
+        {
+          "name": "interpret_seismic_image_mimo",
+          "startLine": 670,
+          "endLine": 684,
+          "params": [
+            "image_path",
+            "basin_context",
+            "interpretation_goal",
+            "backend",
+            "has_segy"
+          ]
+        },
+        {
+          "name": "_strip_markdown_fences",
+          "startLine": 692,
+          "endLine": 702,
+          "params": [
+            "text"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "MiMoVisionError",
+          "startLine": 174,
+          "endLine": 179,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VisionBackend",
+          "startLine": 187,
+          "endLine": 202,
+          "methods": [
+            "call"
+          ],
+          "properties": [
+            "backend_id"
+          ]
+        },
+        {
+          "name": "MiMoVisionResult",
+          "startLine": 211,
+          "endLine": 221,
+          "methods": [],
+          "properties": [
+            "success",
+            "inventory",
+            "error",
+            "error_type",
+            "raw_response",
+            "elapsed_seconds",
+            "backend_id"
+          ]
+        },
+        {
+          "name": "MiMoVLMAdapter",
+          "startLine": 229,
+          "endLine": 525,
+          "methods": [
+            "__init__",
+            "interpret",
+            "_parse_and_validate"
+          ],
+          "properties": []
+        },
+        {
+          "name": "MiMoHTTPBackend",
+          "startLine": 533,
+          "endLine": 662,
+          "methods": [
+            "__init__",
+            "call"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MiMoVisionError",
+          "line": 174,
+          "isDefault": false
+        },
+        {
+          "name": "VisionBackend",
+          "line": 187,
+          "isDefault": false
+        },
+        {
+          "name": "MiMoVisionResult",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "MiMoVLMAdapter",
+          "line": 229,
+          "isDefault": false
+        },
+        {
+          "name": "MiMoHTTPBackend",
+          "line": 533,
+          "isDefault": false
+        },
+        {
+          "name": "interpret_seismic_image_mimo",
+          "line": 670,
+          "isDefault": false
+        },
+        {
+          "name": "_strip_markdown_fences",
+          "line": 692,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "MiMoHTTPBackend",
+          "lineNumber": 267
+        },
+        {
+          "caller": "__init__",
+          "callee": "getattr",
+          "lineNumber": 272
+        },
+        {
+          "caller": "__init__",
+          "callee": "model_name.split",
+          "lineNumber": 272
+        },
+        {
+          "caller": "__init__",
+          "callee": "MiMoVisionError",
+          "lineNumber": 278
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 304
+        },
+        {
+          "caller": "interpret",
+          "callee": "os.path.exists",
+          "lineNumber": 307
+        },
+        {
+          "caller": "interpret",
+          "callee": "MiMoVisionResult",
+          "lineNumber": 308
+        },
+        {
+          "caller": "interpret",
+          "callee": "MIMO_VISION_PROMPT_TEMPLATE.format",
+          "lineNumber": 316
+        },
+        {
+          "caller": "interpret",
+          "callee": "self.backend.call",
+          "lineNumber": 320
+        },
+        {
+          "caller": "interpret",
+          "callee": "MiMoVisionResult",
+          "lineNumber": 326
+        },
+        {
+          "caller": "interpret",
+          "callee": "type",
+          "lineNumber": 328
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 328
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 330
+        },
+        {
+          "caller": "interpret",
+          "callee": "self._parse_and_validate",
+          "lineNumber": 336
+        },
+        {
+          "caller": "interpret",
+          "callee": "MiMoVisionResult",
+          "lineNumber": 344
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 346
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 349
+        },
+        {
+          "caller": "interpret",
+          "callee": "MiMoVisionResult",
+          "lineNumber": 353
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 355
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 358
+        },
+        {
+          "caller": "interpret",
+          "callee": "MiMoVisionResult",
+          "lineNumber": 362
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 366
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "_strip_markdown_fences",
+          "lineNumber": 381
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "json.loads",
+          "lineNumber": 385
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "MiMoVisionError",
+          "lineNumber": 387
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "str",
+          "lineNumber": 388
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "isinstance",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "MiMoVisionError",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "type",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 395
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 396
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 397
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 398
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "reflectors.append",
+          "lineNumber": 404
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ReflectorObservation",
+          "lineNumber": 405
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 406
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 406
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 407
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 408
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 409
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 410
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 411
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 412
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 412
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 413
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 417
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "faults.append",
+          "lineNumber": 422
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "FaultObservation",
+          "lineNumber": 423
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 424
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 424
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 425
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 426
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 427
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 428
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 429
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 430
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 430
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 435
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "zones.append",
+          "lineNumber": 440
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AmplitudeZoneObservation",
+          "lineNumber": 441
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 442
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 442
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 443
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 444
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 445
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 446
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 447
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 447
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 448
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 452
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AxisMetadata",
+          "lineNumber": 456
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 457
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 458
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 459
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 460
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 461
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 462
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 462
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "MiMoVisionError",
+          "lineNumber": 465
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 471
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "default_ac_risk_components",
+          "lineNumber": 476
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "min",
+          "lineNumber": 488
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_file",
+          "lineNumber": 491
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_text",
+          "lineNumber": 492
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_text",
+          "lineNumber": 493
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.compute",
+          "lineNumber": 496
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.to_verdict",
+          "lineNumber": 497
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.to_verdict",
+          "lineNumber": 499
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 501
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 501
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 501
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "PerceptualInventory",
+          "lineNumber": 507
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "int",
+          "lineNumber": 508
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "time.time",
+          "lineNumber": 508
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "str",
+          "lineNumber": 515
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 515
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 516
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 516
+        },
+        {
+          "caller": "__init__",
+          "callee": "backend_url.rstrip",
+          "lineNumber": 554
+        },
+        {
+          "caller": "__init__",
+          "callee": "model_name.split",
+          "lineNumber": 557
+        },
+        {
+          "caller": "call",
+          "callee": "open",
+          "lineNumber": 577
+        },
+        {
+          "caller": "call",
+          "callee": "f.read",
+          "lineNumber": 578
+        },
+        {
+          "caller": "call",
+          "callee": "base64.b64encode(image_bytes).decode",
+          "lineNumber": 579
+        },
+        {
+          "caller": "call",
+          "callee": "base64.b64encode",
+          "lineNumber": 579
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 581
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 583
+        },
+        {
+          "caller": "call",
+          "callee": "type",
+          "lineNumber": 583
+        },
+        {
+          "caller": "call",
+          "callee": "Path(image_path).suffix.lower",
+          "lineNumber": 586
+        },
+        {
+          "caller": "call",
+          "callee": "Path",
+          "lineNumber": 586
+        },
+        {
+          "caller": "call",
+          "callee": "mime_map.get",
+          "lineNumber": 594
+        },
+        {
+          "caller": "call",
+          "callee": "json.dumps(payload).encode",
+          "lineNumber": 620
+        },
+        {
+          "caller": "call",
+          "callee": "json.dumps",
+          "lineNumber": 620
+        },
+        {
+          "caller": "call",
+          "callee": "urllib.request.Request",
+          "lineNumber": 621
+        },
+        {
+          "caller": "call",
+          "callee": "urllib.request.urlopen",
+          "lineNumber": 632
+        },
+        {
+          "caller": "call",
+          "callee": "response.read().decode",
+          "lineNumber": 633
+        },
+        {
+          "caller": "call",
+          "callee": "response.read",
+          "lineNumber": 633
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 635
+        },
+        {
+          "caller": "call",
+          "callee": "e.read().decode",
+          "lineNumber": 637
+        },
+        {
+          "caller": "call",
+          "callee": "e.read",
+          "lineNumber": 637
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 638
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 640
+        },
+        {
+          "caller": "call",
+          "callee": "type",
+          "lineNumber": 640
+        },
+        {
+          "caller": "call",
+          "callee": "json.loads",
+          "lineNumber": 644
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 646
+        },
+        {
+          "caller": "call",
+          "callee": "response_json.get",
+          "lineNumber": 650
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 652
+        },
+        {
+          "caller": "call",
+          "callee": "choices[0].get",
+          "lineNumber": 654
+        },
+        {
+          "caller": "call",
+          "callee": "message.get",
+          "lineNumber": 655
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 658
+        },
+        {
+          "caller": "call",
+          "callee": "MiMoVisionError",
+          "lineNumber": 662
+        },
+        {
+          "caller": "interpret_seismic_image_mimo",
+          "callee": "MiMoVLMAdapter",
+          "lineNumber": 678
+        },
+        {
+          "caller": "interpret_seismic_image_mimo",
+          "callee": "adapter.interpret",
+          "lineNumber": 679
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "text.strip",
+          "lineNumber": 696
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "re.compile",
+          "lineNumber": 698
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "pattern.match",
+          "lineNumber": 699
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "m.group(1).strip",
+          "lineNumber": 701
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "m.group",
+          "lineNumber": 701
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 7,
+        "functionCount": 2,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/minimax_vlm_adapter.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 586,
+      "nonEmptyLines": 508,
+      "functions": [
+        {
+          "name": "interpret_seismic_image",
+          "startLine": 554,
+          "endLine": 568,
+          "params": [
+            "image_path",
+            "basin_context",
+            "interpretation_goal",
+            "backend",
+            "has_segy"
+          ]
+        },
+        {
+          "name": "_strip_markdown_fences",
+          "startLine": 576,
+          "endLine": 586,
+          "params": [
+            "text"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AntiHantuError",
+          "startLine": 72,
+          "endLine": 78,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VisionBackend",
+          "startLine": 86,
+          "endLine": 101,
+          "methods": [
+            "call"
+          ],
+          "properties": [
+            "backend_id"
+          ]
+        },
+        {
+          "name": "VisionResult",
+          "startLine": 188,
+          "endLine": 198,
+          "methods": [],
+          "properties": [
+            "success",
+            "inventory",
+            "error",
+            "error_type",
+            "raw_response",
+            "elapsed_seconds",
+            "backend_id"
+          ]
+        },
+        {
+          "name": "MiniMaxVLMAdapter",
+          "startLine": 201,
+          "endLine": 474,
+          "methods": [
+            "__init__",
+            "interpret",
+            "_parse_and_validate"
+          ],
+          "properties": []
+        },
+        {
+          "name": "_MCPToolVisionBackend",
+          "startLine": 482,
+          "endLine": 546,
+          "methods": [
+            "call"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AntiHantuError",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "VisionBackend",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "VisionResult",
+          "line": 187,
+          "isDefault": false
+        },
+        {
+          "name": "MiniMaxVLMAdapter",
+          "line": 201,
+          "isDefault": false
+        },
+        {
+          "name": "_MCPToolVisionBackend",
+          "line": 482,
+          "isDefault": false
+        },
+        {
+          "name": "interpret_seismic_image",
+          "line": 554,
+          "isDefault": false
+        },
+        {
+          "name": "_strip_markdown_fences",
+          "line": 576,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "_MCPToolVisionBackend",
+          "lineNumber": 226
+        },
+        {
+          "caller": "__init__",
+          "callee": "getattr",
+          "lineNumber": 227
+        },
+        {
+          "caller": "__init__",
+          "callee": "AntiHantuError",
+          "lineNumber": 231
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 258
+        },
+        {
+          "caller": "interpret",
+          "callee": "os.path.exists",
+          "lineNumber": 259
+        },
+        {
+          "caller": "interpret",
+          "callee": "VisionResult",
+          "lineNumber": 260
+        },
+        {
+          "caller": "interpret",
+          "callee": "VISION_PROMPT_TEMPLATE.format",
+          "lineNumber": 267
+        },
+        {
+          "caller": "interpret",
+          "callee": "self.backend.call",
+          "lineNumber": 269
+        },
+        {
+          "caller": "interpret",
+          "callee": "VisionResult",
+          "lineNumber": 275
+        },
+        {
+          "caller": "interpret",
+          "callee": "type",
+          "lineNumber": 277
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 277
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 279
+        },
+        {
+          "caller": "interpret",
+          "callee": "self._parse_and_validate",
+          "lineNumber": 285
+        },
+        {
+          "caller": "interpret",
+          "callee": "VisionResult",
+          "lineNumber": 293
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 295
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 298
+        },
+        {
+          "caller": "interpret",
+          "callee": "VisionResult",
+          "lineNumber": 302
+        },
+        {
+          "caller": "interpret",
+          "callee": "str",
+          "lineNumber": 304
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 307
+        },
+        {
+          "caller": "interpret",
+          "callee": "VisionResult",
+          "lineNumber": 311
+        },
+        {
+          "caller": "interpret",
+          "callee": "time.time",
+          "lineNumber": 315
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "_strip_markdown_fences",
+          "lineNumber": 330
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "json.loads",
+          "lineNumber": 334
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AntiHantuError",
+          "lineNumber": 336
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "str",
+          "lineNumber": 336
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "isinstance",
+          "lineNumber": 338
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AntiHantuError",
+          "lineNumber": 339
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "type",
+          "lineNumber": 339
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 342
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 343
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 344
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 345
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "reflectors.append",
+          "lineNumber": 351
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ReflectorObservation",
+          "lineNumber": 352
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 353
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 353
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 354
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 355
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 356
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 357
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 358
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 359
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 359
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "r.get",
+          "lineNumber": 360
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 364
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "faults.append",
+          "lineNumber": 369
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "FaultObservation",
+          "lineNumber": 370
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 371
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 371
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 372
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 373
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 374
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 375
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 376
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 377
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 377
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "f.get",
+          "lineNumber": 378
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 382
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "zones.append",
+          "lineNumber": 387
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AmplitudeZoneObservation",
+          "lineNumber": 388
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 389
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 389
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 390
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 393
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 394
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 394
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "z.get",
+          "lineNumber": 395
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "logger.warning",
+          "lineNumber": 399
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AxisMetadata",
+          "lineNumber": 403
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 404
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "tuple",
+          "lineNumber": 405
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 406
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 407
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 408
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 409
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "axis_raw.get",
+          "lineNumber": 409
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "AntiHantuError",
+          "lineNumber": 412
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 418
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "default_ac_risk_components",
+          "lineNumber": 424
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "min",
+          "lineNumber": 437
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_file",
+          "lineNumber": 440
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_text",
+          "lineNumber": 441
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "sha256_text",
+          "lineNumber": 442
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.compute",
+          "lineNumber": 445
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.to_verdict",
+          "lineNumber": 446
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "ac.to_verdict",
+          "lineNumber": 448
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 450
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 450
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "len",
+          "lineNumber": 450
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "PerceptualInventory",
+          "lineNumber": 456
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "int",
+          "lineNumber": 457
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "time.time",
+          "lineNumber": 457
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "str",
+          "lineNumber": 464
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 464
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "float",
+          "lineNumber": 465
+        },
+        {
+          "caller": "_parse_and_validate",
+          "callee": "data.get",
+          "lineNumber": 465
+        },
+        {
+          "caller": "call",
+          "callee": "os.path.exists",
+          "lineNumber": 515
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 516
+        },
+        {
+          "caller": "call",
+          "callee": "subprocess.run",
+          "lineNumber": 521
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 528
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 530
+        },
+        {
+          "caller": "call",
+          "callee": "result.stderr.strip",
+          "lineNumber": 534
+        },
+        {
+          "caller": "call",
+          "callee": "result.stdout.strip",
+          "lineNumber": 534
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 535
+        },
+        {
+          "caller": "call",
+          "callee": "json.loads",
+          "lineNumber": 539
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 541
+        },
+        {
+          "caller": "call",
+          "callee": "(envelope.get(\"content\") or \"\").strip",
+          "lineNumber": 543
+        },
+        {
+          "caller": "call",
+          "callee": "envelope.get",
+          "lineNumber": 543
+        },
+        {
+          "caller": "call",
+          "callee": "NotImplementedError",
+          "lineNumber": 545
+        },
+        {
+          "caller": "interpret_seismic_image",
+          "callee": "MiniMaxVLMAdapter",
+          "lineNumber": 562
+        },
+        {
+          "caller": "interpret_seismic_image",
+          "callee": "adapter.interpret",
+          "lineNumber": 563
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "text.strip",
+          "lineNumber": 580
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "re.compile",
+          "lineNumber": 582
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "pattern.match",
+          "lineNumber": 583
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "m.group(1).strip",
+          "lineNumber": 585
+        },
+        {
+          "caller": "_strip_markdown_fences",
+          "callee": "m.group",
+          "lineNumber": 585
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 7,
+        "functionCount": 2,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/perceptual_inventory.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 420,
+      "nonEmptyLines": 330,
+      "functions": [
+        {
+          "name": "sha256_file",
+          "startLine": 354,
+          "endLine": 360,
+          "params": [
+            "path"
+          ]
+        },
+        {
+          "name": "sha256_text",
+          "startLine": 363,
+          "endLine": 365,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "default_ac_risk_components",
+          "startLine": 368,
+          "endLine": 415,
+          "params": [
+            "u_phys",
+            "transform_stack",
+            "multi_view_passed",
+            "physics_validated"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AmplitudeCharacter",
+          "startLine": 56,
+          "endLine": 60,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReflectorContinuity",
+          "startLine": 63,
+          "endLine": 66,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PolarityConvention",
+          "startLine": 69,
+          "endLine": 73,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FaultType",
+          "startLine": 76,
+          "endLine": 81,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AmplitudeZoneCharacter",
+          "startLine": 84,
+          "endLine": 93,
+          "methods": [
+            "_missing_"
+          ],
+          "properties": []
+        },
+        {
+          "name": "AmplitudeZoneOrigin",
+          "startLine": 96,
+          "endLine": 105,
+          "methods": [
+            "_missing_"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DisplayColorPolarity",
+          "startLine": 108,
+          "endLine": 111,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DisplayUnits",
+          "startLine": 114,
+          "endLine": 125,
+          "methods": [
+            "_missing_"
+          ],
+          "properties": []
+        },
+        {
+          "name": "VisionVerdict",
+          "startLine": 128,
+          "endLine": 137,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AcRiskVerdict",
+          "startLine": 140,
+          "endLine": 146,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReflectorObservation",
+          "startLine": 154,
+          "endLine": 165,
+          "methods": [],
+          "properties": [
+            "reflector_id",
+            "lateral_extent_inlines",
+            "twt_range_ms",
+            "amplitude_character",
+            "continuity",
+            "polarity",
+            "confidence",
+            "notes"
+          ]
+        },
+        {
+          "name": "FaultObservation",
+          "startLine": 168,
+          "endLine": 178,
+          "methods": [],
+          "properties": [
+            "fault_id",
+            "type",
+            "lateral_extent_inlines",
+            "twt_range_ms",
+            "strike_dip_deg",
+            "throw_ms",
+            "confidence",
+            "notes"
+          ]
+        },
+        {
+          "name": "AmplitudeZoneObservation",
+          "startLine": 181,
+          "endLine": 190,
+          "methods": [],
+          "properties": [
+            "zone_id",
+            "twt_range_ms",
+            "lateral_extent_inlines",
+            "character",
+            "possible_origin",
+            "confidence",
+            "notes"
+          ]
+        },
+        {
+          "name": "AxisMetadata",
+          "startLine": 193,
+          "endLine": 203,
+          "methods": [],
+          "properties": [
+            "twt_range_ms",
+            "inline_range",
+            "polarity_convention",
+            "display_units",
+            "color_polarity",
+            "confidence",
+            "notes"
+          ]
+        },
+        {
+          "name": "AcRiskComponents",
+          "startLine": 211,
+          "endLine": 246,
+          "methods": [
+            "cap_d_transform",
+            "compute",
+            "to_verdict"
+          ],
+          "properties": [
+            "u_phys",
+            "d_transform",
+            "b_cog",
+            "transform_stack",
+            "multi_view_passed",
+            "physics_validated"
+          ]
+        },
+        {
+          "name": "PerceptualInventory",
+          "startLine": 254,
+          "endLine": 346,
+          "methods": [
+            "_enforce_governance",
+            "to_json_canonical",
+            "to_seal_receipt"
+          ],
+          "properties": [
+            "inventory_id",
+            "image_path",
+            "input_image_sha256",
+            "reflectors",
+            "faults",
+            "amplitude_zones",
+            "axis_metadata",
+            "global_assessment",
+            "overall_confidence",
+            "model_id",
+            "prompt_id",
+            "raw_response_hash",
+            "transform_stack",
+            "ac_risk",
+            "verdict",
+            "human_review_required",
+            "timestamp_unix"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AmplitudeCharacter",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "ReflectorContinuity",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "PolarityConvention",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "FaultType",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "AmplitudeZoneCharacter",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "AmplitudeZoneOrigin",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "DisplayColorPolarity",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "DisplayUnits",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "VisionVerdict",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "AcRiskVerdict",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "ReflectorObservation",
+          "line": 154,
+          "isDefault": false
+        },
+        {
+          "name": "FaultObservation",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "AmplitudeZoneObservation",
+          "line": 181,
+          "isDefault": false
+        },
+        {
+          "name": "AxisMetadata",
+          "line": 193,
+          "isDefault": false
+        },
+        {
+          "name": "AcRiskComponents",
+          "line": 211,
+          "isDefault": false
+        },
+        {
+          "name": "PerceptualInventory",
+          "line": 254,
+          "isDefault": false
+        },
+        {
+          "name": "sha256_file",
+          "line": 354,
+          "isDefault": false
+        },
+        {
+          "name": "sha256_text",
+          "line": 363,
+          "isDefault": false
+        },
+        {
+          "name": "default_ac_risk_components",
+          "line": 368,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "cap_d_transform",
+          "callee": "min",
+          "lineNumber": 230
+        },
+        {
+          "caller": "cap_d_transform",
+          "callee": "max",
+          "lineNumber": 230
+        },
+        {
+          "caller": "compute",
+          "callee": "min",
+          "lineNumber": 235
+        },
+        {
+          "caller": "to_verdict",
+          "callee": "self.compute",
+          "lineNumber": 238
+        },
+        {
+          "caller": "_enforce_governance",
+          "callee": "ValueError",
+          "lineNumber": 291
+        },
+        {
+          "caller": "_enforce_governance",
+          "callee": "self.ac_risk.compute",
+          "lineNumber": 305
+        },
+        {
+          "caller": "_enforce_governance",
+          "callee": "ValueError",
+          "lineNumber": 315
+        },
+        {
+          "caller": "to_json_canonical",
+          "callee": "json.dumps",
+          "lineNumber": 327
+        },
+        {
+          "caller": "to_json_canonical",
+          "callee": "self.model_dump",
+          "lineNumber": 327
+        },
+        {
+          "caller": "to_seal_receipt",
+          "callee": "self.ac_risk.compute",
+          "lineNumber": 339
+        },
+        {
+          "caller": "to_seal_receipt",
+          "callee": "self.ac_risk.to_verdict",
+          "lineNumber": 340
+        },
+        {
+          "caller": "to_seal_receipt",
+          "callee": "len",
+          "lineNumber": 343
+        },
+        {
+          "caller": "to_seal_receipt",
+          "callee": "len",
+          "lineNumber": 344
+        },
+        {
+          "caller": "to_seal_receipt",
+          "callee": "len",
+          "lineNumber": 345
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "hashlib.sha256",
+          "lineNumber": 356
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "open",
+          "lineNumber": 357
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "iter",
+          "lineNumber": 358
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "f.read",
+          "lineNumber": 358
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "h.update",
+          "lineNumber": 359
+        },
+        {
+          "caller": "sha256_file",
+          "callee": "h.hexdigest",
+          "lineNumber": 360
+        },
+        {
+          "caller": "sha256_text",
+          "callee": "hashlib.sha256(text.encode(\"utf-8\")).hexdigest",
+          "lineNumber": 365
+        },
+        {
+          "caller": "sha256_text",
+          "callee": "hashlib.sha256",
+          "lineNumber": 365
+        },
+        {
+          "caller": "sha256_text",
+          "callee": "text.encode",
+          "lineNumber": 365
+        },
+        {
+          "caller": "default_ac_risk_components",
+          "callee": "invertibility.get",
+          "lineNumber": 403
+        },
+        {
+          "caller": "default_ac_risk_components",
+          "callee": "min",
+          "lineNumber": 406
+        },
+        {
+          "caller": "default_ac_risk_components",
+          "callee": "max",
+          "lineNumber": 406
+        },
+        {
+          "caller": "default_ac_risk_components",
+          "callee": "AcRiskComponents",
+          "lineNumber": 408
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 19,
+        "functionCount": 3,
+        "classCount": 16
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/run_vision_v1_demo.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 231,
+      "nonEmptyLines": 194,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 123,
+          "endLine": 205,
+          "params": []
+        },
+        {
+          "name": "_summarize",
+          "startLine": 208,
+          "endLine": 227,
+          "params": [
+            "name",
+            "r",
+            "out"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PerfectVisionMock",
+          "startLine": 36,
+          "endLine": 56,
+          "methods": [
+            "call"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NoisyVisionMock",
+          "startLine": 59,
+          "endLine": 76,
+          "methods": [
+            "call"
+          ],
+          "properties": []
+        },
+        {
+          "name": "RealVLMWrapper",
+          "startLine": 106,
+          "endLine": 113,
+          "methods": [
+            "call"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PerfectVisionMock",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "NoisyVisionMock",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "RealVLMWrapper",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "_summarize",
+          "line": 208,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "os.makedirs",
+          "lineNumber": 124
+        },
+        {
+          "caller": "main",
+          "callee": "time.time",
+          "lineNumber": 126
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 129
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "time.strftime",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "time.gmtime",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 131
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 134
+        },
+        {
+          "caller": "main",
+          "callee": "run_synthetic_forward_inverse",
+          "lineNumber": 135
+        },
+        {
+          "caller": "main",
+          "callee": "PerfectVisionMock",
+          "lineNumber": 136
+        },
+        {
+          "caller": "main",
+          "callee": "_summarize",
+          "lineNumber": 140
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 143
+        },
+        {
+          "caller": "main",
+          "callee": "run_synthetic_forward_inverse",
+          "lineNumber": 144
+        },
+        {
+          "caller": "main",
+          "callee": "NoisyVisionMock",
+          "lineNumber": 145
+        },
+        {
+          "caller": "main",
+          "callee": "_summarize",
+          "lineNumber": 150
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "run_synthetic_forward_inverse",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "RealVLMWrapper",
+          "lineNumber": 155
+        },
+        {
+          "caller": "main",
+          "callee": "_summarize",
+          "lineNumber": 159
+        },
+        {
+          "caller": "main",
+          "callee": "open",
+          "lineNumber": 163
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 164
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 165
+        },
+        {
+          "caller": "main",
+          "callee": "time.strftime",
+          "lineNumber": 165
+        },
+        {
+          "caller": "main",
+          "callee": "time.gmtime",
+          "lineNumber": 165
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 166
+        },
+        {
+          "caller": "main",
+          "callee": "time.strftime",
+          "lineNumber": 166
+        },
+        {
+          "caller": "main",
+          "callee": "time.gmtime",
+          "lineNumber": 166
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 167
+        },
+        {
+          "caller": "main",
+          "callee": "time.time",
+          "lineNumber": 167
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 169
+        },
+        {
+          "caller": "main",
+          "callee": "row.items",
+          "lineNumber": 170
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 172
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 173
+        },
+        {
+          "caller": "main",
+          "callee": "f.write",
+          "lineNumber": 174
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 203
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 204
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 205
+        },
+        {
+          "caller": "_summarize",
+          "callee": "round",
+          "lineNumber": 213
+        },
+        {
+          "caller": "_summarize",
+          "callee": "round",
+          "lineNumber": 218
+        },
+        {
+          "caller": "_summarize",
+          "callee": "round",
+          "lineNumber": 219
+        },
+        {
+          "caller": "_summarize",
+          "callee": "round",
+          "lineNumber": 220
+        },
+        {
+          "caller": "_summarize",
+          "callee": "out.append",
+          "lineNumber": 223
+        },
+        {
+          "caller": "_summarize",
+          "callee": "print",
+          "lineNumber": 224
+        },
+        {
+          "caller": "_summarize",
+          "callee": "print",
+          "lineNumber": 226
+        },
+        {
+          "caller": "_summarize",
+          "callee": "print",
+          "lineNumber": 227
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 2,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/engines/vision/vision_test_harness.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 484,
+      "nonEmptyLines": 416,
+      "functions": [
+        {
+          "name": "build_synthetic_2d_section",
+          "startLine": 112,
+          "endLine": 223,
+          "params": [
+            "n_inlines",
+            "n_twt_samples",
+            "twt_range_ms",
+            "dt_ms",
+            "wavelet_freq",
+            "noise_db",
+            "seed",
+            "reflectors",
+            "faults",
+            "bright_zones"
+          ]
+        },
+        {
+          "name": "render_section_to_png",
+          "startLine": 226,
+          "endLine": 258,
+          "params": [
+            "section_2d",
+            "gt",
+            "output_path",
+            "title"
+          ]
+        },
+        {
+          "name": "_ranges_overlap",
+          "startLine": 266,
+          "endLine": 272,
+          "params": [
+            "a",
+            "b",
+            "tolerance"
+          ]
+        },
+        {
+          "name": "compare_to_ground_truth",
+          "startLine": 275,
+          "endLine": 366,
+          "params": [
+            "inventory",
+            "gt"
+          ]
+        },
+        {
+          "name": "run_synthetic_forward_inverse",
+          "startLine": 397,
+          "endLine": 478,
+          "params": [
+            "backend",
+            "output_png",
+            "output_report",
+            "basin_context",
+            "seed"
+          ]
+        },
+        {
+          "name": "_write_report",
+          "startLine": 481,
+          "endLine": 484,
+          "params": [
+            "report",
+            "path"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "SyntheticGroundTruth",
+          "startLine": 73,
+          "endLine": 104,
+          "methods": [
+            "reflector_tolerance_ms",
+            "fault_tolerance_inlines",
+            "zone_tolerance_ms",
+            "zone_tolerance_inlines"
+          ],
+          "properties": [
+            "n_inlines",
+            "n_twt_samples",
+            "twt_range_ms",
+            "inline_range",
+            "reflectors",
+            "faults",
+            "bright_zones"
+          ]
+        },
+        {
+          "name": "HarnessReport",
+          "startLine": 375,
+          "endLine": 394,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "test_id",
+            "timestamp_unix",
+            "image_path",
+            "image_sha256",
+            "ground_truth_summary",
+            "vision_verdict",
+            "vision_human_review_required",
+            "vision_ac_risk",
+            "vision_ac_risk_verdict",
+            "n_vlm_reflectors",
+            "n_vlm_faults",
+            "n_vlm_zones",
+            "precision_recall",
+            "pass_fail"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SyntheticGroundTruth",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "build_synthetic_2d_section",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "render_section_to_png",
+          "line": 226,
+          "isDefault": false
+        },
+        {
+          "name": "_ranges_overlap",
+          "line": 266,
+          "isDefault": false
+        },
+        {
+          "name": "compare_to_ground_truth",
+          "line": 275,
+          "isDefault": false
+        },
+        {
+          "name": "HarnessReport",
+          "line": 374,
+          "isDefault": false
+        },
+        {
+          "name": "run_synthetic_forward_inverse",
+          "line": 397,
+          "isDefault": false
+        },
+        {
+          "name": "_write_report",
+          "line": 481,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.random.seed",
+          "lineNumber": 148
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.linspace",
+          "lineNumber": 150
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.zeros",
+          "lineNumber": 153
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.exp",
+          "lineNumber": 155
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "ricker_wavelet",
+          "lineNumber": 158
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "convolve_trace",
+          "lineNumber": 159
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.tile",
+          "lineNumber": 162
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "range",
+          "lineNumber": 168
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.interp",
+          "lineNumber": 171
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.ix_",
+          "lineNumber": 178
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.arange",
+          "lineNumber": 178
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "min",
+          "lineNumber": 178
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.std",
+          "lineNumber": 183
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "np.random.randn",
+          "lineNumber": 184
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "SyntheticGroundTruth",
+          "lineNumber": 187
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "enumerate",
+          "lineNumber": 200
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "enumerate",
+          "lineNumber": 210
+        },
+        {
+          "caller": "build_synthetic_2d_section",
+          "callee": "enumerate",
+          "lineNumber": 220
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "os.makedirs",
+          "lineNumber": 233
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "os.path.dirname",
+          "lineNumber": 233
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "max",
+          "lineNumber": 241
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "np.percentile",
+          "lineNumber": 241
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "np.abs",
+          "lineNumber": 241
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "plt.subplots",
+          "lineNumber": 242
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "ax.imshow",
+          "lineNumber": 243
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "ax.set_xlabel",
+          "lineNumber": 251
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "ax.set_ylabel",
+          "lineNumber": 252
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "ax.set_title",
+          "lineNumber": 253
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "plt.colorbar",
+          "lineNumber": 254
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "plt.tight_layout",
+          "lineNumber": 255
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "plt.savefig",
+          "lineNumber": 256
+        },
+        {
+          "caller": "render_section_to_png",
+          "callee": "plt.close",
+          "lineNumber": 257
+        },
+        {
+          "caller": "_ranges_overlap",
+          "callee": "max",
+          "lineNumber": 270
+        },
+        {
+          "caller": "_ranges_overlap",
+          "callee": "min",
+          "lineNumber": 271
+        },
+        {
+          "caller": "_ranges_overlap",
+          "callee": "max",
+          "lineNumber": 272
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "set",
+          "lineNumber": 283
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 284
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 287
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_ranges_overlap",
+          "lineNumber": 290
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "gt.reflector_tolerance_ms",
+          "lineNumber": 290
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "tp_r.append",
+          "lineNumber": 295
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "matched_gt_r.add",
+          "lineNumber": 303
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fp_r.append",
+          "lineNumber": 305
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 306
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fn_r.append",
+          "lineNumber": 308
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "set",
+          "lineNumber": 312
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 316
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "abs",
+          "lineNumber": 319
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "gt.fault_tolerance_inlines",
+          "lineNumber": 320
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "tp_f.append",
+          "lineNumber": 324
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "matched_gt_f.add",
+          "lineNumber": 325
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fp_f.append",
+          "lineNumber": 327
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 328
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fn_f.append",
+          "lineNumber": 330
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "set",
+          "lineNumber": 334
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 337
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_ranges_overlap",
+          "lineNumber": 340
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "gt.zone_tolerance_ms",
+          "lineNumber": 340
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_ranges_overlap",
+          "lineNumber": 341
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "gt.zone_tolerance_inlines",
+          "lineNumber": 342
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "tp_a.append",
+          "lineNumber": 348
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "matched_gt_a.add",
+          "lineNumber": 349
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fp_a.append",
+          "lineNumber": 351
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "enumerate",
+          "lineNumber": 352
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "fn_a.append",
+          "lineNumber": 354
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 357
+        },
+        {
+          "caller": "_pr",
+          "callee": "max",
+          "lineNumber": 357
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 357
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 357
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 358
+        },
+        {
+          "caller": "_pr",
+          "callee": "max",
+          "lineNumber": 358
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 358
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 358
+        },
+        {
+          "caller": "_pr",
+          "callee": "max",
+          "lineNumber": 359
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 360
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 360
+        },
+        {
+          "caller": "_pr",
+          "callee": "len",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_pr",
+          "lineNumber": 363
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_pr",
+          "lineNumber": 364
+        },
+        {
+          "caller": "compare_to_ground_truth",
+          "callee": "_pr",
+          "lineNumber": 365
+        },
+        {
+          "caller": "to_dict",
+          "callee": "dataclasses.asdict",
+          "lineNumber": 394
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "np.random.seed",
+          "lineNumber": 414
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "time.time",
+          "lineNumber": 415
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "build_synthetic_2d_section",
+          "lineNumber": 417
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "render_section_to_png",
+          "lineNumber": 418
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "hashlib.sha256(open(output_png, \"rb\").read()).hexdigest",
+          "lineNumber": 419
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "hashlib.sha256",
+          "lineNumber": 419
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "open(output_png, \"rb\").read",
+          "lineNumber": 419
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "open",
+          "lineNumber": 419
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "MiniMaxVLMAdapter",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "adapter.interpret",
+          "lineNumber": 422
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "int",
+          "lineNumber": 428
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "HarnessReport",
+          "lineNumber": 430
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 435
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 435
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 435
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "_write_report",
+          "lineNumber": 446
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "compare_to_ground_truth",
+          "lineNumber": 450
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "HarnessReport",
+          "lineNumber": 457
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 463
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 464
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 465
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "inv.ac_risk.compute",
+          "lineNumber": 469
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "inv.ac_risk.to_verdict",
+          "lineNumber": 470
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 471
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 472
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "len",
+          "lineNumber": 473
+        },
+        {
+          "caller": "run_synthetic_forward_inverse",
+          "callee": "_write_report",
+          "lineNumber": 477
+        },
+        {
+          "caller": "_write_report",
+          "callee": "os.makedirs",
+          "lineNumber": 482
+        },
+        {
+          "caller": "_write_report",
+          "callee": "os.path.dirname",
+          "lineNumber": 482
+        },
+        {
+          "caller": "_write_report",
+          "callee": "open",
+          "lineNumber": 483
+        },
+        {
+          "caller": "_write_report",
+          "callee": "json.dump",
+          "lineNumber": 484
+        },
+        {
+          "caller": "_write_report",
+          "callee": "report.to_dict",
+          "lineNumber": 484
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 6,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_core/engines/well/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 8,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/engines/well/desurvey_core.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 285,
+      "nonEmptyLines": 246,
+      "functions": [
+        {
+          "name": "desurvey",
+          "startLine": 56,
+          "endLine": 285,
+          "params": [
+            "well_id",
+            "collar",
+            "survey",
+            "method",
+            "declination_deg",
+            "kb_elevation_m",
+            "step_size_m",
+            "crs_in",
+            "crs_out"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "desurvey",
+          "line": 56,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "desurvey",
+          "callee": "isinstance",
+          "lineNumber": 104
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 105
+        },
+        {
+          "caller": "desurvey",
+          "callee": "isinstance",
+          "lineNumber": 106
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 107
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 112
+        },
+        {
+          "caller": "desurvey",
+          "callee": "isinstance",
+          "lineNumber": 114
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 115
+        },
+        {
+          "caller": "desurvey",
+          "callee": "type",
+          "lineNumber": 115
+        },
+        {
+          "caller": "desurvey",
+          "callee": "isinstance",
+          "lineNumber": 116
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 117
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 118
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 119
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 119
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 121
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 132
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 135
+        },
+        {
+          "caller": "desurvey",
+          "callee": "range",
+          "lineNumber": 136
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 136
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 138
+        },
+        {
+          "caller": "desurvey",
+          "callee": "math.isnan",
+          "lineNumber": 139
+        },
+        {
+          "caller": "desurvey",
+          "callee": "math.isinf",
+          "lineNumber": 139
+        },
+        {
+          "caller": "desurvey",
+          "callee": "ValueError",
+          "lineNumber": 140
+        },
+        {
+          "caller": "desurvey",
+          "callee": "sorted",
+          "lineNumber": 143
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 143
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 144
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 145
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 148
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.asarray",
+          "lineNumber": 151
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.asarray",
+          "lineNumber": 152
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 152
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.asarray",
+          "lineNumber": 153
+        },
+        {
+          "caller": "desurvey",
+          "callee": "mincurve.minimum_curvature",
+          "lineNumber": 157
+        },
+        {
+          "caller": "desurvey",
+          "callee": "_tan_mod.balanced_tan",
+          "lineNumber": 161
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.zeros_like",
+          "lineNumber": 162
+        },
+        {
+          "caller": "desurvey",
+          "callee": "pyproj.Transformer.from_crs",
+          "lineNumber": 171
+        },
+        {
+          "caller": "desurvey",
+          "callee": "transformer.transform",
+          "lineNumber": 172
+        },
+        {
+          "caller": "desurvey",
+          "callee": "transformer.transform",
+          "lineNumber": 174
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 179
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 180
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 186
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 187
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.full_like",
+          "lineNumber": 189
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.arange",
+          "lineNumber": 193
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 193
+        },
+        {
+          "caller": "desurvey",
+          "callee": "rows.append",
+          "lineNumber": 196
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 198
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 198
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 199
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 199
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 199
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 200
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 200
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 200
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 201
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 201
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 201
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 202
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 202
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 202
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 203
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 203
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 203
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 204
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 204
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.interp",
+          "lineNumber": 204
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 209
+        },
+        {
+          "caller": "desurvey",
+          "callee": "np.nanmax",
+          "lineNumber": 209
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 209
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 210
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 210
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 211
+        },
+        {
+          "caller": "desurvey",
+          "callee": "math.sqrt",
+          "lineNumber": 211
+        },
+        {
+          "caller": "desurvey",
+          "callee": "range",
+          "lineNumber": 218
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 218
+        },
+        {
+          "caller": "desurvey",
+          "callee": "max",
+          "lineNumber": 220
+        },
+        {
+          "caller": "desurvey",
+          "callee": "gaps.append",
+          "lineNumber": 222
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 225
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 227
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 229
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 231
+        },
+        {
+          "caller": "desurvey",
+          "callee": "float",
+          "lineNumber": 238
+        },
+        {
+          "caller": "desurvey",
+          "callee": "max",
+          "lineNumber": 238
+        },
+        {
+          "caller": "desurvey",
+          "callee": "min",
+          "lineNumber": 238
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 247
+        },
+        {
+          "caller": "desurvey",
+          "callee": "min",
+          "lineNumber": 248
+        },
+        {
+          "caller": "desurvey",
+          "callee": "missing.append",
+          "lineNumber": 252
+        },
+        {
+          "caller": "desurvey",
+          "callee": "missing.append",
+          "lineNumber": 254
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 254
+        },
+        {
+          "caller": "desurvey",
+          "callee": "missing.append",
+          "lineNumber": 256
+        },
+        {
+          "caller": "desurvey",
+          "callee": "len",
+          "lineNumber": 265
+        },
+        {
+          "caller": "desurvey",
+          "callee": "round",
+          "lineNumber": 274
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/enums/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 34,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/enums/statuses.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1007,
+      "nonEmptyLines": 903,
+      "functions": [
+        {
+          "name": "_compute_physics_guard_version",
+          "startLine": 7,
+          "endLine": 24,
+          "params": []
+        },
+        {
+          "name": "enforce_claim_state",
+          "startLine": 370,
+          "endLine": 415,
+          "params": [
+            "result",
+            "evidence_refs"
+          ]
+        },
+        {
+          "name": "get_standard_envelope",
+          "startLine": 418,
+          "endLine": 739,
+          "params": [
+            "primary_artifact",
+            "tool_class",
+            "execution_status",
+            "governance_status",
+            "artifact_status",
+            "uncertainty",
+            "evidence_refs",
+            "diagnostics",
+            "ui_resource_uri",
+            "claim_tag",
+            "claim_state",
+            "confidence_band",
+            "physics_guard",
+            "audit_receipt",
+            "humility_score",
+            "maruah_flag",
+            "tool_version",
+            "artifact_hash",
+            "depth_basis",
+            "depth_datum",
+            "session_id",
+            "trace_id",
+            "parent_trace_id",
+            "domain_law",
+            "physics_manifest_hash",
+            "actor_id",
+            "tool_name",
+            "next_best_actions",
+            "suggested_tool",
+            "can_auto_retry",
+            "missing_inputs_schema",
+            "confidence_policy",
+            "equations_used",
+            "sensitivity_to",
+            "perception_class",
+            "evidence_tag",
+            "canon_9_touched",
+            "vertical_trend",
+            "litho_class",
+            "strat_standard",
+            "cross_modal_stability",
+            "semantic_density_score",
+            "dim_spot_flag"
+          ]
+        },
+        {
+          "name": "_claim_to_metabolic",
+          "startLine": 819,
+          "endLine": 821,
+          "params": [
+            "claim_state"
+          ]
+        },
+        {
+          "name": "_get_confidence_for_claim",
+          "startLine": 824,
+          "endLine": 827,
+          "params": [
+            "claim_state"
+          ]
+        },
+        {
+          "name": "enrich_envelope_with_metabolic",
+          "startLine": 830,
+          "endLine": 1007,
+          "params": [
+            "envelope",
+            "tool_name",
+            "witness_type",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "required_next_tests",
+            "next_best_tool",
+            "cross_organ_handoff",
+            "session_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Dimension",
+          "startLine": 34,
+          "endLine": 43,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ExecutionStatus",
+          "startLine": 46,
+          "endLine": 51,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GovernanceStatus",
+          "startLine": 54,
+          "endLine": 59,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ArtifactStatus",
+          "startLine": 65,
+          "endLine": 74,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FloorStatus",
+          "startLine": 77,
+          "endLine": 81,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Runtime",
+          "startLine": 84,
+          "endLine": 87,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Transport",
+          "startLine": 90,
+          "endLine": 94,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ToolCategory",
+          "startLine": 97,
+          "endLine": 102,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ProspectVerdict",
+          "startLine": 105,
+          "endLine": 109,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimState",
+          "startLine": 112,
+          "endLine": 145,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimTag",
+          "startLine": 148,
+          "endLine": 151,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EvidenceTag",
+          "startLine": 154,
+          "endLine": 163,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LithoClass",
+          "startLine": 166,
+          "endLine": 174,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VerticalTrend",
+          "startLine": 177,
+          "endLine": 181,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DepthBasis",
+          "startLine": 184,
+          "endLine": 187,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PerceptionClass",
+          "startLine": 190,
+          "endLine": 195,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Canon9",
+          "startLine": 200,
+          "endLine": 209,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StratStandard",
+          "startLine": 233,
+          "endLine": 238,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_compute_physics_guard_version",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "Dimension",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "ExecutionStatus",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "GovernanceStatus",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "ArtifactStatus",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "FloorStatus",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "Runtime",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "Transport",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "ToolCategory",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "ProspectVerdict",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimState",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimTag",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceTag",
+          "line": 154,
+          "isDefault": false
+        },
+        {
+          "name": "LithoClass",
+          "line": 166,
+          "isDefault": false
+        },
+        {
+          "name": "VerticalTrend",
+          "line": 177,
+          "isDefault": false
+        },
+        {
+          "name": "DepthBasis",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "PerceptionClass",
+          "line": 190,
+          "isDefault": false
+        },
+        {
+          "name": "Canon9",
+          "line": 200,
+          "isDefault": false
+        },
+        {
+          "name": "StratStandard",
+          "line": 233,
+          "isDefault": false
+        },
+        {
+          "name": "enforce_claim_state",
+          "line": 370,
+          "isDefault": false
+        },
+        {
+          "name": "get_standard_envelope",
+          "line": 418,
+          "isDefault": false
+        },
+        {
+          "name": "_claim_to_metabolic",
+          "line": 819,
+          "isDefault": false
+        },
+        {
+          "name": "_get_confidence_for_claim",
+          "line": 824,
+          "isDefault": false
+        },
+        {
+          "name": "enrich_envelope_with_metabolic",
+          "line": 830,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_compute_physics_guard_version",
+          "callee": "_sp.check_output(\n                [\"git\", \"rev-parse\", \"--short\", \"HEAD\"],\n                cwd=str(_P(__file__).parent.parent.parent),\n                timeout=5,\n            )\n            .decode()\n            .strip",
+          "lineNumber": 14
+        },
+        {
+          "caller": "_compute_physics_guard_version",
+          "callee": "_sp.check_output(\n                [\"git\", \"rev-parse\", \"--short\", \"HEAD\"],\n                cwd=str(_P(__file__).parent.parent.parent),\n                timeout=5,\n            )\n            .decode",
+          "lineNumber": 14
+        },
+        {
+          "caller": "_compute_physics_guard_version",
+          "callee": "_sp.check_output",
+          "lineNumber": 14
+        },
+        {
+          "caller": "_compute_physics_guard_version",
+          "callee": "str",
+          "lineNumber": 16
+        },
+        {
+          "caller": "_compute_physics_guard_version",
+          "callee": "_P",
+          "lineNumber": 16
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 387
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 388
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 397
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 398
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 399
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "_governance_stability_map.get",
+          "lineNumber": 520
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 521
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "GovernanceStatus",
+          "lineNumber": 521
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "len",
+          "lineNumber": 525
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "{0: 0.0, 1: 0.3, 2: 0.3}.get",
+          "lineNumber": 528
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "max",
+          "lineNumber": 534
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "min",
+          "lineNumber": 534
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "datetime.now(timezone.utc).isoformat",
+          "lineNumber": 547
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "datetime.now",
+          "lineNumber": 547
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "GEOX_IDENTITY_CONTEXT.get",
+          "lineNumber": 553
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "governed_identity.get",
+          "lineNumber": 554
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "governed_identity.get",
+          "lineNumber": 555
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "governed_identity.get",
+          "lineNumber": 556
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "audit_receipt.get",
+          "lineNumber": 559
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 560
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "uuid.uuid4",
+          "lineNumber": 562
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "get_domain_law",
+          "lineNumber": 571
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "get_physics_manifest_hash",
+          "lineNumber": 572
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 575
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "primary_artifact.get",
+          "lineNumber": 578
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 604
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 606
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 607
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 621
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "primary_artifact.get",
+          "lineNumber": 622
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "round",
+          "lineNumber": 660
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "round",
+          "lineNumber": 661
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "bool",
+          "lineNumber": 662
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "enforce_claim_state",
+          "lineNumber": 666
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "str(\n            governance_status.value if hasattr(governance_status, \"value\") else governance_status\n            or \"\"\n        ).upper",
+          "lineNumber": 675
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "str",
+          "lineNumber": 675
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "hasattr",
+          "lineNumber": 676
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "len",
+          "lineNumber": 679
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "(claim_state or \"\").upper",
+          "lineNumber": 688
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "geox_apex_envelope",
+          "lineNumber": 699
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "primary_artifact.get",
+          "lineNumber": 700
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 707
+        },
+        {
+          "caller": "_claim_to_metabolic",
+          "callee": "_CLAIM_STATE_MAP.get",
+          "lineNumber": 821
+        },
+        {
+          "caller": "_get_confidence_for_claim",
+          "callee": "_claim_to_metabolic",
+          "lineNumber": 826
+        },
+        {
+          "caller": "_get_confidence_for_claim",
+          "callee": "_CLAIM_TO_CONFIDENCE.get",
+          "lineNumber": 827
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "envelope.get",
+          "lineNumber": 890
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 891
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "envelope.get",
+          "lineNumber": 891
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_claim_to_metabolic",
+          "lineNumber": 892
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_get_confidence_for_claim",
+          "lineNumber": 893
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_TOOL_METABOLIC_DEFAULTS.get",
+          "lineNumber": 896
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "tool_defaults.get",
+          "lineNumber": 897
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "tool_defaults.get",
+          "lineNumber": 898
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_TOOL_WITNESS_TYPE.get",
+          "lineNumber": 907
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_CONFIDENCE_UNCERTAINTY.get",
+          "lineNumber": 917
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 919
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "datetime.now",
+          "lineNumber": 919
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_get_pmh",
+          "lineNumber": 925
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_os_met.environ.get",
+          "lineNumber": 929
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get(\"vault_receipt\", {}).get",
+          "lineNumber": 960
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 960
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "isinstance",
+          "lineNumber": 961
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 961
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 979
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 980
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 981
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 994
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 24,
+        "functionCount": 6,
+        "classCount": 18
+      }
+    },
+    {
+      "path": "src/geox_core/envelopes/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/envelopes/ses_evidence.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 29,
+      "classes": [
+        {
+          "name": "SESEvidenceObject",
+          "startLine": 11,
+          "endLine": 34,
+          "methods": [
+            "__init__",
+            "_generate_physics_hash",
+            "wrap"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SESEvidenceObject",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "str",
+          "lineNumber": 13
+        },
+        {
+          "caller": "__init__",
+          "callee": "uuid.uuid4",
+          "lineNumber": 13
+        },
+        {
+          "caller": "__init__",
+          "callee": "datetime.utcnow().isoformat",
+          "lineNumber": 15
+        },
+        {
+          "caller": "__init__",
+          "callee": "datetime.utcnow",
+          "lineNumber": 15
+        },
+        {
+          "caller": "__init__",
+          "callee": "self._generate_physics_hash",
+          "lineNumber": 17
+        },
+        {
+          "caller": "_generate_physics_hash",
+          "callee": "hashlib.sha256(b\"mass_phi_sw_time_u_v_T_P_k_v1\").hexdigest",
+          "lineNumber": 21
+        },
+        {
+          "caller": "_generate_physics_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_core/gates/calibration_gate.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 250,
+      "nonEmptyLines": 197,
+      "functions": [
+        {
+          "name": "detect_calibration_level",
+          "startLine": 83,
+          "endLine": 105,
+          "params": [
+            "manifest"
+          ]
+        },
+        {
+          "name": "check_calibration_gate",
+          "startLine": 108,
+          "endLine": 164,
+          "params": [
+            "manifest",
+            "required_level"
+          ]
+        },
+        {
+          "name": "requires_calibration",
+          "startLine": 167,
+          "endLine": 214,
+          "params": [
+            "min_level"
+          ]
+        },
+        {
+          "name": "get_confidence_cap",
+          "startLine": 217,
+          "endLine": 232,
+          "params": [
+            "calibration_level"
+          ]
+        },
+        {
+          "name": "get_epistemic_label",
+          "startLine": 235,
+          "endLine": 250,
+          "params": [
+            "calibration_level"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CalibrationLevel",
+          "startLine": 16,
+          "endLine": 21,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CalibrationManifest",
+          "startLine": 42,
+          "endLine": 60,
+          "methods": [],
+          "properties": [
+            "sonic_log",
+            "rft_mdt",
+            "lot_xlot",
+            "offset_wells",
+            "basin_context_ref",
+            "literature_grounded"
+          ]
+        },
+        {
+          "name": "GateResult",
+          "startLine": 64,
+          "endLine": 80,
+          "methods": [],
+          "properties": [
+            "status",
+            "level",
+            "required_level",
+            "missing_inputs",
+            "reason"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CalibrationLevel",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "CalibrationManifest",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "GateResult",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "detect_calibration_level",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "check_calibration_gate",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "requires_calibration",
+          "line": 167,
+          "isDefault": false
+        },
+        {
+          "name": "get_confidence_cap",
+          "line": 217,
+          "isDefault": false
+        },
+        {
+          "name": "get_epistemic_label",
+          "line": 235,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "check_calibration_gate",
+          "callee": "detect_calibration_level",
+          "lineNumber": 122
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "level_order.index",
+          "lineNumber": 131
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "level_order.index",
+          "lineNumber": 132
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "GateResult",
+          "lineNumber": 136
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "missing.append",
+          "lineNumber": 149
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "missing.append",
+          "lineNumber": 151
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "missing.append",
+          "lineNumber": 153
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "missing.append",
+          "lineNumber": 156
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "GateResult",
+          "lineNumber": 158
+        },
+        {
+          "caller": "check_calibration_gate",
+          "callee": "', '.join",
+          "lineNumber": 163
+        },
+        {
+          "caller": "decorator",
+          "callee": "functools.wraps",
+          "lineNumber": 188
+        },
+        {
+          "caller": "wrapper",
+          "callee": "kwargs.get",
+          "lineNumber": 191
+        },
+        {
+          "caller": "wrapper",
+          "callee": "check_calibration_gate",
+          "lineNumber": 194
+        },
+        {
+          "caller": "wrapper",
+          "callee": "func",
+          "lineNumber": 210
+        },
+        {
+          "caller": "get_confidence_cap",
+          "callee": "caps.get",
+          "lineNumber": 232
+        },
+        {
+          "caller": "get_epistemic_label",
+          "callee": "labels.get",
+          "lineNumber": 250
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 5,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/gates/coverage_gate.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 323,
+      "nonEmptyLines": 264,
+      "functions": [
+        {
+          "name": "check_coverage_gate",
+          "startLine": 134,
+          "endLine": 249,
+          "params": [
+            "manifest",
+            "confidence"
+          ]
+        },
+        {
+          "name": "requires_coverage",
+          "startLine": 252,
+          "endLine": 323,
+          "params": [
+            "min_level"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CoverageLevel",
+          "startLine": 36,
+          "endLine": 42,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "InterpretationLayer",
+          "startLine": 53,
+          "endLine": 59,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LayerStatus",
+          "startLine": 63,
+          "endLine": 69,
+          "methods": [],
+          "properties": [
+            "layer",
+            "status",
+            "evidence",
+            "root_cause"
+          ]
+        },
+        {
+          "name": "CoverageManifest",
+          "startLine": 73,
+          "endLine": 115,
+          "methods": [
+            "compute_coverage_score",
+            "compute_confidence_gap"
+          ],
+          "properties": [
+            "observation_count",
+            "interval_thickness_100m_bins",
+            "coverage_score",
+            "sensing",
+            "recognition",
+            "interpretation_layer",
+            "institutional_memory",
+            "confidence",
+            "confidence_outruns_evidence",
+            "basin_context_ref",
+            "observation_sources"
+          ]
+        },
+        {
+          "name": "CoverageGateResult",
+          "startLine": 119,
+          "endLine": 131,
+          "methods": [],
+          "properties": [
+            "status",
+            "level",
+            "coverage_score",
+            "confidence",
+            "confidence_gap",
+            "confidence_outruns_evidence",
+            "layer_statuses",
+            "hold_reasons",
+            "epistemic_override",
+            "message"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CoverageLevel",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "InterpretationLayer",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "LayerStatus",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "CoverageManifest",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "CoverageGateResult",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "check_coverage_gate",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "requires_coverage",
+          "line": 252,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_coverage_score",
+          "callee": "min",
+          "lineNumber": 105
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "CoverageGateResult",
+          "lineNumber": 154
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "manifest.compute_coverage_score",
+          "lineNumber": 166
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "manifest.compute_confidence_gap",
+          "lineNumber": 167
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "COVERAGE_THRESHOLDS.items",
+          "lineNumber": 171
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "hold_reasons.append",
+          "lineNumber": 182
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "hold_reasons.append",
+          "lineNumber": 187
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "hold_reasons.append",
+          "lineNumber": 192
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "getattr",
+          "lineNumber": 203
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "hold_reasons.append",
+          "lineNumber": 207
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "any",
+          "lineNumber": 213
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "layer_statuses.values",
+          "lineNumber": 213
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "layer_statuses.get",
+          "lineNumber": 220
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "any",
+          "lineNumber": 221
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "layer_statuses.get",
+          "lineNumber": 222
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "hold_reasons.append",
+          "lineNumber": 226
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "bool",
+          "lineNumber": 231
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "CoverageGateResult",
+          "lineNumber": 234
+        },
+        {
+          "caller": "check_coverage_gate",
+          "callee": "', '.join",
+          "lineNumber": 247
+        },
+        {
+          "caller": "decorator",
+          "callee": "functools.wraps",
+          "lineNumber": 268
+        },
+        {
+          "caller": "wrapper",
+          "callee": "kwargs.get",
+          "lineNumber": 270
+        },
+        {
+          "caller": "wrapper",
+          "callee": "kwargs.get",
+          "lineNumber": 271
+        },
+        {
+          "caller": "wrapper",
+          "callee": "check_coverage_gate",
+          "lineNumber": 273
+        },
+        {
+          "caller": "wrapper",
+          "callee": "level_order.index",
+          "lineNumber": 282
+        },
+        {
+          "caller": "wrapper",
+          "callee": "level_order.index",
+          "lineNumber": 283
+        },
+        {
+          "caller": "wrapper",
+          "callee": "kwargs.items",
+          "lineNumber": 316
+        },
+        {
+          "caller": "wrapper",
+          "callee": "k.startswith",
+          "lineNumber": 317
+        },
+        {
+          "caller": "wrapper",
+          "callee": "func",
+          "lineNumber": 319
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 2,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/geox_replan_dag.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 368,
+      "nonEmptyLines": 314,
+      "functions": [
+        {
+          "name": "get_replan_trigger",
+          "startLine": 261,
+          "endLine": 263,
+          "params": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "get_invalidated_variables",
+          "startLine": 266,
+          "endLine": 269,
+          "params": [
+            "trigger_variable"
+          ]
+        },
+        {
+          "name": "get_downstream_tools",
+          "startLine": 272,
+          "endLine": 275,
+          "params": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "get_888_hold_on_replan",
+          "startLine": 278,
+          "endLine": 281,
+          "params": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "get_replan_severity",
+          "startLine": 284,
+          "endLine": 287,
+          "params": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "should_recompute_after",
+          "startLine": 290,
+          "endLine": 319,
+          "params": [
+            "trigger_variable",
+            "downstream_tool",
+            "evidence_age_hours"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "InvalidationSeverity",
+          "startLine": 37,
+          "endLine": 43,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReplanTrigger",
+          "startLine": 50,
+          "endLine": 72,
+          "methods": [],
+          "properties": [
+            "trigger_variable",
+            "invalidates",
+            "downstream_tools",
+            "severity",
+            "requires_888_hold",
+            "recompute_window_hours",
+            "evidence_version_required",
+            "superseded_by"
+          ]
+        },
+        {
+          "name": "EvidenceVersion",
+          "startLine": 248,
+          "endLine": 255,
+          "methods": [],
+          "properties": [
+            "variable",
+            "version",
+            "source",
+            "timestamp_utc",
+            "is_current"
+          ]
+        },
+        {
+          "name": "ReplanReceipt",
+          "startLine": 326,
+          "endLine": 350,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "trigger_variable",
+            "downstream_tool",
+            "action",
+            "reason",
+            "severity",
+            "requires_888_hold",
+            "timestamp_utc",
+            "evidence_version",
+            "superseded_tools"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "InvalidationSeverity",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "ReplanTrigger",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceVersion",
+          "line": 247,
+          "isDefault": false
+        },
+        {
+          "name": "get_replan_trigger",
+          "line": 261,
+          "isDefault": false
+        },
+        {
+          "name": "get_invalidated_variables",
+          "line": 266,
+          "isDefault": false
+        },
+        {
+          "name": "get_downstream_tools",
+          "line": 272,
+          "isDefault": false
+        },
+        {
+          "name": "get_888_hold_on_replan",
+          "line": 278,
+          "isDefault": false
+        },
+        {
+          "name": "get_replan_severity",
+          "line": 284,
+          "isDefault": false
+        },
+        {
+          "name": "should_recompute_after",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "ReplanReceipt",
+          "line": 325,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_replan_trigger",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 263
+        },
+        {
+          "caller": "get_invalidated_variables",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 268
+        },
+        {
+          "caller": "get_invalidated_variables",
+          "callee": "list",
+          "lineNumber": 269
+        },
+        {
+          "caller": "get_downstream_tools",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 274
+        },
+        {
+          "caller": "get_downstream_tools",
+          "callee": "list",
+          "lineNumber": 275
+        },
+        {
+          "caller": "get_888_hold_on_replan",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 280
+        },
+        {
+          "caller": "get_replan_severity",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 286
+        },
+        {
+          "caller": "should_recompute_after",
+          "callee": "REPLAN_DAG.get",
+          "lineNumber": 306
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 6,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/godel_wall.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 281,
+      "nonEmptyLines": 238,
+      "functions": [
+        {
+          "name": "_rung_of_assumption",
+          "startLine": 41,
+          "endLine": 46,
+          "params": [
+            "assumption_registry",
+            "assumption_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Claim",
+          "startLine": 53,
+          "endLine": 61,
+          "methods": [],
+          "properties": [
+            "claim_id",
+            "rung",
+            "description",
+            "depends_on_assumption_ids",
+            "created_at",
+            "seal_state"
+          ]
+        },
+        {
+          "name": "SealVerdict",
+          "startLine": 64,
+          "endLine": 74,
+          "methods": [],
+          "properties": [
+            "claim_id",
+            "state",
+            "recursive_dependency",
+            "cycle_path",
+            "reason",
+            "can_seal",
+            "required_evidence",
+            "reviewed_at"
+          ]
+        },
+        {
+          "name": "GodelWall",
+          "startLine": 78,
+          "endLine": 266,
+          "methods": [
+            "__init__",
+            "register_claim",
+            "is_sealable",
+            "_detect_cycle",
+            "seal",
+            "void",
+            "get",
+            "all",
+            "stats"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_rung_of_assumption",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "Claim",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "SealVerdict",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "GodelWall",
+          "line": 78,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_rung_of_assumption",
+          "callee": "assumption_registry.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "_rung_of_assumption",
+          "callee": "KeyError",
+          "lineNumber": 45
+        },
+        {
+          "caller": "__init__",
+          "callee": "threading.RLock",
+          "lineNumber": 83
+        },
+        {
+          "caller": "register_claim",
+          "callee": "ValueError",
+          "lineNumber": 96
+        },
+        {
+          "caller": "register_claim",
+          "callee": "description.strip",
+          "lineNumber": 97
+        },
+        {
+          "caller": "register_claim",
+          "callee": "ValueError",
+          "lineNumber": 98
+        },
+        {
+          "caller": "register_claim",
+          "callee": "Claim",
+          "lineNumber": 100
+        },
+        {
+          "caller": "register_claim",
+          "callee": "uuid.uuid4",
+          "lineNumber": 101
+        },
+        {
+          "caller": "register_claim",
+          "callee": "list",
+          "lineNumber": 104
+        },
+        {
+          "caller": "register_claim",
+          "callee": "ValueError",
+          "lineNumber": 108
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "self._claims.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "KeyError",
+          "lineNumber": 128
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "self._detect_cycle",
+          "lineNumber": 131
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "SealVerdict",
+          "lineNumber": 133
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "claim.model_copy",
+          "lineNumber": 143
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "SealVerdict",
+          "lineNumber": 150
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "claim.model_copy",
+          "lineNumber": 157
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "_rung_of_assumption",
+          "lineNumber": 164
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "invalid.append",
+          "lineNumber": 166
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "invalid.append",
+          "lineNumber": 169
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "SealVerdict",
+          "lineNumber": 172
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "\", \".join",
+          "lineNumber": 177
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "claim.model_copy",
+          "lineNumber": 184
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "SealVerdict",
+          "lineNumber": 188
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "len",
+          "lineNumber": 191
+        },
+        {
+          "caller": "is_sealable",
+          "callee": "claim.model_copy",
+          "lineNumber": 194
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "self._registry.all",
+          "lineNumber": 209
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "children_idx.setdefault(a.parent_assumption_id, []).append",
+          "lineNumber": 211
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "children_idx.setdefault",
+          "lineNumber": 211
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "set",
+          "lineNumber": 215
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "stack.pop",
+          "lineNumber": 218
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "len",
+          "lineNumber": 219
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "visited.add",
+          "lineNumber": 223
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "children_idx.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "_detect_cycle",
+          "callee": "stack.append",
+          "lineNumber": 225
+        },
+        {
+          "caller": "seal",
+          "callee": "self.is_sealable",
+          "lineNumber": 231
+        },
+        {
+          "caller": "seal",
+          "callee": "v.model_copy",
+          "lineNumber": 233
+        },
+        {
+          "caller": "seal",
+          "callee": "self._claims.get",
+          "lineNumber": 235
+        },
+        {
+          "caller": "seal",
+          "callee": "c.model_copy",
+          "lineNumber": 237
+        },
+        {
+          "caller": "void",
+          "callee": "self._claims.get",
+          "lineNumber": 243
+        },
+        {
+          "caller": "void",
+          "callee": "KeyError",
+          "lineNumber": 245
+        },
+        {
+          "caller": "void",
+          "callee": "c.model_copy",
+          "lineNumber": 246
+        },
+        {
+          "caller": "void",
+          "callee": "SealVerdict",
+          "lineNumber": 247
+        },
+        {
+          "caller": "get",
+          "callee": "self._claims.get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "all",
+          "callee": "list",
+          "lineNumber": 256
+        },
+        {
+          "caller": "all",
+          "callee": "self._claims.values",
+          "lineNumber": 256
+        },
+        {
+          "caller": "stats",
+          "callee": "len",
+          "lineNumber": 261
+        },
+        {
+          "caller": "stats",
+          "callee": "sum",
+          "lineNumber": 263
+        },
+        {
+          "caller": "stats",
+          "callee": "self._claims.values",
+          "lineNumber": 263
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 1,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/governance/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/governance/cascade_demotion.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 404,
+      "nonEmptyLines": 333,
+      "functions": [
+        {
+          "name": "cascade_demote",
+          "startLine": 223,
+          "endLine": 250,
+          "params": [
+            "lineage",
+            "falsified_assumption_id",
+            "evidence_ref",
+            "affected_seal_ids"
+          ]
+        },
+        {
+          "name": "honest_vs_lucky",
+          "startLine": 278,
+          "endLine": 308,
+          "params": [
+            "seal_history",
+            "falsifications"
+          ]
+        },
+        {
+          "name": "reseal_with_history",
+          "startLine": 349,
+          "endLine": 382,
+          "params": [
+            "new_state",
+            "prev_leaf",
+            "lineage",
+            "cascade",
+            "seal_history",
+            "falsifications"
+          ]
+        },
+        {
+          "name": "attach_lineage_to_envelope",
+          "startLine": 388,
+          "endLine": 404,
+          "params": [
+            "envelope",
+            "lineage",
+            "cascade"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AssumptionStatus",
+          "startLine": 42,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "RungOrigin",
+          "startLine": 52,
+          "endLine": 64,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Assumption",
+          "startLine": 71,
+          "endLine": 95,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "id",
+            "parent_id",
+            "rung_origin",
+            "introduced_by",
+            "description",
+            "status",
+            "falsified_by",
+            "falsified_at",
+            "dependents"
+          ]
+        },
+        {
+          "name": "AssumptionLineage",
+          "startLine": 98,
+          "endLine": 195,
+          "methods": [
+            "__init__",
+            "register",
+            "falsify",
+            "_walk_descendants",
+            "get",
+            "all_active",
+            "all_falsified",
+            "to_dict"
+          ],
+          "properties": []
+        },
+        {
+          "name": "CascadeResult",
+          "startLine": 202,
+          "endLine": 220,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "falsified_assumption_id",
+            "evidence_ref",
+            "cascaded_count",
+            "demoted_assumption_ids",
+            "affected_seal_ids",
+            "cascade_risk"
+          ]
+        },
+        {
+          "name": "HonestLuckyReport",
+          "startLine": 257,
+          "endLine": 275,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "n_seals",
+            "n_falsified",
+            "honesty_ratio",
+            "lucky_seal_ids",
+            "honest_seal_ids",
+            "cascade_history"
+          ]
+        },
+        {
+          "name": "ResealEnvelope",
+          "startLine": 315,
+          "endLine": 346,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "new_state_summary",
+            "prev_leaf",
+            "new_assumption_ids",
+            "demoted_assumption_ids",
+            "calibration_history",
+            "cascade_risk",
+            "honest_lucky_report",
+            "timestamp",
+            "new_payload_hash"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AssumptionStatus",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "RungOrigin",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "Assumption",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "AssumptionLineage",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "CascadeResult",
+          "line": 201,
+          "isDefault": false
+        },
+        {
+          "name": "cascade_demote",
+          "line": 223,
+          "isDefault": false
+        },
+        {
+          "name": "HonestLuckyReport",
+          "line": 256,
+          "isDefault": false
+        },
+        {
+          "name": "honest_vs_lucky",
+          "line": 278,
+          "isDefault": false
+        },
+        {
+          "name": "ResealEnvelope",
+          "line": 314,
+          "isDefault": false
+        },
+        {
+          "name": "reseal_with_history",
+          "line": 349,
+          "isDefault": false
+        },
+        {
+          "name": "attach_lineage_to_envelope",
+          "line": 388,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "int",
+          "lineNumber": 88
+        },
+        {
+          "caller": "to_dict",
+          "callee": "sorted",
+          "lineNumber": 94
+        },
+        {
+          "caller": "register",
+          "callee": "self._clock",
+          "lineNumber": 124
+        },
+        {
+          "caller": "register",
+          "callee": "hashlib.sha256(seed.encode()).hexdigest",
+          "lineNumber": 125
+        },
+        {
+          "caller": "register",
+          "callee": "hashlib.sha256",
+          "lineNumber": 125
+        },
+        {
+          "caller": "register",
+          "callee": "seed.encode",
+          "lineNumber": 125
+        },
+        {
+          "caller": "register",
+          "callee": "ValueError",
+          "lineNumber": 127
+        },
+        {
+          "caller": "register",
+          "callee": "Assumption",
+          "lineNumber": 128
+        },
+        {
+          "caller": "register",
+          "callee": "ValueError",
+          "lineNumber": 138
+        },
+        {
+          "caller": "register",
+          "callee": "self._assumptions[parent_id].dependents.add",
+          "lineNumber": 139
+        },
+        {
+          "caller": "register",
+          "callee": "self._by_parent.setdefault(parent_id, set()).add",
+          "lineNumber": 140
+        },
+        {
+          "caller": "register",
+          "callee": "self._by_parent.setdefault",
+          "lineNumber": 140
+        },
+        {
+          "caller": "register",
+          "callee": "set",
+          "lineNumber": 140
+        },
+        {
+          "caller": "falsify",
+          "callee": "KeyError",
+          "lineNumber": 155
+        },
+        {
+          "caller": "falsify",
+          "callee": "self._clock",
+          "lineNumber": 159
+        },
+        {
+          "caller": "falsify",
+          "callee": "self._walk_descendants",
+          "lineNumber": 162
+        },
+        {
+          "caller": "falsify",
+          "callee": "sorted",
+          "lineNumber": 166
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "set",
+          "lineNumber": 170
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "list",
+          "lineNumber": 171
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "self._by_parent.get",
+          "lineNumber": 171
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "set",
+          "lineNumber": 171
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "queue.pop",
+          "lineNumber": 173
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "visited.add",
+          "lineNumber": 176
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "queue.extend",
+          "lineNumber": 177
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "self._by_parent.get",
+          "lineNumber": 177
+        },
+        {
+          "caller": "_walk_descendants",
+          "callee": "set",
+          "lineNumber": 177
+        },
+        {
+          "caller": "get",
+          "callee": "self._assumptions.get",
+          "lineNumber": 181
+        },
+        {
+          "caller": "all_active",
+          "callee": "self._assumptions.values",
+          "lineNumber": 184
+        },
+        {
+          "caller": "all_falsified",
+          "callee": "self._assumptions.values",
+          "lineNumber": 187
+        },
+        {
+          "caller": "to_dict",
+          "callee": "len",
+          "lineNumber": 191
+        },
+        {
+          "caller": "to_dict",
+          "callee": "len",
+          "lineNumber": 192
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.all_active",
+          "lineNumber": 192
+        },
+        {
+          "caller": "to_dict",
+          "callee": "len",
+          "lineNumber": 193
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.all_falsified",
+          "lineNumber": 193
+        },
+        {
+          "caller": "to_dict",
+          "callee": "a.to_dict",
+          "lineNumber": 194
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self._assumptions.values",
+          "lineNumber": 194
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 219
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "lineage.all_falsified",
+          "lineNumber": 236
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "lineage.all_active",
+          "lineNumber": 237
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "KeyError",
+          "lineNumber": 239
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "lineage.falsify",
+          "lineNumber": 240
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "len",
+          "lineNumber": 241
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "lineage.all_active",
+          "lineNumber": 241
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "len",
+          "lineNumber": 241
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "len",
+          "lineNumber": 242
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "max",
+          "lineNumber": 242
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "CascadeResult",
+          "lineNumber": 243
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "len",
+          "lineNumber": 246
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "min",
+          "lineNumber": 249
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "max",
+          "lineNumber": 249
+        },
+        {
+          "caller": "cascade_demote",
+          "callee": "float",
+          "lineNumber": 249
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 271
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "f.get",
+          "lineNumber": 288
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "f.get",
+          "lineNumber": 288
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "s.get",
+          "lineNumber": 292
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "lucky.append",
+          "lineNumber": 296
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "str",
+          "lineNumber": 296
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "honest.append",
+          "lineNumber": 298
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "str",
+          "lineNumber": 298
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "max",
+          "lineNumber": 299
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "len",
+          "lineNumber": 299
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "len",
+          "lineNumber": 300
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "HonestLuckyReport",
+          "lineNumber": 301
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "len",
+          "lineNumber": 302
+        },
+        {
+          "caller": "honest_vs_lucky",
+          "callee": "len",
+          "lineNumber": 303
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 341
+        },
+        {
+          "caller": "to_dict",
+          "callee": "float",
+          "lineNumber": 343
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "honest_vs_lucky",
+          "lineNumber": 365
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "lineage.all_active",
+          "lineNumber": 366
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "json.dumps(new_state, sort_keys=True, default=str).encode",
+          "lineNumber": 369
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "json.dumps",
+          "lineNumber": 369
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "hashlib.sha256(payload).hexdigest",
+          "lineNumber": 370
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "hashlib.sha256",
+          "lineNumber": 370
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "s.get",
+          "lineNumber": 371
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "s.get",
+          "lineNumber": 371
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "ResealEnvelope",
+          "lineNumber": 372
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "str",
+          "lineNumber": 373
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "new_state.get",
+          "lineNumber": 373
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "hl.to_dict",
+          "lineNumber": 379
+        },
+        {
+          "caller": "reseal_with_history",
+          "callee": "time.time",
+          "lineNumber": 380
+        },
+        {
+          "caller": "attach_lineage_to_envelope",
+          "callee": "lineage.to_dict",
+          "lineNumber": 400
+        },
+        {
+          "caller": "attach_lineage_to_envelope",
+          "callee": "cascade.to_dict",
+          "lineNumber": 403
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 4,
+        "classCount": 7
+      }
+    },
+    {
+      "path": "src/geox_core/governance/event_bus.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 245,
+      "nonEmptyLines": 201,
+      "functions": [
+        {
+          "name": "get_bus",
+          "startLine": 207,
+          "endLine": 212,
+          "params": []
+        },
+        {
+          "name": "topic_for_tool",
+          "startLine": 226,
+          "endLine": 228,
+          "params": [
+            "tool_name"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "IntelligenceAtom",
+          "startLine": 44,
+          "endLine": 107,
+          "methods": [
+            "compute_id",
+            "seal",
+            "to_json",
+            "from_json"
+          ],
+          "properties": [
+            "atom_id",
+            "tool_name",
+            "tool_version",
+            "result",
+            "pai_receipt",
+            "epistemic_ladder_rung",
+            "godel_wall_state",
+            "constitutional_verdict",
+            "emitted_at",
+            "emitted_by_organ",
+            "topic",
+            "parent_atom_id",
+            "vault_ref",
+            "consumed_by"
+          ]
+        },
+        {
+          "name": "EventBus",
+          "startLine": 111,
+          "endLine": 200,
+          "methods": [
+            "__init__",
+            "available",
+            "connected",
+            "connect",
+            "disconnect",
+            "publish_atom",
+            "subscribe"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IntelligenceAtom",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "EventBus",
+          "line": 111,
+          "isDefault": false
+        },
+        {
+          "name": "get_bus",
+          "line": 207,
+          "isDefault": false
+        },
+        {
+          "name": "topic_for_tool",
+          "line": 226,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_id",
+          "callee": "json.dumps(\n            {\n                \"tool_name\": self.tool_name,\n                \"tool_version\": self.tool_version,\n                \"result\": self.result,\n                \"pai_receipt\": self.pai_receipt,\n                \"parent_atom_id\": self.parent_atom_id,\n            },\n            sort_keys=True,\n            default=str,\n        ).encode",
+          "lineNumber": 79
+        },
+        {
+          "caller": "compute_id",
+          "callee": "json.dumps",
+          "lineNumber": 79
+        },
+        {
+          "caller": "compute_id",
+          "callee": "hashlib.sha256(canonical).hexdigest",
+          "lineNumber": 90
+        },
+        {
+          "caller": "compute_id",
+          "callee": "hashlib.sha256",
+          "lineNumber": 90
+        },
+        {
+          "caller": "seal",
+          "callee": "self.compute_id",
+          "lineNumber": 95
+        },
+        {
+          "caller": "seal",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 97
+        },
+        {
+          "caller": "seal",
+          "callee": "datetime.now",
+          "lineNumber": 97
+        },
+        {
+          "caller": "to_json",
+          "callee": "json.dumps(asdict(self), default=str).encode",
+          "lineNumber": 102
+        },
+        {
+          "caller": "to_json",
+          "callee": "json.dumps",
+          "lineNumber": 102
+        },
+        {
+          "caller": "to_json",
+          "callee": "asdict",
+          "lineNumber": 102
+        },
+        {
+          "caller": "from_json",
+          "callee": "json.loads",
+          "lineNumber": 106
+        },
+        {
+          "caller": "from_json",
+          "callee": "data.decode",
+          "lineNumber": 106
+        },
+        {
+          "caller": "from_json",
+          "callee": "cls",
+          "lineNumber": 107
+        },
+        {
+          "caller": "connect",
+          "callee": "nats.connect",
+          "lineNumber": 139
+        },
+        {
+          "caller": "connect",
+          "callee": "self._nc.jetstream",
+          "lineNumber": 140
+        },
+        {
+          "caller": "connect",
+          "callee": "self._js.add_stream",
+          "lineNumber": 143
+        },
+        {
+          "caller": "connect",
+          "callee": "print",
+          "lineNumber": 153
+        },
+        {
+          "caller": "disconnect",
+          "callee": "self._nc.close",
+          "lineNumber": 159
+        },
+        {
+          "caller": "publish_atom",
+          "callee": "atom.seal",
+          "lineNumber": 168
+        },
+        {
+          "caller": "publish_atom",
+          "callee": "self.connect",
+          "lineNumber": 169
+        },
+        {
+          "caller": "publish_atom",
+          "callee": "self._js.publish",
+          "lineNumber": 172
+        },
+        {
+          "caller": "publish_atom",
+          "callee": "atom.to_json",
+          "lineNumber": 172
+        },
+        {
+          "caller": "publish_atom",
+          "callee": "print",
+          "lineNumber": 175
+        },
+        {
+          "caller": "subscribe",
+          "callee": "self.connect",
+          "lineNumber": 184
+        },
+        {
+          "caller": "_wrapped",
+          "callee": "IntelligenceAtom.from_json",
+          "lineNumber": 190
+        },
+        {
+          "caller": "_wrapped",
+          "callee": "handler",
+          "lineNumber": 191
+        },
+        {
+          "caller": "_wrapped",
+          "callee": "msg.ack",
+          "lineNumber": 192
+        },
+        {
+          "caller": "_wrapped",
+          "callee": "print",
+          "lineNumber": 194
+        },
+        {
+          "caller": "subscribe",
+          "callee": "self._js.subscribe",
+          "lineNumber": 196
+        },
+        {
+          "caller": "subscribe",
+          "callee": "print",
+          "lineNumber": 199
+        },
+        {
+          "caller": "get_bus",
+          "callee": "EventBus",
+          "lineNumber": 211
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 2,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_core/governance/geox_invariants.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 313,
+      "nonEmptyLines": 283,
+      "sections": [
+        {
+          "heading": "meta",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "physics_invariants",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "epistemics_invariants",
+          "level": 1,
+          "line": 83
+        },
+        {
+          "heading": "capital_governance_invariants",
+          "level": 1,
+          "line": 143
+        },
+        {
+          "heading": "operational_invariants",
+          "level": 1,
+          "line": 203
+        },
+        {
+          "heading": "failure_modes",
+          "level": 1,
+          "line": 262
+        },
+        {
+          "heading": "replan_triggers",
+          "level": 1,
+          "line": 279
+        },
+        {
+          "heading": "verdict",
+          "level": 1,
+          "line": 294
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "src/geox_core/governance/nobel_grade.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 418,
+      "nonEmptyLines": 342,
+      "functions": [
+        {
+          "name": "_check_shale_porosity_depth",
+          "startLine": 94,
+          "endLine": 106,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "_check_mass_balance",
+          "startLine": 109,
+          "endLine": 123,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "_check_darcy_sanity",
+          "startLine": 126,
+          "endLine": 137,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "_check_pressure_gradient",
+          "startLine": 140,
+          "endLine": 152,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "_check_capillary_limit",
+          "startLine": 155,
+          "endLine": 167,
+          "params": [
+            "p"
+          ]
+        },
+        {
+          "name": "create_uncertainty_band",
+          "startLine": 193,
+          "endLine": 202,
+          "params": [
+            "base",
+            "unit",
+            "killers"
+          ]
+        },
+        {
+          "name": "audit_hallucination",
+          "startLine": 219,
+          "endLine": 225,
+          "params": [
+            "claims",
+            "citations"
+          ]
+        },
+        {
+          "name": "is_high_risk_domain",
+          "startLine": 262,
+          "endLine": 264,
+          "params": [
+            "query"
+          ]
+        },
+        {
+          "name": "build_hold_manifest",
+          "startLine": 267,
+          "endLine": 278,
+          "params": [
+            "domain",
+            "known",
+            "unknown",
+            "dangerous_assumptions"
+          ]
+        },
+        {
+          "name": "run_discipline_panel",
+          "startLine": 303,
+          "endLine": 323,
+          "params": [
+            "opinions"
+          ]
+        },
+        {
+          "name": "scan_trauma",
+          "startLine": 384,
+          "endLine": 385,
+          "params": [
+            "scenario_tags"
+          ]
+        },
+        {
+          "name": "format_trauma_warning",
+          "startLine": 388,
+          "endLine": 392,
+          "params": [
+            "cases"
+          ]
+        },
+        {
+          "name": "_extract_float",
+          "startLine": 400,
+          "endLine": 410,
+          "params": [
+            "obj"
+          ]
+        },
+        {
+          "name": "_extract_str",
+          "startLine": 413,
+          "endLine": 418,
+          "params": [
+            "obj"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PhysicsViolation",
+          "startLine": 32,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "constraint",
+            "message",
+            "expected",
+            "actual",
+            "severity"
+          ]
+        },
+        {
+          "name": "PhysicsGuardResult",
+          "startLine": 41,
+          "endLine": 44,
+          "methods": [],
+          "properties": [
+            "passed",
+            "violations",
+            "fatal"
+          ]
+        },
+        {
+          "name": "PhysicsGuard",
+          "startLine": 47,
+          "endLine": 91,
+          "methods": [
+            "check"
+          ],
+          "properties": [
+            "LOCKS"
+          ]
+        },
+        {
+          "name": "RiskKiller",
+          "startLine": 176,
+          "endLine": 180,
+          "methods": [],
+          "properties": [
+            "rank",
+            "description",
+            "probability",
+            "mitigation"
+          ]
+        },
+        {
+          "name": "UncertaintyBand",
+          "startLine": 184,
+          "endLine": 190,
+          "methods": [],
+          "properties": [
+            "p10",
+            "p50",
+            "p90",
+            "unit",
+            "dependencies",
+            "killers"
+          ]
+        },
+        {
+          "name": "EvidenceCitation",
+          "startLine": 211,
+          "endLine": 216,
+          "methods": [],
+          "properties": [
+            "source_type",
+            "source_id",
+            "observation",
+            "confidence",
+            "page_or_depth"
+          ]
+        },
+        {
+          "name": "HoldManifest",
+          "startLine": 253,
+          "endLine": 259,
+          "methods": [],
+          "properties": [
+            "domain",
+            "known",
+            "unknown",
+            "dangerous_assumptions",
+            "signatory_required",
+            "ai_recommendation"
+          ]
+        },
+        {
+          "name": "DisciplineOpinion",
+          "startLine": 289,
+          "endLine": 293,
+          "methods": [],
+          "properties": [
+            "discipline",
+            "claim",
+            "confidence",
+            "risk_flag"
+          ]
+        },
+        {
+          "name": "DisciplinePanel",
+          "startLine": 297,
+          "endLine": 300,
+          "methods": [],
+          "properties": [
+            "opinions",
+            "synthesis",
+            "dominant_risk"
+          ]
+        },
+        {
+          "name": "TraumaCase",
+          "startLine": 332,
+          "endLine": 339,
+          "methods": [],
+          "properties": [
+            "name",
+            "year",
+            "basin",
+            "failure_mode",
+            "root_cause",
+            "lessons",
+            "similarity_tags"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PhysicsViolation",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "PhysicsGuardResult",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "PhysicsGuard",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "_check_shale_porosity_depth",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "_check_mass_balance",
+          "line": 109,
+          "isDefault": false
+        },
+        {
+          "name": "_check_darcy_sanity",
+          "line": 126,
+          "isDefault": false
+        },
+        {
+          "name": "_check_pressure_gradient",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "_check_capillary_limit",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "RiskKiller",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "UncertaintyBand",
+          "line": 183,
+          "isDefault": false
+        },
+        {
+          "name": "create_uncertainty_band",
+          "line": 193,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceCitation",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "audit_hallucination",
+          "line": 219,
+          "isDefault": false
+        },
+        {
+          "name": "HoldManifest",
+          "line": 252,
+          "isDefault": false
+        },
+        {
+          "name": "is_high_risk_domain",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "build_hold_manifest",
+          "line": 267,
+          "isDefault": false
+        },
+        {
+          "name": "DisciplineOpinion",
+          "line": 288,
+          "isDefault": false
+        },
+        {
+          "name": "DisciplinePanel",
+          "line": 296,
+          "isDefault": false
+        },
+        {
+          "name": "run_discipline_panel",
+          "line": 303,
+          "isDefault": false
+        },
+        {
+          "name": "TraumaCase",
+          "line": 331,
+          "isDefault": false
+        },
+        {
+          "name": "scan_trauma",
+          "line": 384,
+          "isDefault": false
+        },
+        {
+          "name": "format_trauma_warning",
+          "line": 388,
+          "isDefault": false
+        },
+        {
+          "name": "_extract_float",
+          "line": 400,
+          "isDefault": false
+        },
+        {
+          "name": "_extract_str",
+          "line": 413,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "check",
+          "callee": "violations.append",
+          "lineNumber": 88
+        },
+        {
+          "caller": "check",
+          "callee": "PhysicsGuardResult",
+          "lineNumber": 91
+        },
+        {
+          "caller": "check",
+          "callee": "len",
+          "lineNumber": 91
+        },
+        {
+          "caller": "_check_shale_porosity_depth",
+          "callee": "_extract_float",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_check_shale_porosity_depth",
+          "callee": "_extract_float",
+          "lineNumber": 96
+        },
+        {
+          "caller": "_check_shale_porosity_depth",
+          "callee": "_extract_str",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_check_shale_porosity_depth",
+          "callee": "lith.lower",
+          "lineNumber": 99
+        },
+        {
+          "caller": "_check_shale_porosity_depth",
+          "callee": "PhysicsViolation",
+          "lineNumber": 100
+        },
+        {
+          "caller": "_check_mass_balance",
+          "callee": "_extract_float",
+          "lineNumber": 110
+        },
+        {
+          "caller": "_check_mass_balance",
+          "callee": "_extract_float",
+          "lineNumber": 111
+        },
+        {
+          "caller": "_check_mass_balance",
+          "callee": "_extract_float",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_check_mass_balance",
+          "callee": "abs",
+          "lineNumber": 114
+        },
+        {
+          "caller": "_check_mass_balance",
+          "callee": "PhysicsViolation",
+          "lineNumber": 117
+        },
+        {
+          "caller": "_check_darcy_sanity",
+          "callee": "_extract_float",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_check_darcy_sanity",
+          "callee": "_extract_float",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_check_darcy_sanity",
+          "callee": "PhysicsViolation",
+          "lineNumber": 131
+        },
+        {
+          "caller": "_check_pressure_gradient",
+          "callee": "_extract_float",
+          "lineNumber": 141
+        },
+        {
+          "caller": "_check_pressure_gradient",
+          "callee": "_extract_float",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_check_pressure_gradient",
+          "callee": "PhysicsViolation",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_check_capillary_limit",
+          "callee": "_extract_float",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_check_capillary_limit",
+          "callee": "_extract_float",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_check_capillary_limit",
+          "callee": "PhysicsViolation",
+          "lineNumber": 160
+        },
+        {
+          "caller": "create_uncertainty_band",
+          "callee": "UncertaintyBand",
+          "lineNumber": 195
+        },
+        {
+          "caller": "create_uncertainty_band",
+          "callee": "round",
+          "lineNumber": 196
+        },
+        {
+          "caller": "create_uncertainty_band",
+          "callee": "round",
+          "lineNumber": 197
+        },
+        {
+          "caller": "create_uncertainty_band",
+          "callee": "round",
+          "lineNumber": 198
+        },
+        {
+          "caller": "create_uncertainty_band",
+          "callee": "sorted",
+          "lineNumber": 201
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "any",
+          "lineNumber": 222
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "claim.lower",
+          "lineNumber": 222
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "c.observation.lower",
+          "lineNumber": 222
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "c.observation.lower",
+          "lineNumber": 222
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "claim.lower",
+          "lineNumber": 222
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "ungrounded.append",
+          "lineNumber": 224
+        },
+        {
+          "caller": "audit_hallucination",
+          "callee": "len",
+          "lineNumber": 225
+        },
+        {
+          "caller": "is_high_risk_domain",
+          "callee": "query.lower().strip().replace",
+          "lineNumber": 263
+        },
+        {
+          "caller": "is_high_risk_domain",
+          "callee": "query.lower().strip",
+          "lineNumber": 263
+        },
+        {
+          "caller": "is_high_risk_domain",
+          "callee": "query.lower",
+          "lineNumber": 263
+        },
+        {
+          "caller": "is_high_risk_domain",
+          "callee": "HIGH_RISK_KEYWORDS.get",
+          "lineNumber": 264
+        },
+        {
+          "caller": "build_hold_manifest",
+          "callee": "HoldManifest",
+          "lineNumber": 273
+        },
+        {
+          "caller": "run_discipline_panel",
+          "callee": "' + '.join",
+          "lineNumber": 313
+        },
+        {
+          "caller": "run_discipline_panel",
+          "callee": "' + '.join",
+          "lineNumber": 315
+        },
+        {
+          "caller": "run_discipline_panel",
+          "callee": "DisciplinePanel",
+          "lineNumber": 319
+        },
+        {
+          "caller": "run_discipline_panel",
+          "callee": "sorted",
+          "lineNumber": 320
+        },
+        {
+          "caller": "scan_trauma",
+          "callee": "any",
+          "lineNumber": 385
+        },
+        {
+          "caller": "format_trauma_warning",
+          "callee": "\"\\n\".join",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_extract_float",
+          "callee": "obj.get",
+          "lineNumber": 402
+        },
+        {
+          "caller": "_extract_float",
+          "callee": "isinstance",
+          "lineNumber": 403
+        },
+        {
+          "caller": "_extract_float",
+          "callee": "float",
+          "lineNumber": 404
+        },
+        {
+          "caller": "_extract_float",
+          "callee": "isinstance",
+          "lineNumber": 405
+        },
+        {
+          "caller": "_extract_float",
+          "callee": "float",
+          "lineNumber": 407
+        },
+        {
+          "caller": "_extract_str",
+          "callee": "obj.get",
+          "lineNumber": 415
+        },
+        {
+          "caller": "_extract_str",
+          "callee": "isinstance",
+          "lineNumber": 416
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 24,
+        "functionCount": 14,
+        "classCount": 10
+      }
+    },
+    {
+      "path": "src/geox_core/governance/process_state_graph.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 402,
+      "nonEmptyLines": 334,
+      "functions": [
+        {
+          "name": "_make_initial_state",
+          "startLine": 87,
+          "endLine": 105,
+          "params": [
+            "origin",
+            "environment",
+            "igneous",
+            "metamorphic",
+            "transition",
+            "has_been_molten",
+            "has_been_exhumed"
+          ]
+        },
+        {
+          "name": "_state_key",
+          "startLine": 315,
+          "endLine": 325,
+          "params": [
+            "state"
+          ]
+        },
+        {
+          "name": "_states_match",
+          "startLine": 328,
+          "endLine": 347,
+          "params": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "name": "_self_test",
+          "startLine": 368,
+          "endLine": 398,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EdgeKind",
+          "startLine": 46,
+          "endLine": 56,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ProcessStateEdge",
+          "startLine": 59,
+          "endLine": 79,
+          "methods": [],
+          "properties": [
+            "from_state",
+            "to_state",
+            "edge_kind",
+            "probability",
+            "time_duration_myr",
+            "evidence_refs"
+          ]
+        },
+        {
+          "name": "ProcessStateGraph",
+          "startLine": 252,
+          "endLine": 307,
+          "methods": [
+            "find_outgoing",
+            "find_incoming",
+            "has_been_molten_reachable"
+          ],
+          "properties": [
+            "edges"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EdgeKind",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "ProcessStateEdge",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "_make_initial_state",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "ProcessStateGraph",
+          "line": 252,
+          "isDefault": false
+        },
+        {
+          "name": "_state_key",
+          "line": 315,
+          "isDefault": false
+        },
+        {
+          "name": "_states_match",
+          "line": 328,
+          "isDefault": false
+        },
+        {
+          "name": "_self_test",
+          "line": 368,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_make_initial_state",
+          "callee": "ProcessState",
+          "lineNumber": 97
+        },
+        {
+          "caller": "find_outgoing",
+          "callee": "_states_match",
+          "lineNumber": 275
+        },
+        {
+          "caller": "find_incoming",
+          "callee": "_states_match",
+          "lineNumber": 279
+        },
+        {
+          "caller": "has_been_molten_reachable",
+          "callee": "set",
+          "lineNumber": 293
+        },
+        {
+          "caller": "has_been_molten_reachable",
+          "callee": "_state_key",
+          "lineNumber": 295
+        },
+        {
+          "caller": "has_been_molten_reachable",
+          "callee": "target_visited.add",
+          "lineNumber": 298
+        },
+        {
+          "caller": "has_been_molten_reachable",
+          "callee": "self.find_outgoing",
+          "lineNumber": 303
+        },
+        {
+          "caller": "has_been_molten_reachable",
+          "callee": "self.has_been_molten_reachable",
+          "lineNumber": 304
+        },
+        {
+          "caller": "_self_test",
+          "callee": "ProcessStateGraph",
+          "lineNumber": 376
+        },
+        {
+          "caller": "_self_test",
+          "callee": "ProcessState",
+          "lineNumber": 379
+        },
+        {
+          "caller": "_self_test",
+          "callee": "graph.has_been_molten_reachable",
+          "lineNumber": 384
+        },
+        {
+          "caller": "_self_test",
+          "callee": "ProcessState",
+          "lineNumber": 387
+        },
+        {
+          "caller": "_self_test",
+          "callee": "graph.has_been_molten_reachable",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_self_test",
+          "callee": "graph.find_outgoing",
+          "lineNumber": 395
+        },
+        {
+          "caller": "_self_test",
+          "callee": "len",
+          "lineNumber": 396
+        },
+        {
+          "caller": "_self_test",
+          "callee": "print",
+          "lineNumber": 398
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 4,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/identity_context.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 8,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

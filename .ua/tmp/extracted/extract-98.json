@@ -1,0 +1,5550 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 25,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 23,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "src/geox_core/plot_specs/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 163,
+      "nonEmptyLines": 136,
+      "functions": [
+        {
+          "name": "_scan_forbidden",
+          "startLine": 140,
+          "endLine": 156,
+          "params": [
+            "obj",
+            "path"
+          ]
+        },
+        {
+          "name": "from_dict",
+          "startLine": 159,
+          "endLine": 163,
+          "params": [
+            "payload"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PlotSpec",
+          "startLine": 63,
+          "endLine": 137,
+          "methods": [
+            "validate"
+          ],
+          "properties": [
+            "renderer",
+            "plot_type",
+            "title",
+            "x_label",
+            "y_label",
+            "z_label",
+            "width_px",
+            "height_px",
+            "dpi",
+            "output_format",
+            "output_dir",
+            "depth_basis",
+            "depth_unit",
+            "claim_state",
+            "data_refs",
+            "curve_names",
+            "tops_refs",
+            "colors",
+            "line_styles",
+            "markers",
+            "normalize",
+            "annotations",
+            "basin_hint",
+            "tags"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PlotSpec",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "_scan_forbidden",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "from_dict",
+          "line": 159,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate",
+          "callee": "_scan_forbidden",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "isinstance",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "obj.items",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "str(k).lower",
+          "lineNumber": 145
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "str",
+          "lineNumber": 145
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "any",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "found.append",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "found.extend",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "_scan_forbidden",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "isinstance",
+          "lineNumber": 149
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "enumerate",
+          "lineNumber": 150
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "found.extend",
+          "lineNumber": 151
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "_scan_forbidden",
+          "lineNumber": 151
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "isinstance",
+          "lineNumber": 152
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "obj.lower",
+          "lineNumber": 153
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "any",
+          "lineNumber": 154
+        },
+        {
+          "caller": "_scan_forbidden",
+          "callee": "found.append",
+          "lineNumber": 155
+        },
+        {
+          "caller": "from_dict",
+          "callee": "PlotSpec.__dataclass_fields__.values",
+          "lineNumber": 161
+        },
+        {
+          "caller": "from_dict",
+          "callee": "payload.items",
+          "lineNumber": 162
+        },
+        {
+          "caller": "from_dict",
+          "callee": "PlotSpec",
+          "lineNumber": 163
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "src/geox_core/plot_specs/schemas.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 137,
+      "nonEmptyLines": 115,
+      "functions": [
+        {
+          "name": "_reject_forbidden_fields",
+          "startLine": 125,
+          "endLine": 137,
+          "params": [
+            "value",
+            "path"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PlotSpecValidationError",
+          "startLine": 29,
+          "endLine": 30,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DepthSpec",
+          "startLine": 33,
+          "endLine": 48,
+          "methods": [
+            "validate_range"
+          ],
+          "properties": [
+            "basis",
+            "unit",
+            "range",
+            "increasing_down"
+          ]
+        },
+        {
+          "name": "TrackSpec",
+          "startLine": 51,
+          "endLine": 71,
+          "methods": [
+            "validate_curves",
+            "default_resistivity_log_scale"
+          ],
+          "properties": [
+            "name",
+            "curves",
+            "scale",
+            "xlim",
+            "unit",
+            "overlay"
+          ]
+        },
+        {
+          "name": "RendererSpec",
+          "startLine": 74,
+          "endLine": 76,
+          "methods": [],
+          "properties": [
+            "primary",
+            "secondary"
+          ]
+        },
+        {
+          "name": "PlotSpec",
+          "startLine": 79,
+          "endLine": 122,
+          "methods": [
+            "reject_executable_fields",
+            "validate_evidence",
+            "canonical_tracks"
+          ],
+          "properties": [
+            "plot_type",
+            "artifact_refs",
+            "las_paths",
+            "depth",
+            "tracks",
+            "curve_aliases",
+            "annotations",
+            "renderer",
+            "outputs",
+            "claim_state"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PlotSpecValidationError",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "DepthSpec",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "TrackSpec",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "RendererSpec",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "PlotSpec",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "_reject_forbidden_fields",
+          "line": 125,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_range",
+          "callee": "len",
+          "lineNumber": 44
+        },
+        {
+          "caller": "validate_range",
+          "callee": "ValueError",
+          "lineNumber": 45
+        },
+        {
+          "caller": "validate_range",
+          "callee": "ValueError",
+          "lineNumber": 47
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "ValueError",
+          "lineNumber": 63
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "str(curve).strip().upper",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "str(curve).strip",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "str",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "str(curve).strip",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate_curves",
+          "callee": "str",
+          "lineNumber": 64
+        },
+        {
+          "caller": "default_resistivity_log_scale",
+          "callee": "curve.upper",
+          "lineNumber": 68
+        },
+        {
+          "caller": "default_resistivity_log_scale",
+          "callee": "curve_names.intersection",
+          "lineNumber": 69
+        },
+        {
+          "caller": "reject_executable_fields",
+          "callee": "_reject_forbidden_fields",
+          "lineNumber": 102
+        },
+        {
+          "caller": "validate_evidence",
+          "callee": "ValueError",
+          "lineNumber": 108
+        },
+        {
+          "caller": "validate_evidence",
+          "callee": "ValueError",
+          "lineNumber": 110
+        },
+        {
+          "caller": "canonical_tracks",
+          "callee": "tracks.append",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "isinstance",
+          "lineNumber": 126
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "value.items",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "str",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "key_text.lower",
+          "lineNumber": 129
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "any",
+          "lineNumber": 131
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "PlotSpecValidationError",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "_reject_forbidden_fields",
+          "lineNumber": 134
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "isinstance",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "enumerate",
+          "lineNumber": 136
+        },
+        {
+          "caller": "_reject_forbidden_fields",
+          "callee": "_reject_forbidden_fields",
+          "lineNumber": 137
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 1,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/plot_specs/validators.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 82,
+      "nonEmptyLines": 70,
+      "functions": [
+        {
+          "name": "validate_plot_spec",
+          "startLine": 24,
+          "endLine": 30,
+          "params": [
+            "raw_spec"
+          ]
+        },
+        {
+          "name": "build_well_panel_plot_spec",
+          "startLine": 33,
+          "endLine": 71,
+          "params": [
+            "las_paths",
+            "tracks",
+            "depth_range",
+            "output_formats",
+            "raw_plot_spec"
+          ]
+        },
+        {
+          "name": "_track_to_spec",
+          "startLine": 74,
+          "endLine": 82,
+          "params": [
+            "track"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "validate_plot_spec",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "build_well_panel_plot_spec",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "_track_to_spec",
+          "line": 74,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_plot_spec",
+          "callee": "PlotSpec.model_validate",
+          "lineNumber": 26
+        },
+        {
+          "caller": "validate_plot_spec",
+          "callee": "PlotSpecValidationError",
+          "lineNumber": 30
+        },
+        {
+          "caller": "validate_plot_spec",
+          "callee": "str",
+          "lineNumber": 30
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "dict",
+          "lineNumber": 42
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.setdefault",
+          "lineNumber": 43
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.setdefault",
+          "lineNumber": 44
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.setdefault",
+          "lineNumber": 45
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.setdefault",
+          "lineNumber": 47
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "_track_to_spec",
+          "lineNumber": 47
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "dict",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.get",
+          "lineNumber": 49
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "depth.setdefault",
+          "lineNumber": 50
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "merged.setdefault",
+          "lineNumber": 53
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "validate_plot_spec",
+          "lineNumber": 54
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "validate_plot_spec",
+          "lineNumber": 56
+        },
+        {
+          "caller": "build_well_panel_plot_spec",
+          "callee": "_track_to_spec",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_track_to_spec",
+          "callee": "str(track).strip().upper",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_track_to_spec",
+          "callee": "str(track).strip",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_track_to_spec",
+          "callee": "str",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_track_to_spec",
+          "callee": "DEFAULT_TRACK_UNITS.get",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/registry/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 23,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/registry/basin_context_loader.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 249,
+      "nonEmptyLines": 196,
+      "functions": [
+        {
+          "name": "_parse_group",
+          "startLine": 121,
+          "endLine": 137,
+          "params": [
+            "group_data"
+          ]
+        },
+        {
+          "name": "_parse_overpressure",
+          "startLine": 140,
+          "endLine": 150,
+          "params": [
+            "comp_data",
+            "name"
+          ]
+        },
+        {
+          "name": "_parse_geothermal",
+          "startLine": 153,
+          "endLine": 161,
+          "params": [
+            "geo_data"
+          ]
+        },
+        {
+          "name": "load_basin_context",
+          "startLine": 164,
+          "endLine": 230,
+          "params": [
+            "basin_name",
+            "registry_base"
+          ]
+        },
+        {
+          "name": "get_basin_context",
+          "startLine": 237,
+          "endLine": 249,
+          "params": [
+            "basin_name"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "BasinContextNotFoundError",
+          "startLine": 18,
+          "endLine": 21,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Group",
+          "startLine": 25,
+          "endLine": 40,
+          "methods": [],
+          "properties": [
+            "letter",
+            "age",
+            "lithology",
+            "typical_depth_m",
+            "depositional_environment",
+            "hc_role",
+            "hc_type",
+            "overpressure_top_seal",
+            "overpressure_compartments",
+            "confidence",
+            "note",
+            "porosity_pct",
+            "permeability_mD_max"
+          ]
+        },
+        {
+          "name": "Overpressure",
+          "startLine": 44,
+          "endLine": 53,
+          "methods": [],
+          "properties": [
+            "depth_top_m",
+            "stratigraphic_interval",
+            "controlling_seal",
+            "shape",
+            "mechanism",
+            "separate_compartment",
+            "note"
+          ]
+        },
+        {
+          "name": "Geothermal",
+          "startLine": 57,
+          "endLine": 64,
+          "methods": [],
+          "properties": [
+            "surface_heat_flow_mw_m2",
+            "source",
+            "stretching_factor_beta",
+            "geothermal_gradient_c_per_km",
+            "thermal_state"
+          ]
+        },
+        {
+          "name": "BasinContext",
+          "startLine": 68,
+          "endLine": 118,
+          "methods": [
+            "get_group",
+            "get_overpressure_seal"
+          ],
+          "properties": [
+            "basin",
+            "provenance",
+            "groups",
+            "overpressure",
+            "geothermal",
+            "confidence",
+            "tectonic_phases"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BasinContextNotFoundError",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "Group",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "Overpressure",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "Geothermal",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "BasinContext",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "_parse_group",
+          "line": 121,
+          "isDefault": false
+        },
+        {
+          "name": "_parse_overpressure",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "_parse_geothermal",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "load_basin_context",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "get_basin_context",
+          "line": 237,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_group",
+          "callee": "group.letter.upper",
+          "lineNumber": 99
+        },
+        {
+          "caller": "get_group",
+          "callee": "letter.upper",
+          "lineNumber": 99
+        },
+        {
+          "caller": "get_group",
+          "callee": "KeyError",
+          "lineNumber": 101
+        },
+        {
+          "caller": "get_overpressure_seal",
+          "callee": "KeyError",
+          "lineNumber": 117
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "Group",
+          "lineNumber": 123
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 125
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 129
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 130
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 131
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 132
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 134
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_parse_group",
+          "callee": "group_data.get",
+          "lineNumber": 136
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "Overpressure",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 144
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 145
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 146
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 147
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 148
+        },
+        {
+          "caller": "_parse_overpressure",
+          "callee": "comp_data.get",
+          "lineNumber": 149
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "Geothermal",
+          "lineNumber": 155
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "geo_data.get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "geo_data.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "geo_data.get",
+          "lineNumber": 158
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "geo_data.get",
+          "lineNumber": 159
+        },
+        {
+          "caller": "_parse_geothermal",
+          "callee": "geo_data.get",
+          "lineNumber": 160
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "Path",
+          "lineNumber": 189
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "Path",
+          "lineNumber": 191
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "basin_name.lower().replace",
+          "lineNumber": 194
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "basin_name.lower",
+          "lineNumber": 194
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "filepath.exists",
+          "lineNumber": 197
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "BasinContextNotFoundError",
+          "lineNumber": 198
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "open",
+          "lineNumber": 204
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "yaml.safe_load",
+          "lineNumber": 205
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "_parse_group",
+          "lineNumber": 208
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data[\"overpressure\"].items",
+          "lineNumber": 213
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "_parse_overpressure",
+          "lineNumber": 214
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "_parse_geothermal",
+          "lineNumber": 217
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 217
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 220
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "BasinContext",
+          "lineNumber": 222
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 223
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "load_basin_context",
+          "callee": "data.get",
+          "lineNumber": 228
+        },
+        {
+          "caller": "get_basin_context",
+          "callee": "load_basin_context",
+          "lineNumber": 248
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 5,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/registry/graph.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 90,
+      "nonEmptyLines": 90,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "nodes",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "edges",
+          "level": 1,
+          "line": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/registry/registry.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 704,
+      "nonEmptyLines": 704,
+      "sections": [
+        {
+          "heading": "geox_version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "total_skills",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "total_domains",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "skills_per_domain",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "domains",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "substrates",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "scales",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "horizons",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "recommended_first_nine",
+          "level": 1,
+          "line": 693
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "src/geox_core/renderers/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 228,
+      "nonEmptyLines": 172,
+      "functions": [
+        {
+          "name": "register_renderer",
+          "startLine": 27,
+          "endLine": 30,
+          "params": [
+            "name",
+            "func"
+          ]
+        },
+        {
+          "name": "dispatch",
+          "startLine": 33,
+          "endLine": 85,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "_digest_spec",
+          "startLine": 88,
+          "endLine": 104,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "_render_matplotlib",
+          "startLine": 110,
+          "endLine": 145,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "_render_plotly",
+          "startLine": 151,
+          "endLine": 169,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "_render_pillow",
+          "startLine": 175,
+          "endLine": 190,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "_render_pyvista",
+          "startLine": 196,
+          "endLine": 220,
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "register_renderer",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "dispatch",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "_digest_spec",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "_render_matplotlib",
+          "line": 110,
+          "isDefault": false
+        },
+        {
+          "name": "_render_plotly",
+          "line": 151,
+          "isDefault": false
+        },
+        {
+          "name": "_render_pillow",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "_render_pyvista",
+          "line": 196,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "register_renderer",
+          "callee": "logger.info",
+          "lineNumber": 30
+        },
+        {
+          "caller": "dispatch",
+          "callee": "list",
+          "lineNumber": 42
+        },
+        {
+          "caller": "dispatch",
+          "callee": "_APPROVED_RENDERERS.keys",
+          "lineNumber": 42
+        },
+        {
+          "caller": "dispatch",
+          "callee": "renderer_fn",
+          "lineNumber": 49
+        },
+        {
+          "caller": "dispatch",
+          "callee": "logger.exception",
+          "lineNumber": 51
+        },
+        {
+          "caller": "dispatch",
+          "callee": "result.get",
+          "lineNumber": 60
+        },
+        {
+          "caller": "dispatch",
+          "callee": "validate_artifact",
+          "lineNumber": 61
+        },
+        {
+          "caller": "dispatch",
+          "callee": "build_artifact_envelope",
+          "lineNumber": 71
+        },
+        {
+          "caller": "dispatch",
+          "callee": "str",
+          "lineNumber": 72
+        },
+        {
+          "caller": "dispatch",
+          "callee": "_digest_spec",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "sorted",
+          "lineNumber": 97
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "sorted",
+          "lineNumber": 98
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "hashlib.sha256",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "json.dumps(payload, sort_keys=True).encode",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_digest_spec",
+          "callee": "json.dumps",
+          "lineNumber": 104
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "matplotlib.use",
+          "lineNumber": 114
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "os.makedirs",
+          "lineNumber": 119
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "datetime.now(UTC).strftime",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "datetime.now",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "os.path.join",
+          "lineNumber": 121
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "plt.subplots",
+          "lineNumber": 123
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "ax.set_title",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "ax.set_xlabel",
+          "lineNumber": 125
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "ax.set_ylabel",
+          "lineNumber": 126
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "ax.text",
+          "lineNumber": 130
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "spec.plot_type.upper",
+          "lineNumber": 133
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "ax.axis",
+          "lineNumber": 140
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "fig.savefig",
+          "lineNumber": 142
+        },
+        {
+          "caller": "_render_matplotlib",
+          "callee": "plt.close",
+          "lineNumber": 143
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "os.makedirs",
+          "lineNumber": 155
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "datetime.now(UTC).strftime",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "datetime.now",
+          "lineNumber": 156
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "os.path.join",
+          "lineNumber": 157
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "open",
+          "lineNumber": 167
+        },
+        {
+          "caller": "_render_plotly",
+          "callee": "f.write",
+          "lineNumber": 168
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "os.makedirs",
+          "lineNumber": 181
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "datetime.now(UTC).strftime",
+          "lineNumber": 182
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "datetime.now",
+          "lineNumber": 182
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "os.path.join",
+          "lineNumber": 183
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "Image.new",
+          "lineNumber": 185
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "ImageDraw.Draw",
+          "lineNumber": 186
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "draw.text",
+          "lineNumber": 188
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "img.save",
+          "lineNumber": 189
+        },
+        {
+          "caller": "_render_pillow",
+          "callee": "spec.output_format.upper",
+          "lineNumber": 189
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "os.makedirs",
+          "lineNumber": 200
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "datetime.now(UTC).strftime",
+          "lineNumber": 201
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "datetime.now",
+          "lineNumber": 201
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "os.path.join",
+          "lineNumber": 202
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "pv.Plotter",
+          "lineNumber": 208
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "plotter.add_text",
+          "lineNumber": 209
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "plotter.add_mesh",
+          "lineNumber": 210
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "pv.Cube",
+          "lineNumber": 210
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "plotter.screenshot",
+          "lineNumber": 211
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "plotter.close",
+          "lineNumber": 212
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "Image.new",
+          "lineNumber": 216
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "ImageDraw.Draw",
+          "lineNumber": 217
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "draw.text",
+          "lineNumber": 218
+        },
+        {
+          "caller": "_render_pyvista",
+          "callee": "img.save",
+          "lineNumber": 219
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/renderers/base.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 26,
+      "classes": [
+        {
+          "name": "RendererError",
+          "startLine": 11,
+          "endLine": 12,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "RenderRequest",
+          "startLine": 16,
+          "endLine": 24,
+          "methods": [],
+          "properties": [
+            "plot_spec",
+            "output_dir",
+            "output_png",
+            "well_names",
+            "tops",
+            "basin_hint",
+            "well_ids",
+            "normalize"
+          ]
+        },
+        {
+          "name": "RenderResult",
+          "startLine": 28,
+          "endLine": 35,
+          "methods": [],
+          "properties": [
+            "ok",
+            "artifacts",
+            "validation",
+            "audit_path",
+            "warnings",
+            "claim_state",
+            "payload"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RendererError",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "RenderRequest",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "RenderResult",
+          "line": 27,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "src/geox_core/renderers/matplotlib_logs.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 89,
+      "nonEmptyLines": 78,
+      "functions": [
+        {
+          "name": "render_multiwell_correlation_panel",
+          "startLine": 13,
+          "endLine": 81,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "_pack_is_valid",
+          "startLine": 84,
+          "endLine": 89,
+          "params": [
+            "validation",
+            "required"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_multiwell_correlation_panel",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "_pack_is_valid",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "validate_output_path",
+          "lineNumber": 15
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "str",
+          "lineNumber": 16
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 16
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "render_correlation_panel",
+          "lineNumber": 18
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "panel_result.to_dict",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "dict",
+          "lineNumber": 31
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "payload.get",
+          "lineNumber": 31
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "artifacts.get",
+          "lineNumber": 34
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced_png).resolve",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(output_png).resolve",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 35
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced_png).replace",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "artifacts.get",
+          "lineNumber": 38
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced_csv).exists",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "str",
+          "lineNumber": 40
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(output_png).with_suffix",
+          "lineNumber": 40
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 40
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced_csv).replace",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "artifacts.get",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced).exists",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "str",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(output_png).with_suffix",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(produced).replace",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "verify_artifact_pack",
+          "lineNumber": 50
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "write_json_audit",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "str",
+          "lineNumber": 54
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path(artifacts[\"png_path\"]).with_suffix",
+          "lineNumber": 54
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "Path",
+          "lineNumber": 54
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "spec.model_dump",
+          "lineNumber": 56
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "verify_artifact_pack",
+          "lineNumber": 71
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "RenderResult",
+          "lineNumber": 73
+        },
+        {
+          "caller": "render_multiwell_correlation_panel",
+          "callee": "_pack_is_valid",
+          "lineNumber": 74
+        },
+        {
+          "caller": "_pack_is_valid",
+          "callee": "validation.get",
+          "lineNumber": 86
+        },
+        {
+          "caller": "_pack_is_valid",
+          "callee": "item.get",
+          "lineNumber": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/renderers/plotly_logs.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 18,
+      "functions": [
+        {
+          "name": "render_plotly_html_placeholder",
+          "startLine": 15,
+          "endLine": 24,
+          "params": [
+            "spec",
+            "output_html"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_plotly_html_placeholder",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_plotly_html_placeholder",
+          "callee": "validate_output_path",
+          "lineNumber": 17
+        },
+        {
+          "caller": "render_plotly_html_placeholder",
+          "callee": "Path(path).write_text",
+          "lineNumber": 18
+        },
+        {
+          "caller": "render_plotly_html_placeholder",
+          "callee": "Path",
+          "lineNumber": 18
+        },
+        {
+          "caller": "render_plotly_html_placeholder",
+          "callee": "spec.model_dump_json",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/replan_dag.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 304,
+      "nonEmptyLines": 239,
+      "functions": [
+        {
+          "name": "_register",
+          "startLine": 99,
+          "endLine": 112,
+          "params": [
+            "trigger_name",
+            "source_tool",
+            "affected_variables",
+            "propagation",
+            "reason"
+          ]
+        },
+        {
+          "name": "get_replan",
+          "startLine": 269,
+          "endLine": 289,
+          "params": [
+            "trigger_name",
+            "source_tool"
+          ]
+        },
+        {
+          "name": "requires_hold",
+          "startLine": 292,
+          "endLine": 295,
+          "params": [
+            "trigger_name",
+            "source_tool"
+          ]
+        },
+        {
+          "name": "get_downstream_variables",
+          "startLine": 298,
+          "endLine": 304,
+          "params": [
+            "trigger_name",
+            "source_tool"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Canon9Variable",
+          "startLine": 28,
+          "endLine": 37,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Propagation",
+          "startLine": 43,
+          "endLine": 54,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReplanTrigger",
+          "startLine": 60,
+          "endLine": 70,
+          "methods": [],
+          "properties": [
+            "trigger_name",
+            "source_tool",
+            "affected_variables",
+            "propagation",
+            "reason"
+          ]
+        },
+        {
+          "name": "ReplanEntry",
+          "startLine": 76,
+          "endLine": 85,
+          "methods": [],
+          "properties": [
+            "trigger_name",
+            "source_tool",
+            "affected_variables",
+            "propagation",
+            "reason"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Canon9Variable",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "Propagation",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "ReplanTrigger",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "ReplanEntry",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "_register",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "get_replan",
+          "line": 269,
+          "isDefault": false
+        },
+        {
+          "name": "requires_hold",
+          "line": 292,
+          "isDefault": false
+        },
+        {
+          "name": "get_downstream_variables",
+          "line": 298,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_register",
+          "callee": "ReplanEntry",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get_replan",
+          "callee": "REPLAN_TABLE.get",
+          "lineNumber": 284
+        },
+        {
+          "caller": "requires_hold",
+          "callee": "get_replan",
+          "lineNumber": 294
+        },
+        {
+          "caller": "get_downstream_variables",
+          "callee": "get_replan",
+          "lineNumber": 303
+        },
+        {
+          "caller": "get_downstream_variables",
+          "callee": "list",
+          "lineNumber": 304
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 4,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 37,
+      "nonEmptyLines": 35,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/artifacts/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/claim_envelope.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 523,
+      "nonEmptyLines": 414,
+      "functions": [
+        {
+          "name": "wrap_for_membrane",
+          "startLine": 475,
+          "endLine": 504,
+          "params": [
+            "tool_id",
+            "adapter_output",
+            "canon9_variable",
+            "envelope_class",
+            "**kwargs"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ClaimState",
+          "startLine": 39,
+          "endLine": 54,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimOrigin",
+          "startLine": 57,
+          "endLine": 64,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReasonCode",
+          "startLine": 67,
+          "endLine": 81,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AcRiskLevel",
+          "startLine": 84,
+          "endLine": 90,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EpistemicLabel",
+          "startLine": 93,
+          "endLine": 104,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "UnitSystem",
+          "startLine": 107,
+          "endLine": 123,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimEnvelope",
+          "startLine": 129,
+          "endLine": 442,
+          "methods": [
+            "model_dump_public",
+            "from_adapter_output"
+          ],
+          "properties": [
+            "tool_id",
+            "claim_state",
+            "epistemic_label",
+            "value",
+            "unit",
+            "canon9_variable",
+            "uncertainty_band",
+            "acrisk",
+            "verdict",
+            "evidence_for",
+            "evidence_against",
+            "caveats",
+            "artifact_ref",
+            "requires_arif",
+            "origin",
+            "reason_code",
+            "actor",
+            "timestamp_utc",
+            "_internal"
+          ]
+        },
+        {
+          "name": "GravityEnvelope",
+          "startLine": 448,
+          "endLine": 451,
+          "methods": [],
+          "properties": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "MagneticEnvelope",
+          "startLine": 454,
+          "endLine": 457,
+          "methods": [],
+          "properties": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "TectonicEnvelope",
+          "startLine": 460,
+          "endLine": 463,
+          "methods": [],
+          "properties": [
+            "canon9_variable"
+          ]
+        },
+        {
+          "name": "BathymetryEnvelope",
+          "startLine": 466,
+          "endLine": 469,
+          "methods": [],
+          "properties": [
+            "canon9_variable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClaimState",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimOrigin",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "ReasonCode",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "AcRiskLevel",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "EpistemicLabel",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "UnitSystem",
+          "line": 107,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimEnvelope",
+          "line": 129,
+          "isDefault": false
+        },
+        {
+          "name": "GravityEnvelope",
+          "line": 448,
+          "isDefault": false
+        },
+        {
+          "name": "MagneticEnvelope",
+          "line": 454,
+          "isDefault": false
+        },
+        {
+          "name": "TectonicEnvelope",
+          "line": 460,
+          "isDefault": false
+        },
+        {
+          "name": "BathymetryEnvelope",
+          "line": 466,
+          "isDefault": false
+        },
+        {
+          "name": "wrap_for_membrane",
+          "line": 475,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "model_dump_public",
+          "callee": "self.model_dump",
+          "lineNumber": 313
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get(\"epistemic_label\", \"UNKNOWN\").upper",
+          "lineNumber": 342
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 342
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "label_map.get",
+          "lineNumber": 352
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get(\"confidence\", \"MEDIUM\").upper",
+          "lineNumber": 355
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 355
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "conf_map.get",
+          "lineNumber": 361
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 364
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "\" \".join",
+          "lineNumber": 366
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 366
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 373
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 374
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 375
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 381
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 382
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 386
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 390
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "tool_id.split",
+          "lineNumber": 390
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 393
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "len",
+          "lineNumber": 399
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "len",
+          "lineNumber": 399
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "cls",
+          "lineNumber": 414
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 418
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 418
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 419
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 420
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 427
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 430
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 431
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "str",
+          "lineNumber": 434
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "uuid4",
+          "lineNumber": 434
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 435
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 436
+        },
+        {
+          "caller": "from_adapter_output",
+          "callee": "adapter_output.get",
+          "lineNumber": 439
+        },
+        {
+          "caller": "wrap_for_membrane",
+          "callee": "envelope_class.from_adapter_output",
+          "lineNumber": 498
+        },
+        {
+          "caller": "wrap_for_membrane",
+          "callee": "envelope.model_dump_public",
+          "lineNumber": 504
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 12,
+        "functionCount": 1,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/crust_provenance_map.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 524,
+      "nonEmptyLines": 480,
+      "functions": [
+        {
+          "name": "lookup",
+          "startLine": 448,
+          "endLine": 466,
+          "params": [
+            "hasterok_label"
+          ]
+        },
+        {
+          "name": "all_labels",
+          "startLine": 469,
+          "endLine": 471,
+          "params": []
+        },
+        {
+          "name": "reversible_calls",
+          "startLine": 474,
+          "endLine": 476,
+          "params": []
+        },
+        {
+          "name": "crust_zone_map",
+          "startLine": 479,
+          "endLine": 486,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "ProvenanceEntry",
+          "startLine": 69,
+          "endLine": 87,
+          "methods": [
+            "wilson_stage_name"
+          ],
+          "properties": [
+            "crust_zone",
+            "wilson_stage",
+            "hasterok_axis",
+            "provenance",
+            "notes",
+            "reversible_call"
+          ]
+        },
+        {
+          "name": "ProvenanceEntry",
+          "startLine": 422,
+          "endLine": 440,
+          "methods": [
+            "wilson_stage_name"
+          ],
+          "properties": [
+            "crust_zone",
+            "wilson_stage",
+            "hasterok_axis",
+            "provenance",
+            "notes",
+            "reversible_call"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ProvenanceEntry",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "ProvenanceEntry",
+          "line": 421,
+          "isDefault": false
+        },
+        {
+          "name": "lookup",
+          "line": 448,
+          "isDefault": false
+        },
+        {
+          "name": "all_labels",
+          "line": 469,
+          "isDefault": false
+        },
+        {
+          "name": "reversible_calls",
+          "line": 474,
+          "isDefault": false
+        },
+        {
+          "name": "crust_zone_map",
+          "line": 479,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "wilson_stage_name",
+          "callee": "names.get",
+          "lineNumber": 87
+        },
+        {
+          "caller": "wilson_stage_name",
+          "callee": "names.get",
+          "lineNumber": 440
+        },
+        {
+          "caller": "lookup",
+          "callee": "KeyError",
+          "lineNumber": 461
+        },
+        {
+          "caller": "lookup",
+          "callee": "len",
+          "lineNumber": 464
+        },
+        {
+          "caller": "all_labels",
+          "callee": "list",
+          "lineNumber": 471
+        },
+        {
+          "caller": "all_labels",
+          "callee": "CRUST_PROVENANCE_MAP.keys",
+          "lineNumber": 471
+        },
+        {
+          "caller": "reversible_calls",
+          "callee": "CRUST_PROVENANCE_MAP.items",
+          "lineNumber": 476
+        },
+        {
+          "caller": "crust_zone_map",
+          "callee": "defaultdict",
+          "lineNumber": 483
+        },
+        {
+          "caller": "crust_zone_map",
+          "callee": "CRUST_PROVENANCE_MAP.items",
+          "lineNumber": 484
+        },
+        {
+          "caller": "crust_zone_map",
+          "callee": "inv[entry.crust_zone].append",
+          "lineNumber": 485
+        },
+        {
+          "caller": "crust_zone_map",
+          "callee": "dict",
+          "lineNumber": 486
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 4,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/crust_vp_grammar.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 533,
+      "nonEmptyLines": 469,
+      "functions": [
+        {
+          "name": "vp_zone_classify",
+          "startLine": 252,
+          "endLine": 471,
+          "params": [
+            "vp_km_s",
+            "crust_thickness_km",
+            "depth_km",
+            "heat_flow_mw_m2"
+          ]
+        },
+        {
+          "name": "classify_column",
+          "startLine": 474,
+          "endLine": 487,
+          "params": [
+            "column"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CrustZone",
+          "startLine": 54,
+          "endLine": 64,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VpObservation",
+          "startLine": 114,
+          "endLine": 153,
+          "methods": [],
+          "properties": [
+            "vp_km_s",
+            "depth_km",
+            "uncertainty_km_s",
+            "source",
+            "method"
+          ]
+        },
+        {
+          "name": "CrustClassification",
+          "startLine": 156,
+          "endLine": 207,
+          "methods": [
+            "_no_self_alternative"
+          ],
+          "properties": [
+            "zone",
+            "confidence",
+            "crust_thickness_km",
+            "diagnostic_basis",
+            "alternative_zones",
+            "evidence_rank",
+            "source_paper"
+          ]
+        },
+        {
+          "name": "CrustColumn",
+          "startLine": 210,
+          "endLine": 244,
+          "methods": [],
+          "properties": [
+            "name",
+            "basin_context",
+            "observations",
+            "classifications",
+            "notes"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CrustZone",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "VpObservation",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "CrustClassification",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "CrustColumn",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "vp_zone_classify",
+          "line": 252,
+          "isDefault": false
+        },
+        {
+          "name": "classify_column",
+          "line": 474,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 283
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 284
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 293
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 294
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 312
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 316
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 320
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 321
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 322
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 333
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 334
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 336
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 337
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 338
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 349
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 353
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 355
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 356
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 357
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 373
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 376
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 378
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 379
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 380
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 395
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 396
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 398
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 399
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 400
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 414
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 415
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 417
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 418
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 419
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 433
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 438
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 440
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 441
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "diag.append",
+          "lineNumber": 451
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 453
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "alts.append",
+          "lineNumber": 454
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 455
+        },
+        {
+          "caller": "vp_zone_classify",
+          "callee": "CrustClassification",
+          "lineNumber": 464
+        },
+        {
+          "caller": "classify_column",
+          "callee": "vp_zone_classify",
+          "lineNumber": 481
+        },
+        {
+          "caller": "classify_column",
+          "callee": "classifications.append",
+          "lineNumber": 486
+        },
+        {
+          "caller": "classify_column",
+          "callee": "column.model_copy",
+          "lineNumber": 487
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 2,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/geox_1d_mcp.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 98,
+      "nonEmptyLines": 79,
+      "functions": [
+        {
+          "name": "as_float_list",
+          "startLine": 19,
+          "endLine": 30,
+          "params": [
+            "x"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "VaultReceiptLite",
+          "startLine": 33,
+          "endLine": 44,
+          "methods": [],
+          "properties": [
+            "receipt_id",
+            "tool",
+            "actor",
+            "threshold_ms",
+            "verdict",
+            "resource_uri",
+            "timestamp_utc",
+            "vault999_status",
+            "seal_allowed"
+          ]
+        },
+        {
+          "name": "TDFitResultMCP",
+          "startLine": 47,
+          "endLine": 62,
+          "methods": [],
+          "properties": [
+            "method",
+            "equation",
+            "coefficients",
+            "twt_ms",
+            "residuals_ms",
+            "rmse_ms",
+            "physics_guard",
+            "extrapolation_risk",
+            "fail_closed",
+            "residual_threshold_pct",
+            "residual_ok",
+            "vault_receipt",
+            "resource_uri"
+          ]
+        },
+        {
+          "name": "MistieResultMCP",
+          "startLine": 65,
+          "endLine": 81,
+          "methods": [],
+          "properties": [
+            "optimal_lag_ms",
+            "rms_mistie_ms",
+            "correlation_coefficient",
+            "residual_rms_normalized",
+            "verdict",
+            "threshold_used_ms",
+            "verdict_reason",
+            "residual_class",
+            "residual_description",
+            "per_interval_mistie",
+            "physics_guard",
+            "anti_hantu_flags",
+            "vault_receipt",
+            "resource_uri"
+          ]
+        },
+        {
+          "name": "WaveletResultMCP",
+          "startLine": 84,
+          "endLine": 98,
+          "methods": [],
+          "properties": [
+            "wavelet",
+            "condition_number",
+            "epsilon_used",
+            "new_synthetic",
+            "updated_mistie_ms",
+            "updated_correlation",
+            "phase_class",
+            "wavelet_length_ms",
+            "dt_ms",
+            "physics_guard",
+            "vault_receipt",
+            "resource_uri"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "as_float_list",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "VaultReceiptLite",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "TDFitResultMCP",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "MistieResultMCP",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "WaveletResultMCP",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "as_float_list",
+          "callee": "hasattr",
+          "lineNumber": 23
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "x.tolist",
+          "lineNumber": 24
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "isinstance",
+          "lineNumber": 25
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "float",
+          "lineNumber": 26
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "float",
+          "lineNumber": 27
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "isinstance",
+          "lineNumber": 28
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "float",
+          "lineNumber": 29
+        },
+        {
+          "caller": "as_float_list",
+          "callee": "float",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 1,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/geox_schemas.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 626,
+      "nonEmptyLines": 482,
+      "classes": [
+        {
+          "name": "DomainKind",
+          "startLine": 23,
+          "endLine": 33,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessKind",
+          "startLine": 36,
+          "endLine": 42,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "OperatorKind",
+          "startLine": 45,
+          "endLine": 52,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimKind",
+          "startLine": 55,
+          "endLine": 62,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "TextureKind",
+          "startLine": 65,
+          "endLine": 73,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Comparator",
+          "startLine": 76,
+          "endLine": 85,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VerdictCode",
+          "startLine": 88,
+          "endLine": 95,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SupportKind",
+          "startLine": 98,
+          "endLine": 105,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "UnitRef",
+          "startLine": 113,
+          "endLine": 117,
+          "methods": [],
+          "properties": [
+            "name",
+            "symbol",
+            "quantity"
+          ]
+        },
+        {
+          "name": "DomainRef",
+          "startLine": 120,
+          "endLine": 136,
+          "methods": [
+            "check_time_flag"
+          ],
+          "properties": [
+            "z_kind",
+            "z_unit",
+            "xy_kind",
+            "xy_unit",
+            "is_time_domain",
+            "crs_name",
+            "crs_epsg"
+          ]
+        },
+        {
+          "name": "StorageRef",
+          "startLine": 139,
+          "endLine": 148,
+          "methods": [],
+          "properties": [
+            "platform",
+            "ioobj_key",
+            "object_name",
+            "object_type",
+            "source_path",
+            "source_ref",
+            "survey_name",
+            "survey_uuid"
+          ]
+        },
+        {
+          "name": "ProvenanceStamp",
+          "startLine": 151,
+          "endLine": 159,
+          "methods": [],
+          "properties": [
+            "author",
+            "created_at",
+            "modified_at",
+            "machine_generated",
+            "workflow_name",
+            "workflow_version",
+            "notes"
+          ]
+        },
+        {
+          "name": "SamplingAxis",
+          "startLine": 162,
+          "endLine": 182,
+          "methods": [
+            "step_must_be_positive",
+            "stop_must_exceed_start"
+          ],
+          "properties": [
+            "name",
+            "start",
+            "stop",
+            "step",
+            "count",
+            "unit"
+          ]
+        },
+        {
+          "name": "XYPoint",
+          "startLine": 185,
+          "endLine": 188,
+          "methods": [],
+          "properties": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "name": "XYZPoint",
+          "startLine": 191,
+          "endLine": 195,
+          "methods": [],
+          "properties": [
+            "x",
+            "y",
+            "z"
+          ]
+        },
+        {
+          "name": "NumericRange",
+          "startLine": 198,
+          "endLine": 208,
+          "methods": [
+            "check_order"
+          ],
+          "properties": [
+            "min_value",
+            "max_value",
+            "unit"
+          ]
+        },
+        {
+          "name": "BaseSupportGeometry",
+          "startLine": 216,
+          "endLine": 220,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "domain",
+            "label"
+          ]
+        },
+        {
+          "name": "GridSupportGeometry",
+          "startLine": 223,
+          "endLine": 231,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "inline_axis",
+            "crossline_axis",
+            "z_axis",
+            "bbox_xy",
+            "is_regular_grid"
+          ]
+        },
+        {
+          "name": "StickSupportGeometry",
+          "startLine": 234,
+          "endLine": 241,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "stick_count",
+            "point_count",
+            "stick_id_field",
+            "ordering"
+          ]
+        },
+        {
+          "name": "TrackSupportGeometry",
+          "startLine": 244,
+          "endLine": 251,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "measured_depth_range",
+            "sample_step",
+            "sample_step_unit",
+            "trajectory_defined"
+          ]
+        },
+        {
+          "name": "PointSetSupportGeometry",
+          "startLine": 254,
+          "endLine": 259,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "point_count",
+            "has_unique_ids"
+          ]
+        },
+        {
+          "name": "VolumeSupportGeometry",
+          "startLine": 262,
+          "endLine": 274,
+          "methods": [],
+          "properties": [
+            "support_kind",
+            "inl_range",
+            "crl_range",
+            "z_range",
+            "step_inl",
+            "step_crl",
+            "step_z",
+            "lateral_stepout_traces",
+            "vertical_window_samples",
+            "effective_resolution_m"
+          ]
+        },
+        {
+          "name": "PolicyBand",
+          "startLine": 288,
+          "endLine": 314,
+          "methods": [
+            "validate_band_shape"
+          ],
+          "properties": [
+            "policy_name",
+            "metric_name",
+            "comparator",
+            "green_max",
+            "amber_max",
+            "red_min",
+            "lower_bound",
+            "upper_bound",
+            "unit",
+            "default_verdict_if_missing",
+            "rationale"
+          ]
+        },
+        {
+          "name": "PolicyEvaluation",
+          "startLine": 317,
+          "endLine": 332,
+          "methods": [
+            "metric_names_align"
+          ],
+          "properties": [
+            "metric_name",
+            "observed_value",
+            "unit",
+            "band",
+            "verdict",
+            "explanation"
+          ]
+        },
+        {
+          "name": "WitnessBase",
+          "startLine": 340,
+          "endLine": 351,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_kind",
+            "name",
+            "domain",
+            "support_geometry",
+            "storage_ref",
+            "provenance",
+            "tags",
+            "confidence",
+            "active"
+          ]
+        },
+        {
+          "name": "ManifoldWitness",
+          "startLine": 354,
+          "endLine": 363,
+          "methods": [],
+          "properties": [
+            "witness_kind",
+            "survey_bounds",
+            "z_sampling",
+            "crs_locked",
+            "z_transform_name",
+            "thermo_volume",
+            "reject_out_of_bounds"
+          ]
+        },
+        {
+          "name": "SurveyBounds",
+          "startLine": 366,
+          "endLine": 373,
+          "methods": [],
+          "properties": [
+            "inline_range",
+            "crossline_range",
+            "xy_bbox",
+            "z_range",
+            "nominal_inline_step",
+            "nominal_crossline_step"
+          ]
+        },
+        {
+          "name": "ThermoVolume",
+          "startLine": 376,
+          "endLine": 380,
+          "methods": [],
+          "properties": [
+            "pressure_range_mpa",
+            "temperature_range_c",
+            "notes"
+          ]
+        },
+        {
+          "name": "TruthWitness",
+          "startLine": 383,
+          "endLine": 398,
+          "methods": [
+            "requires_truth_payload"
+          ],
+          "properties": [
+            "witness_kind",
+            "well_id",
+            "well_name",
+            "markers",
+            "logs",
+            "d2t_calibration",
+            "hard_witness"
+          ]
+        },
+        {
+          "name": "MarkerObservation",
+          "startLine": 401,
+          "endLine": 414,
+          "methods": [
+            "at_least_one_position"
+          ],
+          "properties": [
+            "marker_name",
+            "md_value",
+            "tvdss_value",
+            "twt_value_ms",
+            "uncertainty",
+            "uncertainty_unit"
+          ]
+        },
+        {
+          "name": "LogCurveRef",
+          "startLine": 417,
+          "endLine": 424,
+          "methods": [],
+          "properties": [
+            "mnemonic",
+            "quantity",
+            "unit",
+            "sample_count",
+            "null_value",
+            "support_range"
+          ]
+        },
+        {
+          "name": "D2TCalibration",
+          "startLine": 427,
+          "endLine": 433,
+          "methods": [],
+          "properties": [
+            "exists",
+            "source",
+            "control_point_count",
+            "residual_rms_ms",
+            "quality_flag"
+          ]
+        },
+        {
+          "name": "ClaimWitness",
+          "startLine": 436,
+          "endLine": 452,
+          "methods": [],
+          "properties": [
+            "witness_kind",
+            "claim_kind",
+            "support",
+            "confidence",
+            "connected_body_count",
+            "largest_body_fraction",
+            "mask_id",
+            "uncertainty",
+            "interpreted_by_human",
+            "source_algorithm",
+            "version_label",
+            "z_range",
+            "overlays",
+            "parent_claim_id"
+          ]
+        },
+        {
+          "name": "AttributeOverlayRef",
+          "startLine": 455,
+          "endLine": 459,
+          "methods": [],
+          "properties": [
+            "name",
+            "unit",
+            "description"
+          ]
+        },
+        {
+          "name": "TextureWitness",
+          "startLine": 462,
+          "endLine": 477,
+          "methods": [],
+          "properties": [
+            "witness_kind",
+            "texture_kind",
+            "support",
+            "stats",
+            "parent_attribute_ids",
+            "operator_name",
+            "operator_params",
+            "active_set_id",
+            "uncertainty",
+            "u_source",
+            "wavelet_name",
+            "phase_reference",
+            "polarity_convention"
+          ]
+        },
+        {
+          "name": "TextureStats",
+          "startLine": 480,
+          "endLine": 485,
+          "methods": [],
+          "properties": [
+            "min_amplitude",
+            "max_amplitude",
+            "mean_amplitude",
+            "std_amplitude"
+          ]
+        },
+        {
+          "name": "FloorPolicy",
+          "startLine": 493,
+          "endLine": 500,
+          "methods": [],
+          "properties": [
+            "floor_name",
+            "enabled",
+            "hold_on_fail",
+            "note"
+          ]
+        },
+        {
+          "name": "IntentEnvelope",
+          "startLine": 503,
+          "endLine": 523,
+          "methods": [
+            "irreversible_requires_confirmation"
+          ],
+          "properties": [
+            "intent_id",
+            "operation_name",
+            "operator_name",
+            "project_name",
+            "reversible",
+            "requires_human_confirmation",
+            "target_witness_ids",
+            "floor_policies",
+            "policy_bands",
+            "io_parameters",
+            "audit_message"
+          ]
+        },
+        {
+          "name": "ContrastMetric",
+          "startLine": 526,
+          "endLine": 538,
+          "methods": [],
+          "properties": [
+            "metric_id",
+            "metric_name",
+            "value",
+            "unit",
+            "confidence",
+            "expected_value",
+            "residual_value",
+            "method_tag",
+            "description"
+          ]
+        },
+        {
+          "name": "ContrastLink",
+          "startLine": 541,
+          "endLine": 547,
+          "methods": [],
+          "properties": [
+            "left_witness_id",
+            "right_witness_id",
+            "operation"
+          ]
+        },
+        {
+          "name": "ContrastOperatorSpec",
+          "startLine": 550,
+          "endLine": 569,
+          "methods": [
+            "validate_op_logic"
+          ],
+          "properties": [
+            "op_kind",
+            "left_kind",
+            "left_support",
+            "right_kind",
+            "right_support",
+            "required_domain_match",
+            "interpolation_method",
+            "rationale"
+          ]
+        },
+        {
+          "name": "Physics9Item",
+          "startLine": 577,
+          "endLine": 581,
+          "methods": [],
+          "properties": [
+            "sym",
+            "name",
+            "val",
+            "unit"
+          ]
+        },
+        {
+          "name": "CausalSceneUISummary",
+          "startLine": 584,
+          "endLine": 596,
+          "methods": [],
+          "properties": [
+            "status",
+            "epoch",
+            "manifold",
+            "physics9",
+            "claims",
+            "truth",
+            "holds",
+            "floor_flags",
+            "simulation_flags",
+            "metadata"
+          ]
+        },
+        {
+          "name": "ContrastVerdict",
+          "startLine": 599,
+          "endLine": 626,
+          "methods": [
+            "synchronize_hold_flags"
+          ],
+          "properties": [
+            "verdict_id",
+            "intent_id",
+            "status",
+            "verdict_code",
+            "metrics",
+            "links",
+            "floors_evaluated",
+            "human_override",
+            "override_reason",
+            "override_authority_level",
+            "override_timestamp",
+            "commentary",
+            "policy_evaluations",
+            "triggered_floors",
+            "requires_hold",
+            "human_confirmation_required",
+            "witness_snapshot_ids",
+            "generated_at"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DomainKind",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessKind",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "OperatorKind",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimKind",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "TextureKind",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "Comparator",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "VerdictCode",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "SupportKind",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "UnitRef",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "DomainRef",
+          "line": 120,
+          "isDefault": false
+        },
+        {
+          "name": "StorageRef",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "ProvenanceStamp",
+          "line": 151,
+          "isDefault": false
+        },
+        {
+          "name": "SamplingAxis",
+          "line": 162,
+          "isDefault": false
+        },
+        {
+          "name": "XYPoint",
+          "line": 185,
+          "isDefault": false
+        },
+        {
+          "name": "XYZPoint",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "NumericRange",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "BaseSupportGeometry",
+          "line": 216,
+          "isDefault": false
+        },
+        {
+          "name": "GridSupportGeometry",
+          "line": 223,
+          "isDefault": false
+        },
+        {
+          "name": "StickSupportGeometry",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "TrackSupportGeometry",
+          "line": 244,
+          "isDefault": false
+        },
+        {
+          "name": "PointSetSupportGeometry",
+          "line": 254,
+          "isDefault": false
+        },
+        {
+          "name": "VolumeSupportGeometry",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "PolicyBand",
+          "line": 288,
+          "isDefault": false
+        },
+        {
+          "name": "PolicyEvaluation",
+          "line": 317,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessBase",
+          "line": 340,
+          "isDefault": false
+        },
+        {
+          "name": "ManifoldWitness",
+          "line": 354,
+          "isDefault": false
+        },
+        {
+          "name": "SurveyBounds",
+          "line": 366,
+          "isDefault": false
+        },
+        {
+          "name": "ThermoVolume",
+          "line": 376,
+          "isDefault": false
+        },
+        {
+          "name": "TruthWitness",
+          "line": 383,
+          "isDefault": false
+        },
+        {
+          "name": "MarkerObservation",
+          "line": 401,
+          "isDefault": false
+        },
+        {
+          "name": "LogCurveRef",
+          "line": 417,
+          "isDefault": false
+        },
+        {
+          "name": "D2TCalibration",
+          "line": 427,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimWitness",
+          "line": 436,
+          "isDefault": false
+        },
+        {
+          "name": "AttributeOverlayRef",
+          "line": 455,
+          "isDefault": false
+        },
+        {
+          "name": "TextureWitness",
+          "line": 462,
+          "isDefault": false
+        },
+        {
+          "name": "TextureStats",
+          "line": 480,
+          "isDefault": false
+        },
+        {
+          "name": "FloorPolicy",
+          "line": 493,
+          "isDefault": false
+        },
+        {
+          "name": "IntentEnvelope",
+          "line": 503,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastMetric",
+          "line": 526,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastLink",
+          "line": 541,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastOperatorSpec",
+          "line": 550,
+          "isDefault": false
+        },
+        {
+          "name": "Physics9Item",
+          "line": 577,
+          "isDefault": false
+        },
+        {
+          "name": "CausalSceneUISummary",
+          "line": 584,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastVerdict",
+          "line": 599,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "check_time_flag",
+          "callee": "ValueError",
+          "lineNumber": 133
+        },
+        {
+          "caller": "check_time_flag",
+          "callee": "ValueError",
+          "lineNumber": 135
+        },
+        {
+          "caller": "step_must_be_positive",
+          "callee": "ValueError",
+          "lineNumber": 175
+        },
+        {
+          "caller": "stop_must_exceed_start",
+          "callee": "ValueError",
+          "lineNumber": 181
+        },
+        {
+          "caller": "check_order",
+          "callee": "ValueError",
+          "lineNumber": 207
+        },
+        {
+          "caller": "validate_band_shape",
+          "callee": "ValueError",
+          "lineNumber": 308
+        },
+        {
+          "caller": "validate_band_shape",
+          "callee": "ValueError",
+          "lineNumber": 311
+        },
+        {
+          "caller": "validate_band_shape",
+          "callee": "ValueError",
+          "lineNumber": 313
+        },
+        {
+          "caller": "metric_names_align",
+          "callee": "ValueError",
+          "lineNumber": 331
+        },
+        {
+          "caller": "requires_truth_payload",
+          "callee": "ValueError",
+          "lineNumber": 397
+        },
+        {
+          "caller": "at_least_one_position",
+          "callee": "ValueError",
+          "lineNumber": 413
+        },
+        {
+          "caller": "irreversible_requires_confirmation",
+          "callee": "ValueError",
+          "lineNumber": 522
+        },
+        {
+          "caller": "validate_op_logic",
+          "callee": "ValueError",
+          "lineNumber": 568
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 44,
+        "functionCount": 0,
+        "classCount": 44
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/intelligence_flow.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 413,
+      "nonEmptyLines": 361,
+      "functions": [
+        {
+          "name": "is_valid_transition",
+          "startLine": 398,
+          "endLine": 400,
+          "params": [
+            "source",
+            "target"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "FlowLayer",
+          "startLine": 50,
+          "endLine": 64,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FlowStage",
+          "startLine": 67,
+          "endLine": 73,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ToolFamily",
+          "startLine": 76,
+          "endLine": 86,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FlowPacket",
+          "startLine": 218,
+          "endLine": 244,
+          "methods": [],
+          "properties": [
+            "packet_id",
+            "source_layer",
+            "target_layer",
+            "epistemic_rank",
+            "confidence",
+            "payload",
+            "source_tool",
+            "session_id",
+            "actor_id",
+            "timestamp",
+            "content_hash",
+            "doctrine_verdict",
+            "doctrine_audit_receipt"
+          ]
+        },
+        {
+          "name": "FlowSession",
+          "startLine": 252,
+          "endLine": 284,
+          "methods": [
+            "add_packet",
+            "_compute_hash"
+          ],
+          "properties": [
+            "session_id",
+            "basin_name",
+            "actor_id",
+            "started_at",
+            "packets",
+            "final_decision",
+            "final_verdict"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FlowLayer",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "FlowStage",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "ToolFamily",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "FlowPacket",
+          "line": 218,
+          "isDefault": false
+        },
+        {
+          "name": "FlowSession",
+          "line": 252,
+          "isDefault": false
+        },
+        {
+          "name": "is_valid_transition",
+          "line": 398,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "add_packet",
+          "callee": "self._compute_hash",
+          "lineNumber": 273
+        },
+        {
+          "caller": "add_packet",
+          "callee": "self.packets.append",
+          "lineNumber": 274
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "hash",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "tuple",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "sorted",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "packet.payload.items",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "hashlib.sha256(payload.encode()).hexdigest",
+          "lineNumber": 284
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 284
+        },
+        {
+          "caller": "_compute_hash",
+          "callee": "payload.encode",
+          "lineNumber": 284
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 1,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/kinabalu_corpus.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 294,
+      "nonEmptyLines": 233,
+      "classes": [
+        {
+          "name": "EvidenceSource",
+          "startLine": 42,
+          "endLine": 50,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EvidenceRank",
+          "startLine": 53,
+          "endLine": 59,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EdgeRelation",
+          "startLine": 62,
+          "endLine": 71,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Paper",
+          "startLine": 79,
+          "endLine": 127,
+          "methods": [
+            "compute_hash"
+          ],
+          "properties": [
+            "paper_id",
+            "title",
+            "authors",
+            "year",
+            "source",
+            "doi",
+            "journal_or_publisher",
+            "url",
+            "local_pdf_path",
+            "abstract",
+            "tier",
+            "kinabalu_relevance",
+            "sovereign_reviewed",
+            "content_hash"
+          ]
+        },
+        {
+          "name": "Claim",
+          "startLine": 135,
+          "endLine": 155,
+          "methods": [],
+          "properties": [
+            "claim_id",
+            "paper_id",
+            "claim_text",
+            "epistemic_rank",
+            "confidence",
+            "verbatim_quote",
+            "page_or_section",
+            "related_claim_ids",
+            "added_at"
+          ]
+        },
+        {
+          "name": "Edge",
+          "startLine": 163,
+          "endLine": 176,
+          "methods": [],
+          "properties": [
+            "edge_id",
+            "source_node_id",
+            "target_node_id",
+            "relation",
+            "claim",
+            "supporting_paper_ids"
+          ]
+        },
+        {
+          "name": "Node",
+          "startLine": 184,
+          "endLine": 198,
+          "methods": [],
+          "properties": [
+            "node_id",
+            "node_type",
+            "title",
+            "description",
+            "paper_id",
+            "claim_ids",
+            "metadata"
+          ]
+        },
+        {
+          "name": "Eureka",
+          "startLine": 206,
+          "endLine": 234,
+          "methods": [],
+          "properties": [
+            "eureka_id",
+            "title",
+            "claim_text",
+            "supporting_paper_ids",
+            "supporting_claim_ids",
+            "kinabalu_implication",
+            "ratified_by_arif",
+            "ratified_at",
+            "target_layer",
+            "tool_family"
+          ]
+        },
+        {
+          "name": "KinabaluCorpus",
+          "startLine": 242,
+          "endLine": 281,
+          "methods": [],
+          "properties": [
+            "corpus_id",
+            "owner",
+            "lineage",
+            "papers",
+            "claims",
+            "nodes",
+            "edges",
+            "eurekas",
+            "vector_dims",
+            "chunk_size",
+            "chunk_overlap",
+            "embedding_model",
+            "store_uri",
+            "graph_uri",
+            "built_at",
+            "forge_cycle"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EvidenceSource",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceRank",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "EdgeRelation",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "Paper",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "Claim",
+          "line": 135,
+          "isDefault": false
+        },
+        {
+          "name": "Edge",
+          "line": 163,
+          "isDefault": false
+        },
+        {
+          "name": "Node",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "Eureka",
+          "line": 206,
+          "isDefault": false
+        },
+        {
+          "name": "KinabaluCorpus",
+          "line": 242,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "compute_hash",
+          "callee": "','.join",
+          "lineNumber": 126
+        },
+        {
+          "caller": "compute_hash",
+          "callee": "hashlib.sha256(payload.encode()).hexdigest",
+          "lineNumber": 127
+        },
+        {
+          "caller": "compute_hash",
+          "callee": "hashlib.sha256",
+          "lineNumber": 127
+        },
+        {
+          "caller": "compute_hash",
+          "callee": "payload.encode",
+          "lineNumber": 127
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 0,
+        "classCount": 9
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/metabolic.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 844,
+      "nonEmptyLines": 679,
+      "functions": [
+        {
+          "name": "build_metabolic_output",
+          "startLine": 603,
+          "endLine": 844,
+          "params": [
+            "tool_name",
+            "primary_artifact",
+            "witness_type",
+            "claim_state",
+            "confidence_level",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "required_next_tests",
+            "next_best_tool",
+            "evidence_freshness_as_of",
+            "cross_organ_handoff",
+            "session_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ClaimState",
+          "startLine": 37,
+          "endLine": 48,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessType",
+          "startLine": 51,
+          "endLine": 66,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ModelTarget",
+          "startLine": 69,
+          "endLine": 77,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "OrganType",
+          "startLine": 80,
+          "endLine": 87,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ContrastSeverity",
+          "startLine": 90,
+          "endLine": 96,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AbstractionUse",
+          "startLine": 99,
+          "endLine": 104,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ConfidenceLevel",
+          "startLine": 107,
+          "endLine": 124,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessStatus",
+          "startLine": 127,
+          "endLine": 138,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StalenessRisk",
+          "startLine": 141,
+          "endLine": 146,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Witness",
+          "startLine": 154,
+          "endLine": 166,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_type",
+            "source_uri",
+            "raw_content",
+            "ingested_at",
+            "session_id",
+            "provenance"
+          ]
+        },
+        {
+          "name": "DecodedEntity",
+          "startLine": 174,
+          "endLine": 197,
+          "methods": [],
+          "properties": [
+            "entity_id",
+            "entity_type",
+            "detected_at_depth",
+            "detected_value",
+            "detection_confidence",
+            "perception_class",
+            "evidence_tag"
+          ]
+        },
+        {
+          "name": "AnomalousContrast",
+          "startLine": 205,
+          "endLine": 222,
+          "methods": [],
+          "properties": [
+            "contrast_id",
+            "contrast_domain",
+            "background_expectation",
+            "observed_deviation",
+            "candidate_causes",
+            "false_positive_risks",
+            "required_verification",
+            "severity"
+          ]
+        },
+        {
+          "name": "CandidateMeaning",
+          "startLine": 230,
+          "endLine": 250,
+          "methods": [],
+          "properties": [
+            "meaning_id",
+            "decoded_entity_id",
+            "possible_meanings",
+            "primary_interpretation",
+            "meaning_confidence",
+            "meaning_confidence_band",
+            "tests_needed_before_claim",
+            "ruling_out"
+          ]
+        },
+        {
+          "name": "ConstraintCheck",
+          "startLine": 258,
+          "endLine": 269,
+          "methods": [],
+          "properties": [
+            "constraint_id",
+            "constraint_type",
+            "rule_invoked",
+            "check_passed",
+            "failure_reason",
+            "evidence_required"
+          ]
+        },
+        {
+          "name": "ModelUpdate",
+          "startLine": 277,
+          "endLine": 301,
+          "methods": [],
+          "properties": [
+            "model_id",
+            "model_type",
+            "state_before",
+            "incoming_witnesses",
+            "proposed_updates",
+            "constraints_checked",
+            "state_after",
+            "confidence_delta",
+            "audit_receipt"
+          ]
+        },
+        {
+          "name": "AbstractionGuard",
+          "startLine": 309,
+          "endLine": 328,
+          "methods": [],
+          "properties": [
+            "metaphor",
+            "literal_claim",
+            "evidence_required",
+            "allowed_use",
+            "misuse_risk",
+            "violations"
+          ]
+        },
+        {
+          "name": "UncertaintyBand",
+          "startLine": 336,
+          "endLine": 346,
+          "methods": [],
+          "properties": [
+            "omega_0",
+            "uncertainty_range",
+            "major_unknowns",
+            "key_missing_evidence",
+            "claim_too_certain_flag"
+          ]
+        },
+        {
+          "name": "EvidenceFreshness",
+          "startLine": 354,
+          "endLine": 364,
+          "methods": [],
+          "properties": [
+            "as_of",
+            "expires_after_seconds",
+            "staleness_risk",
+            "requires_refresh",
+            "refresh_recommendation"
+          ]
+        },
+        {
+          "name": "CrossOrganHandoff",
+          "startLine": 372,
+          "endLine": 391,
+          "methods": [],
+          "properties": [
+            "next_best_organ",
+            "handoff_reason",
+            "handoff_payload",
+            "blocked_organs",
+            "blocked_reason",
+            "confidence_at_handoff"
+          ]
+        },
+        {
+          "name": "OrganConflict",
+          "startLine": 399,
+          "endLine": 426,
+          "methods": [],
+          "properties": [
+            "conflict_id",
+            "organ_a",
+            "organ_a_conclusion",
+            "organ_b",
+            "organ_b_conclusion",
+            "conflict_domain",
+            "resolution_status",
+            "partial_flag",
+            "recommended_action"
+          ]
+        },
+        {
+          "name": "MetabolicOutput",
+          "startLine": 434,
+          "endLine": 545,
+          "methods": [],
+          "properties": [
+            "organ",
+            "tool_name",
+            "session_id",
+            "witnesses_ingested",
+            "witness_type",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "model_target",
+            "abstraction_guard",
+            "uncertainty",
+            "evidence_freshness",
+            "required_next_tests",
+            "next_best_tool",
+            "cross_organ_handoff",
+            "claim_state",
+            "conflict_flags",
+            "confidence_level",
+            "audit_receipt",
+            "recommendation_only",
+            "execution_authorized",
+            "human_final_authority",
+            "requires_888_judge",
+            "timestamp_utc",
+            "domain_law",
+            "physics_manifest_hash"
+          ]
+        },
+        {
+          "name": "MetabolicCycle",
+          "startLine": 553,
+          "endLine": 580,
+          "methods": [],
+          "properties": [
+            "cycle_id",
+            "organ",
+            "session_id",
+            "witness_ingest",
+            "visual_decode",
+            "anomalous_contrast",
+            "meaning_generate",
+            "constraint_verify",
+            "model_update",
+            "final_output",
+            "claim_state",
+            "recommendation_only",
+            "execution_authorized",
+            "human_final_authority",
+            "requires_888_judge",
+            "timestamp_utc",
+            "total_steps"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClaimState",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessType",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "ModelTarget",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "OrganType",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastSeverity",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "AbstractionUse",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "ConfidenceLevel",
+          "line": 107,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessStatus",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "StalenessRisk",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "Witness",
+          "line": 154,
+          "isDefault": false
+        },
+        {
+          "name": "DecodedEntity",
+          "line": 174,
+          "isDefault": false
+        },
+        {
+          "name": "AnomalousContrast",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "CandidateMeaning",
+          "line": 230,
+          "isDefault": false
+        },
+        {
+          "name": "ConstraintCheck",
+          "line": 258,
+          "isDefault": false
+        },
+        {
+          "name": "ModelUpdate",
+          "line": 277,
+          "isDefault": false
+        },
+        {
+          "name": "AbstractionGuard",
+          "line": 309,
+          "isDefault": false
+        },
+        {
+          "name": "UncertaintyBand",
+          "line": 336,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceFreshness",
+          "line": 354,
+          "isDefault": false
+        },
+        {
+          "name": "CrossOrganHandoff",
+          "line": 372,
+          "isDefault": false
+        },
+        {
+          "name": "OrganConflict",
+          "line": 399,
+          "isDefault": false
+        },
+        {
+          "name": "MetabolicOutput",
+          "line": 434,
+          "isDefault": false
+        },
+        {
+          "name": "MetabolicCycle",
+          "line": 553,
+          "isDefault": false
+        },
+        {
+          "name": "build_metabolic_output",
+          "line": 603,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_metabolic_output",
+          "callee": "_TOOL_DEFAULTS.get",
+          "lineNumber": 722
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 734
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 737
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "_CLAIM_TO_CONFIDENCE.get",
+          "lineNumber": 738
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 740
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 742
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 743
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 746
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now",
+          "lineNumber": 746
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 784
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 785
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 786
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 794
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now",
+          "lineNumber": 794
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 832
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 23,
+        "functionCount": 1,
+        "classCount": 22
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/output_schemas.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1637,
+      "nonEmptyLines": 1595,
+      "functions": [
+        {
+          "name": "validate_iron_law",
+          "startLine": 612,
+          "endLine": 666,
+          "params": [
+            "evidence_chain"
+          ]
+        },
+        {
+          "name": "get_tool_output_schema",
+          "startLine": 1627,
+          "endLine": 1632,
+          "params": [
+            "tool_name"
+          ]
+        },
+        {
+          "name": "get_tool_metadata",
+          "startLine": 1635,
+          "endLine": 1637,
+          "params": [
+            "tool_name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "validate_iron_law",
+          "line": 612,
+          "isDefault": false
+        },
+        {
+          "name": "get_tool_output_schema",
+          "line": 1627,
+          "isDefault": false
+        },
+        {
+          "name": "get_tool_metadata",
+          "line": 1635,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_iron_law",
+          "callee": "link.get",
+          "lineNumber": 627
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.setdefault(rung, []).append",
+          "lineNumber": 628
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.setdefault",
+          "lineNumber": 628
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 631
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 631
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 631
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 632
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 637
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "violations.append",
+          "lineNumber": 639
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 641
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 642
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "rung_2_claims[0].get",
+          "lineNumber": 643
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 650
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 651
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 654
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "violations.append",
+          "lineNumber": 656
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 658
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "rung_2_claims[0].get",
+          "lineNumber": 660
+        },
+        {
+          "caller": "get_tool_output_schema",
+          "callee": "TOOL_OUTPUT_SCHEMAS.get",
+          "lineNumber": 1629
+        },
+        {
+          "caller": "get_tool_output_schema",
+          "callee": "entry.get",
+          "lineNumber": 1631
+        },
+        {
+          "caller": "get_tool_metadata",
+          "callee": "TOOL_OUTPUT_SCHEMAS.get",
+          "lineNumber": 1637
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/render_payload.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 328,
+      "nonEmptyLines": 260,
+      "functions": [
+        {
+          "name": "render_map",
+          "startLine": 253,
+          "endLine": 270,
+          "params": [
+            "geojson",
+            "bbox",
+            "crs",
+            "claim_tag",
+            "maruah_flag"
+          ]
+        },
+        {
+          "name": "render_surface",
+          "startLine": 273,
+          "endLine": 294,
+          "params": [
+            "resource_uri",
+            "geometry_type",
+            "shape",
+            "bbox",
+            "claim_tag"
+          ]
+        },
+        {
+          "name": "render_cube_slice",
+          "startLine": 297,
+          "endLine": 328,
+          "params": [
+            "resource_uri",
+            "shape",
+            "orientation",
+            "slice_index",
+            "bbox",
+            "attribute",
+            "claim_tag",
+            "cube_manifest"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RenderModality",
+          "startLine": 33,
+          "endLine": 43,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LodLevel",
+          "startLine": 46,
+          "endLine": 52,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GeometryType",
+          "startLine": 55,
+          "endLine": 64,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CRSInfo",
+          "startLine": 67,
+          "endLine": 74,
+          "methods": [],
+          "properties": [
+            "horizontal",
+            "vertical",
+            "depth_basis",
+            "depth_datum",
+            "well_datum"
+          ]
+        },
+        {
+          "name": "BoundingBox",
+          "startLine": 77,
+          "endLine": 86,
+          "methods": [],
+          "properties": [
+            "min_x",
+            "min_y",
+            "max_x",
+            "max_y",
+            "min_z",
+            "max_z",
+            "crs"
+          ]
+        },
+        {
+          "name": "BinaryResource",
+          "startLine": 89,
+          "endLine": 103,
+          "methods": [],
+          "properties": [
+            "resource_uri",
+            "geometry_type",
+            "shape",
+            "dtype",
+            "byte_offset",
+            "byte_length",
+            "lod"
+          ]
+        },
+        {
+          "name": "LODInfo",
+          "startLine": 106,
+          "endLine": 114,
+          "methods": [],
+          "properties": [
+            "level",
+            "stride",
+            "brick_shape",
+            "data_type",
+            "compression",
+            "value_range"
+          ]
+        },
+        {
+          "name": "BrickAddress",
+          "startLine": 117,
+          "endLine": 122,
+          "methods": [],
+          "properties": [
+            "ix",
+            "iy",
+            "iz"
+          ]
+        },
+        {
+          "name": "BrickResource",
+          "startLine": 125,
+          "endLine": 137,
+          "methods": [],
+          "properties": [
+            "brick",
+            "lod",
+            "resource_uri",
+            "byte_length",
+            "data_type",
+            "compression",
+            "hash"
+          ]
+        },
+        {
+          "name": "CubeManifest",
+          "startLine": 140,
+          "endLine": 189,
+          "methods": [],
+          "properties": [
+            "cube_id",
+            "name",
+            "dims",
+            "brick_shape",
+            "brick_grid_shape",
+            "crs",
+            "bbox_origin",
+            "bbox_max",
+            "sample_spacing",
+            "time_depth_domain",
+            "lod_count",
+            "lods",
+            "primary_attribute",
+            "available_attributes",
+            "data_origin",
+            "brick_uri_template",
+            "manifest_uri",
+            "claim_tag",
+            "acrisk_score",
+            "arifos_verdict",
+            "artifact_ref",
+            "generated_at"
+          ]
+        },
+        {
+          "name": "RenderPayload",
+          "startLine": 192,
+          "endLine": 247,
+          "methods": [],
+          "properties": [
+            "render_id",
+            "modality",
+            "render_type",
+            "crs",
+            "bbox",
+            "resources",
+            "cube_manifest",
+            "claim_tag",
+            "claim_refs",
+            "arifos_verdict",
+            "acrisk_score",
+            "human_review_required",
+            "inline_geojson",
+            "inline_stats",
+            "source_tool",
+            "source_artifact_refs",
+            "generated_at",
+            "visual_artifact_id",
+            "maruah_flag"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RenderModality",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "LodLevel",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "GeometryType",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "CRSInfo",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "BoundingBox",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "BinaryResource",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "LODInfo",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "BrickAddress",
+          "line": 117,
+          "isDefault": false
+        },
+        {
+          "name": "BrickResource",
+          "line": 125,
+          "isDefault": false
+        },
+        {
+          "name": "CubeManifest",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "RenderPayload",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "render_map",
+          "line": 253,
+          "isDefault": false
+        },
+        {
+          "name": "render_surface",
+          "line": 273,
+          "isDefault": false
+        },
+        {
+          "name": "render_cube_slice",
+          "line": 297,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_map",
+          "callee": "RenderPayload",
+          "lineNumber": 262
+        },
+        {
+          "caller": "render_map",
+          "callee": "CRSInfo",
+          "lineNumber": 265
+        },
+        {
+          "caller": "render_map",
+          "callee": "BoundingBox",
+          "lineNumber": 266
+        },
+        {
+          "caller": "render_surface",
+          "callee": "RenderPayload",
+          "lineNumber": 282
+        },
+        {
+          "caller": "render_surface",
+          "callee": "BoundingBox",
+          "lineNumber": 285
+        },
+        {
+          "caller": "render_surface",
+          "callee": "BinaryResource",
+          "lineNumber": 287
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "RenderPayload",
+          "lineNumber": 313
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "BinaryResource",
+          "lineNumber": 319
+        },
+        {
+          "caller": "render_cube_slice",
+          "callee": "float",
+          "lineNumber": 327
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 14,
+        "functionCount": 3,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "src/geox_core/schemas/request/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

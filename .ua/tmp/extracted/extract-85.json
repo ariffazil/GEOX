@@ -1,0 +1,1786 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [
+    "ops/DEPLOY_COMMANDS.txt",
+    "outputs/kl2_kinabalu/kl2_kinabalu_well_data_v2.xlsx"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 23,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 6,
+      "failed": 0,
+      "skipped": 17
+    }
+  },
+  "results": [
+    {
+      "path": "infra/geox-static.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 48,
+      "nonEmptyLines": 47,
+      "sections": [
+        {
+          "heading": "http",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "tcp",
+          "level": 1,
+          "line": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "ingest/macrostrat-malaysia/export_jmg_macrostrat.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 86,
+      "nonEmptyLines": 74,
+      "functions": [
+        {
+          "name": "make_ctx",
+          "startLine": 42,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "fetch_layer_metadata",
+          "startLine": 48,
+          "endLine": 56,
+          "params": [
+            "layer_id"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 58,
+          "endLine": 83,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "make_ctx",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "fetch_layer_metadata",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 58,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "make_ctx",
+          "callee": "ssl.create_default_context",
+          "lineNumber": 43
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "urllib.request.Request",
+          "lineNumber": 50
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "urllib.request.urlopen",
+          "lineNumber": 52
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "make_ctx",
+          "lineNumber": 52
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "json.loads",
+          "lineNumber": 53
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "resp.read().decode",
+          "lineNumber": 53
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "resp.read",
+          "lineNumber": 53
+        },
+        {
+          "caller": "fetch_layer_metadata",
+          "callee": "print",
+          "lineNumber": 55
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 59
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 60
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 61
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 65
+        },
+        {
+          "caller": "main",
+          "callee": "fetch_layer_metadata",
+          "lineNumber": 66
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "summary.append",
+          "lineNumber": 69
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get",
+          "lineNumber": 72
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get('extent', {}).get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get('extent', {}).get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "meta.get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "os.path.join",
+          "lineNumber": 78
+        },
+        {
+          "caller": "main",
+          "callee": "open",
+          "lineNumber": 79
+        },
+        {
+          "caller": "main",
+          "callee": "json.dump",
+          "lineNumber": 80
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "oauth/geox-scope-annotations.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 311,
+      "nonEmptyLines": 266,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "resource",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "status",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "aligned_against",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "scopes",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "gate_contract",
+          "level": 1,
+          "line": 62
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 73
+        },
+        {
+          "heading": "coverage",
+          "level": 1,
+          "line": 302
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "oauth/oauth-protected-resource.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 62,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "resource",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "resource_name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "resource_documentation",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "resource_policy_uri",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "authorization_servers",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "authorization_servers_status",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "jwks_uri",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "scopes_supported",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "bearer_methods_supported",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "resource_signing_alg_values_supported",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "authorization_details_types_supported",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "client_registration_supported",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "registration_endpoint",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "client_id_required",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "_arifos_p3_auth_lite",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "_arifos_meta",
+          "level": 1,
+          "line": 50
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    },
+    {
+      "path": "oauth/validate.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 210,
+      "nonEmptyLines": 177,
+      "functions": [
+        {
+          "name": "fail",
+          "startLine": 28,
+          "endLine": 31,
+          "params": [
+            "msg",
+            "ci"
+          ]
+        },
+        {
+          "name": "ok",
+          "startLine": 34,
+          "endLine": 35,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "check_write_verb_in_observe",
+          "startLine": 65,
+          "endLine": 83,
+          "params": [
+            "tools",
+            "ci"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 86,
+          "endLine": 206,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "fail",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "ok",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "check_write_verb_in_observe",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "main",
+          "line": 86,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fail",
+          "callee": "print",
+          "lineNumber": 29
+        },
+        {
+          "caller": "fail",
+          "callee": "sys.exit",
+          "lineNumber": 31
+        },
+        {
+          "caller": "ok",
+          "callee": "print",
+          "lineNumber": 35
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "t.get",
+          "lineNumber": 70
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "t.get",
+          "lineNumber": 71
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "tid.lower",
+          "lineNumber": 75
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "print",
+          "lineNumber": 76
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "fail",
+          "lineNumber": 80
+        },
+        {
+          "caller": "check_write_verb_in_observe",
+          "callee": "ok",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "open",
+          "lineNumber": 93
+        },
+        {
+          "caller": "main",
+          "callee": "yaml.safe_load",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "open",
+          "lineNumber": 102
+        },
+        {
+          "caller": "main",
+          "callee": "json.load",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 106
+        },
+        {
+          "caller": "main",
+          "callee": "doc.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "len",
+          "lineNumber": 111
+        },
+        {
+          "caller": "main",
+          "callee": "doc.get",
+          "lineNumber": 112
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 113
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 116
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 119
+        },
+        {
+          "caller": "main",
+          "callee": "check_write_verb_in_observe",
+          "lineNumber": 122
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 125
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 127
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 134
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 135
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 136
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 137
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 144
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 147
+        },
+        {
+          "caller": "main",
+          "callee": "sum",
+          "lineNumber": 151
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 151
+        },
+        {
+          "caller": "main",
+          "callee": "sum",
+          "lineNumber": 152
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 152
+        },
+        {
+          "caller": "main",
+          "callee": "sum",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "sum",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "t.get",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 157
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 159
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 162
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 163
+        },
+        {
+          "caller": "main",
+          "callee": "coverage.get",
+          "lineNumber": 163
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 166
+        },
+        {
+          "caller": "main",
+          "callee": "urllib.request.Request",
+          "lineNumber": 175
+        },
+        {
+          "caller": "main",
+          "callee": "urllib.request.urlopen",
+          "lineNumber": 180
+        },
+        {
+          "caller": "main",
+          "callee": "json.loads",
+          "lineNumber": 181
+        },
+        {
+          "caller": "main",
+          "callee": "resp.read",
+          "lineNumber": 181
+        },
+        {
+          "caller": "main",
+          "callee": "data.get(\"result\", {}).get",
+          "lineNumber": 182
+        },
+        {
+          "caller": "main",
+          "callee": "data.get",
+          "lineNumber": 182
+        },
+        {
+          "caller": "main",
+          "callee": "fail",
+          "lineNumber": 189
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 192
+        },
+        {
+          "caller": "main",
+          "callee": "ok",
+          "lineNumber": 194
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 196
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 200
+        },
+        {
+          "caller": "main",
+          "callee": "sys.exit",
+          "lineNumber": 202
+        },
+        {
+          "caller": "main",
+          "callee": "print",
+          "lineNumber": 205
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "okf/geox.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 53,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "GEOX (Earth Intelligence)",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "What it does",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "The GEOX Way",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Port",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Key Paths",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "Citations",
+          "level": 1,
+          "line": 50
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "okf/sabah-basin/basins/nw-sabah.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 31,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "NW Sabah Basin",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "Tectonic Setting",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Key References",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Stratigraphy",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "okf/sabah-basin/evidence/morley-2023.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 31,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "Morley 2023 — Collisional Wedge",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "Key Claims",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Challenges",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "okf/sabah-basin/evidence/nspw-mud-canopy.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 29,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "NSPW Mud Canopy",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "Key Findings",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Implications",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "okf/sabah-basin/index.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "Sabah Basin — Geological Knowledge Bundle",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Concepts",
+          "level": 2,
+          "line": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "okf/sabah-basin/log.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 8,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "Sabah Basin Bundle — Update Log",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "2026-07-20",
+          "level": 2,
+          "line": 3
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "okf/sabah-basin/prospects/kinabalu.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 33,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "Kinabalu Prospect",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "Trap",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Reservoir",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Risk Factors",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "okf/sabah-basin/stratigraphy/sabah-ladder.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 37,
+      "nonEmptyLines": 31,
+      "sections": [
+        {
+          "heading": "Sabah Stratigraphic Framework",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "Stages",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Key Surfaces",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "okf/sabah-basin/wells/bekantan-1.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 31,
+      "nonEmptyLines": 25,
+      "sections": [
+        {
+          "heading": "BEKANTAN-1",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "Well Data",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Key Learnings",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Citations",
+          "level": 2,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "outputs/kl2_kinabalu/_audit_extract.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 60,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "outputs/kl2_kinabalu/_canonize_atomic.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 124,
+      "nonEmptyLines": 105,
+      "functions": [
+        {
+          "name": "kernel_rpc",
+          "startLine": 16,
+          "endLine": 25,
+          "params": [
+            "method",
+            "params",
+            "session_hdr"
+          ]
+        },
+        {
+          "name": "send",
+          "startLine": 58,
+          "endLine": 60,
+          "params": [
+            "o"
+          ]
+        },
+        {
+          "name": "recv",
+          "startLine": 63,
+          "endLine": 70,
+          "params": []
+        },
+        {
+          "name": "call",
+          "startLine": 80,
+          "endLine": 89,
+          "params": [
+            "tool",
+            "args",
+            "i"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "kernel_rpc",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "send",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "recv",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "call",
+          "line": 80,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "kernel_rpc",
+          "callee": "json.dumps({\"jsonrpc\": \"2.0\", \"id\": 1, \"method\": method,\n                       \"params\": params}).encode",
+          "lineNumber": 17
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "json.dumps",
+          "lineNumber": 17
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "urllib.request.Request",
+          "lineNumber": 22
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "urllib.request.urlopen",
+          "lineNumber": 23
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "r.headers.get",
+          "lineNumber": 24
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "json.loads",
+          "lineNumber": 25
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "r.read().decode",
+          "lineNumber": 25
+        },
+        {
+          "caller": "kernel_rpc",
+          "callee": "r.read",
+          "lineNumber": 25
+        },
+        {
+          "caller": "send",
+          "callee": "p.stdin.write",
+          "lineNumber": 59
+        },
+        {
+          "caller": "send",
+          "callee": "(json.dumps(o) + \"\\n\").encode",
+          "lineNumber": 59
+        },
+        {
+          "caller": "send",
+          "callee": "json.dumps",
+          "lineNumber": 59
+        },
+        {
+          "caller": "send",
+          "callee": "p.stdin.flush",
+          "lineNumber": 60
+        },
+        {
+          "caller": "recv",
+          "callee": "p.stdout.readline",
+          "lineNumber": 65
+        },
+        {
+          "caller": "recv",
+          "callee": "line.strip",
+          "lineNumber": 68
+        },
+        {
+          "caller": "recv",
+          "callee": "line.startswith",
+          "lineNumber": 69
+        },
+        {
+          "caller": "recv",
+          "callee": "json.loads",
+          "lineNumber": 70
+        },
+        {
+          "caller": "call",
+          "callee": "send",
+          "lineNumber": 81
+        },
+        {
+          "caller": "call",
+          "callee": "recv",
+          "lineNumber": 83
+        },
+        {
+          "caller": "call",
+          "callee": "r.get",
+          "lineNumber": 86
+        },
+        {
+          "caller": "call",
+          "callee": "res.get(\"content\", [{}])[0].get",
+          "lineNumber": 87
+        },
+        {
+          "caller": "call",
+          "callee": "res.get",
+          "lineNumber": 87
+        },
+        {
+          "caller": "call",
+          "callee": "json.dumps",
+          "lineNumber": 87
+        },
+        {
+          "caller": "call",
+          "callee": "bool",
+          "lineNumber": 88
+        },
+        {
+          "caller": "call",
+          "callee": "res.get",
+          "lineNumber": 88
+        },
+        {
+          "caller": "call",
+          "callee": "bool",
+          "lineNumber": 88
+        },
+        {
+          "caller": "call",
+          "callee": "r.get",
+          "lineNumber": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "outputs/kl2_kinabalu/_canonize_stdio_driver.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 59,
+      "functions": [
+        {
+          "name": "send",
+          "startLine": 28,
+          "endLine": 30,
+          "params": [
+            "obj"
+          ]
+        },
+        {
+          "name": "recv",
+          "startLine": 32,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "send",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "recv",
+          "line": 32,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "send",
+          "callee": "proc.stdin.write",
+          "lineNumber": 29
+        },
+        {
+          "caller": "send",
+          "callee": "(json.dumps(obj) + \"\\n\").encode",
+          "lineNumber": 29
+        },
+        {
+          "caller": "send",
+          "callee": "json.dumps",
+          "lineNumber": 29
+        },
+        {
+          "caller": "send",
+          "callee": "proc.stdin.flush",
+          "lineNumber": 30
+        },
+        {
+          "caller": "recv",
+          "callee": "proc.stdout.readline",
+          "lineNumber": 34
+        },
+        {
+          "caller": "recv",
+          "callee": "line.strip",
+          "lineNumber": 37
+        },
+        {
+          "caller": "recv",
+          "callee": "line.startswith",
+          "lineNumber": 38
+        },
+        {
+          "caller": "recv",
+          "callee": "json.loads",
+          "lineNumber": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "outputs/kl2_kinabalu/kl2_kinabalu_penetration_v2.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 253,
+      "nonEmptyLines": 227,
+      "functions": [
+        {
+          "name": "horizon_depth",
+          "startLine": 77,
+          "endLine": 79,
+          "params": [
+            "age_ma",
+            "td",
+            "seabed",
+            "age_td"
+          ]
+        },
+        {
+          "name": "sigma_bio",
+          "startLine": 81,
+          "endLine": 82,
+          "params": [
+            "age_ma"
+          ]
+        },
+        {
+          "name": "sigma_vel",
+          "startLine": 84,
+          "endLine": 85,
+          "params": [
+            "z"
+          ]
+        },
+        {
+          "name": "reached",
+          "startLine": 88,
+          "endLine": 89,
+          "params": [
+            "age_td",
+            "horizon"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "horizon_depth",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "sigma_bio",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "sigma_vel",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "reached",
+          "line": 88,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "outputs/kl2_kinabalu/wells_summary.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 158,
+      "nonEmptyLines": 158,
+      "sections": [
+        {
+          "heading": "wells",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "qc",
+          "level": 1,
+          "line": 108
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "prompts/GEOX_CONSTITUTIONAL_PROMPT_BLOCK.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 105,
+      "nonEmptyLines": 95,
+      "sections": [
+        {
+          "heading": "intent",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "epistemic",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "physics_bounds",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "emc_triple_lock",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "falsification_gates",
+          "level": 1,
+          "line": 56
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 63
+        },
+        {
+          "heading": "order_of_operations",
+          "level": 1,
+          "line": 84
+        },
+        {
+          "heading": "anti_hantu",
+          "level": 1,
+          "line": 90
+        },
+        {
+          "heading": "output_contract",
+          "level": 1,
+          "line": 95
+        },
+        {
+          "heading": "doctrine_refs",
+          "level": 1,
+          "line": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "reality_contracts/geox_reality_contract.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 778,
+      "nonEmptyLines": 746,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "contract",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "organ_id",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "organ_role",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "organ_version",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "federation_version",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "sovereign",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "f13_acknowledged",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "forged_by",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "forged_at",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "invariants",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "entities",
+          "level": 1,
+          "line": 55
+        },
+        {
+          "heading": "lanes",
+          "level": 1,
+          "line": 156
+        },
+        {
+          "heading": "allowed_transitions",
+          "level": 1,
+          "line": 186
+        },
+        {
+          "heading": "denied_transitions",
+          "level": 1,
+          "line": 290
+        },
+        {
+          "heading": "gates",
+          "level": 1,
+          "line": 322
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 375
+        },
+        {
+          "heading": "per_call_envelope",
+          "level": 1,
+          "line": 641
+        },
+        {
+          "heading": "cross_organ_allowed",
+          "level": 1,
+          "line": 671
+        },
+        {
+          "heading": "cross_organ_denied",
+          "level": 1,
+          "line": 703
+        },
+        {
+          "heading": "floor_invariants",
+          "level": 1,
+          "line": 716
+        },
+        {
+          "heading": "failure_modes",
+          "level": 1,
+          "line": 732
+        },
+        {
+          "heading": "rollout",
+          "level": 1,
+          "line": 758
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 23
+      }
+    },
+    {
+      "path": "registry/graph.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 90,
+      "nonEmptyLines": 90,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "nodes",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "edges",
+          "level": 1,
+          "line": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "registry/registry.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 316,
+      "nonEmptyLines": 316,
+      "sections": [
+        {
+          "heading": "geox_version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "total_skills",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "total_domains",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "domains",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    }
+  ]
+}

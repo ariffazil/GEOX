@@ -372,8 +372,9 @@ class TestC3RedteamUnknownFormat:
         assert result.ok is False
         assert result.error_code == "SESSION_INVALID"
 
-    def test_empty_session_auto_mints_anon(self):
-        """Empty session_id → auto-mint ANON-xxx (not rejected)."""
+    def test_empty_session_auto_mints_anon(self, monkeypatch):
+        """Empty session_id → auto-mint ANON-xxx (when GEOX_ALLOW_ANON=1)."""
+        monkeypatch.setenv("GEOX_ALLOW_ANON", "1")
         result = validate_session(
             session_id="",
             actor_id="anyone",
@@ -384,6 +385,16 @@ class TestC3RedteamUnknownFormat:
         assert result.session["type"] == "anon"
         assert result.session["session_id"].startswith("ANON-")
         assert result.session["auto_minted"] is True
+
+    def test_empty_session_rejected_when_anon_disabled(self):
+        """Empty session_id → P0_IDENTITY_PROPAGATION HOLD when GEOX_ALLOW_ANON!=1."""
+        result = validate_session(
+            session_id="",
+            actor_id="anyone",
+            required_authority="OBSERVE_ONLY",
+        )
+        assert result.ok is False
+        assert result.error_code == "P0_IDENTITY_PROPAGATION"
 
 
 # ─── Acceptance Test 7: anonymous coercion is GONE ──────────────────────────

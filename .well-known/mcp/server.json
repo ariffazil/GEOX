@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/modelcontextprotocol/specification/main/schema/mcp-server.json",
   "name": "GEOX — Earth Intelligence",
-  "version": "v2026.08.09",
-  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, and 9 interactive MCP Apps. Live counts under static-client auth: 19 governed tools, 16 MCP prompts, 51 MCP resources (9 of which are ui:// MCP Apps). Canonical registry: 81 tools registered; 62 are forge-scope or internal-only and filtered per oauth.scopes_excluded.",
+  "version": "2026.09.18",
+  "description": "Governed geoscience coprocessor under arifOS constitutional floors F1-F13. Evidence-only earth intelligence: basin analysis, seismic interpretation, petrophysics, prospect evaluation, deep-time paleogeography, temporal intelligence, GLOF cascade simulation, and 20 interactive MCP Apps. Canonical surface: 31 public tools, 85 total registered (54 internal). Runtime truth: registry.py::CANONICAL_PUBLIC_TOOLS.",
   "repository": "https://github.com/ariffazil/GEOX",
   "license": "BSL-1.1",
   "author": {
@@ -20,65 +20,47 @@
     "tasks": true,
     "ui": true
   },
-
-  "oauth": {
-    "status": "P3_DEPLOYED_AUTH_LITE",
-    "client_registration_supported": false,
-    "client_id_required": true,
-    "bearer_methods_supported": ["header"],
-    "static_client_ids": [
-      {
-        "client_id": "geox-claude-conn-20260804-a01",
-        "connector": "claude.ai",
-        "header_name": "X-MCP-Client-Id",
-        "scopes": ["geox:observe", "geox:interpret"],
-        "scopes_excluded": ["geox:forge"],
-        "expires_at": "2026-09-04T10:15:00Z",
-        "registry": "https://geox.arif-fazil.com/.well-known/static_clients.yaml"
-      }
-    ],
-    "how_to_configure": "In your MCP connector UI (Claude.ai, ChatGPT, Cloudflare Workers AI, etc.), set: (1) Endpoint URL = https://geox.arif-fazil.com/mcp, (2) Custom HTTP header X-MCP-Client-Id = geox-claude-conn-20260804-a01. Connector should send this header on every MCP request. Caddy edge validates the header before arifOS forward_auth — valid ID bypasses forward_auth and routes directly to GEOX :8081.",
-    "authorization_servers": ["https://auth.arif-fazil.com/realms/arifos"],
-    "authorization_servers_status": "P3_DRAFT — full OAuth AS not yet deployed. Use static client_id until P4.",
-    "deprecation": "When auth.arif-fazil.com/realms/arifos reaches P4_STABLE, static client_ids enter 30-day deprecation grace. Migrate to OAuth 2.1 + DPoP.",
-    "trigger_event": "2026-08-04 — Claude.ai MCP connector error: 'Automatic client registration isn't supported' (ref ofid_ca10349aa319689a)."
-  },
   "tools": {
-    "totalRegistered": 81,
-    "publicCount": 19,
-    "publicCountRationale": "Live tools/list returns 19 governed tools for clients with scopes [geox:observe, geox:interpret]. The static client_id `geox-claude-conn-20260804-a01` excludes geox:forge scope per oauth.scopes_excluded. The remaining 62 (totalRegistered 81 - publicCount 19) are forge-scope or internal-only tools, not exposed to MCP tools/list under static-client auth. Migration to OAuth 2.1 (P4_STABLE) will surface scoped counts per session.",
+    "totalRegistered": 85,
+    "publicCount": 31,
+    "publicCountRationale": "registry.py::CANONICAL_PUBLIC_TOOLS is the single source of truth. 31 public tools after GHOST_TOOLS exclusion. 54 internal tools not exposed to tools/list. Regenerated 2026-09-18 from tools_manifest.yaml.",
     "categories": {
-      "basin": ["geox_basin", "geox_basin_backstrip", "geox_sediment_mass_balance", "geox_thermal_maturity_history"],
-      "seismic": ["geox_seismic_compute", "geox_seismic_ingest", "geox_seismic_interpret", "geox_visual_understand"],
-      "petrophysics": ["geox_petrophysics"],
-      "well": ["geox_well_desk", "geox_well_ingest", "geox_well_qc", "geox_well_view"],
+      "basin": ["geox_basin", "geox_deep_time", "geox_temporal", "geox_spatial", "geox_map", "geox_paleobiodb_query"],
+      "seismic": ["geox_seismic_ingest", "geox_seismic_compute", "geox_seismic_interpret", "geox_extract_native_trace", "geox_extract_display_proxy", "geox_register_native_source", "geox_list_registered_sources", "geox_calibration_register_witness"],
+      "petrophysics": ["geox_petrophysics", "geox_source", "geox_well_qc"],
+      "well": ["geox_well", "geox_well_ingest"],
       "prospect": ["geox_prospect"],
-      "geophysics": ["geox_geomechanics", "geox_subsurface_model", "geox_gempy_implicit_3d"],
-      "stratigraphy": ["geox_sequence", "geox_dde_reason"],
-      "deep_time": ["geox_deep_time_state", "geox_thermal_maturity_history"],
-      "temporal": ["geox_temporal_decline", "geox_temporal_rrr", "geox_temporal_basin_lifecycle", "geox_temporal_cadence"],
-      "dynamics": ["geox_dynamical_systems"],
-      "map": ["geox_map_scene_plan", "geox_map_layers_list", "geox_map_render_preview"],
-      "spatial": ["geox_h3_spatial_index", "geox_lancedb_embed_store", "geox_stac_discover"],
-      "governance": ["geox_claim", "geox_contradiction_scan", "geox_evidence", "geox_evidence_synthesize", "geox_falsify", "geox_surface_status"],
-      "inference": ["geox_lem_predict", "geox_geological_model_generate"],
-      "meta": ["geox_workspace"]
+      "geophysics": ["geox_geomechanics", "geox_model", "geox_contrast_metabolize"],
+      "governance": ["geox_claim"],
+      "glof_cascade": ["geox_glof_cascade_initialize", "geox_glof_cascade_step", "geox_glof_cascade_phase", "geox_glof_cascade_inverse", "geox_glof_cascade_mcmc_inverse", "geox_glof_cascade_metabolize", "geox_glof_cascade_propagate"]
     }
   },
   "mcpApps": {
-    "count": 9,
+    "count": 20,
+    "activeCount": 20,
     "apps": [
-      "ui://geox/well-desk",
-      "ui://geox/prospect-ui",
-      "ui://geox/seismic-vision-review",
-      "ui://geox/geox-mcp-visual",
-      "ui://geox/judge-console",
+      "ui://geox/basin-explorer",
+      "ui://geox/catalog",
+      "ui://geox/earth-map",
       "ui://geox/earth-volume",
-      "ui://geox/attribute-audit",
-      "ui://geox/georeference-map",
-      "ui://geox/analog-digitizer"
+      "ui://geox/geoprobe",
+      "ui://geox/geox-mcp-visual",
+      "ui://geox/gravmag-studio",
+      "ui://geox/judge-console",
+      "ui://geox/prospect-studio",
+      "ui://geox/prospect-ui",
+      "ui://geox/risk-console",
+      "ui://geox/seismic-vision",
+      "ui://geox/visual-hub",
+      "ui://geox/well-desk",
+      "ui://geox/well-witness",
+      "ui://geox/workbench-v1",
+      "ui://geox/workspace-v1",
+      "ui://geox/analog-digitizer",
+      "ui://geox/gravmag-studio.html",
+      "ui://geox/workbench-v1.html"
     ],
-    "manifestUrl": "https://geox.arif-fazil.com/apps.json"
+    "manifestUrl": "https://geox.arif-fazil.com/GEOX_MCP_APPS_SURFACE.json"
   },
   "governance": {
     "framework": "arifOS F1-F13",

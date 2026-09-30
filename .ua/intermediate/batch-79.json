@@ -1,0 +1,307 @@
+{
+  "nodes": [
+    {
+      "id": "file:data/geox_las/exfil.las",
+      "type": "file",
+      "name": "exfil.las",
+      "filePath": "data/geox_las/exfil.las",
+      "summary": "las code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/kl2/SYNC_WINDOWS_TO_VPS.ps1",
+      "type": "file",
+      "name": "SYNC_WINDOWS_TO_VPS.ps1",
+      "filePath": "data/kl2/SYNC_WINDOWS_TO_VPS.ps1",
+      "summary": "powershell script file (29 non-empty lines).",
+      "tags": [
+        "script",
+        "powershell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:data/kl2/nn_datum_borneo2023.yaml",
+      "type": "config",
+      "name": "nn_datum_borneo2023.yaml",
+      "filePath": "data/kl2/nn_datum_borneo2023.yaml",
+      "summary": "yaml config file (40 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:data/real_wells/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "data/real_wells/README.md",
+      "summary": "markdown docs file (27 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/real_wells/q15_15_9_19/q15_15_9_19.las",
+      "type": "file",
+      "name": "q15_15_9_19.las",
+      "filePath": "data/real_wells/q15_15_9_19/q15_15_9_19.las",
+      "summary": "las code file (4721 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/real_wells/q15_15_9_19/q15_dak_petro.las",
+      "type": "file",
+      "name": "q15_dak_petro.las",
+      "filePath": "data/real_wells/q15_15_9_19/q15_dak_petro.las",
+      "summary": "las code file (4724 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/reference/SABAH_BASIN_INTERPRETATION_CHECKLIST.xlsx",
+      "type": "file",
+      "name": "SABAH_BASIN_INTERPRETATION_CHECKLIST.xlsx",
+      "filePath": "data/reference/SABAH_BASIN_INTERPRETATION_CHECKLIST.xlsx",
+      "summary": "xlsx code file (31 non-empty lines).",
+      "tags": [
+        "code",
+        "xlsx"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:data/seismic_sections/marmousi_synthetic_section.meta.json",
+      "type": "config",
+      "name": "marmousi_synthetic_section.meta.json",
+      "filePath": "data/seismic_sections/marmousi_synthetic_section.meta.json",
+      "summary": "json config file (16 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:data/wells/marmousi-F02-1.las",
+      "type": "file",
+      "name": "marmousi-F02-1.las",
+      "filePath": "data/wells/marmousi-F02-1.las",
+      "summary": "las code file (1978 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/wells/marmousi-F03-2.las",
+      "type": "file",
+      "name": "marmousi-F03-2.las",
+      "filePath": "data/wells/marmousi-F03-2.las",
+      "summary": "las code file (1978 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:data/wells/marmousi-F06-1.las",
+      "type": "file",
+      "name": "marmousi-F06-1.las",
+      "filePath": "data/wells/marmousi-F06-1.las",
+      "summary": "las code file (1978 non-empty lines).",
+      "tags": [
+        "code",
+        "las"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:docs/GEOX_LEM_ARCHITECTURE_VISUAL.mmd",
+      "type": "file",
+      "name": "GEOX_LEM_ARCHITECTURE_VISUAL.mmd",
+      "filePath": "docs/GEOX_LEM_ARCHITECTURE_VISUAL.mmd",
+      "summary": "mmd code file (166 non-empty lines).",
+      "tags": [
+        "code",
+        "mmd"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md.sha256",
+      "type": "file",
+      "name": "RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md.sha256",
+      "filePath": "docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md.sha256",
+      "summary": "sha256 code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "sha256"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/adr/ADR-0007-osdu-exchange-alignment.md",
+      "type": "document",
+      "name": "ADR-0007-osdu-exchange-alignment.md",
+      "filePath": "docs/adr/ADR-0007-osdu-exchange-alignment.md",
+      "summary": "markdown docs file (198 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/adr/ADR-0008-rls-as-floor-hardening.md",
+      "type": "document",
+      "name": "ADR-0008-rls-as-floor-hardening.md",
+      "filePath": "docs/adr/ADR-0008-rls-as-floor-hardening.md",
+      "summary": "markdown docs file (177 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:docs/archive/TOMBSTONE.json",
+      "type": "config",
+      "name": "TOMBSTONE.json",
+      "filePath": "docs/archive/TOMBSTONE.json",
+      "summary": "json config file (48 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/archive/ZEN_15_SURFACE_ARCHIVED_2026-07-24.md",
+      "type": "document",
+      "name": "ZEN_15_SURFACE_ARCHIVED_2026-07-24.md",
+      "filePath": "docs/archive/ZEN_15_SURFACE_ARCHIVED_2026-07-24.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/demo/GEOX_VISION_LLM_PERCEPTUAL_DOCTRINE.md",
+      "type": "document",
+      "name": "GEOX_VISION_LLM_PERCEPTUAL_DOCTRINE.md",
+      "filePath": "docs/demo/GEOX_VISION_LLM_PERCEPTUAL_DOCTRINE.md",
+      "summary": "markdown docs file (140 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/deploy",
+      "type": "file",
+      "name": "deploy",
+      "filePath": "docs/deploy",
+      "summary": "unknown code file (60 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/engines/CRITIC_SPEC.md",
+      "type": "document",
+      "name": "CRITIC_SPEC.md",
+      "filePath": "docs/engines/CRITIC_SPEC.md",
+      "summary": "markdown docs file (164 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/engines/REASONER_SPEC.md",
+      "type": "document",
+      "name": "REASONER_SPEC.md",
+      "filePath": "docs/engines/REASONER_SPEC.md",
+      "summary": "markdown docs file (155 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:docs/integration/FEDERATION_NOTES.md",
+      "type": "document",
+      "name": "FEDERATION_NOTES.md",
+      "filePath": "docs/integration/FEDERATION_NOTES.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docs/mockups/geox-dashboard.html",
+      "type": "file",
+      "name": "geox-dashboard.html",
+      "filePath": "docs/mockups/geox-dashboard.html",
+      "summary": "html markup file (45 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/operations/repo-mcp-stabilization.md",
+      "type": "document",
+      "name": "repo-mcp-stabilization.md",
+      "filePath": "docs/operations/repo-mcp-stabilization.md",
+      "summary": "markdown docs file (78 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:docs/plans/NEXT_FORGE_PLAN.md",
+      "type": "document",
+      "name": "NEXT_FORGE_PLAN.md",
+      "filePath": "docs/plans/NEXT_FORGE_PLAN.md",
+      "summary": "markdown docs file (664 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/basins/sabah_basin/basin_profile.yaml",
+      "type": "config",
+      "name": "basin_profile.yaml",
+      "filePath": "resources/basins/sabah_basin/basin_profile.yaml",
+      "summary": "yaml config file (41 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/basins/sabah_basin/claims.json",
+      "type": "config",
+      "name": "claims.json",
+      "filePath": "resources/basins/sabah_basin/claims.json",
+      "summary": "json config file (90 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/basins/sabah_basin/petroleum_system.yaml",
+      "type": "config",
+      "name": "petroleum_system.yaml",
+      "filePath": "resources/basins/sabah_basin/petroleum_system.yaml",
+      "summary": "yaml config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/basins/sabah_basin/spatial_domains.json",
+      "type": "config",
+      "name": "spatial_domains.json",
+      "filePath": "resources/basins/sabah_basin/spatial_domains.json",
+      "summary": "json config file (31 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/basins/sabah_basin/tectonic_history.md",
+      "type": "document",
+      "name": "tectonic_history.md",
+      "filePath": "resources/basins/sabah_basin/tectonic_history.md",
+      "summary": "markdown docs file (61 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,149 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/basins/malay_basin/basin_profile.yaml",
+      "type": "config",
+      "name": "basin_profile.yaml",
+      "filePath": "resources/basins/malay_basin/basin_profile.yaml",
+      "summary": "yaml config file (91 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/bibliography.yaml",
+      "type": "config",
+      "name": "bibliography.yaml",
+      "filePath": "resources/basins/malay_basin/bibliography.yaml",
+      "summary": "yaml config file (4 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/claims.json",
+      "type": "config",
+      "name": "claims.json",
+      "filePath": "resources/basins/malay_basin/claims.json",
+      "summary": "json config file (240 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/field_index.yaml",
+      "type": "config",
+      "name": "field_index.yaml",
+      "filePath": "resources/basins/malay_basin/field_index.yaml",
+      "summary": "yaml config file (10 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/petroleum_system.yaml",
+      "type": "config",
+      "name": "petroleum_system.yaml",
+      "filePath": "resources/basins/malay_basin/petroleum_system.yaml",
+      "summary": "yaml config file (17 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/play_fairways.yaml",
+      "type": "config",
+      "name": "play_fairways.yaml",
+      "filePath": "resources/basins/malay_basin/play_fairways.yaml",
+      "summary": "yaml config file (16 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/reservoir_seal_matrix.yaml",
+      "type": "config",
+      "name": "reservoir_seal_matrix.yaml",
+      "filePath": "resources/basins/malay_basin/reservoir_seal_matrix.yaml",
+      "summary": "yaml config file (7 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/source_rock_summary.yaml",
+      "type": "config",
+      "name": "source_rock_summary.yaml",
+      "filePath": "resources/basins/malay_basin/source_rock_summary.yaml",
+      "summary": "yaml config file (4 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/stratigraphy_groups.yaml",
+      "type": "config",
+      "name": "stratigraphy_groups.yaml",
+      "filePath": "resources/basins/malay_basin/stratigraphy_groups.yaml",
+      "summary": "yaml config file (41 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:resources/basins/malay_basin/tectonic_history.md",
+      "type": "document",
+      "name": "tectonic_history.md",
+      "filePath": "resources/basins/malay_basin/tectonic_history.md",
+      "summary": "markdown docs file (7 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/trap_styles.yaml",
+      "type": "config",
+      "name": "trap_styles.yaml",
+      "filePath": "resources/basins/malay_basin/trap_styles.yaml",
+      "summary": "yaml config file (7 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/malay_basin/uncertainty_register.yaml",
+      "type": "config",
+      "name": "uncertainty_register.yaml",
+      "filePath": "resources/basins/malay_basin/uncertainty_register.yaml",
+      "summary": "yaml config file (7 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

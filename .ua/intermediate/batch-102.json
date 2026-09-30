@@ -1,0 +1,1695 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/well/stratigraphy/codec.py",
+      "type": "file",
+      "name": "codec.py",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:_sha256",
+      "type": "function",
+      "name": "_sha256",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        37,
+        42
+      ],
+      "summary": "_sha256(path) — 5 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:_pack",
+      "type": "function",
+      "name": "_pack",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        45,
+        47
+      ],
+      "summary": "_pack(obj) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:_unpack",
+      "type": "function",
+      "name": "_unpack",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        50,
+        51
+      ],
+      "summary": "_unpack(s) — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:embed_manifest_in_png",
+      "type": "function",
+      "name": "embed_manifest_in_png",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        54,
+        67
+      ],
+      "summary": "embed_manifest_in_png(png_path, manifest_obj) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:extract_manifest_from_png",
+      "type": "function",
+      "name": "extract_manifest_from_png",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        70,
+        80
+      ],
+      "summary": "extract_manifest_from_png(png_path) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:png_to_xlsx",
+      "type": "function",
+      "name": "png_to_xlsx",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        83,
+        112
+      ],
+      "summary": "png_to_xlsx(png_path, xlsx_out) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/codec.py:validate_roundtrip",
+      "type": "function",
+      "name": "validate_roundtrip",
+      "filePath": "src/geox_core/well/stratigraphy/codec.py",
+      "lineRange": [
+        115,
+        154
+      ],
+      "summary": "validate_roundtrip(xlsx_path, sheet) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/config.py",
+      "type": "file",
+      "name": "config.py",
+      "filePath": "src/geox_core/well/stratigraphy/config.py",
+      "summary": "Defines 5 function(s); 3 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/well/stratigraphy/config.py:ProjectConfig",
+      "type": "class",
+      "name": "ProjectConfig",
+      "filePath": "src/geox_core/well/stratigraphy/config.py",
+      "lineRange": [
+        34,
+        59
+      ],
+      "summary": "Class ProjectConfig with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/excel.py",
+      "type": "file",
+      "name": "excel.py",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:_thick_border",
+      "type": "function",
+      "name": "_thick_border",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        49,
+        50
+      ],
+      "summary": "_thick_border() — 1 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:_header_row",
+      "type": "function",
+      "name": "_header_row",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        53,
+        62
+      ],
+      "summary": "_header_row(ws, headers, row, color, font_color) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:_cell",
+      "type": "function",
+      "name": "_cell",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        65,
+        80
+      ],
+      "summary": "_cell(ws, row, col, val, fill_color, bold) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:export_excel",
+      "type": "function",
+      "name": "export_excel",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        83,
+        280
+      ],
+      "summary": "export_excel(all_packages, config, output_path) — 197 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:export_sensing",
+      "type": "function",
+      "name": "export_sensing",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        283,
+        298
+      ],
+      "summary": "export_sensing(sensing_rows, output_path) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/excel.py:_tract_fill",
+      "type": "function",
+      "name": "_tract_fill",
+      "filePath": "src/geox_core/well/stratigraphy/excel.py",
+      "lineRange": [
+        301,
+        311
+      ],
+      "summary": "_tract_fill(tract) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/loader.py",
+      "type": "file",
+      "name": "loader.py",
+      "filePath": "src/geox_core/well/stratigraphy/loader.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/loader.py:load_well_data",
+      "type": "function",
+      "name": "load_well_data",
+      "filePath": "src/geox_core/well/stratigraphy/loader.py",
+      "lineRange": [
+        44,
+        75
+      ],
+      "summary": "load_well_data(path, gr_override, depth_override) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/loader.py:_load_las",
+      "type": "function",
+      "name": "_load_las",
+      "filePath": "src/geox_core/well/stratigraphy/loader.py",
+      "lineRange": [
+        78,
+        136
+      ],
+      "summary": "_load_las(path, gr_override, depth_override) — 58 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/loader.py:_load_csv",
+      "type": "function",
+      "name": "_load_csv",
+      "filePath": "src/geox_core/well/stratigraphy/loader.py",
+      "lineRange": [
+        139,
+        174
+      ],
+      "summary": "_load_csv(path, gr_override, depth_override) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/loader.py:_detect_gr_column",
+      "type": "function",
+      "name": "_detect_gr_column",
+      "filePath": "src/geox_core/well/stratigraphy/loader.py",
+      "lineRange": [
+        177,
+        195
+      ],
+      "summary": "_detect_gr_column(df, override) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/packages.py",
+      "type": "file",
+      "name": "packages.py",
+      "filePath": "src/geox_core/well/stratigraphy/packages.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/packages.py:build_packages",
+      "type": "function",
+      "name": "build_packages",
+      "filePath": "src/geox_core/well/stratigraphy/packages.py",
+      "lineRange": [
+        22,
+        87
+      ],
+      "summary": "build_packages(bins_10m, min_pkg_m, shift_thresh_gapi, max_pkg_m) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/packages.py:_finalize_package",
+      "type": "function",
+      "name": "_finalize_package",
+      "filePath": "src/geox_core/well/stratigraphy/packages.py",
+      "lineRange": [
+        90,
+        159
+      ],
+      "summary": "_finalize_package(bins) — 69 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/pipeline.py",
+      "type": "file",
+      "name": "pipeline.py",
+      "filePath": "src/geox_core/well/stratigraphy/pipeline.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/pipeline.py:run_pipeline",
+      "type": "function",
+      "name": "run_pipeline",
+      "filePath": "src/geox_core/well/stratigraphy/pipeline.py",
+      "lineRange": [
+        37,
+        240
+      ],
+      "summary": "run_pipeline(config, output_dir, dpi, dpi_corr) — 203 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/pipeline.py:_parse_zone_age",
+      "type": "function",
+      "name": "_parse_zone_age",
+      "filePath": "src/geox_core/well/stratigraphy/pipeline.py",
+      "lineRange": [
+        243,
+        257
+      ],
+      "summary": "_parse_zone_age(zone, nn_ages) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/pipeline.py:_make_no_data_package",
+      "type": "function",
+      "name": "_make_no_data_package",
+      "filePath": "src/geox_core/well/stratigraphy/pipeline.py",
+      "lineRange": [
+        260,
+        297
+      ],
+      "summary": "_make_no_data_package(well_id, counter, zone, depo, top, base, age) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/pipeline.py:_extrapolate_motif",
+      "type": "function",
+      "name": "_extrapolate_motif",
+      "filePath": "src/geox_core/well/stratigraphy/pipeline.py",
+      "lineRange": [
+        300,
+        329
+      ],
+      "summary": "_extrapolate_motif(pkg, sorted_pkgs) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/plot.py",
+      "type": "file",
+      "name": "plot.py",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:_plot_gr_conventional",
+      "type": "function",
+      "name": "_plot_gr_conventional",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        58,
+        74
+      ],
+      "summary": "_plot_gr_conventional(ax, depth, gr, gr_min, gr_max, gr_cut, sand_color, shale_color, curve_color, alpha) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:_draw_motif_schematic",
+      "type": "function",
+      "name": "_draw_motif_schematic",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        77,
+        101
+      ],
+      "summary": "_draw_motif_schematic(ax, motif, color, top_d, base_d, x0, x1, alpha_override) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:generate_well_panel",
+      "type": "function",
+      "name": "generate_well_panel",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        104,
+        503
+      ],
+      "summary": "generate_well_panel(well_id, wdata, packages, intervals, config, output_dir, dpi, sensing_bins, now_ts) — 399 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:generate_correlation_panel",
+      "type": "function",
+      "name": "generate_correlation_panel",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        506,
+        649
+      ],
+      "summary": "generate_correlation_panel(well_data, all_packages, config, output_dir, dpi, now_ts) — 143 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:_parse_zone_age",
+      "type": "function",
+      "name": "_parse_zone_age",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        652,
+        660
+      ],
+      "summary": "_parse_zone_age(zone, nn_ages) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/plot.py:_get_haq_ogg",
+      "type": "function",
+      "name": "_get_haq_ogg",
+      "filePath": "src/geox_core/well/stratigraphy/plot.py",
+      "lineRange": [
+        663,
+        705
+      ],
+      "summary": "_get_haq_ogg() — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/sensing.py",
+      "type": "file",
+      "name": "sensing.py",
+      "filePath": "src/geox_core/well/stratigraphy/sensing.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/sensing.py:sense_bins",
+      "type": "function",
+      "name": "sense_bins",
+      "filePath": "src/geox_core/well/stratigraphy/sensing.py",
+      "lineRange": [
+        20,
+        175
+      ],
+      "summary": "sense_bins(depth, gr, zone_top, zone_base, bin_size_m, gr_cut_api) — 155 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/sensing.py:_classify_micro_motif",
+      "type": "function",
+      "name": "_classify_micro_motif",
+      "filePath": "src/geox_core/well/stratigraphy/sensing.py",
+      "lineRange": [
+        178,
+        197
+      ],
+      "summary": "_classify_micro_motif(mean, rng, slope, gr_cut) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/stratigraphy/seqstrat.py",
+      "type": "file",
+      "name": "seqstrat.py",
+      "filePath": "src/geox_core/well/stratigraphy/seqstrat.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/seqstrat.py:infer_seq_strat",
+      "type": "function",
+      "name": "infer_seq_strat",
+      "filePath": "src/geox_core/well/stratigraphy/seqstrat.py",
+      "lineRange": [
+        25,
+        97
+      ],
+      "summary": "infer_seq_strat(pkg, depo_code, depo_rank) — 72 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/seqstrat.py:geo_rule_check",
+      "type": "function",
+      "name": "geo_rule_check",
+      "filePath": "src/geox_core/well/stratigraphy/seqstrat.py",
+      "lineRange": [
+        100,
+        119
+      ],
+      "summary": "geo_rule_check(pkg, depo_code, depo_rank) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/stratigraphy/seqstrat.py:litho_classify",
+      "type": "function",
+      "name": "litho_classify",
+      "filePath": "src/geox_core/well/stratigraphy/seqstrat.py",
+      "lineRange": [
+        122,
+        133
+      ],
+      "summary": "litho_classify(gr_mean, cut_sand, cut_silt, cut_shaly) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/tools/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/well/tools/__init__.py",
+      "summary": "python code file (0 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/tools/packages.py",
+      "type": "file",
+      "name": "packages.py",
+      "filePath": "src/geox_core/well/tools/packages.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/packages.py:build_packages",
+      "type": "function",
+      "name": "build_packages",
+      "filePath": "src/geox_core/well/tools/packages.py",
+      "lineRange": [
+        16,
+        84
+      ],
+      "summary": "build_packages(gr_bins, min_package_thickness_m, p50_shift_api) — 68 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/packages.py:_finalize_package",
+      "type": "function",
+      "name": "_finalize_package",
+      "filePath": "src/geox_core/well/tools/packages.py",
+      "lineRange": [
+        87,
+        110
+      ],
+      "summary": "_finalize_package(bins) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/packages.py:_classify_stacking",
+      "type": "function",
+      "name": "_classify_stacking",
+      "filePath": "src/geox_core/well/tools/packages.py",
+      "lineRange": [
+        113,
+        137
+      ],
+      "summary": "_classify_stacking(pkg, all_pkgs, idx) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/well/tools/sensing.py",
+      "type": "file",
+      "name": "sensing.py",
+      "filePath": "src/geox_core/well/tools/sensing.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/sensing.py:compute_gr_bins",
+      "type": "function",
+      "name": "compute_gr_bins",
+      "filePath": "src/geox_core/well/tools/sensing.py",
+      "lineRange": [
+        18,
+        114
+      ],
+      "summary": "compute_gr_bins(depth, gr, zone_top, zone_base, bin_size_m) — 96 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/well/tools/seqstrat.py",
+      "type": "file",
+      "name": "seqstrat.py",
+      "filePath": "src/geox_core/well/tools/seqstrat.py",
+      "summary": "Defines 4 function(s); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/seqstrat.py:infer_seq_strat",
+      "type": "function",
+      "name": "infer_seq_strat",
+      "filePath": "src/geox_core/well/tools/seqstrat.py",
+      "lineRange": [
+        52,
+        117
+      ],
+      "summary": "infer_seq_strat(packages, depo_env_code, gr_cutoff_api) — 65 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/seqstrat.py:_assign_systems_tracts",
+      "type": "function",
+      "name": "_assign_systems_tracts",
+      "filePath": "src/geox_core/well/tools/seqstrat.py",
+      "lineRange": [
+        120,
+        163
+      ],
+      "summary": "_assign_systems_tracts(packages, depo) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/seqstrat.py:_is_tract_boundary",
+      "type": "function",
+      "name": "_is_tract_boundary",
+      "filePath": "src/geox_core/well/tools/seqstrat.py",
+      "lineRange": [
+        166,
+        197
+      ],
+      "summary": "_is_tract_boundary(pattern, motif, current_tract, expected, depo) — 31 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/well/tools/seqstrat.py:_identify_surfaces",
+      "type": "function",
+      "name": "_identify_surfaces",
+      "filePath": "src/geox_core/well/tools/seqstrat.py",
+      "lineRange": [
+        200,
+        292
+      ],
+      "summary": "_identify_surfaces(packages, tracts, depo, gr_cutoff) — 92 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/__init__.py",
+      "summary": "python code file (2 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/apps/workbench.py",
+      "type": "file",
+      "name": "workbench.py",
+      "filePath": "src/geox_mcp/apps/workbench.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/apps/workbench.py:register_workbench",
+      "type": "function",
+      "name": "register_workbench",
+      "filePath": "src/geox_mcp/apps/workbench.py",
+      "lineRange": [
+        48,
+        98
+      ],
+      "summary": "register_workbench(mcp) — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/artifact_identity.py",
+      "type": "file",
+      "name": "artifact_identity.py",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:make_artifact_id",
+      "type": "function",
+      "name": "make_artifact_id",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        76,
+        117
+      ],
+      "summary": "make_artifact_id(kind, canonical_id, sha256, version) — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:canonicalize_well_ref",
+      "type": "function",
+      "name": "canonicalize_well_ref",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        120,
+        135
+      ],
+      "summary": "canonicalize_well_ref(well_name, uwi) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:parse_artifact_ref",
+      "type": "function",
+      "name": "parse_artifact_ref",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        158,
+        217
+      ],
+      "summary": "parse_artifact_ref(ref) — 59 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:artifact_refs_equal",
+      "type": "function",
+      "name": "artifact_refs_equal",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        220,
+        239
+      ],
+      "summary": "artifact_refs_equal(a, b) — 19 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:storage_keys_for",
+      "type": "function",
+      "name": "storage_keys_for",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        245,
+        291
+      ],
+      "summary": "storage_keys_for(ref) — 46 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_identity.py:make_artifact_record",
+      "type": "function",
+      "name": "make_artifact_record",
+      "filePath": "src/geox_mcp/artifact_identity.py",
+      "lineRange": [
+        297,
+        335
+      ],
+      "summary": "make_artifact_record(kind, canonical_id, content_hash, source_path, well_name, uwi, domain_id, version, metadata) — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_mcp/artifact_resolve.py",
+      "type": "file",
+      "name": "artifact_resolve.py",
+      "filePath": "src/geox_mcp/artifact_resolve.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_resolve.py:_geox_root",
+      "type": "function",
+      "name": "_geox_root",
+      "filePath": "src/geox_mcp/artifact_resolve.py",
+      "lineRange": [
+        26,
+        28
+      ],
+      "summary": "_geox_root() — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/artifact_resolve.py:resolve_well_las",
+      "type": "function",
+      "name": "resolve_well_las",
+      "filePath": "src/geox_mcp/artifact_resolve.py",
+      "lineRange": [
+        31,
+        175
+      ],
+      "summary": "resolve_well_las(ref) — 144 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/artifacts/zarr_store.py",
+      "type": "file",
+      "name": "zarr_store.py",
+      "filePath": "src/geox_mcp/artifacts/zarr_store.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/artifacts/zarr_store.py:well_log_from_legacy_entry",
+      "type": "function",
+      "name": "well_log_from_legacy_entry",
+      "filePath": "src/geox_mcp/artifacts/zarr_store.py",
+      "lineRange": [
+        528,
+        582
+      ],
+      "summary": "well_log_from_legacy_entry(entry, curves, depth, units) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/artifacts/zarr_store.py:LineageEntry",
+      "type": "class",
+      "name": "LineageEntry",
+      "filePath": "src/geox_mcp/artifacts/zarr_store.py",
+      "lineRange": [
+        92,
+        152
+      ],
+      "summary": "Class LineageEntry with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/artifacts/zarr_store.py:ZarrArtifactStore",
+      "type": "class",
+      "name": "ZarrArtifactStore",
+      "filePath": "src/geox_mcp/artifacts/zarr_store.py",
+      "lineRange": [
+        158,
+        522
+      ],
+      "summary": "Class ZarrArtifactStore with 14 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_mcp/authority_gate.py",
+      "type": "file",
+      "name": "authority_gate.py",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "summary": "Defines 4 function(s); 1 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_mcp/authority_gate.py:_authority_rank",
+      "type": "function",
+      "name": "_authority_rank",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "lineRange": [
+        111,
+        117
+      ],
+      "summary": "_authority_rank(level) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/authority_gate.py:_http_status_for",
+      "type": "function",
+      "name": "_http_status_for",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "lineRange": [
+        120,
+        133
+      ],
+      "summary": "_http_status_for(error_code) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_mcp/authority_gate.py:extract_identity",
+      "type": "function",
+      "name": "extract_identity",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "lineRange": [
+        139,
+        178
+      ],
+      "summary": "extract_identity(arguments) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/authority_gate.py:enforce_authority",
+      "type": "function",
+      "name": "enforce_authority",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "lineRange": [
+        184,
+        310
+      ],
+      "summary": "enforce_authority(tool_name, arguments) — 126 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_mcp/authority_gate.py:AuthorityRejection",
+      "type": "class",
+      "name": "AuthorityRejection",
+      "filePath": "src/geox_mcp/authority_gate.py",
+      "lineRange": [
+        57,
+        98
+      ],
+      "summary": "Class AuthorityRejection with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/canonical_surface_gate.py",
+      "type": "file",
+      "name": "canonical_surface_gate.py",
+      "filePath": "src/geox_mcp/canonical_surface_gate.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/canonical_surface_gate.py:filter_tools_list",
+      "type": "function",
+      "name": "filter_tools_list",
+      "filePath": "src/geox_mcp/canonical_surface_gate.py",
+      "lineRange": [
+        64,
+        114
+      ],
+      "summary": "filter_tools_list(tools, log_drift) — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_mcp/canonical_surface_gate.py:drift_report",
+      "type": "function",
+      "name": "drift_report",
+      "filePath": "src/geox_mcp/canonical_surface_gate.py",
+      "lineRange": [
+        117,
+        142
+      ],
+      "summary": "drift_report(live_tool_names) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/contracts/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_mcp/contracts/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/contracts/adapter_bus_contract.py",
+      "type": "file",
+      "name": "adapter_bus_contract.py",
+      "filePath": "src/geox_mcp/contracts/adapter_bus_contract.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/contracts/gate_receipt.py",
+      "type": "file",
+      "name": "gate_receipt.py",
+      "filePath": "src/geox_mcp/contracts/gate_receipt.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/contracts/geo_project_state.py",
+      "type": "file",
+      "name": "geo_project_state.py",
+      "filePath": "src/geox_mcp/contracts/geo_project_state.py",
+      "summary": "4 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_mcp/contracts/geo_project_state.py:GeoProjectState",
+      "type": "class",
+      "name": "GeoProjectState",
+      "filePath": "src/geox_mcp/contracts/geo_project_state.py",
+      "lineRange": [
+        50,
+        81
+      ],
+      "summary": "Class GeoProjectState with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_mcp/contracts/interpretation_bundle.py",
+      "type": "file",
+      "name": "interpretation_bundle.py",
+      "filePath": "src/geox_mcp/contracts/interpretation_bundle.py",
+      "summary": "python code file (44 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:_sha256",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:_pack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:_unpack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:embed_manifest_in_png",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:extract_manifest_from_png",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:png_to_xlsx",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/codec.py",
+      "target": "function:src/geox_core/well/stratigraphy/codec.py:validate_roundtrip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/config.py",
+      "target": "class:src/geox_core/well/stratigraphy/config.py:ProjectConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:_thick_border",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:_header_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:_cell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:export_excel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:export_sensing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/excel.py",
+      "target": "function:src/geox_core/well/stratigraphy/excel.py:_tract_fill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/loader.py",
+      "target": "function:src/geox_core/well/stratigraphy/loader.py:load_well_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/loader.py",
+      "target": "function:src/geox_core/well/stratigraphy/loader.py:_load_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/loader.py",
+      "target": "function:src/geox_core/well/stratigraphy/loader.py:_load_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/loader.py",
+      "target": "function:src/geox_core/well/stratigraphy/loader.py:_detect_gr_column",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/packages.py",
+      "target": "function:src/geox_core/well/stratigraphy/packages.py:build_packages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/packages.py",
+      "target": "function:src/geox_core/well/stratigraphy/packages.py:_finalize_package",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/pipeline.py",
+      "target": "function:src/geox_core/well/stratigraphy/pipeline.py:run_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/pipeline.py",
+      "target": "function:src/geox_core/well/stratigraphy/pipeline.py:_parse_zone_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/pipeline.py",
+      "target": "function:src/geox_core/well/stratigraphy/pipeline.py:_make_no_data_package",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/pipeline.py",
+      "target": "function:src/geox_core/well/stratigraphy/pipeline.py:_extrapolate_motif",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:_plot_gr_conventional",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:_draw_motif_schematic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:generate_well_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:generate_correlation_panel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:_parse_zone_age",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/plot.py",
+      "target": "function:src/geox_core/well/stratigraphy/plot.py:_get_haq_ogg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/sensing.py",
+      "target": "function:src/geox_core/well/stratigraphy/sensing.py:sense_bins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/sensing.py",
+      "target": "function:src/geox_core/well/stratigraphy/sensing.py:_classify_micro_motif",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/seqstrat.py",
+      "target": "function:src/geox_core/well/stratigraphy/seqstrat.py:infer_seq_strat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/seqstrat.py",
+      "target": "function:src/geox_core/well/stratigraphy/seqstrat.py:geo_rule_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/stratigraphy/seqstrat.py",
+      "target": "function:src/geox_core/well/stratigraphy/seqstrat.py:litho_classify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/packages.py",
+      "target": "function:src/geox_core/well/tools/packages.py:build_packages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/packages.py",
+      "target": "function:src/geox_core/well/tools/packages.py:_finalize_package",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/packages.py",
+      "target": "function:src/geox_core/well/tools/packages.py:_classify_stacking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/sensing.py",
+      "target": "function:src/geox_core/well/tools/sensing.py:compute_gr_bins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/seqstrat.py",
+      "target": "function:src/geox_core/well/tools/seqstrat.py:infer_seq_strat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/seqstrat.py",
+      "target": "function:src/geox_core/well/tools/seqstrat.py:_assign_systems_tracts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/seqstrat.py",
+      "target": "function:src/geox_core/well/tools/seqstrat.py:_is_tract_boundary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/well/tools/seqstrat.py",
+      "target": "function:src/geox_core/well/tools/seqstrat.py:_identify_surfaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/apps/workbench.py",
+      "target": "function:src/geox_mcp/apps/workbench.py:register_workbench",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:make_artifact_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:canonicalize_well_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:parse_artifact_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:artifact_refs_equal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:storage_keys_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_identity.py",
+      "target": "function:src/geox_mcp/artifact_identity.py:make_artifact_record",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_resolve.py",
+      "target": "function:src/geox_mcp/artifact_resolve.py:_geox_root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifact_resolve.py",
+      "target": "function:src/geox_mcp/artifact_resolve.py:resolve_well_las",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifacts/zarr_store.py",
+      "target": "function:src/geox_mcp/artifacts/zarr_store.py:well_log_from_legacy_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifacts/zarr_store.py",
+      "target": "class:src/geox_mcp/artifacts/zarr_store.py:LineageEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/artifacts/zarr_store.py",
+      "target": "class:src/geox_mcp/artifacts/zarr_store.py:ZarrArtifactStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/authority_gate.py",
+      "target": "function:src/geox_mcp/authority_gate.py:_authority_rank",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/authority_gate.py",
+      "target": "function:src/geox_mcp/authority_gate.py:_http_status_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/authority_gate.py",
+      "target": "function:src/geox_mcp/authority_gate.py:extract_identity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/authority_gate.py",
+      "target": "function:src/geox_mcp/authority_gate.py:enforce_authority",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/authority_gate.py",
+      "target": "class:src/geox_mcp/authority_gate.py:AuthorityRejection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/canonical_surface_gate.py",
+      "target": "function:src/geox_mcp/canonical_surface_gate.py:filter_tools_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/canonical_surface_gate.py",
+      "target": "function:src/geox_mcp/canonical_surface_gate.py:drift_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_mcp/contracts/geo_project_state.py",
+      "target": "class:src/geox_mcp/contracts/geo_project_state.py:GeoProjectState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

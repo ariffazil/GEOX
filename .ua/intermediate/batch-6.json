@@ -1,0 +1,66 @@
+{
+  "nodes": [
+    {
+      "id": "document:.github/copilot-instructions.md",
+      "type": "document",
+      "name": "copilot-instructions.md",
+      "filePath": ".github/copilot-instructions.md",
+      "summary": "markdown docs file (40 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.github/dependabot.yml",
+      "type": "config",
+      "name": "dependabot.yml",
+      "filePath": ".github/dependabot.yml",
+      "summary": "yaml config file (107 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:.github/pull_request_template.md",
+      "type": "document",
+      "name": "pull_request_template.md",
+      "filePath": ".github/pull_request_template.md",
+      "summary": "markdown docs file (21 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.github/repo-policy.yml",
+      "type": "config",
+      "name": "repo-policy.yml",
+      "filePath": ".github/repo-policy.yml",
+      "summary": "yaml config file (60 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:.github/workflows.CANONICAL.yml",
+      "type": "config",
+      "name": "workflows.CANONICAL.yml",
+      "filePath": ".github/workflows.CANONICAL.yml",
+      "summary": "yaml config file (21 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml",
+        "ci-cd"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,1249 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 20,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 20,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "results": [
+    {
+      "path": "docs/GEOX_ZEN_ROADMAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 115,
+      "nonEmptyLines": 77,
+      "sections": [
+        {
+          "heading": "GEOX Zen Roadmap",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. Two loops (do not conflate)",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "1. Priority order (locked)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "2. Zen surface (target ~8 capability verbs)",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "3. One noun set",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "4. Zen the output",
+          "level": 2,
+          "line": 61
+        },
+        {
+          "heading": "5. Workspace inheritance",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "6. Tool descriptions = triggers",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "7. Happy path (one call after arif_init)",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "8. Status",
+          "level": 2,
+          "line": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docs/GLOSSARY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 16,
+      "nonEmptyLines": 14,
+      "sections": [
+        {
+          "heading": "GEOX Glossary — Constitutional & Industry Terminology",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/GOVERNANCE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 40,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "GEOX Well Logs Operating Laws (CRP v1.0)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Identity & Mission",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "2. Operating Laws (Reality-First Doctrine)",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "3. Orthogonal Capability Modes",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "4. SEAL / PARTIAL / 888_HOLD Decision Logic",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "5. Refusal Rules & Anti-Hallucination",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "6. Output Contract & Telemetry Footer",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "7. Human-in-the-Loop Escalation",
+          "level": 2,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "docs/HEALTHCHECK.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 79,
+      "nonEmptyLines": 58,
+      "sections": [
+        {
+          "heading": "GEOX Health and Deployment Notes",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Live Port: 8081",
+          "level": 2,
+          "line": 4
+        },
+        {
+          "heading": "Starting GEOX Daemon",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Health Check",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Caddy Route (Current — VERIFIED 2026-06-02)",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "MCP Endpoint",
+          "level": 2,
+          "line": 68
+        },
+        {
+          "heading": "Port History",
+          "level": 2,
+          "line": 73
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/HOST_COMPATIBILITY_MATRIX.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 35,
+      "nonEmptyLines": 27,
+      "sections": [
+        {
+          "heading": "GEOX MCP Host Compatibility Matrix",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Compatibility Matrix",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Tested Key Endpoints",
+          "level": 2,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "docs/MCP_APPS_READINESS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 64,
+      "nonEmptyLines": 50,
+      "sections": [
+        {
+          "heading": "GEOX MCP Apps Readiness — Index (SOT pointer)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Status snapshot",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "Deploy (one path)",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Clean clone note (W0.2)",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "Smoke (host hydrate)",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "Seal levels",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "Residual (honest)",
+          "level": 2,
+          "line": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/MCP_TOOL_REFERENCE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 169,
+      "nonEmptyLines": 138,
+      "sections": [
+        {
+          "heading": "MCP Tool Reference — GEOX 54 Canonical Tools",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Lane 1 — DISCOVERY (6 tools, OBSERVE-only, no lease required)",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "Lane 2 — EVIDENCE (14 tools, ANALYZE, no lease required)",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "Lane 3 — REASONING (21 tools, ANALYZE, lease + session required)",
+          "level": 2,
+          "line": 58
+        },
+        {
+          "heading": "Lane 4 — JUDGMENT (13 tools, GOVERNED, lease + session + arifOS judge required)",
+          "level": 2,
+          "line": 88
+        },
+        {
+          "heading": "Constitutional Output Envelope",
+          "level": 2,
+          "line": 106
+        },
+        {
+          "heading": "Live Verification (post-deploy)",
+          "level": 2,
+          "line": 135
+        },
+        {
+          "heading": "References",
+          "level": 2,
+          "line": 159
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/MCP_TRANSPORT_SURFACE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 428,
+      "nonEmptyLines": 339,
+      "sections": [
+        {
+          "heading": "GEOX MCP Transport Surface — Manifest",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Executive Summary",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "1. TOOLS — 56 Canonical (4 Lanes)",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Lane 1 — DISCOVERY (6 tools, OBSERVE-only, no lease)",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "Lane 2 — EVIDENCE (14 tools, ANALYZE, no lease)",
+          "level": 3,
+          "line": 41
+        },
+        {
+          "heading": "Lane 3 — REASONING (21 tools, ANALYZE, lease + session)",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "Lane 4 — JUDGMENT (13 tools, GOVERNED, lease + session + arifOS judge)",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "2. RESOURCES — 17+ Templates (URI scheme: `geox://...` and `tree777://...`)",
+          "level": 2,
+          "line": 108
+        },
+        {
+          "heading": "2.1 Identity + Reality Context (5)",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "2.2 Capabilities + Knowledge Pack (4)",
+          "level": 3,
+          "line": 120
+        },
+        {
+          "heading": "2.3 TREE777 Wiki (4) — federation skills/concepts/scars",
+          "level": 3,
+          "line": 129
+        },
+        {
+          "heading": "2.4 Literature + Basins (3)",
+          "level": 3,
+          "line": 138
+        },
+        {
+          "heading": "2.5 Claims + Artifacts (4)",
+          "level": 3,
+          "line": 147
+        },
+        {
+          "heading": "2.6 Binary Render Transport (Module J, 5)",
+          "level": 3,
+          "line": 159
+        },
+        {
+          "heading": "3. PROMPTS — 11 Templates",
+          "level": 2,
+          "line": 171
+        },
+        {
+          "heading": "3.1 Earth Intelligence (3 — the core trio)",
+          "level": 3,
+          "line": 173
+        },
+        {
+          "heading": "3.2 Discipline (3)",
+          "level": 3,
+          "line": 184
+        },
+        {
+          "heading": "3.3 Red Team (1)",
+          "level": 3,
+          "line": 192
+        },
+        {
+          "heading": "3.4 Reports (3)",
+          "level": 3,
+          "line": 198
+        },
+        {
+          "heading": "3.5 Plus discovery-query and intake (in server.py decorator; see `geox_query_intake` tool lane 1)",
+          "level": 3,
+          "line": 206
+        },
+        {
+          "heading": "4. SUB-SERVERS (mounted via `mcp.mount()`)",
+          "level": 2,
+          "line": 210
+        },
+        {
+          "heading": "5. UI APPS (Prefabs)",
+          "level": 2,
+          "line": 223
+        },
+        {
+          "heading": "6. WebMCP (HTTP Endpoints for Browser-Based MCP Hosts)",
+          "level": 2,
+          "line": 235
+        },
+        {
+          "heading": "7. Transport Layer Details",
+          "level": 2,
+          "line": 249
+        },
+        {
+          "heading": "7.1 FastMCP Transport Options",
+          "level": 3,
+          "line": 251
+        },
+        {
+          "heading": "7.2 FastMCP Extensions Wired",
+          "level": 3,
+          "line": 258
+        },
+        {
+          "heading": "7.3 Authority Lane Mapping (Server-side Enforcement)",
+          "level": 3,
+          "line": 272
+        },
+        {
+          "heading": "8. MCP Spec Alignment (per `modelcontextprotocol.io/specification/2025-11-25`)",
+          "level": 2,
+          "line": 285
+        },
+        {
+          "heading": "9. Language Support",
+          "level": 2,
+          "line": 303
+        },
+        {
+          "heading": "10. Verification (live)",
+          "level": 2,
+          "line": 330
+        },
+        {
+          "heading": "11. File Organization",
+          "level": 2,
+          "line": 361
+        },
+        {
+          "heading": "12. Migration Path (Future)",
+          "level": 2,
+          "line": 399
+        },
+        {
+          "heading": "References",
+          "level": 2,
+          "line": 414
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 33
+      }
+    },
+    {
+      "path": "docs/MODE_PARAM_SCHEMA_GUIDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 96,
+      "nonEmptyLines": 74,
+      "sections": [
+        {
+          "heading": "GEOX Mode-Param Schema Guide",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Why This Exists",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "geox_claim (13 modes, 30+ params)",
+          "level": 2,
+          "line": 18
+        },
+        {
+          "heading": "geox_basin (9+ modes)",
+          "level": 2,
+          "line": 41
+        },
+        {
+          "heading": "geox_petrophysics (5 modes)",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "geox_model (3 modes)",
+          "level": 2,
+          "line": 69
+        },
+        {
+          "heading": "geox_seismic_interpret (10+ modes)",
+          "level": 2,
+          "line": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/PHYSICS9_EARTH_WITNESS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 274,
+      "nonEmptyLines": 209,
+      "sections": [
+        {
+          "heading": "Physics9 Earth Witness — Multi-Physics Joint Inversion",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What This Is",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "The Physics9State — The 9-Dial Canon",
+          "level": 2,
+          "line": 44
+        },
+        {
+          "heading": "The Forward Models (one per modality)",
+          "level": 2,
+          "line": 80
+        },
+        {
+          "heading": "The Inverse Solver (IRLS)",
+          "level": 2,
+          "line": 94
+        },
+        {
+          "heading": "Biostrat Time-Facies Constraints",
+          "level": 2,
+          "line": 120
+        },
+        {
+          "heading": "CSEM/MT 1D Forward — Filling the ρₑ Gap",
+          "level": 2,
+          "line": 139
+        },
+        {
+          "heading": "PINN Seismic Inversion — 1D Baseline",
+          "level": 2,
+          "line": 164
+        },
+        {
+          "heading": "Output Envelope — What the Kernel Sees",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "Constitutional Truth",
+          "level": 2,
+          "line": 218
+        },
+        {
+          "heading": "Why This Is Different from Foundation Models",
+          "level": 2,
+          "line": 234
+        },
+        {
+          "heading": "Files",
+          "level": 2,
+          "line": 250
+        },
+        {
+          "heading": "Future (W14+)",
+          "level": 2,
+          "line": 264
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "docs/PHYSICS_9_SPEC.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 62,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "PHYSICS.9: THE GEOX STATE VECTOR",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "MISSION: THE MINIMAL SEMANTIC BASIS",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "THE PHYSICS 9",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "CONSTITUTIONAL LOCK: DERIVED EXCLUSIONS",
+          "level": 3,
+          "line": 27
+        },
+        {
+          "heading": "2. Physical Completeness",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "3. AGI/LEM Foundation",
+          "level": 3,
+          "line": 47
+        },
+        {
+          "heading": "SEAL",
+          "level": 2,
+          "line": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/POSITIONING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 113,
+      "nonEmptyLines": 77,
+      "sections": [
+        {
+          "heading": "GEOX Positioning: Earth Evidence Operating System",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "0. The One-Line Position",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. The Core Differentiation",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "2. The Five Contrasts (the public moat)",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "3. The Four Parallel Surfaces",
+          "level": 2,
+          "line": 52
+        },
+        {
+          "heading": "4. Competitive Alignment",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "5. The \"Earth Evidence Operating System\" Mandate",
+          "level": 2,
+          "line": 78
+        },
+        {
+          "heading": "6. What the Public Site Sells (and What It Doesn't)",
+          "level": 2,
+          "line": 86
+        },
+        {
+          "heading": "7. The Posture",
+          "level": 2,
+          "line": 102
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/POST_MERGE_DRIFT_AUDIT_2026-07-13.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 57,
+      "nonEmptyLines": 44,
+      "sections": [
+        {
+          "heading": "GEOX Post-Merge Drift Audit",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Evidence inputs",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "2. Claim parity table",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "3. Detailed observations",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "4. Risk assessment",
+          "level": 2,
+          "line": 40
+        },
+        {
+          "heading": "5. Recommended corrective actions",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "6. Audit verdict",
+          "level": 2,
+          "line": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "docs/PROTOCOL_CONFORMANCE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 29,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "🌍 GEOX — Protocol Conformance",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Supported Protocols",
+          "level": 2,
+          "line": 6
+        },
+        {
+          "heading": "MCP Tool Surface",
+          "level": 2,
+          "line": 20
+        },
+        {
+          "heading": "Gaps",
+          "level": 2,
+          "line": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/QUICKSTART.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 95,
+      "nonEmptyLines": 66,
+      "sections": [
+        {
+          "heading": "GEOX Quickstart — 15 Minutes to Running Locally",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What You'll Have",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Prerequisites",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Quickstart",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Verify",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Quick Test",
+          "level": 2,
+          "line": 47
+        },
+        {
+          "heading": "Key Tools",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "What You Need for Real Data",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "Common Issues",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "Next Steps",
+          "level": 2,
+          "line": 85
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docs/README-FULL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 249,
+      "nonEmptyLines": 196,
+      "sections": [
+        {
+          "heading": "🌍 GEOX — Earth Intelligence Organ",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "📐 Epistemic Layering",
+          "level": 2,
+          "line": 35
+        },
+        {
+          "heading": "🧪 Falsification-First Architecture — Inner Loop",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "🌐 Federation — Outer Loop",
+          "level": 2,
+          "line": 72
+        },
+        {
+          "heading": "🛠️ Core Capabilities (19 Tools)",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "🗺️ Where GEOX Sits in the Federation",
+          "level": 2,
+          "line": 125
+        },
+        {
+          "heading": "⚡ Production Operations",
+          "level": 2,
+          "line": 194
+        },
+        {
+          "heading": "🏛️ Federation Navigation",
+          "level": 2,
+          "line": 211
+        },
+        {
+          "heading": "📡 MCP Registries",
+          "level": 2,
+          "line": 230
+        },
+        {
+          "heading": "📜 License & Sovereignty",
+          "level": 2,
+          "line": 243
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docs/README_WELL_DESK.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 157,
+      "nonEmptyLines": 129,
+      "sections": [
+        {
+          "heading": "WellDesk",
+          "level": 2,
+          "line": 1
+        },
+        {
+          "heading": "What WellDesk Does",
+          "level": 3,
+          "line": 5
+        },
+        {
+          "heading": "Architecture",
+          "level": 3,
+          "line": 15
+        },
+        {
+          "heading": "Launch as Web App",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "Use as MCP App",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "Quickstart",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "Tool Contract",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "Scaffold Fixtures",
+          "level": 3,
+          "line": 138
+        },
+        {
+          "heading": "Constraints",
+          "level": 3,
+          "line": 148
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/RELEASE_CHANGELOG_DRAFT_v2026.07.13-institution-1.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 77,
+      "nonEmptyLines": 61,
+      "sections": [
+        {
+          "heading": "GEOX Release Changelog Draft",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Release metadata",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "2. Merge summary",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "3. Branch cleanup summary",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "4. Validation summary (release gate snapshot)",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "5. Limitations and risk notes",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "6. Rollback and recovery",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "7. Signature block",
+          "level": 2,
+          "line": 70
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "docs/RELEASE_CHECKLIST.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 14,
+      "nonEmptyLines": 12,
+      "sections": [
+        {
+          "heading": "Sovereign 13 Release Checklist",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/RUNBOOK.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 201,
+      "nonEmptyLines": 164,
+      "sections": [
+        {
+          "heading": "RUNBOOK.md — GEOX (Earth Intelligence)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Start / Stop",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Health Check",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Federation Map (W16+)",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Logs",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "Tests",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "Common Failure Modes",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "What NOT to Do",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "W2-W13+ FORGE Operational Notes",
+          "level": 2,
+          "line": 71
+        },
+        {
+          "heading": "Doctrine tools (JUDGMENT lane — lease + session required)",
+          "level": 3,
+          "line": 73
+        },
+        {
+          "heading": "Multi-physics joint inversion",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "WEALTH feed",
+          "level": 3,
+          "line": 113
+        },
+        {
+          "heading": "WELL operator gate",
+          "level": 3,
+          "line": 124
+        },
+        {
+          "heading": "Geomechanics",
+          "level": 3,
+          "line": 133
+        },
+        {
+          "heading": "Open Data Refresh",
+          "level": 2,
+          "line": 141
+        },
+        {
+          "heading": "EMAG2v3 V3",
+          "level": 3,
+          "line": 143
+        },
+        {
+          "heading": "Prithvi-EO-2.0 (when greenlit)",
+          "level": 3,
+          "line": 159
+        },
+        {
+          "heading": "Rollback Procedure",
+          "level": 2,
+          "line": 172
+        },
+        {
+          "heading": "Emergency Contacts",
+          "level": 2,
+          "line": 193
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 19
+      }
+    }
+  ]
+}
