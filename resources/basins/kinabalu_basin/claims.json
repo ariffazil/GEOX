@@ -43,7 +43,7 @@
     "claim_id": "kin_clm_5",
     "claim": "At depth, part of the Kinabalu substrate is stacked above underthrust Dangerous Grounds extended crust continuing SE beneath Neogene Borneo sediments.",
     "claim_type": "hypothesis",
-    "evidence_refs": ["../../nw_borneo_collision_system/claims.json"],
+    "evidence_refs": ["../nw_borneo_collision_system/claims.json"],
     "source": "Arif ENTERPRISE relay 2026-09-30 (sys_clm_3)",
     "confidence": "low",
     "valid_until": "2027-06-30",

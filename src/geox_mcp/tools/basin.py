@@ -39,6 +39,43 @@ def _normalize_name(name: str) -> str:
     return name.lower().replace(" ", "_").replace("-", "_")
 
 
+def _find_alias_match(query_normalized: str) -> str | None:
+    """Scan all basin_profile.yaml `aliases:` entries for a normalized match.
+
+    Used as a fallback when the canonical directory-name lookup misses. Newly
+    advertised aliases (DG, Kinabalu, NWB Trough, etc.) often sit beside the
+    canonical id (DANGEROUS_GROUNDS, KINABALU_BASIN, NORTHWEST_BORNEO_TROUGH)
+    and would otherwise return "Basin not found".
+
+    Returns the matching directory name (basin key on disk), or None.
+    Skips directories without a basin_profile.yaml — they cannot be resolved
+    safely via alias scan.
+    """
+    basins_root = RESOURCES_DIR / "basins"
+    if not basins_root.exists():
+        return None
+    try:
+        for child in sorted(basins_root.iterdir()):
+            if not child.is_dir():
+                continue
+            prof_path = child / "basin_profile.yaml"
+            if not prof_path.exists():
+                continue
+            try:
+                with open(prof_path) as f:
+                    prof = yaml.safe_load(f) or {}
+            except Exception:
+                continue
+            for alias in prof.get("aliases") or []:
+                if not isinstance(alias, str):
+                    continue
+                if _normalize_name(alias) == query_normalized:
+                    return child.name
+    except Exception:
+        return None
+    return None
+
+
 # ── Basin Coordinate Registry ────────────────────────────────────────────────
 # FIX 2026-07-06: Enables Macrostrat API fallback for basins without local data.
 # When a basin has no local basin_profile.yaml, we look up its approximate
@@ -180,8 +217,18 @@ async def geox_basin_resolve(
     profile_file = basin_dir / "basin_profile.yaml"
 
     if not profile_file.exists():
-        # Fallback to general fuzzy check or return error
-        if normalized in ("malay_basin", "basin_melayu"):
+        # Alias fallback — newly advertised aliases (DG, Kinabalu, NWB Trough, etc.)
+        # may not match a directory name on disk. Scan every basin_profile.yaml's
+        # `aliases:` list and re-target on first normalized match. This must
+        # happen BEFORE the miss return or downstream consumers see "Basin not
+        # found" for resolvable basins.
+        alias_hit = _find_alias_match(normalized)
+        if alias_hit:
+            normalized = alias_hit
+            basin_dir = RESOURCES_DIR / "basins" / normalized
+            polygon_file = basin_dir / "polygon.geojson"
+            profile_file = basin_dir / "basin_profile.yaml"
+        elif normalized in ("malay_basin", "basin_melayu"):
             normalized = "malay_basin"
             basin_dir = RESOURCES_DIR / "basins" / normalized
             polygon_file = basin_dir / "polygon.geojson"
@@ -766,6 +813,18 @@ async def geox_basin_profile(
             "forbidden_claims": list(set(forbidden_claims)),
             "next_best_actions": next_best_actions,
         }
+
+        # Event registry lane (F2-compaction-safe).
+        # compact_structured_for_ui keeps only first 15 scalar values from
+        # `interpreted` when its JSON > 4 KB; the events list lives deeper in
+        # the YAML and is a list, so it is dropped. Hoist it to a dedicated
+        # top-level `event_registry` key (added to the compactor prefer list)
+        # so callers receive the full one-event-three-expressions registry
+        # on the public path. Empty list is omitted to keep payloads lean.
+        events_raw = mode_data.get("events") if mode == "overview" else None
+        if isinstance(events_raw, list) and events_raw:
+            result["event_registry"] = events_raw
+            result["event_registry_total"] = len(events_raw)
 
         # Determine governance status
         gov_status = GovernanceStatus.QUALIFY

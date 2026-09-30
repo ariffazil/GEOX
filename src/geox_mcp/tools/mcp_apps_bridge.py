@@ -1078,6 +1078,12 @@ def compact_structured_for_ui(
         "arc",
         "plate_setting",
         "gplates",
+        # 2026-09-30: hoisted from basin_profile.yaml's `events:` so the
+        # one-event-three-expressions registry survives the 4 KB compact
+        # boundary on the public geox_basin_profile path. Mirror in
+        # event_registry_total so callers see whether the list was capped.
+        "event_registry",
+        "event_registry_total",
     ]
     for k in prefer:
         if k not in source:

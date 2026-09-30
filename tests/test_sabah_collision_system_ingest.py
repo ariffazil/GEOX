@@ -54,9 +54,12 @@ async def test_trough_bbox_not_placeholder():
 async def test_system_profile_exposes_event_registry():
     prof = await geox_basin_profile(basin_name="NW Borneo Collision System", mode="overview")
     assert prof["execution_status"] == "SUCCESS"
-    interp = prof["primary_artifact"]["interpreted"]
-    assert "events" in interp and len(interp["events"]) >= 10
-    assert "COLLISION_MM" in {e["event_id"] for e in interp["events"]}
+    art = prof["primary_artifact"]
+    # Hoisted to top-level lane so it survives MCP compaction (4 KB dict boundary).
+    assert "event_registry" in art and len(art["event_registry"]) >= 10
+    assert "COLLISION_MM" in {e["event_id"] for e in art["event_registry"]}
+    # Master paradox stays inside the interpreted lane for legacy consumers.
+    interp = art["interpreted"]
     assert "opposite sign" in interp["master_paradox"].lower()
 
 
@@ -68,3 +71,38 @@ async def test_malay_legacy_path_preserved():
     assert "Malay Basin" in art["aliases"] and "Basin Melayu" in art["aliases"]
     assert art["bbox"] == [102.0, 4.0, 106.5, 8.5]
     assert art["neighbor_basins"] == ["Penyu", "Gulf of Thailand", "West Natuna"]
+
+
+# Aliases advertised in basin_profile.yaml but not equal to the canonical
+# directory name. Resolver must scan the alias index before returning
+# "Basin not found" so callers receive a populated envelope.
+ALIAS_HITS = [
+    ("DG", "DANGEROUS_GROUNDS"),
+    ("Kinabalu", "KINABALU_BASIN"),
+    ("NWB Trough", "NORTHWEST_BORNEO_TROUGH"),
+    ("Layang Basin", "LAYANG_LAYANG_BASIN"),
+    ("deepwater flat zone (operator colloquial)", "SABAH_TROUGH"),
+]
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("alias,expected_id", ALIAS_HITS)
+async def test_advertised_aliases_resolve(alias, expected_id):
+    res = await geox_basin_resolve(name=alias)
+    assert res["execution_status"] == "SUCCESS", f"alias '{alias}' should resolve, got {res}"
+    art = res["primary_artifact"]
+    assert art["basin_id"] == expected_id
+    # Resolver must surface the canonical name in the alias list so the
+    # alias → canonical mapping is auditable in receipts. Title-case mangling
+    # won't match multi-word names perfectly; rely on the alias set being
+    # non-empty and the requested alias being present (case-insensitive).
+    assert len(art["aliases"]) >= 1
+    assert alias in art["aliases"] or alias.lower() in {a.lower() for a in art["aliases"]}
+
+
+@pytest.mark.asyncio
+async def test_truly_unknown_basin_still_holds():
+    """Alias fallback must not mask real misses."""
+    res = await geox_basin_resolve(name="Atlantis Hydrocarbon Province")
+    assert res["execution_status"] == "ERROR"
+    assert "Basin not found" in res["primary_artifact"].get("error", "")
