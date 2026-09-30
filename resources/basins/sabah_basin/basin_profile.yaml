@@ -1,9 +1,18 @@
 # Sabah Basin Profile — GEOX Canonical
 # DITEMPA BUKAN DIBERI
 # Source: Canonical ontology + literature synthesis
+#
+# QUARANTINE_PENDING_AUDIT (FI-003, 2026-09-30): formation names below
+# ("Panas Thicknessnam", "Kellaneous", "Gomantong Limestone 23–16 Ma") could not be
+# verified against any public lexicon (GSM/JMG/Petrolsdb) or the 2023 Borneo
+# Integration framework; tectonic_setting ("Eurasian vs Philippine Sea Plate")
+# conflates the East Sabah/Sulu system with this NW margin entity. DO NOT cite
+# from this file until audited. The verified NW-Borneo model lives in
+# nw_borneo_collision_system + layang_layang_basin/sabah_trough/kinabalu_basin.
 
 basin_id: SABAH_BASIN
 basin_name: Sabah Basin
+data_status: QUARANTINE_PENDING_AUDIT
 location: Northern Sabah, East Malaysia — offshore and onshore
 area_sq_km: 37500
 tectonic_setting: Collision zone between Eurasian Plate and Philippine Sea Plate
