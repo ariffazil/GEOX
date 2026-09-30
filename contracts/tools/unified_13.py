@@ -50,14 +50,13 @@ logger = logging.getLogger("geox.unified13")
 # ALIAS DISPATCH
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 async def dispatch_alias(old_name: str, canonical_name: str, **kwargs: Any) -> dict:
     """Centralized dispatcher for aliases with deprecation metadata."""
     if canonical_name == "geox_data_ingest_bundle":
         stype = "well" if "well" in old_name else "seismic" if "seismic" in old_name else "earth3d"
         uri = kwargs.get("source_uri") or kwargs.get("volume_ref") or kwargs.get("bundle_uri")
-        res = await geox_data_ingest_bundle(
-            source_uri=uri, source_type=stype, well_id=kwargs.get("well_id")
-        )
+        res = await geox_data_ingest_bundle(source_uri=uri, source_type=stype, well_id=kwargs.get("well_id"))
     elif canonical_name == "geox_subsurface_generate_candidates":
         target = "petrophysics" if "petrophysics" in old_name or "petro" in old_name else "structure"
         refs = [kwargs.get("well_id") or kwargs.get("volume_ref") or "N/A"]
@@ -90,6 +89,7 @@ async def geox_health_check() -> dict:
         "tools_loaded": len(CANONICAL_PUBLIC_TOOLS),
         "timestamp": datetime.now(UTC).isoformat(),
     }
+
 
 # Legacy alias
 mcp_health_check = geox_health_check
@@ -131,8 +131,7 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
     # Count is 16: 12 surface tools + 4 internal tools (claim, evidence, prospect, doctrine)
     # Phase 2 (2026-06-26): canonical lock — 16 mode-consolidated tools, 21 was pre-consolidation
     assert len(CANONICAL_PUBLIC_TOOLS) == 16, (
-        f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools (12 surface + 4 internal), "
-        f"got {len(CANONICAL_PUBLIC_TOOLS)}"
+        f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools (12 surface + 4 internal), got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────

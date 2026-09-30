@@ -152,9 +152,7 @@ async def main() -> int:
 
     apps_by_uri = {app["uri"]: app for app in apps_meta.get("apps", []) if "uri" in app}
     apps_visual: dict[str, list[str]] = {
-        app["uri"]: list(app.get("visual_tools") or app.get("tools") or [])
-        for app in apps_meta.get("apps", [])
-        if "uri" in app
+        app["uri"]: list(app.get("visual_tools") or app.get("tools") or []) for app in apps_meta.get("apps", []) if "uri" in app
     }
 
     resources = await mcp.list_resources()
@@ -196,25 +194,24 @@ async def main() -> int:
         # Bound tools — live meta + bridge reverse maps + alias family + apps.json
         bound_tools = _tools_for_uri(uri, tool_uri_index, apps_visual)
 
-        ui_resources_surface.append({
-            "id": app_id,
-            "uri": uri,
-            "title": title,
-            "status": status,
-            "mime_type": mime_type,
-            "content_bytes": content_len,
-            "content_hash": content_hash,
-            "bound_tools": bound_tools,
-            "csp_domains": ["geox.arif-fazil.com", "macrostrat.org", "tile.openstreetmap.org", "unpkg.com"],
-            "component_domains": ["geox.arif-fazil.com"],
-            "deprecation_note": app_meta.get("deprecation_note"),
-        })
+        ui_resources_surface.append(
+            {
+                "id": app_id,
+                "uri": uri,
+                "title": title,
+                "status": status,
+                "mime_type": mime_type,
+                "content_bytes": content_len,
+                "content_hash": content_hash,
+                "bound_tools": bound_tools,
+                "csp_domains": ["geox.arif-fazil.com", "macrostrat.org", "tile.openstreetmap.org", "unpkg.com"],
+                "component_domains": ["geox.arif-fazil.com"],
+                "deprecation_note": app_meta.get("deprecation_note"),
+            }
+        )
 
     # W2 gate: active resources must not be zero-bound
-    active_zero = [
-        r for r in ui_resources_surface
-        if r.get("status") == "active" and not (r.get("bound_tools") or [])
-    ]
+    active_zero = [r for r in ui_resources_surface if r.get("status") == "active" and not (r.get("bound_tools") or [])]
 
     surface_manifest = {
         "schema_version": "1.0.0",
@@ -248,8 +245,7 @@ async def main() -> int:
         for r in active_zero:
             print(f"  - {r['uri']} (id={r.get('id')})", file=sys.stderr)
         print(
-            "Fix: extend _app_to_tool / _tool_app_fallback / _URI_ALIASES in "
-            "mcp_apps_bridge.py or generate_mcp_apps_surface.py",
+            "Fix: extend _app_to_tool / _tool_app_fallback / _URI_ALIASES in mcp_apps_bridge.py or generate_mcp_apps_surface.py",
             file=sys.stderr,
         )
         return 1

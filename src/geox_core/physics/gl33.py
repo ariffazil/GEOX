@@ -23,6 +23,7 @@ Zen doctrine applied:
 
 DITEMPA BUKAN DIBERI — the 33-state tensor is forged, not given.
 """
+
 from __future__ import annotations
 
 import math
@@ -37,10 +38,10 @@ import numpy as np
 
 # ============================================================== Panel labels
 class Panel(Enum):
-    M = "Geomechanics"        # 9 properties (state matrix)
-    P = "Petrophysics"        # 9 properties (field & storage)
-    W = "Wave Invariants"     # 9 properties (observable bridge)
-    X = "Cross-Domain"        # 6 properties (chemistry/bio/info/social)
+    M = "Geomechanics"  # 9 properties (state matrix)
+    P = "Petrophysics"  # 9 properties (field & storage)
+    W = "Wave Invariants"  # 9 properties (observable bridge)
+    X = "Cross-Domain"  # 6 properties (chemistry/bio/info/social)
 
 
 # ============================================================== Bounds
@@ -55,45 +56,42 @@ class Bounds:
 
 BOUNDS_33 = {
     # === M (9): Geomechanics — failure & flow ===
-    "E":         Bounds(1e6,  1e11,  "Pa",    Panel.M, "Paterson 1994 / ISRM"),
-    "nu":        Bounds(0.05, 0.49,  "-",      Panel.M, "Thermodynamic bound"),
-    "c":         Bounds(0.0,  5e6,   "Pa",     Panel.M, "Clay to hard rock"),
-    "phi_angle": Bounds(0.0,  1.55,  "rad",    Panel.M, "0 to <pi/2"),
-    "k_perm":    Bounds(1e-15, 1e-2, "m^2",    Panel.M, "Intact rock to gravel"),
-    "phi_p":     Bounds(0.0,  0.6,   "-",      Panel.M, "Loose soil to pumice"),
-    "eta":       Bounds(1e-3, 1e3,   "Pa.s",   Panel.M, "Water to wet concrete"),
-    "tau_0":     Bounds(0.0,  1e5,   "Pa",     Panel.M, "Water to debris flow"),
-    "sigma_t":   Bounds(0.0,  5e7,   "Pa",     Panel.M, "Snow to steel"),
-
+    "E": Bounds(1e6, 1e11, "Pa", Panel.M, "Paterson 1994 / ISRM"),
+    "nu": Bounds(0.05, 0.49, "-", Panel.M, "Thermodynamic bound"),
+    "c": Bounds(0.0, 5e6, "Pa", Panel.M, "Clay to hard rock"),
+    "phi_angle": Bounds(0.0, 1.55, "rad", Panel.M, "0 to <pi/2"),
+    "k_perm": Bounds(1e-15, 1e-2, "m^2", Panel.M, "Intact rock to gravel"),
+    "phi_p": Bounds(0.0, 0.6, "-", Panel.M, "Loose soil to pumice"),
+    "eta": Bounds(1e-3, 1e3, "Pa.s", Panel.M, "Water to wet concrete"),
+    "tau_0": Bounds(0.0, 1e5, "Pa", Panel.M, "Water to debris flow"),
+    "sigma_t": Bounds(0.0, 5e7, "Pa", Panel.M, "Snow to steel"),
     # === P (9): Petrophysics — in-situ state & storage ===
-    "rho":       Bounds(500,  3200,  "kg/m^3", Panel.P, "USGS rock/ice tables"),
-    "Pp":        Bounds(0.0,  1e8,   "Pa",     Panel.P, "Hydrostatic to lithostatic"),
-    "T":         Bounds(173,  1000,  "K",      Panel.P, "Permafrost to magma"),
-    "phi":       Bounds(0.0,  0.6,   "-",      Panel.P, "Same as phi_p; field-scale effective"),
-    "rho_e":     Bounds(0.1,  1000,  "ohm.m",  Panel.P, "Shale to brine"),
-    "chi":       Bounds(-1e-2, 1e-1, "SI",     Panel.P, "Diamag to ferromag"),
-    "k_th":      Bounds(0.1,  10,    "W/m.K",  Panel.P, "Insulator to metal"),
-    "S_w":       Bounds(0.0,  1.0,   "-",      Panel.P, "Dry to saturated"),
-    "phase_id":  Bounds(0,    3,     "-",      Panel.P, "solid/granular/fluid/unknown enum"),
-
+    "rho": Bounds(500, 3200, "kg/m^3", Panel.P, "USGS rock/ice tables"),
+    "Pp": Bounds(0.0, 1e8, "Pa", Panel.P, "Hydrostatic to lithostatic"),
+    "T": Bounds(173, 1000, "K", Panel.P, "Permafrost to magma"),
+    "phi": Bounds(0.0, 0.6, "-", Panel.P, "Same as phi_p; field-scale effective"),
+    "rho_e": Bounds(0.1, 1000, "ohm.m", Panel.P, "Shale to brine"),
+    "chi": Bounds(-1e-2, 1e-1, "SI", Panel.P, "Diamag to ferromag"),
+    "k_th": Bounds(0.1, 10, "W/m.K", Panel.P, "Insulator to metal"),
+    "S_w": Bounds(0.0, 1.0, "-", Panel.P, "Dry to saturated"),
+    "phase_id": Bounds(0, 3, "-", Panel.P, "solid/granular/fluid/unknown enum"),
     # === W (9): Wave Invariants — observable bridge ===
-    "Vp":        Bounds(1500, 6000,  "m/s",    Panel.W, "Water to dense rock"),
-    "Vs":        Bounds(0.0,  4000,  "m/s",    Panel.W, "Fluid=0, rock=3500"),
-    "Qp":        Bounds(5,    500,   "-",      Panel.W, "Attenuation"),
-    "Qs":        Bounds(5,    500,   "-",      Panel.W, "Attenuation"),
-    "epsilon":   Bounds(-0.2, 0.5,   "-",      Panel.W, "Thomsen VTI anisotropy"),
-    "delta":     Bounds(-0.2, 0.5,   "-",      Panel.W, "Thomsen VTI anisotropy"),
-    "gamma":     Bounds(-0.2, 0.5,   "-",      Panel.W, "Thomsen VTI anisotropy"),
-    "alpha_B":   Bounds(0.0,  1.0,   "-",      Panel.W, "Biot-Willis 0..1"),
-    "g":         Bounds(9.78, 9.83,  "m/s^2",  Panel.W, "Earth surface gravity (R notin S)"),
-
+    "Vp": Bounds(1500, 6000, "m/s", Panel.W, "Water to dense rock"),
+    "Vs": Bounds(0.0, 4000, "m/s", Panel.W, "Fluid=0, rock=3500"),
+    "Qp": Bounds(5, 500, "-", Panel.W, "Attenuation"),
+    "Qs": Bounds(5, 500, "-", Panel.W, "Attenuation"),
+    "epsilon": Bounds(-0.2, 0.5, "-", Panel.W, "Thomsen VTI anisotropy"),
+    "delta": Bounds(-0.2, 0.5, "-", Panel.W, "Thomsen VTI anisotropy"),
+    "gamma": Bounds(-0.2, 0.5, "-", Panel.W, "Thomsen VTI anisotropy"),
+    "alpha_B": Bounds(0.0, 1.0, "-", Panel.W, "Biot-Willis 0..1"),
+    "g": Bounds(9.78, 9.83, "m/s^2", Panel.W, "Earth surface gravity (R notin S)"),
     # === X (6): Cross-domain bridges ===
-    "E_a":       Bounds(0.0,  200e3, "J/mol",  Panel.X, "Arrhenius activation energy"),
-    "L_f":       Bounds(0.0,  334e3, "J/kg",   Panel.X, "Latent heat of fusion (water 334kJ/kg)"),
-    "c_bio":     Bounds(0.0,  50e3,  "Pa",     Panel.X, "Biotic root cohesion"),
-    "D_f":       Bounds(1.0,  3.0,   "-",      Panel.X, "Fractal dimension (Euclidean=3)"),
-    "H_info":    Bounds(0.0,  10.0,  "bits",   Panel.X, "Shannon entropy"),
-    "E_socio":   Bounds(0.0,  1.0,   "-",      Panel.X, "Socio-spatial exposure index"),
+    "E_a": Bounds(0.0, 200e3, "J/mol", Panel.X, "Arrhenius activation energy"),
+    "L_f": Bounds(0.0, 334e3, "J/kg", Panel.X, "Latent heat of fusion (water 334kJ/kg)"),
+    "c_bio": Bounds(0.0, 50e3, "Pa", Panel.X, "Biotic root cohesion"),
+    "D_f": Bounds(1.0, 3.0, "-", Panel.X, "Fractal dimension (Euclidean=3)"),
+    "H_info": Bounds(0.0, 10.0, "bits", Panel.X, "Shannon entropy"),
+    "E_socio": Bounds(0.0, 1.0, "-", Panel.X, "Socio-spatial exposure index"),
 }
 
 
@@ -112,6 +110,7 @@ class GEOXEarthState33:
         Coupling arrows between panels via operators (forward_kinematics, etc.)
         No redundant fields (phi vs phi_p are distinct scalar quantities)
     """
+
     # ============ M (9) Geomechanics ============
     E: float = 30e9
     nu: float = 0.25
@@ -132,31 +131,31 @@ class GEOXEarthState33:
     chi: float = 0.0
     k_th: float = 2.5
     S_w: float = 0.0
-    phase_id: int = 0          # 0=solid, 1=granular, 2=fluid, 3=unknown
+    phase_id: int = 0  # 0=solid, 1=granular, 2=fluid, 3=unknown
 
     # ============ W (9) Wave Invariants ============
-    Vp: float = 0.0           # m/s — derived; 0 = unlearned
-    Vs: float = 0.0           # m/s — derived; 0 = unlearned
+    Vp: float = 0.0  # m/s — derived; 0 = unlearned
+    Vs: float = 0.0  # m/s — derived; 0 = unlearned
     Qp: float = 100.0
     Qs: float = 50.0
-    epsilon: float = 0.0       # Thomsen anisotropy
+    epsilon: float = 0.0  # Thomsen anisotropy
     delta: float = 0.0
     gamma: float = 0.0
-    alpha_B: float = 0.0       # Biot-Willis
-    g: float = 9.81           # FIXED — R notin S
+    alpha_B: float = 0.0  # Biot-Willis
+    g: float = 9.81  # FIXED — R notin S
 
     # ============ X (6) Cross-domain bridges ============
-    E_a: float = 50e3          # J/mol  (Arrhenius)
-    L_f: float = 334e3         # J/kg   (water latent heat)
-    c_bio: float = 0.0         # Pa     (root cohesion)
-    D_f: float = 2.5           # fractal dim
-    H_info: float = 0.0        # bits   (Shannon)
-    E_socio: float = 0.0       # exposure index 0..1
+    E_a: float = 50e3  # J/mol  (Arrhenius)
+    L_f: float = 334e3  # J/kg   (water latent heat)
+    c_bio: float = 0.0  # Pa     (root cohesion)
+    D_f: float = 2.5  # fractal dim
+    H_info: float = 0.0  # bits   (Shannon)
+    E_socio: float = 0.0  # exposure index 0..1
 
     # ============ Dynamic ops (5) ============
-    velocity: float = 0.0      # m/s   flow magnitude
-    strain: float = 0.0        # -     accumulated
-    saturation: float = 0.0    # -     live water fraction (deprecated alias; use S_w)
+    velocity: float = 0.0  # m/s   flow magnitude
+    strain: float = 0.0  # -     accumulated
+    saturation: float = 0.0  # -     live water fraction (deprecated alias; use S_w)
     timestamp_ns: int = field(default_factory=lambda: time.time_ns())
     cell_id: str = ""
 
@@ -270,6 +269,7 @@ def metabolize_33(s: GEOXEarthState33) -> GEOXEarthState33:
         9. F12 witness hash recompute
     """
     from dataclasses import replace
+
     s2 = replace(s)
 
     # --- 1. Arrhenius: cohesion decays with temperature (normalized to T_ref)
@@ -291,7 +291,7 @@ def metabolize_33(s: GEOXEarthState33) -> GEOXEarthState33:
     if s2.T >= 273.15 and 800 < s2.rho < 1100 and s2.phase_id == 0:
         # Consume latent heat energy balance (simplified)
         # Real impl: dt = (rho * L_f) / heat_input_rate
-        s2 = replace(s2, phase_id=1)   # solid -> granular (wet)
+        s2 = replace(s2, phase_id=1)  # solid -> granular (wet)
 
     # --- 4. Terzaghi effective stress
     sigma_v = s2.rho * s2.g * 100.0  # 100m reference depth
@@ -305,11 +305,11 @@ def metabolize_33(s: GEOXEarthState33) -> GEOXEarthState33:
     # --- 6. Voellmy if velocity high
     if s2.velocity >= 5.0 and s2.tau_0 > 0:
         # Voellmy check at sigma_n from effective stress
-        tau_v = s2.tau_0 + 0.15 * max(sigma_eff, 0.0) + s2.rho * s2.velocity ** 2 / 1000.0
+        tau_v = s2.tau_0 + 0.15 * max(sigma_eff, 0.0) + s2.rho * s2.velocity**2 / 1000.0
         if tau_v > tau_max * 1.5:
             s2 = replace(s2, phase_id=2)  # granular -> fluid
     elif margin < 0:
-        s2 = replace(s2, phase_id=1)      # solid -> granular
+        s2 = replace(s2, phase_id=1)  # solid -> granular
 
     # --- 7. Saturation update (live water fraction from pore pressure)
     if s2.Pp > 0 and s2.rho > 0:
@@ -318,8 +318,7 @@ def metabolize_33(s: GEOXEarthState33) -> GEOXEarthState33:
 
     # --- 8. Update derived W
     derived = forward_kinematics(s2)
-    s2 = replace(s2, Vp=derived["Vp"], Vs=derived["Vs"],
-                 alpha_B=derived["alpha_B"])
+    s2 = replace(s2, Vp=derived["Vp"], Vs=derived["Vs"], alpha_B=derived["alpha_B"])
 
     return s2
 
@@ -345,7 +344,7 @@ class FIMReceipt33:
 def _g33_gaussian_likelihood(s_sim: GEOXEarthState33, w_obs: dict) -> float:
     """log P(w_obs | s) assuming Gaussian observation noise."""
     sigma_vp = 100.0  # m/s
-    sigma_vs = 60.0   # m/s
+    sigma_vs = 60.0  # m/s
     fwd = forward_kinematics(s_sim)
     L = 0.0
     if "Vp" in w_obs:
@@ -419,8 +418,8 @@ def run_fim_cycle_33(
 
 # ============================================================== Factories
 def from_legacy_states(
-    physics13_dict: Optional[dict] = None,
-    glof_dict: Optional[dict] = None,
+    physics13_dict: dict | None = None,
+    glof_dict: dict | None = None,
 ) -> GEOXEarthState33:
     """Build GEOXEarthState33 from existing Physics13State + GLOFMaterialState dicts.
 
@@ -450,8 +449,7 @@ def from_legacy_states(
             s = replace(s, Qs=float(physics13_dict["qs"]))
     if glof_dict:
         # M slice
-        for k in ("E", "nu", "c", "phi_angle", "k_perm", "phi_p",
-                  "eta", "tau_0", "sigma_t"):
+        for k in ("E", "nu", "c", "phi_angle", "k_perm", "phi_p", "eta", "tau_0", "sigma_t"):
             if k in glof_dict:
                 # Map phi (glof) -> phi_p (33)
                 actual_key = "phi_p" if k == "phi_p" else k
@@ -468,18 +466,39 @@ def himalayan_glof_33() -> GEOXEarthState33:
     """Himalayan GLOF reference state — 33D defaults for Bhote Koshi."""
     return GEOXEarthState33(
         # M
-        E=30e9, nu=0.25, c=5e3, phi_angle=math.radians(32),
-        k_perm=1e-4, phi_p=0.30, eta=0.05, tau_0=2e3, sigma_t=0.5e6,
+        E=30e9,
+        nu=0.25,
+        c=5e3,
+        phi_angle=math.radians(32),
+        k_perm=1e-4,
+        phi_p=0.30,
+        eta=0.05,
+        tau_0=2e3,
+        sigma_t=0.5e6,
         # P
-        rho=2700.0, T=273.15, phi=0.30, rho_e=100.0,
-        chi=1e-4, k_th=2.5, S_w=0.1,
+        rho=2700.0,
+        T=273.15,
+        phi=0.30,
+        rho_e=100.0,
+        chi=1e-4,
+        k_th=2.5,
+        S_w=0.1,
         # W — Vp/Vs derived via forward_kinematics
-        Vp=5500.0, Vs=3200.0, Qp=80, Qs=40,
-        epsilon=0.15, delta=0.10, gamma=0.12,
+        Vp=5500.0,
+        Vs=3200.0,
+        Qp=80,
+        Qs=40,
+        epsilon=0.15,
+        delta=0.10,
+        gamma=0.12,
         alpha_B=0.30,
         # X
-        E_a=80e3, L_f=334e3, c_bio=0.0, D_f=2.4,
-        H_info=2.5, E_socio=0.15,
+        E_a=80e3,
+        L_f=334e3,
+        c_bio=0.0,
+        D_f=2.4,
+        H_info=2.5,
+        E_socio=0.15,
         cell_id="bhotekoshi_33",
         phase_id=1,  # granular
     )
@@ -487,14 +506,14 @@ def himalayan_glof_33() -> GEOXEarthState33:
 
 if __name__ == "__main__":
     s = himalayan_glof_33()
-    print(f"=== GEOXEarthState33 (33-D) ===")
+    print("=== GEOXEarthState33 (33-D) ===")
     print(f"  cell_id={s.cell_id}")
     for p in Panel:
         d = s.panel(p)
         print(f"  Panel {p.value:14s} ({p.value:1s}): {len(d)} fields")
     ok, viol = s.validate()
     print(f"  validate ok={ok} violations={viol}")
-    print(f"  K={s.K_bulk()/1e9:.2f} GPa  G={s.G_shear()/1e9:.2f} GPa")
+    print(f"  K={s.K_bulk() / 1e9:.2f} GPa  G={s.G_shear() / 1e9:.2f} GPa")
     print(f"  state_hash={s.state_hash()}")
 
     print()
@@ -505,7 +524,7 @@ if __name__ == "__main__":
     print()
     print("=== Gassmann fluid substitution ===")
     g = gassmann_substitution(s, K_f=2.2e9)  # water
-    print(f"  K_sat={g['K_sat']/1e9:.3f} GPa  Vp_sat={g['Vp_sat']:.0f} m/s")
+    print(f"  K_sat={g['K_sat'] / 1e9:.3f} GPa  Vp_sat={g['Vp_sat']:.0f} m/s")
 
     print()
     print("=== Metabolize (one closure pass) ===")
@@ -520,4 +539,4 @@ if __name__ == "__main__":
     w_obs = {"Vp": 5000.0, "Vs": 2900.0}
     s_post, receipt = run_fim_cycle_33(s, w_obs, cycle_id="c1", notes="Bhote Koshi")
     print(f"  cycle={receipt.cycle_id} G={receipt.G_score:.3f} LL={receipt.log_likelihood:.2f}")
-    print(f"  inferred rho={s_post.rho:.0f} E={s_post.E/1e9:.1f}GPa phase={s_post.phase_id}")
+    print(f"  inferred rho={s_post.rho:.0f} E={s_post.E / 1e9:.1f}GPa phase={s_post.phase_id}")

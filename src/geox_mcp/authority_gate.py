@@ -43,6 +43,7 @@ to revert fully.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging
@@ -159,11 +160,7 @@ def extract_identity(
         return None, None, None
     session_id = arguments.get("session_id")
     actor_id = arguments.get("actor_id")
-    session_token = (
-        arguments.get("session_token")
-        or arguments.get("sct")
-        or arguments.get("arifos_sct")
-    )
+    session_token = arguments.get("session_token") or arguments.get("sct") or arguments.get("arifos_sct")
     env = arguments.get("_envelope")
     if isinstance(env, dict):
         if not session_id and env.get("session_id"):
@@ -289,10 +286,7 @@ def enforce_authority(
         raise AuthorityRejection(
             error_code="INSUFFICIENT_AUTHORITY",
             http_status=403,
-            message=(
-                f"session authority {result.authority!r} < required {required!r} "
-                f"for tool '{tool_name}'"
-            ),
+            message=(f"session authority {result.authority!r} < required {required!r} for tool '{tool_name}'"),
             session_id=session_id or "anonymous",
             actor_id=actor_id or result.actor or "anonymous",
             required_authority=required,

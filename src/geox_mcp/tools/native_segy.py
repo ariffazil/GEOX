@@ -28,15 +28,15 @@ _SOURCE_REGISTRY: dict[str, dict[str, Any]] = {}
 async def geox_register_native_source(
     *,
     source_uri: str,
-    source_id: Optional[str] = None,
+    source_id: str | None = None,
     classification: str = "unknown",
     authority: str = "UNVERIFIED",
-    survey_id: Optional[str] = None,
-    line_id: Optional[str] = None,
+    survey_id: str | None = None,
+    line_id: str | None = None,
     crs: str = "CRS_UNKNOWN",
-    registered_by: Optional[str] = None,
-    session_id: Optional[str] = None,
-    actor_id: Optional[str] = None,
+    registered_by: str | None = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
 ) -> dict[str, Any]:
     """Register a native SEG-Y source for trace extraction.
 
@@ -46,9 +46,15 @@ async def geox_register_native_source(
     Returns registration receipt with HOLD reasons if validation fails.
     """
     from geox_core.seismic_pipeline.native_segy_contracts import (
-        AmplitudeIntegrity, DataClassification, PhaseIntegrity, PolarityState,
-        SeismicDatasetManifest, SeismicQCReceipt, SeismicSourceRef,
-        SourceAuthority, VerticalDomain,
+        AmplitudeIntegrity,
+        DataClassification,
+        PhaseIntegrity,
+        PolarityState,
+        SeismicDatasetManifest,
+        SeismicQCReceipt,
+        SeismicSourceRef,
+        SourceAuthority,
+        VerticalDomain,
     )
 
     # Validate source URI
@@ -284,13 +290,13 @@ async def _header_qc(segy_path: str) -> dict[str, Any]:
 async def geox_extract_native_trace(
     *,
     source_id: str,
-    trace_index: Optional[int] = None,
-    cdp: Optional[int] = None,
-    inline: Optional[int] = None,
-    crossline: Optional[int] = None,
+    trace_index: int | None = None,
+    cdp: int | None = None,
+    inline: int | None = None,
+    crossline: int | None = None,
     intent: str = "trace_extraction",
-    session_id: Optional[str] = None,
-    actor_id: Optional[str] = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
 ) -> dict[str, Any]:
     """Extract a native seismic trace from a registered source.
 
@@ -305,8 +311,12 @@ async def geox_extract_native_trace(
     - Unparseable SEG-Y
     """
     from geox_core.seismic_pipeline.native_segy_contracts import (
-        AmplitudeIntegrity, NativeTraceReceipt, NativeTraceRef,
-        PhaseIntegrity, PolarityState, VerticalDomain,
+        AmplitudeIntegrity,
+        NativeTraceReceipt,
+        NativeTraceRef,
+        PhaseIntegrity,
+        PolarityState,
+        VerticalDomain,
     )
 
     # Check registry
@@ -356,6 +366,7 @@ async def geox_extract_native_trace(
 
     # Extract trace
     import segyio
+
     try:
         with segyio.open(source_uri, ignore_geometry=True) as f:
             # Resolve trace index
@@ -406,8 +417,12 @@ async def geox_extract_native_trace(
             header = {}
             try:
                 h = f.header[resolved_index]
-                for field in [segyio.TraceField.INLINE_3D, segyio.TraceField.CROSSLINE_3D,
-                              segyio.TraceField.CDP, segyio.TraceField.offset]:
+                for field in [
+                    segyio.TraceField.INLINE_3D,
+                    segyio.TraceField.CROSSLINE_3D,
+                    segyio.TraceField.CDP,
+                    segyio.TraceField.offset,
+                ]:
                     try:
                         header[field.name] = int(h[field])
                     except (KeyError, ValueError):
@@ -466,7 +481,7 @@ async def geox_extract_native_trace(
             "min": float(trace_data.min()),
             "max": float(trace_data.max()),
             "mean": float(trace_data.mean()),
-            "rms": float((trace_data ** 2).mean() ** 0.5),
+            "rms": float((trace_data**2).mean() ** 0.5),
         },
         "header": header,
         "receipt": receipt.model_dump(),

@@ -24,32 +24,36 @@ Velocity- and pressure-driven regimes evaluated against current state vector.
 
 DITEMPA BUKAN DIBERI — phase is computed, not asserted.
 """
+
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Tuple
+
 
 from geox_core.physics.glgeomaterial import (
-    GLOFMaterialState, MaterialPhase, Bounds,
+    GLOFMaterialState,
+    MaterialPhase,
+    Bounds,
 )
 
 # Empirical thresholds from Himalayan / Alpine GLOF literature
-V_CRIT_AVALANCHE = 5.0      # m/s   threshold for granular -> Voellmy flow
-S_CRIT_LIQUEFACTION = 0.90   # -    saturation threshold for liquefaction
-SIGMA_T_FACTOR = 1.2         # safety factor on tensile strength
+V_CRIT_AVALANCHE = 5.0  # m/s   threshold for granular -> Voellmy flow
+S_CRIT_LIQUEFACTION = 0.90  # -    saturation threshold for liquefaction
+SIGMA_T_FACTOR = 1.2  # safety factor on tensile strength
 
 
 @dataclass
 class YieldVerdict:
     """Result of one yield-surface evaluation."""
+
     current_phase: MaterialPhase
     next_phase: MaterialPhase
-    failure_mode: str          # "stable" / "mohr_coulomb" / "voellmy" / "tensile" / "bingham"
-    tau_applied: float         # Pa
-    tau_resisted: float        # Pa
-    margin: float              # (resisted - applied) / resisted, <0 means failure
-    fracture_K: float          # stress intensity (Pa*m^0.5), 0 if not computed
+    failure_mode: str  # "stable" / "mohr_coulomb" / "voellmy" / "tensile" / "bingham"
+    tau_applied: float  # Pa
+    tau_resisted: float  # Pa
+    margin: float  # (resisted - applied) / resisted, <0 means failure
+    fracture_K: float  # stress intensity (Pa*m^0.5), 0 if not computed
 
     @property
     def fails(self) -> bool:
@@ -62,8 +66,10 @@ class YieldVerdict:
 
 # ============================================================== Mohr-Coulomb
 def evaluate_mohr_coulomb(
-    s: GLOFMaterialState, sigma_n: float, tau_applied: float,
-) -> Tuple[float, float]:
+    s: GLOFMaterialState,
+    sigma_n: float,
+    tau_applied: float,
+) -> tuple[float, float]:
     """Mohr-Coulomb shear strength at given normal stress.
 
     tau_max = c + (sigma_n - u) * tan(phi)
@@ -81,9 +87,10 @@ def evaluate_mohr_coulomb(
 
 # ============================================================== LEFM
 def evaluate_tensile(
-    s: GLOFMaterialState, sigma_applied: float,
+    s: GLOFMaterialState,
+    sigma_applied: float,
     crack_length_m: float = 1.0,
-) -> Tuple[float, float]:
+) -> tuple[float, float]:
     """Linear-elastic fracture mechanics — mode I.
 
     K_I = sigma_applied * sqrt(pi * a)
@@ -99,15 +106,17 @@ def evaluate_tensile(
         return (0.0, -1.0)
     margin = (sigma_resisted - sigma_applied) / sigma_resisted
     # Stress intensity (informational, for UI)
-    K_I = sigma_applied * math.sqrt(math.pi * crack_length_m)
     return (sigma_resisted, margin)
 
 
 # ============================================================== Voellmy-Salm
 def evaluate_voellmy(
-    s: GLOFMaterialState, sigma_n: float, velocity: float,
-    mu: float = 0.15, xi: float = 1000.0,
-) -> Tuple[float, float]:
+    s: GLOFMaterialState,
+    sigma_n: float,
+    velocity: float,
+    mu: float = 0.15,
+    xi: float = 1000.0,
+) -> tuple[float, float]:
     """Voellmy-Salm rheology for granular avalanche flow.
 
     tau = tau_0 + mu*sigma_n + rho*v^2/xi
@@ -124,9 +133,11 @@ def evaluate_voellmy(
 
 # ============================================================== Bingham-H-B
 def evaluate_bingham(
-    s: GLOFMaterialState, gamma_dot: float,
-    eta: float = 0.05, n: float = 1.0,
-) -> Tuple[float, float]:
+    s: GLOFMaterialState,
+    gamma_dot: float,
+    eta: float = 0.05,
+    n: float = 1.0,
+) -> tuple[float, float]:
     """Bingham-Herschel-Bulkley rheology for debris flow.
 
     tau = tau_0 + eta * gamma_dot^n
@@ -135,7 +146,7 @@ def evaluate_bingham(
     Returns (tau_resisted, margin_ratio).
     """
     gdot = max(gamma_dot, 0.0)
-    tau = s.tau_0 + eta * (gdot ** n)
+    tau = s.tau_0 + eta * (gdot**n)
     ref = max(s.tau_0 + eta * 10.0, 1.0)  # reference: gamma_dot = 10
     margin = 1.0 - tau / ref
     return (tau, margin)
@@ -166,7 +177,7 @@ def evaluate_cascade(
     cur = s.phase_id
     nxt = cur
     mode = "stable"
-    tau_r, tau_a = 0.0, tau_applied
+    tau_r, _tau_a = 0.0, tau_applied
     margin = 1.0
     K_I = 0.0
 
@@ -224,6 +235,7 @@ def phase_sequence(s0: GLOFMaterialState, loads: list) -> list:
         ]
     """
     from dataclasses import replace
+
     s = s0
     results = []
     for ev in loads:
@@ -248,13 +260,12 @@ if __name__ == "__main__":
     s0 = himalayan_defaults()
     # GLOF cascade scenario
     loads = [
-        {"sigma_n": 500e3, "tau_applied": 80e3,  "saturation": 0.1},   # t=0
-        {"sigma_n": 500e3, "tau_applied": 80e3,  "saturation": 0.5},   # t+45min
-        {"sigma_n": 500e3, "tau_applied": 80e3,  "saturation": 0.95},  # t+90min
-        {"sigma_n": 100e3, "tau_applied": 200e3, "velocity": 8.0},     # t+135min breach
+        {"sigma_n": 500e3, "tau_applied": 80e3, "saturation": 0.1},  # t=0
+        {"sigma_n": 500e3, "tau_applied": 80e3, "saturation": 0.5},  # t+45min
+        {"sigma_n": 500e3, "tau_applied": 80e3, "saturation": 0.95},  # t+90min
+        {"sigma_n": 100e3, "tau_applied": 200e3, "velocity": 8.0},  # t+135min breach
     ]
     for t, v in enumerate(phase_sequence(s0, loads)):
         flag = " *FAIL*" if v.fails else ""
         flag2 = " -> " + v.next_phase.value if v.transitions else ""
-        print(f"t+{t*45:3d}min : {v.current_phase.value:8s}{flag2:12s} "
-              f"mode={v.failure_mode:14s} margin={v.margin:+.3f}{flag}")
+        print(f"t+{t * 45:3d}min : {v.current_phase.value:8s}{flag2:12s} mode={v.failure_mode:14s} margin={v.margin:+.3f}{flag}")

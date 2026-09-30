@@ -15,7 +15,9 @@ logger = logging.getLogger("geox.canonical.map_context")
 
 async def geox_map_context_scene(
     bbox: list[float],
-    mode: Literal["bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail"] = "bbox_context",
+    mode: Literal[
+        "bbox_context", "crs_check", "render_scene", "scene_summary", "georeference_map", "coordinate_guardrail"
+    ] = "bbox_context",
     crs: str = "EPSG:4326",
 ) -> dict:
     """Spatial bbox context, CRS checks, and causal scene rendering.
@@ -47,5 +49,3 @@ async def geox_map_context_scene(
         perception_class="DISPLAY",
         maruah_flag=maruah_flag,
     )
-
-

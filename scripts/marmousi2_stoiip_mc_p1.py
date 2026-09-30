@@ -7,6 +7,7 @@ Not a 3D GRV grid. Volumes are factor MC; label honestly.
 Usage:
   PYTHONPATH=src python scripts/marmousi2_stoiip_mc_p1.py
 """
+
 from __future__ import annotations
 
 import json

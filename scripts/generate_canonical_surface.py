@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Regenerate CANONICAL_PUBLIC_SURFACE.json from tools_manifest.yaml."""
+
 from __future__ import annotations
 
 import json
@@ -25,15 +26,17 @@ def main() -> None:
     for t in manifest_tools():
         if t.visibility != "public":
             continue
-        tools.append({
-            "name": t.name,
-            "domain": t.domain,
-            "axis": t.axis,
-            "lane": t.lane,
-            "description": (t.description or "")[:200],
-            "ui": t.ui,
-            "governance": t.governance,
-        })
+        tools.append(
+            {
+                "name": t.name,
+                "domain": t.domain,
+                "axis": t.axis,
+                "lane": t.lane,
+                "description": (t.description or "")[:200],
+                "ui": t.ui,
+                "governance": t.governance,
+            }
+        )
     out = {
         "schema": "geox.canonical_public_surface.v1",
         "generated_at": datetime.now(UTC).isoformat(),
@@ -56,6 +59,7 @@ def main() -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(out, indent=2) + "\n")
         print("wrote", path, "public_count=", out["public_count"])
+
 
 if __name__ == "__main__":
     main()

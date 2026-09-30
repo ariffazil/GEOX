@@ -82,8 +82,7 @@ async def geox_diagenesis(
             if residual > 0.05:
                 out["overpressure_flag"] = "POSSIBLE_OVERPRESSURE"
                 out["overpressure_note"] = (
-                    "Residual porosity > 0.05 above Sclater-Christie trend. "
-                    "Consider pore-pressure analysis before drilling."
+                    "Residual porosity > 0.05 above Sclater-Christie trend. Consider pore-pressure analysis before drilling."
                 )
             else:
                 out["overpressure_flag"] = "NOT_INDICATED"

@@ -23,6 +23,7 @@ tool still works when arifOS is unreachable.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -82,9 +83,7 @@ class SealResult:
         if self.receipt is not None:
             try:
                 d["receipt_hash"] = self.receipt.audit.receipt_hash
-                d["tier"] = str(self.receipt.audit.tier) if hasattr(
-                    self.receipt.audit, "tier"
-                ) else None
+                d["tier"] = str(self.receipt.audit.tier) if hasattr(self.receipt.audit, "tier") else None
             except Exception:
                 pass
         if self.error:
@@ -171,9 +170,10 @@ def seal_receipt(
     )
 
     # Compute a content hash that the vault will use as the entry id.
-    receipt_hash = receipt.audit.receipt_hash or hashlib.sha256(
-        json.dumps(receipt.model_dump(), default=str, sort_keys=True).encode()
-    ).hexdigest()
+    receipt_hash = (
+        receipt.audit.receipt_hash
+        or hashlib.sha256(json.dumps(receipt.model_dump(), default=str, sort_keys=True).encode()).hexdigest()
+    )
 
     try:
         import httpx
@@ -194,9 +194,7 @@ def seal_receipt(
                     "arguments": {
                         "mode": "seal",
                         "verdict": verdict,
-                        "receipt": json.loads(
-                            json.dumps(receipt.model_dump(), default=str)
-                        ),
+                        "receipt": json.loads(json.dumps(receipt.model_dump(), default=str)),
                         "receipt_hash": receipt_hash,
                     },
                 },
@@ -237,12 +235,7 @@ def seal_receipt(
             if not payload:
                 payload = result
 
-            vault_ref = (
-                payload.get("vault_ref")
-                or payload.get("vault_id")
-                or payload.get("seal_id")
-                or payload.get("ref")
-            )
+            vault_ref = payload.get("vault_ref") or payload.get("vault_id") or payload.get("seal_id") or payload.get("ref")
             if vault_ref:
                 return SealResult(
                     state="SEALED",
@@ -333,11 +326,7 @@ def build_verification_envelope(
             "id": artifact_id,
             "sha256": artifact_sha256 or "",
         },
-        "receipt": (
-            receipt.to_dict()
-            if receipt is not None
-            else {"state": "PENDING", "ref": None}
-        ),
+        "receipt": (receipt.to_dict() if receipt is not None else {"state": "PENDING", "ref": None}),
     }
     if verification_reason:
         env["verification_reason"] = verification_reason

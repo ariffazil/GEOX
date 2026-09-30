@@ -909,7 +909,6 @@ def discriminate_prospect(
 
 
 if __name__ == "__main__":
-
     print("=" * 70)
     print("Sabah Prospect Discrimination Engine — ARIF 6-Domain + Kill Matrix")
     print("=" * 70)

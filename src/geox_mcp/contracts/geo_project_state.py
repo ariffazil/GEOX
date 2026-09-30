@@ -54,7 +54,7 @@ class GeoProjectState(BaseModel):
     updated_at_utc: str = Field(default_factory=lambda: datetime.now(UTC).isoformat())
     commit_sha: str = Field(default="fafb6ddc", description="Repository commit SHA")
     physics_version: str = Field(default="GEOX-SOVEREIGN-v2026.07", description="Physics engine version")
-    
+
     coordinate_reference: CoordinateReferenceSystem = Field(default_factory=CoordinateReferenceSystem)
     wells: list[dict[str, Any]] = Field(default_factory=list, description="Ingested well records")
     seismic_surveys: list[dict[str, Any]] = Field(default_factory=list, description="Seismic survey bounds & zarr refs")

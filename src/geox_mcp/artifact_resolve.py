@@ -70,11 +70,7 @@ def resolve_well_las(ref: str) -> dict[str, Any]:
         }
 
     parsed = parse_artifact_ref(raw) or {}
-    display = (
-        parsed.get("display_name")
-        or (parsed.get("canonical_id") or "").removeprefix("well:")
-        or raw
-    )
+    display = parsed.get("display_name") or (parsed.get("canonical_id") or "").removeprefix("well:") or raw
     kind = parsed.get("kind") or "well_las"
 
     # In-memory artifact store

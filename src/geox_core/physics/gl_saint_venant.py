@@ -25,11 +25,12 @@ Output: time series of (x, t, u) for downstream surge tracking.
 
 DITEMPA BUKAN DIBERI — Saint-Venant is the canonical shallow-water model.
 """
+
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Callable
+from collections.abc import Callable
 
 import numpy as np
 
@@ -37,10 +38,11 @@ import numpy as np
 @dataclass
 class SVDomain:
     """Spatial domain + discretization."""
-    length_m: float = 60_000.0       # 60 km reach
-    nx: int = 200                     # cells
-    manning_n: float = 0.05           # gravel/boulder bed
-    bed_slope: float = 0.01           # 1% slope (Himalayan V-shape)
+
+    length_m: float = 60_000.0  # 60 km reach
+    nx: int = 200  # cells
+    manning_n: float = 0.05  # gravel/boulder bed
+    bed_slope: float = 0.01  # 1% slope (Himalayan V-shape)
     g: float = 9.81
 
     @property
@@ -51,11 +53,12 @@ class SVDomain:
 @dataclass
 class SVResult:
     """Time-series result from Saint-Venant simulation."""
-    x: np.ndarray                            # (nx,) cell centers [m]
-    t: np.ndarray                            # (nt,) output times [s]
-    h: np.ndarray = field(default=None)      # (nt, nx) depth [m]
-    u: np.ndarray = field(default=None)      # (nt, nx) velocity [m/s]
-    Q: np.ndarray = field(default=None)      # (nt, nx) discharge [m³/s]
+
+    x: np.ndarray  # (nx,) cell centers [m]
+    t: np.ndarray  # (nt,) output times [s]
+    h: np.ndarray = field(default=None)  # (nt, nx) depth [m]
+    u: np.ndarray = field(default=None)  # (nt, nx) velocity [m/s]
+    Q: np.ndarray = field(default=None)  # (nt, nx) discharge [m³/s]
     cfl: float = 0.0
     n_steps: int = 0
 
@@ -88,7 +91,6 @@ def saint_venant_step(
     Returns:
         h_new, u_new: updated state.
     """
-    nx = domain.nx
     dx = domain.dx
     g = domain.g
 
@@ -109,8 +111,8 @@ def saint_venant_step(
     # Compute flux differences
     F = np.stack([F_mass, F_mom], axis=1)  # (nx, 2)
     # Lax-Friedrichs flux
-    flux_L = F[:-1, :]    # F at left of each interface (nx-1, 2)
-    flux_R = F[1:, :]     # F at right (nx-1, 2)
+    flux_L = F[:-1, :]  # F at left of each interface (nx-1, 2)
+    flux_R = F[1:, :]  # F at right (nx-1, 2)
     U_L = U[:-1, :]
     U_R = U[1:, :]
 
@@ -134,7 +136,7 @@ def saint_venant_step(
     # Update interior cells (excluding BCs)
     # Source term: g * h * (S_0 - S_f)
     # Use Manning friction: S_f = n² |u| u / h^(4/3)
-    S_f = domain.manning_n ** 2 * np.abs(u) * u / np.maximum(h, 0.1) ** (4.0 / 3.0)
+    S_f = domain.manning_n**2 * np.abs(u) * u / np.maximum(h, 0.1) ** (4.0 / 3.0)
     S_0 = domain.bed_slope
     src = g * h * (S_0 - S_f)
 
@@ -159,10 +161,10 @@ def saint_venant_step(
 def simulate_glof_propagation(
     breach_Q_func: Callable[[float], float],
     domain: SVDomain,
-    duration_s: float = 7200.0,       # 2 hours
+    duration_s: float = 7200.0,  # 2 hours
     output_interval_s: float = 60.0,  # output every minute
-    h_initial: float = 1.0,           # base flow depth
-    Q_initial: float = 5.0,           # base flow discharge (mild)
+    h_initial: float = 1.0,  # base flow depth
+    Q_initial: float = 5.0,  # base flow discharge (mild)
 ) -> SVResult:
     """Run Saint-Venant 1D for GLOF propagation.
 
@@ -266,26 +268,25 @@ if __name__ == "__main__":
     # Smoke test: Costa 1985 breach Q(t) profile, 60 km reach
     def Q_breach(t_s: float) -> float:
         """Peak Q at 12 min = 720 s, exponential decay."""
-        if t_s < 60:        # ramp-up 0–60 s
+        if t_s < 60:  # ramp-up 0–60 s
             return 3000.0 * (t_s / 60.0)
-        elif t_s < 720:    # ramp-down 60–720 s
+        elif t_s < 720:  # ramp-down 60–720 s
             return 3000.0 * math.exp(-(t_s - 60) / 300.0)
         else:
             return 3000.0 * math.exp(-(t_s - 60) / 1800.0)  # long tail
 
-    domain = SVDomain(length_m=60_000.0, nx=200, manning_n=0.05,
-                      bed_slope=0.01, g=9.81)
-    print(f"Running Saint-Venant 1D for {domain.length_m/1000:.0f} km reach, "
-          f"{domain.nx} cells, g={domain.g}...")
+    domain = SVDomain(length_m=60_000.0, nx=200, manning_n=0.05, bed_slope=0.01, g=9.81)
+    print(f"Running Saint-Venant 1D for {domain.length_m / 1000:.0f} km reach, {domain.nx} cells, g={domain.g}...")
 
     result = simulate_glof_propagation(
-        breach_Q_func=Q_breach, domain=domain,
-        duration_s=7200.0, output_interval_s=120.0,
+        breach_Q_func=Q_breach,
+        domain=domain,
+        duration_s=7200.0,
+        output_interval_s=120.0,
     )
     print(f"  n_steps = {result.n_steps}, CFL max = {result.cfl:.2f}")
     print(f"  snapshots = {len(result.t)} (every 2 min)")
     print(f"  max depth at downstream (x=L): {result.h[:, -1].max():.2f} m")
     print(f"  max velocity at downstream:    {result.u[:, -1].max():.2f} m/s")
     print(f"  max Q at downstream:            {result.Q[:, -1].max():.0f} m³/s")
-    print(f"  time of peak downstream (s):    "
-          f"{result.t[np.argmax(result.Q[:, -1])]:.0f}")
+    print(f"  time of peak downstream (s):    {result.t[np.argmax(result.Q[:, -1])]:.0f}")

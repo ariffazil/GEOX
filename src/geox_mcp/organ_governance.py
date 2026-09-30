@@ -663,7 +663,7 @@ def build_evidence_envelope(
 
     # Compute non-empty SHA256 receipt digest if not explicitly provided
     if not content_sha256:
-        raw_seed = f"{tool_name}:{session_id}:{actor_id}:{artifact_id}:{governance_verdict}:{_env_time.time()}".encode("utf-8")
+        raw_seed = f"{tool_name}:{session_id}:{actor_id}:{artifact_id}:{governance_verdict}:{_env_time.time()}".encode()
         content_sha256 = "sha256:" + hashlib.sha256(raw_seed).hexdigest()
 
     return {

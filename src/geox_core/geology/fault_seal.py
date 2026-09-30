@@ -18,25 +18,27 @@ from typing import Literal, Optional
 @dataclass
 class StratigraphicZone:
     """One zone in the slipped interval."""
+
     zone_id: str
     thickness_m: float
     vsh: float  # Volume of shale (0.0-1.0)
-    source_ref: Optional[str] = None
+    source_ref: str | None = None
 
 
 @dataclass
 class SGResult:
     """SGR computation result — NOT a seal verdict."""
+
     sgr_fraction: float  # 0.0-1.0
-    sgr_percent: float   # 0.0-100.0
+    sgr_percent: float  # 0.0-100.0
     status: Literal["COMPUTED", "HOLD", "UNKNOWN"] = "COMPUTED"
     interpretation: str = "NOT_A_SEAL_VERDICT"
     formula_variant: str = "yielding_1997"
-    throw_m: Optional[float] = None
+    throw_m: float | None = None
     n_zones: int = 0
     total_vsh_thickness: float = 0.0
     limitations: list[str] = field(default_factory=list)
-    uncertainty: Optional[dict] = None
+    uncertainty: dict | None = None
     errors: list[str] = field(default_factory=list)
 
 
@@ -44,7 +46,7 @@ def compute_sgr(
     zones: list[dict],
     throw_m: float,
     formula_variant: str = "yielding_1997",
-    uncertainty: Optional[dict] = None,
+    uncertainty: dict | None = None,
 ) -> dict:
     """Compute SGR from stratigraphic zones and fault throw.
 
@@ -66,16 +68,21 @@ def compute_sgr(
 
     if not zones:
         return SGResult(
-            sgr_fraction=0.0, sgr_percent=0.0,
-            status="UNKNOWN", errors=["No stratigraphic zones provided"],
+            sgr_fraction=0.0,
+            sgr_percent=0.0,
+            status="UNKNOWN",
+            errors=["No stratigraphic zones provided"],
             limitations=limitations,
         ).__dict__
 
     if throw_m is None or throw_m <= 0:
         return SGResult(
-            sgr_fraction=0.0, sgr_percent=0.0,
-            status="HOLD", errors=["Throw must be > 0 meters"],
-            throw_m=throw_m, n_zones=len(zones),
+            sgr_fraction=0.0,
+            sgr_percent=0.0,
+            status="HOLD",
+            errors=["Throw must be > 0 meters"],
+            throw_m=throw_m,
+            n_zones=len(zones),
             limitations=limitations,
         ).__dict__
 

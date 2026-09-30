@@ -131,9 +131,13 @@ def render_section_overlay(
 
     # Content hash for cache / watermark
     content = {
-        "faults": [{"id": f.get("fault_id") if isinstance(f, dict) else None, "pts": _points(f if isinstance(f, dict) else {})} for f in flist],
+        "faults": [
+            {"id": f.get("fault_id") if isinstance(f, dict) else None, "pts": _points(f if isinstance(f, dict) else {})}
+            for f in flist
+        ],
         "horizons": [
-            {"id": h.get("horizon_id") if isinstance(h, dict) else None, "pts": _points(h if isinstance(h, dict) else {})} for h in hlist
+            {"id": h.get("horizon_id") if isinstance(h, dict) else None, "pts": _points(h if isinstance(h, dict) else {})}
+            for h in hlist
         ],
         "image_hash": img_hash,
         "hypothesis_id": hypothesis_id,
@@ -269,8 +273,7 @@ def render_section_overlay(
         "seal_authority": "arifOS_only",
         "epistemic_label": "DER_RENDER",
         "honesty_banner": (
-            "Rendered pick overlay for human review. Geometry is INT/SPEC until gated. "
-            "PNG is not a SEAL. arifOS seals only."
+            "Rendered pick overlay for human review. Geometry is INT/SPEC until gated. PNG is not a SEAL. arifOS seals only."
         ),
     }
 

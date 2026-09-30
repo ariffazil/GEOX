@@ -48,10 +48,7 @@ def _lazy_import(name: str) -> Any:
     try:
         return __import__(name)
     except ImportError as exc:
-        raise ImportError(
-            f"{name} not available. Activate environment: "
-            f"source /opt/geox-science/venv/bin/activate"
-        ) from exc
+        raise ImportError(f"{name} not available. Activate environment: source /opt/geox-science/venv/bin/activate") from exc
 
 
 class _LazyModule:

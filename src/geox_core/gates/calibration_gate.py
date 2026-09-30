@@ -10,7 +10,8 @@ labels and caveats, preventing false confidence in unvalidated results.
 import functools
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Literal
+from typing import Any, Literal
+from collections.abc import Callable
 
 
 class CalibrationLevel(str, Enum):
@@ -141,7 +142,6 @@ def check_calibration_gate(
         )
 
     # Missing inputs for the required level
-    requirements = CALIBRATION_REQUIREMENTS[required_level]
     missing = []
 
     if required_level == CalibrationLevel.CALIBRATED:

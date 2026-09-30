@@ -28,7 +28,7 @@ DITEMPA BUKAN DIBERI.
 
 from __future__ import annotations
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 from scipy.spatial import KDTree
@@ -163,7 +163,7 @@ def geox_takens_embed(
     series: np.ndarray,
     delay: int,
     dim: int,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Build time-delay embedding library from a univariate series.
 
     Given delay τ and embedding dimension E, reconstructs the state-space

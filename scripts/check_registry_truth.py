@@ -321,8 +321,8 @@ def main() -> int:
     ap.add_argument("--live", action="store_true", help="Also probe :8081 tools/list")
     args = ap.parse_args()
 
-    print(f"═══ GEOX Registry Truth Check ═══")
-    print(f"  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
+    print("═══ GEOX Registry Truth Check ═══")
+    print("  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
     print(f"  Truth count:  {TRUTH_COUNT}")
     print(f"  Truth tools:  {TRUTH_SORTED}")
     print(f"  Mode:         {'STRICT' if args.strict else 'WARN on count drift'}")
@@ -339,7 +339,7 @@ def main() -> int:
     if args.live:
         check_live_probe(strict=args.strict)
 
-    print(f"\n═══ RESULT ═══")
+    print("\n═══ RESULT ═══")
     print(f"  Drift:  {drift_count}")
     print(f"  Warn:   {warn_count}")
 
@@ -353,7 +353,7 @@ def main() -> int:
         print(f"  Verdict: PASS with {warn_count} warning(s)")
         return 0
     else:
-        print(f"  Verdict: TRUE — all surfaces match registry.py")
+        print("  Verdict: TRUE — all surfaces match registry.py")
         return 0
 
 

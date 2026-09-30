@@ -78,6 +78,7 @@ async def geox_seismic_ingest(
                 import os as _os
                 import segyio as _segyio
                 import numpy as _np
+
                 # Allow file:// prefix; materialize to local path
                 local = source_uri.removeprefix("file://")
                 if not _os.path.exists(local):
@@ -107,12 +108,25 @@ async def geox_seismic_ingest(
                     else:
                         _amp_min = _amp_max = _amp_mean = _amp_std = 0.0
                     # Map raw format int → schema enum
-                    _fmt_map = {0: "UNKNOWN", 1: "IBM_FLOAT", 2: "INT32", 3: "INT16",
-                                 4: "IEEE_FLOAT", 5: "IEEE_DOUBLE", 6: "INT24", 7: "INT64", 8: "INT8"}
-                    _fmt_enum = {"IBM_FLOAT": "SEG_Y_REV1", "INT32": "SEG_Y_REV1",
-                                  "IEEE_FLOAT": "SEG_Y_REV2", "IEEE_DOUBLE": "SEG_Y_REV2",
-                                  "INT16": "SEG_Y_REV1", "INT24": "SEG_Y_REV1"}.get(
-                                  _fmt_map.get(_fmt, ""), "SEG_Y_REV1")
+                    _fmt_map = {
+                        0: "UNKNOWN",
+                        1: "IBM_FLOAT",
+                        2: "INT32",
+                        3: "INT16",
+                        4: "IEEE_FLOAT",
+                        5: "IEEE_DOUBLE",
+                        6: "INT24",
+                        7: "INT64",
+                        8: "INT8",
+                    }
+                    _fmt_enum = {
+                        "IBM_FLOAT": "SEG_Y_REV1",
+                        "INT32": "SEG_Y_REV1",
+                        "IEEE_FLOAT": "SEG_Y_REV2",
+                        "IEEE_DOUBLE": "SEG_Y_REV2",
+                        "INT16": "SEG_Y_REV1",
+                        "INT24": "SEG_Y_REV1",
+                    }.get(_fmt_map.get(_fmt, ""), "SEG_Y_REV1")
                     _md = {
                         "filename": _os.path.basename(local),
                         "format": _fmt_enum,
@@ -130,11 +144,14 @@ async def geox_seismic_ingest(
                         "amplitude_mean": _amp_mean,
                         "amplitude_std": _amp_std,
                         "nonzero_sampled_traces": len(_samp_traces),
-                        "inline_start": 1, "inline_end": 1,
-                        "crossline_start": 1, "crossline_end": _n_traces,
+                        "inline_start": 1,
+                        "inline_end": 1,
+                        "crossline_start": 1,
+                        "crossline_end": _n_traces,
                         "coordinate_system": "EPSG:4326",
                     }
                 from geox_mcp.tools.ingestion import geox_seismic_segy_inspect as _impl
+
                 return await _impl(segy_metadata=_md)
             except ImportError:
                 # segyio not available — fall through to bundle

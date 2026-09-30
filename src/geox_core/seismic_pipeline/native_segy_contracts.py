@@ -58,38 +58,40 @@ class PolarityState(str, Enum):
 
 class SeismicSourceRef(BaseModel):
     """Reference to a registered native seismic data source."""
+
     model_config = ConfigDict(extra="forbid")
 
     source_id: str
-    source_uri: Optional[str] = None
-    source_hash: Optional[str] = None  # SHA256 of file bytes
+    source_uri: str | None = None
+    source_hash: str | None = None  # SHA256 of file bytes
     classification: DataClassification = DataClassification.UNKNOWN
     authority: SourceAuthority = SourceAuthority.UNVERIFIED
-    survey_id: Optional[str] = None
-    line_id: Optional[str] = None
+    survey_id: str | None = None
+    line_id: str | None = None
     crs: str = "CRS_UNKNOWN"
     registered_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    registered_by: Optional[str] = None
+    registered_by: str | None = None
 
 
 class SeismicDatasetManifest(BaseModel):
     """Manifest of a registered SEG-Y dataset with header metadata."""
+
     model_config = ConfigDict(extra="forbid")
 
     source_ref: SeismicSourceRef
-    file_size_bytes: Optional[int] = None
+    file_size_bytes: int | None = None
     segy_revision: str = "unknown"  # rev1, rev2, unknown
-    trace_count: Optional[int] = None
-    samples_per_trace: Optional[int] = None
-    sample_interval_us: Optional[int] = None
-    sample_interval_ms: Optional[float] = None
-    data_sample_format: Optional[int] = None  # segyio format code
+    trace_count: int | None = None
+    samples_per_trace: int | None = None
+    sample_interval_us: int | None = None
+    sample_interval_ms: float | None = None
+    data_sample_format: int | None = None  # segyio format code
     sorting: str = "unknown"  # inline, crossline, unknown
     vertical_domain: VerticalDomain = VerticalDomain.UNKNOWN
     vertical_unit: str = "unknown"
-    inline_range: Optional[tuple[int, int]] = None
-    crossline_range: Optional[tuple[int, int]] = None
-    cdp_range: Optional[tuple[int, int]] = None
+    inline_range: tuple[int, int] | None = None
+    crossline_range: tuple[int, int] | None = None
+    cdp_range: tuple[int, int] | None = None
     amplitude_integrity: AmplitudeIntegrity = AmplitudeIntegrity.UNKNOWN
     phase_integrity: PhaseIntegrity = PhaseIntegrity.UNKNOWN
     polarity_state: PolarityState = PolarityState.UNKNOWN
@@ -101,6 +103,7 @@ class SeismicDatasetManifest(BaseModel):
 
 class SeismicQCReceipt(BaseModel):
     """Quality control receipt from SEG-Y header inspection."""
+
     model_config = ConfigDict(extra="forbid")
 
     source_id: str
@@ -123,15 +126,16 @@ class SeismicQCReceipt(BaseModel):
 
 class NativeTraceRef(BaseModel):
     """Reference to an extracted native seismic trace."""
+
     model_config = ConfigDict(extra="forbid")
 
     trace_ref_id: str
     source_id: str
     source_hash: str
     trace_index: int
-    cdp: Optional[int] = None
-    inline: Optional[int] = None
-    crossline: Optional[int] = None
+    cdp: int | None = None
+    inline: int | None = None
+    crossline: int | None = None
     n_samples: int
     sample_interval_us: int
     sample_interval_ms: float
@@ -149,10 +153,11 @@ class NativeTraceRef(BaseModel):
 
 class NativeTraceReceipt(BaseModel):
     """Receipt from native trace extraction with QC reference."""
+
     model_config = ConfigDict(extra="forbid")
 
     trace_ref: NativeTraceRef
-    qc_receipt_id: Optional[str] = None
+    qc_receipt_id: str | None = None
     permitted_uses: list[str] = [
         "quantitative_amplitude_analysis",
         "avo_classification",

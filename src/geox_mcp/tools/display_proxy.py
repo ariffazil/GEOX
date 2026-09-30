@@ -47,7 +47,7 @@ def _column_amplitude_proxy(image_array: np.ndarray, x_min: int, y_min: int, x_m
     Uses luminance as proxy — NOT reflection amplitude.
     Returns array of shape (n_traces, n_samples) normalized to [-1, 1].
     """
-    panel = image_array[y_min:y_max + 1, x_min:x_max + 1]
+    panel = image_array[y_min : y_max + 1, x_min : x_max + 1]
     if panel.ndim == 3:
         # Convert to grayscale using R-B channel (seismic convention)
         gray = panel[:, :, 0].astype(float) - panel[:, :, 2].astype(float)
@@ -65,14 +65,14 @@ def _column_amplitude_proxy(image_array: np.ndarray, x_min: int, y_min: int, x_m
 
 async def geox_extract_display_proxy(
     *,
-    image_path: Optional[str] = None,
-    image_data: Optional[str] = None,
-    calibration_witness_ref: Optional[dict[str, Any]] = None,
-    panel_bounds: Optional[dict[str, int]] = None,
+    image_path: str | None = None,
+    image_data: str | None = None,
+    calibration_witness_ref: dict[str, Any] | None = None,
+    panel_bounds: dict[str, int] | None = None,
     extraction_method: str = "column_luminance_r_minus_b",
-    session_id: Optional[str] = None,
-    actor_id: Optional[str] = None,
-    trace_id: Optional[str] = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict[str, Any]:
     """Extract a display-derived proxy from a raster seismic image.
 
@@ -161,10 +161,13 @@ async def geox_extract_display_proxy(
         "amplitude_integrity": "DISPLAY_TRANSFORMED",
         "phase_integrity": "DISPLAY_TRANSFORMED",
         "epistemic_tag": "DER",
-        "calibration_witness_ref": calibration_witness_ref.get("witness_id") or calibration_witness_ref.get("calibration_witness_id", "unknown"),
+        "calibration_witness_ref": calibration_witness_ref.get("witness_id")
+        or calibration_witness_ref.get("calibration_witness_id", "unknown"),
         "panel_bounds": {
-            "x_min": x_min, "y_min": y_min,
-            "x_max": x_max, "y_max": y_max,
+            "x_min": x_min,
+            "y_min": y_min,
+            "x_max": x_max,
+            "y_max": y_max,
             "width": x_max - x_min + 1,
             "height": y_max - y_min + 1,
         },

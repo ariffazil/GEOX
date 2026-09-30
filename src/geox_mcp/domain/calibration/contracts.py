@@ -7,6 +7,7 @@ uncertainty enters.
 
 DITEMPA BUKAN DIBERI.
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -52,8 +53,8 @@ class VerticalDomain(str, Enum):
 class EvidenceRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
     dataset_id: str
-    dataset_version_hash: Optional[str] = None
-    source_uri: Optional[str] = None
+    dataset_version_hash: str | None = None
+    source_uri: str | None = None
     classification: DataClassification = DataClassification.SYNTHETIC
     authority_state: AuthorityState = AuthorityState.UNVERIFIED
 
@@ -62,9 +63,9 @@ class AnchorPoint(BaseModel):
     model_config = ConfigDict(extra="forbid")
     pixel_x: float
     pixel_y: float
-    world_x: Optional[float] = None
-    world_y: Optional[float] = None
-    value: Optional[float] = None  # for TWT/depth ticks
+    world_x: float | None = None
+    world_y: float | None = None
+    value: float | None = None  # for TWT/depth ticks
 
 
 class AxisCalibration(BaseModel):
@@ -72,10 +73,10 @@ class AxisCalibration(BaseModel):
     method: str = "two_point"  # two_point | header | navigation | checkshot_tie
     anchor_a: AnchorPoint
     anchor_b: AnchorPoint
-    scale_per_pixel: Optional[float] = None
+    scale_per_pixel: float | None = None
     unit: str = "unknown"
-    uncertainty: Optional[dict[str, Any]] = None
-    residual: Optional[float] = None
+    uncertainty: dict[str, Any] | None = None
+    residual: float | None = None
 
 
 class HorizontalCalibration(AxisCalibration):
@@ -89,10 +90,10 @@ class VerticalCalibration(AxisCalibration):
 class VelocityEvidenceRef(BaseModel):
     model_config = ConfigDict(extra="forbid")
     kind: str = "checkshot"  # checkshot | VSP | velocity_model | time_depth_curve
-    id: Optional[str] = None
-    version_hash: Optional[str] = None
+    id: str | None = None
+    version_hash: str | None = None
     validity_domain: str = "TWT_to_TVDSS"
-    uncertainty_band_pct: Optional[float] = None
+    uncertainty_band_pct: float | None = None
 
 
 class Pick(BaseModel):
@@ -102,7 +103,7 @@ class Pick(BaseModel):
     coordinates: list[dict[str, float]] = []
     epistemic_tag: str = "INTERPRETED"
     observer: str = "unknown"
-    uncertainty: Optional[dict[str, Any]] = None
+    uncertainty: dict[str, Any] | None = None
 
 
 class DisplayDomain(BaseModel):
@@ -110,8 +111,8 @@ class DisplayDomain(BaseModel):
     vertical_domain: VerticalDomain = VerticalDomain.TWT
     vertical_units: str = "ms"
     horizontal_domain: str = "inline_crossline"
-    crs: Optional[str] = None
-    vertical_exaggeration: Optional[float] = None
+    crs: str | None = None
+    vertical_exaggeration: float | None = None
 
 
 class CalibrationWitness(BaseModel):
@@ -123,9 +124,9 @@ class CalibrationWitness(BaseModel):
     purpose: list[CalibrationPurpose] = []
     evidence_ref: EvidenceRef
     display_domain: DisplayDomain
-    axis_calibration_h: Optional[HorizontalCalibration] = None
-    axis_calibration_v: Optional[VerticalCalibration] = None
-    velocity_or_td_ref: Optional[VelocityEvidenceRef] = None
+    axis_calibration_h: HorizontalCalibration | None = None
+    axis_calibration_v: VerticalCalibration | None = None
+    velocity_or_td_ref: VelocityEvidenceRef | None = None
     picks: list[Pick] = []
     observer: str = "unknown"
     created_at: datetime = Field(default_factory=datetime.utcnow)

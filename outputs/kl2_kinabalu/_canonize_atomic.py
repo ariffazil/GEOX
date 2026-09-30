@@ -4,6 +4,7 @@ Lane discovered 2026-09-07: stateless HTTP is whitelisted; stdio carries session
 ownership; ACT binding requires caller actor == token actor; EXECUTE_REVERSIBLE
 requires a kernel-issued lease naming the tool in scope.
 """
+
 import json
 import subprocess
 import os
@@ -14,8 +15,7 @@ ACTOR = "qwen-fi003"
 
 
 def kernel_rpc(method, params, session_hdr=None):
-    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method,
-                       "params": params}).encode()
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params}).encode()
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if session_hdr:
         headers["Mcp-Session-Id"] = session_hdr
@@ -25,14 +25,16 @@ def kernel_rpc(method, params, session_hdr=None):
         return json.loads(r.read().decode()), sid
 
 
-init_r, sid = kernel_rpc("initialize", {
-    "protocolVersion": "2024-11-05", "capabilities": {},
-    "clientInfo": {"name": "fi003-canonize-atomic2", "version": "1.0"}})
+init_r, sid = kernel_rpc(
+    "initialize",
+    {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "fi003-canonize-atomic2", "version": "1.0"}},
+)
 kernel_rpc("notifications/initialized", {}, sid)
-call_r, _ = kernel_rpc("tools/call", {
-    "name": "arif_init",
-    "arguments": {"mode": "light", "intent": "forge_canonize KL2 v2 trio (F13 GO)",
-                  "actor_id": ACTOR}}, sid)
+call_r, _ = kernel_rpc(
+    "tools/call",
+    {"name": "arif_init", "arguments": {"mode": "light", "intent": "forge_canonize KL2 v2 trio (F13 GO)", "actor_id": ACTOR}},
+    sid,
+)
 payload = json.loads(call_r["result"]["content"][0]["text"])
 token = payload["session_token"]
 kern_sid = payload["session_id"]
@@ -40,19 +42,20 @@ assert token.count(".") == 2 and token.startswith("act_v1."), "bad token"
 print(f"[kernel] session={kern_sid} actor={payload.get('actor_id')}")
 
 FILES = [
-    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_chart_v2.png",
-     "kl2_kinabalu_penetration_chart_v2.png"),
-    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_well_data_v2.xlsx",
-     "kl2_kinabalu_well_data_v2.xlsx"),
-    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_v2.py",
-     "kl2_kinabalu_penetration_v2.py"),
+    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_chart_v2.png", "kl2_kinabalu_penetration_chart_v2.png"),
+    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_well_data_v2.xlsx", "kl2_kinabalu_well_data_v2.xlsx"),
+    ("/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_v2.py", "kl2_kinabalu_penetration_v2.py"),
 ]
 env = {**os.environ, "FORGE_STDIO_ACTOR_ID": ACTOR}
 errf = open("/tmp/aforge-stdio-stderr4.log", "wb")
 p = subprocess.Popen(
     ["node", "dist/src/interfaces/mcp/cli.js", "serve", "--transport", "stdio"],
-    cwd="/root/A-FORGE", stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-    stderr=errf, env=env)
+    cwd="/root/A-FORGE",
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=errf,
+    env=env,
+)
 
 
 def send(o):
@@ -70,16 +73,24 @@ def recv():
             return json.loads(line)
 
 
-send({"jsonrpc": "2.0", "id": 1, "method": "initialize",
-      "params": {"protocolVersion": "2024-11-05", "capabilities": {},
-                 "clientInfo": {"name": "fi003-canonize-atomic2", "version": "1.0"}}})
+send(
+    {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "initialize",
+        "params": {
+            "protocolVersion": "2024-11-05",
+            "capabilities": {},
+            "clientInfo": {"name": "fi003-canonize-atomic2", "version": "1.0"},
+        },
+    }
+)
 recv()
 send({"jsonrpc": "2.0", "method": "notifications/initialized"})
 
 
 def call(tool, args, i):
-    send({"jsonrpc": "2.0", "id": i, "method": "tools/call",
-          "params": {"name": tool, "arguments": args}})
+    send({"jsonrpc": "2.0", "id": i, "method": "tools/call", "params": {"name": tool, "arguments": args}})
     r = recv()
     if r is None:
         return None, True
@@ -90,11 +101,21 @@ def call(tool, args, i):
 
 
 # lease: scope forge_canonize, reversible ceiling
-lease_body, lease_err = call("forge_lease", {
-    "mode": "request", "agent_id": ACTOR, "scope": ["forge_canonize"],
-    "max_action_class": "EXECUTE_REVERSIBLE", "ttl_seconds": 1800,
-    "reason": "KL2 v2 trio canonize — validator re-seal PASSED, F13 GO 2026-09-07",
-    "session_id": kern_sid, "session_token": token, "actor_id": ACTOR}, 10)
+lease_body, lease_err = call(
+    "forge_lease",
+    {
+        "mode": "request",
+        "agent_id": ACTOR,
+        "scope": ["forge_canonize"],
+        "max_action_class": "EXECUTE_REVERSIBLE",
+        "ttl_seconds": 1800,
+        "reason": "KL2 v2 trio canonize — validator re-seal PASSED, F13 GO 2026-09-07",
+        "session_id": kern_sid,
+        "session_token": token,
+        "actor_id": ACTOR,
+    },
+    10,
+)
 print("--- lease ---")
 print((lease_body or "NO RESPONSE")[:500])
 lease_id = None
@@ -105,16 +126,27 @@ if not lease_err:
         pass
 if not lease_id:
     print("[ABORT] no lease_id — cannot proceed to canonize")
-    p.terminate(); errf.close()
+    p.terminate()
+    errf.close()
     raise SystemExit(1)
 print(f"[lease] {lease_id}")
 
 ok = 0
 for i, (path, name) in enumerate(FILES):
-    body, is_err = call("forge_canonize", {
-        "source_path": path, "category": "artifact", "sign": True,
-        "target_name": name, "session_token": token, "session_id": kern_sid,
-        "actor_id": ACTOR, "lease_id": lease_id}, 100 + i)
+    body, is_err = call(
+        "forge_canonize",
+        {
+            "source_path": path,
+            "category": "artifact",
+            "sign": True,
+            "target_name": name,
+            "session_token": token,
+            "session_id": kern_sid,
+            "actor_id": ACTOR,
+            "lease_id": lease_id,
+        },
+        100 + i,
+    )
     print(f"--- {name} [{'ERR' if is_err else 'OK'}] ---")
     print((body or "NO RESPONSE")[:900])
     ok += 0 if is_err else 1

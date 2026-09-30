@@ -672,10 +672,7 @@ def get_standard_envelope(
     # apex on empty-ref READ; constitutional G stays arif_think(mode=apex) only.
     try:
         _refs = evidence_refs or []
-        _gs = str(
-            governance_status.value if hasattr(governance_status, "value") else governance_status
-            or ""
-        ).upper()
+        _gs = str(governance_status.value if hasattr(governance_status, "value") else governance_status or "").upper()
         _is_read_no_claim = len(_refs) == 0 and _gs in (
             "QUALIFY",
             "PASS",
@@ -684,9 +681,7 @@ def get_standard_envelope(
             "UNKNOWN",
             "",
         )
-        if _is_read_no_claim and not (
-            (claim_state or "").upper() in ("OBSERVED", "DERIVED_CANDIDATE") and _refs
-        ):
+        if _is_read_no_claim and not ((claim_state or "").upper() in ("OBSERVED", "DERIVED_CANDIDATE") and _refs):
             response["apex"] = {
                 "emitted": False,
                 "reason": "READ_NO_REFS — full apex omitted (signal gate would be constant HOLD noise)",

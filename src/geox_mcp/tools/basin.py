@@ -390,8 +390,8 @@ async def geox_basin_profile(
                 "tool": "geox_basin_profile",
                 "error": "basin_name is required (non-empty string)",
                 "hint": "Provide a basin name like 'malay_basin' or 'sabah_basin'. "
-                        "Note: MCP parameter name='name' is NOT mapped to basin_name — "
-                        "use basin_name explicitly.",
+                "Note: MCP parameter name='name' is NOT mapped to basin_name — "
+                "use basin_name explicitly.",
             },
             tool_class="observe",
             execution_status=ExecutionStatus.ERROR,
@@ -842,7 +842,8 @@ async def geox_basin_profile(
             governance_status=gov_status,
             claim_tag="HYPOTHESIS" if not refs else "CLAIM",
             claim_state=claim_state,
-            evidence_refs=[f"basins/{normalized}/{f}" for f in evidence_loaded] +
+            evidence_refs=[f"basins/{normalized}/{f}" for f in evidence_loaded]
+            +
             # Component #36 — coverage engine reference (pressure_states.yaml)
             ["ontology/pressure_states.yaml"],
             session_id=session_id,

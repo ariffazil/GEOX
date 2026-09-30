@@ -603,9 +603,7 @@ def _check_pressure_vs_migration(match: re.Match, claim: str) -> dict[str, Any]:
             "pressure compartment",
         )
     )
-    migration_lang = any(
-        k in text for k in ("migrat", "charge", "fill", "kitchen", "source rock", "source-rock")
-    )
+    migration_lang = any(k in text for k in ("migrat", "charge", "fill", "kitchen", "source rock", "source-rock"))
     equates = any(
         k in text
         for k in (

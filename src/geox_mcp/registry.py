@@ -205,9 +205,7 @@ def is_mutating_call(tool_name: str, arguments: dict[str, Any] | None = None) ->
 # Principle: Capability Exists ≠ Capability Visible ≠ Capability Activated
 
 _REGISTRY_PATH = Path(__file__).with_name("registry")
-_CAPABILITY_REGISTRY_PATH = (
-    Path(__file__).resolve().parents[2] / "registry" / "capability_registry.yaml"
-)
+_CAPABILITY_REGISTRY_PATH = Path(__file__).resolve().parents[2] / "registry" / "capability_registry.yaml"
 
 # Discovery profile definitions (loaded from capability_registry.yaml)
 _DISCOVERY_PROFILES: dict[str, dict[str, Any]] | None = None
@@ -282,4 +280,3 @@ def is_escalation_required(tool_name: str) -> bool:
     reg = _load_capability_registry()
     visibility = reg.get("pack_visibility", {}).get(pack, {})
     return visibility.get("escalation_required", False)
-

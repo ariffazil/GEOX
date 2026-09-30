@@ -114,6 +114,7 @@ def _ensure_arifos_mcp_session() -> str | None:
             return _arifos_mcp_session_id
     # No cached session — initialize outside the lock to avoid head-of-line.
     import httpx as _httpx_init
+
     try:
         r = _httpx_init.post(
             f"{_ARIFOS_BASE}/mcp",
@@ -156,6 +157,7 @@ def _ensure_arifos_mcp_session() -> str | None:
     except Exception as exc:
         logger.warning("arifOS MCP initialize failed: %s", exc)
     return None
+
 
 _kernel_verify_cache: dict[str, tuple[float, Any]] = {}
 _kernel_verify_lock = threading.Lock()
@@ -346,6 +348,7 @@ def validate_session(
     # Zero config. Works on every platform. No cross-server dependency.
     if not session_id or session_id.strip() == "":
         import os
+
         if os.getenv("GEOX_ALLOW_ANON", "0") != "1":
             return ValidationResult(
                 ok=False,
@@ -353,6 +356,7 @@ def validate_session(
                 error_message="P0_IDENTITY_PROPAGATION · HOLD — valid session token (SCT or SEAL-*) is required before executing organ computations",
             )
         import uuid
+
         anon_id = f"ANON-{uuid.uuid4().hex[:16]}"
         result = ValidationResult(
             ok=True,
@@ -361,6 +365,7 @@ def validate_session(
             session={"type": "anon", "session_id": anon_id, "auto_minted": True},
         )
         from geox_mcp.rate_limiter import rate_limiter
+
         if not rate_limiter.check(anon_id, "anon"):
             return ValidationResult(
                 ok=False,
@@ -410,6 +415,7 @@ def validate_session(
         # ── Rate limit check (no-op for SCT sessions without typed tiers) ──
         if result.session and result.session.get("type") in ("anon", "session"):
             from geox_mcp.rate_limiter import rate_limiter
+
             tier = "anon" if result.session["type"] == "anon" else "session"
             if not rate_limiter.check(session_id, tier):
                 return ValidationResult(
@@ -455,9 +461,7 @@ def validate_session(
             kernel_actor = standing_actor
         elif isinstance(standing_actor, dict):
             kernel_actor = (
-                standing_actor.get("claimed_id")
-                or standing_actor.get("canonical_id")
-                or standing_actor.get("actor_id")
+                standing_actor.get("claimed_id") or standing_actor.get("canonical_id") or standing_actor.get("actor_id")
             )
         else:
             kernel_actor = None
@@ -466,19 +470,11 @@ def validate_session(
             if isinstance(raw_actor, str):
                 kernel_actor = raw_actor
             elif isinstance(raw_actor, dict):
-                kernel_actor = (
-                    raw_actor.get("actor_id")
-                    or raw_actor.get("claimed_id")
-                    or raw_actor.get("canonical_id")
-                )
+                kernel_actor = raw_actor.get("actor_id") or raw_actor.get("claimed_id") or raw_actor.get("canonical_id")
             else:
                 kernel_actor = None
         if isinstance(kernel_actor, dict):
-            kernel_actor = (
-                kernel_actor.get("actor_id")
-                or kernel_actor.get("claimed_id")
-                or kernel_actor.get("canonical_id")
-            )
+            kernel_actor = kernel_actor.get("actor_id") or kernel_actor.get("claimed_id") or kernel_actor.get("canonical_id")
 
         # ── FORGED 2026-07-27 (FI-008 · GEOX authority-sync fix) ──
         # The arifOS kernel `validate` mode returns the live authority band in
@@ -554,6 +550,7 @@ def validate_session(
         # ── Rate limit check (no-op for SEAL sessions without typed tiers) ──
         if result.session and result.session.get("type") in ("anon", "session"):
             from geox_mcp.rate_limiter import rate_limiter
+
             tier = "anon" if result.session["type"] == "anon" else "session"
             if not rate_limiter.check(session_id, tier):
                 return ValidationResult(
@@ -568,6 +565,7 @@ def validate_session(
     # Zero config. Works on every platform. No cross-server dependency.
     if session_id.startswith("ANON-") or session_id == "__auto_mint__":
         import uuid
+
         anon_id = session_id if session_id.startswith("ANON-") else f"ANON-{uuid.uuid4().hex[:16]}"
         result = ValidationResult(
             ok=True,
@@ -577,6 +575,7 @@ def validate_session(
         )
         # ── Rate limit check for anon sessions ──────────────────────
         from geox_mcp.rate_limiter import rate_limiter
+
         if not rate_limiter.check(anon_id, "anon"):
             return ValidationResult(
                 ok=False,

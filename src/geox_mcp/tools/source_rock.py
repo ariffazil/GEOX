@@ -98,10 +98,7 @@ async def geox_source_rock(
             out["baseline_density_input"] = bl_den
         if density_neutron_separation is not None:
             out["density_neutron_separation_input"] = density_neutron_separation
-        out["epistemic"] = (
-            out.get("epistemic", "")
-            + " depth_m=0 (not supplied); calibrate with actual depth for production use."
-        )
+        out["epistemic"] = out.get("epistemic", "") + " depth_m=0 (not supplied); calibrate with actual depth for production use."
         return out
 
     errors: list[str] = []
@@ -152,10 +149,7 @@ async def geox_source_rock(
             result["delalogr"] = r_dlr
 
         if not any(k in result for k in ("toc", "kerogen", "maturity", "delalogr")):
-            errors.append(
-                "mode=full: no inputs supplied. Provide toc_wt_pct, hydrogen_index, "
-                "tmax_c, or shale_resistivity."
-            )
+            errors.append("mode=full: no inputs supplied. Provide toc_wt_pct, hydrogen_index, tmax_c, or shale_resistivity.")
 
     else:
         errors.append(f"Unknown mode: {mode!r}. Valid: toc, kerogen, maturity, delalogr, full")

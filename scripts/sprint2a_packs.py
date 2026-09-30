@@ -16,12 +16,12 @@ MANIFEST_PATH = ROOT / "src" / "geox_mcp" / "tools_manifest.yaml"
 
 # ── Research sub-family mapping ─────────────────────────────────────────
 RESEARCH_SUBFAMILY: dict[str, str] = {
-    "geox_glof_cascade_initialize":  "cascade",
-    "geox_glof_cascade_step":        "cascade",
-    "geox_glof_cascade_phase":       "cascade",
-    "geox_glof_cascade_metabolize":  "cascade",
-    "geox_glof_cascade_propagate":   "cascade",
-    "geox_glof_cascade_inverse":     "inversion",
+    "geox_glof_cascade_initialize": "cascade",
+    "geox_glof_cascade_step": "cascade",
+    "geox_glof_cascade_phase": "cascade",
+    "geox_glof_cascade_metabolize": "cascade",
+    "geox_glof_cascade_propagate": "cascade",
+    "geox_glof_cascade_inverse": "inversion",
     "geox_glof_cascade_mcmc_inverse": "inversion",
 }
 
@@ -33,10 +33,19 @@ CAPABILITY_PACKS = {
         "description": "Default discovery surface. All agents see these tools.",
         "intent": "Evaluate basin context, validate data, interpret wells/seismic, assess prospects.",
         "tools": [
-            "geox_basin", "geox_claim", "geox_deep_time", "geox_map",
-            "geox_model", "geox_prospect", "geox_seismic_interpret",
-            "geox_source", "geox_spatial", "geox_temporal",
-            "geox_petrophysics", "geox_well", "geox_well_qc",
+            "geox_basin",
+            "geox_claim",
+            "geox_deep_time",
+            "geox_map",
+            "geox_model",
+            "geox_prospect",
+            "geox_seismic_interpret",
+            "geox_source",
+            "geox_spatial",
+            "geox_temporal",
+            "geox_petrophysics",
+            "geox_well",
+            "geox_well_qc",
         ],
     },
     "earth_specialist": {
@@ -45,9 +54,12 @@ CAPABILITY_PACKS = {
         "description": "Opt-in after task declaration. Seismic computation, geomechanics, data ingestion.",
         "intent": "Process raw data, run computations, analyze paleobiology.",
         "tools": [
-            "geox_contrast_metabolize", "geox_geomechanics",
-            "geox_paleobiodb_query", "geox_seismic_compute",
-            "geox_seismic_ingest", "geox_well_ingest",
+            "geox_contrast_metabolize",
+            "geox_geomechanics",
+            "geox_paleobiodb_query",
+            "geox_seismic_compute",
+            "geox_seismic_ingest",
+            "geox_well_ingest",
         ],
     },
     "earth_research": {
@@ -59,15 +71,18 @@ CAPABILITY_PACKS = {
             "cascade": {
                 "label": "GLOF Cascade Simulation",
                 "tools": [
-                    "geox_glof_cascade_initialize", "geox_glof_cascade_step",
-                    "geox_glof_cascade_phase", "geox_glof_cascade_metabolize",
+                    "geox_glof_cascade_initialize",
+                    "geox_glof_cascade_step",
+                    "geox_glof_cascade_phase",
+                    "geox_glof_cascade_metabolize",
                     "geox_glof_cascade_propagate",
                 ],
             },
             "inversion": {
                 "label": "Bayesian Inversion",
                 "tools": [
-                    "geox_glof_cascade_inverse", "geox_glof_cascade_mcmc_inverse",
+                    "geox_glof_cascade_inverse",
+                    "geox_glof_cascade_mcmc_inverse",
                 ],
             },
             "restoration": {
@@ -84,9 +99,12 @@ CAPABILITY_PACKS = {
             },
         },
         "tools": [
-            "geox_glof_cascade_initialize", "geox_glof_cascade_step",
-            "geox_glof_cascade_phase", "geox_glof_cascade_inverse",
-            "geox_glof_cascade_mcmc_inverse", "geox_glof_cascade_metabolize",
+            "geox_glof_cascade_initialize",
+            "geox_glof_cascade_step",
+            "geox_glof_cascade_phase",
+            "geox_glof_cascade_inverse",
+            "geox_glof_cascade_mcmc_inverse",
+            "geox_glof_cascade_metabolize",
             "geox_glof_cascade_propagate",
         ],
     },
@@ -114,8 +132,7 @@ def add_capability_packs(dry_run: bool = False) -> int:
 
     if not dry_run:
         with open(MANIFEST_PATH, "w") as f:
-            yaml.dump(manifest, f, default_flow_style=False, sort_keys=False,
-                      allow_unicode=True, width=120)
+            yaml.dump(manifest, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
         print(f"  ✓ Added capability_packs ({len(CAPABILITY_PACKS)} packs)")
         print(f"  ✓ Added subfamily to {subfamily_count} research tools")
         for pack_name, pack in CAPABILITY_PACKS.items():

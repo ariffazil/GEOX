@@ -8,12 +8,14 @@ import requests
 SOT_PATH = "/opt/arifos/sites/arif-fazil.com/geox/status.json"
 SOT_DIR = os.path.dirname(SOT_PATH)
 
+
 def get_container_status(name):
     try:
         res = subprocess.check_output(["docker", "inspect", "-f", "{{.State.Status}}", name]).decode().strip()
         return res
     except Exception:
         return "down"
+
 
 def get_api_health(url):
     try:
@@ -24,23 +26,18 @@ def get_api_health(url):
     except Exception:
         return "unreachable"
 
+
 status_data = {
     "timestamp": datetime.now(UTC).isoformat(),
     "seal": "DITEMPA BUKAN DIBERI",
     "services": {
         "arifosmcp": {
             "docker": get_container_status("arifosmcp"),
-            "api": get_api_health("https://arifosmcp.arif-fazil.com/health")
+            "api": get_api_health("https://arifosmcp.arif-fazil.com/health"),
         },
-        "geox_eic": {
-            "docker": get_container_status("geox_eic"),
-            "api": get_api_health("https://geox.arif-fazil.com/health")
-        }
+        "geox_eic": {"docker": get_container_status("geox_eic"), "api": get_api_health("https://geox.arif-fazil.com/health")},
     },
-    "integrity": {
-        "skills_linked": os.path.islink("/root/arifOS/geox/skills"),
-        "submodule_sync": True
-    }
+    "integrity": {"skills_linked": os.path.islink("/root/arifOS/geox/skills"), "submodule_sync": True},
 }
 
 os.makedirs(SOT_DIR, exist_ok=True)

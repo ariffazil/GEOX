@@ -624,14 +624,11 @@ class GeoxGovernanceMiddleware(Middleware):
             # C3 FIX: capture validated SCT authority before stripping.
             # The authority gate needs this because the SCT is stripped next.
             if isinstance(arguments, dict):
-                _sct_token = (
-                    arguments.get("session_token")
-                    or arguments.get("sct")
-                    or arguments.get("arifos_sct")
-                )
+                _sct_token = arguments.get("session_token") or arguments.get("sct") or arguments.get("arifos_sct")
                 if _sct_token and isinstance(_sct_token, str) and _sct_token.startswith("act_v1."):
                     try:
                         import base64 as _b64
+
                         _payload_b64 = _sct_token.split(".", 1)[1]
                         # Pad for base64 decode
                         _payload_b64 += "=" * (-len(_payload_b64) % 4)
@@ -1036,9 +1033,7 @@ class GeoxGovernanceMiddleware(Middleware):
             # MANDATORY content_sha256 — never empty (F11 AUDITABILITY).
             # Compute deterministic SHA256 of canonical envelope payload so
             # every receipt has a verifiable hash even when no artifact exists.
-            _envelope_for_hash = _json.dumps(
-                gov_envelope, sort_keys=True, default=str
-            )
+            _envelope_for_hash = _json.dumps(gov_envelope, sort_keys=True, default=str)
             content_sha256 = hashlib.sha256(_envelope_for_hash.encode()).hexdigest()
 
             envelope = build_evidence_envelope(

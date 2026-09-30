@@ -179,10 +179,7 @@ async def geox_seismic_compute(
             if (
                 "zoeppritz" in result
                 and isinstance(result["zoeppritz"], dict)
-                and all(
-                    result["zoeppritz"].get(k) is not None
-                    for k in ("above", "below")
-                )
+                and all(result["zoeppritz"].get(k) is not None for k in ("above", "below"))
             ):
                 try:
                     import numpy as _np
@@ -190,16 +187,17 @@ async def geox_seismic_compute(
                     from geox_core.avo.avo_forward import zoeppritz_rpp as _zrpp
 
                     _th = kwargs.get("theta_deg")
-                    _thetas = (
-                        list(_th) if isinstance(_th, (list, tuple)) and _th
-                        else [0.0, 10.0, 20.0, 30.0]
-                    )
+                    _thetas = list(_th) if isinstance(_th, (list, tuple)) and _th else [0.0, 10.0, 20.0, 30.0]
                     _a, _b = result["zoeppritz"]["above"], result["zoeppritz"]["below"]
                     _rpp_curve = [
                         round(float(v), 6)
                         for v in _zrpp(
-                            _a["vp"], _a["vs"], _a["rho"],
-                            _b["vp"], _b["vs"], _b["rho"],
+                            _a["vp"],
+                            _a["vs"],
+                            _a["rho"],
+                            _b["vp"],
+                            _b["vs"],
+                            _b["rho"],
                             _np.asarray(_thetas, dtype=float),
                         )
                     ]
@@ -221,9 +219,7 @@ async def geox_seismic_compute(
                     _sig = _np.zeros_like(_t)
                     _sig[0] = _rpp_curve[0]
                     _fc = 25.0
-                    _w = (1.0 - 2.0 * (_np.pi * _fc * (_t - 0.06)) ** 2) * _np.exp(
-                        -(_np.pi * _fc * (_t - 0.06)) ** 2
-                    )
+                    _w = (1.0 - 2.0 * (_np.pi * _fc * (_t - 0.06)) ** 2) * _np.exp(-((_np.pi * _fc * (_t - 0.06)) ** 2))
                     _trace = _np.convolve(_sig, _w, mode="same")
                     result.setdefault(
                         "synthetic_trace",
@@ -238,9 +234,7 @@ async def geox_seismic_compute(
                         {
                             "R_PP_0deg": _rpp_curve[0],
                             "R_PP_max_abs": round(max(abs(v) for v in _rpp_curve), 6),
-                            "theta_of_max_deg": _thetas[
-                                max(range(len(_rpp_curve)), key=lambda i: abs(_rpp_curve[i]))
-                            ],
+                            "theta_of_max_deg": _thetas[max(range(len(_rpp_curve)), key=lambda i: abs(_rpp_curve[i]))],
                             "acrisk": result["zoeppritz"].get("acrisk"),
                             "method": "Bortfeld-Zoeppritz",
                         },
@@ -264,15 +258,15 @@ async def geox_seismic_compute(
                         _r0_src = "Shuey fit intercept (0deg not in sweep)"
                     # Rutherford-Williams classification (spec order, computed):
                     if _R0 > 0 and _G > 0:
-                        _cls = "Class I"    # high-impedance, brightening
+                        _cls = "Class I"  # high-impedance, brightening
                     elif abs(_R0) < 0.02:
-                        _cls = "Class II"   # near-zero intercept, polarity flip
+                        _cls = "Class II"  # near-zero intercept, polarity flip
                     elif _R0 > 0 and _G < 0:
                         _cls = "Class IIp"  # small positive intercept, dimming
                     elif _R0 < 0 and _G < 0:
                         _cls = "Class III"  # low impedance, bright negative
                     elif _R0 < 0 and _G > 0:
-                        _cls = "Class IV"   # negative intercept, dimming with offset
+                        _cls = "Class IV"  # negative intercept, dimming with offset
                     else:
                         _cls = "UNCLASSIFIED"
                     result["attributes"] = {

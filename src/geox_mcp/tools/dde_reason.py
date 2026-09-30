@@ -481,8 +481,7 @@ async def geox_dde_reason(
                     "backarc_basins": ["Malay", "Penyu", "West Natuna", "Sunda", "North Sumatra"],
                 }
                 out["epistemic"] = (
-                    "DERIVED from standard plate-boundary geometry "
-                    "(Bird 2003; USGS Sunda Arc). Not a live GNSS inversion."
+                    "DERIVED from standard plate-boundary geometry (Bird 2003; USGS Sunda Arc). Not a live GNSS inversion."
                 )
 
             try:

@@ -91,7 +91,7 @@ def panel_crossplots(ax_list, Y, elems, r2):
         ("feldspar", "K+Na"),
         ("pyrite", "S"),
     ]
-    for ax, (m, e) in zip(ax_list, pairs):
+    for ax, (m, e) in zip(ax_list, pairs, strict=False):
         j = MIN_ORDER.index(m)
         x, y = elems[e], Y[:, j]
         ax.scatter(x, y, s=6, alpha=0.35, color=color_of(r2[m]), edgecolors="none")
@@ -168,7 +168,7 @@ def panel_heatmap(ax, Y, elems):
 # PANEL 4 — L2 depth-track modelled vs measured (i-GO Figure 2 analog)
 # ============================================================================
 def panel_depthtrack(ax_list, Y, pred, depth):
-    for ax, m in zip(ax_list, MIN_ORDER):
+    for ax, m in zip(ax_list, MIN_ORDER, strict=False):
         j = MIN_ORDER.index(m)
         ax.plot(Y[:, j], depth, color=C_ACTUAL, lw=0.8, label="Actual (XRD)")
         ax.plot(pred[m], depth, color=C_MODEL, lw=0.8, alpha=0.8, label="Model (XRF)")
@@ -193,7 +193,7 @@ def panel_residuals(ax, Y, pred):
         showmeans=True,
         tick_labels=MIN_ORDER,
     )
-    for patch, m in zip(bp["boxes"], MIN_ORDER):
+    for patch, m in zip(bp["boxes"], MIN_ORDER, strict=False):
         patch.set_facecolor(color_of(_dummy_r2(m)))
         patch.set_alpha(0.6)
     ax.axhline(0, ls="--", color="black", lw=1)

@@ -49,9 +49,7 @@ def _regenerate_canonical(manifest: dict) -> int:
         "generated_at": "2026-07-24T11:45:00Z",
         "source": "tools_manifest.yaml",
         "public_count": len(public),
-        "internal_count": sum(
-            1 for t in manifest.get("tools", []) if t.get("visibility") != "public"
-        ),
+        "internal_count": sum(1 for t in manifest.get("tools", []) if t.get("visibility") != "public"),
         "public_tools": [t["name"] for t in public],
         "tools": [
             {
@@ -130,10 +128,7 @@ def main() -> int:
         canonical = json.loads(CANONICAL.read_text())
         canonical_count = canonical.get("public_count", 0)
         if canonical_count != expected_count:
-            print(
-                f"FAIL: CANONICAL_PUBLIC_SURFACE.json public_count={canonical_count} "
-                f"!= manifest public={expected_count}"
-            )
+            print(f"FAIL: CANONICAL_PUBLIC_SURFACE.json public_count={canonical_count} != manifest public={expected_count}")
             return 1
         print("OK: surface agrees with manifest")
         return 0
