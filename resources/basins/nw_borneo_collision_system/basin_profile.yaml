@@ -1,0 +1,142 @@
+# NW Borneo Collision System — parent entity (one system, three positions)
+# Forged 2026-09-30 under Arif ENTERPRISE synthesis (deck 3133 proxy relay).
+# Ontology law: NOT three separate basins — three structural positions in ONE
+# collision system. Stratigraphy differs because POSITION differs, not time.
+basin_id: NW_BORNEO_COLLISION_SYSTEM
+basin_name: "NW Borneo Collision System"
+entity_type: "plate_boundary_system (parent)"
+location: "NW Sabah margin, Dangerous Grounds to Kinabalu wedge, offshore Borneo"
+centroid: {lat: 6.8, lng: 115.0}
+coarse_bbox_wsen: [111.5, 5.5, 117.5, 9.0]
+geometry_precision: "COARSE_BBOX — system boundary not defined; polygon intentionally absent"
+data_status: "PROVISIONAL_LITERATURE_AND_ENTERPRISE_SYNTHESIS — no proprietary well ties attached; strictness beyond 'screen' forbidden until data ingest"
+
+master_paradox: >
+  Same age, opposite sign. One collision produces three opposite stratigraphic
+  responses: LOWER PLATE (Layang-Layang) subsides and drowns; FOREDEEP (Sabah
+  Trough) bends and deepens; UPPER PLATE (Kinabalu Basin) uplifts and erodes.
+  Labelling any of the three expressions as one horizon is a category error —
+  this is why earlier work mixed up EMU, DRU and BU.
+
+members:
+  - {id: LAYANG_LAYANG_BASIN, dir: layang_layang_basin, structural_position: "lower_plate (rifted Dangerous Grounds block)", collision_sign: "subside + drown (RU)"}
+  - {id: SABAH_TROUGH, dir: sabah_trough, structural_position: "foredeep / flexural moat", collision_sign: "bend + deepen (foredeep onset)"}
+  - {id: KINABALU_BASIN, dir: kinabalu_basin, structural_position: "upper_plate (wedge-top + foreland depocentres on Crocker prism)", collision_sign: "uplift + erode (DRU)"}
+  - {id: DANGEROUS_GROUNDS, dir: dangerous_grounds, structural_position: "crustal_source_province (lower plate sensu stricto)", collision_sign: "extended crust continues SE beneath Neogene Borneo sediments (INTERPRET, untested)"}
+  - {id: NORTHWEST_BORNEO_TROUGH, dir: northwest_borneo_trough, structural_position: "fossil_trench_axis", collision_sign: "HOLD — polarity and timing of subduction debated"}
+
+# ── EVENT REGISTRY: one event, three expressions ─────────────────────────
+# Arif ACTION implemented: every event gets ONE id; each position gets its own
+# surface + separate evidence. Do not unify the reflectors.
+events:
+  - event_id: RIFT_ONSET_PALEOCENE
+    age_bracket: "~Early Paleocene (approximate, not basinwide)"
+    origin: "Extension of the South China margin"
+    expressions:
+      layang_layang: {surface: ROU, form: "syn-rift half-grabens begin"}
+      sabah_trough: {surface: none_yet, form: "same rift system; not yet a trough"}
+      kinabalu_basin: {surface: not_a_basin, form: "future substrate accreting on Borneo side"}
+    confidence: LOW-MED
+
+  - event_id: RIFT_PHASE2_EOCENE
+    age_bracket: "~Middle Eocene (patchy)"
+    origin: "Change of phase within the rift (R1→R2)"
+    expressions:
+      layang_layang: {surface: IRU, form: "separates early from late syn-rift; only local; can merge with BU"}
+      sabah_trough: {surface: —, form: —}
+      kinabalu_basin: {surface: none, form: "Crocker/Rajang deepwater accretion continues"}
+    confidence: LOW-MED
+
+  - event_id: BREAKUP_EARLY_OLIGOCENE
+    age_bracket: "BU later Early Oligocene, DIACHRONOUS; seafloor spreading from ~32–31 Ma (public: IODP Exp349 C12 ~33–32; enterprise bracket 32–31)"
+    origin: "Proto-South China Sea / South China Sea oceanization"
+    expressions:
+      layang_layang: {surface: BU, form: "uplift-erosion of rift shoulders, then thermal sag; BU = process surface, NOT a chronohorizon; does not always equal base carbonate"}
+      sabah_trough: {surface: post_rift_sag, form: "post-rift sag"}
+      kinabalu_basin: {surface: none, form: "subduction/accretion continue; wedge thickens"}
+    confidence: MED
+
+  - event_id: DRIFT_CARBONATE_CHATTIAN_AQUITANIAN
+    age_bracket: "Late Oligocene–Early Miocene"
+    origin: "Dangerous Grounds drifting south"
+    expressions:
+      layang_layang: {surface: carbonate_interval, form: "shallow-water platform and reef carbonates — main reservoir window (forebulge shallowing: Steuer et al.)"}
+      sabah_trough: {surface: thin_reworked_carbonates, form: "carbonates thinner or reworked in lows"}
+      kinabalu_basin: {surface: deepmarine_facies, form: "Crocker, Temburong, Setap-type deep-marine sediments"}
+    confidence: MED
+
+  - event_id: BASE_MIOCENE_STYLE_CHANGE
+    age_bracket: "~23 Ma"
+    origin: "Thinned continental crust starts entering the subduction zone"
+    expressions:
+      layang_layang: {surface: —, form: "carbonate growth continues"}
+      sabah_trough: {surface: —, form: "—"}
+      kinabalu_basin: {surface: BMU_or_Top_Crocker, form: "wedge style changes accretion → underthrusting"}
+    confidence: MED
+
+  - event_id: COLLISION_MM
+    age_bracket: "Early–Middle Miocene — DEBATED: ~20.5 Ma vs ~16.9–15.5 Ma (public: Clift et al. 2008: SCS spreading terminated after 16 Ma when DG jammed the trench)"
+    origin: "Dangerous Grounds jams the trench; spreading ends"
+    expressions:
+      layang_layang: {surface: RU, form: "drowning, carbonate demise, pelagic drape — carbonate-to-mud transition WITHOUT major erosion; block goes DOWN"}
+      sabah_trough: {surface: foredeep_onset, form: "maximum flexure: forebulge on platform, foredeep in trough; HARD TO TRACE"}
+      kinabalu_basin: {surface: thrust_loading, form: "thrust loading, uplift and erosion; block goes UP"}
+    confidence: HIGH_for_order_LOW_for_exact_age
+    law: "RU (lower plate) and DRU (upper plate) share cause and age bracket but are PHYSICALLY DIFFERENT surfaces with different seismic signatures. Never chase one reflector."
+
+  - event_id: POST_COLLISION_UPLIFT_DRU
+    age_bracket: "~13.5–12.5 Ma"
+    origin: "Post-collision uplift of Borneo"
+    expressions:
+      layang_layang: {surface: —, form: "sediment-starved; NOT a direct equivalent of RU"}
+      sabah_trough: {surface: distal_gravity_flows, form: "receives distal gravity flows"}
+      kinabalu_basin: {surface: DRU, form: "major erosion, then prograding deltas — Stage IV begins"}
+    confidence: MED
+
+  - event_id: WEDGE_FRONT_ADVANCE_UIU
+    age_bracket: "~13–10.5 Ma"
+    origin: "Loading of overpressured wedge shale (mobile shale as CLOCK DISRUPTOR, not just structure)"
+    expressions:
+      layang_layang: {surface: —, form: "—"}
+      sabah_trough: {surface: UIU_mini_basins, form: "wedge front overrides trough margin; mini-basins, mud canopy"}
+      kinabalu_basin: {surface: mud_volcanoes, form: "mini-basins, mud volcanoes, Rotan-type turbidite fairways"}
+    confidence: MED
+    warning: "Some apparent 'regional sequence boundaries' here may be mobile-substrate accommodation surfaces, not tectonic or eustatic. Time-gap FIELD, not line."
+
+  - event_id: SRU_LATE_MIOCENE
+    age_bracket: "~9–8.5 Ma"
+    origin: "Continued compression"
+    expressions:
+      layang_layang: {surface: drape, form: "drape"}
+      sabah_trough: {surface: deep_low_energy_fill, form: "deep, low-energy fill"}
+      kinabalu_basin: {surface: SRU, form: "inboard belt folded and eroded; outboard belt and East Baram depocentres open"}
+    confidence: MED
+
+  - event_id: PLIOCENE_DEFORMATION
+    age_bracket: "Pliocene–Quaternary"
+    origin: "Continued shortening and gravity-driven tectonics"
+    expressions:
+      layang_layang: {surface: —, form: "stable"}
+      sabah_trough: {surface: —, form: "stable to mildly deformed"}
+      kinabalu_basin: {surface: —, form: "gentle anticlines and crestal faults outboard"}
+    confidence: MED
+
+standing_holds:
+  - "HOLD — subduction polarity and timing: older model = SE-directed subduction of proto-SCS beneath NW Borneo; newer model = underthrusting of CONTINENTAL crust from ~base Miocene. Both in literature. Do not average; do not pick without new evidence."
+  - "HOLD — Stage III correlation across the trough until a dip line with well tie physically crosses it."
+  - "HOLD — collision age: 20.5 Ma vs 16.9–15.5 Ma brackets remain open."
+  - "HOLD — 'extended Dangerous Grounds crust continues beneath Neogene Borneo sediments at least halfway to slope toe' is INTERPRET (stacked at depth), admissible only once a cross-trough dip line + well tie tests it."
+
+correlation_laws:
+  - "Correlate FROM the continuous record (Kinabalu/NN zones) OUTWARD; never transfer Stage/IVA-style boxes into the lower plate without a well-age tie."
+  - "A time-equivalent surface may record OPPOSITE processes by province — always record the sign (subsidence/uplift/starvation) with the age."
+  - "TB sequences / NN anchors = translation layer only, never physical truth."
+
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30 (250 enterprise results / 84 meetings; deck 3133 NOT directly readable from KVM8 — relayed text only)"
+  - "Clift et al. 2008 (collision ~16 Ma, trench jam)"
+  - "IODP Exp 349 (SCS spreading onset ~33–32 Ma, C12)"
+  - "Chang et al. 2023 C.R. Geoscience (IRU, R2 37–32 Ma)"
+  - "Steuer et al. 2012/2014 (DG rifted-attenuated crust; forebulge carbonate)"
+  - "Hinz 1985 (Middle Miocene unconformity = end of spreading)"
+  - "Hamilton 1979 (proto-SCS subduction / Borneo embayment lineage)"

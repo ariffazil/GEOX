@@ -1,0 +1,42 @@
+[
+  {
+    "claim_id": "dgr_clm_1",
+    "claim": "Dangerous Grounds is the crustal impactor province — attenuated/rifted continental crust (Steuer et al. 2012) detached from the South China conjugate margin — not a basin with an independent fill history.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30; Steuer 2012",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["crystalline_bassment_default"]
+  },
+  {
+    "claim_id": "dgr_clm_2",
+    "claim": "Rifted DG crust continues SE beneath Neogene Borneo sediments at least halfway to the slope toe; Kinabalu partly stacked on it at depth (hypothesis, untested).",
+    "claim_type": "hypothesis",
+    "evidence_refs": ["tectonic_history.md", "../../nw_borneo_collision_system/claims.json"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 (EVIDENCE-classed in source relay; GEOX holds it as hypothesis pending dip-line test)",
+    "confidence": "low",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": ["plan_view_map_assertion", "drilling_decision"]
+  },
+  {
+    "claim_id": "dgr_clm_3",
+    "claim": "SCS spreading began ~33-32 Ma (C12; IODP Exp 349) and died ~16.9-15.5 Ma when DG jammed the NW Borneo trench (Clift et al. 2008); ~20.5 Ma collision bracket retained as alternative.",
+    "claim_type": "observed",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "IODP Exp 349; Clift et al. 2008 (public)",
+    "confidence": "HIGH_for_onset_MED_for_terminal",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": []
+  },
+  {
+    "claim_id": "dgr_clm_4",
+    "claim": "DG carbonate growth was partly supported by a flexural FOREBULGE shallow zone migrating from the Borneo-Palawan trough toward the DG (Steuer et al. 2014) — carbonate tops are time-transgressive environmental markers, not sequence boundaries.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Steuer et al. 2014",
+    "confidence": "MED",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["carbonate_top_aschrono_horizon"]
+  }
+]

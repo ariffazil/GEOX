@@ -1,0 +1,52 @@
+[
+  {
+    "claim_id": "sys_clm_1",
+    "claim": "Layang-Layang, Sabah Trough and Kinabalu Basin are three structural positions within one collision system (lower plate / foredeep / upper plate), not three independent basins.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md", "basin_profile.yaml"],
+    "source": "Arif ENTERPRISE synthesis relay 2026-09-30",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["cross_provincial_stage_transfer_without_well_tie"]
+  },
+  {
+    "claim_id": "sys_clm_2",
+    "claim": "One collision (COLLISION_MM), three opposite expressions: RU drowning without major erosion on the lower plate; foredeep onset in the trough; DRU uplift-erosion on the upper plate. They are physically different surfaces with different seismic signatures.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Arif ENTERPRISE relay + Clift et al. 2008 + Hinz 1985",
+    "confidence": "MED-HIGH for order, LOW for exact age",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["single_reflector_unification_of_RU_DRU_BMU_EMU"]
+  },
+  {
+    "claim_id": "sys_clm_3",
+    "claim": "Rifted Dangerous Grounds crust continues SE beneath Neogene Borneo sediments at least halfway between the Sabah shelf and slope toe; part of Kinabalu is stacked above Layang-Layang crust at depth.",
+    "claim_type": "hypothesis",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 (INTERPRET — untested by cross-trough dip line)",
+    "confidence": "low",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": ["plan_view_map_assertion", "drilling_decision"]
+  },
+  {
+    "claim_id": "sys_clm_4",
+    "claim": "SCS seafloor spreading terminated after ~16 Ma when the Dangerous Grounds collided with and jammed the Borneo trench; spreading onset ~33-32 Ma (C12) per IODP Exp 349.",
+    "claim_type": "observed",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Clift et al. 2008; IODP Expedition 349 results (public)",
+    "confidence": "HIGH",
+    "valid_until": "2030-12-31",
+    "forbidden_uses": []
+  },
+  {
+    "claim_id": "sys_clm_5",
+    "claim": "Subduction polarity and timing beneath NW Borneo is unresolved: older SE-directed proto-SCS subduction vs newer continental underthrusting from ~base Miocene. HOLD; both recorded; do not average.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 + public literature debate",
+    "confidence": "UNKNOWN",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["polarity_assumption_in_restoration"]
+  }
+]

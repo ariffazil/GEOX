@@ -1,0 +1,46 @@
+basin_id: LAYANG_LAYANG_BASIN
+basin_name: "Layang-Layang Basin"
+aliases: ["Layang-Layang Basin", "Layang Basin", "Northwest Sabah Platform (colloquial per PETRONAS MPM)", "Dangerous Grounds platform-trough"]
+entity_type: "rifted_margin_province_basin"
+parent_system: NW_BORNEO_COLLISION_SYSTEM
+structural_position: "LOWER PLATE — continental crust rifted from the South China margin, drifted south, now jammed against Borneo"
+location: "Dangerous Grounds, SW sub-basin of the South China Sea, NW of Sabah"
+centroid: {lat: 7.14, lng: 113.87}
+coarse_bbox_wsen: [112.8, 6.3, 115.2, 8.2]
+geometry_precision: "COARSE_BBOX — boundaries not defined; polygon intentionally absent"
+data_status: "PROVISIONAL_LITERATURE_AND_ENTERPRISE_SYNTHESIS — no well penetrates the complete syn-rift package; lithological interpretation of deep syn-rift remains highly uncertain (2024 DG framework self-declared)"
+collision_response_sign: "SUBSIDE + DROWN (RU: carbonate-to-mud transition WITHOUT major erosion; block goes down at COLLISION_MM)"
+
+crust_origin: >
+  Southern conjugate margin of the South China Sea. Rifted from the South China
+  side and drifted south until collision with Borneo. Attenuated continental
+  crust over the full rifted range (Steuer et al. 2012); breakup diachronous.
+
+clock:  # this province's own time axis — see parent event registry for expressions
+  - {event_id: RIFT_ONSET_PALEOCENE, surface: ROU, note: "top pre-rift / base syn-rift, broadly Early Paleocene APPROXIMATE, not basinwide"}
+  - {event_id: RIFT_PHASE2_EOCENE, surface: IRU, note: "sporadic; can merge with BU"}
+  - {event_id: BREAKUP_EARLY_OLIGOCENE, surface: BU, note: "later Early Oligocene; DIACHRONOUS process surface; on paleo-highs carbonate may start BEFORE time-equivalent BU"}
+  - {event_id: DRIFT_CARBONATE_CHATTIAN_AQUITANIAN, surface: carbonate_top, note: "Late Oligocene–Early Miocene platform/reef; main reservoir window; not strictly an unconformity — often MORE consistently mappable than tectonic surfaces"}
+  - {event_id: COLLISION_MM, surface: RU, note: "drowning + pelagic red drape; drift/post-drift collision surface; uncertain toward Sabah Trough; NOT necessarily the same reflector as shelf DRU"}
+  - {event_id: POST_COLLISION_UPLIFT_DRU, surface: none, note: "sediment-starved thereafter"}
+  - {event_id: PLIOCENE_DEFORMATION, surface: none, note: "stable"}
+
+petroleum_system_summary:
+  reservoir: "carbonate highs (platform/reef); pinnacle-atoll geometry"
+  source: "syn-rift source rocks — the main open question (charge)"
+  risk_order: ["charge from syn-rift source", "reservoir lateral extent", "seal on flanks"]
+  record_quality: "WORST of the three positions — records MISSING time (unconformities), not continuous time"
+
+contradictions_preserved:
+  - "Atoll fate debated: subsiding drowned platform (classical atoll model; Chen 2023 drowning-steps) vs Hutchison 2010 'no evidence of drowned carbonate reefs' in the Spratly province. Keep both until core/well evidence arbitrates."
+
+live_reference: "enterprise 2024 DG framework (ROU–IRU–BU–carbonate_top–RU, 3D seismic + four wells); RU uncertain toward Sabah Trough; no well penetrates complete syn-rift"
+correlation_law: "Do NOT transfer Kinabalu Stage IV boxes into this province; correlate outward FROM continuous records, with well-age tie mandatory"
+holds: ["collision_age_20.5_vs_16.9-15.5", "BU_diachroneity", "syn-rift_lithology_unknown"]
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30"
+  - "Steuer et al. 2012/2014 (DG crust + forebulge carbonates)"
+  - "Chang et al. 2023 C.R. Geoscience (rifting phases, IRU 37-32 Ma)"
+  - "Clift et al. 2008 (collision ~16 Ma, spreading death)"
+  - "Hutchison 2010; Chen et al. 2023 Frontiers (drowning controversy)"
+  - "PETRONAS MPM exploration page (colloquial 'Northwest Sabah Platform') — OBS 2026-09-30"

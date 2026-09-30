@@ -1,0 +1,42 @@
+[
+  {
+    "claim_id": "trf_clm_1",
+    "claim": "The Sabah Trough is a foredeep/flexural moat in the same Dangerous Grounds crust, bent down under wedge load; it has no independent tectonic origin.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["treat_as_independent_basin_clock"]
+  },
+  {
+    "claim_id": "trf_clm_2",
+    "claim": "Foredeep onset at COLLISION_MM is difficult to trace because the same event is erosional on the wedge side but onlap/condensation/facies-change in the moat.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 (unconformity landward, conformity basinward)",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["regional_single_horizon_pick"]
+  },
+  {
+    "claim_id": "trf_clm_3",
+    "claim": "Some Middle–Late Miocene apparent regional sequence boundaries in this position are mobile-substrate accommodation surfaces rather than tectonic or eustatic boundaries.",
+    "claim_type": "hypothesis",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Public mobile-shale work + ENTERPRISE relay 2026-09-30 (Pagasa wedge mini-basins/canopy 13–10.5 Ma)",
+    "confidence": "low",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": ["eustatic_interpretation_as_default"]
+  },
+  {
+    "claim_id": "trf_clm_4",
+    "claim": "Hiatus behaviour across the trough is a time-gap field: durations vary well-to-well, surfaces merge, become condensed sections, or disappear — never a single instantaneous basinwide line.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Chronosequence method (Krebs, via ENTERPRISE relay) + well graphic-correlation record",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": []
+  }
+]

@@ -1,0 +1,59 @@
+basin_id: KINABALU_BASIN
+basin_name: "Kinabalu Basin"
+aliases: ["Kinabalu Basin", "Kinabalu"]
+entity_type: "upper_plate_wedge_top_and_foreland_depocentres"
+parent_system: NW_BORNEO_COLLISION_SYSTEM
+structural_position: "UPPER PLATE — basin fill resting on the Borneo (Crocker) accretionary wedge and on its seaward flank"
+location: "Offshore N/NE Sabah deepwater (enterprise usage; PETRONAS MPM references Kinabalu-area wells 2025-09)"
+centroid: {lat: 6.2, lng: 116.7}
+coarse_bbox_wsen: [115.6, 5.5, 117.5, 7.0]
+geometry_precision: "COARSE_BBOX — basin limits still enterprise-defined; polygon intentionally absent"
+data_status: "PROVISIONAL_ENTERPRISE_RELAY_2026 — NN-based Stage IV calibration preliminary; Stage III tie explicitly uncertain/HOLD"
+collision_response_sign: "UPLIFT + ERODE (thrust loading at COLLISION_MM; block goes UP; DRU then major erosion + Stage IV progradation)"
+
+crust_origin: >
+  Borneo side. Fill rests on the Crocker accretionary prism, which formed as
+  proto-South China Sea material was subducted/accreted beneath NW Borneo
+  (polarity and timing HOLD — see northwest_borneo_trough). NOT simply adjacent
+  to Layang-Layang: at depth part of this basin is STACKED above underthrust
+  Dangerous Grounds crust (INTERPRET — see parent system hypothesis claim).
+
+substrate_note: "Pre-DRU 'basement' here is deformed SEDIMENTARY rock (accretionary prism), not crystalline crust — economic/acoustic basement must never be conflated with crystalline basement."
+
+clock:
+  - {event_id: RIFT_ONSET_PALEOCENE, note: "not formed as a basin; future substrate accreting on Borneo side"}
+  - {event_id: DRIFT_CARBONATE_CHATTIAN_AQUITANIAN, note: "deep-marine Crocker, Temburong, Setap-type sediments — province-dependent, not one facies belt"}
+  - {event_id: BASE_MIOCENE_STYLE_CHANGE, surface: BMU_or_Top_Crocker, note: "~23 Ma wedge style accretion → underthrusting; BMU/TCU near base Miocene is NOT a synonym of DRU"}
+  - {event_id: COLLISION_MM, surface: thrust_loading, note: "uplift + erosion; block goes UP"}
+  - {event_id: POST_COLLISION_UPLIFT_DRU, surface: DRU, note: "13.5–12.5 Ma; major erosion then prograding deltas — Stage IV begins; DRU dated ~13.5–12.5 Ma, DISTINCT from BMU/TCU"}
+  - {event_id: WEDGE_FRONT_ADVANCE_UIU, note: "mini-basins, mud volcanoes, Rotan-type turbidite fairways (13–10.5 Ma)"}
+  - {event_id: SRU_LATE_MIOCENE, surface: SRU, note: "~9–8.5 Ma: inboard belt folded and eroded; OUTBOARD belt + East Baram depocentres open"}
+  - {event_id: PLIOCENE_DEFORMATION, note: "gentle anticlines + crestal faults outboard; continued progradation (IVG)"}
+
+stage_iv_nn_calibration_2026:  # ENTERPRISE RELAY — preliminary, NN-based nannofossil standard
+  IVG: {tie: "near NN19", confidence: MED}
+  IVF: {tie: "near NN18", confidence: MED}
+  IVE: {tie: "near NN16", confidence: MED, intra_IVE_events: {E3: NN15, E2: NN11B, E1: NN11A, confidence: "MED-LOW"}}
+  IVD: {tie: "near top NN10", confidence: MED}
+  IVC: {tie: "near top NN9", confidence: MED}
+  IVB: {tie: "NN8", confidence: LOW-MED}
+  IVA: {tie: "approximately mid-NN5", confidence: LOW-MED}
+  Stage_III_top: {tie: "uncertain; possible Kudat relationship", confidence: "LOW — HOLD"}
+contradiction_note: >
+  Coarse ladder (IVE=NN16–NN11, IVD=lower NN11–NN10, IVB=NN8, IVA~mid-NN5)
+  versus detailed wells showing overlap, reworking, long zonal ranges and
+  several intra-stage events. RULE: NN zone ≠ surface automatically. A surface
+  needs a seismic-stratal criterion PLUS a constrained age bracket.
+
+petroleum_system_summary:
+  reservoir: "abundant — sand-rich deltas and turbidites from uplifting Borneo"
+  risk_order: ["charge timing vs deep burial", "trap fidelity (crestal faults, shale-influenced seals)"]
+  record_quality: "BEST of the three positions — continuous progradational archive; this is the correlation MASTER: correlate outward FROM here, never inward by stage transfer"
+
+naming_note: "'Kinabalu Basin' is a group of wedge-top and foreland depocentres, not a single-origin basin."
+holds: ["Stage_III_cross_trough_CORRELATION_HOLD_until_well_tied_dip_line", "collision_age", "subduction_polarity"]
+correlation_law: "Do NOT transfer Stage IV boxes into Layang-Layang: the equivalent lower-plate interval is a carbonate-and-drift package with a completely different origin."
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30 (2026 Kinabalu NN framework; 2023 Borneo integration age anchors NN18/NN16/NN11/NN9/NN5/NN2/NP23/NP14/CC26/CC1 @ 2.0/3.1/8.11/9.53/14.2/19.3/29.62/46.29/57.21/66/145 Ma)"
+  - "PETRONAS MPM exploration page 2026-09-30 (Kinabalu-area wells usage — OBS)"
+  - "Public NW Borneo mobile-shale and Crocker prism literature"

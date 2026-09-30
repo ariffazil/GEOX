@@ -1,0 +1,33 @@
+basin_id: DANGEROUS_GROUNDS
+basin_name: "Dangerous Grounds"
+aliases: ["Dangerous Grounds", "DG", "NW Sabah Platform-Trough (province usage)"]
+entity_type: "crustal_source_province (NOT a basin — the lower plate itself)"
+parent_system: NW_BORNEO_COLLISION_SYSTEM
+structural_position: "CRUSTAL BLOCK — attenuated/rifted continental crust (locally transitional) detached from the South China conjugate margin; the material of which the lower plate and the moat are made"
+location: "SE South China Sea, W/NW of Sabah, N of Sarawak Brunei line"
+centroid: {lat: 7.5, lng: 114.5}
+coarse_bbox_wsen: [112.0, 5.5, 116.5, 9.0]
+geometry_precision: "COARSE_BBOX — province limits physiographic; polygon intentionally absent"
+data_status: "PROVISIONAL_LITERATURE_AND_ENTERPRISE_SYNTHESIS"
+
+crust_truth: >
+  Full range of rifted and attenuated continental crust (Steuer et al. 2012).
+  The 'basement' here is NOT crystalline in general — pre-rift continental
+  sediment ± basement inheritance; 'acoustic' and 'economic' basement are
+  different operational objects and must not be conflated with crustal basement.
+
+key_processes:
+  - "Rift (R1 Eocene; R2 37–32 Ma separated by IRU — Chang et al. 2023)"
+  - "Breakup, later Early Oligocene, DIACHRONOUS (BU is a process surface)"
+  - "Thermal sag + carbonate growth on structural highs and flexural FOREBULGE shallow zone (Steuer forebulge hypothesis)"
+  - "Drift south on the SCS plate; ridge died ~16–15 Ma at trench jam (Clift et al. 2008)"
+  - "COLLISION_MM: jammed the NW Borneo trench — this province IS the impactor"
+  - "CONTINUATION: extended crust continues SE beneath Neogene Borneo sediments at least halfway to slope toe (INTERPRET — underthrust stacking hypothesis; untested)"
+
+sign_at_collision: "DOWN + STARVED (drowning, pelagic drape) — the same impactor that made the neighbour (Kinabalu) go UP"
+bodies: ["layang_layang_basin (platform/pinnacle realm of this province)", "sabah_trough (its bent-down front margin)"]
+dispute_note: "Spratly/Layang atoll carbonates: subsiding drowned-platform models vs Hutchison 2010 'no evidence of drowned carbonate reefs' — preserved as contradiction, not averaged."
+holds: ["syn-rift_lithology_unpenetrated", "BU_diachroneity", "underthrust_continuation_untested", "oceanic_vs_attenuated_continent_OCT_zonation_unknown"]
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30"
+  - "Steuer et al. 2012/2014; Chang et al. 2023; Clift et al. 2008; Hinz 1985; Hutchison 2010"

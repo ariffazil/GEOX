@@ -1,0 +1,51 @@
+basin_id: SABAH_TROUGH
+basin_name: "Sabah Trough"
+aliases: ["Sabah Trough", "deepwater flat zone (operator colloquial)", "NW Sabah trough"]
+entity_type: "foredeep_flexural_moat (bathymetric + flexural feature — NOT a basin with its own origin)"
+parent_system: NW_BORNEO_COLLISION_SYSTEM
+structural_position: "FOREDEEP — flexural low where the lower plate (Dangerous Grounds crust) bends down under the load of the advancing thrust wedge"
+location: "Offshore NW Sabah deepwater, between the Dangerous Grounds platform and the Kinabalu wedge front"
+centroid: {lat: 6.7, lng: 115.3}
+coarse_bbox_wsen: [114.4, 5.9, 116.4, 7.2]
+geometry_precision: "COARSE_BBOX — axis trace varies by author; polygon intentionally absent"
+data_status: "PROVISIONAL_LITERATURE_AND_ENTERPRISE_SYNTHESIS"
+collision_response_sign: "BEND + DEEPEN (foredeep onset at COLLISION_MM; onset is HARD TO TRACE seismically)"
+
+crust_origin: >
+  Same Dangerous Grounds extended crust as Layang-Layang, bent downward by the
+  wedge load above/adjacent it. Its stratigraphy is the distal archive of the
+  other two positions' erosion products.
+
+clock:
+  - {event_id: RIFT_ONSET_PALEOCENE, note: "same rift system; not yet a trough"}
+  - {event_id: BREAKUP_EARLY_OLIGOCENE, note: "post-rift sag"}
+  - {event_id: DRIFT_CARBONATE_CHATTIAN_AQUITANIAN, note: "carbonates thin or reworked in lows"}
+  - {event_id: COLLISION_MM, surface: foredeep_onset, note: "maximum flexure; forebulge on platform, moat here; onset difficult to trace — often conformity/condensed rather than erosional"}
+  - {event_id: POST_COLLISION_UPLIFT_DRU, surface: distal_gravity_flows, note: "receives distal gravity flows from the uplifting wedge"}
+  - {event_id: WEDGE_FRONT_ADVANCE_UIU, surface: UIU, note: "wedge front OVERRIDES the trough margin; mini-basins, mud canopy, mud volcanoes (13–10.5 Ma)"}
+  - {event_id: SRU_LATE_MIOCENE, surface: SRU, note: "deep, low-energy fill (~9–8.5 Ma)"}
+  - {event_id: PLIOCENE_DEFORMATION, note: "stable to mildly deformed; fold belt nucleates at margins"}
+
+petroleum_system_summary:
+  reservoir: "distal turbidite/thin-carbonate; ponded by mobile-shale topography"
+  risk_order: ["reservoir predictability (shale-distorted geometry)", "seal through shale canopies", "trap fidelity on diapir-flanks"]
+  record_quality: "DISTURBED TIME — mud diapirism, rafting and gravity tectonics make apparent conformities pseudoconformities"
+
+mobile_shale_warning: >
+  The 'quiet flat floor' is the most tectonically violent archive in Sabah:
+  mobile shale, mini-basins, mud pipes/chambers and canopy complexes
+  redistribute sediment out of chronological order. Some apparent 'regional
+  sequence boundaries' in this position are accommodation surfaces of mobile
+  substrate — NOT tectonic or eustatic events. Hiatus behavior is a TIME-GAP
+  FIELD, not a line: durations vary well-to-well, surfaces merge, become
+  condensed, or vanish.
+
+naming_note: "'Sabah Trough' mixes physiography with basinhood: it is a bathymetric and flexural feature; its fill belongs to the systems of the two neighbouring positions."
+
+correlation_law: "Do NOT read Stage IVA–IVG boxes across the trough; boundaries landward (erosional) become onlap/condensation/facies change in the moat. Tie by physical surface + constrained age bracket, never by NN zone alone."
+holds: ["foredeep_onset_untraced", "subduction_polarity_HOLD (parent)", "shale_clock_vs_tectonic_clock_unseparated"]
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30"
+  - "Clift et al. 2008 (trench jam)"
+  - "Hamilton 1979 lineage (proto-SCS subduction / NE Borneo trough)"
+  - "Public mobile-shale work (Middle–Late Miocene mini-basin/canopy reorganization)"
