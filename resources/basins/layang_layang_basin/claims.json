@@ -1,0 +1,52 @@
+[
+  {
+    "claim_id": "lay_clm_1",
+    "claim": "Layang-Layang sits on the lower plate: rifted continental crust detached from the South China conjugate margin and transported south by South China Sea opening.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30; Steuer et al. 2012/2014; Taylor 2025 conjugate-margin reappraisal",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["drilling_decision"]
+  },
+  {
+    "claim_id": "lay_clm_2",
+    "claim": "BU is a diachronous process surface, not a fixed chronohorizon; on paleo-highs carbonate growth may begin before the time-equivalent BU.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "2024 DG framework (enterprise relay) + Chang et al. 2023",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["isochron_mapping"]
+  },
+  {
+    "claim_id": "lay_clm_3",
+    "claim": "At COLLISION_MM the province recorded RU: carbonate drowning and pelagic drape without major erosion; the block subsided. RU is not necessarily the same reflector as the inboard DRU/MMU.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Arif ENTERPRISE relay 2026-09-30",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["single_reflector_unification_of_RU_DRU"]
+  },
+  {
+    "claim_id": "lay_clm_4",
+    "claim": "No well penetrates the complete syn-rift package; deep syn-rift lithology remains highly uncertain — the best-constrained part of the DG framework is relative tectonic order, not absolute ages.",
+    "claim_type": "observed",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "2024 DG framework (enterprise relay, self-declared)",
+    "confidence": "HIGH",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["claim_synrift_lithology_confirmed"]
+  },
+  {
+    "claim_id": "lay_clm_5",
+    "claim": "Atoll/platform fate is contested: drowned-subsiding platform models vs Hutchison (2010) 'no evidence of drowned carbonate reefs' in the province. Contradiction preserved, unarbitrated.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Hutchison 2010 vs Chen et al. 2023",
+    "confidence": "UNKNOWN",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["drowning_assertion_as_fact"]
+  }
+]

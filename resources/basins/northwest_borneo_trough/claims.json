@@ -1,0 +1,22 @@
+[
+  {
+    "claim_id": "nbt_clm_1",
+    "claim": "The NW Borneo Trough is an extinct trench/plate-margin line whose jamming at COLLISION_MM produced the modern three-position geometry; axis position and pre-Miocene course are contested.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "tectonic_history.md"],
+    "source": "Hamilton 1979 lineage; GSM/public consensus; ENTERPRISE relay 2026-09-30",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["axis_as_modern_basin_boundary"]
+  },
+  {
+    "claim_id": "nbt_clm_2",
+    "claim": "Subduction polarity and timing remain OPEN between (a) SE-directed proto-SCS subduction and (b) continental underthrusting from ~base Miocene. Recorded as HOLD; neither model may be adopted silently in restorations or charts.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 — 'treat this as HOLD'",
+    "confidence": "UNKNOWN",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["polarity_default_in_modeling", "silently_pick_model"]
+  }
+]

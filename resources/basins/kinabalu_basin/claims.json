@@ -1,0 +1,52 @@
+[
+  {
+    "claim_id": "kin_clm_1",
+    "claim": "Kinabalu Basin fill rests on the Borneo (Crocker) accretionary wedge and its seaward flank — upper plate of the collision system; it is a group of wedge-top/foreland depocentres.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml", "tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": ["single_origin_basin_assertion"]
+  },
+  {
+    "claim_id": "kin_clm_2",
+    "claim": "DRU (13.5–12.5 Ma) marks post-collision uplift, major erosion and onset of Stage IV progradation in this province; DRU is distinct from BMU/Top-Crocker (~base Miocene).",
+    "claim_type": "interpreted",
+    "evidence_refs": ["tectonic_history.md"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 + public mobile-shale dating",
+    "confidence": "MED",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["BMU_DRU_synonymy"]
+  },
+  {
+    "claim_id": "kin_clm_3",
+    "claim": "2026 Stage IV NN calibration (IVG NN19 → IVA mid-NN5, intra-IVE E1–E3 at NN11A/NN11B/NN15) is preliminary; NN zones do not equal surfaces — surfaces need seismic-stratal criteria plus age brackets.",
+    "claim_type": "observed",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "2026 Kinabalu framework (enterprise relay, self-declared preliminary)",
+    "confidence": "HIGH about the uncertainty itself",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": ["zone_as_horizon_transfer"]
+  },
+  {
+    "claim_id": "kin_clm_4",
+    "claim": "Stage III correlation across the Sabah Trough is on HOLD until a dip line with a well tie physically crosses the trough.",
+    "claim_type": "interpreted",
+    "evidence_refs": ["basin_profile.yaml"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 (explicit ACTION + verdict)",
+    "confidence": "STANDING_HOLD",
+    "valid_until": "2027-12-31",
+    "forbidden_uses": ["stage_III_cross_trough_correlation"]
+  },
+  {
+    "claim_id": "kin_clm_5",
+    "claim": "At depth, part of the Kinabalu substrate is stacked above underthrust Dangerous Grounds extended crust continuing SE beneath Neogene Borneo sediments.",
+    "claim_type": "hypothesis",
+    "evidence_refs": ["../../nw_borneo_collision_system/claims.json"],
+    "source": "Arif ENTERPRISE relay 2026-09-30 (sys_clm_3)",
+    "confidence": "low",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": ["plan_view_map_assertion", "drilling_decision"]
+  }
+]

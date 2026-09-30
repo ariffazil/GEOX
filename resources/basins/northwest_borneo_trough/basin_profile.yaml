@@ -1,0 +1,35 @@
+basin_id: NORTHWEST_BORNEO_TROUGH
+basin_name: "Northwest Borneo Trough"
+aliases: ["Northwest Borneo Trough", "NWB Trough", "NE Borneo (Palawan) Trough", "extinct trench of NW Borneo"]
+entity_type: "fossil_trench_axis (NOT a basin; predecessor geometry of the Sabah Trough)"
+parent_system: NW_BORNEO_COLLISION_SYSTEM
+structural_position: "TRENCH LINE — the plate boundary where proto-SCS material descended/accreted beneath NW Borneo until the Dangerous Grounds jammed it at COLLISION_MM"
+location: "Arcuate axis from N Palawan to NW Sabah, now buried/inverted"
+centroid: {lat: 6.6, lng: 114.6}
+coarse_bbox_wsen: [113.5, 5.8, 116.0, 7.4]
+geometry_precision: "COARSE_BBOX — axis reconstruction contested; polygon intentionally absent"
+data_status: "HOLD_ENTITY — recorded so the controversy itself is queryable"
+
+# ── THE POLARITY/TIMING HOLD — two live models, preserved NOT averaged ──
+competing_models:
+  older:
+    name: "SE-directed proto-SCS subduction beneath NW Borneo"
+    lineage: "Hamilton 1979 and successors; active trench during SCS spreading; widely accepted as extinct plate margin"
+    consequence: "Kinabalu embayment formed by rollback/trench retreat; Crocker prism by accretion of subducted material"
+  newer:
+    name: "Underthrusting of CONTINENTAL crust from ~base of the Miocene"
+    lineage: "mobile-shale/workflow studies + 2023–2025 enterprise DG framework; wedge style change at ~23 Ma (BASE_MIOCENE_STYLE_CHANGE)"
+    consequence: "BMU/TCU near base Miocene distinct from DRU (13.5–12.5 Ma); collision effects propagate earlier and deeper"
+status: "HOLD — both published; neither disproven; do not choose without new cross-trough physical evidence"
+
+post_extinction: >
+  Trench jam at COLLISION_MM; spreading death follows; isostatic rebound and
+  inversion recorded along the axis; the modern Sabah Trough occupies a
+  modified expression of this line (foredeep of the same system).
+
+holds: ["polarity_and_timing", "axis_position_pre_Miocene", "relationship_BU_vs_base_carbonate_on_trench_facing_highs"]
+sources:
+  - "Arif ENTERPRISE synthesis relay 2026-09-30 (explicit UNKNOWN: treat as HOLD)"
+  - "Hamilton 1979 (proto-SCS subduction model, public)"
+  - "GSM/public consensus notes: 'widely accepted that the Northwest Borneo Trough represents a now extinct plate margin… active trench during spreading of the South [China Sea]' — OBS 2026-09-30"
+  - "Clift et al. 2008; Tectonophysics 183:305–319 (1990) Neogene arc-continent collision, N Borneo"
