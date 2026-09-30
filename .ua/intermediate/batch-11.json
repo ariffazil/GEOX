@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "id": "config:apps/geox-mcp-visual/cubeprobe_data.json",
+      "type": "config",
+      "name": "cubeprobe_data.json",
+      "filePath": "apps/geox-mcp-visual/cubeprobe_data.json",
+      "summary": "json config file (7601 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/geox-mcp-visual/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/geox-mcp-visual/index.html",
+      "summary": "html markup file (25 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:apps/geox-mcp-visual/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/geox-mcp-visual/manifest.json",
+      "summary": "json config file (23 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:apps/geox-mcp-visual/physiccore_data.json",
+      "type": "config",
+      "name": "physiccore_data.json",
+      "filePath": "apps/geox-mcp-visual/physiccore_data.json",
+      "summary": "json config file (295 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:apps/geox-mcp-visual/seisvis_data.json",
+      "type": "config",
+      "name": "seisvis_data.json",
+      "filePath": "apps/geox-mcp-visual/seisvis_data.json",
+      "summary": "json config file (5405 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:apps/geox-mcp-visual/timelapse_data.json",
+      "type": "config",
+      "name": "timelapse_data.json",
+      "filePath": "apps/geox-mcp-visual/timelapse_data.json",
+      "summary": "json config file (56 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:apps/geox-mcp-visual/welldesk_data.json",
+      "type": "config",
+      "name": "welldesk_data.json",
+      "filePath": "apps/geox-mcp-visual/welldesk_data.json",
+      "summary": "json config file (3471 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

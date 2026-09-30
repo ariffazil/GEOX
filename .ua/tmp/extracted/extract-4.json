@@ -1,0 +1,845 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 18,
+  "filesSkipped": [
+    "Dockerfile.local",
+    "llms.txt"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 18,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 18
+    }
+  },
+  "results": [
+    {
+      "path": ".env.example",
+      "language": "config",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 13,
+      "definitions": [
+        {
+          "name": "GEOX_SECRET_TOKEN",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "GEOX_HOST",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 8,
+          "endLine": 8
+        },
+        {
+          "name": "GEOX_PORT",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 9,
+          "endLine": 9
+        },
+        {
+          "name": "GEOX_PROFILE",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "GEOX_LOG_LEVEL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "AF_FORGE_BRIDGE_URL",
+          "kind": "variable",
+          "fields": [],
+          "startLine": 18,
+          "endLine": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 13,
+      "nonEmptyLines": 8,
+      "sections": [
+        {
+          "heading": "AGENTS.md — Pointer",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "AAA Autonomy Protocol (overrides default agent behavior in this organ)",
+          "level": 2,
+          "line": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "CANONICAL_PUBLIC_SURFACE.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 288,
+      "nonEmptyLines": 288,
+      "sections": [
+        {
+          "heading": "schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "source",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "public_count",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "internal_count",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "public_tools",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "rule",
+          "level": 1,
+          "line": 287
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "CHANGELOG.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 32,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "Changelog — GEOX (Earth Sciences)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "[Unreleased]",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 7
+        },
+        {
+          "heading": "Fixed",
+          "level": 3,
+          "line": 11
+        },
+        {
+          "heading": "[2026.07.13] — Earth OS Release",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 16
+        },
+        {
+          "heading": "Changed",
+          "level": 3,
+          "line": 22
+        },
+        {
+          "heading": "[2026.05.01] — Initial Federation Release",
+          "level": 2,
+          "line": 26
+        },
+        {
+          "heading": "Added",
+          "level": 3,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "CLAUDE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "CLAUDE.md — Pointer (Portable)",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 43,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "Contributing to GEOX",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Before You Start",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Setup",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "Making Changes",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Boundaries",
+          "level": 2,
+          "line": 30
+        },
+        {
+          "heading": "Federation",
+          "level": 2,
+          "line": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "DEPLOYMENT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 70,
+      "nonEmptyLines": 54,
+      "sections": [
+        {
+          "heading": "Deployment — GEOX (Earth Sciences)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Live VPS (KVM8) — this is how GEOX actually runs",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Prerequisites (portable / Docker)",
+          "level": 2,
+          "line": 21
+        },
+        {
+          "heading": "Quick Start (Docker — not KVM8 live)",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "Docker Compose",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Domain Capabilities",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "Data Requirements",
+          "level": 2,
+          "line": 66
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "FEDERATION.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 26,
+      "nonEmptyLines": 20,
+      "sections": [
+        {
+          "heading": "Federation Contract v2 — GEOX",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Federation Identity",
+          "level": 2,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "FEDERATION_CONTRACT.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "FEDERATION_CONTRACT — GEOX (Earth Intelligence)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Boundary (non-negotiable)",
+          "level": 2,
+          "line": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "FEDERATION_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "GEOX_MCP_APPS_SURFACE.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 554,
+      "nonEmptyLines": 554,
+      "sections": [
+        {
+          "heading": "schema_version",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "total_canonical_tools",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "total_ui_resources",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "active_ui_resources",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "deprecated_ui_resources",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "planned_ui_resources",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "active_zero_bound",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "ui_resources",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "Makefile",
+      "language": "makefile",
+      "fileCategory": "infra",
+      "totalLines": 129,
+      "nonEmptyLines": 103,
+      "steps": [
+        {
+          "name": "install",
+          "startLine": 14,
+          "endLine": 16
+        },
+        {
+          "name": "install-dev",
+          "startLine": 17,
+          "endLine": 19
+        },
+        {
+          "name": "test",
+          "startLine": 24,
+          "endLine": 26
+        },
+        {
+          "name": "test-slow",
+          "startLine": 27,
+          "endLine": 29
+        },
+        {
+          "name": "smoke",
+          "startLine": 30,
+          "endLine": 32
+        },
+        {
+          "name": "smoke-require-live",
+          "startLine": 34,
+          "endLine": 36
+        },
+        {
+          "name": "smoke-mcp-roundtrip",
+          "startLine": 38,
+          "endLine": 40
+        },
+        {
+          "name": "smoke-deploy",
+          "startLine": 42,
+          "endLine": 44
+        },
+        {
+          "name": "build",
+          "startLine": 45,
+          "endLine": 47
+        },
+        {
+          "name": "up",
+          "startLine": 48,
+          "endLine": 50
+        },
+        {
+          "name": "down",
+          "startLine": 51,
+          "endLine": 53
+        },
+        {
+          "name": "lint",
+          "startLine": 54,
+          "endLine": 57
+        },
+        {
+          "name": "format",
+          "startLine": 58,
+          "endLine": 60
+        },
+        {
+          "name": "clean",
+          "startLine": 61,
+          "endLine": 64
+        },
+        {
+          "name": "forge",
+          "startLine": 70,
+          "endLine": 72
+        },
+        {
+          "name": "seed-evidence",
+          "startLine": 82,
+          "endLine": 84
+        },
+        {
+          "name": "seed-demo-las",
+          "startLine": 85,
+          "endLine": 98
+        },
+        {
+          "name": "deploy-apps",
+          "startLine": 99,
+          "endLine": 119
+        },
+        {
+          "name": "readiness-test",
+          "startLine": 120,
+          "endLine": 122
+        },
+        {
+          "name": "generate-mcp-apps-surface",
+          "startLine": 124,
+          "endLine": 126
+        },
+        {
+          "name": "apps-catalog",
+          "startLine": 127,
+          "endLine": 130
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "stepCount": 21
+      }
+    },
+    {
+      "path": "PROTOCOL_CONFORMANCE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 51,
+      "nonEmptyLines": 43,
+      "sections": [
+        {
+          "heading": "PROTOCOL_CONFORMANCE.md — GEOX Earth Intelligence",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "MCP Conformance",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "FastMCP Conformance",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "A2A Conformance",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "XMCP Conformance",
+          "level": 2,
+          "line": 29
+        },
+        {
+          "heading": "Gaps",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Required Compliance",
+          "level": 2,
+          "line": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 182,
+      "nonEmptyLines": 129,
+      "sections": [
+        {
+          "heading": "GEOX — Earth Intelligence Engine",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "Live reality (probe this, do not trust prose)",
+          "level": 2,
+          "line": 34
+        },
+        {
+          "heading": "The Problem",
+          "level": 2,
+          "line": 53
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "Quick Start",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "Live VPS (this machine — truth)",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "Local development",
+          "level": 3,
+          "line": 102
+        },
+        {
+          "heading": "Canonical public tools (26)",
+          "level": 2,
+          "line": 115
+        },
+        {
+          "heading": "2026-09-06 surface repair (witness, not theatre)",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "Malay Basin (what GEOX actually holds)",
+          "level": 2,
+          "line": 132
+        },
+        {
+          "heading": "Epistemic labels",
+          "level": 2,
+          "line": 142
+        },
+        {
+          "heading": "Federation role",
+          "level": 2,
+          "line": 155
+        },
+        {
+          "heading": "Documentation",
+          "level": 2,
+          "line": 170
+        },
+        {
+          "heading": "License",
+          "level": 2,
+          "line": 178
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    },
+    {
+      "path": "SECURITY.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 29,
+      "nonEmptyLines": 20,
+      "sections": [
+        {
+          "heading": "Security Policy",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Reporting a Vulnerability",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Security Architecture",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Data Handling",
+          "level": 2,
+          "line": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "apps.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 112,
+      "nonEmptyLines": 112,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "generated_at",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "authority",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "protocol",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "apps",
+          "level": 1,
+          "line": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "entrypoint.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 17,
+      "nonEmptyLines": 14,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "identity.toml",
+      "language": "toml",
+      "fileCategory": "config",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    }
+  ]
+}

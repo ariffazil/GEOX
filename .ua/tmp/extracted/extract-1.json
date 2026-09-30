@@ -1,0 +1,222 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 2,
+  "filesSkipped": [
+    ".dockerignore"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 2,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 67,
+      "nonEmptyLines": 52,
+      "services": [
+        {
+          "name": "builder",
+          "image": "python:3.12-slim",
+          "ports": [],
+          "startLine": 3,
+          "endLine": 23
+        },
+        {
+          "name": "runtime",
+          "image": "python:3.12-slim",
+          "ports": [
+            8081
+          ],
+          "startLine": 24,
+          "endLine": 68
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM python:3.12-slim AS builder",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 5,
+          "endLine": 5
+        },
+        {
+          "name": "RUN apt-get update && apt-get install -y --no-install-recommends",
+          "startLine": 7,
+          "endLine": 7
+        },
+        {
+          "name": "RUN python -m venv /opt/venv",
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "ENV PATH=\"/opt/venv/bin:$PATH\"",
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "COPY pyproject.toml README.md ./",
+          "startLine": 18,
+          "endLine": 18
+        },
+        {
+          "name": "COPY src/ ./src/",
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "RUN pip install --no-cache-dir .",
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "FROM python:3.12-slim AS runtime",
+          "startLine": 24,
+          "endLine": 24
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 26,
+          "endLine": 26
+        },
+        {
+          "name": "RUN apt-get update && apt-get install -y --no-install-recommends",
+          "startLine": 31,
+          "endLine": 31
+        },
+        {
+          "name": "COPY --from=builder /opt/venv /opt/venv",
+          "startLine": 37,
+          "endLine": 37
+        },
+        {
+          "name": "ENV PATH=\"/opt/venv/bin:$PATH\"",
+          "startLine": 38,
+          "endLine": 38
+        },
+        {
+          "name": "COPY src/ ./src/",
+          "startLine": 41,
+          "endLine": 41
+        },
+        {
+          "name": "COPY resources/ ./resources/",
+          "startLine": 42,
+          "endLine": 42
+        },
+        {
+          "name": "COPY data/ ./data/",
+          "startLine": 43,
+          "endLine": 43
+        },
+        {
+          "name": "COPY fixtures/ ./fixtures/",
+          "startLine": 44,
+          "endLine": 44
+        },
+        {
+          "name": "COPY pyproject.toml entrypoint.sh ./",
+          "startLine": 45,
+          "endLine": 45
+        },
+        {
+          "name": "ARG GIT_SHA=\"\"",
+          "startLine": 48,
+          "endLine": 48
+        },
+        {
+          "name": "ARG GIT_DATE=\"\"",
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "ENV GIT_SHA=${GIT_SHA}",
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "ENV GIT_DATE=${GIT_DATE}",
+          "startLine": 51,
+          "endLine": 51
+        },
+        {
+          "name": "ENV PYTHONPATH=/app/src",
+          "startLine": 54,
+          "endLine": 54
+        },
+        {
+          "name": "ENV PORT=8081",
+          "startLine": 55,
+          "endLine": 55
+        },
+        {
+          "name": "ENV HOST=0.0.0.0",
+          "startLine": 56,
+          "endLine": 56
+        },
+        {
+          "name": "EXPOSE 8081",
+          "startLine": 58,
+          "endLine": 58
+        },
+        {
+          "name": "CMD [\"python\", \"-m\", \"geox_mcp.server\"]",
+          "startLine": 67,
+          "endLine": 67
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 2,
+        "stepCount": 27
+      }
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "fileCategory": "infra",
+      "totalLines": 64,
+      "nonEmptyLines": 64,
+      "sections": [
+        {
+          "heading": "networks",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "services",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "volumes",
+          "level": 1,
+          "line": 62
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,1036 @@
+{
+  "nodes": [
+    {
+      "id": "file:geox-gui/src/hooks/useGeoxBridge.ts",
+      "type": "file",
+      "name": "useGeoxBridge.ts",
+      "filePath": "geox-gui/src/hooks/useGeoxBridge.ts",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/hooks/useGeoxBridge.ts:useGeoxBridge",
+      "type": "function",
+      "name": "useGeoxBridge",
+      "filePath": "geox-gui/src/hooks/useGeoxBridge.ts",
+      "lineRange": [
+        18,
+        115
+      ],
+      "summary": "useGeoxBridge() — 97 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/hooks/useGeoxHostBridge.ts",
+      "type": "file",
+      "name": "useGeoxHostBridge.ts",
+      "filePath": "geox-gui/src/hooks/useGeoxHostBridge.ts",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/hooks/useGeoxHostBridge.ts:useGeoxHostBridge",
+      "type": "function",
+      "name": "useGeoxHostBridge",
+      "filePath": "geox-gui/src/hooks/useGeoxHostBridge.ts",
+      "lineRange": [
+        16,
+        121
+      ],
+      "summary": "useGeoxHostBridge(iframeRef) — 105 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/hooks/useMcpTool.ts",
+      "type": "file",
+      "name": "useMcpTool.ts",
+      "filePath": "geox-gui/src/hooks/useMcpTool.ts",
+      "summary": "Defines 4 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/hooks/useMcpTool.ts:directMcpCall",
+      "type": "function",
+      "name": "directMcpCall",
+      "filePath": "geox-gui/src/hooks/useMcpTool.ts",
+      "lineRange": [
+        74,
+        142
+      ],
+      "summary": "directMcpCall(toolName, args, baseUrl) — 68 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox-gui/src/hooks/useMcpTool.ts:useMcpTool",
+      "type": "function",
+      "name": "useMcpTool",
+      "filePath": "geox-gui/src/hooks/useMcpTool.ts",
+      "lineRange": [
+        144,
+        318
+      ],
+      "summary": "useMcpTool(toolName) — 174 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/index.css",
+      "type": "file",
+      "name": "index.css",
+      "filePath": "geox-gui/src/index.css",
+      "summary": "css markup file (1 non-empty lines).",
+      "tags": [
+        "markup",
+        "css"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/main.tsx",
+      "type": "file",
+      "name": "main.tsx",
+      "filePath": "geox-gui/src/main.tsx",
+      "summary": "typescript code file (9 non-empty lines).",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/store/geoxStore.ts",
+      "type": "file",
+      "name": "geoxStore.ts",
+      "filePath": "geox-gui/src/store/geoxStore.ts",
+      "summary": "Defines 10 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox-gui/src/store/geoxStore.ts:inferDefaultGeoxUrl",
+      "type": "function",
+      "name": "inferDefaultGeoxUrl",
+      "filePath": "geox-gui/src/store/geoxStore.ts",
+      "lineRange": [
+        29,
+        40
+      ],
+      "summary": "inferDefaultGeoxUrl() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/src/styles/designSystem.css",
+      "type": "file",
+      "name": "designSystem.css",
+      "filePath": "geox-gui/src/styles/designSystem.css",
+      "summary": "css markup file (489 non-empty lines).",
+      "tags": [
+        "markup",
+        "css"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "geox-gui/src/types.ts",
+      "summary": "exports 57 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox-gui/src/types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "geox-gui/src/types/index.ts",
+      "summary": "exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:geox-gui/src/vite-env.d.ts",
+      "type": "file",
+      "name": "vite-env.d.ts",
+      "filePath": "geox-gui/src/vite-env.d.ts",
+      "summary": "typescript code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/tailwind.config.js",
+      "type": "file",
+      "name": "tailwind.config.js",
+      "filePath": "geox-gui/tailwind.config.js",
+      "summary": "javascript code file (22 non-empty lines).",
+      "tags": [
+        "code",
+        "javascript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox-gui/vite.config.ts",
+      "type": "file",
+      "name": "vite.config.ts",
+      "filePath": "geox-gui/vite.config.ts",
+      "summary": "typescript code file (24 non-empty lines).",
+      "tags": [
+        "code",
+        "typescript"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "geox/__init__.py",
+      "summary": "python code file (12 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/core/multi_mineral.py",
+      "type": "file",
+      "name": "multi_mineral.py",
+      "filePath": "geox/core/multi_mineral.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:classify_lithology_vector",
+      "type": "function",
+      "name": "classify_lithology_vector",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        76,
+        190
+      ],
+      "summary": "classify_lithology_vector(rhob, nphi, geological_context) — 114 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:compute_matrix_density",
+      "type": "function",
+      "name": "compute_matrix_density",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        198,
+        255
+      ],
+      "summary": "compute_matrix_density(fractions, dominant) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:check_borehole_quality",
+      "type": "function",
+      "name": "check_borehole_quality",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        263,
+        335
+      ],
+      "summary": "check_borehole_quality(rhob, drho, caliper, bit_size, drho_max, caliper_max_pct) — 72 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:compute_porosity_carbonate_safe",
+      "type": "function",
+      "name": "compute_porosity_carbonate_safe",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        338,
+        373
+      ],
+      "summary": "compute_porosity_carbonate_safe(rhob, lithology_result, fluid_density) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:compute_porosity_uncertainty",
+      "type": "function",
+      "name": "compute_porosity_uncertainty",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        376,
+        402
+      ],
+      "summary": "compute_porosity_uncertainty(rhob, fractions, fluid_density) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:hc_correction_density",
+      "type": "function",
+      "name": "hc_correction_density",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        410,
+        505
+      ],
+      "summary": "hc_correction_density(phi_d, rhob, rho_ma, rho_f, sxo, rho_hc, nphi) — 95 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:compute_sw_dual_water",
+      "type": "function",
+      "name": "compute_sw_dual_water",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        513,
+        592
+      ],
+      "summary": "compute_sw_dual_water(rt, phi, rw, vsh, a, m, n, rwb) — 79 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:carbonate_texture_indicator",
+      "type": "function",
+      "name": "carbonate_texture_indicator",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        600,
+        676
+      ],
+      "summary": "carbonate_texture_indicator(rhob, nphi, dt) — 76 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/core/multi_mineral.py:_most_common",
+      "type": "function",
+      "name": "_most_common",
+      "filePath": "geox/core/multi_mineral.py",
+      "lineRange": [
+        684,
+        690
+      ],
+      "summary": "_most_common(arr) — 6 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "geox/egs/__init__.py",
+      "summary": "python code file (8 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/engines/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "geox/egs/engines/__init__.py",
+      "summary": "python code file (1 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/engines/geometry.py",
+      "type": "file",
+      "name": "geometry.py",
+      "filePath": "geox/egs/engines/geometry.py",
+      "summary": "Defines 8 function(s); 1 class(es); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/engines/geometry.py:SpatialIndex",
+      "type": "class",
+      "name": "SpatialIndex",
+      "filePath": "geox/egs/engines/geometry.py",
+      "lineRange": [
+        108,
+        135
+      ],
+      "summary": "Class SpatialIndex with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/engines/physics.py",
+      "type": "file",
+      "name": "physics.py",
+      "filePath": "geox/egs/engines/physics.py",
+      "summary": "Defines 8 function(s); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/egs/engines/physics.py:brine_density",
+      "type": "function",
+      "name": "brine_density",
+      "filePath": "geox/egs/engines/physics.py",
+      "lineRange": [
+        19,
+        44
+      ],
+      "summary": "brine_density(temperature_c, salinity_ppm, pressure_mpa) — 25 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox/egs/engines/physics.py:gas_density",
+      "type": "function",
+      "name": "gas_density",
+      "filePath": "geox/egs/engines/physics.py",
+      "lineRange": [
+        58,
+        87
+      ],
+      "summary": "gas_density(temperature_c, pressure_mpa, gas_gravity) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:geox/egs/engines/physics.py:voigt_reuss_hill",
+      "type": "function",
+      "name": "voigt_reuss_hill",
+      "filePath": "geox/egs/engines/physics.py",
+      "lineRange": [
+        123,
+        140
+      ],
+      "summary": "voigt_reuss_hill(vp_mineral, vp_fluid, phi, rho_mineral, rho_fluid) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/engines/update_ops.py",
+      "type": "file",
+      "name": "update_ops.py",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "summary": "6 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:geox/egs/engines/update_ops.py:UpdateStratColumn",
+      "type": "class",
+      "name": "UpdateStratColumn",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "lineRange": [
+        61,
+        115
+      ],
+      "summary": "Class UpdateStratColumn with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/engines/update_ops.py:UpdateHorizonGeom",
+      "type": "class",
+      "name": "UpdateHorizonGeom",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "lineRange": [
+        118,
+        171
+      ],
+      "summary": "Class UpdateHorizonGeom with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/engines/update_ops.py:UpdateFaultModel",
+      "type": "class",
+      "name": "UpdateFaultModel",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "lineRange": [
+        174,
+        222
+      ],
+      "summary": "Class UpdateFaultModel with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:geox/egs/engines/update_ops.py:UpdateReservoirProperties",
+      "type": "class",
+      "name": "UpdateReservoirProperties",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "lineRange": [
+        225,
+        283
+      ],
+      "summary": "Class UpdateReservoirProperties with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/engines/update_ops.py:UpdateChargeModel",
+      "type": "class",
+      "name": "UpdateChargeModel",
+      "filePath": "geox/egs/engines/update_ops.py",
+      "lineRange": [
+        286,
+        338
+      ],
+      "summary": "Class UpdateChargeModel with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox/egs/models/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "geox/egs/models/__init__.py",
+      "summary": "python code file (6 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/models/claims.py",
+      "type": "file",
+      "name": "claims.py",
+      "filePath": "geox/egs/models/claims.py",
+      "summary": "5 class(es); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/models/claims.py:ClaimEnvelope",
+      "type": "class",
+      "name": "ClaimEnvelope",
+      "filePath": "geox/egs/models/claims.py",
+      "lineRange": [
+        64,
+        130
+      ],
+      "summary": "Class ClaimEnvelope with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox/egs/models/entities.py",
+      "type": "file",
+      "name": "entities.py",
+      "filePath": "geox/egs/models/entities.py",
+      "summary": "15 class(es); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:geox/egs/models/entities.py:SurfaceMesh3D",
+      "type": "class",
+      "name": "SurfaceMesh3D",
+      "filePath": "geox/egs/models/entities.py",
+      "lineRange": [
+        38,
+        63
+      ],
+      "summary": "Class SurfaceMesh3D with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:geox/egs/models/entities.py:EarthGraph",
+      "type": "class",
+      "name": "EarthGraph",
+      "filePath": "geox/egs/models/entities.py",
+      "lineRange": [
+        245,
+        310
+      ],
+      "summary": "Class EarthGraph with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox/egs/models/provenance.py",
+      "type": "file",
+      "name": "provenance.py",
+      "filePath": "geox/egs/models/provenance.py",
+      "summary": "7 class(es); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/models/provenance.py:EvidenceKind",
+      "type": "class",
+      "name": "EvidenceKind",
+      "filePath": "geox/egs/models/provenance.py",
+      "lineRange": [
+        76,
+        96
+      ],
+      "summary": "Class EvidenceKind with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:geox/egs/models/provenance.py:ProvenanceChain",
+      "type": "class",
+      "name": "ProvenanceChain",
+      "filePath": "geox/egs/models/provenance.py",
+      "lineRange": [
+        134,
+        157
+      ],
+      "summary": "Class ProvenanceChain with 3 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:geox/egs/models/sts.py",
+      "type": "file",
+      "name": "sts.py",
+      "filePath": "geox/egs/models/sts.py",
+      "summary": "6 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:geox/egs/models/sts.py:StateTransitionSurface",
+      "type": "class",
+      "name": "StateTransitionSurface",
+      "filePath": "geox/egs/models/sts.py",
+      "lineRange": [
+        75,
+        126
+      ],
+      "summary": "Class StateTransitionSurface with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/models/sts.py:BasinNode",
+      "type": "class",
+      "name": "BasinNode",
+      "filePath": "geox/egs/models/sts.py",
+      "lineRange": [
+        134,
+        160
+      ],
+      "summary": "Class BasinNode with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:geox/egs/models/sts.py:StateGraph",
+      "type": "class",
+      "name": "StateGraph",
+      "filePath": "geox/egs/models/sts.py",
+      "lineRange": [
+        168,
+        270
+      ],
+      "summary": "Class StateGraph with 6 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:geox/egs/models/translation.py",
+      "type": "file",
+      "name": "translation.py",
+      "filePath": "geox/egs/models/translation.py",
+      "summary": "Defines 1 function(s); 2 class(es); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:geox/egs/models/translation.py:layang_layang_example",
+      "type": "function",
+      "name": "layang_layang_example",
+      "filePath": "geox/egs/models/translation.py",
+      "lineRange": [
+        77,
+        118
+      ],
+      "summary": "layang_layang_example() — 41 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:geox/egs/models/translation.py:TranslationLayer",
+      "type": "class",
+      "name": "TranslationLayer",
+      "filePath": "geox/egs/models/translation.py",
+      "lineRange": [
+        35,
+        71
+      ],
+      "summary": "Class TranslationLayer with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:geox-gui/src/hooks/useGeoxBridge.ts",
+      "target": "function:geox-gui/src/hooks/useGeoxBridge.ts:useGeoxBridge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/hooks/useGeoxHostBridge.ts",
+      "target": "function:geox-gui/src/hooks/useGeoxHostBridge.ts:useGeoxHostBridge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/hooks/useMcpTool.ts",
+      "target": "function:geox-gui/src/hooks/useMcpTool.ts:directMcpCall",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/hooks/useMcpTool.ts",
+      "target": "function:geox-gui/src/hooks/useMcpTool.ts:useMcpTool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox-gui/src/store/geoxStore.ts",
+      "target": "function:geox-gui/src/store/geoxStore.ts:inferDefaultGeoxUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:classify_lithology_vector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:compute_matrix_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:check_borehole_quality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:compute_porosity_carbonate_safe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:compute_porosity_uncertainty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:hc_correction_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:compute_sw_dual_water",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:carbonate_texture_indicator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/core/multi_mineral.py",
+      "target": "function:geox/core/multi_mineral.py:_most_common",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/geometry.py",
+      "target": "class:geox/egs/engines/geometry.py:SpatialIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/physics.py",
+      "target": "function:geox/egs/engines/physics.py:brine_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/physics.py",
+      "target": "function:geox/egs/engines/physics.py:gas_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/physics.py",
+      "target": "function:geox/egs/engines/physics.py:voigt_reuss_hill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/update_ops.py",
+      "target": "class:geox/egs/engines/update_ops.py:UpdateStratColumn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/update_ops.py",
+      "target": "class:geox/egs/engines/update_ops.py:UpdateHorizonGeom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/update_ops.py",
+      "target": "class:geox/egs/engines/update_ops.py:UpdateFaultModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/update_ops.py",
+      "target": "class:geox/egs/engines/update_ops.py:UpdateReservoirProperties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/engines/update_ops.py",
+      "target": "class:geox/egs/engines/update_ops.py:UpdateChargeModel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/claims.py",
+      "target": "class:geox/egs/models/claims.py:ClaimEnvelope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/entities.py",
+      "target": "class:geox/egs/models/entities.py:SurfaceMesh3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/entities.py",
+      "target": "class:geox/egs/models/entities.py:EarthGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/provenance.py",
+      "target": "class:geox/egs/models/provenance.py:EvidenceKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/provenance.py",
+      "target": "class:geox/egs/models/provenance.py:ProvenanceChain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/sts.py",
+      "target": "class:geox/egs/models/sts.py:StateTransitionSurface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/sts.py",
+      "target": "class:geox/egs/models/sts.py:BasinNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/sts.py",
+      "target": "class:geox/egs/models/sts.py:StateGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/translation.py",
+      "target": "function:geox/egs/models/translation.py:layang_layang_example",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:geox/egs/models/translation.py",
+      "target": "class:geox/egs/models/translation.py:TranslationLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

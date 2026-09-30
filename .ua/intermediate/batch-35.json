@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/biostrat/mcp/concepts_manifest.json",
+      "type": "config",
+      "name": "concepts_manifest.json",
+      "filePath": "resources/biostrat/mcp/concepts_manifest.json",
+      "summary": "json config file (128 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/governance.json",
+      "type": "config",
+      "name": "governance.json",
+      "filePath": "resources/biostrat/mcp/governance.json",
+      "summary": "json config file (160 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/prompts_manifest.json",
+      "type": "config",
+      "name": "prompts_manifest.json",
+      "filePath": "resources/biostrat/mcp/prompts_manifest.json",
+      "summary": "json config file (117 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/resources_manifest.json",
+      "type": "config",
+      "name": "resources_manifest.json",
+      "filePath": "resources/biostrat/mcp/resources_manifest.json",
+      "summary": "json config file (115 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/skill_manifest.json",
+      "type": "config",
+      "name": "skill_manifest.json",
+      "filePath": "resources/biostrat/mcp/skill_manifest.json",
+      "summary": "json config file (165 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/task_reality_loop.json",
+      "type": "config",
+      "name": "task_reality_loop.json",
+      "filePath": "resources/biostrat/mcp/task_reality_loop.json",
+      "summary": "json config file (170 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/biostrat/mcp/tools_manifest.json",
+      "type": "config",
+      "name": "tools_manifest.json",
+      "filePath": "resources/biostrat/mcp/tools_manifest.json",
+      "summary": "json config file (122 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

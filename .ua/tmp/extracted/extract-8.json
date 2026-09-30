@@ -1,0 +1,492 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 8,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 8
+    }
+  },
+  "results": [
+    {
+      "path": "999_vault/999_SEAL.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 18,
+      "sections": [
+        {
+          "heading": "nine_signal",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "verdict",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "repo_name",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "summary",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "timestamp",
+          "level": 1,
+          "line": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "999_vault/EMC_REAL_ROCK_SEAL.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 16,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "seal_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "timestamp",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "session",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "actor",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "results",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "key_finding",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "doi_xrf",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "doi_xrd",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "licence",
+          "level": 1,
+          "line": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "999_vault/geox-registry-audit-2026-06-26.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "seal_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "epoch",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "actor",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "action",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "resources_audited",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "live",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "install_queue",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "deferred",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "corrections",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "active_888_holds",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "phase_lock",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "evidence_path",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "verdict",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "confidence",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "witness",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "next_action",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "seal_DITMPA",
+          "level": 1,
+          "line": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": "999_vault/repair_anchor.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 8,
+      "nonEmptyLines": 8,
+      "sections": [
+        {
+          "heading": "event",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "note",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "prev_hash",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "payload_hash",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "verdict",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "timestamp",
+          "level": 1,
+          "line": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "999_vault/seal_349966e7fa23.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 12,
+      "nonEmptyLines": 12,
+      "sections": [
+        {
+          "heading": "earth_object_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "claim_state",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "timestamp_utc",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "sealed_by",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "data",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vault_hash",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "999_vault/seal_6c9748e17445.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 12,
+      "nonEmptyLines": 12,
+      "sections": [
+        {
+          "heading": "earth_object_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "claim_state",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "timestamp_utc",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "sealed_by",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "data",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vault_hash",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "999_vault/seal_c9ff89c5ffac.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 12,
+      "nonEmptyLines": 12,
+      "sections": [
+        {
+          "heading": "earth_object_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "claim_state",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "timestamp_utc",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "sealed_by",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "data",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "vault_hash",
+          "level": 1,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "999_vault/seal_knowledge_taxonomy_2026-07-06.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 15,
+      "nonEmptyLines": 15,
+      "sections": [
+        {
+          "heading": "seal_id",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "artifact",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "domains",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "branches",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "leaves",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "forged_by",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "sovereign",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "sovereign_signal",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "sealed_by",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "timestamp",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "session_id",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "path",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "ditempa",
+          "level": 1,
+          "line": 14
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    }
+  ]
+}

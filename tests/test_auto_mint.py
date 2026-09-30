@@ -77,7 +77,7 @@ class TestRegistryGuard:
     def test_unknown_tool_skips(self, tmp_db: str, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
-        r = asyncio.get_event_loop().run_until_complete(
+        r = asyncio.run(
             mint_from_gate_pass("geox_unknown_tool", {"ok": True, "local_verdict": "QUALIFIED_CANDIDATE"})
         )
         assert r is not None
@@ -89,7 +89,7 @@ class TestVerdictGuard:
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
         result = {"ok": True, "local_verdict": "COMPUTED", "stage1_isolate": {}, "stage3_classify": {}}
-        r = asyncio.get_event_loop().run_until_complete(mint_from_gate_pass("geox_contrast_metabolize", result))
+        r = asyncio.run(mint_from_gate_pass("geox_contrast_metabolize", result))
         assert r is not None
         assert r.get("skipped") is not None
 
@@ -98,7 +98,7 @@ class TestCanonicalMint:
     def test_synthetic_convergence(self, tmp_db: str, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
-        r = asyncio.get_event_loop().run_until_complete(
+        r = asyncio.run(
             mint_from_gate_pass(
                 "geox_contrast_metabolize",
                 CONTRAST_RESULT_SYNTHETIC,
@@ -116,13 +116,13 @@ class TestCanonicalMint:
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
         before = _count_claims(tmp_db)
-        asyncio.get_event_loop().run_until_complete(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
+        asyncio.run(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
         assert _count_claims(tmp_db) == before + 1
 
     def test_provenance_contains_auto_mint(self, tmp_db: str, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
-        asyncio.get_event_loop().run_until_complete(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
+        asyncio.run(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
         with sqlite3.connect(tmp_db) as conn:
             payload = json.loads(conn.execute("SELECT payload FROM earth_memory ORDER BY timestamp DESC LIMIT 1").fetchone()[0])
         assert payload["provenance"].startswith("auto-mint:v1")
@@ -134,8 +134,8 @@ class TestDedup:
     def test_second_identical_input_skips(self, tmp_db: str, monkeypatch: pytest.MonkeyPatch):
         monkeypatch.setenv("GEOX_EARTH_MEMORY_DB", tmp_db)
         monkeypatch.setenv("GEOX_AUTO_MINT", "1")
-        asyncio.get_event_loop().run_until_complete(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
-        r = asyncio.get_event_loop().run_until_complete(
+        asyncio.run(mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC))
+        r = asyncio.run(
             mint_from_gate_pass("geox_contrast_metabolize", CONTRAST_RESULT_SYNTHETIC)
         )
         assert r is not None

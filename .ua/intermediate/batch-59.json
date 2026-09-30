@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/atmosphere/atmo-radiation-and-solar.md",
+      "type": "document",
+      "name": "atmo-radiation-and-solar.md",
+      "filePath": "src/geox_core/skills/atmosphere/atmo-radiation-and-solar.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/atmosphere/atmo-seasonality-and-monsoon.md",
+      "type": "document",
+      "name": "atmo-seasonality-and-monsoon.md",
+      "filePath": "src/geox_core/skills/atmosphere/atmo-seasonality-and-monsoon.md",
+      "summary": "markdown docs file (34 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/atmosphere/atmo-weather-state.md",
+      "type": "document",
+      "name": "atmo-weather-state.md",
+      "filePath": "src/geox_core/skills/atmosphere/atmo-weather-state.md",
+      "summary": "markdown docs file (38 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

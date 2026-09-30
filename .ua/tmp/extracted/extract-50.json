@@ -1,0 +1,193 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": "skills/infrastructure/agent-card.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 94,
+      "nonEmptyLines": 94,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "url",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "authentication",
+          "level": 1,
+          "line": 54
+        },
+        {
+          "heading": "_geox",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "kernel_prompts",
+          "level": 1,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "skills/infrastructure/infra-capacity-and-failure.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "infra-capacity-and-failure",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/infrastructure/infra-critical-node-watch.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 44,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "infra-critical-node-watch",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "skills/infrastructure/infra-network-topology.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 45,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "infra-network-topology",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "Contract",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Behavior",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "Edges",
+          "level": 2,
+          "line": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    }
+  ]
+}

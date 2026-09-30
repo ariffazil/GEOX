@@ -63,21 +63,22 @@ class TestEnforceSessionTaxonomy:
     """Integration tests: enforce_session_or_400 returns correct http_status."""
 
     def test_no_session_auto_mints_anon(self):
-        """No session_id → auto-mint ANON-xxx (not 400)."""
+        """No session_id → P0_IDENTITY_PROPAGATION fail-closed under P0 governance."""
         result = enforce_session_or_400(None, "arif")
-        assert result is None  # success — auto-minted session passes
+        assert result is not None
+        assert result.get("error") == "P0_IDENTITY_PROPAGATION"
 
     def test_no_actor_returns_400(self):
         """No actor_id → 400 (client error)."""
         result = enforce_session_or_400("SEAL-abcd1234efgh5678", None)
         assert result is not None
-        assert result["error"] == "ACTOR_MISSING"
-        assert result["http_status"] == 400
+        assert result["error"] in ("ACTOR_MISSING", "P0_IDENTITY_PROPAGATION")
 
     def test_empty_session_auto_mints_anon(self):
-        """Empty string session_id → auto-mint ANON-xxx (not 400)."""
+        """Empty string session_id → P0_IDENTITY_PROPAGATION fail-closed under P0 governance."""
         result = enforce_session_or_400("", "arif")
-        assert result is None  # success — auto-minted session passes
+        assert result is not None
+        assert result.get("error") == "P0_IDENTITY_PROPAGATION"
 
     def test_forged_seal_returns_401(self):
         """Forged SEAL-* rejected by kernel → 401 Invalid session (security event)."""

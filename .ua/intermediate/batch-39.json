@@ -1,0 +1,102 @@
+{
+  "nodes": [
+    {
+      "id": "config:resources/playbooks/geomechanics.yaml",
+      "type": "config",
+      "name": "geomechanics.yaml",
+      "filePath": "resources/playbooks/geomechanics.yaml",
+      "summary": "yaml config file (37 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/petrophysics.yaml",
+      "type": "config",
+      "name": "petrophysics.yaml",
+      "filePath": "resources/playbooks/petrophysics.yaml",
+      "summary": "yaml config file (48 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/process_abduction.yaml",
+      "type": "config",
+      "name": "process_abduction.yaml",
+      "filePath": "resources/playbooks/process_abduction.yaml",
+      "summary": "yaml config file (48 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/prospect_evaluation.yaml",
+      "type": "config",
+      "name": "prospect_evaluation.yaml",
+      "filePath": "resources/playbooks/prospect_evaluation.yaml",
+      "summary": "yaml config file (22 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/playbooks/recursive_toac.yaml",
+      "type": "config",
+      "name": "recursive_toac.yaml",
+      "filePath": "resources/playbooks/recursive_toac.yaml",
+      "summary": "yaml config file (38 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/seismic_well_tie.yaml",
+      "type": "config",
+      "name": "seismic_well_tie.yaml",
+      "filePath": "resources/playbooks/seismic_well_tie.yaml",
+      "summary": "yaml config file (49 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/well_qc.yaml",
+      "type": "config",
+      "name": "well_qc.yaml",
+      "filePath": "resources/playbooks/well_qc.yaml",
+      "summary": "yaml config file (43 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/playbooks/well_sequence_stratigraphy.yaml",
+      "type": "config",
+      "name": "well_sequence_stratigraphy.yaml",
+      "filePath": "resources/playbooks/well_sequence_stratigraphy.yaml",
+      "summary": "yaml config file (26 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,199 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 5,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 5
+    }
+  },
+  "results": [
+    {
+      "path": ".github/copilot-instructions.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 54,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "GEOX — Earth Intelligence Organ",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Repo identity",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Build, test, run",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "Key directories",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Canonical MCP surface (32 tools)",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Physics9 constraints",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "Conventions",
+          "level": 2,
+          "line": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": ".github/dependabot.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 110,
+      "nonEmptyLines": 107,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "updates",
+          "level": 1,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 26,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 1
+        },
+        {
+          "heading": "Type",
+          "level": 2,
+          "line": 4
+        },
+        {
+          "heading": "Key changes",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Test evidence",
+          "level": 2,
+          "line": 14
+        },
+        {
+          "heading": "Checklist",
+          "level": 2,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": ".github/repo-policy.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 66,
+      "nonEmptyLines": 60,
+      "sections": [
+        {
+          "heading": "repo_policy",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "required_checks",
+          "level": 1,
+          "line": 36
+        },
+        {
+          "heading": "exceptions",
+          "level": 1,
+          "line": 66
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": ".github/workflows.CANONICAL.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 24,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "canonical_workflows",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "required_checks_for_main",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "last_audit",
+          "level": 1,
+          "line": 24
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}

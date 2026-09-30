@@ -1,0 +1,65 @@
+{
+  "nodes": [
+    {
+      "id": "file:apps/well-desk/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/well-desk/index.html",
+      "summary": "html markup file (677 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:apps/well-desk/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "apps/well-desk/manifest.json",
+      "summary": "json config file (71 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:apps/well-desk/map-unified.html",
+      "type": "file",
+      "name": "map-unified.html",
+      "filePath": "apps/well-desk/map-unified.html",
+      "summary": "html markup file (840 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/well-desk/p0-viz.html",
+      "type": "file",
+      "name": "p0-viz.html",
+      "filePath": "apps/well-desk/p0-viz.html",
+      "summary": "html markup file (435 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/well-desk/p0.html",
+      "type": "file",
+      "name": "p0.html",
+      "filePath": "apps/well-desk/p0.html",
+      "summary": "html markup file (135 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

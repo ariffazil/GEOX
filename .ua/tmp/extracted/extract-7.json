@@ -1,0 +1,353 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": ".well-known/agent-card.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 78,
+      "nonEmptyLines": 78,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "id",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "protocolVersion",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "url",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "provider",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "service_id",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "authority",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "transport",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "tool_surface",
+          "level": 1,
+          "line": 37
+        },
+        {
+          "heading": "resource_surface",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 39
+        },
+        {
+          "heading": "governance",
+          "level": 1,
+          "line": 56
+        },
+        {
+          "heading": "metadata",
+          "level": 1,
+          "line": 73
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 17
+      }
+    },
+    {
+      "path": ".well-known/agent.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 138,
+      "nonEmptyLines": 138,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "url",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "documentation_url",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "agent_card_url",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "provider",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "authentication",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "defaultInputModes",
+          "level": 1,
+          "line": 35
+        },
+        {
+          "heading": "defaultOutputModes",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "skills",
+          "level": 1,
+          "line": 41
+        },
+        {
+          "heading": "canonical_tools",
+          "level": 1,
+          "line": 93
+        },
+        {
+          "heading": "mcp_resources",
+          "level": 1,
+          "line": 99
+        },
+        {
+          "heading": "constitutional_floors",
+          "level": 1,
+          "line": 100
+        },
+        {
+          "heading": "lane",
+          "level": 1,
+          "line": 110
+        },
+        {
+          "heading": "self_judge",
+          "level": 1,
+          "line": 111
+        },
+        {
+          "heading": "judge_authority",
+          "level": 1,
+          "line": 112
+        },
+        {
+          "heading": "ledger",
+          "level": 1,
+          "line": 113
+        },
+        {
+          "heading": "seal_protocol",
+          "level": 1,
+          "line": 114
+        },
+        {
+          "heading": "metadata",
+          "level": 1,
+          "line": 115
+        },
+        {
+          "heading": "tools_manifest",
+          "level": 1,
+          "line": 120
+        },
+        {
+          "heading": "apps_manifest",
+          "level": 1,
+          "line": 121
+        },
+        {
+          "heading": "openapi_manifest",
+          "level": 1,
+          "line": 122
+        },
+        {
+          "heading": "public_surface_audit",
+          "level": 1,
+          "line": 123
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 25
+      }
+    },
+    {
+      "path": ".well-known/openapi.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 551,
+      "nonEmptyLines": 551,
+      "sections": [
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "openapi",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "paths",
+          "level": 1,
+          "line": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": ".well-known/tools.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 967,
+      "nonEmptyLines": 967,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "canonical_tools",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "internal_tools",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "manifest_path",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "organ",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "policy",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "surface_tools",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "tools",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 21
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

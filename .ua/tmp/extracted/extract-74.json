@@ -1,0 +1,118 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 1,
+  "filesSkipped": [
+    "static/lem-dashboard/index.html",
+    "static/lem-dashboard/llms.txt"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 1,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 1
+    }
+  },
+  "results": [
+    {
+      "path": "static/lem-dashboard/agent.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 30,
+      "nonEmptyLines": 30,
+      "sections": [
+        {
+          "heading": "@context",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "url",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "federation",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "domain",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "authority",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "capabilities",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "tools_public",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "lem_engines",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "lem_tools",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "git_version",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "forge_date",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "owner",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "tagline",
+          "level": 1,
+          "line": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 16
+      }
+    }
+  ]
+}

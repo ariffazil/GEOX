@@ -1,0 +1,452 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "resources/analogs/seed_malay_basin_J_deepwater.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 57,
+      "nonEmptyLines": 51,
+      "sections": [
+        {
+          "heading": "analog_id",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "basin_id",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "play_name",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "play_type",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "discovery_status",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "producers_count",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "discovery_year_first",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "tectonic_setting",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "basin_age",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "lithology_primary",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "lithology_secondary",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "depth_range_m",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "trap_style",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "source_rock",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "reservoir_rock",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "epistemic_rung",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "evidence_refs",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "data_quality",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "contrast_dimensions",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "primary_hydrocarbon",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "eur_bcf",
+          "level": 1,
+          "line": 51
+        },
+        {
+          "heading": "recovery_factor",
+          "level": 1,
+          "line": 52
+        },
+        {
+          "heading": "fiscal_terms",
+          "level": 1,
+          "line": 53
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 25
+      }
+    },
+    {
+      "path": "resources/analogs/seed_malay_basin_K_GroupH.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 79,
+      "nonEmptyLines": 78,
+      "sections": [
+        {
+          "heading": "analog_id",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "basin_id",
+          "level": 1,
+          "line": 14
+        },
+        {
+          "heading": "play_name",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "play_type",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "discovery_status",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "producers_count",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "discovery_year_first",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "tectonic_setting",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "basin_age",
+          "level": 1,
+          "line": 24
+        },
+        {
+          "heading": "lithology_primary",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "lithology_secondary",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "depth_range_m",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "trap_style",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "source_rock",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "reservoir_rock",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "epistemic_rung",
+          "level": 1,
+          "line": 35
+        },
+        {
+          "heading": "evidence_refs",
+          "level": 1,
+          "line": 36
+        },
+        {
+          "heading": "data_quality",
+          "level": 1,
+          "line": 40
+        },
+        {
+          "heading": "contrast_dimensions",
+          "level": 1,
+          "line": 45
+        },
+        {
+          "heading": "primary_hydrocarbon",
+          "level": 1,
+          "line": 69
+        },
+        {
+          "heading": "eur_bcf",
+          "level": 1,
+          "line": 70
+        },
+        {
+          "heading": "recovery_factor",
+          "level": 1,
+          "line": 71
+        },
+        {
+          "heading": "fiscal_terms",
+          "level": 1,
+          "line": 72
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 25
+      }
+    },
+    {
+      "path": "resources/analogs/seed_malay_basin_K_center_overpressure.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 263,
+      "nonEmptyLines": 259,
+      "sections": [
+        {
+          "heading": "analog_id",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "basin_id",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "play_name",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "play_type",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "discovery_status",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "prospect_status",
+          "level": 1,
+          "line": 22
+        },
+        {
+          "heading": "structural_setting",
+          "level": 1,
+          "line": 26
+        },
+        {
+          "heading": "target_interval",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "tectonic_setting",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "basin_age",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "lithology_primary",
+          "level": 1,
+          "line": 33
+        },
+        {
+          "heading": "lithology_secondary",
+          "level": 1,
+          "line": 34
+        },
+        {
+          "heading": "depth_range_m",
+          "level": 1,
+          "line": 35
+        },
+        {
+          "heading": "trap_style",
+          "level": 1,
+          "line": 36
+        },
+        {
+          "heading": "source_rock",
+          "level": 1,
+          "line": 37
+        },
+        {
+          "heading": "reservoir_rock",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "seal",
+          "level": 1,
+          "line": 39
+        },
+        {
+          "heading": "pressure_model",
+          "level": 1,
+          "line": 43
+        },
+        {
+          "heading": "temperature_model",
+          "level": 1,
+          "line": 78
+        },
+        {
+          "heading": "casing_program",
+          "level": 1,
+          "line": 88
+        },
+        {
+          "heading": "epistemic_rung",
+          "level": 1,
+          "line": 121
+        },
+        {
+          "heading": "epistemic_labels",
+          "level": 1,
+          "line": 122
+        },
+        {
+          "heading": "evidence_refs",
+          "level": 1,
+          "line": 151
+        },
+        {
+          "heading": "data_quality",
+          "level": 1,
+          "line": 158
+        },
+        {
+          "heading": "contrast_dimensions",
+          "level": 1,
+          "line": 162
+        },
+        {
+          "heading": "notes",
+          "level": 1,
+          "line": 191
+        },
+        {
+          "heading": "coverage_model",
+          "level": 1,
+          "line": 201
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    }
+  ]
+}

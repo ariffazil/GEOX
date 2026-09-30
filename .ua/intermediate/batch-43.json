@@ -1,0 +1,89 @@
+{
+  "nodes": [
+    {
+      "id": "config:schemas/asset_memory_record.json",
+      "type": "config",
+      "name": "asset_memory_record.json",
+      "filePath": "schemas/asset_memory_record.json",
+      "summary": "json config file (13 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:schemas/dimensions.json",
+      "type": "config",
+      "name": "dimensions.json",
+      "filePath": "schemas/dimensions.json",
+      "summary": "json config file (92 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/graph.schema.json",
+      "type": "config",
+      "name": "graph.schema.json",
+      "filePath": "schemas/graph.schema.json",
+      "summary": "json config file (36 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/las_manifest.json",
+      "type": "config",
+      "name": "las_manifest.json",
+      "filePath": "schemas/las_manifest.json",
+      "summary": "json config file (39 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/registry.schema.json",
+      "type": "config",
+      "name": "registry.schema.json",
+      "filePath": "schemas/registry.schema.json",
+      "summary": "json config file (77 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/skill.schema.json",
+      "type": "config",
+      "name": "skill.schema.json",
+      "filePath": "schemas/skill.schema.json",
+      "summary": "json config file (105 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:schemas/well_desk_event_schema.json",
+      "type": "config",
+      "name": "well_desk_event_schema.json",
+      "filePath": "schemas/well_desk_event_schema.json",
+      "summary": "json config file (175 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

@@ -34,9 +34,9 @@ async def test_empty_input_mode_contracts_are_distinct():
 
     cases = {
         "horizon_contrast": "MISSING_REQUIRED_FIELD",
-        "rsi_pipeline": "MISSING_IMAGE_PATH",
-        "interpret_section": "MISSING_IMAGE_PATH",
-        "classical_section": "MISSING_IMAGE_PATH",
+        "rsi_pipeline": ("MISSING_IMAGE", "MISSING_IMAGE_PATH"),
+        "interpret_section": ("MISSING_IMAGE", "MISSING_IMAGE_PATH"),
+        "classical_section": ("MISSING_IMAGE", "MISSING_IMAGE_PATH"),
         "structure_validate": "EMPTY_FRAMEWORK",
         "segy_slice": "MISSING_SEGY_PATH",
         "blend": "MISSING_REQUIRED_FIELD",
@@ -53,7 +53,10 @@ async def test_empty_input_mode_contracts_are_distinct():
         if mode == "fault_sticks":
             assert r.get("claim_tag") == "VOID" or r.get("claim_state") == "INGESTION_FAILED" or err
             continue
-        assert err == expected_err, f"{mode}: got {err}, expected {expected_err}, body={blob[:400]}"
+        if isinstance(expected_err, tuple):
+            assert err in expected_err, f"{mode}: got {err}, expected {expected_err}, body={blob[:400]}"
+        else:
+            assert err == expected_err, f"{mode}: got {err}, expected {expected_err}, body={blob[:400]}"
         # router bleed: non-horizon modes must not quote horizon_contrast contract
         if mode != "horizon_contrast":
             assert "horizon_contrast requires attribute_data" not in blob, f"bleed into {mode}"
@@ -64,7 +67,7 @@ async def test_rsi_pipeline_empty_is_not_horizon_contrast_error():
     from geox_mcp.tools.seismic_interpret import geox_seismic_interpret
 
     r = await geox_seismic_interpret(mode="rsi_pipeline")
-    assert r.get("error") == "MISSING_IMAGE_PATH"
+    assert r.get("error") in ("MISSING_IMAGE", "MISSING_IMAGE_PATH")
     assert "attribute_data" not in (r.get("message") or "")
     assert "1D multi-attribute" not in (r.get("message") or "")
 

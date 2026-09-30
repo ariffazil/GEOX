@@ -1,0 +1,5062 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 25,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 23,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "contracts/enums/statuses.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 754,
+      "nonEmptyLines": 671,
+      "functions": [
+        {
+          "name": "enforce_claim_state",
+          "startLine": 309,
+          "endLine": 338,
+          "params": [
+            "result",
+            "evidence_refs"
+          ]
+        },
+        {
+          "name": "get_standard_envelope",
+          "startLine": 341,
+          "endLine": 497,
+          "params": [
+            "primary_artifact",
+            "tool_class",
+            "execution_status",
+            "governance_status",
+            "artifact_status",
+            "uncertainty",
+            "evidence_refs",
+            "diagnostics",
+            "ui_resource_uri",
+            "claim_tag",
+            "claim_state",
+            "confidence_band",
+            "physics_guard",
+            "audit_receipt",
+            "humility_score",
+            "maruah_flag",
+            "tool_version",
+            "artifact_hash",
+            "depth_basis",
+            "depth_datum",
+            "session_id",
+            "trace_id",
+            "parent_trace_id",
+            "constitution_hash",
+            "next_best_actions",
+            "suggested_tool",
+            "can_auto_retry",
+            "missing_inputs_schema",
+            "confidence_policy",
+            "perception_class",
+            "evidence_tag",
+            "canon_9_touched",
+            "vertical_trend",
+            "litho_class",
+            "strat_standard"
+          ]
+        },
+        {
+          "name": "_claim_to_metabolic",
+          "startLine": 577,
+          "endLine": 579,
+          "params": [
+            "claim_state"
+          ]
+        },
+        {
+          "name": "_get_confidence_for_claim",
+          "startLine": 582,
+          "endLine": 585,
+          "params": [
+            "claim_state"
+          ]
+        },
+        {
+          "name": "enrich_envelope_with_metabolic",
+          "startLine": 588,
+          "endLine": 754,
+          "params": [
+            "envelope",
+            "tool_name",
+            "witness_type",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "required_next_tests",
+            "next_best_tool",
+            "cross_organ_handoff",
+            "session_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Dimension",
+          "startLine": 9,
+          "endLine": 18,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ExecutionStatus",
+          "startLine": 21,
+          "endLine": 26,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GovernanceStatus",
+          "startLine": 29,
+          "endLine": 34,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ArtifactStatus",
+          "startLine": 40,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FloorStatus",
+          "startLine": 52,
+          "endLine": 56,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Runtime",
+          "startLine": 59,
+          "endLine": 62,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Transport",
+          "startLine": 65,
+          "endLine": 69,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ToolCategory",
+          "startLine": 72,
+          "endLine": 77,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ProspectVerdict",
+          "startLine": 80,
+          "endLine": 84,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ClaimTag",
+          "startLine": 87,
+          "endLine": 90,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EvidenceTag",
+          "startLine": 93,
+          "endLine": 102,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LithoClass",
+          "startLine": 105,
+          "endLine": 113,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VerticalTrend",
+          "startLine": 116,
+          "endLine": 120,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "DepthBasis",
+          "startLine": 123,
+          "endLine": 126,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PerceptionClass",
+          "startLine": 129,
+          "endLine": 134,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Canon9",
+          "startLine": 139,
+          "endLine": 148,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StratStandard",
+          "startLine": 172,
+          "endLine": 177,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Dimension",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "ExecutionStatus",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "GovernanceStatus",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "ArtifactStatus",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "FloorStatus",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "Runtime",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "Transport",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "ToolCategory",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "ProspectVerdict",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "ClaimTag",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceTag",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "LithoClass",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "VerticalTrend",
+          "line": 116,
+          "isDefault": false
+        },
+        {
+          "name": "DepthBasis",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "PerceptionClass",
+          "line": 129,
+          "isDefault": false
+        },
+        {
+          "name": "Canon9",
+          "line": 139,
+          "isDefault": false
+        },
+        {
+          "name": "StratStandard",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "enforce_claim_state",
+          "line": 309,
+          "isDefault": false
+        },
+        {
+          "name": "get_standard_envelope",
+          "line": 341,
+          "isDefault": false
+        },
+        {
+          "name": "_claim_to_metabolic",
+          "line": 577,
+          "isDefault": false
+        },
+        {
+          "name": "_get_confidence_for_claim",
+          "line": 582,
+          "isDefault": false
+        },
+        {
+          "name": "enrich_envelope_with_metabolic",
+          "line": 588,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 320
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 321
+        },
+        {
+          "caller": "enforce_claim_state",
+          "callee": "result.get",
+          "lineNumber": 322
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 413
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "datetime.now(timezone.utc).isoformat",
+          "lineNumber": 414
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "datetime.now",
+          "lineNumber": 414
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "audit_receipt.get",
+          "lineNumber": 418
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "uuid.uuid4",
+          "lineNumber": 419
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "os.environ.get",
+          "lineNumber": 421
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "primary_artifact.get",
+          "lineNumber": 424
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 440
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 442
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "isinstance",
+          "lineNumber": 443
+        },
+        {
+          "caller": "get_standard_envelope",
+          "callee": "enforce_claim_state",
+          "lineNumber": 492
+        },
+        {
+          "caller": "_claim_to_metabolic",
+          "callee": "_CLAIM_STATE_MAP.get",
+          "lineNumber": 579
+        },
+        {
+          "caller": "_get_confidence_for_claim",
+          "callee": "_claim_to_metabolic",
+          "lineNumber": 584
+        },
+        {
+          "caller": "_get_confidence_for_claim",
+          "callee": "_CLAIM_TO_CONFIDENCE.get",
+          "lineNumber": 585
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "envelope.get",
+          "lineNumber": 648
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 649
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "envelope.get",
+          "lineNumber": 649
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_claim_to_metabolic",
+          "lineNumber": 650
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_get_confidence_for_claim",
+          "lineNumber": 651
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_TOOL_METABOLIC_DEFAULTS.get",
+          "lineNumber": 654
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "tool_defaults.get",
+          "lineNumber": 655
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "tool_defaults.get",
+          "lineNumber": 656
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_TOOL_WITNESS_TYPE.get",
+          "lineNumber": 665
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "_CONFIDENCE_UNCERTAINTY.get",
+          "lineNumber": 675
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 677
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "datetime.now",
+          "lineNumber": 677
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get(\"vault_receipt\", {}).get",
+          "lineNumber": 708
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 708
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "isinstance",
+          "lineNumber": 709
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 709
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 727
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 728
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 729
+        },
+        {
+          "caller": "enrich_envelope_with_metabolic",
+          "callee": "primary.get",
+          "lineNumber": 742
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 22,
+        "functionCount": 5,
+        "classCount": 17
+      }
+    },
+    {
+      "path": "contracts/governance/acp_logic.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 803,
+      "nonEmptyLines": 669,
+      "functions": [
+        {
+          "name": "acp_register_agent",
+          "startLine": 741,
+          "endLine": 757,
+          "params": [
+            "agent_id",
+            "role",
+            "name",
+            "resources",
+            "tools"
+          ]
+        },
+        {
+          "name": "acp_submit_proposal",
+          "startLine": 760,
+          "endLine": 762,
+          "params": [
+            "agent_id",
+            "proposal"
+          ]
+        },
+        {
+          "name": "acp_check_convergence",
+          "startLine": 765,
+          "endLine": 767,
+          "params": [
+            "resource"
+          ]
+        },
+        {
+          "name": "acp_grant_seal",
+          "startLine": 770,
+          "endLine": 772,
+          "params": [
+            "proposal_id",
+            "human_auth_token"
+          ]
+        },
+        {
+          "name": "acp_get_status",
+          "startLine": 775,
+          "endLine": 777,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "AgentRole",
+          "startLine": 45,
+          "endLine": 52,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AgentStatus",
+          "startLine": 55,
+          "endLine": 63,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "VerdictState",
+          "startLine": 66,
+          "endLine": 73,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "FloorId",
+          "startLine": 76,
+          "endLine": 90,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Agent",
+          "startLine": 98,
+          "endLine": 119,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "agent_id",
+            "role",
+            "name",
+            "subscribed_resources",
+            "authorized_tools",
+            "status",
+            "last_proposal",
+            "confidence_score",
+            "connected_at"
+          ]
+        },
+        {
+          "name": "A2AMessage",
+          "startLine": 123,
+          "endLine": 140,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "msg_id",
+            "sender_id",
+            "recipient_id",
+            "msg_type",
+            "payload",
+            "timestamp"
+          ]
+        },
+        {
+          "name": "FloorCheck",
+          "startLine": 144,
+          "endLine": 157,
+          "methods": [
+            "to_dict"
+          ],
+          "properties": [
+            "floor",
+            "passed",
+            "message",
+            "confidence"
+          ]
+        },
+        {
+          "name": "AgentRegistry",
+          "startLine": 164,
+          "endLine": 250,
+          "methods": [
+            "__init__",
+            "register",
+            "unregister",
+            "get_agent",
+            "get_subscribers",
+            "list_agents",
+            "update_agent_status",
+            "set_proposal"
+          ],
+          "properties": []
+        },
+        {
+          "name": "A2AMessageBus",
+          "startLine": 257,
+          "endLine": 326,
+          "methods": [
+            "__init__",
+            "send",
+            "_deliver",
+            "subscribe",
+            "get_history"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FloorEnforcer",
+          "startLine": 333,
+          "endLine": 475,
+          "methods": [
+            "__init__",
+            "validate",
+            "_check_f2_truth",
+            "_check_f4_clarity",
+            "_check_f7_humility",
+            "_check_f9_physics_9",
+            "_check_f11_auditability",
+            "_check_f13_sovereign"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DiscordanceDetector",
+          "startLine": 482,
+          "endLine": 558,
+          "methods": [
+            "__init__",
+            "check_convergence",
+            "_calculate_discordance"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Judge888",
+          "startLine": 565,
+          "endLine": 649,
+          "methods": [
+            "__init__",
+            "evaluate",
+            "_verdict_message",
+            "grant_seal"
+          ],
+          "properties": []
+        },
+        {
+          "name": "GEOSXACP",
+          "startLine": 656,
+          "endLine": 730,
+          "methods": [
+            "__new__",
+            "__init__",
+            "register_agent",
+            "submit_proposal",
+            "get_status"
+          ],
+          "properties": [
+            "_instance"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AgentRole",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "AgentStatus",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "VerdictState",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "FloorId",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "Agent",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "A2AMessage",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "FloorCheck",
+          "line": 143,
+          "isDefault": false
+        },
+        {
+          "name": "AgentRegistry",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "A2AMessageBus",
+          "line": 257,
+          "isDefault": false
+        },
+        {
+          "name": "FloorEnforcer",
+          "line": 333,
+          "isDefault": false
+        },
+        {
+          "name": "DiscordanceDetector",
+          "line": 482,
+          "isDefault": false
+        },
+        {
+          "name": "Judge888",
+          "line": 565,
+          "isDefault": false
+        },
+        {
+          "name": "GEOSXACP",
+          "line": 656,
+          "isDefault": false
+        },
+        {
+          "name": "acp_register_agent",
+          "line": 741,
+          "isDefault": false
+        },
+        {
+          "name": "acp_submit_proposal",
+          "line": 760,
+          "isDefault": false
+        },
+        {
+          "name": "acp_check_convergence",
+          "line": 765,
+          "isDefault": false
+        },
+        {
+          "name": "acp_grant_seal",
+          "line": 770,
+          "isDefault": false
+        },
+        {
+          "name": "acp_get_status",
+          "line": 775,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_dict",
+          "callee": "list",
+          "lineNumber": 116
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.connected_at.isoformat",
+          "lineNumber": 118
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.timestamp.isoformat",
+          "lineNumber": 139
+        },
+        {
+          "caller": "__init__",
+          "callee": "WeakSet",
+          "lineNumber": 173
+        },
+        {
+          "caller": "__init__",
+          "callee": "asyncio.Lock",
+          "lineNumber": 174
+        },
+        {
+          "caller": "register",
+          "callee": "logger.warning",
+          "lineNumber": 187
+        },
+        {
+          "caller": "register",
+          "callee": "Agent",
+          "lineNumber": 189
+        },
+        {
+          "caller": "register",
+          "callee": "set",
+          "lineNumber": 193
+        },
+        {
+          "caller": "register",
+          "callee": "set",
+          "lineNumber": 194
+        },
+        {
+          "caller": "register",
+          "callee": "set",
+          "lineNumber": 202
+        },
+        {
+          "caller": "register",
+          "callee": "self._resource_subscribers[resource].add",
+          "lineNumber": 203
+        },
+        {
+          "caller": "register",
+          "callee": "logger.info",
+          "lineNumber": 205
+        },
+        {
+          "caller": "unregister",
+          "callee": "self._agents.pop",
+          "lineNumber": 214
+        },
+        {
+          "caller": "unregister",
+          "callee": "self._resource_subscribers[resource].discard",
+          "lineNumber": 219
+        },
+        {
+          "caller": "unregister",
+          "callee": "logger.info",
+          "lineNumber": 221
+        },
+        {
+          "caller": "get_agent",
+          "callee": "self._agents.get",
+          "lineNumber": 226
+        },
+        {
+          "caller": "get_subscribers",
+          "callee": "self._resource_subscribers.get",
+          "lineNumber": 230
+        },
+        {
+          "caller": "get_subscribers",
+          "callee": "set",
+          "lineNumber": 230
+        },
+        {
+          "caller": "list_agents",
+          "callee": "list",
+          "lineNumber": 235
+        },
+        {
+          "caller": "list_agents",
+          "callee": "self._agents.values",
+          "lineNumber": 235
+        },
+        {
+          "caller": "__init__",
+          "callee": "asyncio.Lock",
+          "lineNumber": 267
+        },
+        {
+          "caller": "send",
+          "callee": "self._message_history.append",
+          "lineNumber": 275
+        },
+        {
+          "caller": "send",
+          "callee": "len",
+          "lineNumber": 278
+        },
+        {
+          "caller": "send",
+          "callee": "self.registry.get_agent",
+          "lineNumber": 283
+        },
+        {
+          "caller": "send",
+          "callee": "self._deliver",
+          "lineNumber": 285
+        },
+        {
+          "caller": "send",
+          "callee": "self.registry.get_agent",
+          "lineNumber": 290
+        },
+        {
+          "caller": "send",
+          "callee": "set",
+          "lineNumber": 293
+        },
+        {
+          "caller": "send",
+          "callee": "self.registry.get_subscribers",
+          "lineNumber": 295
+        },
+        {
+          "caller": "send",
+          "callee": "recipients.add",
+          "lineNumber": 297
+        },
+        {
+          "caller": "send",
+          "callee": "self.registry.get_agent",
+          "lineNumber": 300
+        },
+        {
+          "caller": "send",
+          "callee": "self._deliver",
+          "lineNumber": 302
+        },
+        {
+          "caller": "_deliver",
+          "callee": "logger.debug",
+          "lineNumber": 308
+        },
+        {
+          "caller": "_deliver",
+          "callee": "self._handlers.get",
+          "lineNumber": 311
+        },
+        {
+          "caller": "_deliver",
+          "callee": "handler",
+          "lineNumber": 314
+        },
+        {
+          "caller": "_deliver",
+          "callee": "logger.error",
+          "lineNumber": 316
+        },
+        {
+          "caller": "subscribe",
+          "callee": "self._handlers[msg_type].append",
+          "lineNumber": 322
+        },
+        {
+          "caller": "validate",
+          "callee": "list",
+          "lineNumber": 359
+        },
+        {
+          "caller": "validate",
+          "callee": "self._check_handlers.get",
+          "lineNumber": 363
+        },
+        {
+          "caller": "validate",
+          "callee": "handler",
+          "lineNumber": 365
+        },
+        {
+          "caller": "validate",
+          "callee": "results.append",
+          "lineNumber": 366
+        },
+        {
+          "caller": "validate",
+          "callee": "results.append",
+          "lineNumber": 369
+        },
+        {
+          "caller": "validate",
+          "callee": "FloorCheck",
+          "lineNumber": 369
+        },
+        {
+          "caller": "_check_f2_truth",
+          "callee": "FloorCheck",
+          "lineNumber": 381
+        },
+        {
+          "caller": "_check_f4_clarity",
+          "callee": "proposal.get",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_check_f4_clarity",
+          "callee": "all",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_check_f4_clarity",
+          "callee": "units.values",
+          "lineNumber": 392
+        },
+        {
+          "caller": "_check_f4_clarity",
+          "callee": "FloorCheck",
+          "lineNumber": 393
+        },
+        {
+          "caller": "_check_f7_humility",
+          "callee": "proposal.get",
+          "lineNumber": 402
+        },
+        {
+          "caller": "_check_f7_humility",
+          "callee": "proposal.get",
+          "lineNumber": 403
+        },
+        {
+          "caller": "_check_f7_humility",
+          "callee": "FloorCheck",
+          "lineNumber": 410
+        },
+        {
+          "caller": "_check_f7_humility",
+          "callee": "FloorCheck",
+          "lineNumber": 417
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "set",
+          "lineNumber": 427
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "proposal.keys",
+          "lineNumber": 427
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "any",
+          "lineNumber": 428
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "json.dumps(proposal).lower",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "json.dumps",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "any",
+          "lineNumber": 433
+        },
+        {
+          "caller": "_check_f9_physics_9",
+          "callee": "FloorCheck",
+          "lineNumber": 437
+        },
+        {
+          "caller": "_check_f11_auditability",
+          "callee": "FloorCheck",
+          "lineNumber": 448
+        },
+        {
+          "caller": "_check_f13_sovereign",
+          "callee": "proposal.get",
+          "lineNumber": 458
+        },
+        {
+          "caller": "_check_f13_sovereign",
+          "callee": "proposal.get",
+          "lineNumber": 460
+        },
+        {
+          "caller": "_check_f13_sovereign",
+          "callee": "FloorCheck",
+          "lineNumber": 463
+        },
+        {
+          "caller": "_check_f13_sovereign",
+          "callee": "FloorCheck",
+          "lineNumber": 470
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "self.registry.get_subscribers",
+          "lineNumber": 498
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "len",
+          "lineNumber": 501
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "len",
+          "lineNumber": 505
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "self._calculate_discordance",
+          "lineNumber": 510
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "self.bus.send",
+          "lineNumber": 515
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "A2AMessage",
+          "lineNumber": 515
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "datetime.now(UTC).timestamp",
+          "lineNumber": 516
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "datetime.now",
+          "lineNumber": 516
+        },
+        {
+          "caller": "check_convergence",
+          "callee": "len",
+          "lineNumber": 534
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "p.get",
+          "lineNumber": 543
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "p.get",
+          "lineNumber": 543
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "p.get",
+          "lineNumber": 543
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "isinstance",
+          "lineNumber": 544
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "values.append",
+          "lineNumber": 545
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "len",
+          "lineNumber": 547
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "sum",
+          "lineNumber": 551
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "len",
+          "lineNumber": 551
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "sum",
+          "lineNumber": 554
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "len",
+          "lineNumber": 554
+        },
+        {
+          "caller": "_calculate_discordance",
+          "callee": "min",
+          "lineNumber": 558
+        },
+        {
+          "caller": "evaluate",
+          "callee": "self.enforcer.validate",
+          "lineNumber": 587
+        },
+        {
+          "caller": "evaluate",
+          "callee": "all",
+          "lineNumber": 590
+        },
+        {
+          "caller": "evaluate",
+          "callee": "any",
+          "lineNumber": 591
+        },
+        {
+          "caller": "evaluate",
+          "callee": "proposal.get",
+          "lineNumber": 597
+        },
+        {
+          "caller": "evaluate",
+          "callee": "proposal.get",
+          "lineNumber": 608
+        },
+        {
+          "caller": "evaluate",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 609
+        },
+        {
+          "caller": "evaluate",
+          "callee": "datetime.now",
+          "lineNumber": 609
+        },
+        {
+          "caller": "evaluate",
+          "callee": "r.to_dict",
+          "lineNumber": 610
+        },
+        {
+          "caller": "evaluate",
+          "callee": "self._verdict_message",
+          "lineNumber": 612
+        },
+        {
+          "caller": "evaluate",
+          "callee": "self._verdict_history.append",
+          "lineNumber": 615
+        },
+        {
+          "caller": "_verdict_message",
+          "callee": "messages.get",
+          "lineNumber": 627
+        },
+        {
+          "caller": "grant_seal",
+          "callee": "human_auth_token.startswith",
+          "lineNumber": 634
+        },
+        {
+          "caller": "grant_seal",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 643
+        },
+        {
+          "caller": "grant_seal",
+          "callee": "datetime.now",
+          "lineNumber": 643
+        },
+        {
+          "caller": "grant_seal",
+          "callee": "self._verdict_history.append",
+          "lineNumber": 648
+        },
+        {
+          "caller": "__new__",
+          "callee": "super().__new__",
+          "lineNumber": 666
+        },
+        {
+          "caller": "__new__",
+          "callee": "super",
+          "lineNumber": 666
+        },
+        {
+          "caller": "__init__",
+          "callee": "AgentRegistry",
+          "lineNumber": 674
+        },
+        {
+          "caller": "__init__",
+          "callee": "A2AMessageBus",
+          "lineNumber": 675
+        },
+        {
+          "caller": "__init__",
+          "callee": "FloorEnforcer",
+          "lineNumber": 676
+        },
+        {
+          "caller": "__init__",
+          "callee": "DiscordanceDetector",
+          "lineNumber": 677
+        },
+        {
+          "caller": "__init__",
+          "callee": "Judge888",
+          "lineNumber": 678
+        },
+        {
+          "caller": "__init__",
+          "callee": "logger.info",
+          "lineNumber": 681
+        },
+        {
+          "caller": "register_agent",
+          "callee": "AgentRole",
+          "lineNumber": 692
+        },
+        {
+          "caller": "register_agent",
+          "callee": "self.registry.register",
+          "lineNumber": 693
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "self.registry.get_agent",
+          "lineNumber": 697
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "self.registry.set_proposal",
+          "lineNumber": 702
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "self.judge.evaluate",
+          "lineNumber": 705
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "self.bus.send",
+          "lineNumber": 708
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "A2AMessage",
+          "lineNumber": 708
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "datetime.now(UTC).timestamp",
+          "lineNumber": 709
+        },
+        {
+          "caller": "submit_proposal",
+          "callee": "datetime.now",
+          "lineNumber": 709
+        },
+        {
+          "caller": "get_status",
+          "callee": "len",
+          "lineNumber": 726
+        },
+        {
+          "caller": "get_status",
+          "callee": "self.registry.list_agents",
+          "lineNumber": 726
+        },
+        {
+          "caller": "get_status",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 729
+        },
+        {
+          "caller": "get_status",
+          "callee": "datetime.now",
+          "lineNumber": 729
+        },
+        {
+          "caller": "acp_register_agent",
+          "callee": "acp.register_agent",
+          "lineNumber": 750
+        },
+        {
+          "caller": "acp_register_agent",
+          "callee": "agent.to_dict",
+          "lineNumber": 753
+        },
+        {
+          "caller": "acp_register_agent",
+          "callee": "acp.get_status",
+          "lineNumber": 754
+        },
+        {
+          "caller": "acp_register_agent",
+          "callee": "str",
+          "lineNumber": 757
+        },
+        {
+          "caller": "acp_submit_proposal",
+          "callee": "acp.submit_proposal",
+          "lineNumber": 762
+        },
+        {
+          "caller": "acp_check_convergence",
+          "callee": "acp.discordance.check_convergence",
+          "lineNumber": 767
+        },
+        {
+          "caller": "acp_grant_seal",
+          "callee": "acp.judge.grant_seal",
+          "lineNumber": 772
+        },
+        {
+          "caller": "acp_get_status",
+          "callee": "acp.get_status",
+          "lineNumber": 777
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 18,
+        "functionCount": 5,
+        "classCount": 13
+      }
+    },
+    {
+      "path": "contracts/mcp/adapter_bus_contract.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 42,
+      "nonEmptyLines": 31,
+      "classes": [
+        {
+          "name": "AdapterBusEnvelope",
+          "startLine": 34,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "tool_name",
+            "arguments",
+            "geox_substrate",
+            "geox_scale",
+            "geox_horizon",
+            "claim_tag",
+            "f13_hold"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AdapterBusEnvelope",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "contracts/openapi/v1/examples/payloads.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 95,
+      "nonEmptyLines": 95,
+      "sections": [
+        {
+          "heading": "pick",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "interval",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "correlation",
+          "level": 1,
+          "line": 60
+        },
+        {
+          "heading": "timescale_unit",
+          "level": 1,
+          "line": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "contracts/openapi/v1/openapi.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 215,
+      "nonEmptyLines": 209,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "contracts/parity/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/parity/runtime_matrix.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 117,
+      "nonEmptyLines": 108,
+      "functions": [
+        {
+          "name": "get_tool_parity",
+          "startLine": 112,
+          "endLine": 117,
+          "params": [
+            "tool_name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "get_tool_parity",
+          "line": 112,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get_tool_parity",
+          "callee": "RUNTIME_PARITY_MATRIX.get",
+          "lineNumber": 113
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/argument_sidecar.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 402,
+      "nonEmptyLines": 328,
+      "functions": [
+        {
+          "name": "validate_argument_for_export",
+          "startLine": 297,
+          "endLine": 335,
+          "params": [
+            "sidecar"
+          ]
+        },
+        {
+          "name": "build_argument_sidecar",
+          "startLine": 343,
+          "endLine": 402,
+          "params": [
+            "artifact_id",
+            "primary_claims",
+            "rival_claims",
+            "uncertainty",
+            "scene_plan_id",
+            "created_by"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "TruthClass",
+          "startLine": 41,
+          "endLine": 48,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ChallengeType",
+          "startLine": 51,
+          "endLine": 63,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReviewState",
+          "startLine": 66,
+          "endLine": 73,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GeologicalClaim",
+          "startLine": 81,
+          "endLine": 123,
+          "methods": [],
+          "properties": [
+            "claim_id",
+            "claim_text",
+            "truth_class",
+            "layer_id",
+            "evidence_refs",
+            "epistemic_label",
+            "confidence",
+            "falsification_test"
+          ]
+        },
+        {
+          "name": "RivalInterpretation",
+          "startLine": 131,
+          "endLine": 160,
+          "methods": [],
+          "properties": [
+            "rival_id",
+            "claim_text",
+            "challenge_type",
+            "evidence_needed",
+            "probability",
+            "status"
+          ]
+        },
+        {
+          "name": "UncertaintyBand",
+          "startLine": 168,
+          "endLine": 197,
+          "methods": [],
+          "properties": [
+            "p10",
+            "p50",
+            "p90",
+            "dominant_source",
+            "major_unknowns",
+            "blocks_export"
+          ]
+        },
+        {
+          "name": "ArgumentSidecar",
+          "startLine": 205,
+          "endLine": 289,
+          "methods": [],
+          "properties": [
+            "sidecar_id",
+            "artifact_id",
+            "scene_plan_id",
+            "primary_claims",
+            "rival_claims",
+            "uncertainty",
+            "review_state",
+            "f13_required",
+            "human_reviewer",
+            "review_notes",
+            "export_permitted",
+            "export_block_reason",
+            "created_at",
+            "created_by",
+            "constitution_hash"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TruthClass",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "ChallengeType",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "ReviewState",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "GeologicalClaim",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "RivalInterpretation",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "UncertaintyBand",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "ArgumentSidecar",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "validate_argument_for_export",
+          "line": 297,
+          "isDefault": false
+        },
+        {
+          "name": "build_argument_sidecar",
+          "line": 343,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 312
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 317
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 321
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 325
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 329
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "blocks.append",
+          "lineNumber": 333
+        },
+        {
+          "caller": "validate_argument_for_export",
+          "callee": "len",
+          "lineNumber": 335
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "ValueError",
+          "lineNumber": 380
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "ValueError",
+          "lineNumber": 382
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "GeologicalClaim",
+          "lineNumber": 384
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "RivalInterpretation",
+          "lineNumber": 385
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "UncertaintyBand",
+          "lineNumber": 386
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "ArgumentSidecar",
+          "lineNumber": 388
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "validate_argument_for_export",
+          "lineNumber": 398
+        },
+        {
+          "caller": "build_argument_sidecar",
+          "callee": "\"; \".join",
+          "lineNumber": 400
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 2,
+        "classCount": 7
+      }
+    },
+    {
+      "path": "contracts/schemas/artifacts/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/earth_layer_registry.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 468,
+      "nonEmptyLines": 400,
+      "functions": [
+        {
+          "name": "seed_sabah_layers",
+          "startLine": 345,
+          "endLine": 439,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "TruthClass",
+          "startLine": 36,
+          "endLine": 48,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "License",
+          "startLine": 66,
+          "endLine": 75,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EarthLayer",
+          "startLine": 101,
+          "endLine": 214,
+          "methods": [
+            "_layer_id_slug",
+            "in_bbox",
+            "allowed_for",
+            "license_allowed_for",
+            "governance_gate",
+            "to_dict"
+          ],
+          "properties": [
+            "layer_id",
+            "name",
+            "description",
+            "theme",
+            "layer_type",
+            "truth_class",
+            "license",
+            "bbox_west",
+            "bbox_east",
+            "bbox_south",
+            "bbox_north",
+            "crs_epsg",
+            "source_id",
+            "source_uri",
+            "source_year",
+            "source_author",
+            "provenance_sidecar_ref",
+            "resource_uri",
+            "resource_size_bytes",
+            "registered_at",
+            "registered_by",
+            "version",
+            "deprecated",
+            "superseded_by",
+            "community_territory_flag",
+            "community_territory_note"
+          ]
+        },
+        {
+          "name": "EarthLayerRegistry",
+          "startLine": 222,
+          "endLine": 337,
+          "methods": [
+            "register",
+            "deprecate",
+            "get",
+            "list",
+            "list_for_bbox",
+            "export_package"
+          ],
+          "properties": [
+            "layers",
+            "registry_version",
+            "registry_created_at"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TruthClass",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "License",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "EarthLayer",
+          "line": 101,
+          "isDefault": false
+        },
+        {
+          "name": "EarthLayerRegistry",
+          "line": 222,
+          "isDefault": false
+        },
+        {
+          "name": "seed_sabah_layers",
+          "line": 345,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_layer_id_slug",
+          "callee": "v.replace(\".\", \"\").replace(\"_\", \"\").replace(\"-\", \"\").isalnum",
+          "lineNumber": 169
+        },
+        {
+          "caller": "_layer_id_slug",
+          "callee": "v.replace(\".\", \"\").replace(\"_\", \"\").replace",
+          "lineNumber": 169
+        },
+        {
+          "caller": "_layer_id_slug",
+          "callee": "v.replace(\".\", \"\").replace",
+          "lineNumber": 169
+        },
+        {
+          "caller": "_layer_id_slug",
+          "callee": "v.replace",
+          "lineNumber": 169
+        },
+        {
+          "caller": "_layer_id_slug",
+          "callee": "ValueError",
+          "lineNumber": 170
+        },
+        {
+          "caller": "allowed_for",
+          "callee": "MAP_PURPOSE_ALLOW.get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "allowed_for",
+          "callee": "set",
+          "lineNumber": 185
+        },
+        {
+          "caller": "license_allowed_for",
+          "callee": "LICENSE_ALLOW.get",
+          "lineNumber": 190
+        },
+        {
+          "caller": "license_allowed_for",
+          "callee": "set",
+          "lineNumber": 190
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 197
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "self.allowed_for",
+          "lineNumber": 198
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 199
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "self.license_allowed_for",
+          "lineNumber": 200
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 201
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "len",
+          "lineNumber": 202
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "self.in_bbox",
+          "lineNumber": 203
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 204
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 206
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "blockers.append",
+          "lineNumber": 210
+        },
+        {
+          "caller": "governance_gate",
+          "callee": "len",
+          "lineNumber": 211
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.model_dump",
+          "lineNumber": 214
+        },
+        {
+          "caller": "get",
+          "callee": "self.layers.get",
+          "lineNumber": 249
+        },
+        {
+          "caller": "list",
+          "callee": "dict",
+          "lineNumber": 258
+        },
+        {
+          "caller": "list_for_bbox",
+          "callee": "self.layers.values",
+          "lineNumber": 274
+        },
+        {
+          "caller": "list_for_bbox",
+          "callee": "layer.governance_gate",
+          "lineNumber": 279
+        },
+        {
+          "caller": "list_for_bbox",
+          "callee": "layer.in_bbox",
+          "lineNumber": 281
+        },
+        {
+          "caller": "list_for_bbox",
+          "callee": "available.append",
+          "lineNumber": 282
+        },
+        {
+          "caller": "list_for_bbox",
+          "callee": "unavailable.append",
+          "lineNumber": 285
+        },
+        {
+          "caller": "export_package",
+          "callee": "self.get",
+          "lineNumber": 298
+        },
+        {
+          "caller": "export_package",
+          "callee": "bool",
+          "lineNumber": 302
+        },
+        {
+          "caller": "export_package",
+          "callee": "layer.to_dict",
+          "lineNumber": 324
+        },
+        {
+          "caller": "export_package",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 334
+        },
+        {
+          "caller": "export_package",
+          "callee": "datetime.now",
+          "lineNumber": 334
+        },
+        {
+          "caller": "export_package",
+          "callee": "uuid4",
+          "lineNumber": 335
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "EarthLayerRegistry",
+          "lineNumber": 353
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "reg.register",
+          "lineNumber": 354
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "EarthLayer",
+          "lineNumber": 355
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "reg.register",
+          "lineNumber": 375
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "EarthLayer",
+          "lineNumber": 376
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "reg.register",
+          "lineNumber": 396
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "EarthLayer",
+          "lineNumber": 397
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "reg.register",
+          "lineNumber": 417
+        },
+        {
+          "caller": "seed_sabah_layers",
+          "callee": "EarthLayer",
+          "lineNumber": 418
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 1,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "contracts/schemas/federation_envelope.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 555,
+      "nonEmptyLines": 475,
+      "functions": [
+        {
+          "name": "build_federation_envelope",
+          "startLine": 316,
+          "endLine": 369,
+          "params": [
+            "trace_id",
+            "actor_id",
+            "organ_origin",
+            "intent",
+            "metabolic_phase",
+            "evidence_type",
+            "evidence_refs",
+            "epistemic_label",
+            "confidence",
+            "autonomy_band",
+            "reversibility_class",
+            "risk_class",
+            "proposed_action",
+            "execution_status",
+            "measurement_result",
+            "measurement_summary",
+            "organ_target",
+            "handoff_reason",
+            "payload",
+            "session_id",
+            "parent_envelope_id",
+            "f13_required",
+            "required_floor_checks"
+          ]
+        },
+        {
+          "name": "geox_to_federation_envelope",
+          "startLine": 377,
+          "endLine": 555,
+          "params": [
+            "tool_name",
+            "tool_output",
+            "trace_id",
+            "actor_id",
+            "intent",
+            "session_id",
+            "organ_target",
+            "handoff_reason",
+            "parent_envelope_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "OrganID",
+          "startLine": 38,
+          "endLine": 47,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AutonomyBand",
+          "startLine": 50,
+          "endLine": 63,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ReversibilityClass",
+          "startLine": 66,
+          "endLine": 71,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "RiskClass",
+          "startLine": 74,
+          "endLine": 80,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ExecutionStatus",
+          "startLine": 83,
+          "endLine": 95,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "MetabolicPhase",
+          "startLine": 98,
+          "endLine": 107,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EvidenceLayer",
+          "startLine": 115,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "evidence_type",
+            "evidence_refs",
+            "epistemic_label",
+            "confidence",
+            "uncertainty_range",
+            "major_unknowns",
+            "freshness_utc"
+          ]
+        },
+        {
+          "name": "FloorCheck",
+          "startLine": 158,
+          "endLine": 165,
+          "methods": [],
+          "properties": [
+            "floor_id",
+            "floor_name",
+            "passed",
+            "reason",
+            "evidence"
+          ]
+        },
+        {
+          "name": "FederationEnvelope",
+          "startLine": 173,
+          "endLine": 308,
+          "methods": [],
+          "properties": [
+            "envelope_id",
+            "trace_id",
+            "actor_id",
+            "session_id",
+            "organ_origin",
+            "organ_target",
+            "organ_chain",
+            "intent",
+            "metabolic_phase",
+            "evidence_layer",
+            "autonomy_band",
+            "reversibility_class",
+            "risk_class",
+            "required_floor_checks",
+            "f13_required",
+            "proposed_action",
+            "execution_status",
+            "measurement_result",
+            "measurement_summary",
+            "vault_receipt_reference",
+            "payload",
+            "handoff_reason",
+            "blocked_organs",
+            "timestamp_utc",
+            "constitution_hash",
+            "parent_envelope_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OrganID",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "AutonomyBand",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "ReversibilityClass",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "RiskClass",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "ExecutionStatus",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "MetabolicPhase",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceLayer",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "FloorCheck",
+          "line": 158,
+          "isDefault": false
+        },
+        {
+          "name": "FederationEnvelope",
+          "line": 173,
+          "isDefault": false
+        },
+        {
+          "name": "build_federation_envelope",
+          "line": 316,
+          "isDefault": false
+        },
+        {
+          "name": "geox_to_federation_envelope",
+          "line": 377,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_federation_envelope",
+          "callee": "FederationEnvelope",
+          "lineNumber": 343
+        },
+        {
+          "caller": "build_federation_envelope",
+          "callee": "EvidenceLayer",
+          "lineNumber": 349
+        },
+        {
+          "caller": "build_federation_envelope",
+          "callee": "min",
+          "lineNumber": 353
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 420
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "_CLAIM_TO_STATUS.get",
+          "lineNumber": 440
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 443
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 444
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 447
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "_PERCEPTION_TO_EPISTEMIC.get",
+          "lineNumber": 455
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 458
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "isinstance",
+          "lineNumber": 459
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "max",
+          "lineNumber": 460
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "min",
+          "lineNumber": 460
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 465
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "_TOOL_RISK.get",
+          "lineNumber": 489
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 521
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "summary_parts.append",
+          "lineNumber": 522
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get(\"primary_artifact\", {}).get",
+          "lineNumber": 523
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "tool_output.get",
+          "lineNumber": 523
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "summary_parts.append",
+          "lineNumber": 524
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "build_federation_envelope",
+          "lineNumber": 526
+        },
+        {
+          "caller": "geox_to_federation_envelope",
+          "callee": "\" | \".join",
+          "lineNumber": 542
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 2,
+        "classCount": 9
+      }
+    },
+    {
+      "path": "contracts/schemas/metabolic.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 843,
+      "nonEmptyLines": 677,
+      "functions": [
+        {
+          "name": "build_metabolic_output",
+          "startLine": 603,
+          "endLine": 843,
+          "params": [
+            "tool_name",
+            "primary_artifact",
+            "witness_type",
+            "claim_state",
+            "confidence_level",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "required_next_tests",
+            "next_best_tool",
+            "evidence_freshness_as_of",
+            "cross_organ_handoff",
+            "session_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ClaimState",
+          "startLine": 38,
+          "endLine": 49,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessType",
+          "startLine": 52,
+          "endLine": 67,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ModelTarget",
+          "startLine": 70,
+          "endLine": 78,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "OrganType",
+          "startLine": 81,
+          "endLine": 88,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ContrastSeverity",
+          "startLine": 91,
+          "endLine": 97,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "AbstractionUse",
+          "startLine": 100,
+          "endLine": 105,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ConfidenceLevel",
+          "startLine": 108,
+          "endLine": 125,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "WitnessStatus",
+          "startLine": 128,
+          "endLine": 139,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StalenessRisk",
+          "startLine": 142,
+          "endLine": 147,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Witness",
+          "startLine": 155,
+          "endLine": 167,
+          "methods": [],
+          "properties": [
+            "witness_id",
+            "witness_type",
+            "source_uri",
+            "raw_content",
+            "ingested_at",
+            "session_id",
+            "provenance"
+          ]
+        },
+        {
+          "name": "DecodedEntity",
+          "startLine": 175,
+          "endLine": 198,
+          "methods": [],
+          "properties": [
+            "entity_id",
+            "entity_type",
+            "detected_at_depth",
+            "detected_value",
+            "detection_confidence",
+            "perception_class",
+            "evidence_tag"
+          ]
+        },
+        {
+          "name": "AnomalousContrast",
+          "startLine": 206,
+          "endLine": 223,
+          "methods": [],
+          "properties": [
+            "contrast_id",
+            "contrast_domain",
+            "background_expectation",
+            "observed_deviation",
+            "candidate_causes",
+            "false_positive_risks",
+            "required_verification",
+            "severity"
+          ]
+        },
+        {
+          "name": "CandidateMeaning",
+          "startLine": 231,
+          "endLine": 251,
+          "methods": [],
+          "properties": [
+            "meaning_id",
+            "decoded_entity_id",
+            "possible_meanings",
+            "primary_interpretation",
+            "meaning_confidence",
+            "meaning_confidence_band",
+            "tests_needed_before_claim",
+            "ruling_out"
+          ]
+        },
+        {
+          "name": "ConstraintCheck",
+          "startLine": 259,
+          "endLine": 270,
+          "methods": [],
+          "properties": [
+            "constraint_id",
+            "constraint_type",
+            "rule_invoked",
+            "check_passed",
+            "failure_reason",
+            "evidence_required"
+          ]
+        },
+        {
+          "name": "ModelUpdate",
+          "startLine": 278,
+          "endLine": 302,
+          "methods": [],
+          "properties": [
+            "model_id",
+            "model_type",
+            "state_before",
+            "incoming_witnesses",
+            "proposed_updates",
+            "constraints_checked",
+            "state_after",
+            "confidence_delta",
+            "audit_receipt"
+          ]
+        },
+        {
+          "name": "AbstractionGuard",
+          "startLine": 310,
+          "endLine": 329,
+          "methods": [],
+          "properties": [
+            "metaphor",
+            "literal_claim",
+            "evidence_required",
+            "allowed_use",
+            "misuse_risk",
+            "violations"
+          ]
+        },
+        {
+          "name": "UncertaintyBand",
+          "startLine": 337,
+          "endLine": 347,
+          "methods": [],
+          "properties": [
+            "omega_0",
+            "uncertainty_range",
+            "major_unknowns",
+            "key_missing_evidence",
+            "claim_too_certain_flag"
+          ]
+        },
+        {
+          "name": "EvidenceFreshness",
+          "startLine": 355,
+          "endLine": 365,
+          "methods": [],
+          "properties": [
+            "as_of",
+            "expires_after_seconds",
+            "staleness_risk",
+            "requires_refresh",
+            "refresh_recommendation"
+          ]
+        },
+        {
+          "name": "CrossOrganHandoff",
+          "startLine": 373,
+          "endLine": 392,
+          "methods": [],
+          "properties": [
+            "next_best_organ",
+            "handoff_reason",
+            "handoff_payload",
+            "blocked_organs",
+            "blocked_reason",
+            "confidence_at_handoff"
+          ]
+        },
+        {
+          "name": "OrganConflict",
+          "startLine": 400,
+          "endLine": 427,
+          "methods": [],
+          "properties": [
+            "conflict_id",
+            "organ_a",
+            "organ_a_conclusion",
+            "organ_b",
+            "organ_b_conclusion",
+            "conflict_domain",
+            "resolution_status",
+            "partial_flag",
+            "recommended_action"
+          ]
+        },
+        {
+          "name": "MetabolicOutput",
+          "startLine": 435,
+          "endLine": 545,
+          "methods": [],
+          "properties": [
+            "organ",
+            "tool_name",
+            "session_id",
+            "witnesses_ingested",
+            "witness_type",
+            "witness_status",
+            "decoded_entities",
+            "anomalous_contrasts",
+            "candidate_meanings",
+            "constraints_checked",
+            "model_updates",
+            "model_target",
+            "abstraction_guard",
+            "uncertainty",
+            "evidence_freshness",
+            "required_next_tests",
+            "next_best_tool",
+            "cross_organ_handoff",
+            "claim_state",
+            "conflict_flags",
+            "confidence_level",
+            "audit_receipt",
+            "recommendation_only",
+            "execution_authorized",
+            "human_final_authority",
+            "requires_888_judge",
+            "timestamp_utc",
+            "constitution_hash"
+          ]
+        },
+        {
+          "name": "MetabolicCycle",
+          "startLine": 553,
+          "endLine": 580,
+          "methods": [],
+          "properties": [
+            "cycle_id",
+            "organ",
+            "session_id",
+            "witness_ingest",
+            "visual_decode",
+            "anomalous_contrast",
+            "meaning_generate",
+            "constraint_verify",
+            "model_update",
+            "final_output",
+            "claim_state",
+            "recommendation_only",
+            "execution_authorized",
+            "human_final_authority",
+            "requires_888_judge",
+            "timestamp_utc",
+            "total_steps"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClaimState",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessType",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "ModelTarget",
+          "line": 70,
+          "isDefault": false
+        },
+        {
+          "name": "OrganType",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "ContrastSeverity",
+          "line": 91,
+          "isDefault": false
+        },
+        {
+          "name": "AbstractionUse",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "ConfidenceLevel",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "WitnessStatus",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "StalenessRisk",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "Witness",
+          "line": 155,
+          "isDefault": false
+        },
+        {
+          "name": "DecodedEntity",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "AnomalousContrast",
+          "line": 206,
+          "isDefault": false
+        },
+        {
+          "name": "CandidateMeaning",
+          "line": 231,
+          "isDefault": false
+        },
+        {
+          "name": "ConstraintCheck",
+          "line": 259,
+          "isDefault": false
+        },
+        {
+          "name": "ModelUpdate",
+          "line": 278,
+          "isDefault": false
+        },
+        {
+          "name": "AbstractionGuard",
+          "line": 310,
+          "isDefault": false
+        },
+        {
+          "name": "UncertaintyBand",
+          "line": 337,
+          "isDefault": false
+        },
+        {
+          "name": "EvidenceFreshness",
+          "line": 355,
+          "isDefault": false
+        },
+        {
+          "name": "CrossOrganHandoff",
+          "line": 373,
+          "isDefault": false
+        },
+        {
+          "name": "OrganConflict",
+          "line": 400,
+          "isDefault": false
+        },
+        {
+          "name": "MetabolicOutput",
+          "line": 435,
+          "isDefault": false
+        },
+        {
+          "name": "MetabolicCycle",
+          "line": 553,
+          "isDefault": false
+        },
+        {
+          "name": "build_metabolic_output",
+          "line": 603,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "build_metabolic_output",
+          "callee": "_TOOL_DEFAULTS.get",
+          "lineNumber": 722
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 734
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 737
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "_CLAIM_TO_CONFIDENCE.get",
+          "lineNumber": 738
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 740
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 742
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "defaults.get",
+          "lineNumber": 743
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 746
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now",
+          "lineNumber": 746
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 784
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 785
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 786
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 794
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "datetime.now",
+          "lineNumber": 794
+        },
+        {
+          "caller": "build_metabolic_output",
+          "callee": "primary_artifact.get",
+          "lineNumber": 832
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 23,
+        "functionCount": 1,
+        "classCount": 22
+      }
+    },
+    {
+      "path": "contracts/schemas/output_schemas.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1638,
+      "nonEmptyLines": 1595,
+      "functions": [
+        {
+          "name": "validate_iron_law",
+          "startLine": 613,
+          "endLine": 667,
+          "params": [
+            "evidence_chain"
+          ]
+        },
+        {
+          "name": "get_tool_output_schema",
+          "startLine": 1628,
+          "endLine": 1633,
+          "params": [
+            "tool_name"
+          ]
+        },
+        {
+          "name": "get_tool_metadata",
+          "startLine": 1636,
+          "endLine": 1638,
+          "params": [
+            "tool_name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "validate_iron_law",
+          "line": 613,
+          "isDefault": false
+        },
+        {
+          "name": "get_tool_output_schema",
+          "line": 1628,
+          "isDefault": false
+        },
+        {
+          "name": "get_tool_metadata",
+          "line": 1636,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate_iron_law",
+          "callee": "link.get",
+          "lineNumber": 628
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.setdefault(rung, []).append",
+          "lineNumber": 629
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.setdefault",
+          "lineNumber": 629
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 632
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 632
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 632
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 633
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 638
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "violations.append",
+          "lineNumber": 640
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 642
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 643
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "rung_2_claims[0].get",
+          "lineNumber": 644
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 651
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 652
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "by_rung.get",
+          "lineNumber": 655
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "violations.append",
+          "lineNumber": 657
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "claim_link.get",
+          "lineNumber": 659
+        },
+        {
+          "caller": "validate_iron_law",
+          "callee": "rung_2_claims[0].get",
+          "lineNumber": 661
+        },
+        {
+          "caller": "get_tool_output_schema",
+          "callee": "TOOL_OUTPUT_SCHEMAS.get",
+          "lineNumber": 1630
+        },
+        {
+          "caller": "get_tool_output_schema",
+          "callee": "entry.get",
+          "lineNumber": 1632
+        },
+        {
+          "caller": "get_tool_metadata",
+          "callee": "TOOL_OUTPUT_SCHEMAS.get",
+          "lineNumber": 1638
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/provenance_sidecar.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 361,
+      "nonEmptyLines": 290,
+      "classes": [
+        {
+          "name": "ProvAgent",
+          "startLine": 33,
+          "endLine": 40,
+          "methods": [],
+          "properties": [
+            "agent_id",
+            "agent_type",
+            "name",
+            "role"
+          ]
+        },
+        {
+          "name": "ProvActivity",
+          "startLine": 43,
+          "endLine": 54,
+          "methods": [],
+          "properties": [
+            "activity_id",
+            "activity_type",
+            "started_at",
+            "ended_at",
+            "used_inputs",
+            "parameters",
+            "geox_version",
+            "git_commit",
+            "model_versions"
+          ]
+        },
+        {
+          "name": "ProvEntity",
+          "startLine": 57,
+          "endLine": 66,
+          "methods": [],
+          "properties": [
+            "entity_id",
+            "entity_type",
+            "checksum",
+            "checksum_algorithm",
+            "content_type",
+            "size_bytes",
+            "media_uri"
+          ]
+        },
+        {
+          "name": "ISO19115Metadata",
+          "startLine": 74,
+          "endLine": 119,
+          "methods": [
+            "_bbox_lon_valid"
+          ],
+          "properties": [
+            "title",
+            "abstract",
+            "purpose",
+            "status",
+            "topic_category",
+            "crs_epsg",
+            "crs_name",
+            "bbox_west",
+            "bbox_east",
+            "bbox_south",
+            "bbox_north",
+            "temporal_start",
+            "temporal_end",
+            "lineage_statement",
+            "distribution_format",
+            "access_constraints",
+            "use_constraints"
+          ]
+        },
+        {
+          "name": "GeMSMapMetadata",
+          "startLine": 127,
+          "endLine": 160,
+          "methods": [],
+          "properties": [
+            "map_id",
+            "map_name",
+            "map_type",
+            "scale",
+            "publisher",
+            "publication_year",
+            "series",
+            "source_license"
+          ]
+        },
+        {
+          "name": "HumanReview",
+          "startLine": 168,
+          "endLine": 182,
+          "methods": [],
+          "properties": [
+            "reviewer_id",
+            "reviewer_role",
+            "reviewed_at",
+            "verdict",
+            "notes",
+            "signature"
+          ]
+        },
+        {
+          "name": "ArifOSReview",
+          "startLine": 185,
+          "endLine": 196,
+          "methods": [],
+          "properties": [
+            "arifos_review_id",
+            "session_id",
+            "verdict",
+            "floor_checks_passed",
+            "floor_checks_failed",
+            "reviewed_at"
+          ]
+        },
+        {
+          "name": "VaultReceiptRef",
+          "startLine": 199,
+          "endLine": 204,
+          "methods": [],
+          "properties": [
+            "vault_entry_id",
+            "sealed_at",
+            "chain_hash"
+          ]
+        },
+        {
+          "name": "ProvenanceSidecar",
+          "startLine": 212,
+          "endLine": 328,
+          "methods": [
+            "export_gate",
+            "to_dict",
+            "compute_checksum",
+            "for_artifact"
+          ],
+          "properties": [
+            "artifact_id",
+            "artifact_type",
+            "entity",
+            "was_generated_by",
+            "was_attributed_to",
+            "iso_19115",
+            "gems",
+            "human_reviews",
+            "arifos_review",
+            "vault_receipt",
+            "processing_steps",
+            "input_checksums",
+            "sidecar_created_at",
+            "sidecar_version"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ProvAgent",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "ProvActivity",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "ProvEntity",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "ISO19115Metadata",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "GeMSMapMetadata",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "HumanReview",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "ArifOSReview",
+          "line": 185,
+          "isDefault": false
+        },
+        {
+          "name": "VaultReceiptRef",
+          "line": 199,
+          "isDefault": false
+        },
+        {
+          "name": "ProvenanceSidecar",
+          "line": 212,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 257
+        },
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 259
+        },
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 261
+        },
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 263
+        },
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 265
+        },
+        {
+          "caller": "export_gate",
+          "callee": "blockers.append",
+          "lineNumber": 268
+        },
+        {
+          "caller": "export_gate",
+          "callee": "len",
+          "lineNumber": 270
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.model_dump",
+          "lineNumber": 274
+        },
+        {
+          "caller": "compute_checksum",
+          "callee": "isinstance",
+          "lineNumber": 279
+        },
+        {
+          "caller": "compute_checksum",
+          "callee": "content.encode",
+          "lineNumber": 280
+        },
+        {
+          "caller": "compute_checksum",
+          "callee": "hashlib.sha256(content).hexdigest",
+          "lineNumber": 281
+        },
+        {
+          "caller": "compute_checksum",
+          "callee": "hashlib.sha256",
+          "lineNumber": 281
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "datetime.now",
+          "lineNumber": 299
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvenanceSidecar.compute_checksum",
+          "lineNumber": 300
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "len",
+          "lineNumber": 301
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "isinstance",
+          "lineNumber": 301
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvEntity",
+          "lineNumber": 303
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvActivity",
+          "lineNumber": 309
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "uuid4",
+          "lineNumber": 310
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvAgent",
+          "lineNumber": 317
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvAgent",
+          "lineNumber": 318
+        },
+        {
+          "caller": "for_artifact",
+          "callee": "ProvenanceSidecar",
+          "lineNumber": 320
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 0,
+        "classCount": 9
+      }
+    },
+    {
+      "path": "contracts/schemas/request/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/response/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 1,
+      "nonEmptyLines": 0,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/schemas/scar_memory.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 354,
+      "nonEmptyLines": 293,
+      "functions": [
+        {
+          "name": "seed_kinabalu_scars",
+          "startLine": 253,
+          "endLine": 335,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "ScarEvidence",
+          "startLine": 53,
+          "endLine": 70,
+          "methods": [],
+          "properties": [
+            "evidence_kind",
+            "description",
+            "source",
+            "url",
+            "attached_at"
+          ]
+        },
+        {
+          "name": "Scar",
+          "startLine": 73,
+          "endLine": 166,
+          "methods": [
+            "is_active",
+            "matches_claim",
+            "apply_constraint",
+            "seal",
+            "to_dict"
+          ],
+          "properties": [
+            "scar_id",
+            "category",
+            "severity",
+            "scar_pressure",
+            "original_claim",
+            "failure_mode",
+            "domain",
+            "basin_id",
+            "prospect_id",
+            "detected_by",
+            "detected_at",
+            "evidence",
+            "constraint_imposed",
+            "confidence_ceiling",
+            "analog_pattern",
+            "sealed",
+            "vault_entry_id",
+            "superseded_by",
+            "sealed_by",
+            "sealed_at"
+          ]
+        },
+        {
+          "name": "ScarStore",
+          "startLine": 174,
+          "endLine": 245,
+          "methods": [
+            "__init__",
+            "add",
+            "get",
+            "list_active",
+            "seal",
+            "apply_to_claim",
+            "supersede",
+            "export"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ScarEvidence",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "Scar",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "ScarStore",
+          "line": 174,
+          "isDefault": false
+        },
+        {
+          "name": "seed_kinabalu_scars",
+          "line": 253,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "matches_claim",
+          "callee": "self.analog_pattern.lower",
+          "lineNumber": 139
+        },
+        {
+          "caller": "matches_claim",
+          "callee": "claim_text.lower",
+          "lineNumber": 139
+        },
+        {
+          "caller": "apply_constraint",
+          "callee": "self.is_active",
+          "lineNumber": 146
+        },
+        {
+          "caller": "seal",
+          "callee": "datetime.now",
+          "lineNumber": 163
+        },
+        {
+          "caller": "to_dict",
+          "callee": "self.model_dump",
+          "lineNumber": 166
+        },
+        {
+          "caller": "add",
+          "callee": "ValueError",
+          "lineNumber": 192
+        },
+        {
+          "caller": "get",
+          "callee": "self._scars.get",
+          "lineNumber": 197
+        },
+        {
+          "caller": "list_active",
+          "callee": "self._scars.values",
+          "lineNumber": 200
+        },
+        {
+          "caller": "list_active",
+          "callee": "s.is_active",
+          "lineNumber": 200
+        },
+        {
+          "caller": "seal",
+          "callee": "self.get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "seal",
+          "callee": "KeyError",
+          "lineNumber": 210
+        },
+        {
+          "caller": "seal",
+          "callee": "scar.seal",
+          "lineNumber": 211
+        },
+        {
+          "caller": "apply_to_claim",
+          "callee": "self.list_active",
+          "lineNumber": 223
+        },
+        {
+          "caller": "apply_to_claim",
+          "callee": "scar.matches_claim",
+          "lineNumber": 224
+        },
+        {
+          "caller": "apply_to_claim",
+          "callee": "scar.apply_constraint",
+          "lineNumber": 225
+        },
+        {
+          "caller": "apply_to_claim",
+          "callee": "block_reasons.append",
+          "lineNumber": 227
+        },
+        {
+          "caller": "apply_to_claim",
+          "callee": "min",
+          "lineNumber": 229
+        },
+        {
+          "caller": "supersede",
+          "callee": "self.get",
+          "lineNumber": 235
+        },
+        {
+          "caller": "supersede",
+          "callee": "KeyError",
+          "lineNumber": 237
+        },
+        {
+          "caller": "supersede",
+          "callee": "old.is_active",
+          "lineNumber": 238
+        },
+        {
+          "caller": "supersede",
+          "callee": "ValueError",
+          "lineNumber": 239
+        },
+        {
+          "caller": "supersede",
+          "callee": "self.add",
+          "lineNumber": 241
+        },
+        {
+          "caller": "export",
+          "callee": "s.to_dict",
+          "lineNumber": 245
+        },
+        {
+          "caller": "export",
+          "callee": "self._scars.values",
+          "lineNumber": 245
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "ScarStore",
+          "lineNumber": 262
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "scars.append",
+          "lineNumber": 265
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "Scar",
+          "lineNumber": 266
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "ScarEvidence",
+          "lineNumber": 282
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "scars.append",
+          "lineNumber": 298
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "Scar",
+          "lineNumber": 299
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "ScarEvidence",
+          "lineNumber": 314
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "store.add",
+          "lineNumber": 332
+        },
+        {
+          "caller": "seed_kinabalu_scars",
+          "callee": "store.seal",
+          "lineNumber": 333
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 1,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "contracts/tools/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 38,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/_artifact_helpers.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 53,
+      "functions": [
+        {
+          "name": "_artifact_exists",
+          "startLine": 19,
+          "endLine": 21,
+          "params": [
+            "artifact_id"
+          ]
+        },
+        {
+          "name": "_register_artifact",
+          "startLine": 24,
+          "endLine": 28,
+          "params": [
+            "artifact_id",
+            "**kwargs"
+          ]
+        },
+        {
+          "name": "_get_artifact",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "artifact_id"
+          ]
+        },
+        {
+          "name": "_record_latest_qc",
+          "startLine": 36,
+          "endLine": 40,
+          "params": [
+            "artifact_id",
+            "qc_result"
+          ]
+        },
+        {
+          "name": "_reset_registry",
+          "startLine": 43,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "_safe_upload_path",
+          "startLine": 50,
+          "endLine": 63,
+          "params": [
+            "filename",
+            "target_dir"
+          ]
+        },
+        {
+          "name": "_decode_upload_content",
+          "startLine": 66,
+          "endLine": 75,
+          "params": [
+            "content_base64"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_artifact_exists",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "_register_artifact",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "_get_artifact",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "_record_latest_qc",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "_reset_registry",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "_safe_upload_path",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "_decode_upload_content",
+          "line": 66,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_get_artifact",
+          "callee": "_artifact_store.get",
+          "lineNumber": 33
+        },
+        {
+          "caller": "_reset_registry",
+          "callee": "_artifact_registry.clear",
+          "lineNumber": 45
+        },
+        {
+          "caller": "_reset_registry",
+          "callee": "_well_curves_registry.clear",
+          "lineNumber": 46
+        },
+        {
+          "caller": "_reset_registry",
+          "callee": "_artifact_store.clear",
+          "lineNumber": 47
+        },
+        {
+          "caller": "_safe_upload_path",
+          "callee": "os.path.isabs",
+          "lineNumber": 55
+        },
+        {
+          "caller": "_safe_upload_path",
+          "callee": "ValueError",
+          "lineNumber": 56
+        },
+        {
+          "caller": "_safe_upload_path",
+          "callee": "Path(target_dir).resolve",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_safe_upload_path",
+          "callee": "Path",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_safe_upload_path",
+          "callee": "base_dir.mkdir",
+          "lineNumber": 60
+        },
+        {
+          "caller": "_decode_upload_content",
+          "callee": "base64.b64decode",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_decode_upload_content",
+          "callee": "ValueError",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_decode_upload_content",
+          "callee": "len",
+          "lineNumber": 73
+        },
+        {
+          "caller": "_decode_upload_content",
+          "callee": "ValueError",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/_helpers.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 106,
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/dst.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 91,
+      "functions": [
+        {
+          "name": "geox_dst_ingest_test",
+          "startLine": 13,
+          "endLine": 101,
+          "params": [
+            "well_id",
+            "field",
+            "reservoir_name",
+            "test_name",
+            "test_duration_hr",
+            "main_flow_hr",
+            "main_buildup_hr",
+            "choke_size_64ths",
+            "bhp_psi",
+            "bht_c",
+            "whp_psi",
+            "wht_c",
+            "gas_rate_mmscfd",
+            "condensate_rate_stbd",
+            "water_rate_stbd",
+            "co2_mol_pct",
+            "h2s_ppm",
+            "bsw_pct",
+            "chloride_ppm",
+            "wgr_stb_per_mmscf",
+            "permeability_md_min",
+            "permeability_md_max",
+            "skin_min",
+            "skin_max"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_dst_ingest_test",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "round",
+          "lineNumber": 49
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "round",
+          "lineNumber": 51
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "round",
+          "lineNumber": 53
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "round",
+          "lineNumber": 55
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 59
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 61
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 63
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 65
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 67
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 69
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "derived.get",
+          "lineNumber": 70
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 71
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "flags.append",
+          "lineNumber": 73
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "{\n                \"gas_rate_mmscfd\": gas_rate_mmscfd,\n                \"condensate_rate_stbd\": condensate_rate_stbd,\n                \"water_rate_stbd\": water_rate_stbd,\n                \"co2_mol_pct\": co2_mol_pct,\n                \"h2s_ppm\": h2s_ppm,\n                \"bhp_psi\": bhp_psi,\n                \"whp_psi\": whp_psi,\n            }.items",
+          "lineNumber": 83
+        },
+        {
+          "caller": "geox_dst_ingest_test",
+          "callee": "get_standard_envelope",
+          "lineNumber": 95
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/ingest.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 577,
+      "nonEmptyLines": 538,
+      "functions": [
+        {
+          "name": "_metabolic_return",
+          "startLine": 33,
+          "endLine": 48,
+          "params": [
+            "envelope",
+            "witness_status",
+            "**kwargs"
+          ]
+        },
+        {
+          "name": "geox_data_ingest_bundle",
+          "startLine": 51,
+          "endLine": 577,
+          "params": [
+            "source_uri",
+            "source_type",
+            "well_id",
+            "standardize_curves",
+            "normalize_units",
+            "content_base64",
+            "filename",
+            "target_dir",
+            "overwrite"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "_metabolic_return",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "geox_data_ingest_bundle",
+          "line": 51,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_metabolic_return",
+          "callee": "enrich_envelope_with_metabolic",
+          "lineNumber": 43
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 81
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 82
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 98
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 99
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_safe_upload_path",
+          "lineNumber": 116
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 118
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 119
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 124
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "target_path.exists",
+          "lineNumber": 135
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 136
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 137
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 143
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_decode_upload_content",
+          "lineNumber": 155
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "target_path.write_bytes",
+          "lineNumber": 156
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 158
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 159
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 164
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "hashlib.sha256(target_path.read_bytes()).hexdigest",
+          "lineNumber": 175
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "hashlib.sha256",
+          "lineNumber": 175
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "target_path.read_bytes",
+          "lineNumber": 175
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "LASIngestor().ingest",
+          "lineNumber": 181
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "LASIngestor",
+          "lineNumber": 181
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 181
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_result.to_dict",
+          "lineNumber": 182
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 184
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 185
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 191
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 203
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 205
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 206
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 207
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 209
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 210
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "ingest_dict.get",
+          "lineNumber": 210
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_register_artifact",
+          "lineNumber": 213
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 216
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 223
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 224
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 228
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "len",
+          "lineNumber": 233
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 246
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 247
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path",
+          "lineNumber": 264
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_parse_csv_or_json",
+          "lineNumber": 269
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 271
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 272
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str(exc).lower",
+          "lineNumber": 276
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 276
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 277
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 288
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 288
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_register_artifact",
+          "lineNumber": 289
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 292
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 293
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "len",
+          "lineNumber": 299
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_parse_csv_or_json",
+          "lineNumber": 312
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 314
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 315
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str(exc).lower",
+          "lineNumber": 319
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 319
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 320
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "list",
+          "lineNumber": 331
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 331
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 331
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 331
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 331
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_register_artifact",
+          "lineNumber": 332
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 335
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 336
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "len",
+          "lineNumber": 342
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_parse_csv_or_json",
+          "lineNumber": 355
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 357
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 358
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str(exc).lower",
+          "lineNumber": 362
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 362
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 363
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "float",
+          "lineNumber": 374
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 374
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 374
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 374
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "r.get",
+          "lineNumber": 374
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_register_artifact",
+          "lineNumber": 375
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "min",
+          "lineNumber": 378
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "max",
+          "lineNumber": 378
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 379
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 380
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "len",
+          "lineNumber": 386
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.basename",
+          "lineNumber": 398
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "source_uri.split",
+          "lineNumber": 398
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path(source_name).stem.replace(\".las\", \"\").replace",
+          "lineNumber": 399
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path(source_name).stem.replace",
+          "lineNumber": 399
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path",
+          "lineNumber": 399
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "materialize_las_source",
+          "lineNumber": 403
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 405
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 406
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 411
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "source_uri.startswith",
+          "lineNumber": 424
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 425
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 426
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 431
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.exists",
+          "lineNumber": 445
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.basename",
+          "lineNumber": 446
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.exists",
+          "lineNumber": 448
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.splitext(local_path)[1].lower",
+          "lineNumber": 454
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.path.splitext",
+          "lineNumber": 454
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "{\"las\": \"well\"}.get",
+          "lineNumber": 455
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "LASIngestor().ingest",
+          "lineNumber": 460
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "LASIngestor",
+          "lineNumber": 460
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "result.to_dict",
+          "lineNumber": 461
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "source_uri.startswith",
+          "lineNumber": 464
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path",
+          "lineNumber": 466
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "os.environ.get",
+          "lineNumber": 466
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "stable_dir.mkdir",
+          "lineNumber": 467
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_safe_artifact_filename",
+          "lineNumber": 468
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "Path",
+          "lineNumber": 469
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "shutil.copyfile",
+          "lineNumber": 472
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "str",
+          "lineNumber": 473
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "logger.warning",
+          "lineNumber": 475
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 478
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 480
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 481
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 482
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 483
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 484
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 485
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 485
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_register_artifact",
+          "lineNumber": 487
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_map_canonical_curves",
+          "lineNumber": 501
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_detect_depth_unit",
+          "lineNumber": 504
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "depth_unit_original.upper",
+          "lineNumber": 508
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "isinstance",
+          "lineNumber": 514
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "isinstance",
+          "lineNumber": 526
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "out.get",
+          "lineNumber": 529
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "json.dumps",
+          "lineNumber": 539
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "hashlib.sha256(payload_str.encode()).hexdigest",
+          "lineNumber": 540
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "hashlib.sha256",
+          "lineNumber": 540
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "payload_str.encode",
+          "lineNumber": 540
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "datetime.now(UTC).isoformat",
+          "lineNumber": 544
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "datetime.now",
+          "lineNumber": 544
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 547
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 548
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "_metabolic_return",
+          "lineNumber": 557
+        },
+        {
+          "caller": "geox_data_ingest_bundle",
+          "callee": "get_standard_envelope",
+          "lineNumber": 558
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/kernel/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 6,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "contracts/tools/canonical/map_context.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 43,
+      "functions": [
+        {
+          "name": "geox_map_context_scene",
+          "startLine": 16,
+          "endLine": 49,
+          "params": [
+            "bbox",
+            "mode",
+            "crs"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "geox_map_context_scene",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "geox_map_context_scene",
+          "callee": "_check_maruah_territory",
+          "lineNumber": 35
+        },
+        {
+          "caller": "geox_map_context_scene",
+          "callee": "get_standard_envelope",
+          "lineNumber": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

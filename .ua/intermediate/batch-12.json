@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "file:apps/glof_substrate/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "apps/glof_substrate/index.html",
+      "summary": "html markup file (456 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/glof_substrate/index_local.html",
+      "type": "file",
+      "name": "index_local.html",
+      "filePath": "apps/glof_substrate/index_local.html",
+      "summary": "html markup file (303 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:apps/glof_substrate/index_v1_9sliders.html",
+      "type": "file",
+      "name": "index_v1_9sliders.html",
+      "filePath": "apps/glof_substrate/index_v1_9sliders.html",
+      "summary": "html markup file (303 non-empty lines).",
+      "tags": [
+        "markup",
+        "html"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

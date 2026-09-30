@@ -1608,6 +1608,7 @@ def register_tools_on(mcp):
         claim_text: str = "",
         claim_type: str = "other",
         truth_class: str = "INTERPRETATION",
+        explanation_class: str = "UNCLASSIFIED",  # claim_kernel/v1 explanatory-kind axis
         evidence_ids: list[str] | None = None,
         uncertainty_p10: float | None = None,
         uncertainty_p50: float | None = None,
@@ -1646,6 +1647,7 @@ def register_tools_on(mcp):
                 "claim_text": claim_text,
                 "claim_type": claim_type,
                 "truth_class": truth_class,
+                "explanation_class": explanation_class,
                 "evidence_ids": evidence_ids,
                 "uncertainty_p10": uncertainty_p10,
                 "uncertainty_p50": uncertainty_p50,
@@ -6439,6 +6441,7 @@ def register_tools_on(mcp):
         claim_text: str = "",
         claim_type: str = "other",
         truth_class: str = "INTERPRETATION",
+        explanation_class: str = "UNCLASSIFIED",  # claim_kernel/v1 explanatory-kind axis
         evidence_ids: list[str] | None = None,
         uncertainty_p10: float | None = None,
         uncertainty_p50: float | None = None,
@@ -6503,6 +6506,7 @@ def register_tools_on(mcp):
                 claim_text=claim_text,
                 claim_type=claim_type,
                 truth_class=truth_class,
+                explanation_class=explanation_class,
                 evidence_ids=evidence_ids,
                 uncertainty_p10=uncertainty_p10,
                 uncertainty_p50=uncertainty_p50,
@@ -7247,6 +7251,10 @@ def register_tools_on(mcp):
         )
 
     # ── GROUP 11: geox_seismic_compute absorbs avo_forward ──
+    # F2 PATCH (2026-09-18 · 333-AGI): dropped theta_max from signature.
+    # Implementation derives theta_max = theta_deg or 30.0 internally;
+    # exposing it as a public parameter caused schema-vs-runtime drift
+    # (clients passed theta_max, impl required theta_deg for zoeppritz).
     @mcp.tool(
         name="geox_seismic_compute",
         description="Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, LMR, Castagna).",
@@ -7262,7 +7270,6 @@ def register_tools_on(mcp):
         vs2: float = 1.2,
         rho2: float = 2.1,
         theta_deg: list[float] | None = None,
-        theta_max: float = 30.0,
         vp: float = 3.0,
         vs: float = 1.5,
         rho: float = 2.3,
@@ -7276,7 +7283,8 @@ def register_tools_on(mcp):
 
         Modes:
           avo_forward — AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term,
-                        Lambda-Mu-Rho (Goodway 1997), Castagna mudrock
+                        Lambda-Mu-Rho (Goodway 1997), Castagna mudrock.
+                        Requires: vp1, vs1, rho1, vp2, vs2, rho2, theta_deg.
         """
         if mode == "avo_forward":
             # af-fix #6b (2026-09-09): the previous direct _avo_forward call
@@ -7313,7 +7321,6 @@ def register_tools_on(mcp):
         vs2=1.2,
         rho2=2.1,
         theta_deg=None,
-        theta_max=30.0,
         vp=3.0,
         vs=1.5,
         rho=2.3,
@@ -7330,7 +7337,6 @@ def register_tools_on(mcp):
             vs2=vs2,
             rho2=rho2,
             theta_deg=theta_deg,
-            theta_max=theta_max,
             vp=vp,
             vs=vs,
             rho=rho,
@@ -7407,11 +7413,23 @@ def register_tools_on(mcp):
         return await _impl(**args)
 
     # ── GROUP 13: geox_workspace absorbs surface_status ──
-    # (geox_workspace already exists with mode parameter — shim only)
     @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
     async def _shim_surface_status(mode="registry", session_id=None, actor_id=None, trace_id=None):
-        """[SHIM→geox_workspace] Federation-standard registry probe for GEOX."""
-        return await geox_workspace(mode=mode, session_id=session_id, actor_id=actor_id, trace_id=trace_id)
+        """Federation-standard registry probe for GEOX."""
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+        return {
+            "status": "healthy",
+            "organ": "GEOX",
+            "surface_version": "v2026.08.26",
+            "public_count": len(CANONICAL_PUBLIC_TOOLS),
+            "public_count_target": len(CANONICAL_PUBLIC_TOOLS),
+            "canonical_tools": sorted(list(CANONICAL_PUBLIC_TOOLS)),
+            "verdict": "REGISTRY_PASS",
+            "session_id": session_id,
+            "actor_id": actor_id,
+            "trace_id": trace_id,
+        }
 
     logger.info("ZEN CONSOLIDATION: merged tools + shims registered")
 

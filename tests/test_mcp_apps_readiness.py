@@ -33,17 +33,44 @@ def ensure_surface_manifest():
     assert SURFACE_MANIFEST_PATH.exists(), "GEOX_MCP_APPS_SURFACE.json missing. Run scripts/generate_mcp_apps_surface.py"
 
 
+@pytest.fixture(autouse=True)
+def mock_arifos_test_session():
+    """Mock arifOS kernel verification for SEAL-test session IDs during test execution."""
+    from unittest.mock import patch
+
+    def _mock_verify(session_id, actor_id, required_authority="OBSERVE_ONLY"):
+        if session_id and str(session_id).startswith("SEAL-test"):
+            return {
+                "session_id": session_id,
+                "actor_id": actor_id or "test-runner",
+                "standing": {
+                    "actor": {"claimed_id": actor_id or "test-runner", "verified": True},
+                    "authority": {"band": "SOVEREIGN"},
+                    "session_id": session_id,
+                },
+            }
+        return None
+
+    with patch("geox_mcp.session_enforcement._cached_kernel_verify", side_effect=_mock_verify):
+        yield
+
+
 @pytest.mark.asyncio
 async def test_01_tools_list_schema_and_ui_bindings():
     """Verify tools/list exposes _meta.ui.resourceUri and openai/outputTemplate alias for 30 canonical tools."""
     tools = await mcp.list_tools()
-    # Live public surface is 33 tools
-    assert len(tools) in (31, 32), f"Expected 33–34 canonical tools, got {len(tools)}"
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS as _CANON
+
+    _names = {x.name for x in tools}
+    # SOT set-equality: registry canonical must be live; any live extra must be the
+    # one declared live-but-not-canonical exception (contracts registry special-case).
+    assert set(_CANON) <= _names, f"canonical missing from live: {sorted(set(_CANON) - _names)}"
+    assert _names - set(_CANON) <= {"geox_dst_ingest_test"}, f"undeclared live extras: {sorted(_names - set(_CANON))}"
 
     tools_by_name = {t.name: t for t in tools}
 
     # Verify key app-bound tools carry valid UI metadata
-    app_tools = ["geox_petrophysics", "geox_basin", "geox_claim", "geox_prospect", "geox_map_layers_list"]
+    app_tools = ["geox_petrophysics", "geox_basin", "geox_claim", "geox_seismic_interpret", "geox_prospect", "geox_map"]
     for tool_name in app_tools:
         assert tool_name in tools_by_name
         t = tools_by_name[tool_name]
@@ -209,9 +236,13 @@ async def test_07_well_desk_resource_is_host_bridge_shell():
 
 @pytest.mark.asyncio
 async def test_08_all_tools_have_four_annotations_and_ui_binding():
-    """PR3: 32 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
+    """PR3: 31 tools — full MCP annotation quartet + ui.resourceUri (or documented)."""
     tools = await mcp.list_tools()
-    assert len(tools) in (31, 32), f"Expected 33–34 tools, got {len(tools)}"
+    from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS as _CANON8
+
+    _names8 = {x.name for x in tools}
+    assert set(_CANON8) <= _names8, f"canonical missing from live: {sorted(set(_CANON8) - _names8)}"
+    assert _names8 - set(_CANON8) <= {"geox_dst_ingest_test"}, f"undeclared live extras: {sorted(_names8 - set(_CANON8))}"
     # MCP SDK v2 renamed annotation fields from camelCase to snake_case.
     # Look up both names so the test passes against either SDK version.
     needed_old = ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint")
@@ -229,15 +260,20 @@ async def test_08_all_tools_have_four_annotations_and_ui_binding():
         keys = {}
         if ann is not None:
             if hasattr(ann, "model_dump"):
-                keys = ann.model_dump()
+                keys = ann.model_dump(by_alias=True)
             elif isinstance(ann, dict):
-                keys = ann
+                keys = dict(ann)
             else:
                 for old, new in zip(needed_old, needed_new):
                     val = getattr(ann, new, None)
                     if val is None:
                         val = getattr(ann, old, None)
                     keys[new] = val
+        # Normalize camelCase aliases → snake_case: model_dump(by_alias=True)
+        # yields camel keys, but the quartet check below is snake-keyed.
+        for old, new in zip(needed_old, needed_new):
+            if keys.get(new) is None and keys.get(old) is not None:
+                keys[new] = keys[old]
         if any(keys.get(k) is None for k in needed_new):
             if t.name in app_tool_names:
                 continue
@@ -352,12 +388,12 @@ async def test_10b_judge_basin_tools_list_bindings():
     """PR3: tools/list exposes judge/basin UI bindings for host discovery."""
     tools = await mcp.list_tools()
     by_name = {t.name: t for t in tools}
-    # geox_falsify was deregistered (see falsify.py — no @mcp.tool decorator,
-    # replaced by geox_biostrat_falsify). The judge-console binding now lives
-    # on whatever falsification-mode tool the live surface carries.
+    assert (by_name["geox_claim"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/judge-console")
     assert (by_name["geox_basin"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/basin-explorer")
-    assert (by_name["geox_lem_predict"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/well-desk")
-    assert (by_name["geox_visual_understand"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/visual-hub")
+    assert (by_name["geox_petrophysics"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/well-desk")
+    assert (
+        (by_name["geox_seismic_interpret"].meta or {}).get("ui", {}).get("resourceUri", "").startswith("ui://geox/seismic-vision")
+    )
 
 
 def test_10c_surface_manifest_active_zero_bound():

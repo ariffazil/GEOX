@@ -151,6 +151,33 @@ class ClaimTag(StrEnum):
     HYPOTHESIS = "HYPOTHESIS"
 
 
+class ClaimExplanationClass(StrEnum):
+    """The explanatory-KIND axis of a claim (claim_kernel/v1).
+
+    ClaimState answers WHERE a claim is in review. ClaimTag / truth_class answer
+    HOW it was obtained. This enum answers WHAT KIND of explanation it is — the
+    axis that decides whether the claim may justify a mutation.
+
+    Only MEASURED, MECHANISM and PATTERN are action-eligible. A NARRATIVE claim
+    may be published but may never be the sole justification for entering
+    APPROVED_INTERPRETATION or SEALED. UNCLASSIFIED is the default for every
+    pre-existing claim record and fails closed.
+    """
+
+    MEASURED = "MEASURED"
+    MECHANISM = "MECHANISM"
+    PATTERN = "PATTERN"
+    NARRATIVE = "NARRATIVE"
+    UNCLASSIFIED = "UNCLASSIFIED"
+
+
+ACTION_ELIGIBLE_EXPLANATION_CLASSES: tuple[str, ...] = (
+    ClaimExplanationClass.MEASURED.value,
+    ClaimExplanationClass.MECHANISM.value,
+    ClaimExplanationClass.PATTERN.value,
+)
+
+
 class EvidenceTag(StrEnum):
     EVIDENCE_DIRECT = "EVIDENCE_DIRECT"
     EVIDENCE_MULTI_ZONE = "EVIDENCE_MULTI_ZONE"

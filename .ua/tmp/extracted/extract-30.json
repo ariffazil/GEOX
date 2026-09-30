@@ -1,0 +1,117 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 3,
+  "filesSkipped": [
+    "ingest/macrostrat-malaysia/index.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 3,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 3
+    }
+  },
+  "results": [
+    {
+      "path": "ingest/macrostrat-malaysia/SUBMISSION_PROPOSAL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 80,
+      "nonEmptyLines": 59,
+      "sections": [
+        {
+          "heading": "Upstream Map Ingestion Proposal: Geological Map of Malaysia (JMG 1:500,000)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Executive Summary & Geoscientific Rationale",
+          "level": 2,
+          "line": 12
+        },
+        {
+          "heading": "2. Source Metadata & Open Access Provenance",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "3. Stratigraphic Architecture & Lexicon Concordance",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "4. Integration Artifacts & Manifest",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "5. Contact & Coordination",
+          "level": 2,
+          "line": 67
+        },
+        {
+          "heading": "6. Schema & Pipeline Coordination Questions for Maintainers",
+          "level": 2,
+          "line": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "ingest/macrostrat-malaysia/jmg_malaysia_states_summary.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 522,
+      "nonEmptyLines": 522,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "ingest/macrostrat-malaysia/macrostrat_ingestion_manifest.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 84,
+      "nonEmptyLines": 84,
+      "sections": [
+        {
+          "heading": "source",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "layers",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "stratigraphic_domains",
+          "level": 1,
+          "line": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}

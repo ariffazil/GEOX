@@ -1,0 +1,1063 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 19,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 19,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 19
+    }
+  },
+  "results": [
+    {
+      "path": "resources/ontology/archie_params.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 378,
+      "nonEmptyLines": 354,
+      "sections": [
+        {
+          "heading": "m_parameters",
+          "level": 1,
+          "line": 38
+        },
+        {
+          "heading": "n_parameters",
+          "level": 1,
+          "line": 135
+        },
+        {
+          "heading": "a_parameters",
+          "level": 1,
+          "line": 221
+        },
+        {
+          "heading": "quick_defaults",
+          "level": 1,
+          "line": 259
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 324
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 334
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 348
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/ontology/biostrat_reference_stack.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 210,
+      "nonEmptyLines": 184,
+      "sections": [
+        {
+          "heading": "taxonomy_atlas",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "zonation_schemes",
+          "level": 1,
+          "line": 69
+        },
+        {
+          "heading": "regional_framework",
+          "level": 1,
+          "line": 124
+        },
+        {
+          "heading": "timescale",
+          "level": 1,
+          "line": 156
+        },
+        {
+          "heading": "counting_standards",
+          "level": 1,
+          "line": 168
+        },
+        {
+          "heading": "terminology",
+          "level": 1,
+          "line": 181
+        },
+        {
+          "heading": "epistemic",
+          "level": 1,
+          "line": 197
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/ontology/borehole_corrections.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 493,
+      "nonEmptyLines": 437,
+      "sections": [
+        {
+          "heading": "caliper_log",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "density_log",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "neutron_log",
+          "level": 1,
+          "line": 127
+        },
+        {
+          "heading": "sp_log",
+          "level": 1,
+          "line": 224
+        },
+        {
+          "heading": "resistivity_log",
+          "level": 1,
+          "line": 278
+        },
+        {
+          "heading": "sonic_log",
+          "level": 1,
+          "line": 347
+        },
+        {
+          "heading": "correction_flowchart",
+          "level": 1,
+          "line": 393
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 437
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 449
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 463
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "resources/ontology/curve_aliases.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 29,
+      "sections": [
+        {
+          "heading": "curve_aliases",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "resources/ontology/depositional_env_codes.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 7,
+      "nonEmptyLines": 7,
+      "sections": [
+        {
+          "heading": "depositional_env_codes",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "resources/ontology/electrofacies_library.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 439,
+      "nonEmptyLines": 409,
+      "sections": [
+        {
+          "heading": "electrofacies_motifs",
+          "level": 1,
+          "line": 29
+        },
+        {
+          "heading": "combination_patterns",
+          "level": 1,
+          "line": 288
+        },
+        {
+          "heading": "cross_plot_matrix",
+          "level": 1,
+          "line": 317
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 369
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 378
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 389
+        },
+        {
+          "heading": "supported_megasequences",
+          "level": 1,
+          "line": 418
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/ontology/fluid_pvt.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 424,
+      "nonEmptyLines": 382,
+      "sections": [
+        {
+          "heading": "oil_pvt",
+          "level": 1,
+          "line": 28
+        },
+        {
+          "heading": "live_oil_pvt",
+          "level": 1,
+          "line": 76
+        },
+        {
+          "heading": "gas_pvt",
+          "level": 1,
+          "line": 154
+        },
+        {
+          "heading": "water_pvt",
+          "level": 1,
+          "line": 238
+        },
+        {
+          "heading": "compositional_gradients",
+          "level": 1,
+          "line": 289
+        },
+        {
+          "heading": "eor_considerations",
+          "level": 1,
+          "line": 335
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 360
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 377
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 394
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "resources/ontology/formation_water.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 379,
+      "nonEmptyLines": 367,
+      "sections": [
+        {
+          "heading": "region",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "general_model",
+          "level": 1,
+          "line": 292
+        },
+        {
+          "heading": "sp_derived_rw",
+          "level": 1,
+          "line": 311
+        },
+        {
+          "heading": "dual_water_model",
+          "level": 1,
+          "line": 319
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 335
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 345
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 355
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/ontology/lithology_classes.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 68,
+      "nonEmptyLines": 63,
+      "sections": [
+        {
+          "heading": "classes",
+          "level": 1,
+          "line": 4
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "resources/ontology/net_pay_cutoffs.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 403,
+      "nonEmptyLines": 372,
+      "sections": [
+        {
+          "heading": "capillary_pressure_model",
+          "level": 1,
+          "line": 40
+        },
+        {
+          "heading": "net_pay_cutoffs",
+          "level": 1,
+          "line": 80
+        },
+        {
+          "heading": "net_pay_procedure",
+          "level": 1,
+          "line": 243
+        },
+        {
+          "heading": "screening_defaults",
+          "level": 1,
+          "line": 283
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 357
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 368
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 382
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "resources/ontology/petrophysics_assumptions.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 329,
+      "nonEmptyLines": 284,
+      "sections": [
+        {
+          "heading": "archie_defaults",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "formation_water_defaults",
+          "level": 1,
+          "line": 64
+        },
+        {
+          "heading": "temperature_gradients",
+          "level": 1,
+          "line": 115
+        },
+        {
+          "heading": "salinity_defaults",
+          "level": 1,
+          "line": 150
+        },
+        {
+          "heading": "porosity_cutoffs",
+          "level": 1,
+          "line": 174
+        },
+        {
+          "heading": "permeability_defaults",
+          "level": 1,
+          "line": 213
+        },
+        {
+          "heading": "capillary_pressure_defaults",
+          "level": 1,
+          "line": 242
+        },
+        {
+          "heading": "fluid_defaults",
+          "level": 1,
+          "line": 267
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 299
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 312
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 325
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "resources/ontology/petrophysics_report.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 379,
+      "nonEmptyLines": 331,
+      "sections": [
+        {
+          "heading": "GEOX Petrophysics Report Template",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "DITEMPA BUKAN DIBERI",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "PURPOSE: Standardized output format for geologist's petrophysical interpretation.",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "This template structures the FINAL DELIVERABLE — the interpretation that",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "goes into the well report, the reserves submission, or the geocellular model.",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "A petrophysics report is a CHAIN OF REASONING, not just a table of numbers.",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "Every number must be traceable to a measurement, a calibration, or an assumption.",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "CLAIM LIMITS: Every assumption must be stated explicitly with uncertainty bounds.",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "\"Porosity is estimated from density log with ±2 p.u. uncertainty at 1σ.\"",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "\"Water saturation uses Archie with m=2.0, n=2.0 — calibrated to core.\"",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "PHYSICS-9 RULE: The report must make the GENETIC STORY coherent with the NUMBERS.",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "GR motif, cross-plot, and log-derived properties must all tell the same story.",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "REPORT HEADER",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 51
+        },
+        {
+          "heading": "LOG QUALITY ASSESSMENT",
+          "level": 1,
+          "line": 52
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 53
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 99
+        },
+        {
+          "heading": "PETROPHYSICAL PARAMETERS — SOURCE AND JUSTIFICATION",
+          "level": 1,
+          "line": 100
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 101
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 173
+        },
+        {
+          "heading": "ZONE-BY-ZONE INTERPRETATION",
+          "level": 1,
+          "line": 174
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 175
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 235
+        },
+        {
+          "heading": "FLUID PROPERTIES SUMMARY",
+          "level": 1,
+          "line": 236
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 237
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 267
+        },
+        {
+          "heading": "RESERVES ESTIMATE SUMMARY",
+          "level": 1,
+          "line": 268
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 269
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 315
+        },
+        {
+          "heading": "ASSUMPTIONS AND LIMITATIONS",
+          "level": 1,
+          "line": 316
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 317
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 354
+        },
+        {
+          "heading": "CERTIFICATION",
+          "level": 1,
+          "line": 355
+        },
+        {
+          "heading": "─────────────────────────────────────────────────────────────────────────────",
+          "level": 1,
+          "line": 356
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 36
+      }
+    },
+    {
+      "path": "resources/ontology/pressure_states.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 114,
+      "nonEmptyLines": 101,
+      "sections": [
+        {
+          "heading": "states",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "coverage_engine",
+          "level": 1,
+          "line": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "resources/ontology/risk_verdicts.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 45,
+      "nonEmptyLines": 41,
+      "sections": [
+        {
+          "heading": "verdicts",
+          "level": 1,
+          "line": 4
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "resources/ontology/sabah_basin_strat.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 901,
+      "nonEmptyLines": 834,
+      "sections": [
+        {
+          "heading": "basin",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "kinabalu_granite",
+          "level": 1,
+          "line": 310
+        },
+        {
+          "heading": "stratigraphy",
+          "level": 1,
+          "line": 364
+        },
+        {
+          "heading": "seismic_horizons",
+          "level": 1,
+          "line": 589
+        },
+        {
+          "heading": "biozonation",
+          "level": 1,
+          "line": 671
+        },
+        {
+          "heading": "regional_notes",
+          "level": 1,
+          "line": 724
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 746
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 756
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 766
+        },
+        {
+          "heading": "nspw_hypotheses_testable",
+          "level": 1,
+          "line": 796
+        },
+        {
+          "heading": "nspw_geox_parameterization",
+          "level": 1,
+          "line": 833
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "resources/ontology/scal_correlations.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 506,
+      "nonEmptyLines": 470,
+      "sections": [
+        {
+          "heading": "capillary_pressure",
+          "level": 1,
+          "line": 30
+        },
+        {
+          "heading": "leverett_j_function",
+          "level": 1,
+          "line": 132
+        },
+        {
+          "heading": "brooks_corey",
+          "level": 1,
+          "line": 171
+        },
+        {
+          "heading": "van_genuchten",
+          "level": 1,
+          "line": 210
+        },
+        {
+          "heading": "relative_permeability",
+          "level": 1,
+          "line": 227
+        },
+        {
+          "heading": "klinkenberg",
+          "level": 1,
+          "line": 303
+        },
+        {
+          "heading": "resistivity_index",
+          "level": 1,
+          "line": 350
+        },
+        {
+          "heading": "compressibility",
+          "level": 1,
+          "line": 403
+        },
+        {
+          "heading": "units",
+          "level": 1,
+          "line": 438
+        },
+        {
+          "heading": "valid_ranges",
+          "level": 1,
+          "line": 453
+        },
+        {
+          "heading": "epistemic_tags",
+          "level": 1,
+          "line": 471
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    },
+    {
+      "path": "resources/ontology/seismic_foundation_models.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 125,
+      "nonEmptyLines": 97,
+      "sections": [
+        {
+          "heading": "Seismic Foundation Models — Vocabulary Reference",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "PRISM · TGS · SAM-Fault — Canonical Research Anchors",
+          "level": 2,
+          "line": 2
+        },
+        {
+          "heading": "Model Registry",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "PRISM — Seismic Foundation Model",
+          "level": 3,
+          "line": 10
+        },
+        {
+          "heading": "TGS Seismic Foundation Model",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "SAM-Fault — Segment Anything for Faults",
+          "level": 3,
+          "line": 48
+        },
+        {
+          "heading": "Vocabulary",
+          "level": 2,
+          "line": 70
+        },
+        {
+          "heading": "Cross-Model Routing",
+          "level": 2,
+          "line": 87
+        },
+        {
+          "heading": "Claim State Vocabulary",
+          "level": 2,
+          "line": 113
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "resources/ontology/sequence_surfaces.yaml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 59,
+      "nonEmptyLines": 55,
+      "sections": [
+        {
+          "heading": "surfaces",
+          "level": 1,
+          "line": 4
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "resources/ontology/wlfm_vocabulary.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 113,
+      "nonEmptyLines": 79,
+      "sections": [
+        {
+          "heading": "WLFM Geological Vocabulary — GEOX Well-Log Foundation Model",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "VQ Token Codebook Reference",
+          "level": 2,
+          "line": 2
+        },
+        {
+          "heading": "Codebook Architecture",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "Emergent Token Clusters (WLFM-1200)",
+          "level": 2,
+          "line": 25
+        },
+        {
+          "heading": "Token-to-Geology Mapping Rules",
+          "level": 2,
+          "line": 42
+        },
+        {
+          "heading": "GR Motif → WLFM Token Mapping",
+          "level": 3,
+          "line": 46
+        },
+        {
+          "heading": "Cross-Well Invariance (SCL — Stratigraphy-Aware Contrastive Learning)",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "Limitations and Failure Modes",
+          "level": 2,
+          "line": 90
+        },
+        {
+          "heading": "GEOX Integration Points",
+          "level": 2,
+          "line": 102
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/deploy-dimension-native.sh",
+      "type": "file",
+      "name": "deploy-dimension-native.sh",
+      "filePath": "scripts/deploy-dimension-native.sh",
+      "summary": "shell script file (130 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-openai-adapter.sh",
+      "type": "file",
+      "name": "deploy-openai-adapter.sh",
+      "filePath": "scripts/deploy-openai-adapter.sh",
+      "summary": "Defines 1 function(s)",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-vps-local.sh",
+      "type": "file",
+      "name": "deploy-vps-local.sh",
+      "filePath": "scripts/deploy-vps-local.sh",
+      "summary": "Defines 3 function(s)",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-vps.sh",
+      "type": "file",
+      "name": "deploy-vps.sh",
+      "filePath": "scripts/deploy-vps.sh",
+      "summary": "shell script file (67 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/entrypoint.sh",
+      "type": "file",
+      "name": "entrypoint.sh",
+      "filePath": "scripts/entrypoint.sh",
+      "summary": "shell script file (14 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/entrypoint_unified.sh",
+      "type": "file",
+      "name": "entrypoint_unified.sh",
+      "filePath": "scripts/entrypoint_unified.sh",
+      "summary": "shell script file (14 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/governance-gate.sh",
+      "type": "file",
+      "name": "governance-gate.sh",
+      "filePath": "scripts/governance-gate.sh",
+      "summary": "Defines 1 function(s)",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/scan_forbidden_phrases.sh",
+      "type": "file",
+      "name": "scan_forbidden_phrases.sh",
+      "filePath": "scripts/scan_forbidden_phrases.sh",
+      "summary": "shell script file (54 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

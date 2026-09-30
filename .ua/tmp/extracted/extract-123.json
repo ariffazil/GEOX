@@ -1,0 +1,1359 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 9,
+  "filesSkipped": [
+    "ui/geox-dashboard.html",
+    "ui/well-dashboard.html"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 9,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 7,
+      "failed": 0,
+      "skipped": 2
+    }
+  },
+  "results": [
+    {
+      "path": "tests/unit/test_tasks.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 80,
+      "functions": [
+        {
+          "name": "mcp_server",
+          "startLine": 23,
+          "endLine": 34,
+          "params": []
+        },
+        {
+          "name": "test_task_tools_registered",
+          "startLine": 38,
+          "endLine": 43,
+          "params": [
+            "mcp_server"
+          ]
+        },
+        {
+          "name": "test_task_ingest_empty_refs_fail_closed",
+          "startLine": 47,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "test_task_metabolize_empty_refs_fail_closed",
+          "startLine": 57,
+          "endLine": 62,
+          "params": []
+        },
+        {
+          "name": "test_task_metabolize_nonexistent_wells",
+          "startLine": 66,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "test_server_task_support_enabled",
+          "startLine": 78,
+          "endLine": 83,
+          "params": [
+            "mcp_server"
+          ]
+        },
+        {
+          "name": "test_task_tool_task_config",
+          "startLine": 87,
+          "endLine": 99,
+          "params": [
+            "mcp_server"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "mcp_server",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "test_task_tools_registered",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "test_task_ingest_empty_refs_fail_closed",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "test_task_metabolize_empty_refs_fail_closed",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "test_task_metabolize_nonexistent_wells",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "test_server_task_support_enabled",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "test_task_tool_task_config",
+          "line": 86,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "mcp_server",
+          "callee": "FastMCP",
+          "lineNumber": 25
+        },
+        {
+          "caller": "mcp_server",
+          "callee": "register_unified_tools",
+          "lineNumber": 28
+        },
+        {
+          "caller": "mcp_server",
+          "callee": "mcp.tool",
+          "lineNumber": 32
+        },
+        {
+          "caller": "mcp_server",
+          "callee": "mcp.tool",
+          "lineNumber": 33
+        },
+        {
+          "caller": "test_task_tools_registered",
+          "callee": "mcp_server.list_tools",
+          "lineNumber": 40
+        },
+        {
+          "caller": "test_task_ingest_empty_refs_fail_closed",
+          "callee": "geox_task_ingest_las_batch",
+          "lineNumber": 50
+        },
+        {
+          "caller": "test_task_ingest_empty_refs_fail_closed",
+          "callee": "result.get",
+          "lineNumber": 51
+        },
+        {
+          "caller": "test_task_ingest_empty_refs_fail_closed",
+          "callee": "payload.get",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_task_ingest_empty_refs_fail_closed",
+          "callee": "payload.get",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_task_metabolize_empty_refs_fail_closed",
+          "callee": "geox_task_metabolize_basin",
+          "lineNumber": 60
+        },
+        {
+          "caller": "test_task_metabolize_empty_refs_fail_closed",
+          "callee": "result.get",
+          "lineNumber": 61
+        },
+        {
+          "caller": "test_task_metabolize_empty_refs_fail_closed",
+          "callee": "result.get",
+          "lineNumber": 62
+        },
+        {
+          "caller": "test_task_metabolize_nonexistent_wells",
+          "callee": "geox_task_metabolize_basin",
+          "lineNumber": 69
+        },
+        {
+          "caller": "test_task_metabolize_nonexistent_wells",
+          "callee": "result.get",
+          "lineNumber": 73
+        },
+        {
+          "caller": "test_task_metabolize_nonexistent_wells",
+          "callee": "result.get(\"derived\", {}).get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "test_task_metabolize_nonexistent_wells",
+          "callee": "result.get",
+          "lineNumber": 74
+        },
+        {
+          "caller": "test_server_task_support_enabled",
+          "callee": "getattr",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_task_tool_task_config",
+          "callee": "mcp_server.get_tool",
+          "lineNumber": 89
+        },
+        {
+          "caller": "test_task_tool_task_config",
+          "callee": "tool.task_config.supports_tasks",
+          "lineNumber": 91
+        },
+        {
+          "caller": "test_task_tool_task_config",
+          "callee": "mcp_server.get_tool",
+          "lineNumber": 95
+        },
+        {
+          "caller": "test_task_tool_task_config",
+          "callee": "tool2.task_config.supports_tasks",
+          "lineNumber": 97
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/unit/test_thermal_maturity.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 126,
+      "nonEmptyLines": 101,
+      "functions": [
+        {
+          "name": "_make_thermal",
+          "startLine": 29,
+          "endLine": 45,
+          "params": [
+            "name",
+            "ages",
+            "depths",
+            "gradient"
+          ]
+        },
+        {
+          "name": "test_easyro_immature_at_30_gradient",
+          "startLine": 49,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "test_easyro_oil_window_at_38_gradient",
+          "startLine": 57,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "test_easyro_gas_window_at_50_gradient",
+          "startLine": 65,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "test_gradient_separation",
+          "startLine": 73,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "test_arrhenius_one_minus_x_dependency",
+          "startLine": 82,
+          "endLine": 87,
+          "params": []
+        },
+        {
+          "name": "test_tti_increases_with_temperature",
+          "startLine": 91,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "test_hydrocarbon_windows_tracked",
+          "startLine": 99,
+          "endLine": 109,
+          "params": []
+        },
+        {
+          "name": "test_easyro_minimum_at_surface",
+          "startLine": 113,
+          "endLine": 116,
+          "params": []
+        },
+        {
+          "name": "test_timestep_convergence",
+          "startLine": 120,
+          "endLine": 126,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_make_thermal",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "test_easyro_immature_at_30_gradient",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "test_easyro_oil_window_at_38_gradient",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "test_easyro_gas_window_at_50_gradient",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "test_gradient_separation",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "test_arrhenius_one_minus_x_dependency",
+          "line": 82,
+          "isDefault": false
+        },
+        {
+          "name": "test_tti_increases_with_temperature",
+          "line": 91,
+          "isDefault": false
+        },
+        {
+          "name": "test_hydrocarbon_windows_tracked",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "test_easyro_minimum_at_surface",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "test_timestep_convergence",
+          "line": 120,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "_make_thermal",
+          "callee": "len",
+          "lineNumber": 37
+        },
+        {
+          "caller": "_make_thermal",
+          "callee": "ThermalHistory",
+          "lineNumber": 38
+        },
+        {
+          "caller": "test_easyro_immature_at_30_gradient",
+          "callee": "_make_thermal",
+          "lineNumber": 51
+        },
+        {
+          "caller": "test_easyro_immature_at_30_gradient",
+          "callee": "burial_maturity_history",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_easyro_oil_window_at_38_gradient",
+          "callee": "_make_thermal",
+          "lineNumber": 59
+        },
+        {
+          "caller": "test_easyro_oil_window_at_38_gradient",
+          "callee": "burial_maturity_history",
+          "lineNumber": 60
+        },
+        {
+          "caller": "test_easyro_gas_window_at_50_gradient",
+          "callee": "_make_thermal",
+          "lineNumber": 67
+        },
+        {
+          "caller": "test_easyro_gas_window_at_50_gradient",
+          "callee": "burial_maturity_history",
+          "lineNumber": 68
+        },
+        {
+          "caller": "test_gradient_separation",
+          "callee": "burial_maturity_history",
+          "lineNumber": 75
+        },
+        {
+          "caller": "test_gradient_separation",
+          "callee": "_make_thermal",
+          "lineNumber": 75
+        },
+        {
+          "caller": "test_gradient_separation",
+          "callee": "burial_maturity_history",
+          "lineNumber": 76
+        },
+        {
+          "caller": "test_gradient_separation",
+          "callee": "_make_thermal",
+          "lineNumber": 76
+        },
+        {
+          "caller": "test_gradient_separation",
+          "callee": "abs",
+          "lineNumber": 77
+        },
+        {
+          "caller": "test_arrhenius_one_minus_x_dependency",
+          "callee": "easyro_compute",
+          "lineNumber": 85
+        },
+        {
+          "caller": "test_tti_increases_with_temperature",
+          "callee": "tti_compute",
+          "lineNumber": 93
+        },
+        {
+          "caller": "test_tti_increases_with_temperature",
+          "callee": "tti_compute",
+          "lineNumber": 94
+        },
+        {
+          "caller": "test_hydrocarbon_windows_tracked",
+          "callee": "_make_thermal",
+          "lineNumber": 101
+        },
+        {
+          "caller": "test_hydrocarbon_windows_tracked",
+          "callee": "burial_maturity_history",
+          "lineNumber": 102
+        },
+        {
+          "caller": "test_easyro_minimum_at_surface",
+          "callee": "easyro_compute",
+          "lineNumber": 115
+        },
+        {
+          "caller": "test_timestep_convergence",
+          "callee": "_make_thermal",
+          "lineNumber": 122
+        },
+        {
+          "caller": "test_timestep_convergence",
+          "callee": "burial_maturity_history",
+          "lineNumber": 123
+        },
+        {
+          "caller": "test_timestep_convergence",
+          "callee": "burial_maturity_history",
+          "lineNumber": 124
+        },
+        {
+          "caller": "test_timestep_convergence",
+          "callee": "abs",
+          "lineNumber": 125
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 10,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/verify_harness_sync.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 53,
+      "nonEmptyLines": 44,
+      "functions": [
+        {
+          "name": "test_harness_governance",
+          "startLine": 8,
+          "endLine": 50,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "test_harness_governance",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 9
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 21
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "geox_to_wealth_score",
+          "lineNumber": 22
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 24
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 25
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "result.get",
+          "lineNumber": 25
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 26
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "result.get",
+          "lineNumber": 26
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 27
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "result.get",
+          "lineNumber": 27
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 30
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 32
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 35
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "geox_to_wealth_score",
+          "lineNumber": 42
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 44
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 45
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "result_identity.get",
+          "lineNumber": 45
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "result_identity.get",
+          "lineNumber": 47
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 48
+        },
+        {
+          "caller": "test_harness_governance",
+          "callee": "print",
+          "lineNumber": 50
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/verify_integrated_stack.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 59,
+      "nonEmptyLines": 50,
+      "functions": [
+        {
+          "name": "test_integrated_stack",
+          "startLine": 9,
+          "endLine": 56,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "test_integrated_stack",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 10
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 24
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "compute_psv_from_substrates",
+          "lineNumber": 25
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 26
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 27
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 30
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "measurements.copy",
+          "lineNumber": 32
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "compute_sovereign_valuation",
+          "lineNumber": 35
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 44
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 45
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 48
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "audit['harness_status']['Civilization'].get",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 54
+        },
+        {
+          "caller": "test_integrated_stack",
+          "callee": "print",
+          "lineNumber": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tests/well/test_desurvey.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 318,
+      "nonEmptyLines": 264,
+      "functions": [
+        {
+          "name": "test_1_vertical_well",
+          "startLine": 34,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "test_2_straight_inclined_well",
+          "startLine": 73,
+          "endLine": 99,
+          "params": []
+        },
+        {
+          "name": "test_3_build_and_hold_horizontal",
+          "startLine": 103,
+          "endLine": 144,
+          "params": []
+        },
+        {
+          "name": "test_4_magnetic_declination_application",
+          "startLine": 148,
+          "endLine": 174,
+          "params": []
+        },
+        {
+          "name": "test_5_survey_gap_escalates_estimate",
+          "startLine": 178,
+          "endLine": 217,
+          "params": []
+        },
+        {
+          "name": "test_6_kb_missing_escalates",
+          "startLine": 221,
+          "endLine": 258,
+          "params": []
+        },
+        {
+          "name": "test_bonus_tangential_method",
+          "startLine": 262,
+          "endLine": 284,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "TestValidationFailures",
+          "startLine": 288,
+          "endLine": 318,
+          "methods": [
+            "test_missing_well_id",
+            "test_missing_collar",
+            "test_insufficient_survey_stations",
+            "test_non_monotonic_survey",
+            "test_unsupported_method"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "test_1_vertical_well",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "test_2_straight_inclined_well",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "test_3_build_and_hold_horizontal",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "test_4_magnetic_declination_application",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "test_5_survey_gap_escalates_estimate",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "test_6_kb_missing_escalates",
+          "line": 221,
+          "isDefault": false
+        },
+        {
+          "name": "test_bonus_tangential_method",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "TestValidationFailures",
+          "line": 288,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "desurvey",
+          "lineNumber": 41
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 56
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 57
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 58
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 59
+        },
+        {
+          "caller": "test_1_vertical_well",
+          "callee": "pytest.approx",
+          "lineNumber": 64
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "desurvey",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "math.cos",
+          "lineNumber": 91
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "math.radians",
+          "lineNumber": 91
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "math.sin",
+          "lineNumber": 92
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "math.radians",
+          "lineNumber": 92
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "pytest.approx",
+          "lineNumber": 94
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "pytest.approx",
+          "lineNumber": 97
+        },
+        {
+          "caller": "test_2_straight_inclined_well",
+          "callee": "pytest.approx",
+          "lineNumber": 98
+        },
+        {
+          "caller": "test_3_build_and_hold_horizontal",
+          "callee": "desurvey",
+          "lineNumber": 124
+        },
+        {
+          "caller": "test_3_build_and_hold_horizontal",
+          "callee": "pytest.approx",
+          "lineNumber": 136
+        },
+        {
+          "caller": "test_3_build_and_hold_horizontal",
+          "callee": "pytest.approx",
+          "lineNumber": 140
+        },
+        {
+          "caller": "test_4_magnetic_declination_application",
+          "callee": "desurvey",
+          "lineNumber": 157
+        },
+        {
+          "caller": "test_4_magnetic_declination_application",
+          "callee": "pytest.approx",
+          "lineNumber": 168
+        },
+        {
+          "caller": "test_5_survey_gap_escalates_estimate",
+          "callee": "desurvey",
+          "lineNumber": 194
+        },
+        {
+          "caller": "test_5_survey_gap_escalates_estimate",
+          "callee": "pytest.approx",
+          "lineNumber": 205
+        },
+        {
+          "caller": "test_5_survey_gap_escalates_estimate",
+          "callee": "abs",
+          "lineNumber": 209
+        },
+        {
+          "caller": "test_5_survey_gap_escalates_estimate",
+          "callee": "len",
+          "lineNumber": 210
+        },
+        {
+          "caller": "test_6_kb_missing_escalates",
+          "callee": "desurvey",
+          "lineNumber": 230
+        },
+        {
+          "caller": "test_6_kb_missing_escalates",
+          "callee": "pytest.approx",
+          "lineNumber": 248
+        },
+        {
+          "caller": "test_6_kb_missing_escalates",
+          "callee": "any",
+          "lineNumber": 253
+        },
+        {
+          "caller": "test_bonus_tangential_method",
+          "callee": "desurvey",
+          "lineNumber": 270
+        },
+        {
+          "caller": "test_missing_well_id",
+          "callee": "pytest.raises",
+          "lineNumber": 292
+        },
+        {
+          "caller": "test_missing_well_id",
+          "callee": "desurvey",
+          "lineNumber": 293
+        },
+        {
+          "caller": "test_missing_collar",
+          "callee": "pytest.raises",
+          "lineNumber": 296
+        },
+        {
+          "caller": "test_missing_collar",
+          "callee": "desurvey",
+          "lineNumber": 297
+        },
+        {
+          "caller": "test_insufficient_survey_stations",
+          "callee": "pytest.raises",
+          "lineNumber": 300
+        },
+        {
+          "caller": "test_insufficient_survey_stations",
+          "callee": "desurvey",
+          "lineNumber": 301
+        },
+        {
+          "caller": "test_non_monotonic_survey",
+          "callee": "pytest.raises",
+          "lineNumber": 304
+        },
+        {
+          "caller": "test_non_monotonic_survey",
+          "callee": "desurvey",
+          "lineNumber": 305
+        },
+        {
+          "caller": "test_unsupported_method",
+          "callee": "pytest.raises",
+          "lineNumber": 316
+        },
+        {
+          "caller": "test_unsupported_method",
+          "callee": "desurvey",
+          "lineNumber": 318
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "tools/extract_gsm_figures.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 62,
+      "functions": [
+        {
+          "name": "extract_figures",
+          "startLine": 20,
+          "endLine": 66,
+          "params": [
+            "pdf_path",
+            "output_dir",
+            "dpi"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extract_figures",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extract_figures",
+          "callee": "os.path.exists",
+          "lineNumber": 25
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "os.makedirs",
+          "lineNumber": 26
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 28
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 29
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 30
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "convert_from_path",
+          "lineNumber": 33
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 35
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "enumerate",
+          "lineNumber": 39
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "os.path.join",
+          "lineNumber": 41
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 43
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "page.save",
+          "lineNumber": 44
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "figures.append",
+          "lineNumber": 46
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "os.path.join",
+          "lineNumber": 60
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "open",
+          "lineNumber": 61
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "json.dump",
+          "lineNumber": 62
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 64
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "len",
+          "lineNumber": 64
+        },
+        {
+          "caller": "extract_figures",
+          "callee": "print",
+          "lineNumber": 65
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "tools/georeference_map.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 82,
+      "nonEmptyLines": 67,
+      "functions": [
+        {
+          "name": "georeference_map",
+          "startLine": 21,
+          "endLine": 62,
+          "params": [
+            "input_path",
+            "output_path",
+            "bounds"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "georeference_map",
+          "line": 21,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "georeference_map",
+          "callee": "print",
+          "lineNumber": 29
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "print",
+          "lineNumber": 30
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "Image.open",
+          "lineNumber": 33
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "np.array",
+          "lineNumber": 36
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "len",
+          "lineNumber": 39
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "data.transpose",
+          "lineNumber": 40
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "data.reshape",
+          "lineNumber": 43
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "from_bounds",
+          "lineNumber": 46
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "rasterio.open",
+          "lineNumber": 49
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "dst.write",
+          "lineNumber": 60
+        },
+        {
+          "caller": "georeference_map",
+          "callee": "print",
+          "lineNumber": 62
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "vision/earth_substrate_v1.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 80,
+      "nonEmptyLines": 60,
+      "sections": [
+        {
+          "heading": "vision/earth_substrate_v1.md — GEOX Earth Substrate Vision",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What GEOX Wants To Be",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "What GEOX Actually Is (2026-07-03)",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Missing Receipts",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "What Makes GEOX Novel (If Built)",
+          "level": 2,
+          "line": 43
+        },
+        {
+          "heading": "Three RFCs (Not Tools)",
+          "level": 2,
+          "line": 57
+        },
+        {
+          "heading": "The Build Path",
+          "level": 2,
+          "line": 69
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "well-correlation-rigor/SKILL.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 127,
+      "nonEmptyLines": 99,
+      "sections": [
+        {
+          "heading": "Well Correlation Rigor — The Real-Geologist Checklist",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "The 5 Non-Negotiable Components",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Log Motif → Depositional Model Reference",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "Subsea Datum — Why It Matters",
+          "level": 2,
+          "line": 38
+        },
+        {
+          "heading": "Basin-Specific Marker Quick Reference",
+          "level": 2,
+          "line": 49
+        },
+        {
+          "heading": "Marker Bed Selection — The Real Test",
+          "level": 2,
+          "line": 63
+        },
+        {
+          "heading": "Pre-Delivery Self-Check",
+          "level": 2,
+          "line": 73
+        },
+        {
+          "heading": "Standard Workflow (Cherokee-style, adaptable)",
+          "level": 2,
+          "line": 79
+        },
+        {
+          "heading": "Pitfalls (Updated 2026-08-18)",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "Adoption Note",
+          "level": 2,
+          "line": 112
+        },
+        {
+          "heading": "Reference Files",
+          "level": 2,
+          "line": 123
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 11
+      }
+    }
+  ]
+}

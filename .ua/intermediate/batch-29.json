@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:geox/seismic/rsi/geox_out/D_geologist_report.txt",
+      "type": "document",
+      "name": "D_geologist_report.txt",
+      "filePath": "geox/seismic/rsi/geox_out/D_geologist_report.txt",
+      "summary": "txt docs file (68 non-empty lines).",
+      "tags": [
+        "documentation",
+        "txt"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:geox/seismic/rsi/geox_out/cognition.json",
+      "type": "config",
+      "name": "cognition.json",
+      "filePath": "geox/seismic/rsi/geox_out/cognition.json",
+      "summary": "json config file (722 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:geox/seismic/rsi/geox_out/geoseismic_model.json",
+      "type": "config",
+      "name": "geoseismic_model.json",
+      "filePath": "geox/seismic/rsi/geox_out/geoseismic_model.json",
+      "summary": "json config file (25429 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": []
+}

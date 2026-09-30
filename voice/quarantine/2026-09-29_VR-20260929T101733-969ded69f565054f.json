@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-29T10:17:33.800157+00:00",
+  "trace_id": "VR-20260929T101733-969ded69f565054f",
+  "source_file": "/root/.hermes/cache/audio/audio_53c1233f7e26.ogg",
+  "source_sha256": "ca464a6787695fdf",
+  "category": "UNKNOWN",
+  "guard": {
+    "category": "UNKNOWN",
+    "sink": "QUARANTINE",
+    "confidence": 0.4,
+    "reasons": [
+      "tiada_isyarat_mencukupi",
+      "jangan_teka"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

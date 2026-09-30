@@ -1,0 +1,30 @@
+{
+  "ts": "2026-09-24T11:35:47.332763+00:00",
+  "trace_id": "VR-20260924T113547-414d1e5f825780ba",
+  "source_file": "/root/.hermes/cache/audio/audio_78ef13bdf5c4.ogg",
+  "source_sha256": "97572378a191394d",
+  "category": "UNKNOWN",
+  "guard": {
+    "category": "UNKNOWN",
+    "sink": "QUARANTINE",
+    "confidence": 0.4,
+    "reasons": [
+      "tiada_isyarat_mencukupi",
+      "jangan_teka"
+    ],
+    "named_persons": [
+      "Coke Zero",
+      "Dinner Nasi"
+    ],
+    "proprietary_flag": false
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

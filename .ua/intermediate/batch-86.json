@@ -1,0 +1,1561 @@
+{
+  "nodes": [
+    {
+      "id": "document:research/velocity_mapping/DEEP_RESEARCH_VELOCITY_STRUCTURAL_MAPPING.md",
+      "type": "document",
+      "name": "DEEP_RESEARCH_VELOCITY_STRUCTURAL_MAPPING.md",
+      "filePath": "research/velocity_mapping/DEEP_RESEARCH_VELOCITY_STRUCTURAL_MAPPING.md",
+      "summary": "markdown docs file (399 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:resources/basins/malay_basin/polygon.geojson",
+      "type": "file",
+      "name": "polygon.geojson",
+      "filePath": "resources/basins/malay_basin/polygon.geojson",
+      "summary": "geojson code file (12 non-empty lines).",
+      "tags": [
+        "code",
+        "geojson"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:resources/basins/sabah_two_oceanics.yaml",
+      "type": "config",
+      "name": "sabah_two_oceanics.yaml",
+      "filePath": "resources/basins/sabah_two_oceanics.yaml",
+      "summary": "yaml config file (156 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/capabilities/geox_capabilities.json",
+      "type": "config",
+      "name": "geox_capabilities.json",
+      "filePath": "resources/capabilities/geox_capabilities.json",
+      "summary": "json config file (1097 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:resources/data",
+      "type": "file",
+      "name": "data",
+      "filePath": "resources/data",
+      "summary": "unknown code file (70 non-empty lines).",
+      "tags": [
+        "code",
+        "unknown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/data_sources/malaysia_jmg_myGEMS_catalog.json",
+      "type": "config",
+      "name": "malaysia_jmg_myGEMS_catalog.json",
+      "filePath": "resources/data_sources/malaysia_jmg_myGEMS_catalog.json",
+      "summary": "json config file (310 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/data_sources/paleobiodb_catalog.json",
+      "type": "config",
+      "name": "paleobiodb_catalog.json",
+      "filePath": "resources/data_sources/paleobiodb_catalog.json",
+      "summary": "json config file (82 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:resources/registry/pressure_components.yaml",
+      "type": "config",
+      "name": "pressure_components.yaml",
+      "filePath": "resources/registry/pressure_components.yaml",
+      "summary": "yaml config file (230 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:resources/registry/stratigraphy/malay_basin.yaml",
+      "type": "config",
+      "name": "malay_basin.yaml",
+      "filePath": "resources/registry/stratigraphy/malay_basin.yaml",
+      "summary": "yaml config file (136 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:schemas/earth/build_schemas.py",
+      "type": "file",
+      "name": "build_schemas.py",
+      "filePath": "schemas/earth/build_schemas.py",
+      "summary": "python code file (415 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/arifos_od_siphon.py",
+      "type": "file",
+      "name": "arifos_od_siphon.py",
+      "filePath": "scripts/arifos_od_siphon.py",
+      "summary": "Defines 1 function(s); 1 class(es); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:scripts/arifos_od_siphon.py:ODSiphon",
+      "type": "class",
+      "name": "ODSiphon",
+      "filePath": "scripts/arifos_od_siphon.py",
+      "lineRange": [
+        27,
+        179
+      ],
+      "summary": "Class ODSiphon with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/build_indonesia_volcanoes.py",
+      "type": "file",
+      "name": "build_indonesia_volcanoes.py",
+      "filePath": "scripts/build_indonesia_volcanoes.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/build_indonesia_volcanoes.py:determine_tectonic_arc",
+      "type": "function",
+      "name": "determine_tectonic_arc",
+      "filePath": "scripts/build_indonesia_volcanoes.py",
+      "lineRange": [
+        18,
+        54
+      ],
+      "summary": "determine_tectonic_arc(location, name) — 36 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/build_indonesia_volcanoes.py:fetch_volcano_list",
+      "type": "function",
+      "name": "fetch_volcano_list",
+      "filePath": "scripts/build_indonesia_volcanoes.py",
+      "lineRange": [
+        56,
+        85
+      ],
+      "summary": "fetch_volcano_list() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/build_indonesia_volcanoes.py:fetch_volcano_detail",
+      "type": "function",
+      "name": "fetch_volcano_detail",
+      "filePath": "scripts/build_indonesia_volcanoes.py",
+      "lineRange": [
+        95,
+        125
+      ],
+      "summary": "fetch_volcano_detail(v) — 30 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/build_indonesia_volcanoes.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/build_indonesia_volcanoes.py",
+      "lineRange": [
+        127,
+        220
+      ],
+      "summary": "main() — 93 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check_registry_truth.py",
+      "type": "file",
+      "name": "check_registry_truth.py",
+      "filePath": "scripts/check_registry_truth.py",
+      "summary": "Defines 15 function(s); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_surface",
+      "type": "function",
+      "name": "check_surface",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        58,
+        76
+      ],
+      "summary": "check_surface(name, actual_count, actual_set, strict) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_manifest",
+      "type": "function",
+      "name": "check_manifest",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        89,
+        107
+      ],
+      "summary": "check_manifest(strict) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_canonical_surface_json",
+      "type": "function",
+      "name": "check_canonical_surface_json",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        110,
+        120
+      ],
+      "summary": "check_canonical_surface_json(strict) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_llms_txt",
+      "type": "function",
+      "name": "check_llms_txt",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        123,
+        166
+      ],
+      "summary": "check_llms_txt(strict) — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_tools_sot_yaml",
+      "type": "function",
+      "name": "check_tools_sot_yaml",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        169,
+        182
+      ],
+      "summary": "check_tools_sot_yaml(strict) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_contracts_tools_yaml",
+      "type": "function",
+      "name": "check_contracts_tools_yaml",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        185,
+        198
+      ],
+      "summary": "check_contracts_tools_yaml(strict) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_readme_badge",
+      "type": "function",
+      "name": "check_readme_badge",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        201,
+        236
+      ],
+      "summary": "check_readme_badge(strict) — 35 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_tools_json",
+      "type": "function",
+      "name": "check_tools_json",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        239,
+        250
+      ],
+      "summary": "check_tools_json(strict) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_generated_tools_json",
+      "type": "function",
+      "name": "check_generated_tools_json",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        253,
+        264
+      ],
+      "summary": "check_generated_tools_json(strict) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:check_live_probe",
+      "type": "function",
+      "name": "check_live_probe",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        267,
+        315
+      ],
+      "summary": "check_live_probe(strict) — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check_registry_truth.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check_registry_truth.py",
+      "lineRange": [
+        318,
+        357
+      ],
+      "summary": "main() — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check_structural_restoration_parity.py",
+      "type": "file",
+      "name": "check_structural_restoration_parity.py",
+      "filePath": "scripts/check_structural_restoration_parity.py",
+      "summary": "Defines 5 function(s); exports 5 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check_structural_restoration_parity.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check_structural_restoration_parity.py",
+      "lineRange": [
+        74,
+        117
+      ],
+      "summary": "main() — 43 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/control_plane_server_patch.py",
+      "type": "file",
+      "name": "control_plane_server_patch.py",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:_get_canonical_tools",
+      "type": "function",
+      "name": "_get_canonical_tools",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        40,
+        48
+      ],
+      "summary": "_get_canonical_tools() — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:rt1_check_tool",
+      "type": "function",
+      "name": "rt1_check_tool",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        64,
+        85
+      ],
+      "summary": "rt1_check_tool(tool_name) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:rt1_guard_middleware",
+      "type": "function",
+      "name": "rt1_guard_middleware",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        88,
+        143
+      ],
+      "summary": "rt1_guard_middleware(get_response) — 55 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:rt3_check_irreversible",
+      "type": "function",
+      "name": "rt3_check_irreversible",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        149,
+        175
+      ],
+      "summary": "rt3_check_irreversible(tool_name, arguments) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:rt3_guard",
+      "type": "function",
+      "name": "rt3_guard",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        178,
+        204
+      ],
+      "summary": "rt3_guard(tool_name, arguments) — 26 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:compute_registry_hash",
+      "type": "function",
+      "name": "compute_registry_hash",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        210,
+        231
+      ],
+      "summary": "compute_registry_hash() — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/control_plane_server_patch.py:guard_report",
+      "type": "function",
+      "name": "guard_report",
+      "filePath": "scripts/control_plane_server_patch.py",
+      "lineRange": [
+        237,
+        251
+      ],
+      "summary": "guard_report() — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/dependency_probes.py",
+      "type": "file",
+      "name": "dependency_probes.py",
+      "filePath": "scripts/dependency_probes.py",
+      "summary": "Defines 6 function(s); 2 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:probe_protobuf",
+      "type": "function",
+      "name": "probe_protobuf",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        92,
+        182
+      ],
+      "summary": "probe_protobuf() — 90 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:probe_cryptography",
+      "type": "function",
+      "name": "probe_cryptography",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        191,
+        309
+      ],
+      "summary": "probe_cryptography() — 118 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:probe_fastmcp",
+      "type": "function",
+      "name": "probe_fastmcp",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        315,
+        401
+      ],
+      "summary": "probe_fastmcp() — 86 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:probe_sentence_transformers",
+      "type": "function",
+      "name": "probe_sentence_transformers",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        410,
+        477
+      ],
+      "summary": "probe_sentence_transformers() — 67 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:probe_caio",
+      "type": "function",
+      "name": "probe_caio",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        483,
+        547
+      ],
+      "summary": "probe_caio() — 64 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dependency_probes.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/dependency_probes.py",
+      "lineRange": [
+        562,
+        611
+      ],
+      "summary": "main(argv) — 49 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/generate_all_surfaces.py",
+      "type": "file",
+      "name": "generate_all_surfaces.py",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "summary": "Defines 9 function(s); exports 9 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:get_tool_metadata",
+      "type": "function",
+      "name": "get_tool_metadata",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        57,
+        78
+      ],
+      "summary": "get_tool_metadata(name) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_tools_sot_yaml",
+      "type": "function",
+      "name": "regenerate_tools_sot_yaml",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        81,
+        123
+      ],
+      "summary": "regenerate_tools_sot_yaml(dry_run) — 42 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_canonical_public_surface_json",
+      "type": "function",
+      "name": "regenerate_canonical_public_surface_json",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        126,
+        165
+      ],
+      "summary": "regenerate_canonical_public_surface_json(dry_run) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_tools_json",
+      "type": "function",
+      "name": "regenerate_tools_json",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        168,
+        197
+      ],
+      "summary": "regenerate_tools_json(dry_run) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_llms_txt",
+      "type": "function",
+      "name": "regenerate_llms_txt",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        200,
+        237
+      ],
+      "summary": "regenerate_llms_txt(dry_run) — 37 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_contracts_tools_yaml",
+      "type": "function",
+      "name": "regenerate_contracts_tools_yaml",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        240,
+        294
+      ],
+      "summary": "regenerate_contracts_tools_yaml(dry_run) — 54 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:regenerate_readme_badge",
+      "type": "function",
+      "name": "regenerate_readme_badge",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        297,
+        341
+      ],
+      "summary": "regenerate_readme_badge(dry_run) — 44 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_all_surfaces.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/generate_all_surfaces.py",
+      "lineRange": [
+        344,
+        394
+      ],
+      "summary": "main() — 50 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/generate_canonical_surface.py",
+      "type": "file",
+      "name": "generate_canonical_surface.py",
+      "filePath": "scripts/generate_canonical_surface.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_canonical_surface.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/generate_canonical_surface.py",
+      "lineRange": [
+        20,
+        58
+      ],
+      "summary": "main() — 38 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/generate_live_sot.py",
+      "type": "file",
+      "name": "generate_live_sot.py",
+      "filePath": "scripts/generate_live_sot.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/generate_mcp_apps_surface.py",
+      "type": "file",
+      "name": "generate_mcp_apps_surface.py",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "summary": "Defines 6 function(s); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:_base_uri",
+      "type": "function",
+      "name": "_base_uri",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        56,
+        60
+      ],
+      "summary": "_base_uri(uri) — 4 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:_canonical_uri",
+      "type": "function",
+      "name": "_canonical_uri",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        63,
+        75
+      ],
+      "summary": "_canonical_uri(uri) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:_uri_family",
+      "type": "function",
+      "name": "_uri_family",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        78,
+        95
+      ],
+      "summary": "_uri_family(uri) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:_build_tool_uri_index",
+      "type": "function",
+      "name": "_build_tool_uri_index",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        98,
+        127
+      ],
+      "summary": "_build_tool_uri_index(tools) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:_tools_for_uri",
+      "type": "function",
+      "name": "_tools_for_uri",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        130,
+        141
+      ],
+      "summary": "_tools_for_uri(uri, index, apps_visual) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_mcp_apps_surface.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/generate_mcp_apps_surface.py",
+      "lineRange": [
+        144,
+        257
+      ],
+      "summary": "main() — 113 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/generate_public_registry.py",
+      "type": "file",
+      "name": "generate_public_registry.py",
+      "filePath": "scripts/generate_public_registry.py",
+      "summary": "Defines 7 function(s); exports 7 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_public_registry.py:_public_tool_row",
+      "type": "function",
+      "name": "_public_tool_row",
+      "filePath": "scripts/generate_public_registry.py",
+      "lineRange": [
+        22,
+        38
+      ],
+      "summary": "_public_tool_row(tool) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_public_registry.py:build_tools_snapshot",
+      "type": "function",
+      "name": "build_tools_snapshot",
+      "filePath": "scripts/generate_public_registry.py",
+      "lineRange": [
+        41,
+        70
+      ],
+      "summary": "build_tools_snapshot() — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_public_registry.py:build_openapi_snapshot",
+      "type": "function",
+      "name": "build_openapi_snapshot",
+      "filePath": "scripts/generate_public_registry.py",
+      "lineRange": [
+        73,
+        100
+      ],
+      "summary": "build_openapi_snapshot() — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_public_registry.py:build_root_tools_manifest",
+      "type": "function",
+      "name": "build_root_tools_manifest",
+      "filePath": "scripts/generate_public_registry.py",
+      "lineRange": [
+        103,
+        113
+      ],
+      "summary": "build_root_tools_manifest() — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_public_registry.py:build_llms_txt",
+      "type": "function",
+      "name": "build_llms_txt",
+      "filePath": "scripts/generate_public_registry.py",
+      "lineRange": [
+        116,
+        138
+      ],
+      "summary": "build_llms_txt() — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/generate_pytest_receipt.py",
+      "type": "file",
+      "name": "generate_pytest_receipt.py",
+      "filePath": "scripts/generate_pytest_receipt.py",
+      "summary": "Defines 3 function(s); exports 3 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate_pytest_receipt.py:get_git_commit_sha",
+      "type": "function",
+      "name": "get_git_commit_sha",
+      "filePath": "scripts/generate_pytest_receipt.py",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "get_git_commit_sha() — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_pytest_receipt.py:categorize_nodeid",
+      "type": "function",
+      "name": "categorize_nodeid",
+      "filePath": "scripts/generate_pytest_receipt.py",
+      "lineRange": [
+        37,
+        61
+      ],
+      "summary": "categorize_nodeid(nodeid, error_msg) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate_pytest_receipt.py:run_and_generate_receipt",
+      "type": "function",
+      "name": "run_and_generate_receipt",
+      "filePath": "scripts/generate_pytest_receipt.py",
+      "lineRange": [
+        64,
+        179
+      ],
+      "summary": "run_and_generate_receipt(args) — 115 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/hooks/install_hooks.sh",
+      "type": "file",
+      "name": "install_hooks.sh",
+      "filePath": "scripts/hooks/install_hooks.sh",
+      "summary": "shell script file (13 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/hooks/pre-push/pre-push.sh",
+      "type": "file",
+      "name": "pre-push.sh",
+      "filePath": "scripts/hooks/pre-push/pre-push.sh",
+      "summary": "shell script file (11 non-empty lines).",
+      "tags": [
+        "script",
+        "shell"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/hooks/pre-push/repo_guard.py",
+      "type": "file",
+      "name": "repo_guard.py",
+      "filePath": "scripts/hooks/pre-push/repo_guard.py",
+      "summary": "Defines 12 function(s); 1 class(es); exports 13 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/hooks/pre-push/repo_guard.py:changed_files",
+      "type": "function",
+      "name": "changed_files",
+      "filePath": "scripts/hooks/pre-push/repo_guard.py",
+      "lineRange": [
+        78,
+        90
+      ],
+      "summary": "changed_files(commits) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/hooks/pre-push/repo_guard.py:scan_for_secrets",
+      "type": "function",
+      "name": "scan_for_secrets",
+      "filePath": "scripts/hooks/pre-push/repo_guard.py",
+      "lineRange": [
+        108,
+        122
+      ],
+      "summary": "scan_for_secrets(paths) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/hooks/pre-push/repo_guard.py:validate_changed_json",
+      "type": "function",
+      "name": "validate_changed_json",
+      "filePath": "scripts/hooks/pre-push/repo_guard.py",
+      "lineRange": [
+        125,
+        139
+      ],
+      "summary": "validate_changed_json(paths) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/hooks/pre-push/repo_guard.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/hooks/pre-push/repo_guard.py",
+      "lineRange": [
+        151,
+        253
+      ],
+      "summary": "main() — 102 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/arifos_od_siphon.py",
+      "target": "class:scripts/arifos_od_siphon.py:ODSiphon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/build_indonesia_volcanoes.py",
+      "target": "function:scripts/build_indonesia_volcanoes.py:determine_tectonic_arc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/build_indonesia_volcanoes.py",
+      "target": "function:scripts/build_indonesia_volcanoes.py:fetch_volcano_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/build_indonesia_volcanoes.py",
+      "target": "function:scripts/build_indonesia_volcanoes.py:fetch_volcano_detail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/build_indonesia_volcanoes.py",
+      "target": "function:scripts/build_indonesia_volcanoes.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_canonical_surface_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_llms_txt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_tools_sot_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_contracts_tools_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_readme_badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_tools_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_generated_tools_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:check_live_probe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_registry_truth.py",
+      "target": "function:scripts/check_registry_truth.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/check_structural_restoration_parity.py",
+      "target": "function:scripts/check_structural_restoration_parity.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:_get_canonical_tools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:rt1_check_tool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:rt1_guard_middleware",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:rt3_check_irreversible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:rt3_guard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:compute_registry_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/control_plane_server_patch.py",
+      "target": "function:scripts/control_plane_server_patch.py:guard_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:probe_protobuf",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:probe_cryptography",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:probe_fastmcp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:probe_sentence_transformers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:probe_caio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/dependency_probes.py",
+      "target": "function:scripts/dependency_probes.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:get_tool_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_tools_sot_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_canonical_public_surface_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_tools_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_llms_txt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_contracts_tools_yaml",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:regenerate_readme_badge",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_all_surfaces.py",
+      "target": "function:scripts/generate_all_surfaces.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_canonical_surface.py",
+      "target": "function:scripts/generate_canonical_surface.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:_base_uri",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:_canonical_uri",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:_uri_family",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:_build_tool_uri_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:_tools_for_uri",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_mcp_apps_surface.py",
+      "target": "function:scripts/generate_mcp_apps_surface.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_public_registry.py",
+      "target": "function:scripts/generate_public_registry.py:_public_tool_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_public_registry.py",
+      "target": "function:scripts/generate_public_registry.py:build_tools_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_public_registry.py",
+      "target": "function:scripts/generate_public_registry.py:build_openapi_snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_public_registry.py",
+      "target": "function:scripts/generate_public_registry.py:build_root_tools_manifest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_public_registry.py",
+      "target": "function:scripts/generate_public_registry.py:build_llms_txt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_pytest_receipt.py",
+      "target": "function:scripts/generate_pytest_receipt.py:get_git_commit_sha",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_pytest_receipt.py",
+      "target": "function:scripts/generate_pytest_receipt.py:categorize_nodeid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/generate_pytest_receipt.py",
+      "target": "function:scripts/generate_pytest_receipt.py:run_and_generate_receipt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/hooks/pre-push/repo_guard.py",
+      "target": "function:scripts/hooks/pre-push/repo_guard.py:changed_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/hooks/pre-push/repo_guard.py",
+      "target": "function:scripts/hooks/pre-push/repo_guard.py:scan_for_secrets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/hooks/pre-push/repo_guard.py",
+      "target": "function:scripts/hooks/pre-push/repo_guard.py:validate_changed_json",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/hooks/pre-push/repo_guard.py",
+      "target": "function:scripts/hooks/pre-push/repo_guard.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

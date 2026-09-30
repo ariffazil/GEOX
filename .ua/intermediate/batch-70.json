@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "config:src/geox_mcp/contracts/geox_gravmag_studio_contract.json",
+      "type": "config",
+      "name": "geox_gravmag_studio_contract.json",
+      "filePath": "src/geox_mcp/contracts/geox_gravmag_studio_contract.json",
+      "summary": "json config file (173 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:src/geox_mcp/contracts/geox_seismic_load_volume_contract.json",
+      "type": "config",
+      "name": "geox_seismic_load_volume_contract.json",
+      "filePath": "src/geox_mcp/contracts/geox_seismic_load_volume_contract.json",
+      "summary": "json config file (95 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src/geox_mcp/contracts/geox_ui_tool_contract.json",
+      "type": "config",
+      "name": "geox_ui_tool_contract.json",
+      "filePath": "src/geox_mcp/contracts/geox_ui_tool_contract.json",
+      "summary": "json config file (165 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:src/geox_mcp/contracts/geox_well_desk_contract.json",
+      "type": "config",
+      "name": "geox_well_desk_contract.json",
+      "filePath": "src/geox_mcp/contracts/geox_well_desk_contract.json",
+      "summary": "json config file (112 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

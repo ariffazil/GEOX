@@ -416,6 +416,26 @@ class GeoxGovernanceMiddleware(Middleware):
         filtered = [t for t in result if getattr(t, "name", None) in canonical_public_tools]
         removed = len(result) - len(filtered)
 
+        # BL surface ruling 2026-09-30: the MCP annotation quartet is an ASSEMBLY
+        # invariant, not a per-decorator courtesy. Any canonical tool reaching the
+        # client surface without annotations gets them attached here, derived from
+        # the single behavior table (_geox_annotations). One enforcement point,
+        # identical in deployed and in-process test compositions.
+        try:
+            from geox_mcp.server import _geox_annotations as _ann
+            from mcp.types import Annotations as _MCPAnnotations
+
+            for _t in filtered:
+                if getattr(_t, "annotations", None) is None and getattr(_t, "name", None):
+                    try:
+                        # SDK object (snake_case fields, camelCase aliases on the wire)
+                        # — same shape decorator-provided annotations produce.
+                        _t.annotations = _MCPAnnotations.model_validate(_ann(_t.name))
+                    except Exception:  # frozen tool objects: skip
+                        pass
+        except Exception:
+            pass
+
         # Build dual drift reports:
         #   raw_report  — unfiltered → raw counts for journal diagnostics
         #   client_report — filtered → what /health and /drift surface
@@ -1021,6 +1041,12 @@ class GeoxGovernanceMiddleware(Middleware):
         """P0-6: Inject 5-layer evidence envelope into tool response.
 
         Preserves FastMCP ToolResult wire type (mutates structured_content).
+
+        F2 PATCH (2026-09-18 · 333-AGI · audit-layer dual-truth fix):
+        Propagates actual error state from tool result into the stamped
+        envelope. Previously hardcoded execution_status="COMPLETED" and
+        omitted is_error/error_detail — a failed call would be recorded
+        as a successful computation in the audit layer.
         """
         if not isinstance(gov_envelope, dict):
             return result
@@ -1036,13 +1062,45 @@ class GeoxGovernanceMiddleware(Middleware):
             _envelope_for_hash = _json.dumps(gov_envelope, sort_keys=True, default=str)
             content_sha256 = hashlib.sha256(_envelope_for_hash.encode()).hexdigest()
 
+            # F2 PATCH: detect actual error state from tool result.
+            # Honours result.isError (FastMCP wrapper), result["isError"],
+            # result["status"] in {"ERROR","INVALID","FAILED"}, and
+            # truthy result["error"] payload. Falls back to ToolResult
+            # attribute for non-dict returns.
+            _is_error = False
+            _error_detail = ""
+            try:
+                if isinstance(result, dict):
+                    if result.get("isError") is True:
+                        _is_error = True
+                    elif result.get("status") in ("ERROR", "INVALID", "FAILED", "REJECTED"):
+                        _is_error = True
+                    _err = result.get("error")
+                    if isinstance(_err, dict):
+                        _error_detail = str(_err.get("message") or _err.get("detail") or _err)[:200]
+                    elif _err is not None and _err is not False:
+                        _error_detail = str(_err)[:200]
+                else:
+                    _is_error = bool(getattr(result, "is_error", False))
+                    if _is_error:
+                        _error_detail = str(getattr(result, "error", ""))[:200]
+            except Exception:
+                pass
+
+            _transport = "ERROR" if _is_error else "OK"
+            _execution = "FAILED" if _is_error else "COMPLETED"
+            _artifact = "REJECTED" if _is_error else ("CREATED" if gov_envelope.get("artifact_id") else "NONE")
+            _gov_verdict = gov_envelope.get("gate_verdict", "VOID" if _is_error else "ADVISORY")
+
             envelope = build_evidence_envelope(
                 tool_name=tool_name,
-                transport_status="OK",
-                execution_status="COMPLETED",
-                artifact_status="CREATED" if gov_envelope.get("artifact_id") else "NONE",
+                transport_status=_transport,
+                execution_status=_execution,
+                artifact_status=_artifact,
                 verification_status="PENDING",
-                governance_verdict=gov_envelope.get("gate_verdict", "ADVISORY"),
+                governance_verdict=_gov_verdict,
+                is_error=_is_error,
+                error_detail=_error_detail,
                 artifact_id=gov_envelope.get("artifact_id", ""),
                 session_id=gov_envelope.get("session_id", ""),
                 actor_id=gov_envelope.get("actor_id", "anonymous"),
@@ -1132,7 +1190,44 @@ class GeoxGovernanceMiddleware(Middleware):
             elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
                 result.structured_content = {**conformance, **result.structured_content}
             return result
-        except Exception:
+        except Exception as exc:
+            # T7-P2 (2026-09-18, BIJAKSANA compile): stop burying well_conformance errors.
+            # Surface the exception under _well_conformance.errors so RT1/RT3 callers
+            # can detect a swallowed failure instead of receiving conformant=True on a
+            # degraded result. Verdict stays HOLD, never SEAL, when conformance fails.
+            logger.warning(
+                "well_conformance injection failed for tool=%s: %s",
+                tool_name,
+                exc,
+            )
+            try:
+                if isinstance(result, dict):
+                    result = {
+                        "_well_conformance": {
+                            "claim_state": "HOLD",
+                            "witness_type": "AI",
+                            "organ_type": "GEOX",
+                            "conformance_version": "v1.0",
+                            "conformant": False,
+                            "errors": [f"{type(exc).__name__}: {exc}"],
+                        },
+                        **result,
+                    }
+                elif hasattr(result, "structured_content") and isinstance(result.structured_content, dict):
+                    result.structured_content = {
+                        "_well_conformance": {
+                            "claim_state": "HOLD",
+                            "witness_type": "AI",
+                            "organ_type": "GEOX",
+                            "conformance_version": "v1.0",
+                            "conformant": False,
+                            "errors": [f"{type(exc).__name__}: {exc}"],
+                        },
+                        **result.structured_content,
+                    }
+            except Exception:
+                # Last resort — never lose the original tool result.
+                return result
             return result
 
     @staticmethod

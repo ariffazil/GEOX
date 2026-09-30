@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "geox-claim-state-machine/v1",
   "title": "GEOX ClaimCard State Machine v1",
-  "description": "Canonical state machine for ClaimCard lifecycle. 9 states, 8 transitions. Structured error codes for governance holds.",
+  "description": "Canonical state machine for ClaimCard lifecycle. 9 states, 8 transitions. Structured error codes for governance holds. States/transitions unchanged in meaning; explanation_axis (claim_kernel/v1) added, guarding APPROVED_INTERPRETATION and SEALED.",
   "type": "object",
   "properties": {
     "spec_version": {
@@ -13,16 +13,38 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "description", "entry_conditions", "exit_allowed"],
+        "required": [
+          "name",
+          "description",
+          "entry_conditions",
+          "exit_allowed"
+        ],
         "properties": {
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "entry_conditions": { "type": "array", "items": { "type": "string" } },
-          "requires_evidence_pack": { "type": "boolean", "default": false },
-          "requires_human": { "type": "boolean", "default": false },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "entry_conditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "requires_evidence_pack": {
+            "type": "boolean",
+            "default": false
+          },
+          "requires_human": {
+            "type": "boolean",
+            "default": false
+          },
           "exit_allowed": {
             "type": "array",
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "description": "Valid next states."
           }
         }
@@ -32,12 +54,36 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["from", "to", "condition", "error_code_on_fail"],
+        "required": [
+          "from",
+          "to",
+          "condition",
+          "error_code_on_fail"
+        ],
         "properties": {
-          "from": { "type": "string" },
-          "to": { "type": "string" },
-          "condition": { "type": "string" },
-          "error_code_on_fail": { "type": "string" }
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "condition": {
+            "type": "string"
+          },
+          "error_code_on_fail": {
+            "type": "string"
+          },
+          "requires_explanation_class": {
+            "type": "string",
+            "enum": [
+              "action_eligible"
+            ],
+            "description": "claim_kernel/v1 explanatory-kind guard on this transition."
+          },
+          "error_code_on_explanation_fail": {
+            "type": "string",
+            "description": "Error code raised when the explanatory-kind guard refuses this transition."
+          }
         }
       }
     },
@@ -45,31 +91,181 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["code", "severity", "layer", "message_template"],
+        "required": [
+          "code",
+          "severity",
+          "layer",
+          "message_template"
+        ],
         "properties": {
-          "code": { "type": "string" },
-          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
-          "layer": { "type": "string", "enum": ["production_authority", "geox_mcp_core", "geox_mcp_ui", "geox_mcp_apps", "subsurface_workflow"] },
-          "message_template": { "type": "string" },
-          "recovery": { "type": "string" }
+          "code": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "layer": {
+            "type": "string",
+            "enum": [
+              "production_authority",
+              "geox_mcp_core",
+              "geox_mcp_ui",
+              "geox_mcp_apps",
+              "subsurface_workflow"
+            ]
+          },
+          "message_template": {
+            "type": "string"
+          },
+          "recovery": {
+            "type": "string"
+          }
         }
       }
     },
     "default": {
       "type": "object",
       "properties": {
-        "initial_state": { "type": "string", "const": "DRAFT" },
+        "initial_state": {
+          "type": "string",
+          "const": "DRAFT"
+        },
         "terminal_states": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "blocked_if_no_evidence": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "States that cannot be entered if EvidencePack is NO_VALID_EVIDENCE or QC_FAILED."
+        },
+        "blocked_if_explanation_not_action_eligible": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "States that cannot be entered unless explanation_class is action-eligible."
+        },
+        "default_explanation_class": {
+          "type": "string",
+          "const": "UNCLASSIFIED"
+        }
+      }
+    },
+    "explanation_axis": {
+      "type": "object",
+      "description": "Explanatory-kind axis (claim_kernel/v1). Orthogonal to the lifecycle states: it records WHAT KIND of explanation a claim is, and gates the two transitions that turn a claim into a justification.",
+      "required": [
+        "schema",
+        "field",
+        "default",
+        "classes",
+        "guarded_transitions",
+        "rule"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "const": "claim_kernel/v1"
+        },
+        "field": {
+          "type": "string",
+          "const": "explanation_class"
+        },
+        "default": {
+          "type": "string",
+          "const": "UNCLASSIFIED"
+        },
+        "fail_closed": {
+          "type": "boolean",
+          "default": true
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "action_eligible"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "MEASURED",
+                  "MECHANISM",
+                  "PATTERN",
+                  "NARRATIVE",
+                  "UNCLASSIFIED"
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "action_eligible": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "guarded_transitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "from",
+              "to",
+              "error_code_on_fail"
+            ],
+            "properties": {
+              "from": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "to": {
+                "type": "string"
+              },
+              "error_code_on_fail": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rule": {
+          "type": "string"
+        },
+        "on_narrative": {
+          "type": "string"
+        },
+        "on_unclassified": {
+          "type": "string"
+        },
+        "rewrite_of_preexisting_records": {
+          "type": "string"
+        },
+        "kernel_unavailable_posture": {
+          "type": "string"
         }
       }
     }
   },
-  "required": ["spec_version", "states", "transitions", "error_codes", "default"]
+  "required": [
+    "spec_version",
+    "states",
+    "transitions",
+    "error_codes",
+    "default"
+  ]
 }

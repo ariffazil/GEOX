@@ -1,0 +1,6402 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [
+    "geox-gui/src/components/Cockpit/OperatorCockpit.css",
+    "geox-gui/src/components/LandingPage/LandingPage.css"
+  ],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 23,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 23,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "geox-gui/src/App.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 40,
+      "functions": [
+        {
+          "name": "App",
+          "startLine": 16,
+          "endLine": 42,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "App",
+          "callee": "useGEOXStore",
+          "lineNumber": 19
+        },
+        {
+          "caller": "App",
+          "callee": "sessionToken.trim",
+          "lineNumber": 21
+        },
+        {
+          "caller": "App",
+          "callee": "useGEOXStore.getState().setSessionIdentity",
+          "lineNumber": 29
+        },
+        {
+          "caller": "App",
+          "callee": "useGEOXStore.getState",
+          "lineNumber": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/GeoxCore.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 261,
+      "nonEmptyLines": 238,
+      "functions": [
+        {
+          "name": "Badge",
+          "startLine": 15,
+          "endLine": 27,
+          "params": [
+            "{ children, color = \"amber\" }"
+          ]
+        },
+        {
+          "name": "GeoxCore",
+          "startLine": 29,
+          "endLine": 259,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GeoxCore",
+          "line": 29,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GeoxCore",
+          "callee": "useState",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useState",
+          "lineNumber": 31
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useMcpTool",
+          "lineNumber": 32
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useState",
+          "lineNumber": 33
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useState",
+          "lineNumber": 34
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useRef",
+          "lineNumber": 39
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useEffect",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "setInterval",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "setTime",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCHours().toString().padStart",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCHours().toString",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCHours",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCMinutes().toString().padStart",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCMinutes().toString",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "d.getUTCMinutes",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "clearInterval",
+          "lineNumber": 46
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "useEffect",
+          "lineNumber": 49
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "terminalEndRef.current?.scrollIntoView",
+          "lineNumber": 50
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "e.preventDefault",
+          "lineNumber": 54
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "terminalInput.trim",
+          "lineNumber": 55
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "terminalInput.trim",
+          "lineNumber": 57
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "setTerminalInput",
+          "lineNumber": 58
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "setTerminalLog",
+          "lineNumber": 59
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "interpretTool.call",
+          "lineNumber": 62
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "setTerminalLog",
+          "lineNumber": 63
+        },
+        {
+          "caller": "handleTerminalSubmit",
+          "callee": "setTerminalLog",
+          "lineNumber": 65
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "domains.map",
+          "lineNumber": 114
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "setActiveDomain",
+          "lineNumber": 120
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "terminalLog.map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "setTerminalInput",
+          "lineNumber": 157
+        },
+        {
+          "caller": "GeoxCore",
+          "callee": "['CONCESSIONS', 'INFRASTRUCTURE', 'SURFACE_GEOLOGY'].map",
+          "lineNumber": 237
+        }
+      ],
+      "metrics": {
+        "importCount": 7,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/apps/x1d/X1D_Shell.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "X1D_Shell",
+          "startLine": 8,
+          "endLine": 40,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "X1D_Shell",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/apps/x2d/X2D_Shell.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "X2D_Shell",
+          "startLine": 8,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "X2D_Shell",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/apps/x3d/X3D_Shell.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "X3D_Shell",
+          "startLine": 8,
+          "endLine": 39,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "X3D_Shell",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/AppHost/AppIframeHost.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 44,
+      "functions": [
+        {
+          "name": "AppIframeHost",
+          "startLine": 16,
+          "endLine": 48,
+          "params": [
+            "{ src, title, appId: _appId }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AppIframeHost",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AppIframeHost",
+          "callee": "useRef",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AppIframeHost",
+          "callee": "useGeoxHostBridge",
+          "lineNumber": 18
+        },
+        {
+          "caller": "AppIframeHost",
+          "callee": "sendToApp",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/ChronosHistory/ChronosHistory.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 94,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "ChronosHistory",
+          "startLine": 5,
+          "endLine": 87,
+          "params": []
+        },
+        {
+          "name": "StatCard",
+          "startLine": 89,
+          "endLine": 94,
+          "params": [
+            "{label, value}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ChronosHistory",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ChronosHistory",
+          "callee": "useState",
+          "lineNumber": 6
+        },
+        {
+          "caller": "ChronosHistory",
+          "callee": "[...Array(40)].map",
+          "lineNumber": 44
+        },
+        {
+          "caller": "ChronosHistory",
+          "callee": "Array",
+          "lineNumber": 44
+        },
+        {
+          "caller": "ChronosHistory",
+          "callee": "Math.random",
+          "lineNumber": 48
+        },
+        {
+          "caller": "ChronosHistory",
+          "callee": "setMode",
+          "lineNumber": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/ChronosHistory/TemporalAnimation.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 441,
+      "nonEmptyLines": 384,
+      "functions": [
+        {
+          "name": "DeclineCurve",
+          "startLine": 67,
+          "endLine": 148,
+          "params": [
+            "{ data, loading }"
+          ]
+        },
+        {
+          "name": "RRRGauge",
+          "startLine": 154,
+          "endLine": 198,
+          "params": [
+            "{ rrr, loading }"
+          ]
+        },
+        {
+          "name": "TemporalAnimation",
+          "startLine": 204,
+          "endLine": 439,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemporalAnimation",
+          "line": 204,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "DeclineCurve",
+          "callee": "useRef",
+          "lineNumber": 68
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "useEffect",
+          "lineNumber": 73
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "canvas.getContext",
+          "lineNumber": 76
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.scale",
+          "lineNumber": 81
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.clearRect",
+          "lineNumber": 83
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillRect",
+          "lineNumber": 84
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 90
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillText",
+          "lineNumber": 95
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "data.forecast.map",
+          "lineNumber": 99
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "data.forecast.map",
+          "lineNumber": 100
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear().domain(d3.extent(years) as [number, number]).range",
+          "lineNumber": 101
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 101
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 101
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.extent",
+          "lineNumber": 101
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear().domain([0, d3.max(rates) ?? 1]).range",
+          "lineNumber": 102
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 102
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 102
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.max",
+          "lineNumber": 102
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.beginPath",
+          "lineNumber": 108
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.moveTo",
+          "lineNumber": 108
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.lineTo",
+          "lineNumber": 108
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.stroke",
+          "lineNumber": 108
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.beginPath",
+          "lineNumber": 112
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "xScale",
+          "lineNumber": 116
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "yScale",
+          "lineNumber": 117
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.moveTo",
+          "lineNumber": 118
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.lineTo",
+          "lineNumber": 119
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.stroke",
+          "lineNumber": 121
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillText",
+          "lineNumber": 126
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.max(rates)?.toLocaleString",
+          "lineNumber": 126
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "d3.max",
+          "lineNumber": 126
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "data.forecast.filter((_, i) => i % 2 === 0).forEach",
+          "lineNumber": 128
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "data.forecast.filter",
+          "lineNumber": 128
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillText",
+          "lineNumber": 129
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "xScale",
+          "lineNumber": 129
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "yScale",
+          "lineNumber": 134
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 135
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.beginPath",
+          "lineNumber": 136
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.moveTo",
+          "lineNumber": 136
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.lineTo",
+          "lineNumber": 136
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.stroke",
+          "lineNumber": 136
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 137
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillText",
+          "lineNumber": 139
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "data.threshold_bpd.toLocaleString",
+          "lineNumber": 139
+        },
+        {
+          "caller": "DeclineCurve",
+          "callee": "ctx.fillText",
+          "lineNumber": 144
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "useRef",
+          "lineNumber": 155
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "useEffect",
+          "lineNumber": 158
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "canvas.getContext",
+          "lineNumber": 161
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.scale",
+          "lineNumber": 166
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.clearRect",
+          "lineNumber": 168
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.beginPath",
+          "lineNumber": 172
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.arc",
+          "lineNumber": 172
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.stroke",
+          "lineNumber": 172
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "Math.min",
+          "lineNumber": 175
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.beginPath",
+          "lineNumber": 178
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.arc",
+          "lineNumber": 178
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.stroke",
+          "lineNumber": 178
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 181
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "rrr.toFixed",
+          "lineNumber": 181
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 183
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 187
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 192
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 193
+        },
+        {
+          "caller": "RRRGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 194
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useGEOXStore",
+          "lineNumber": 205
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useState",
+          "lineNumber": 206
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useState",
+          "lineNumber": 207
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useState",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useState",
+          "lineNumber": 209
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useMcpTool",
+          "lineNumber": 212
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useMcpTool",
+          "lineNumber": 218
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useMcpTool",
+          "lineNumber": 224
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useMcpTool",
+          "lineNumber": 232
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useCallback",
+          "lineNumber": 239
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "updateFloorStatus",
+          "lineNumber": 241
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "Promise.allSettled",
+          "lineNumber": 255
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "declineTool.call",
+          "lineNumber": 256
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "rrrTool.call",
+          "lineNumber": 257
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "lifecycleTool.call",
+          "lineNumber": 258
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "cadenceTool.call",
+          "lineNumber": 259
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "updateFloorStatus",
+          "lineNumber": 262
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "updateFloorStatus",
+          "lineNumber": 264
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "String",
+          "lineNumber": 264
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useEffect",
+          "lineNumber": 268
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "computeAll",
+          "lineNumber": 268
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "useEffect",
+          "lineNumber": 271
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setInterval",
+          "lineNumber": 273
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setCurrentYear",
+          "lineNumber": 274
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setPlaying",
+          "lineNumber": 276
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "clearInterval",
+          "lineNumber": 282
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setCurrentYear",
+          "lineNumber": 317
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setPlaying",
+          "lineNumber": 321
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setCurrentYear",
+          "lineNumber": 326
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setPlaying",
+          "lineNumber": 326
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 353
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "setCurrentYear",
+          "lineNumber": 355
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "Math.round",
+          "lineNumber": 355
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "remainingPct.toFixed",
+          "lineNumber": 372
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "(declineTool.data.annual_decline_rate * 100).toFixed",
+          "lineNumber": 382
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "awardRate.toFixed",
+          "lineNumber": 399
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "[...Array(24)].map",
+          "lineNumber": 412
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "Array",
+          "lineNumber": 412
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "Math.abs",
+          "lineNumber": 414
+        },
+        {
+          "caller": "TemporalAnimation",
+          "callee": "Math.sin",
+          "lineNumber": 414
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/Cockpit/OperatorCockpit.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 453,
+      "nonEmptyLines": 423,
+      "functions": [
+        {
+          "name": "initialView",
+          "startLine": 102,
+          "endLine": 108,
+          "params": []
+        },
+        {
+          "name": "initialToken",
+          "startLine": 110,
+          "endLine": 120,
+          "params": []
+        },
+        {
+          "name": "SessionGate",
+          "startLine": 122,
+          "endLine": 195,
+          "params": [
+            "{ onBound }"
+          ]
+        },
+        {
+          "name": "OperatorCockpit",
+          "startLine": 197,
+          "endLine": 451,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "SessionGate",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "OperatorCockpit",
+          "line": 197,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "initialView",
+          "callee": "new URLSearchParams(window.location.search).get",
+          "lineNumber": 103
+        },
+        {
+          "caller": "initialToken",
+          "callee": "params.get",
+          "lineNumber": 112
+        },
+        {
+          "caller": "initialToken",
+          "callee": "params.delete",
+          "lineNumber": 114
+        },
+        {
+          "caller": "initialToken",
+          "callee": "window.history.replaceState",
+          "lineNumber": 116
+        },
+        {
+          "caller": "initialToken",
+          "callee": "sessionStorage.getItem",
+          "lineNumber": 119
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "useState",
+          "lineNumber": 125
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "useState",
+          "lineNumber": 126
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "useState",
+          "lineNumber": 127
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "useCallback",
+          "lineNumber": 134
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "setState",
+          "lineNumber": 135
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "setError",
+          "lineNumber": 136
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "inspectSessionToken",
+          "lineNumber": 138
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "candidate.trim",
+          "lineNumber": 138
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "geoxMcpClient.bindSession",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "candidate.trim",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "sessionStorage.setItem",
+          "lineNumber": 140
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "candidate.trim",
+          "lineNumber": 140
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "onBound",
+          "lineNumber": 141
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "sessionStorage.removeItem",
+          "lineNumber": 143
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "geoxMcpClient.clearSession",
+          "lineNumber": 144
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "setState",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "setError",
+          "lineNumber": 146
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "useEffect",
+          "lineNumber": 150
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "token.trim",
+          "lineNumber": 151
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "bind",
+          "lineNumber": 151
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "setToken",
+          "lineNumber": 174
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "bind",
+          "lineNumber": 181
+        },
+        {
+          "caller": "SessionGate",
+          "callee": "token.trim",
+          "lineNumber": 182
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useRef",
+          "lineNumber": 198
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 199
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 200
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 201
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 202
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 203
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 204
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useState",
+          "lineNumber": 205
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useGEOXStore",
+          "lineNumber": 208
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useMemo",
+          "lineNumber": 210
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "VIEWS.find",
+          "lineNumber": 211
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useCallback",
+          "lineNumber": 215
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "Date.now",
+          "lineNumber": 219
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setIdentity",
+          "lineNumber": 222
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setSurfaceStatus",
+          "lineNumber": 223
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setSessionIdentity",
+          "lineNumber": 224
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useCallback",
+          "lineNumber": 227
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "sessionStorage.removeItem",
+          "lineNumber": 228
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "geoxMcpClient.clearSession",
+          "lineNumber": 229
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setIdentity",
+          "lineNumber": 230
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setSurfaceStatus",
+          "lineNumber": 231
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setActivity",
+          "lineNumber": 232
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setSessionIdentity",
+          "lineNumber": 233
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useEffect",
+          "lineNumber": 236
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "fetch('/health', { headers: { Accept: 'application/json' } })\n      .then((response) => response.json())\n      .then((health) => setRelease(health.release_name || health.version || 'live'))\n      .catch",
+          "lineNumber": 237
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "fetch('/health', { headers: { Accept: 'application/json' } })\n      .then((response) => response.json())\n      .then",
+          "lineNumber": 237
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "fetch('/health', { headers: { Accept: 'application/json' } })\n      .then",
+          "lineNumber": 237
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "fetch",
+          "lineNumber": 237
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "response.json",
+          "lineNumber": 238
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setRelease",
+          "lineNumber": 239
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setRelease",
+          "lineNumber": 240
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "useEffect",
+          "lineNumber": 243
+        },
+        {
+          "caller": "respond",
+          "callee": "source.postMessage",
+          "lineNumber": 248
+        },
+        {
+          "caller": "onMessage",
+          "callee": "String",
+          "lineNumber": 261
+        },
+        {
+          "caller": "onMessage",
+          "callee": "String",
+          "lineNumber": 266
+        },
+        {
+          "caller": "onMessage",
+          "callee": "String",
+          "lineNumber": 271
+        },
+        {
+          "caller": "onMessage",
+          "callee": "Date.now",
+          "lineNumber": 277
+        },
+        {
+          "caller": "onMessage",
+          "callee": "new Date().toISOString",
+          "lineNumber": 283
+        },
+        {
+          "caller": "onMessage",
+          "callee": "setActivity",
+          "lineNumber": 286
+        },
+        {
+          "caller": "onMessage",
+          "callee": "[nextActivity, ...entries].slice",
+          "lineNumber": 286
+        },
+        {
+          "caller": "onMessage",
+          "callee": "geoxMcpClient.callTool",
+          "lineNumber": 289
+        },
+        {
+          "caller": "onMessage",
+          "callee": "setActivity",
+          "lineNumber": 290
+        },
+        {
+          "caller": "onMessage",
+          "callee": "entries.map",
+          "lineNumber": 290
+        },
+        {
+          "caller": "onMessage",
+          "callee": "respond",
+          "lineNumber": 293
+        },
+        {
+          "caller": "onMessage",
+          "callee": "setActivity",
+          "lineNumber": 302
+        },
+        {
+          "caller": "onMessage",
+          "callee": "entries.map",
+          "lineNumber": 302
+        },
+        {
+          "caller": "onMessage",
+          "callee": "respond",
+          "lineNumber": 305
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "window.addEventListener",
+          "lineNumber": 315
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "window.removeEventListener",
+          "lineNumber": 316
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "Number",
+          "lineNumber": 321
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setShowNavigation",
+          "lineNumber": 330
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "identity.sessionId.slice",
+          "lineNumber": 350
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setShowNavigation",
+          "lineNumber": 359
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "VIEWS.map",
+          "lineNumber": 361
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setActiveView",
+          "lineNumber": 369
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setShowNavigation",
+          "lineNumber": 370
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setShowActivity",
+          "lineNumber": 393
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "setShowActivity",
+          "lineNumber": 421
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "activity.map",
+          "lineNumber": 435
+        },
+        {
+          "caller": "OperatorCockpit",
+          "callee": "new Date(entry.timestamp).toLocaleTimeString",
+          "lineNumber": 437
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 2,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/CorrelationPanel/MultiWellCorrelationPanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 708,
+      "nonEmptyLines": 637,
+      "functions": [
+        {
+          "name": "WellTrack",
+          "startLine": 76,
+          "endLine": 270,
+          "params": [
+            "{ well, tops, depthRange, width, height, showFacies, readOnly, cursorDepth, onCursorMove, onPickTop }"
+          ]
+        },
+        {
+          "name": "CorrelationDepthTrack",
+          "startLine": 276,
+          "endLine": 342,
+          "params": [
+            "{ depthRange, height, cursorDepth, onCursorMove }"
+          ]
+        },
+        {
+          "name": "MultiWellCorrelationPanel",
+          "startLine": 355,
+          "endLine": 706,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MultiWellCorrelationPanel",
+          "line": 355,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "WellTrack",
+          "callee": "useRef",
+          "lineNumber": 88
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "useRef",
+          "lineNumber": 89
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "useCallback",
+          "lineNumber": 94
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "canvas.getContext",
+          "lineNumber": 97
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.scale",
+          "lineNumber": 104
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.clearRect",
+          "lineNumber": 106
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 108
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 112
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear().domain(depthRange).range",
+          "lineNumber": 114
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 114
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 114
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.ceil",
+          "lineNumber": 119
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 120
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 121
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 121
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 121
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 121
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 129
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "well.facies.forEach",
+          "lineNumber": 132
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "faciesByDepth.has",
+          "lineNumber": 133
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.round",
+          "lineNumber": 133
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "faciesByDepth.set",
+          "lineNumber": 133
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.round",
+          "lineNumber": 133
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "well.facies.map",
+          "lineNumber": 136
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "faciesByDepth.get",
+          "lineNumber": 141
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.round",
+          "lineNumber": 141
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.max",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.abs",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 145
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 153
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear().domain([0, 150]).range",
+          "lineNumber": 158
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 158
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 158
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 159
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 165
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "xScale",
+          "lineNumber": 166
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.max",
+          "lineNumber": 166
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.min",
+          "lineNumber": 166
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 167
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 167
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 169
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 172
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 173
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "xScale",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.max",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "Math.min",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 176
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 178
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.closePath",
+          "lineNumber": 179
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fill",
+          "lineNumber": 182
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "tops.forEach",
+          "lineNumber": 187
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 190
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 193
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 194
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 195
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 198
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 199
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 200
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 201
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.closePath",
+          "lineNumber": 203
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fill",
+          "lineNumber": 204
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 207
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 214
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "yScale",
+          "lineNumber": 218
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 221
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 222
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 222
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 222
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 222
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 223
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "useEffect",
+          "lineNumber": 227
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "draw",
+          "lineNumber": 227
+        },
+        {
+          "caller": "handleClick",
+          "callee": "containerRef.current.getBoundingClientRect",
+          "lineNumber": 233
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotH]).range",
+          "lineNumber": 235
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 235
+        },
+        {
+          "caller": "handleClick",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 235
+        },
+        {
+          "caller": "handleClick",
+          "callee": "yScale",
+          "lineNumber": 236
+        },
+        {
+          "caller": "handleClick",
+          "callee": "tops.find",
+          "lineNumber": 239
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onPickTop",
+          "lineNumber": 240
+        },
+        {
+          "caller": "handleClick",
+          "callee": "Math.round",
+          "lineNumber": 240
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "containerRef.current.getBoundingClientRect",
+          "lineNumber": 246
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotH]).range",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 248
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 249
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 250
+        },
+        {
+          "caller": "WellTrack",
+          "callee": "onCursorMove",
+          "lineNumber": 259
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "useRef",
+          "lineNumber": 282
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "useEffect",
+          "lineNumber": 287
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "canvas.getContext",
+          "lineNumber": 290
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.scale",
+          "lineNumber": 295
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.clearRect",
+          "lineNumber": 296
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 297
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 298
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "d3.scaleLinear().domain(depthRange).range",
+          "lineNumber": 300
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 300
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 300
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "Math.ceil",
+          "lineNumber": 301
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "yScale",
+          "lineNumber": 302
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 306
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 306
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 306
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 306
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 310
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "d.toString",
+          "lineNumber": 310
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 316
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "yScale",
+          "lineNumber": 319
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 321
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 326
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotH]).range",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 328
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 329
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 330
+        },
+        {
+          "caller": "CorrelationDepthTrack",
+          "callee": "onCursorMove",
+          "lineNumber": 339
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useGEOXStore",
+          "lineNumber": 356
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 357
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 358
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 359
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 360
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 361
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 362
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useState",
+          "lineNumber": 363
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useGeologicalClaim",
+          "lineNumber": 374
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useMcpTool",
+          "lineNumber": 378
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useMcpTool",
+          "lineNumber": 379
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 382
+        },
+        {
+          "caller": "seed",
+          "callee": "wellId.charCodeAt",
+          "lineNumber": 385
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "wellIds.map",
+          "lineNumber": 389
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "seed",
+          "lineNumber": 390
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Math.random",
+          "lineNumber": 400
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "gr.push",
+          "lineNumber": 402
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Math.round",
+          "lineNumber": 402
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Math.max",
+          "lineNumber": 402
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Math.min",
+          "lineNumber": 402
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "facies.push",
+          "lineNumber": 405
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "tops.forEach",
+          "lineNumber": 409
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useEffect",
+          "lineNumber": 425
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "setWells",
+          "lineNumber": 426
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "buildSyntheticWells",
+          "lineNumber": 426
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 427
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 432
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 434
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "wellTool.call",
+          "lineNumber": 435
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 436
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "setWells",
+          "lineNumber": 439
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "prev.filter",
+          "lineNumber": 440
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "result.wells!.map",
+          "lineNumber": 441
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 446
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "String",
+          "lineNumber": 446
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 450
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "loadWell",
+          "lineNumber": 452
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 456
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 458
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "petroTool.call",
+          "lineNumber": 459
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 465
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 468
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "String",
+          "lineNumber": 468
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 473
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 477
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "setTops",
+          "lineNumber": 478
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "prev.map",
+          "lineNumber": 479
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "toDraft",
+          "lineNumber": 483
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "updateFloorStatus",
+          "lineNumber": 486
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 490
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "requestReview",
+          "lineNumber": 491
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "useCallback",
+          "lineNumber": 497
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "attest",
+          "lineNumber": 498
+        },
+        {
+          "caller": "zoomIn",
+          "callee": "setDepthRange",
+          "lineNumber": 504
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "setDepthRange",
+          "lineNumber": 509
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "Math.max",
+          "lineNumber": 509
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "depthRange[0].toFixed",
+          "lineNumber": 546
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "depthRange[1].toFixed",
+          "lineNumber": 546
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "setShowFacies",
+          "lineNumber": 549
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "setShowSidebar",
+          "lineNumber": 555
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "wells.map",
+          "lineNumber": 566
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "tops.map",
+          "lineNumber": 590
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Object.entries(t.depths).map",
+          "lineNumber": 597
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Object.entries",
+          "lineNumber": 597
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Math.round",
+          "lineNumber": 600
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "Object.keys",
+          "lineNumber": 603
+        },
+        {
+          "caller": "MultiWellCorrelationPanel",
+          "callee": "toDraft",
+          "lineNumber": 673
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/CorrelationPanel/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 2,
+      "exports": [
+        {
+          "name": "MultiWellCorrelationPanel",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "CorrelationTop",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "CorrelationWell",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "CorrelationResult",
+          "line": 2,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/EarthVision/EarthVisionPanel.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 884,
+      "nonEmptyLines": 808,
+      "functions": [
+        {
+          "name": "acRiskLevel",
+          "startLine": 54,
+          "endLine": 60,
+          "params": [
+            "acriskMax"
+          ]
+        },
+        {
+          "name": "acRiskColor",
+          "startLine": 62,
+          "endLine": 70,
+          "params": [
+            "level"
+          ]
+        },
+        {
+          "name": "acRiskBg",
+          "startLine": 72,
+          "endLine": 80,
+          "params": [
+            "level"
+          ]
+        },
+        {
+          "name": "searchSTAC",
+          "startLine": 189,
+          "endLine": 217,
+          "params": [
+            "bbox",
+            "collection",
+            "maxCloud"
+          ]
+        },
+        {
+          "name": "ACRiskLegend",
+          "startLine": 221,
+          "endLine": 230,
+          "params": []
+        },
+        {
+          "name": "LayerRow",
+          "startLine": 234,
+          "endLine": 309,
+          "params": [
+            "{ layer, onToggle, onOpacity }"
+          ]
+        },
+        {
+          "name": "STACSearchPanel",
+          "startLine": 313,
+          "endLine": 414,
+          "params": [
+            "{ bbox, onActivate }"
+          ]
+        },
+        {
+          "name": "CoordHUD",
+          "startLine": 418,
+          "endLine": 442,
+          "params": [
+            "{ map }"
+          ]
+        },
+        {
+          "name": "EarthVisionPanel",
+          "startLine": 446,
+          "endLine": 882,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "EarthVisionPanel",
+          "line": 446,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "searchSTAC",
+          "callee": "url.searchParams.set",
+          "lineNumber": 196
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "bbox.join",
+          "lineNumber": 196
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "url.searchParams.set",
+          "lineNumber": 197
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "url.searchParams.set",
+          "lineNumber": 198
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "url.searchParams.set",
+          "lineNumber": 199
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "url.searchParams.set",
+          "lineNumber": 201
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "fetch",
+          "lineNumber": 203
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "url.toString",
+          "lineNumber": 203
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "res.json",
+          "lineNumber": 205
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "(data.features || []).map",
+          "lineNumber": 206
+        },
+        {
+          "caller": "searchSTAC",
+          "callee": "f.properties.datetime?.split",
+          "lineNumber": 208
+        },
+        {
+          "caller": "ACRiskLegend",
+          "callee": "(['SEAL', 'QUALIFY', 'PARTIAL', 'HOLD'] as ACRiskLevel[]).map",
+          "lineNumber": 223
+        },
+        {
+          "caller": "ACRiskLegend",
+          "callee": "acRiskBg",
+          "lineNumber": 225
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "acRiskLevel",
+          "lineNumber": 239
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "useState",
+          "lineNumber": 240
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "setExpanded",
+          "lineNumber": 246
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "e.stopPropagation",
+          "lineNumber": 250
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "onToggle",
+          "lineNumber": 250
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "acRiskColor",
+          "lineNumber": 262
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "onOpacity",
+          "lineNumber": 294
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "Number",
+          "lineNumber": 294
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "e.stopPropagation",
+          "lineNumber": 296
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "layer.opacity.toFixed",
+          "lineNumber": 298
+        },
+        {
+          "caller": "LayerRow",
+          "callee": "layer.acriskMax.toFixed",
+          "lineNumber": 301
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "useState",
+          "lineNumber": 317
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "useState",
+          "lineNumber": 318
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "useState",
+          "lineNumber": 319
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "useState",
+          "lineNumber": 320
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "useCallback",
+          "lineNumber": 322
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "setLoading",
+          "lineNumber": 324
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "searchSTAC",
+          "lineNumber": 325
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "setResults",
+          "lineNumber": 326
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "setLoading",
+          "lineNumber": 327
+        },
+        {
+          "caller": "handleActivate",
+          "callee": "onActivate",
+          "lineNumber": 340
+        },
+        {
+          "caller": "handleActivate",
+          "callee": "setSelected",
+          "lineNumber": 341
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "setQuery",
+          "lineNumber": 355
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "setQuery",
+          "lineNumber": 369
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "Number",
+          "lineNumber": 369
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "results.map",
+          "lineNumber": 389
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "handleActivate",
+          "lineNumber": 392
+        },
+        {
+          "caller": "STACSearchPanel",
+          "callee": "item.id.split",
+          "lineNumber": 396
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "useState",
+          "lineNumber": 419
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "useEffect",
+          "lineNumber": 421
+        },
+        {
+          "caller": "update",
+          "callee": "map.getCenter",
+          "lineNumber": 424
+        },
+        {
+          "caller": "update",
+          "callee": "setCoords",
+          "lineNumber": 425
+        },
+        {
+          "caller": "update",
+          "callee": "map.getZoom",
+          "lineNumber": 425
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "map.on",
+          "lineNumber": 427
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "update",
+          "lineNumber": 428
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "map.off",
+          "lineNumber": 429
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "coords.lat.toFixed",
+          "lineNumber": 436
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "coords.lon.toFixed",
+          "lineNumber": 437
+        },
+        {
+          "caller": "CoordHUD",
+          "callee": "coords.zoom.toFixed",
+          "lineNumber": 438
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useRef",
+          "lineNumber": 447
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useRef",
+          "lineNumber": 448
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useState",
+          "lineNumber": 449
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useState",
+          "lineNumber": 450
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useState",
+          "lineNumber": 451
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useState",
+          "lineNumber": 452
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useState",
+          "lineNumber": 453
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useEffect",
+          "lineNumber": 456
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.addControl",
+          "lineNumber": 485
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.addControl",
+          "lineNumber": 486
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.on",
+          "lineNumber": 488
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "setMapReady",
+          "lineNumber": 490
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.getBounds",
+          "lineNumber": 491
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "setBbox",
+          "lineNumber": 492
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getWest",
+          "lineNumber": 492
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getSouth",
+          "lineNumber": 492
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getEast",
+          "lineNumber": 492
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getNorth",
+          "lineNumber": 492
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.on",
+          "lineNumber": 495
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current.getBounds",
+          "lineNumber": 497
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "setBbox",
+          "lineNumber": 498
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getWest",
+          "lineNumber": 498
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getSouth",
+          "lineNumber": 498
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getEast",
+          "lineNumber": 498
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "b.getNorth",
+          "lineNumber": 498
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.remove",
+          "lineNumber": 502
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "useEffect",
+          "lineNumber": 509
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.forEach",
+          "lineNumber": 512
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.getSource",
+          "lineNumber": 514
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addSource",
+          "lineNumber": 520
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addLayer",
+          "lineNumber": 526
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addSource",
+          "lineNumber": 537
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addLayer",
+          "lineNumber": 542
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "fetch(layer.data)\n            .then(r => r.json())\n            .then(geojson => {\n              if (map.current?.getSource(sourceId)) return;\n              map.current?.addSource(sourceId, { type: 'geojson', data: geojson });\n              map.current?.addLayer({\n                id: `layer-${layer.id}`,\n                type: 'fill',\n                source: sourceId,\n                paint: {\n                  'fill-color': '#8B4513',\n                  'fill-opacity': layer.opacity * 0.5,\n                },\n              });\n              map.current?.addLayer({\n                id: `layer-${layer.id}-outline`,\n                type: 'line',\n                source: sourceId,\n                paint: {\n                  'line-color': '#A0522D',\n                  'line-width': 1,\n                },\n              });\n            })\n            .catch",
+          "lineNumber": 552
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "fetch(layer.data)\n            .then(r => r.json())\n            .then",
+          "lineNumber": 552
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "fetch(layer.data)\n            .then",
+          "lineNumber": 552
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "fetch",
+          "lineNumber": 552
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "r.json",
+          "lineNumber": 553
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.getSource",
+          "lineNumber": 555
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addSource",
+          "lineNumber": 556
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addLayer",
+          "lineNumber": 557
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.addLayer",
+          "lineNumber": 566
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.getLayer",
+          "lineNumber": 581
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.removeLayer",
+          "lineNumber": 581
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.getLayer",
+          "lineNumber": 582
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.removeLayer",
+          "lineNumber": 582
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.getSource",
+          "lineNumber": 583
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.removeSource",
+          "lineNumber": 583
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.setPaintProperty",
+          "lineNumber": 591
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "map.current?.setPaintProperty",
+          "lineNumber": 593
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "layers.find",
+          "lineNumber": 605
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "['osm-basemap', 'google-satellite', 'esri-satellite', 'opentopomap'].includes",
+          "lineNumber": 608
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "setActiveBaseLayer",
+          "lineNumber": 610
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "['osm-basemap', 'google-satellite', 'esri-satellite', 'opentopomap'].forEach",
+          "lineNumber": 613
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.getLayer",
+          "lineNumber": 615
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.removeLayer",
+          "lineNumber": 615
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.getSource",
+          "lineNumber": 616
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.removeSource",
+          "lineNumber": 616
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "layers.find",
+          "lineNumber": 619
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.addSource",
+          "lineNumber": 621
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "map.current?.addLayer",
+          "lineNumber": 622
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "setLayers",
+          "lineNumber": 627
+        },
+        {
+          "caller": "handleToggleBase",
+          "callee": "prev.map",
+          "lineNumber": 627
+        },
+        {
+          "caller": "handleToggleOverlay",
+          "callee": "setLayers",
+          "lineNumber": 632
+        },
+        {
+          "caller": "handleToggleOverlay",
+          "callee": "prev.map",
+          "lineNumber": 632
+        },
+        {
+          "caller": "handleOpacity",
+          "callee": "setLayers",
+          "lineNumber": 636
+        },
+        {
+          "caller": "handleOpacity",
+          "callee": "prev.map",
+          "lineNumber": 636
+        },
+        {
+          "caller": "handleSTACActivate",
+          "callee": "setLayers",
+          "lineNumber": 654
+        },
+        {
+          "caller": "handleSTACActivate",
+          "callee": "prev.filter",
+          "lineNumber": 655
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.getBounds",
+          "lineNumber": 662
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getCenter",
+          "lineNumber": 663
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getCenter",
+          "lineNumber": 664
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "Math.max",
+          "lineNumber": 665
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getEast",
+          "lineNumber": 665
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getWest",
+          "lineNumber": 665
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getNorth",
+          "lineNumber": 665
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "bbox.getSouth",
+          "lineNumber": 665
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.getLayer",
+          "lineNumber": 683
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.removeLayer",
+          "lineNumber": 683
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.getLayer",
+          "lineNumber": 684
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.removeLayer",
+          "lineNumber": 684
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.getSource",
+          "lineNumber": 685
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.removeSource",
+          "lineNumber": 685
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "fetch(url)\n      .then(r => r.json())\n      .then(geojson => {\n        if (!map.current) return;\n        map.current.addSource('source-macrostrat-geology', { type: 'geojson', data: geojson });\n        map.current.addLayer({\n          id: 'layer-macrostrat-geology',\n          type: 'fill',\n          source: 'source-macrostrat-geology',\n          paint: {\n            'fill-color': [\n              'match', ['get', 'lith'],\n              'shale', '#7B8794',\n              'sandstone', '#D4A574',\n              'limestone', '#B8C4AE',\n              'granite', '#C9725A',\n              'basalt', '#5A5A5A',\n              '#8B7355' // default\n            ],\n            'fill-opacity': 0.55,\n          },\n        });\n        map.current.addLayer({\n          id: 'layer-macrostrat-geology-outline',\n          type: 'line',\n          source: 'source-macrostrat-geology',\n          paint: { 'line-color': '#A0522D', 'line-width': 0.5 },\n        });\n      })\n      .catch",
+          "lineNumber": 687
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "fetch(url)\n      .then(r => r.json())\n      .then",
+          "lineNumber": 687
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "fetch(url)\n      .then",
+          "lineNumber": 687
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "fetch",
+          "lineNumber": 687
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "r.json",
+          "lineNumber": 688
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.addSource",
+          "lineNumber": 691
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.addLayer",
+          "lineNumber": 692
+        },
+        {
+          "caller": "handleMacrostratToggle",
+          "callee": "map.current.addLayer",
+          "lineNumber": 709
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 719
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "['osm-basemap', 'google-satellite', 'esri-satellite', 'opentopomap'].includes",
+          "lineNumber": 719
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 720
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "['osm-basemap', 'google-satellite', 'esri-satellite', 'opentopomap'].includes",
+          "lineNumber": 720
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "Math.max",
+          "lineNumber": 722
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter(l => l.visible).map",
+          "lineNumber": 722
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 722
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "acRiskLevel",
+          "lineNumber": 723
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "acRiskColor",
+          "lineNumber": 737
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 741
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "baseLayers.map",
+          "lineNumber": 758
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter(l => l.id === 'dem-hillshade').map",
+          "lineNumber": 776
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 776
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "overlayLayers.filter(l => l.id !== 'dem-hillshade').map",
+          "lineNumber": 817
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "overlayLayers.filter",
+          "lineNumber": 817
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 854
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter(l => l.visible && l.legendColor).map",
+          "lineNumber": 857
+        },
+        {
+          "caller": "EarthVisionPanel",
+          "callee": "layers.filter",
+          "lineNumber": 857
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 9,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LandingPage/LandingPage.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 535,
+      "nonEmptyLines": 492,
+      "functions": [
+        {
+          "name": "Hero",
+          "startLine": 31,
+          "endLine": 84,
+          "params": [
+            "{ onEnterCockpit }"
+          ]
+        },
+        {
+          "name": "OutcomesSection",
+          "startLine": 86,
+          "endLine": 115,
+          "params": []
+        },
+        {
+          "name": "WorkspacesSection",
+          "startLine": 187,
+          "endLine": 246,
+          "params": []
+        },
+        {
+          "name": "PlatformSection",
+          "startLine": 252,
+          "endLine": 326,
+          "params": []
+        },
+        {
+          "name": "PlatformCard",
+          "startLine": 328,
+          "endLine": 347,
+          "params": [
+            "{ icon: Icon, title, description, link, href }"
+          ]
+        },
+        {
+          "name": "ToolsSection",
+          "startLine": 353,
+          "endLine": 390,
+          "params": []
+        },
+        {
+          "name": "ToolItem",
+          "startLine": 392,
+          "endLine": 397,
+          "params": [
+            "{ name, desc }"
+          ]
+        },
+        {
+          "name": "SkillItem",
+          "startLine": 399,
+          "endLine": 404,
+          "params": [
+            "{ name, desc }"
+          ]
+        },
+        {
+          "name": "EvidenceSection",
+          "startLine": 410,
+          "endLine": 447,
+          "params": []
+        },
+        {
+          "name": "GovernanceSection",
+          "startLine": 449,
+          "endLine": 474,
+          "params": []
+        },
+        {
+          "name": "Footer",
+          "startLine": 480,
+          "endLine": 495,
+          "params": []
+        },
+        {
+          "name": "LandingPage",
+          "startLine": 501,
+          "endLine": 535,
+          "params": [
+            "{ onEnterCockpit }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "LandingPage",
+          "line": 501,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Hero",
+          "callee": "useGEOXStore",
+          "lineNumber": 32
+        },
+        {
+          "caller": "OutcomesSection",
+          "callee": "[\n          { icon: FileSearch, title: 'Interpret', desc: 'Load seismic, well logs, and basin data. Every interpretation is tied to physical parameters you can verify.' },\n          { icon: BarChart3, title: 'Compare', desc: 'Test multiple scenarios side-by-side. Compare reserves estimates, risk profiles, and structural hypotheses with quantitative deltas.' },\n          { icon: Shield, title: 'Govern', desc: 'Every output is scored for feasibility, uncertainty, and risk. High-confidence claims proceed. Uncertain claims trigger hold states.' },\n        ].map",
+          "lineNumber": 98
+        },
+        {
+          "caller": "WorkspacesSection",
+          "callee": "APPS.map",
+          "lineNumber": 199
+        },
+        {
+          "caller": "PlatformSection",
+          "callee": "useGEOXStore",
+          "lineNumber": 253
+        },
+        {
+          "caller": "PlatformSection",
+          "callee": "metaLinks.find",
+          "lineNumber": 299
+        },
+        {
+          "caller": "PlatformSection",
+          "callee": "metaLinks.find",
+          "lineNumber": 306
+        },
+        {
+          "caller": "PlatformSection",
+          "callee": "metaLinks.find",
+          "lineNumber": 313
+        },
+        {
+          "caller": "GovernanceSection",
+          "callee": "[\n          { id: 'F1', name: 'REVERSIBLE' },\n          { id: 'F2', name: 'TRUTH' },\n          { id: 'F4', name: 'CLARITY' },\n          { id: 'F7', name: 'HUMILITY' },\n          { id: 'F9', name: 'TRANSPARENT' },\n          { id: 'F11', name: 'AUDITABLE' },\n          { id: 'F13', name: 'SOVEREIGN' },\n        ].map",
+          "lineNumber": 457
+        },
+        {
+          "caller": "LandingPage",
+          "callee": "useState",
+          "lineNumber": 502
+        },
+        {
+          "caller": "LandingPage",
+          "callee": "useEffect",
+          "lineNumber": 504
+        },
+        {
+          "caller": "handleScroll",
+          "callee": "setShowNav",
+          "lineNumber": 505
+        },
+        {
+          "caller": "LandingPage",
+          "callee": "window.addEventListener",
+          "lineNumber": 506
+        },
+        {
+          "caller": "LandingPage",
+          "callee": "window.removeEventListener",
+          "lineNumber": 507
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 12,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/Layout/MainLayout.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 353,
+      "nonEmptyLines": 313,
+      "functions": [
+        {
+          "name": "getEmbeddedAppSrc",
+          "startLine": 49,
+          "endLine": 55,
+          "params": [
+            "appName"
+          ]
+        },
+        {
+          "name": "LeftSidebar",
+          "startLine": 61,
+          "endLine": 121,
+          "params": []
+        },
+        {
+          "name": "LayerItem",
+          "startLine": 123,
+          "endLine": 128,
+          "params": [
+            "{ name, checked = false }"
+          ]
+        },
+        {
+          "name": "RightSidebar",
+          "startLine": 134,
+          "endLine": 146,
+          "params": []
+        },
+        {
+          "name": "MainWorkspace",
+          "startLine": 152,
+          "endLine": 231,
+          "params": []
+        },
+        {
+          "name": "Header",
+          "startLine": 237,
+          "endLine": 289,
+          "params": []
+        },
+        {
+          "name": "HeaderAppLink",
+          "startLine": 291,
+          "endLine": 301,
+          "params": [
+            "{ href, icon: Icon, label }"
+          ]
+        },
+        {
+          "name": "Toolbar",
+          "startLine": 307,
+          "endLine": 322,
+          "params": []
+        },
+        {
+          "name": "ToolbarButton",
+          "startLine": 324,
+          "endLine": 329,
+          "params": [
+            "{ icon: Icon, label }"
+          ]
+        },
+        {
+          "name": "ToolbarDivider",
+          "startLine": 331,
+          "endLine": 333,
+          "params": []
+        },
+        {
+          "name": "MainLayout",
+          "startLine": 339,
+          "endLine": 351,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MainLayout",
+          "line": 339,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getEmbeddedAppSrc",
+          "callee": "import.meta.env.BASE_URL.endsWith",
+          "lineNumber": 50
+        },
+        {
+          "caller": "LeftSidebar",
+          "callee": "useState",
+          "lineNumber": 62
+        },
+        {
+          "caller": "LeftSidebar",
+          "callee": "setExpanded",
+          "lineNumber": 68
+        },
+        {
+          "caller": "MainWorkspace",
+          "callee": "useActiveTab",
+          "lineNumber": 153
+        },
+        {
+          "caller": "MainWorkspace",
+          "callee": "useGEOXStore.getState().setActiveTab",
+          "lineNumber": 158
+        },
+        {
+          "caller": "MainWorkspace",
+          "callee": "useGEOXStore.getState",
+          "lineNumber": 158
+        },
+        {
+          "caller": "MainWorkspace",
+          "callee": "TABS.map",
+          "lineNumber": 160
+        },
+        {
+          "caller": "MainWorkspace",
+          "callee": "getEmbeddedAppSrc",
+          "lineNumber": 196
+        },
+        {
+          "caller": "Header",
+          "callee": "useGovernance",
+          "lineNumber": 238
+        },
+        {
+          "caller": "Header",
+          "callee": "useGEOXConnected",
+          "lineNumber": 239
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 1,
+        "functionCount": 11,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/Layout/MainLayoutForge.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 611,
+      "nonEmptyLines": 573,
+      "functions": [
+        {
+          "name": "LeftSidebar",
+          "startLine": 96,
+          "endLine": 194,
+          "params": []
+        },
+        {
+          "name": "LayerItem",
+          "startLine": 199,
+          "endLine": 213,
+          "params": [
+            "{\n  name,\n  checked = false,\n  color,\n}"
+          ]
+        },
+        {
+          "name": "RightSidebar",
+          "startLine": 218,
+          "endLine": 330,
+          "params": []
+        },
+        {
+          "name": "TelemetryRow",
+          "startLine": 335,
+          "endLine": 353,
+          "params": [
+            "{ label, value, status }"
+          ]
+        },
+        {
+          "name": "DomainWorkspace",
+          "startLine": 358,
+          "endLine": 414,
+          "params": []
+        },
+        {
+          "name": "Header",
+          "startLine": 419,
+          "endLine": 495,
+          "params": []
+        },
+        {
+          "name": "ForgeIntelligencePanel",
+          "startLine": 500,
+          "endLine": 574,
+          "params": []
+        },
+        {
+          "name": "HeaderAppLink",
+          "startLine": 579,
+          "endLine": 593,
+          "params": [
+            "{ href, icon: Icon, label }"
+          ]
+        },
+        {
+          "name": "MainLayoutForge",
+          "startLine": 598,
+          "endLine": 609,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MainLayoutForge",
+          "line": 598,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "LeftSidebar",
+          "callee": "useState",
+          "lineNumber": 97
+        },
+        {
+          "caller": "LeftSidebar",
+          "callee": "useGEOXConnected",
+          "lineNumber": 98
+        },
+        {
+          "caller": "LeftSidebar",
+          "callee": "setExpanded",
+          "lineNumber": 108
+        },
+        {
+          "caller": "LeftSidebar",
+          "callee": "DOMAIN_TABS.map",
+          "lineNumber": 150
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "useGovernance",
+          "lineNumber": 219
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "useState",
+          "lineNumber": 220
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "[\n          { id: 'floors', icon: Shield, label: 'Governance' },\n          { id: 'telemetry', icon: Cpu, label: 'Telemetry' },\n          { id: 'intel', icon: Database, label: 'Intelligence' },\n        ].map",
+          "lineNumber": 233
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "setActivePanel",
+          "lineNumber": 240
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "Object.values(governance.floors).map",
+          "lineNumber": 266
+        },
+        {
+          "caller": "RightSidebar",
+          "callee": "Object.values",
+          "lineNumber": 266
+        },
+        {
+          "caller": "DomainWorkspace",
+          "callee": "useState",
+          "lineNumber": 359
+        },
+        {
+          "caller": "DomainWorkspace",
+          "callee": "setActiveTab",
+          "lineNumber": 364
+        },
+        {
+          "caller": "DomainWorkspace",
+          "callee": "DOMAIN_TABS.map",
+          "lineNumber": 366
+        },
+        {
+          "caller": "Header",
+          "callee": "useGovernance",
+          "lineNumber": 420
+        },
+        {
+          "caller": "Header",
+          "callee": "useGEOXConnected",
+          "lineNumber": 421
+        },
+        {
+          "caller": "ForgeIntelligencePanel",
+          "callee": "useGeminiIntelligence",
+          "lineNumber": 501
+        },
+        {
+          "caller": "ForgeIntelligencePanel",
+          "callee": "useEffect",
+          "lineNumber": 511
+        },
+        {
+          "caller": "ForgeIntelligencePanel",
+          "callee": "engine.calibrate2D",
+          "lineNumber": 522
+        },
+        {
+          "caller": "ForgeIntelligencePanel",
+          "callee": "generate('General geological interpretation request', 'general').catch",
+          "lineNumber": 546
+        },
+        {
+          "caller": "ForgeIntelligencePanel",
+          "callee": "generate",
+          "lineNumber": 546
+        }
+      ],
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 1,
+        "functionCount": 9,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LogDock/LogDock.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 697,
+      "nonEmptyLines": 607,
+      "functions": [
+        {
+          "name": "TrackRenderer",
+          "startLine": 41,
+          "endLine": 256,
+          "params": [
+            "{\n  track, data, depthRange, width, height, cursorDepth, onCursorMove\n}"
+          ]
+        },
+        {
+          "name": "DepthTrack",
+          "startLine": 262,
+          "endLine": 363,
+          "params": [
+            "{ depthRange, height, cursorDepth, onCursorMove }"
+          ]
+        },
+        {
+          "name": "CurveLegend",
+          "startLine": 369,
+          "endLine": 393,
+          "params": [
+            "{ curves, onToggle }"
+          ]
+        },
+        {
+          "name": "PetrophysicsSummary",
+          "startLine": 399,
+          "endLine": 466,
+          "params": [
+            "{ data, cursorDepth }"
+          ]
+        },
+        {
+          "name": "MetricRow",
+          "startLine": 468,
+          "endLine": 484,
+          "params": [
+            "{ label, value, unit, color, icon: Icon }"
+          ]
+        },
+        {
+          "name": "interpolateCurve",
+          "startLine": 486,
+          "endLine": 501,
+          "params": [
+            "curve",
+            "depth"
+          ]
+        },
+        {
+          "name": "LogDock",
+          "startLine": 534,
+          "endLine": 695,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LogDock",
+          "line": 534,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TrackRenderer",
+          "callee": "useRef",
+          "lineNumber": 44
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "useRef",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "useCallback",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "canvas.getContext",
+          "lineNumber": 56
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.scale",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.clearRect",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillRect",
+          "lineNumber": 72
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear()\n      .domain(depthRange)\n      .range",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear()\n      .domain",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "Math.ceil",
+          "lineNumber": 88
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 89
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 90
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 91
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 93
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 99
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d.toString",
+          "lineNumber": 99
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "track.curves.forEach",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "data.curves.find",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "Math.max",
+          "lineNumber": 112
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "Math.max",
+          "lineNumber": 113
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLog()\n          .domain([logMin, logMax])\n          .range",
+          "lineNumber": 114
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLog()\n          .domain",
+          "lineNumber": 114
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLog",
+          "lineNumber": 114
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear()\n          .domain([minVal, maxVal])\n          .range",
+          "lineNumber": 118
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear()\n          .domain",
+          "lineNumber": 118
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 118
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 126
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 134
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 138
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 147
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 148
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.closePath",
+          "lineNumber": 151
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fill",
+          "lineNumber": 154
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 159
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 168
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "isNaN",
+          "lineNumber": 170
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 175
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 177
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 180
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 183
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 189
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 198
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 202
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 205
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 206
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 207
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 209
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 210
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 216
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "cursorDepth.toFixed",
+          "lineNumber": 216
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "useEffect",
+          "lineNumber": 220
+        },
+        {
+          "caller": "TrackRenderer",
+          "callee": "draw",
+          "lineNumber": 221
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "containerRef.current.getBoundingClientRect",
+          "lineNumber": 226
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear()\n      .domain([margin.top, margin.top + plotHeight])\n      .range",
+          "lineNumber": 228
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear()\n      .domain",
+          "lineNumber": 228
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 228
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 231
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 233
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "onCursorMove",
+          "lineNumber": 238
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "useRef",
+          "lineNumber": 268
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "useEffect",
+          "lineNumber": 273
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "canvas.getContext",
+          "lineNumber": 276
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.scale",
+          "lineNumber": 284
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.clearRect",
+          "lineNumber": 286
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 288
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "d3.scaleLinear()\n      .domain(depthRange)\n      .range",
+          "lineNumber": 290
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "d3.scaleLinear()\n      .domain",
+          "lineNumber": 290
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 290
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 297
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "Math.ceil",
+          "lineNumber": 303
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "yScale",
+          "lineNumber": 304
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 309
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 310
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 311
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 312
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 318
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "d.toString",
+          "lineNumber": 318
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 326
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 328
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "yScale",
+          "lineNumber": 332
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 335
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 336
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 337
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 338
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 343
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear()\n      .domain([margin.top, margin.top + plotHeight])\n      .range",
+          "lineNumber": 345
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear()\n      .domain",
+          "lineNumber": 345
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 345
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 348
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 350
+        },
+        {
+          "caller": "DepthTrack",
+          "callee": "onCursorMove",
+          "lineNumber": 360
+        },
+        {
+          "caller": "CurveLegend",
+          "callee": "curves.map",
+          "lineNumber": 375
+        },
+        {
+          "caller": "CurveLegend",
+          "callee": "onToggle",
+          "lineNumber": 378
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "useMemo",
+          "lineNumber": 403
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "data.curves.find",
+          "lineNumber": 406
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "data.curves.find",
+          "lineNumber": 407
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "data.curves.find",
+          "lineNumber": 408
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "interpolateCurve",
+          "lineNumber": 410
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "interpolateCurve",
+          "lineNumber": 411
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "interpolateCurve",
+          "lineNumber": 412
+        },
+        {
+          "caller": "PetrophysicsSummary",
+          "callee": "cursorDepth?.toFixed",
+          "lineNumber": 444
+        },
+        {
+          "caller": "MetricRow",
+          "callee": "value.toFixed",
+          "lineNumber": 481
+        },
+        {
+          "caller": "interpolateCurve",
+          "callee": "curve.depth.findIndex",
+          "lineNumber": 487
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 535
+        },
+        {
+          "caller": "LogDock",
+          "callee": "demoWellData",
+          "lineNumber": 535
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 536
+        },
+        {
+          "caller": "LogDock",
+          "callee": "data.curves.find",
+          "lineNumber": 537
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 540
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 541
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 542
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useState",
+          "lineNumber": 543
+        },
+        {
+          "caller": "LogDock",
+          "callee": "useCallback",
+          "lineNumber": 547
+        },
+        {
+          "caller": "LogDock",
+          "callee": "setData",
+          "lineNumber": 548
+        },
+        {
+          "caller": "LogDock",
+          "callee": "prev.curves.map",
+          "lineNumber": 550
+        },
+        {
+          "caller": "zoomIn",
+          "callee": "setDepthRange",
+          "lineNumber": 559
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "setDepthRange",
+          "lineNumber": 567
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "Math.max",
+          "lineNumber": 568
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "Math.min",
+          "lineNumber": 569
+        },
+        {
+          "caller": "resetZoom",
+          "callee": "setDepthRange",
+          "lineNumber": 574
+        },
+        {
+          "caller": "LogDock",
+          "callee": "tracks.reduce",
+          "lineNumber": 577
+        },
+        {
+          "caller": "LogDock",
+          "callee": "depthRange[0].toFixed",
+          "lineNumber": 602
+        },
+        {
+          "caller": "LogDock",
+          "callee": "depthRange[1].toFixed",
+          "lineNumber": 602
+        },
+        {
+          "caller": "LogDock",
+          "callee": "cursorDepth.toFixed",
+          "lineNumber": 610
+        },
+        {
+          "caller": "LogDock",
+          "callee": "setMode",
+          "lineNumber": 618
+        },
+        {
+          "caller": "LogDock",
+          "callee": "setMode",
+          "lineNumber": 624
+        },
+        {
+          "caller": "LogDock",
+          "callee": "setShowSidebar",
+          "lineNumber": 631
+        },
+        {
+          "caller": "LogDock",
+          "callee": "tracks.map",
+          "lineNumber": 657
+        },
+        {
+          "caller": "LogDock",
+          "callee": "data.curves.filter",
+          "lineNumber": 684
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LogDock/PetrophysicalTracks.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 611,
+      "nonEmptyLines": 553,
+      "functions": [
+        {
+          "name": "PetrophysicalTrackRenderer",
+          "startLine": 105,
+          "endLine": 287,
+          "params": [
+            "{ track, depth, curves, depthRange, cursorDepth, onCursorMove }"
+          ]
+        },
+        {
+          "name": "PetrophysicalDepthTrack",
+          "startLine": 293,
+          "endLine": 356,
+          "params": [
+            "{ depthRange, cursorDepth, onCursorMove }"
+          ]
+        },
+        {
+          "name": "ZoneLegend",
+          "startLine": 362,
+          "endLine": 411,
+          "params": [
+            "{ cursorDepth, depth, vsh, phie, sw }"
+          ]
+        },
+        {
+          "name": "MetricLine",
+          "startLine": 413,
+          "endLine": 424,
+          "params": [
+            "{ label, value, color, cutoff }"
+          ]
+        },
+        {
+          "name": "PetrophysicalTracks",
+          "startLine": 430,
+          "endLine": 609,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PetrophysicalTracks",
+          "line": 430,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "useRef",
+          "lineNumber": 113
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "useCallback",
+          "lineNumber": 120
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "canvas.getContext",
+          "lineNumber": 123
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.scale",
+          "lineNumber": 131
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.clearRect",
+          "lineNumber": 133
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillRect",
+          "lineNumber": 135
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 139
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear()\n      .domain(depthRange)\n      .range",
+          "lineNumber": 141
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear()\n      .domain",
+          "lineNumber": 141
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 141
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "Math.ceil",
+          "lineNumber": 148
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 149
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 150
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 151
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 152
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 153
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "track.curves.forEach",
+          "lineNumber": 157
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear()\n        .domain([track.xMin, track.xMax])\n        .range",
+          "lineNumber": 161
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear()\n        .domain",
+          "lineNumber": 161
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 161
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 166
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 168
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 174
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 175
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "Math.min",
+          "lineNumber": 175
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "Math.max",
+          "lineNumber": 175
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 177
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 180
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 185
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 185
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.closePath",
+          "lineNumber": 187
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fill",
+          "lineNumber": 190
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 194
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 203
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 204
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "Math.min",
+          "lineNumber": 204
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "Math.max",
+          "lineNumber": 204
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 205
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 206
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 208
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 215
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear().domain([track.xMin, track.xMax]).range([margin.left + 2, margin.left + plotWidth - 2])",
+          "lineNumber": 216
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear().domain([track.xMin, track.xMax]).range",
+          "lineNumber": 216
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 216
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 216
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 217
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 218
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 219
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 220
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 221
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 224
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear().domain([track.xMin, track.xMax]).range",
+          "lineNumber": 227
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 227
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 227
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 231
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 232
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 233
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 233
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 233
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 233
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 234
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "xScale",
+          "lineNumber": 237
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 238
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 238
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 238
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 238
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 239
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 240
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 247
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 253
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.fillText",
+          "lineNumber": 255
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "yScale",
+          "lineNumber": 259
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 262
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.beginPath",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.moveTo",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.lineTo",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.stroke",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "ctx.setLineDash",
+          "lineNumber": 264
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "useEffect",
+          "lineNumber": 268
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "draw",
+          "lineNumber": 268
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 271
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotHeight]).range",
+          "lineNumber": 273
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 273
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 273
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 274
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 275
+        },
+        {
+          "caller": "PetrophysicalTrackRenderer",
+          "callee": "onCursorMove",
+          "lineNumber": 284
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "useRef",
+          "lineNumber": 298
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "useEffect",
+          "lineNumber": 304
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "canvas.getContext",
+          "lineNumber": 307
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.scale",
+          "lineNumber": 312
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.clearRect",
+          "lineNumber": 313
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.fillRect",
+          "lineNumber": 314
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.strokeRect",
+          "lineNumber": 315
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "d3.scaleLinear().domain(depthRange).range",
+          "lineNumber": 317
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 317
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 317
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "Math.ceil",
+          "lineNumber": 318
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "yScale",
+          "lineNumber": 319
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 323
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 323
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 323
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 323
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 326
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "d.toString",
+          "lineNumber": 326
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.fillText",
+          "lineNumber": 330
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "yScale",
+          "lineNumber": 333
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.beginPath",
+          "lineNumber": 335
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.moveTo",
+          "lineNumber": 335
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.lineTo",
+          "lineNumber": 335
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "ctx.stroke",
+          "lineNumber": 335
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 340
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain([margin.top, margin.top + plotHeight]).range",
+          "lineNumber": 342
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear().domain",
+          "lineNumber": 342
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "d3.scaleLinear",
+          "lineNumber": 342
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "yScale",
+          "lineNumber": 343
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "onCursorMove",
+          "lineNumber": 344
+        },
+        {
+          "caller": "PetrophysicalDepthTrack",
+          "callee": "onCursorMove",
+          "lineNumber": 353
+        },
+        {
+          "caller": "ZoneLegend",
+          "callee": "useMemo",
+          "lineNumber": 369
+        },
+        {
+          "caller": "ZoneLegend",
+          "callee": "depth.findIndex",
+          "lineNumber": 371
+        },
+        {
+          "caller": "MetricLine",
+          "callee": "value.toFixed",
+          "lineNumber": 418
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useGEOXStore",
+          "lineNumber": 431
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useState",
+          "lineNumber": 432
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useState",
+          "lineNumber": 433
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useState",
+          "lineNumber": 434
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useState",
+          "lineNumber": 435
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useMcpTool",
+          "lineNumber": 437
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useCallback",
+          "lineNumber": 465
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "updateFloorStatus",
+          "lineNumber": 467
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "petroTool.call",
+          "lineNumber": 468
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "updateFloorStatus",
+          "lineNumber": 477
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "setLastReceiptHash",
+          "lineNumber": 478
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "updateFloorStatus",
+          "lineNumber": 480
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "String",
+          "lineNumber": 480
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "useEffect",
+          "lineNumber": 485
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "runPetrophysics",
+          "lineNumber": 486
+        },
+        {
+          "caller": "zoomIn",
+          "callee": "setDepthRange",
+          "lineNumber": 492
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "setDepthRange",
+          "lineNumber": 497
+        },
+        {
+          "caller": "zoomOut",
+          "callee": "Math.max",
+          "lineNumber": 497
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "lastReceiptHash.slice",
+          "lineNumber": 527
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "depthRange[0].toFixed",
+          "lineNumber": 540
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "depthRange[1].toFixed",
+          "lineNumber": 540
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "setShowSidebar",
+          "lineNumber": 542
+        },
+        {
+          "caller": "PetrophysicalTracks",
+          "callee": "TRACKS.map",
+          "lineNumber": 554
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LogDock/data/demoWellData.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 304,
+      "nonEmptyLines": 282,
+      "functions": [
+        {
+          "name": "demoWellData",
+          "startLine": 23,
+          "endLine": 304,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "demoWellData",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "demoWellData",
+          "callee": "depths.push",
+          "lineNumber": 33
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "parseFloat",
+          "lineNumber": 33
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "d.toFixed",
+          "lineNumber": 33
+        },
+        {
+          "caller": "getZone",
+          "callee": "zones.find",
+          "lineNumber": 48
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "getZone",
+          "lineNumber": 61
+        },
+        {
+          "caller": "noise",
+          "callee": "Math.random",
+          "lineNumber": 62
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "grValues.push",
+          "lineNumber": 66
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 66
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 66
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.pow",
+          "lineNumber": 72
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.pow",
+          "lineNumber": 72
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.min",
+          "lineNumber": 73
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "ildValues.push",
+          "lineNumber": 77
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 77
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 77
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "lldValues.push",
+          "lineNumber": 78
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 78
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 78
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "nphiValues.push",
+          "lineNumber": 82
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 82
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 82
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "rhobValues.push",
+          "lineNumber": 86
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 86
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 86
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "dtValues.push",
+          "lineNumber": 90
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 90
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 90
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "caliValues.push",
+          "lineNumber": 94
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 94
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "noise",
+          "lineNumber": 94
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.max",
+          "lineNumber": 109
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.min",
+          "lineNumber": 109
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.max",
+          "lineNumber": 114
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.min",
+          "lineNumber": 114
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "vshValues.push",
+          "lineNumber": 115
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 115
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.sqrt",
+          "lineNumber": 123
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.max",
+          "lineNumber": 125
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.min",
+          "lineNumber": 125
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "phieValues.push",
+          "lineNumber": 126
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 126
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.pow",
+          "lineNumber": 132
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.max",
+          "lineNumber": 133
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.min",
+          "lineNumber": 133
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "swValues.push",
+          "lineNumber": 135
+        },
+        {
+          "caller": "demoWellData",
+          "callee": "Math.round",
+          "lineNumber": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LogDock/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 52,
+      "nonEmptyLines": 47,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/LogTrackViewer.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "scale",
+          "startLine": 3,
+          "endLine": 8,
+          "params": [
+            "values",
+            "size"
+          ]
+        },
+        {
+          "name": "LogTrackViewer",
+          "startLine": 10,
+          "endLine": 41,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LogTrackViewer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "scale",
+          "callee": "Math.min",
+          "lineNumber": 4
+        },
+        {
+          "caller": "scale",
+          "callee": "Math.max",
+          "lineNumber": 5
+        },
+        {
+          "caller": "scale",
+          "callee": "values.map",
+          "lineNumber": 7
+        },
+        {
+          "caller": "LogTrackViewer",
+          "callee": "tracks.map",
+          "lineNumber": 19
+        },
+        {
+          "caller": "LogTrackViewer",
+          "callee": "scale",
+          "lineNumber": 20
+        },
+        {
+          "caller": "LogTrackViewer",
+          "callee": "scale",
+          "lineNumber": 21
+        },
+        {
+          "caller": "LogTrackViewer",
+          "callee": "xs.map((x, index) => `${x + 10},${ys[index] + 10}`).join",
+          "lineNumber": 22
+        },
+        {
+          "caller": "LogTrackViewer",
+          "callee": "xs.map",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/MalayBasinPilot/MalayBasinPilotDashboard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 424,
+      "nonEmptyLines": 397,
+      "functions": [
+        {
+          "name": "MalayBasinPilotDashboard",
+          "startLine": 23,
+          "endLine": 374,
+          "params": []
+        },
+        {
+          "name": "MetricCard",
+          "startLine": 378,
+          "endLine": 389,
+          "params": [
+            "{ \n  label, value, sub, icon: Icon, color \n}"
+          ]
+        },
+        {
+          "name": "PlayCard",
+          "startLine": 391,
+          "endLine": 407,
+          "params": [
+            "{\n  code, type, fields, share, accent, median, status\n}"
+          ]
+        },
+        {
+          "name": "EDPItem",
+          "startLine": 409,
+          "endLine": 423,
+          "params": [
+            "{\n  phase, period, title, outcome, active\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "MalayBasinPilotDashboard",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useState",
+          "lineNumber": 25
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useState",
+          "lineNumber": 26
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useMcpTool",
+          "lineNumber": 28
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useMcpTool",
+          "lineNumber": 29
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "scenarioTool.call",
+          "lineNumber": 33
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "setActiveTraceId",
+          "lineNumber": 42
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "setShowTrace",
+          "lineNumber": 43
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "traceTool.call",
+          "lineNumber": 45
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "setTraceData",
+          "lineNumber": 46
+        },
+        {
+          "caller": "handleExecuteScenario",
+          "callee": "console.error",
+          "lineNumber": 49
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "useEffect",
+          "lineNumber": 54
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "setInterval",
+          "lineNumber": 57
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "traceTool.call",
+          "lineNumber": 58
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "setTraceData",
+          "lineNumber": 59
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "clearInterval",
+          "lineNumber": 62
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "Discovery",
+          "lineNumber": 161
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "setShowTrace",
+          "lineNumber": 287
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "traceData.steps.map",
+          "lineNumber": 309
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "step.evidence.map",
+          "lineNumber": 321
+        },
+        {
+          "caller": "MalayBasinPilotDashboard",
+          "callee": "window.open",
+          "lineNumber": 353
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/ProspectUI/ProspectUI.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 185,
+      "nonEmptyLines": 162,
+      "functions": [
+        {
+          "name": "ProspectUI",
+          "startLine": 11,
+          "endLine": 183,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ProspectUI",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ProspectUI",
+          "callee": "useGEOXStore",
+          "lineNumber": 12
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "useState",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "useMcpTool",
+          "lineNumber": 17
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "useCallback",
+          "lineNumber": 21
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "updateFloorStatus",
+          "lineNumber": 25
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "projectWellTool.call",
+          "lineNumber": 26
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "setProjectedPath",
+          "lineNumber": 32
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "updateFloorStatus",
+          "lineNumber": 33
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "console.error",
+          "lineNumber": 36
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "updateFloorStatus",
+          "lineNumber": 37
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "useEffect",
+          "lineNumber": 41
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "handleProjectWell",
+          "lineNumber": 43
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "setMode",
+          "lineNumber": 59
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "projectedPath.map((p, i) => `${128 + i*2},${128 + i*4}`).join",
+          "lineNumber": 92
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "projectedPath.map",
+          "lineNumber": 92
+        },
+        {
+          "caller": "ProspectUI",
+          "callee": "projectedPath.map",
+          "lineNumber": 98
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "geox-gui/src/components/ProspectUI/RiskDashboard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 374,
+      "nonEmptyLines": 335,
+      "functions": [
+        {
+          "name": "RiskGauge",
+          "startLine": 70,
+          "endLine": 109,
+          "params": [
+            "{ label, value, color, max, unit }"
+          ]
+        },
+        {
+          "name": "POSBar",
+          "startLine": 115,
+          "endLine": 131,
+          "params": [
+            "{ components }"
+          ]
+        },
+        {
+          "name": "RiskHeatmap",
+          "startLine": 137,
+          "endLine": 169,
+          "params": [
+            "{ matrix }"
+          ]
+        },
+        {
+          "name": "RiskDashboard",
+          "startLine": 175,
+          "endLine": 372,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "RiskDashboard",
+          "line": 175,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "RiskGauge",
+          "callee": "useRef",
+          "lineNumber": 71
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "useEffect",
+          "lineNumber": 74
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "canvas.getContext",
+          "lineNumber": 77
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.scale",
+          "lineNumber": 82
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.clearRect",
+          "lineNumber": 84
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.beginPath",
+          "lineNumber": 88
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.arc",
+          "lineNumber": 88
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.stroke",
+          "lineNumber": 89
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "Math.min",
+          "lineNumber": 92
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.beginPath",
+          "lineNumber": 95
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.arc",
+          "lineNumber": 95
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.stroke",
+          "lineNumber": 96
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 101
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "value.toFixed",
+          "lineNumber": 101
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 103
+        },
+        {
+          "caller": "RiskGauge",
+          "callee": "ctx.fillText",
+          "lineNumber": 105
+        },
+        {
+          "caller": "POSBar",
+          "callee": "components.map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "POSBar",
+          "callee": "(c.value * 100).toFixed",
+          "lineNumber": 127
+        },
+        {
+          "caller": "RiskHeatmap",
+          "callee": "Object.entries",
+          "lineNumber": 140
+        },
+        {
+          "caller": "riskColor",
+          "callee": "level.toLowerCase",
+          "lineNumber": 144
+        },
+        {
+          "caller": "RiskHeatmap",
+          "callee": "entries.map",
+          "lineNumber": 157
+        },
+        {
+          "caller": "RiskHeatmap",
+          "callee": "riskColor",
+          "lineNumber": 161
+        },
+        {
+          "caller": "RiskHeatmap",
+          "callee": "riskColor",
+          "lineNumber": 162
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "useGEOXStore",
+          "lineNumber": 176
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "useState",
+          "lineNumber": 177
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "useMcpTool",
+          "lineNumber": 179
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "useCallback",
+          "lineNumber": 185
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "updateFloorStatus",
+          "lineNumber": 187
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "prospectTool.call",
+          "lineNumber": 188
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "updateFloorStatus",
+          "lineNumber": 193
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "setLastReceipt",
+          "lineNumber": 194
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "updateFloorStatus",
+          "lineNumber": 196
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "String",
+          "lineNumber": 196
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "useEffect",
+          "lineNumber": 200
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "computeProspect",
+          "lineNumber": 200
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "lastReceipt.slice",
+          "lineNumber": 258
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "Object.keys",
+          "lineNumber": 293
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "(data.well_cost_usd / 1e6).toFixed",
+          "lineNumber": 310
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "(data.p50_value_usd / 1e6).toFixed",
+          "lineNumber": 316
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "(data.evoi_usd / 1e6).toFixed",
+          "lineNumber": 322
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "data?.net_to_gross?.toFixed",
+          "lineNumber": 331
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "(data.porosity * 100).toFixed",
+          "lineNumber": 335
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "(data.recovery_factor * 100).toFixed",
+          "lineNumber": 339
+        },
+        {
+          "caller": "RiskDashboard",
+          "callee": "data.missing_constraints.map",
+          "lineNumber": 352
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    }
+  ]
+}

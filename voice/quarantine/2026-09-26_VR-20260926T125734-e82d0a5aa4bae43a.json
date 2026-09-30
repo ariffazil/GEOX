@@ -1,0 +1,27 @@
+{
+  "ts": "2026-09-26T12:57:34.514608+00:00",
+  "trace_id": "VR-20260926T125734-e82d0a5aa4bae43a",
+  "source_file": "/root/.hermes/cache/audio/audio_2753ed318e29.ogg",
+  "source_sha256": "a4eefc07bfbd16c9",
+  "category": "PERSONAL",
+  "guard": {
+    "category": "PERSONAL",
+    "sink": "QUARANTINE",
+    "confidence": 0.85,
+    "reasons": [
+      "OVERRIDE_personal=['abang']",
+      "F5_private_bukan_geox"
+    ],
+    "named_persons": [],
+    "proprietary_flag": false
+  },
+  "projections": {},
+  "projection_counts": {
+    "geox": 0,
+    "wealth": 0,
+    "well": 0
+  },
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

@@ -1,0 +1,2158 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "summary": "Defines 10 function(s); 5 class(es); exports 15 symbol(s)",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:bouguer_slab_correction",
+      "type": "function",
+      "name": "bouguer_slab_correction",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        162,
+        173
+      ],
+      "summary": "bouguer_slab_correction(elevation_m, density_kg_m3) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:gravity_forward_voxel",
+      "type": "function",
+      "name": "gravity_forward_voxel",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        194,
+        242
+      ],
+      "summary": "gravity_forward_voxel(x_obs, y_obs, z_obs, x_nodes, y_nodes, z_nodes, density_contrast, voxel_size_m) — 48 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:gravity_forward_slab",
+      "type": "function",
+      "name": "gravity_forward_slab",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        248,
+        263
+      ],
+      "summary": "gravity_forward_slab(x_obs, y_obs, thickness_m, density_contrast_kg_m3) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:magnetic_forward_voxel",
+      "type": "function",
+      "name": "magnetic_forward_voxel",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        269,
+        351
+      ],
+      "summary": "magnetic_forward_voxel(x_obs, y_obs, z_obs, x_nodes, y_nodes, z_nodes, susceptibility, inclination_deg, declination_deg, voxel_size_m) — 82 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:magnetic_forward_prism",
+      "type": "function",
+      "name": "magnetic_forward_prism",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        357,
+        396
+      ],
+      "summary": "magnetic_forward_prism(x_obs, susceptibility_si, depth_top_m, depth_bottom_m, width_m, inclination_deg, declination_deg) — 39 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:compute_complete_bouguer",
+      "type": "function",
+      "name": "compute_complete_bouguer",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        402,
+        451
+      ],
+      "summary": "compute_complete_bouguer(observed_gravity_mgal, elevations_m, latitudes_deg, longitudes_deg, reduction_density_kg_m3, terrain_correction_mgal) — 49 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:bouguer_anomaly_map",
+      "type": "function",
+      "name": "bouguer_anomaly_map",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        457,
+        497
+      ],
+      "summary": "bouguer_anomaly_map(x_grid, y_grid, elevation_grid, density_contrast_kg_m3, latitude_deg, method) — 40 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/potential_fields/__init__.py:joint_gravity_magnetic_model",
+      "type": "function",
+      "name": "joint_gravity_magnetic_model",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        503,
+        548
+      ],
+      "summary": "joint_gravity_magnetic_model(gravity_anomaly, magnetic_anomaly, density_susceptibility_ratio) — 45 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/potential_fields/__init__.py:GravityAnomaly",
+      "type": "class",
+      "name": "GravityAnomaly",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        64,
+        87
+      ],
+      "summary": "Class GravityAnomaly with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/potential_fields/__init__.py:MagneticAnomaly",
+      "type": "class",
+      "name": "MagneticAnomaly",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        91,
+        118
+      ],
+      "summary": "Class MagneticAnomaly with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/potential_fields/__init__.py:BouguerCorrections",
+      "type": "class",
+      "name": "BouguerCorrections",
+      "filePath": "src/geox_core/engines/potential_fields/__init__.py",
+      "lineRange": [
+        122,
+        144
+      ],
+      "summary": "Class BouguerCorrections with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/seismic/__init__.py",
+      "summary": "python code file (13 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/attenuation.py",
+      "type": "file",
+      "name": "attenuation.py",
+      "filePath": "src/geox_core/engines/seismic/attenuation.py",
+      "summary": "python code file (10 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/attribute_registry.py",
+      "type": "file",
+      "name": "attribute_registry.py",
+      "filePath": "src/geox_core/engines/seismic/attribute_registry.py",
+      "summary": "8 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/attribute_registry.py:SeismicAttribute",
+      "type": "class",
+      "name": "SeismicAttribute",
+      "filePath": "src/geox_core/engines/seismic/attribute_registry.py",
+      "lineRange": [
+        35,
+        66
+      ],
+      "summary": "Class SeismicAttribute with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/attribute_registry.py:AttributeRegistry",
+      "type": "class",
+      "name": "AttributeRegistry",
+      "filePath": "src/geox_core/engines/seismic/attribute_registry.py",
+      "lineRange": [
+        180,
+        247
+      ],
+      "summary": "Class AttributeRegistry with 10 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/blending.py",
+      "type": "file",
+      "name": "blending.py",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "summary": "Defines 13 function(s); exports 13 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:_rgb_to_hsv",
+      "type": "function",
+      "name": "_rgb_to_hsv",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        30,
+        53
+      ],
+      "summary": "_rgb_to_hsv(rgb) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:_hsv_to_rgb",
+      "type": "function",
+      "name": "_hsv_to_rgb",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        56,
+        70
+      ],
+      "summary": "_hsv_to_rgb(hsv) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:_rgb_to_hsl",
+      "type": "function",
+      "name": "_rgb_to_hsl",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        73,
+        96
+      ],
+      "summary": "_rgb_to_hsl(rgb) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:_hsl_to_rgb",
+      "type": "function",
+      "name": "_hsl_to_rgb",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        99,
+        116
+      ],
+      "summary": "_hsl_to_rgb(hsl) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:_normalize_to_01",
+      "type": "function",
+      "name": "_normalize_to_01",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        122,
+        131
+      ],
+      "summary": "_normalize_to_01(data) — 9 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:alpha_blend_2d",
+      "type": "function",
+      "name": "alpha_blend_2d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        137,
+        158
+      ],
+      "summary": "alpha_blend_2d(channel1, channel2, opacity1, opacity2) — 21 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:alpha_blend_3d",
+      "type": "function",
+      "name": "alpha_blend_3d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        161,
+        190
+      ],
+      "summary": "alpha_blend_3d(channel1, channel2, channel3, opacity1, opacity2, opacity3) — 29 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:rgb_blend_2d",
+      "type": "function",
+      "name": "rgb_blend_2d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        196,
+        220
+      ],
+      "summary": "rgb_blend_2d(red_channel, green_channel, blue_channel) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:rgb_blend_3d",
+      "type": "function",
+      "name": "rgb_blend_3d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        223,
+        245
+      ],
+      "summary": "rgb_blend_3d(red_channel, green_channel, blue_channel) — 22 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:hsv_blend_3d",
+      "type": "function",
+      "name": "hsv_blend_3d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        251,
+        275
+      ],
+      "summary": "hsv_blend_3d(hue_channel, saturation_channel, value_channel) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/blending.py:hsl_blend_3d",
+      "type": "function",
+      "name": "hsl_blend_3d",
+      "filePath": "src/geox_core/engines/seismic/blending.py",
+      "lineRange": [
+        278,
+        302
+      ],
+      "summary": "hsl_blend_3d(hue_channel, saturation_channel, lightness_channel) — 24 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/devito_adapter.py",
+      "type": "file",
+      "name": "devito_adapter.py",
+      "filePath": "src/geox_core/engines/seismic/devito_adapter.py",
+      "summary": "Defines 2 function(s); 2 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/devito_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/seismic/devito_adapter.py",
+      "lineRange": [
+        45,
+        47
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/devito_adapter.py:DevitoAdapter",
+      "type": "class",
+      "name": "DevitoAdapter",
+      "filePath": "src/geox_core/engines/seismic/devito_adapter.py",
+      "lineRange": [
+        68,
+        312
+      ],
+      "summary": "Class DevitoAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/inversion.py",
+      "type": "file",
+      "name": "inversion.py",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "summary": "Defines 10 function(s); 6 class(es); exports 16 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:_correlation",
+      "type": "function",
+      "name": "_correlation",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        139,
+        146
+      ],
+      "summary": "_correlation(a, b) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:_bandpass_filter",
+      "type": "function",
+      "name": "_bandpass_filter",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        149,
+        157
+      ],
+      "summary": "_bandpass_filter(data, dt_s, low_hz, high_hz) — 8 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:_build_lfm_from_wells",
+      "type": "function",
+      "name": "_build_lfm_from_wells",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        160,
+        223
+      ],
+      "summary": "_build_lfm_from_wells(well_logs, depth_target, cutoff_hz, dt_s) — 63 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:_estimate_wavelet_from_well",
+      "type": "function",
+      "name": "_estimate_wavelet_from_well",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        226,
+        283
+      ],
+      "summary": "_estimate_wavelet_from_well(seismic_trace, reflectivity, dt_ms, method) — 57 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:coloured_inversion",
+      "type": "function",
+      "name": "coloured_inversion",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        289,
+        381
+      ],
+      "summary": "coloured_inversion(seismic_trace, well_ai, dt_ms, lfm) — 92 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:model_based_inversion",
+      "type": "function",
+      "name": "model_based_inversion",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        387,
+        491
+      ],
+      "summary": "model_based_inversion(seismic_trace, initial_ai, wavelet, dt_ms, iterations, damping, lfm) — 104 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:pinn_assisted_inversion",
+      "type": "function",
+      "name": "pinn_assisted_inversion",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        497,
+        635
+      ],
+      "summary": "pinn_assisted_inversion(seismic_trace, well_ai, dt_ms, lfm, wavelet_freq_hz, regularisation_weight, smoothness_weight, iterations, learning_rate) — 138 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:reforward_consistency_gate",
+      "type": "function",
+      "name": "reforward_consistency_gate",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        641,
+        664
+      ],
+      "summary": "reforward_consistency_gate(inversion_result, seismic_observed, threshold) — 23 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:run_inversion_pipeline",
+      "type": "function",
+      "name": "run_inversion_pipeline",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        670,
+        731
+      ],
+      "summary": "run_inversion_pipeline(seismic_trace, method, dt_ms, well_logs, initial_ai, wavelet_freq_hz, iterations) — 61 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/inversion.py:_classify_confidence",
+      "type": "function",
+      "name": "_classify_confidence",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        737,
+        744
+      ],
+      "summary": "_classify_confidence(r) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/inversion.py:InversionResult",
+      "type": "class",
+      "name": "InversionResult",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        82,
+        109
+      ],
+      "summary": "Class InversionResult with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/inversion.py:ConsistencyGate",
+      "type": "class",
+      "name": "ConsistencyGate",
+      "filePath": "src/geox_core/engines/seismic/inversion.py",
+      "lineRange": [
+        113,
+        133
+      ],
+      "summary": "Class ConsistencyGate with 1 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/mistie_engine.py",
+      "type": "file",
+      "name": "mistie_engine.py",
+      "filePath": "src/geox_core/engines/seismic/mistie_engine.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/mistie_engine.py:compute_mistie_rms",
+      "type": "function",
+      "name": "compute_mistie_rms",
+      "filePath": "src/geox_core/engines/seismic/mistie_engine.py",
+      "lineRange": [
+        24,
+        217
+      ],
+      "summary": "compute_mistie_rms(synthetic_trace, seismic_trace, dt_ms, time_window_ms, threshold_ms, max_lag_ms, intervals) — 193 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/mistie_engine.py:_error_result",
+      "type": "function",
+      "name": "_error_result",
+      "filePath": "src/geox_core/engines/seismic/mistie_engine.py",
+      "lineRange": [
+        220,
+        236
+      ],
+      "summary": "_error_result(message, threshold_ms) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/obspy_adapter.py",
+      "type": "file",
+      "name": "obspy_adapter.py",
+      "filePath": "src/geox_core/engines/seismic/obspy_adapter.py",
+      "summary": "Defines 1 function(s); 5 class(es); exports 6 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/obspy_adapter.py:ObsPyAdapter",
+      "type": "class",
+      "name": "ObsPyAdapter",
+      "filePath": "src/geox_core/engines/seismic/obspy_adapter.py",
+      "lineRange": [
+        70,
+        530
+      ],
+      "summary": "Class ObsPyAdapter with 9 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "type": "file",
+      "name": "pygeopressure_adapter.py",
+      "filePath": "src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "summary": "Defines 2 function(s); 2 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/pygeopressure_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "lineRange": [
+        55,
+        57
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/pygeopressure_adapter.py:PyGeoPressureAdapter",
+      "type": "class",
+      "name": "PyGeoPressureAdapter",
+      "filePath": "src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "lineRange": [
+        88,
+        339
+      ],
+      "summary": "Class PyGeoPressureAdapter with 4 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/pylops_adapter.py",
+      "type": "file",
+      "name": "pylops_adapter.py",
+      "filePath": "src/geox_core/engines/seismic/pylops_adapter.py",
+      "summary": "Defines 2 function(s); 2 class(es); exports 4 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/pylops_adapter.py:_sha256_params",
+      "type": "function",
+      "name": "_sha256_params",
+      "filePath": "src/geox_core/engines/seismic/pylops_adapter.py",
+      "lineRange": [
+        48,
+        50
+      ],
+      "summary": "_sha256_params(params) — 2 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/pylops_adapter.py:PyLopsAdapter",
+      "type": "class",
+      "name": "PyLopsAdapter",
+      "filePath": "src/geox_core/engines/seismic/pylops_adapter.py",
+      "lineRange": [
+        65,
+        312
+      ],
+      "summary": "Class PyLopsAdapter with 5 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/velocity_structural_qc.py",
+      "type": "file",
+      "name": "velocity_structural_qc.py",
+      "filePath": "src/geox_core/engines/seismic/velocity_structural_qc.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/velocity_structural_qc.py:VelocityStructuralEngine",
+      "type": "class",
+      "name": "VelocityStructuralEngine",
+      "filePath": "src/geox_core/engines/seismic/velocity_structural_qc.py",
+      "lineRange": [
+        5,
+        78
+      ],
+      "summary": "Class VelocityStructuralEngine with 2 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/vision_bridge.py",
+      "type": "file",
+      "name": "vision_bridge.py",
+      "filePath": "src/geox_core/engines/seismic/vision_bridge.py",
+      "summary": "1 class(es); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/geox_core/engines/seismic/vision_bridge.py:GEOXVisionDepthEngine",
+      "type": "class",
+      "name": "GEOXVisionDepthEngine",
+      "filePath": "src/geox_core/engines/seismic/vision_bridge.py",
+      "lineRange": [
+        8,
+        218
+      ],
+      "summary": "Class GEOXVisionDepthEngine with 7 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/wavelet_extract.py",
+      "type": "file",
+      "name": "wavelet_extract.py",
+      "filePath": "src/geox_core/engines/seismic/wavelet_extract.py",
+      "summary": "Defines 2 function(s); exports 2 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/wavelet_extract.py:extract_wavelet_least_squares",
+      "type": "function",
+      "name": "extract_wavelet_least_squares",
+      "filePath": "src/geox_core/engines/seismic/wavelet_extract.py",
+      "lineRange": [
+        19,
+        134
+      ],
+      "summary": "extract_wavelet_least_squares(reflectivity, seismic_trace, dt_ms, wavelet_length_ms, epsilon) — 115 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/seismic/wavelet_extract.py:_classify_phase",
+      "type": "function",
+      "name": "_classify_phase",
+      "filePath": "src/geox_core/engines/seismic/wavelet_extract.py",
+      "lineRange": [
+        137,
+        155
+      ],
+      "summary": "_classify_phase(w) — 18 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/seismic/well_tie.py",
+      "type": "file",
+      "name": "well_tie.py",
+      "filePath": "src/geox_core/engines/seismic/well_tie.py",
+      "summary": "python code file (21 non-empty lines).",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/stratigraphy/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/stratigraphy/__init__.py",
+      "summary": "python code file (10 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "type": "file",
+      "name": "accommodation.py",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "summary": "Defines 5 function(s); 6 class(es); exports 11 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/accommodation.py:tectonic_subsidence_at_time",
+      "type": "function",
+      "name": "tectonic_subsidence_at_time",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        215,
+        232
+      ],
+      "summary": "tectonic_subsidence_at_time(si_km, thermal_rate_mm_yr, tau_ma, time_ma) — 17 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/accommodation.py:sediment_load_isostasy",
+      "type": "function",
+      "name": "sediment_load_isostasy",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        235,
+        249
+      ],
+      "summary": "sediment_load_isostasy(sediment_thickness_m, rho_sed, rho_water, rho_mantle) — 14 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/accommodation.py:decompact_thickness",
+      "type": "function",
+      "name": "decompact_thickness",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        252,
+        280
+      ],
+      "summary": "decompact_thickness(present_thickness_m, depth_km, phi0, c_per_km) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/accommodation.py:get_eustatic_level",
+      "type": "function",
+      "name": "get_eustatic_level",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        283,
+        311
+      ],
+      "summary": "get_eustatic_level(time_ma, eustatic_curve, constant_rate_mm_yr) — 28 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/accommodation.py:simulate_accommodation",
+      "type": "function",
+      "name": "simulate_accommodation",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        319,
+        502
+      ],
+      "summary": "simulate_accommodation(req) — 183 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/accommodation.py:AccommodationRequest",
+      "type": "class",
+      "name": "AccommodationRequest",
+      "filePath": "src/geox_core/engines/stratigraphy/accommodation.py",
+      "lineRange": [
+        83,
+        167
+      ],
+      "summary": "Class AccommodationRequest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "type": "file",
+      "name": "sediment_routing.py",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "summary": "Defines 6 function(s); 8 class(es); exports 14 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_gradient_at_position",
+      "type": "function",
+      "name": "_gradient_at_position",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        268,
+        278
+      ],
+      "summary": "_gradient_at_position(pos_km, geometry) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_environment_at_position",
+      "type": "function",
+      "name": "_environment_at_position",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        281,
+        297
+      ],
+      "summary": "_environment_at_position(pos_km, geometry, water_depth_m) — 16 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_transport_capacity",
+      "type": "function",
+      "name": "_transport_capacity",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        300,
+        327
+      ],
+      "summary": "_transport_capacity(gradient, discharge_m3_s, grain_diameter_mm) — 27 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_should_avulse",
+      "type": "function",
+      "name": "_should_avulse",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        330,
+        345
+      ],
+      "summary": "_should_avulse(current_gradient, alternative_gradient, rng) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_is_turbidity_initiated",
+      "type": "function",
+      "name": "_is_turbidity_initiated",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        348,
+        363
+      ],
+      "summary": "_is_turbidity_initiated(slope_deg, sediment_load_m, critical_slope_deg) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:simulate_routing",
+      "type": "function",
+      "name": "simulate_routing",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        371,
+        590
+      ],
+      "summary": "simulate_routing(req) — 219 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:SedimentSource",
+      "type": "class",
+      "name": "SedimentSource",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        89,
+        109
+      ],
+      "summary": "Class SedimentSource with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:BasinGeometry",
+      "type": "class",
+      "name": "BasinGeometry",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        112,
+        153
+      ],
+      "summary": "Class BasinGeometry with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:RoutingRequest",
+      "type": "class",
+      "name": "RoutingRequest",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        156,
+        189
+      ],
+      "summary": "Class RoutingRequest with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:DepositionalBody",
+      "type": "class",
+      "name": "DepositionalBody",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        192,
+        213
+      ],
+      "summary": "Class DepositionalBody with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:RoutingResult",
+      "type": "class",
+      "name": "RoutingResult",
+      "filePath": "src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "lineRange": [
+        230,
+        260
+      ],
+      "summary": "Class RoutingResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "type": "file",
+      "name": "sequence_emergence.py",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "summary": "Defines 7 function(s); 3 class(es); exports 10 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_classify_scale",
+      "type": "function",
+      "name": "_classify_scale",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        146,
+        157
+      ],
+      "summary": "_classify_scale(duration_myr) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_reservoir",
+      "type": "function",
+      "name": "_assess_reservoir",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        160,
+        171
+      ],
+      "summary": "_assess_reservoir(packages) — 11 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_seal",
+      "type": "function",
+      "name": "_assess_seal",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        174,
+        181
+      ],
+      "summary": "_assess_seal(surfaces) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_source",
+      "type": "function",
+      "name": "_assess_source",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        184,
+        191
+      ],
+      "summary": "_assess_source(surfaces) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_stacking_summary",
+      "type": "function",
+      "name": "_stacking_summary",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        194,
+        204
+      ],
+      "summary": "_stacking_summary(packages) — 10 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_accommodation_trend",
+      "type": "function",
+      "name": "_accommodation_trend",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        207,
+        219
+      ],
+      "summary": "_accommodation_trend(packages) — 12 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:emerge_sequences",
+      "type": "function",
+      "name": "emerge_sequences",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        222,
+        383
+      ],
+      "summary": "emerge_sequences(surface_result, accommodation) — 161 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sequence_emergence.py:EmergentSequence",
+      "type": "class",
+      "name": "EmergentSequence",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        58,
+        107
+      ],
+      "summary": "Class EmergentSequence with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/sequence_emergence.py:SequenceEmergenceResult",
+      "type": "class",
+      "name": "SequenceEmergenceResult",
+      "filePath": "src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "lineRange": [
+        110,
+        138
+      ],
+      "summary": "Class SequenceEmergenceResult with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "type": "file",
+      "name": "surface_first.py",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "summary": "Defines 4 function(s); 4 class(es); exports 8 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/surface_first.py:_infer_geometry",
+      "type": "function",
+      "name": "_infer_geometry",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        129,
+        144
+      ],
+      "summary": "_infer_geometry(step, prev_step) — 15 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/surface_first.py:_accommodation_change",
+      "type": "function",
+      "name": "_accommodation_change",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        147,
+        154
+      ],
+      "summary": "_accommodation_change(step, prev_step) — 7 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/surface_first.py:generate_surfaces",
+      "type": "function",
+      "name": "generate_surfaces",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        157,
+        278
+      ],
+      "summary": "generate_surfaces(accommodation, min_surface_magnitude_m) — 121 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/geox_core/engines/stratigraphy/surface_first.py:_evidence_for_surface",
+      "type": "function",
+      "name": "_evidence_for_surface",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        281,
+        294
+      ],
+      "summary": "_evidence_for_surface(surface_type) — 13 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/surface_first.py:StratSurface",
+      "type": "class",
+      "name": "StratSurface",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        46,
+        75
+      ],
+      "summary": "Class StratSurface with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/geox_core/engines/stratigraphy/surface_first.py:DepositionalPackage",
+      "type": "class",
+      "name": "DepositionalPackage",
+      "filePath": "src/geox_core/engines/stratigraphy/surface_first.py",
+      "lineRange": [
+        78,
+        99
+      ],
+      "summary": "Class DepositionalPackage with 0 method(s).",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/structural_restoration/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "src/geox_core/engines/structural_restoration/__init__.py",
+      "summary": "python code file (7 non-empty lines).",
+      "tags": [
+        "code",
+        "python",
+        "package-marker"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/geox_core/engines/structural_restoration/accommodation_diff.py",
+      "type": "file",
+      "name": "accommodation_diff.py",
+      "filePath": "src/geox_core/engines/structural_restoration/accommodation_diff.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/structural_restoration/accommodation_diff.py:compute_accommodation",
+      "type": "function",
+      "name": "compute_accommodation",
+      "filePath": "src/geox_core/engines/structural_restoration/accommodation_diff.py",
+      "lineRange": [
+        28,
+        138
+      ],
+      "summary": "compute_accommodation(scenario, source_grid, target_grid) — 110 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/geox_core/engines/structural_restoration/basement_subsidence.py",
+      "type": "file",
+      "name": "basement_subsidence.py",
+      "filePath": "src/geox_core/engines/structural_restoration/basement_subsidence.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/structural_restoration/basement_subsidence.py:compute_basement_subsidence",
+      "type": "function",
+      "name": "compute_basement_subsidence",
+      "filePath": "src/geox_core/engines/structural_restoration/basement_subsidence.py",
+      "lineRange": [
+        26,
+        120
+      ],
+      "summary": "compute_basement_subsidence(scenario, basement_source_grid, basement_target_grid) — 94 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/geox_core/engines/structural_restoration/fill_ratio.py",
+      "type": "file",
+      "name": "fill_ratio.py",
+      "filePath": "src/geox_core/engines/structural_restoration/fill_ratio.py",
+      "summary": "Defines 1 function(s); exports 1 symbol(s)",
+      "tags": [
+        "code",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/geox_core/engines/structural_restoration/fill_ratio.py:compute_fill_ratio",
+      "type": "function",
+      "name": "compute_fill_ratio",
+      "filePath": "src/geox_core/engines/structural_restoration/fill_ratio.py",
+      "lineRange": [
+        32,
+        197
+      ],
+      "summary": "compute_fill_ratio(scenario, thickness_grid, accommodation_grid) — 165 line(s).",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:src/geox_core/engines/structural_restoration/invariants.yaml",
+      "type": "config",
+      "name": "invariants.yaml",
+      "filePath": "src/geox_core/engines/structural_restoration/invariants.yaml",
+      "summary": "yaml config file (172 non-empty lines).",
+      "tags": [
+        "configuration",
+        "yaml"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:bouguer_slab_correction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:gravity_forward_voxel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:gravity_forward_slab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:magnetic_forward_voxel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:magnetic_forward_prism",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:compute_complete_bouguer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:bouguer_anomaly_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "function:src/geox_core/engines/potential_fields/__init__.py:joint_gravity_magnetic_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "class:src/geox_core/engines/potential_fields/__init__.py:GravityAnomaly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "class:src/geox_core/engines/potential_fields/__init__.py:MagneticAnomaly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/potential_fields/__init__.py",
+      "target": "class:src/geox_core/engines/potential_fields/__init__.py:BouguerCorrections",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/attribute_registry.py",
+      "target": "class:src/geox_core/engines/seismic/attribute_registry.py:SeismicAttribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/attribute_registry.py",
+      "target": "class:src/geox_core/engines/seismic/attribute_registry.py:AttributeRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:_rgb_to_hsv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:_hsv_to_rgb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:_rgb_to_hsl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:_hsl_to_rgb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:_normalize_to_01",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:alpha_blend_2d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:alpha_blend_3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:rgb_blend_2d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:rgb_blend_3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:hsv_blend_3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/blending.py",
+      "target": "function:src/geox_core/engines/seismic/blending.py:hsl_blend_3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/devito_adapter.py",
+      "target": "function:src/geox_core/engines/seismic/devito_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/devito_adapter.py",
+      "target": "class:src/geox_core/engines/seismic/devito_adapter.py:DevitoAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:_correlation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:_bandpass_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:_build_lfm_from_wells",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:_estimate_wavelet_from_well",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:coloured_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:model_based_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:pinn_assisted_inversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:reforward_consistency_gate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:run_inversion_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "function:src/geox_core/engines/seismic/inversion.py:_classify_confidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "class:src/geox_core/engines/seismic/inversion.py:InversionResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/inversion.py",
+      "target": "class:src/geox_core/engines/seismic/inversion.py:ConsistencyGate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/mistie_engine.py",
+      "target": "function:src/geox_core/engines/seismic/mistie_engine.py:compute_mistie_rms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/mistie_engine.py",
+      "target": "function:src/geox_core/engines/seismic/mistie_engine.py:_error_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/obspy_adapter.py",
+      "target": "class:src/geox_core/engines/seismic/obspy_adapter.py:ObsPyAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "target": "function:src/geox_core/engines/seismic/pygeopressure_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/pygeopressure_adapter.py",
+      "target": "class:src/geox_core/engines/seismic/pygeopressure_adapter.py:PyGeoPressureAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/pylops_adapter.py",
+      "target": "function:src/geox_core/engines/seismic/pylops_adapter.py:_sha256_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/pylops_adapter.py",
+      "target": "class:src/geox_core/engines/seismic/pylops_adapter.py:PyLopsAdapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/velocity_structural_qc.py",
+      "target": "class:src/geox_core/engines/seismic/velocity_structural_qc.py:VelocityStructuralEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/vision_bridge.py",
+      "target": "class:src/geox_core/engines/seismic/vision_bridge.py:GEOXVisionDepthEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/wavelet_extract.py",
+      "target": "function:src/geox_core/engines/seismic/wavelet_extract.py:extract_wavelet_least_squares",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/seismic/wavelet_extract.py",
+      "target": "function:src/geox_core/engines/seismic/wavelet_extract.py:_classify_phase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "function:src/geox_core/engines/stratigraphy/accommodation.py:tectonic_subsidence_at_time",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "function:src/geox_core/engines/stratigraphy/accommodation.py:sediment_load_isostasy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "function:src/geox_core/engines/stratigraphy/accommodation.py:decompact_thickness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "function:src/geox_core/engines/stratigraphy/accommodation.py:get_eustatic_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "function:src/geox_core/engines/stratigraphy/accommodation.py:simulate_accommodation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/accommodation.py",
+      "target": "class:src/geox_core/engines/stratigraphy/accommodation.py:AccommodationRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_gradient_at_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_environment_at_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_transport_capacity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_should_avulse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:_is_turbidity_initiated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sediment_routing.py:simulate_routing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:SedimentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:BasinGeometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:RoutingRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:DepositionalBody",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sediment_routing.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sediment_routing.py:RoutingResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_classify_scale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_reservoir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_seal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_assess_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_stacking_summary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:_accommodation_trend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "function:src/geox_core/engines/stratigraphy/sequence_emergence.py:emerge_sequences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sequence_emergence.py:EmergentSequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/sequence_emergence.py",
+      "target": "class:src/geox_core/engines/stratigraphy/sequence_emergence.py:SequenceEmergenceResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "function:src/geox_core/engines/stratigraphy/surface_first.py:_infer_geometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "function:src/geox_core/engines/stratigraphy/surface_first.py:_accommodation_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "function:src/geox_core/engines/stratigraphy/surface_first.py:generate_surfaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "function:src/geox_core/engines/stratigraphy/surface_first.py:_evidence_for_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "class:src/geox_core/engines/stratigraphy/surface_first.py:StratSurface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/stratigraphy/surface_first.py",
+      "target": "class:src/geox_core/engines/stratigraphy/surface_first.py:DepositionalPackage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/structural_restoration/accommodation_diff.py",
+      "target": "function:src/geox_core/engines/structural_restoration/accommodation_diff.py:compute_accommodation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/structural_restoration/basement_subsidence.py",
+      "target": "function:src/geox_core/engines/structural_restoration/basement_subsidence.py:compute_basement_subsidence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/geox_core/engines/structural_restoration/fill_ratio.py",
+      "target": "function:src/geox_core/engines/structural_restoration/fill_ratio.py:compute_fill_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

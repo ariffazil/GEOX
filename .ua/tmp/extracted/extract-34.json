@@ -1,0 +1,303 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 4,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 0,
+      "failed": 0,
+      "skipped": 4
+    }
+  },
+  "results": [
+    {
+      "path": "resources/biostrat/facies_matrix.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 148,
+      "nonEmptyLines": 144,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "doctrine",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "epistemic_status",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "fossil_groups",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "malay_basin_specific",
+          "level": 1,
+          "line": 100
+        },
+        {
+          "heading": "sabah_specific",
+          "level": 1,
+          "line": 117
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 142
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "resources/biostrat/nn_zones.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 52,
+      "nonEmptyLines": 52,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "scheme",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "scheme_reference",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "discipline",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "calibration",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "calibration_note",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "not_radiometric_ages",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "diachroneity_warning",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "zones",
+          "level": 1,
+          "line": 11
+        },
+        {
+          "heading": "operator_reports_referenced",
+          "level": 1,
+          "line": 42
+        },
+        {
+          "heading": "regional_framework",
+          "level": 1,
+          "line": 49
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 50
+        },
+        {
+          "heading": "epistemic_status",
+          "level": 1,
+          "line": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 14
+      }
+    },
+    {
+      "path": "resources/biostrat/palynology_pr_zones.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 213,
+      "nonEmptyLines": 207,
+      "sections": [
+        {
+          "heading": "$schema",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "description",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "source",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "discipline",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "region",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "basin_context",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "last_verified",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "epistemic_status",
+          "level": 1,
+          "line": 9
+        },
+        {
+          "heading": "confidence_caveat",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "seismic_groups",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "major_unconformities",
+          "level": 1,
+          "line": 31
+        },
+        {
+          "heading": "zones",
+          "level": 1,
+          "line": 44
+        },
+        {
+          "heading": "key_ecological_signals",
+          "level": 1,
+          "line": 169
+        },
+        {
+          "heading": "cross_discipline_integration",
+          "level": 1,
+          "line": 201
+        },
+        {
+          "heading": "constitutional_alignment",
+          "level": 1,
+          "line": 208
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 15
+      }
+    },
+    {
+      "path": "resources/biostrat/rulings.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 77,
+      "nonEmptyLines": 67,
+      "sections": [
+        {
+          "heading": "GEOX Biostratigraphy Governance Rulings — B1–B8",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "DITEMPA BUKAN DIBERI — Forged, Not Given",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "Phase 2.5 (2026-07-03): Codified per Arif sovereign spec.",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "These 8 rulings are constitutional guardrails for every biostratigraphic",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "claim processed by the GEOX Earth Intelligence organ. They enforce the",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "biostrat-as-calibration doctrine: fossils constrain, they do not dictate.",
+          "level": 1,
+          "line": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    }
+  ]
+}

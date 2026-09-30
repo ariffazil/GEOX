@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/geox_core/skills/water/water-floodplain-and-flow.md",
+      "type": "document",
+      "name": "water-floodplain-and-flow.md",
+      "filePath": "src/geox_core/skills/water/water-floodplain-and-flow.md",
+      "summary": "markdown docs file (36 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/water/water-hydrology-basics.md",
+      "type": "document",
+      "name": "water-hydrology-basics.md",
+      "filePath": "src/geox_core/skills/water/water-hydrology-basics.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/geox_core/skills/water/water-maritime-state.md",
+      "type": "document",
+      "name": "water-maritime-state.md",
+      "filePath": "src/geox_core/skills/water/water-maritime-state.md",
+      "summary": "markdown docs file (35 non-empty lines).",
+      "tags": [
+        "documentation",
+        "markdown"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": []
+}

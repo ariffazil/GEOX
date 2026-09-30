@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-07-24T09:54:30.795219+00:00",
+  "generated_at": "2026-09-17T21:51:50.766847+00:00",
   "organ": "GEOX",
   "total_canonical_tools": 32,
-  "total_ui_resources": 23,
-  "active_ui_resources": 19,
+  "total_ui_resources": 24,
+  "active_ui_resources": 20,
   "deprecated_ui_resources": 3,
   "planned_ui_resources": 1,
   "active_zero_bound": 0,
@@ -12,11 +12,11 @@
     {
       "id": "analog-digitizer",
       "uri": "ui://geox/analog-digitizer",
-      "title": "geox_ui_analog_digitizer",
+      "title": "GEOX Analog Digitizer",
       "status": "planned",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 3835,
-      "content_hash": "sha256:87e6ed4986d3d482",
+      "content_bytes": 11553,
+      "content_hash": "sha256:18ef82f892debac6",
       "bound_tools": [
         "geox_well_ingest"
       ],
@@ -37,8 +37,8 @@
       "title": "geox_ui_attribute_audit",
       "status": "deprecated",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 986,
-      "content_hash": "sha256:87c69cea12877bd7",
+      "content_bytes": 42,
+      "content_hash": "sha256:bb3b9e1ae272e4cd",
       "bound_tools": [
         "geox_seismic_compute",
         "geox_seismic_interpret"
@@ -65,6 +65,7 @@
       "bound_tools": [
         "geox_basin",
         "geox_basin_backstrip",
+        "geox_dde_reason",
         "geox_sediment_mass_balance",
         "geox_sequence",
         "geox_thermal_maturity_history"
@@ -108,13 +109,15 @@
       "title": "GEOX Earth Map",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 17470,
-      "content_hash": "sha256:5cd8639a8ea977df",
+      "content_bytes": 18593,
+      "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
+        "geox_h3_spatial_index",
         "geox_map_export_package",
         "geox_map_layers_list",
         "geox_map_render_preview",
-        "geox_map_scene_plan"
+        "geox_map_scene_plan",
+        "geox_stac_discover"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -137,6 +140,8 @@
       "content_hash": "sha256:c6a7b21f04f2f209",
       "bound_tools": [
         "geox_deep_time_state",
+        "geox_gempy_implicit_3d",
+        "geox_geological_model_generate",
         "geox_seismic_compute",
         "geox_seismic_interpret",
         "geox_subsurface_model"
@@ -182,8 +187,8 @@
       "title": "geox_ui_georeference_map",
       "status": "deprecated",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 1023,
-      "content_hash": "sha256:dc9a14e5b99f7842",
+      "content_bytes": 43,
+      "content_hash": "sha256:4587d1308b5c9200",
       "bound_tools": [
         "geox_basin",
         "geox_deep_time_state"
@@ -208,6 +213,7 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_lancedb_embed_store",
         "geox_surface_status",
         "geox_visual_generate_hypotheses",
         "geox_visual_understand"
@@ -394,8 +400,8 @@
       "title": "geox_ui_seismic_vision_review",
       "status": "deprecated",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 1037,
-      "content_hash": "sha256:525cd1a31875071c",
+      "content_bytes": 48,
+      "content_hash": "sha256:f315ec2fd2968af3",
       "bound_tools": [
         "geox_seismic_compute",
         "geox_seismic_interpret"
@@ -420,6 +426,7 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_lancedb_embed_store",
         "geox_surface_status",
         "geox_visual_generate_hypotheses",
         "geox_visual_understand"
@@ -449,7 +456,30 @@
         "geox_well_desk",
         "geox_well_desurvey",
         "geox_well_ingest",
-        "geox_well_qc"
+        "geox_well_qc",
+        "geox_well_view"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com",
+        "macrostrat.org",
+        "tile.openstreetmap.org",
+        "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "well-witness",
+      "uri": "ui://geox/well-witness",
+      "title": "GEOX Well Witness",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 11022,
+      "content_hash": "sha256:352aba9157742bf8",
+      "bound_tools": [
+        "geox_petrophysics"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -468,8 +498,8 @@
       "title": "GEOX Workbench",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 17470,
-      "content_hash": "sha256:5cd8639a8ea977df",
+      "content_bytes": 18593,
+      "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
         "geox_map_layers_list"
       ],
@@ -490,8 +520,8 @@
       "title": "geox_workbench",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 17470,
-      "content_hash": "sha256:5cd8639a8ea977df",
+      "content_bytes": 18593,
+      "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
         "geox_map_layers_list"
       ],
@@ -512,8 +542,8 @@
       "title": "GEOX Workspace",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 17470,
-      "content_hash": "sha256:5cd8639a8ea977df",
+      "content_bytes": 18593,
+      "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
         "geox_workspace"
       ],
@@ -534,8 +564,8 @@
       "title": "geox_workspace_v1",
       "status": "active",
       "mime_type": "text/html;profile=mcp-app",
-      "content_bytes": 11477,
-      "content_hash": "sha256:563493114642f55e",
+      "content_bytes": 14014,
+      "content_hash": "sha256:a2201d3dd0937ff4",
       "bound_tools": [
         "geox_workspace"
       ],

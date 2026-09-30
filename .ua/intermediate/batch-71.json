@@ -1,0 +1,41 @@
+{
+  "nodes": [
+    {
+      "id": "config:static/.well-known/a2a-agent-card.json",
+      "type": "config",
+      "name": "a2a-agent-card.json",
+      "filePath": "static/.well-known/a2a-agent-card.json",
+      "summary": "json config file (50 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:static/.well-known/agent.json",
+      "type": "config",
+      "name": "agent.json",
+      "filePath": "static/.well-known/agent.json",
+      "summary": "json config file (19 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:static/.well-known/arifos.json",
+      "type": "config",
+      "name": "arifos.json",
+      "filePath": "static/.well-known/arifos.json",
+      "summary": "json config file (10 non-empty lines).",
+      "tags": [
+        "configuration",
+        "json"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": []
+}
