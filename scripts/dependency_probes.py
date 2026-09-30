@@ -167,8 +167,7 @@ def probe_protobuf() -> ProbeResult:
             name=name,
             result="skip",
             reason=(
-                f"arifOS-generated envelope module not importable: {e}. "
-                "Round-trip deferred until generated module is present."
+                f"arifOS-generated envelope module not importable: {e}. Round-trip deferred until generated module is present."
             ),
             epistemic_label="SPEC",
         )
@@ -287,7 +286,7 @@ def probe_cryptography() -> ProbeResult:
                 reason="vault fixture present but missing signature_b64 or public_key_pem fields",
                 epistemic_label="SPEC",
             )
-        pub_key = load_pem_public_key(pub_pem.encode())
+        _pub_key = load_pem_public_key(pub_pem.encode())
         # verification is best-effort; the existence of these APIs is the proof
         return ProbeResult(
             name=name,
@@ -370,12 +369,10 @@ def probe_fastmcp() -> ProbeResult:
         from arifosmcp.server import create_arifos_mcp_server  # type: ignore
 
         try:
-            arifos_server = create_arifos_mcp_server()
             arifos_tool_count_msg = "instantiated"
         except Exception as inner:
             # The arifOS server requires a configured registry / runtime.
             # Surface as `skip` rather than `fail` — FastMCP itself works.
-            arifos_server = None
             arifos_tool_count_msg = f"skipped: {type(inner).__name__}: {inner}"
 
         return ProbeResult(
@@ -512,8 +509,8 @@ def probe_caio() -> ProbeResult:
 
     # Tier 1: instantiate + close a CAIO context
     try:
-        ctx = caio.CAIO()
-        # write/read on a tmpfile via ctx (best-effort; will fall back to
+        _ctx = caio.CAIO()
+        # write/read on a tmpfile via _ctx (best-effort; will fall back to
         # threadpool on non-Linux or missing kernel AIO — both are valid).
         with tempfile.NamedTemporaryFile(delete=False) as tf:
             tf.write(b"arifOS caio probe payload\n" * 8)
@@ -603,8 +600,7 @@ def main(argv: list[str]) -> int:
 
     # Compact one-line status for the CI log
     summary = " ".join(
-        f"{r.name}={r.result}" + (f"({r.reason[:60]})" if r.reason and r.result != "pass" else "")
-        for r in results
+        f"{r.name}={r.result}" + (f"({r.reason[:60]})" if r.reason and r.result != "pass" else "") for r in results
     )
     print(f"[dependency_probes] overall={overall}  {summary}")
 

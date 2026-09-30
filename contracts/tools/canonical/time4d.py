@@ -50,5 +50,3 @@ async def geox_time4d_analyze_system(
         claim_state="INTERPRETED",
         evidence_refs=refs,
     )
-
-

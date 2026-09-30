@@ -189,8 +189,7 @@ def regenerate_canonical_public_surface_json(dry_run: bool) -> None:
         "tools": tools_list,
         "families": sorted(set(m["family"] for m in tools_list)),
         "tier_distribution": {
-            tier: [t["name"] for t in tools_list if t["tier"] == tier]
-            for tier in sorted(set(t["tier"] for t in tools_list))
+            tier: [t["name"] for t in tools_list if t["tier"] == tier] for tier in sorted(set(t["tier"] for t in tools_list))
         },
         "capability_packs": packs,
         "discovery_profiles": profiles,
@@ -409,7 +408,7 @@ def regenerate_readme_badge(dry_run: bool) -> None:
     """Regenerate README.md badge count and capabilities heading."""
     path = ROOT / "README.md"
     if not path.exists():
-        print(f"  ⚠ README.md not found, skipping")
+        print("  ⚠ README.md not found, skipping")
         return
 
     text = path.read_text()
@@ -457,8 +456,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true", help="Show what would change without writing")
     args = ap.parse_args()
 
-    print(f"═══ GEOX Surface Regeneration ═══")
-    print(f"  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
+    print("═══ GEOX Surface Regeneration ═══")
+    print("  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
     print(f"  Truth count:  {TRUTH_COUNT}")
     print(f"  Truth tools:  {TRUTH_SORTED}")
     print(f"  Mode:         {'DRY-RUN' if args.dry_run else 'WRITE'}")
@@ -480,7 +479,7 @@ def main() -> int:
         fn(dry_run=args.dry_run)
         print()
 
-    print(f"═══ SUMMARY ═══")
+    print("═══ SUMMARY ═══")
     for c in changes:
         print(c)
     print(f"\n  Total surfaces: {len(surfaces)}")
@@ -488,11 +487,11 @@ def main() -> int:
     print(f"  Unchanged: {sum(1 for c in changes if 'UNCHANGED' in c)}")
 
     if args.dry_run:
-        print(f"\n  DRY-RUN complete. No files were written.")
+        print("\n  DRY-RUN complete. No files were written.")
     else:
-        print(f"\n  All surfaces regenerated from registry.py truth.")
+        print("\n  All surfaces regenerated from registry.py truth.")
         # Run check to verify
-        print(f"\n═══ POST-GENERATION VERIFICATION ═══")
+        print("\n═══ POST-GENERATION VERIFICATION ═══")
         import subprocess
 
         result = subprocess.run(

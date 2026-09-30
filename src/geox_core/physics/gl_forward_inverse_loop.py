@@ -16,6 +16,7 @@ Closure: each F-I-M cycle produces a MetabolizeReceipt with
     - G = geometric-mean(Witness_human, Witness_simulation, Witness_seismic)
     - epicycle delta (improvement vs prior cycle)
 """
+
 from __future__ import annotations
 
 import math
@@ -23,16 +24,22 @@ import time
 import hashlib
 import json
 from dataclasses import dataclass, field
-from typing import Optional, Tuple, Callable
+from typing import Optional
+from collections.abc import Callable
 
 import numpy as np
 
 from geox_core.physics.glgeomaterial import (
-    GLOFMaterialState, MaterialPhase, himalayan_defaults,
+    GLOFMaterialState,
+    MaterialPhase,
+    himalayan_defaults,
 )
 from geox_core.physics.glphase_switcher import (
-    evaluate_cascade, YieldVerdict, phase_sequence,
-    V_CRIT_AVALANCHE, S_CRIT_LIQUEFACTION,
+    evaluate_cascade,
+    YieldVerdict,
+    phase_sequence,
+    V_CRIT_AVALANCHE,
+    S_CRIT_LIQUEFACTION,
 )
 
 
@@ -40,12 +47,13 @@ from geox_core.physics.glphase_switcher import (
 @dataclass
 class GLOFObservation:
     """Field observation used for inverse inference."""
+
     label: str
-    water_head_m: float          # impounded lake height
-    breach_width_m: float        # observed breach width
-    peak_discharge_m3s: float   # observed Q_peak
-    time_to_peak_min: float      # minutes from breach start to Q_peak
-    downstream_surge_m: float   # water level rise at downstream town (e.g. Trishuli)
+    water_head_m: float  # impounded lake height
+    breach_width_m: float  # observed breach width
+    peak_discharge_m3s: float  # observed Q_peak
+    time_to_peak_min: float  # minutes from breach start to Q_peak
+    downstream_surge_m: float  # water level rise at downstream town (e.g. Trishuli)
     source: str = "field"
     timestamp_ns: int = field(default_factory=lambda: time.time_ns())
 
@@ -59,16 +67,18 @@ class ThetaPrior:
 
     Other 3 (rho, E, nu) come from existing petrophysical state.
     """
-    c: Tuple[float, float] = (1e3, 1e5)     # cohesion (Pa) — wide range
-    phi_deg: Tuple[float, float] = (25.0, 40.0)  # friction angle
-    k: Tuple[float, float] = (1e-6, 1e-3)   # permeability (m^2)
-    tau_0: Tuple[float, float] = (1e3, 1e4) # yield stress (Pa)
-    sigma_t: Tuple[float, float] = (1e5, 5e6)  # tensile strength (Pa)
-    phi_p: Tuple[float, float] = (0.20, 0.40)  # porosity
+
+    c: tuple[float, float] = (1e3, 1e5)  # cohesion (Pa) — wide range
+    phi_deg: tuple[float, float] = (25.0, 40.0)  # friction angle
+    k: tuple[float, float] = (1e-6, 1e-3)  # permeability (m^2)
+    tau_0: tuple[float, float] = (1e3, 1e4)  # yield stress (Pa)
+    sigma_t: tuple[float, float] = (1e5, 5e6)  # tensile strength (Pa)
+    phi_p: tuple[float, float] = (0.20, 0.40)  # porosity
 
     def grid(self, n: int = 5) -> list:
         """Generate uniform grid over the prior (n samples per dim)."""
         from itertools import product
+
         axes = [
             np.linspace(self.c[0], self.c[1], n),
             np.linspace(self.phi_deg[0], self.phi_deg[1], n),
@@ -86,7 +96,7 @@ def forward_glof(
     water_head_m: float = 100.0,
     dam_height_m: float = 150.0,
     dt_sec: float = 1.0,
-    n_steps: int = 180,         # 3 minutes at 1Hz; demo
+    n_steps: int = 180,  # 3 minutes at 1Hz; demo
 ) -> dict:
     """Forward simulate GLOF cascade for one material sample.
 
@@ -97,6 +107,7 @@ def forward_glof(
     Returns dict with time series + breach timing.
     """
     from dataclasses import replace
+
     rho_w = 1000.0
     g = 9.81
     Pp_series = []
@@ -108,8 +119,7 @@ def forward_glof(
         # Water head ramps linearly 0 -> max over first 90 steps
         h_w = min(water_head_m, water_head_m * t / 90.0)
         Pp = rho_w * g * h_w
-        s = replace(s, Pp=Pp,
-                    saturation=min(1.0, h_w / max(water_head_m, 1e-3)))
+        s = replace(s, Pp=Pp, saturation=min(1.0, h_w / max(water_head_m, 1e-3)))
         Pp_series.append(Pp)
 
         # Mohr-Coulomb check at dam base (sigma_n from gravity, tau from
@@ -125,7 +135,7 @@ def forward_glof(
 
     # Peak discharge estimate (empirical — Costa 1985 envelope)
     if breach_step >= 0:
-        Q_peak = 3.1 * (water_head_m ** 1.5) * (breach_width_m_est(theta) ** 0.5)
+        Q_peak = 3.1 * (water_head_m**1.5) * (breach_width_m_est(theta) ** 0.5)
         t_to_peak_min = 5.0 + 0.5 * water_head_m / 10.0
     else:
         Q_peak = 0.0
@@ -179,10 +189,10 @@ def log_likelihood(theta: GLOFMaterialState, obs: GLOFObservation) -> float:
 # ============================================================== Inverse solver
 def inverse_infer(
     obs: GLOFObservation,
-    base_theta: Optional[GLOFMaterialState] = None,
-    prior: Optional[ThetaPrior] = None,
+    base_theta: GLOFMaterialState | None = None,
+    prior: ThetaPrior | None = None,
     n_grid: int = 4,
-) -> Tuple[GLOFMaterialState, float, dict]:
+) -> tuple[GLOFMaterialState, float, dict]:
     """Grid-search inverse inference over ThetaPrior.
 
     Returns (theta_hat, max_log_likelihood, posterior_summary).
@@ -192,16 +202,21 @@ def inverse_infer(
 
     grid = pr.grid(n=n_grid)
     best_ll = -float("inf")
-    best_grid = None
     all_ll = []
 
     for c, phi_deg, k, tau_0, sigma_t, phi_p in grid:
         s = GLOFMaterialState(
-            rho=base.rho, E=base.E, nu=base.nu,
-            c=c, phi=math.radians(phi_deg),
-            k=k, phi_p=phi_p,
-            tau_0=tau_0, sigma_t=sigma_t,
-            T=base.T, Pp=base.Pp,
+            rho=base.rho,
+            E=base.E,
+            nu=base.nu,
+            c=c,
+            phi=math.radians(phi_deg),
+            k=k,
+            phi_p=phi_p,
+            tau_0=tau_0,
+            sigma_t=sigma_t,
+            T=base.T,
+            Pp=base.Pp,
             cell_id="grid_sample",
             phase_id=base.phase_id,
         )
@@ -209,39 +224,42 @@ def inverse_infer(
         all_ll.append((s, ll))
         if ll > best_ll:
             best_ll = ll
-            best_grid = s
     return _emit_grid_result(all_ll, base, pr, n_grid)
 
 
 def _emit_grid_result(all_ll, base, pr, n_grid):
     """Emit grid-search posterior summary (legacy Phase A behavior)."""
     all_ll.sort(key=lambda x: x[1], reverse=True)
-    top3 = [{"c": s.c, "phi_deg": math.degrees(s.phi), "k": s.k,
-             "tau_0": s.tau_0, "log_lik": round(ll, 2)}
-            for s, ll in all_ll[:3]]
+    top3 = [
+        {"c": s.c, "phi_deg": math.degrees(s.phi), "k": s.k, "tau_0": s.tau_0, "log_lik": round(ll, 2)} for s, ll in all_ll[:3]
+    ]
     best_grid = all_ll[0][0]
     return best_grid, all_ll[0][1], {"top3": top3, "n_grid": len(all_ll), "method": "grid"}
 
 
 def mcmc_infer(
     obs: GLOFObservation,
-    base_theta: Optional[GLOFMaterialState] = None,
+    base_theta: GLOFMaterialState | None = None,
     n_warmup: int = 80,
     n_iter: int = 200,
     n_chains: int = 2,
     seed: int = 42,
-) -> Tuple[GLOFMaterialState, float, dict]:
+) -> tuple[GLOFMaterialState, float, dict]:
     """Phase C — proper Bayesian posterior via adaptive Metropolis-Hastings.
 
     Uses gl_mcmc.metropolis_hastings for the sampler. Returns the best sample
     + posterior diagnostics (R-hat, ESS, percentiles).
     """
     from geox_core.physics.gl_mcmc import metropolis_hastings
+
     base = base_theta or himalayan_defaults()
     chains, diag = metropolis_hastings(
-        base, obs,
-        n_warmup=n_warmup, n_iter=n_iter,
-        n_chains=n_chains, seed=seed,
+        base,
+        obs,
+        n_warmup=n_warmup,
+        n_iter=n_iter,
+        n_chains=n_chains,
+        seed=seed,
     )
     # Find best sample across chains
     best_ll = -float("inf")
@@ -259,7 +277,8 @@ def mcmc_infer(
                 phi_p=max(0.0, min(0.6, x[5])),
                 tau_0=math.exp(x[3]),
                 sigma_t=math.exp(x[4]),
-                T=base.T, Pp=base.Pp,
+                T=base.T,
+                Pp=base.Pp,
                 cell_id="mcmc_sample",
                 phase_id=base.phase_id,
             )
@@ -298,13 +317,16 @@ def saint_venant_propagate(
     Returns dict with time series of depth, velocity, Q along the domain.
     """
     from geox_core.physics.gl_saint_venant import (
-        SVDomain, simulate_glof_propagation,
+        SVDomain,
+        simulate_glof_propagation,
     )
-    domain = SVDomain(length_m=length_m, nx=nx, manning_n=manning_n,
-                      bed_slope=bed_slope)
+
+    domain = SVDomain(length_m=length_m, nx=nx, manning_n=manning_n, bed_slope=bed_slope)
     result = simulate_glof_propagation(
-        breach_Q_func=breach_Q_func, domain=domain,
-        duration_s=duration_s, output_interval_s=output_interval_s,
+        breach_Q_func=breach_Q_func,
+        domain=domain,
+        duration_s=duration_s,
+        output_interval_s=output_interval_s,
     )
     # Find peak downstream
     Q_downstream = result.Q[:, -1]
@@ -328,22 +350,25 @@ def saint_venant_propagate(
 @dataclass
 class MetabolizeReceipt:
     """F12 witness receipt from one F-I-M cycle."""
+
     cycle_id: str
     timestamp_ns: int
     theta_hat_dict: dict
     log_likelihood: float
     forward_prediction: dict
     observation: dict
-    G_score: float          # geometric-mean tri-witness 0..1
-    epicycle_delta: float   # improvement metric (LL improvement vs prior)
-    prior_cycle_id: Optional[str] = None
+    G_score: float  # geometric-mean tri-witness 0..1
+    epicycle_delta: float  # improvement metric (LL improvement vs prior)
+    prior_cycle_id: str | None = None
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()
 
 
 def tri_witness_score(
-    forward_pred: dict, obs: GLOFObservation, theta: GLOFMaterialState,
+    forward_pred: dict,
+    obs: GLOFObservation,
+    theta: GLOFMaterialState,
 ) -> float:
     """Geometric mean of three witness components (F12 — G = cbrt(H*M*E)).
 
@@ -353,18 +378,23 @@ def tri_witness_score(
     """
     # Human witness — obs source quality
     H = {
-        "field": 1.0, "gauge": 0.9, "satellite": 0.85,
-        "social_media": 0.3, "model": 0.5,
+        "field": 1.0,
+        "gauge": 0.9,
+        "satellite": 0.85,
+        "social_media": 0.3,
+        "model": 0.5,
     }.get(obs.source, 0.4)
 
     # Model witness — 1 - normalized residual across 3 observable variables
     sigma = np.array([200.0, 2.0, 0.5])
-    resid = np.array([
-        (forward_pred["Q_peak_m3s"] - obs.peak_discharge_m3s) / sigma[0],
-        (forward_pred["time_to_peak_min"] - obs.time_to_peak_min) / sigma[1],
-        (forward_pred["downstream_surge_m_est"] - obs.downstream_surge_m) / sigma[2],
-    ])
-    M = float(np.exp(-0.5 * np.mean(resid ** 2)))
+    resid = np.array(
+        [
+            (forward_pred["Q_peak_m3s"] - obs.peak_discharge_m3s) / sigma[0],
+            (forward_pred["time_to_peak_min"] - obs.time_to_peak_min) / sigma[1],
+            (forward_pred["downstream_surge_m_est"] - obs.downstream_surge_m) / sigma[2],
+        ]
+    )
+    M = float(np.exp(-0.5 * np.mean(resid**2)))
 
     # External witness — physics bounds
     ok, _ = theta.validate()
@@ -379,7 +409,7 @@ def metabolize(
     theta_hat: GLOFMaterialState,
     forward_pred: dict,
     obs: GLOFObservation,
-    prior_receipt: Optional[MetabolizeReceipt] = None,
+    prior_receipt: MetabolizeReceipt | None = None,
 ) -> MetabolizeReceipt:
     """Close the loop: produce F12 witness receipt."""
     log_ll = log_likelihood(theta_hat, obs)
@@ -410,8 +440,10 @@ def seed_from_seismic(
     F-I-M loop boundary.
     """
     from geox_core.physics.glgeomaterial import from_physics13_state
+
     # The Physics13State object lives in geox_core.physics.state
     from geox_core.physics.state import Physics13State
+
     p = Physics13State.from_raw_dict(physics13_state_dict)
     return from_physics13_state(p, **extras)
 
@@ -421,8 +453,8 @@ def run_fim_cycle(
     obs: GLOFObservation,
     cycle_id: str = "",
     n_grid: int = 4,
-    prior_receipt: Optional[MetabolizeReceipt] = None,
-) -> Tuple[GLOFMaterialState, MetabolizeReceipt]:
+    prior_receipt: MetabolizeReceipt | None = None,
+) -> tuple[GLOFMaterialState, MetabolizeReceipt]:
     """Run one complete Forward-Inverse-Metabolize cycle."""
     theta_hat, log_ll, posterior = inverse_infer(obs, n_grid=n_grid)
     fwd = forward_glof(theta_hat, water_head_m=obs.water_head_m)
@@ -444,11 +476,15 @@ if __name__ == "__main__":
 
     print("Running F-I-M cycle for Trishuli 2026-08-26 GLOF...")
     theta_hat, receipt = run_fim_cycle(obs, cycle_id="c1", n_grid=3)
-    print(f"theta_hat: c={theta_hat.c:.0f} Pa, phi={math.degrees(theta_hat.phi):.1f} deg, "
-          f"k={theta_hat.k:.2e} m^2, tau_0={theta_hat.tau_0:.0f} Pa, "
-          f"sigma_t={theta_hat.sigma_t:.0f} Pa")
+    print(
+        f"theta_hat: c={theta_hat.c:.0f} Pa, phi={math.degrees(theta_hat.phi):.1f} deg, "
+        f"k={theta_hat.k:.2e} m^2, tau_0={theta_hat.tau_0:.0f} Pa, "
+        f"sigma_t={theta_hat.sigma_t:.0f} Pa"
+    )
     print(f"log_lik={receipt.log_likelihood:.3f}, G_score={receipt.G_score:.3f}")
-    print(f"forward: Q_peak={receipt.forward_prediction['Q_peak_m3s']:.0f} m3/s, "
-          f"surge={receipt.forward_prediction['downstream_surge_m_est']:.2f} m")
+    print(
+        f"forward: Q_peak={receipt.forward_prediction['Q_peak_m3s']:.0f} m3/s, "
+        f"surge={receipt.forward_prediction['downstream_surge_m_est']:.2f} m"
+    )
     print(f"posterior top3: {json.dumps(receipt.to_dict()['forward_prediction']['top3'] if False else '', indent=2)}")
     print("receipt keys:", list(receipt.to_dict().keys()))

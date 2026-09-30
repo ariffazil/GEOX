@@ -2,6 +2,7 @@
 
 DITEMPA BUKAN DIBERI.
 """
+
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -10,9 +11,9 @@ from typing import Any, Optional
 async def geox_calibration_register_witness(
     *,
     witness: dict[str, Any],
-    session_id: Optional[str] = None,
-    actor_id: Optional[str] = None,
-    trace_id: Optional[str] = None,
+    session_id: str | None = None,
+    actor_id: str | None = None,
+    trace_id: str | None = None,
 ) -> dict[str, Any]:
     """Register a calibration witness for structural interpretation.
 

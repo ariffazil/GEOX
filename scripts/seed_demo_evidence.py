@@ -7,6 +7,7 @@ so geox_petrophysics(mode=generate) can resolve evidence_refs.
 Usage:
   PYTHONPATH=src python3 scripts/seed_demo_evidence.py
 """
+
 from __future__ import annotations
 
 import json
@@ -69,10 +70,7 @@ def main() -> int:
         print(f"SEED {wid} → {las}")
 
     _persist_artifact_registry()
-    print(
-        f"Done. Seeded {len(seeded)} wells. "
-        f"Registry keys sample: {list(_artifact_store.keys())[:8]}"
-    )
+    print(f"Done. Seeded {len(seeded)} wells. Registry keys sample: {list(_artifact_store.keys())[:8]}")
     return 0
 
 

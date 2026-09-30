@@ -125,13 +125,9 @@ def main() -> int:
         print(f"note: fixed upstream — remove ledger entry to shrink debt: {k}")
 
     if new_v or expired_v:
-        print(
-            f"BOUNDARY RATCHET: FAIL ({len(new_v)} new, {len(expired_v)} expired, {len(kept)} known)"
-        )
+        print(f"BOUNDARY RATCHET: FAIL ({len(new_v)} new, {len(expired_v)} expired, {len(kept)} known)")
         return 1
-    print(
-        f"BOUNDARY RATCHET: PASS ({len(kept)} known violations under exception, {len(stale)} stale ledger)"
-    )
+    print(f"BOUNDARY RATCHET: PASS ({len(kept)} known violations under exception, {len(stale)} stale ledger)")
     return 0
 
 

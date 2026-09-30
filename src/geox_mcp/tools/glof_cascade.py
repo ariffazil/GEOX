@@ -15,6 +15,7 @@ Integrates existing GEOX surfaces:
 
 DITEMPA BUKAN DIBERI — the cascade is forged, not given.
 """
+
 from __future__ import annotations
 
 import math
@@ -33,24 +34,20 @@ class GLOFCascadeInitRequest(BaseModel):
     resolution_m: float = Field(default=10.0, description="Cell size [m]")
     dam_height_m: float = Field(default=150.0, description="Dam crest elevation [m]")
     water_head_initial_m: float = Field(default=0.0, description="Initial lake level [m]")
-    use_seismic_priors: bool = Field(default=True,
-                                     description="Seed from existing geox_geomechanics if state provided")
+    use_seismic_priors: bool = Field(default=True, description="Seed from existing geox_geomechanics if state provided")
     # ── 33D state input (zen-33 architecture, GEOX LEWM) ──
-    initial_state_33: Optional[dict] = Field(
+    initial_state_33: dict | None = Field(
         default=None,
-        description="Full GEOXEarthState33 dict (33 scalars: M9 + P9 + W9 + X6). "
-                    "If None, defaults to himalayan_glof_33().")
-    panel_focus: Optional[str] = Field(
-        default="all",
-        description="Which panel to focus mutation: M | P | W | X | all")
+        description="Full GEOXEarthState33 dict (33 scalars: M9 + P9 + W9 + X6). If None, defaults to himalayan_glof_33().",
+    )
+    panel_focus: str | None = Field(default="all", description="Which panel to focus mutation: M | P | W | X | all")
 
 
 class GLOFCascadeStepRequest(BaseModel):
     state_id: str = Field(..., description="ID returned from initialize")
     n_steps: int = Field(default=10, description="Timesteps to advance")
     dt_sec: float = Field(default=1.0, description="Time step [s]")
-    boundary_conditions: dict = Field(default_factory=dict,
-                                       description="{north: 'inflow', south: 'open', ...}")
+    boundary_conditions: dict = Field(default_factory=dict, description="{north: 'inflow', south: 'open', ...}")
 
 
 class GLOFCascadePhaseRequest(BaseModel):
@@ -60,7 +57,7 @@ class GLOFCascadePhaseRequest(BaseModel):
     tau_applied: float = Field(..., description="Applied shear [Pa]")
     velocity: float = Field(default=0.0, description="Flow velocity [m/s]")
     sigma_applied: float = Field(default=0.0, description="Tensile stress [Pa]")
-    saturation: Optional[float] = Field(default=None, description="Water saturation 0..1")
+    saturation: float | None = Field(default=None, description="Water saturation 0..1")
 
 
 class GLOFCascadeInverseRequest(BaseModel):
@@ -70,15 +67,15 @@ class GLOFCascadeInverseRequest(BaseModel):
     observation: dict = Field(
         ...,
         description="GLOFObservation dict. REQUIRED: label (str), water_head_m, "
-                    "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
-                    "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
+        "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
+        "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
     )
-    base_theta: Optional[dict] = Field(
+    base_theta: dict | None = Field(
         default=None,
         description="Seed GLOFMaterialState dict (9 required scalars: rho, E, nu, c, "
-                    "phi [rad], k, phi_p, tau_0, sigma_t; optional: T, Pp, sigma_v, "
-                    "saturation, velocity, strain, cell_id, phase_id, timestamp_ns, "
-                    "bounds) — defaults to himalayan_defaults()",
+        "phi [rad], k, phi_p, tau_0, sigma_t; optional: T, Pp, sigma_v, "
+        "saturation, velocity, strain, cell_id, phase_id, timestamp_ns, "
+        "bounds) — defaults to himalayan_defaults()",
     )
     n_grid: int = Field(default=4, description="Grid resolution per dimension")
 
@@ -88,16 +85,16 @@ class GLOFCascadeMetabolizeRequest(BaseModel):
     theta_hat: dict = Field(
         ...,
         description="Inferred GLOFMaterialState dict (9 required scalars: rho, E, nu, c, "
-                    "phi [rad], k, phi_p, tau_0, sigma_t; optional dynamic/meta fields "
-                    "accepted). Output of geox_glof_cascade_inverse.result.theta_hat "
-                    "validates as-is.",
+        "phi [rad], k, phi_p, tau_0, sigma_t; optional dynamic/meta fields "
+        "accepted). Output of geox_glof_cascade_inverse.result.theta_hat "
+        "validates as-is.",
     )
     forward_prediction: dict = Field(..., description="Forward sim output")
     observation: dict = Field(
         ...,
         description="GLOFObservation dict. REQUIRED: label, water_head_m, "
-                    "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
-                    "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
+        "breach_width_m, peak_discharge_m3s, time_to_peak_min, "
+        "downstream_surge_m. OPTIONAL: source, timestamp_ns.",
     )
 
 
@@ -114,8 +111,9 @@ class _StateRegistry:
 
     For production, this should be backed by Redis / Postgres.
     """
+
     def __init__(self):
-        self._states: dict[str, "GLOFSimSession"] = {}
+        self._states: dict[str, GLOFSimSession] = {}
 
     def put(self, state_id: str, session) -> None:
         self._states[state_id] = session
@@ -138,13 +136,17 @@ class GLOFSimSession:
     material is exposed for backward-compat with the previous GLOF
     pipeline (glgeomaterial.py + glphase_switcher.py + gl_forward_inverse_loop.py).
     """
+
     def __init__(self, init_req: GLOFCascadeInitRequest):
         from geox_core.physics.glgeomaterial import (
-            himalayan_defaults, GLOFMaterialState,
+            himalayan_defaults,
+            GLOFMaterialState,
         )
         from geox_core.physics.gl33 import (
-            GEOXEarthState33, himalayan_glof_33,
+            GEOXEarthState33,
+            himalayan_glof_33,
         )
+
         self.init_req = init_req
         self.material = himalayan_defaults()  # legacy M slice
         self.history: list[dict] = []
@@ -183,6 +185,7 @@ class GLOFSimSession:
 # MISSING_REQUIRED_FIELD-style envelope (pattern: geox_seismic_interpret).
 # Field lists are introspected from the REAL dataclasses — they cannot drift.
 
+
 def _glof_field_contract(kind: str) -> tuple[list[str], list[str], list[str]]:
     """(required_fields, optional_fields, all_fields) from the source dataclass."""
     import dataclasses as _dc
@@ -197,8 +200,15 @@ def _glof_field_contract(kind: str) -> tuple[list[str], list[str], list[str]]:
         return (
             ["Q_peak_m3s", "time_to_peak_min", "downstream_surge_m_est"],
             ["Pp_series", "phase_series", "breach_step", "breach_time_min"],
-            ["Q_peak_m3s", "time_to_peak_min", "downstream_surge_m_est",
-             "Pp_series", "phase_series", "breach_step", "breach_time_min"],
+            [
+                "Q_peak_m3s",
+                "time_to_peak_min",
+                "downstream_surge_m_est",
+                "Pp_series",
+                "phase_series",
+                "breach_step",
+                "breach_time_min",
+            ],
         )
     else:  # pragma: no cover - programming error
         raise ValueError(f"unknown contract kind: {kind}")
@@ -339,7 +349,9 @@ async def geox_glof_cascade_step(
     s = REGISTRY.get(request.state_id)
     if s is None:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_step", result={},
+            ok=False,
+            tool="geox_glof_cascade_step",
+            result={},
             error=f"state_id {request.state_id} not found",
         )
     try:
@@ -354,6 +366,7 @@ async def geox_glof_cascade_step(
         # NEW: advance 33D state via metabolize_33 (zen-33 closure)
         from geox_core.physics.gl33 import metabolize_33, forward_kinematics
         from dataclasses import replace as dc_replace
+
         # Advance 33D state n_steps times (1 metabolize per step)
         s33 = s.state_33
         for _ in range(request.n_steps):
@@ -361,14 +374,16 @@ async def geox_glof_cascade_step(
             s33 = metabolize_33(s33)
         s.state_33 = s33
         # Append summarized step to history
-        s.history.append({
-            "n_steps": request.n_steps,
-            "dt_sec": request.dt_sec,
-            "breach_step": result.get("breach_step"),
-            "Q_peak": result.get("Q_peak_m3s"),
-            "phase_series_unique": sorted(set(result["phase_series"])),
-            "phase_id_33_after": s33.phase_id,
-        })
+        s.history.append(
+            {
+                "n_steps": request.n_steps,
+                "dt_sec": request.dt_sec,
+                "breach_step": result.get("breach_step"),
+                "Q_peak": result.get("Q_peak_m3s"),
+                "phase_series_unique": sorted(set(result["phase_series"])),
+                "phase_id_33_after": s33.phase_id,
+            }
+        )
         s.cycle_count += 1
         # 33D forward observation (derived W from new M,P)
         w33 = forward_kinematics(s33)
@@ -396,7 +411,10 @@ async def geox_glof_cascade_step(
         )
     except Exception as e:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_step", result={}, error=str(e),
+            ok=False,
+            tool="geox_glof_cascade_step",
+            result={},
+            error=str(e),
         )
 
 
@@ -414,7 +432,9 @@ async def geox_glof_cascade_phase(
     s = REGISTRY.get(request.state_id)
     if s is None:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_phase", result={},
+            ok=False,
+            tool="geox_glof_cascade_phase",
+            result={},
             error=f"state_id {request.state_id} not found",
         )
     try:
@@ -430,12 +450,9 @@ async def geox_glof_cascade_phase(
         s33 = s.state_33
         sigma_eff_33 = s33.rho * s33.g * 100.0 - s33.alpha_B * s33.Pp
         tau_max_33 = s33.c + max(sigma_eff_33, 0.0) * math.tan(max(s33.phi_angle, 1e-3))
-        breach_prob_33 = max(0.0, min(1.0,
-            request.tau_applied / max(tau_max_33, 1.0)))
+        breach_prob_33 = max(0.0, min(1.0, request.tau_applied / max(tau_max_33, 1.0)))
         # Hydro-fracture indicator: tensile stress vs sigma_t
-        hydro_fracture = (
-            request.sigma_applied > s33.sigma_t if request.sigma_applied > 0 else False
-        )
+        hydro_fracture = request.sigma_applied > s33.sigma_t if request.sigma_applied > 0 else False
         return GLOFCascadeResponse(
             ok=True,
             tool="geox_glof_cascade_phase",
@@ -461,7 +478,10 @@ async def geox_glof_cascade_phase(
         )
     except Exception as e:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_phase", result={}, error=str(e),
+            ok=False,
+            tool="geox_glof_cascade_phase",
+            result={},
+            error=str(e),
         )
 
 
@@ -470,10 +490,12 @@ async def geox_glof_cascade_inverse(
 ) -> GLOFCascadeResponse:
     """Bayesian grid-search inference of dam parameters from observations."""
     from geox_core.physics.gl_forward_inverse_loop import (
-        inverse_infer, GLOFObservation,
+        inverse_infer,
+        GLOFObservation,
     )
     from geox_core.physics.glgeomaterial import (
-        himalayan_defaults, GLOFMaterialState,
+        himalayan_defaults,
+        GLOFMaterialState,
     )
 
     try:
@@ -493,7 +515,9 @@ async def geox_glof_cascade_inverse(
             base = himalayan_defaults()
 
         theta_hat, log_ll, posterior = inverse_infer(
-            obs, base_theta=base, n_grid=request.n_grid,
+            obs,
+            base_theta=base,
+            n_grid=request.n_grid,
         )
         return GLOFCascadeResponse(
             ok=True,
@@ -507,7 +531,10 @@ async def geox_glof_cascade_inverse(
         )
     except Exception as e:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_inverse", result={}, error=str(e),
+            ok=False,
+            tool="geox_glof_cascade_inverse",
+            result={},
+            error=str(e),
         )
 
 
@@ -516,7 +543,8 @@ async def geox_glof_cascade_metabolize(
 ) -> GLOFCascadeResponse:
     """Close the F-I-M loop — produce receipt with tri-witness G-score."""
     from geox_core.physics.gl_forward_inverse_loop import (
-        metabolize as metabolize_fn, GLOFObservation,
+        metabolize as metabolize_fn,
+        GLOFObservation,
     )
     from geox_core.physics.glgeomaterial import GLOFMaterialState, MaterialPhase
 
@@ -528,7 +556,9 @@ async def geox_glof_cascade_metabolize(
         _err = _validate_glof_payload("geox_glof_cascade_metabolize", "observation", request.observation, "observation")
         if _err:
             return _err
-        _err = _validate_glof_payload("geox_glof_cascade_metabolize", "forward_pred", request.forward_prediction, "forward_prediction")
+        _err = _validate_glof_payload(
+            "geox_glof_cascade_metabolize", "forward_pred", request.forward_prediction, "forward_prediction"
+        )
         if _err:
             return _err
         # Reconstruct with phase_id coercion (dict -> Enum)
@@ -554,14 +584,21 @@ async def geox_glof_cascade_metabolize(
         )
     except Exception as e:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_metabolize", result={}, error=str(e),
+            ok=False,
+            tool="geox_glof_cascade_metabolize",
+            result={},
+            error=str(e),
         )
 
 
 # ─────────────────────────────────────────────────────────────── Phase C tools
 class GLOFCascadeMCMCRequest(BaseModel):
     """MCMC Bayesian posterior inference (Phase C)."""
-    observation: dict = Field(default=..., description="GLOFObservation dict. REQUIRED: label, water_head_m, breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m. OPTIONAL: source, timestamp_ns.")
+
+    observation: dict = Field(
+        default=...,
+        description="GLOFObservation dict. REQUIRED: label, water_head_m, breach_width_m, peak_discharge_m3s, time_to_peak_min, downstream_surge_m. OPTIONAL: source, timestamp_ns.",
+    )
     base_theta: dict | None = Field(default=None, description="Initial 33D state (full)")
     n_warmup: int = Field(default=80, description="Adaptive warm-up iterations per chain")
     n_iter: int = Field(default=200, description="Production iterations per chain")
@@ -571,10 +608,8 @@ class GLOFCascadeMCMCRequest(BaseModel):
 
 class GLOFCascadePropagateRequest(BaseModel):
     """Saint-Venant 1D propagation (Phase C)."""
-    breach_Q_profile: str = Field(
-        default="costa1985",
-        description="Q(t) profile: 'costa1985' | 'instant' | 'linear_decay'"
-    )
+
+    breach_Q_profile: str = Field(default="costa1985", description="Q(t) profile: 'costa1985' | 'instant' | 'linear_decay'")
     length_m: float = Field(default=60_000.0, description="Reach length [m]")
     nx: int = Field(default=200, description="Cells along reach")
     manning_n: float = Field(default=0.05, description="Manning roughness")
@@ -595,9 +630,11 @@ async def geox_glof_cascade_mcmc_inverse(
 ) -> GLOFCascadeResponse:
     """Phase C — proper Bayesian posterior via MCMC (replaces grid search)."""
     from geox_core.physics.gl_forward_inverse_loop import (
-        mcmc_infer, GLOFObservation,
+        mcmc_infer,
+        GLOFObservation,
     )
     from geox_core.physics.glgeomaterial import GLOFMaterialState
+
     try:
         # af-fix #5: validate BEFORE dataclass construction — no raw TypeError escapes
         _err = _validate_glof_payload("geox_glof_cascade_mcmc_inverse", "observation", request.observation, "observation")
@@ -612,7 +649,8 @@ async def geox_glof_cascade_mcmc_inverse(
         if request.base_theta:
             base = GLOFMaterialState(**request.base_theta)
         theta_hat, log_ll, posterior = mcmc_infer(
-            obs, base,
+            obs,
+            base,
             n_warmup=request.n_warmup,
             n_iter=request.n_iter,
             n_chains=request.n_chains,
@@ -629,7 +667,10 @@ async def geox_glof_cascade_mcmc_inverse(
         )
     except Exception as e:
         return GLOFCascadeResponse(
-            ok=False, tool="geox_glof_cascade_mcmc_inverse", result={}, error=str(e),
+            ok=False,
+            tool="geox_glof_cascade_mcmc_inverse",
+            result={},
+            error=str(e),
         )
 
 
@@ -670,7 +711,9 @@ async def geox_glof_cascade_propagate(
         )
     except Exception as e:
         return GLOFCascadePropagateResponse(
-            ok=False, tool="geox_glof_cascade_propagate", result={},
+            ok=False,
+            tool="geox_glof_cascade_propagate",
+            result={},
             error=str(e),
         )
 
@@ -710,12 +753,14 @@ if __name__ == "__main__":
 
         # 2. Phase check at cell bhotekoshi_dam
         ph = GLOFCascadePhaseRequest(
-            state_id=state_id, cell_id="dam_crest",
-            sigma_n=500e3, tau_applied=80e3, saturation=0.1,
+            state_id=state_id,
+            cell_id="dam_crest",
+            sigma_n=500e3,
+            tau_applied=80e3,
+            saturation=0.1,
         )
         r = await geox_glof_cascade_phase(ph)
-        print(f"[2] phase margin={r.result.get('margin'):+.3f} "
-              f"mode={r.result.get('failure_mode')}")
+        print(f"[2] phase margin={r.result.get('margin'):+.3f} mode={r.result.get('failure_mode')}")
 
         # 3. Inverse inference
         obs = {
@@ -730,14 +775,17 @@ if __name__ == "__main__":
         inv = GLOFCascadeInverseRequest(observation=obs, n_grid=3)
         r = await geox_glof_cascade_inverse(inv)
         theta_hat = r.result["theta_hat"]
-        print(f"[3] inverse c={theta_hat['c']:.0f} phi={math.degrees(theta_hat['phi']):.1f}deg "
-              f"ll={r.result['log_likelihood']:.2f}")
+        print(
+            f"[3] inverse c={theta_hat['c']:.0f} phi={math.degrees(theta_hat['phi']):.1f}deg ll={r.result['log_likelihood']:.2f}"
+        )
 
         # 4. Metabolize
         fwd_pred = {"Q_peak_m3s": 3000.0, "time_to_peak_min": 12.0, "downstream_surge_m_est": 9.0}
         met = GLOFCascadeMetabolizeRequest(
-            cycle_id="c1", theta_hat=theta_hat,
-            forward_prediction=fwd_pred, observation=obs,
+            cycle_id="c1",
+            theta_hat=theta_hat,
+            forward_prediction=fwd_pred,
+            observation=obs,
         )
         r = await geox_glof_cascade_metabolize(met)
         rec = r.result["receipt"]

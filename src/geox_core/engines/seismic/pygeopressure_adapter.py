@@ -179,7 +179,6 @@ class PyGeoPressureAdapter:
         es = ob - pp_eaton
 
         is_calibrated = calibration_data is not None
-        calibration_status = "CALIBRATED" if is_calibrated else "UNCALIBRATED"
         confidence = 0.82 if is_calibrated else 0.72
 
         params_hash = _sha256_params(

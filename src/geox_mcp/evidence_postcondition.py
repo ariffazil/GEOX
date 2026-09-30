@@ -33,7 +33,17 @@ logger = logging.getLogger("geox_mcp.evidence_postcondition")
 EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     # ── Compute / petrophysics ──────────────────────────────────────
     "geox_petrophysics": ["net_pay", "curves", "curves_available", "vsh", "porosity", "sw"],
-    "geox_seismic_compute": ["synthetic_trace", "reflectivity", "amplitude", "attribute", "zoeppritz", "rpp", "shuey", "lmr", "castagna"],
+    "geox_seismic_compute": [
+        "synthetic_trace",
+        "reflectivity",
+        "amplitude",
+        "attribute",
+        "zoeppritz",
+        "rpp",
+        "shuey",
+        "lmr",
+        "castagna",
+    ],
     "geox_seismic_interpret": ["horizons", "faults", "interpretation_bundle", "geometry"],
     "geox_seismic_ingest": ["volume_ref", "headers", "trace_count", "sample_count"],
     "geox_sequence": ["correlation", "zones", "tops", "strat_column"],
@@ -349,9 +359,7 @@ def check_evidence_postcondition(
         or domain.get("isError") is False
     )
     is_already_error = (
-        domain.get("isError") is True
-        or domain.get("status") in ("INVALID", "ERROR", "FAILURE")
-        or bool(domain.get("error"))
+        domain.get("isError") is True or domain.get("status") in ("INVALID", "ERROR", "FAILURE") or bool(domain.get("error"))
     )
 
     if is_already_error or not claims_success:

@@ -549,7 +549,7 @@ def _multi_mineral_solve(
         # Shaly — neutron-weighted (density unreliable due to light clays)
         w_d = 0.30
         w_n = 0.70
-    
+
     phi_avg = w_d * phi_d + w_n * phi_n if (phi_d > 0 and phi_n > 0) else max(phi_d, phi_n)
     phi_avg = max(0.0, min(0.50, phi_avg))
 

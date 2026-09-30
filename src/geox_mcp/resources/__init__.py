@@ -634,11 +634,14 @@ async def geox_data_sources_malaysia() -> str:
     """
     path = RESOURCES_DIR / "data_sources" / "malaysia_jmg_myGEMS_catalog.json"
     if not path.exists():
-        return json.dumps({
-            "error": "Catalog not found",
-            "expected_path": str(path),
-            "hint": "Run geox_workspace check or re-verify after VPS sync."
-        }, indent=2)
+        return json.dumps(
+            {
+                "error": "Catalog not found",
+                "expected_path": str(path),
+                "hint": "Run geox_workspace check or re-verify after VPS sync.",
+            },
+            indent=2,
+        )
     try:
         return path.read_text(encoding="utf-8")
     except Exception as e:
@@ -658,11 +661,14 @@ async def geox_data_sources_paleobiodb() -> str:
     """
     path = RESOURCES_DIR / "data_sources" / "paleobiodb_catalog.json"
     if not path.exists():
-        return json.dumps({
-            "error": "Catalog not found",
-            "expected_path": str(path),
-            "hint": "Run geox_workspace check or re-verify after VPS sync.",
-        }, indent=2)
+        return json.dumps(
+            {
+                "error": "Catalog not found",
+                "expected_path": str(path),
+                "hint": "Run geox_workspace check or re-verify after VPS sync.",
+            },
+            indent=2,
+        )
     try:
         return path.read_text(encoding="utf-8")
     except Exception as e:

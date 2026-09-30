@@ -18,16 +18,20 @@ Returned posterior_summary:
 
 DITEMPA BUKAN DIBERI — posterior is forged from likelihood, not assumed.
 """
+
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Callable, Optional
+from typing import Optional
+from collections.abc import Callable
 
 import numpy as np
 
 from geox_core.physics.gl_forward_inverse_loop import (
-    GLOFObservation, forward_glof, log_likelihood,
+    GLOFObservation,
+    forward_glof,
+    log_likelihood,
 )
 from geox_core.physics.glgeomaterial import GLOFMaterialState
 
@@ -52,8 +56,7 @@ def _log_prior(theta: GLOFMaterialState) -> float:
 
     Other fields are derived or fixed (g=9.81, rho is weakly informed).
     """
-    valid = (theta.E > 0 and theta.c > 0 and theta.phi > 0 and
-              theta.tau_0 > 0 and theta.sigma_t > 0 and theta.phi_p > 0)
+    valid = theta.E > 0 and theta.c > 0 and theta.phi > 0 and theta.tau_0 > 0 and theta.sigma_t > 0 and theta.phi_p > 0
     return 0.0 if valid else -1e10
 
 
@@ -63,19 +66,22 @@ def _pack_theta(theta: GLOFMaterialState) -> np.ndarray:
     Sampling on (log_E, log_c, phi, log_tau_0, log_sigma_t, phi_p) since
     these are the 6 most-uncertain for dam-material inference.
     """
-    return np.array([
-        math.log(max(theta.E, 1.0)),
-        math.log(max(theta.c, 1.0)),
-        theta.phi,
-        math.log(max(theta.tau_0, 1.0)),
-        math.log(max(theta.sigma_t, 1.0)),
-        theta.phi_p,
-    ])
+    return np.array(
+        [
+            math.log(max(theta.E, 1.0)),
+            math.log(max(theta.c, 1.0)),
+            theta.phi,
+            math.log(max(theta.tau_0, 1.0)),
+            math.log(max(theta.sigma_t, 1.0)),
+            theta.phi_p,
+        ]
+    )
 
 
 def _unpack_theta(theta0: GLOFMaterialState, x: np.ndarray) -> GLOFMaterialState:
     """Unpack 6-vector back into a GLOFMaterialState (keep non-sampled fields)."""
     from dataclasses import replace
+
     return replace(
         theta0,
         E=math.exp(x[0]),
@@ -101,7 +107,7 @@ def metropolis_hastings(
     n_warmup: int = 200,
     n_iter: int = 1000,
     n_chains: int = 4,
-    seed: Optional[int] = None,
+    seed: int | None = None,
 ) -> tuple:
     """Adaptive Metropolis-Hastings sampler for the 6-D GLOF posterior.
 
@@ -139,11 +145,9 @@ def metropolis_hastings(
         chains_ll.append([ll_init])
 
     # Adaptive Metropolis warm-up
-    adapt_scale = 2.38 ** 2 / n_params
+    adapt_scale = 2.38**2 / n_params
     eps = 1e-6
-    chain_mean = np.mean([np.array(c[-1]) for c in chains_x], axis=0)
     chain_cov = proposal_cov.copy()
-    sample_count = n_chains
 
     for it in range(n_warmup + n_iter):
         chain_idx = it % n_chains
@@ -190,7 +194,6 @@ def _diagnose(chains_x: list, chains_ll: list, n_warmup: int) -> MCMCDiagnostics
     """Compute Gelman-Rubin R-hat, ESS, posterior summary."""
     # Drop warm-up
     prod_chains = [np.array(c[n_warmup:]) for c in chains_x]
-    n_chains = len(prod_chains)
     n_iter = prod_chains[0].shape[0]
     n_params = prod_chains[0].shape[1]
 
@@ -200,11 +203,10 @@ def _diagnose(chains_x: list, chains_ll: list, n_warmup: int) -> MCMCDiagnostics
     for p_idx in range(n_params):
         chain_means = np.array([c[:, p_idx].mean() for c in prod_chains])
         chain_vars = np.array([c[:, p_idx].var(ddof=1) for c in prod_chains])
-        overall_mean = chain_means.mean()
         B = n_iter * np.var(chain_means, ddof=1)  # between-chain var
-        W = chain_vars.mean()                        # within-chain var
+        W = chain_vars.mean()  # within-chain var
         var_plus = (n_iter - 1) / n_iter * W + B / n_iter
-        r_hat = float(np.sqrt(var_plus / W)) if W > 0 else float('inf')
+        r_hat = float(np.sqrt(var_plus / W)) if W > 0 else float("inf")
         r_hats.append(r_hat)
         # Effective sample size (rough): n_iter / (1 + 2 * sum_autocorr)
         ess = n_iter  # crude upper bound
@@ -220,8 +222,6 @@ def _diagnose(chains_x: list, chains_ll: list, n_warmup: int) -> MCMCDiagnostics
 
     # Find best sample (highest log-likelihood)
     all_ll = np.array([l for ll_list in chains_ll for l in ll_list[n_warmup:]])
-    best_idx = int(np.argmax(all_ll))
-    best_ll = float(all_ll[best_idx])
 
     labels = ["E", "c", "phi", "tau_0", "sigma_t", "phi_p"]
 
@@ -246,22 +246,28 @@ if __name__ == "__main__":
 
     obs = GLOFObservation(
         label="Trishuli_MCMC_test",
-        water_head_m=110.0, breach_width_m=150.0,
-        peak_discharge_m3s=3000.0, time_to_peak_min=12.0,
-        downstream_surge_m=9.0, source="gauge",
+        water_head_m=110.0,
+        breach_width_m=150.0,
+        peak_discharge_m3s=3000.0,
+        time_to_peak_min=12.0,
+        downstream_surge_m=9.0,
+        source="gauge",
     )
 
     print("Running MCMC for Trishuli 2026-08-26...")
     chains, diag = metropolis_hastings(
-        himalayan_defaults(), obs,
-        n_warmup=100, n_iter=300, n_chains=2, seed=42,
+        himalayan_defaults(),
+        obs,
+        n_warmup=100,
+        n_iter=300,
+        n_chains=2,
+        seed=42,
     )
     print(f"  n_iter = {diag.n_iter}")
     print(f"  accept_rate = {diag.accept_rate:.2%}")
     print(f"  R-hat (avg) = {diag.r_hat:.3f}")
     print(f"  ESS (avg) = {diag.ess:.0f}")
     print(f"  converged (R-hat < 1.1) = {diag.converged}")
-    print(f"  posterior summary:")
+    print("  posterior summary:")
     for k in diag.mean:
-        print(f"    {k:14s} mean={diag.mean[k]:.3g} "
-              f"p05={diag.p05[k]:.3g} p95={diag.p95[k]:.3g}")
+        print(f"    {k:14s} mean={diag.mean[k]:.3g} p05={diag.p05[k]:.3g} p95={diag.p95[k]:.3g}")

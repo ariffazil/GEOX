@@ -201,7 +201,7 @@ def load_basin_context(basin_name: str, registry_base: str | None = None) -> Bas
             f"Required sources: Madon 2006, USGS OF-99-50T, Tjia 1994, etc."
         )
 
-    with open(filepath, "r") as f:
+    with open(filepath) as f:
         data = yaml.safe_load(f)
 
     # Parse groups

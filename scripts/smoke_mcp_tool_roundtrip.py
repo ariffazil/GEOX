@@ -124,9 +124,7 @@ def check_live_mcp() -> list[str]:
         # some transports put it in body
         sid = (init_body.get("result") or {}).get("sessionId")
     if not sid:
-        failures.append(
-            f"live MCP initialize missing mcp-session-id (HTTP {code} body={str(init_body)[:200]})"
-        )
+        failures.append(f"live MCP initialize missing mcp-session-id (HTTP {code} body={str(init_body)[:200]})")
         return failures
 
     # 2b) lifecycle: notifications/initialized (Phase A1 gate)

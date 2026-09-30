@@ -21,6 +21,7 @@ Exit codes:
     3 — both drift and gap
     4 — server unreachable / MCP error
 """
+
 from __future__ import annotations
 
 import argparse
@@ -206,15 +207,9 @@ def format_report(report: dict[str, Any], *, json_mode: bool) -> str:
         lines.append(f"event: {EVT_SURFACE_DRIFT.replace('SURFACE_DRIFT', 'SURFACE_OK')}")
     else:
         if report.get("drift_count", 0) > 0:
-            lines.append(
-                f"VERDICT: DRIFT — {report['drift_count']} non-canonical tool(s) "
-                f"exposed. Event: {EVT_SURFACE_DRIFT}"
-            )
+            lines.append(f"VERDICT: DRIFT — {report['drift_count']} non-canonical tool(s) exposed. Event: {EVT_SURFACE_DRIFT}")
         if report.get("gap_count", 0) > 0:
-            lines.append(
-                f"VERDICT: GAP — {report['gap_count']} canonical tool(s) missing "
-                f"from live. Event: {EVT_SURFACE_GAP}"
-            )
+            lines.append(f"VERDICT: GAP — {report['gap_count']} canonical tool(s) missing from live. Event: {EVT_SURFACE_GAP}")
     lines.append("=" * 64)
     return "\n".join(lines)
 
@@ -300,9 +295,7 @@ def main(argv: list[str] | None = None) -> int:
             reports["mcp_tools_list"] = {"error": f"{type(e).__name__}: {e}"}
 
     if not args.no_drift_endpoint:
-        reports["drift_endpoint"] = probe_drift_endpoint(args.base_url) or {
-            "error": "endpoint unavailable"
-        }
+        reports["drift_endpoint"] = probe_drift_endpoint(args.base_url) or {"error": "endpoint unavailable"}
 
     if args.json:
         print(json.dumps(reports, indent=2, sort_keys=True))

@@ -143,8 +143,7 @@ def add_workflow_packs(dry_run: bool = False) -> int:
 
     if not dry_run:
         with open(MANIFEST_PATH, "w") as f:
-            yaml.dump(manifest, f, default_flow_style=False, sort_keys=False,
-                      allow_unicode=True, width=120)
+            yaml.dump(manifest, f, default_flow_style=False, sort_keys=False, allow_unicode=True, width=120)
         print(f"  ✓ Added workflow_packs ({len(WORKFLOW_PACKS)} workflows)")
         for name, wf in WORKFLOW_PACKS.items():
             print(f"    {name}: {len(wf['steps'])} steps → {wf['output_contract']}")

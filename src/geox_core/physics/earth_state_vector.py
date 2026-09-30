@@ -14,6 +14,7 @@ that the 30 July audit correctly identified as missing.
 
 DITEMPA BUKAN DIBERI — 2026-07-31
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -85,7 +86,7 @@ class PetrophysicalEarthStateVector:
 
     # ── Epistemic ─────────────────────────────────────────────────────────
     provenance: dict[str, str] = field(default_factory=dict)  # field → tool that produced it
-    confidence: dict[str, str] = field(default_factory=dict)   # field → HIGH/MEDIUM/LOW
+    confidence: dict[str, str] = field(default_factory=dict)  # field → HIGH/MEDIUM/LOW
     warnings: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -106,9 +107,15 @@ class PetrophysicalEarthStateVector:
     def completeness(self) -> float:
         """Fraction of key fields populated. 1.0 = fully characterised."""
         key_fields = [
-            "porosity", "sw", "matrix_density_gcc", "dominant_mineral",
-            "pore_pressure_mpa", "temperature_c", "max_burial_depth_m",
-            "vitrinite_reflectance_ro", "brittleness_index",
+            "porosity",
+            "sw",
+            "matrix_density_gcc",
+            "dominant_mineral",
+            "pore_pressure_mpa",
+            "temperature_c",
+            "max_burial_depth_m",
+            "vitrinite_reflectance_ro",
+            "brittleness_index",
         ]
         populated = sum(1 for f in key_fields if getattr(self, f, None) is not None)
         return populated / len(key_fields)
@@ -116,13 +123,17 @@ class PetrophysicalEarthStateVector:
     def grade(self) -> str:
         """AAA-quality grade based on completeness."""
         c = self.completeness()
-        if c >= 0.80: return "AAA"
-        if c >= 0.50: return "AA"
-        if c >= 0.30: return "A"
+        if c >= 0.80:
+            return "AAA"
+        if c >= 0.50:
+            return "AA"
+        if c >= 0.30:
+            return "A"
         return "RAW"
 
 
 # ── Builder ──────────────────────────────────────────────────────────────────
+
 
 def build_earth_state_vector_from_mineral_zone(
     zone_result: dict[str, Any],

@@ -217,8 +217,12 @@ async def geox_paleobiodb_query(
         ).model_dump()
 
     cache_params = {
-        "name": name, "taxon": taxon, "rank": rank,
-        "interval": interval, "cc": cc, "fossil_group": fossil_group,
+        "name": name,
+        "taxon": taxon,
+        "rank": rank,
+        "interval": interval,
+        "cc": cc,
+        "fossil_group": fossil_group,
         "limit": limit,
     }
     key = _cache_key(mode, cache_params)

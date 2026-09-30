@@ -116,7 +116,6 @@ def add_epistemic_banner(
     banner_height = max(banner_height, 3)  # Minimum 3 units
 
     if position == "top":
-        y_pos = ylim[1]
         ax.axhspan(
             ylim[1],
             ylim[1] + banner_height,
@@ -128,7 +127,6 @@ def add_epistemic_banner(
         text_y = ylim[1] + banner_height / 2
         ha = "center"
     else:
-        y_pos = ylim[0]
         ax.axhspan(
             ylim[0] - banner_height,
             ylim[0],

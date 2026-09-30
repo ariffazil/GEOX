@@ -68,11 +68,7 @@ def fetch_kernel_apex_scalars(*, timeout_s: float = 1.5, use_cache: bool = True)
     if use_cache and _CACHE["apex"] is not None and (now - float(_CACHE["ts"])) < _CACHE_TTL_S:
         return dict(_CACHE["apex"])  # type: ignore[arg-type]
 
-    base = (
-        os.environ.get("ARIFOS_HEALTH_URL")
-        or os.environ.get("ARIFOS_URL")
-        or "http://127.0.0.1:8088"
-    ).rstrip("/")
+    base = (os.environ.get("ARIFOS_HEALTH_URL") or os.environ.get("ARIFOS_URL") or "http://127.0.0.1:8088").rstrip("/")
     if base.endswith("/health"):
         url = base
     else:

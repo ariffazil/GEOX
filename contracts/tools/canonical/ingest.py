@@ -260,7 +260,6 @@ async def geox_data_ingest_bundle(
             )
         )
 
-
     derived_id = well_id or Path(source_uri).stem
 
     # ── Handle non-well source types ────────────────────────────────────

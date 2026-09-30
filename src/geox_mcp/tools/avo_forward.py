@@ -65,9 +65,14 @@ async def geox_avo_forward(
     def _require_interface(needed: list[str]) -> list[str]:
         """Return list of missing parameter names."""
         mapping = {
-            "vp1": vp1, "vs1": vs1, "rho1": rho1,
-            "vp2": vp2, "vs2": vs2, "rho2": rho2,
-            "theta_deg": theta_deg, "vp": vp,
+            "vp1": vp1,
+            "vs1": vs1,
+            "rho1": rho1,
+            "vp2": vp2,
+            "vs2": vs2,
+            "rho2": rho2,
+            "theta_deg": theta_deg,
+            "vp": vp,
         }
         return [n for n in needed if mapping.get(n) is None]
 
@@ -109,9 +114,12 @@ async def geox_avo_forward(
         vp_input = vp if vp is not None else vp1
         rho_input = rho if rho is not None else rho1
         missing = []
-        if vp_input is None: missing.append("vp or vp1")
-        if vs_input is None: missing.append("vs or vs1")
-        if rho_input is None: missing.append("rho or rho1")
+        if vp_input is None:
+            missing.append("vp or vp1")
+        if vs_input is None:
+            missing.append("vs or vs1")
+        if rho_input is None:
+            missing.append("rho or rho1")
         if missing:
             errors.append(f"mode=lmr missing: {missing}")
             return None
@@ -141,6 +149,7 @@ async def geox_avo_forward(
         out = castagna_mudrock_fallback(vp_input, fluid_zone=fluid_zone)
         # vs may be ndarray scalar — coerce
         import numpy as _np
+
         vs_val = out.get("vs")
         if hasattr(vs_val, "item"):
             out["vs"] = float(vs_val.item())
@@ -194,9 +203,7 @@ async def geox_avo_forward(
             )
 
     else:
-        errors.append(
-            f"Unknown mode: {mode!r}. Valid: zoeppritz, shuey, lmr, castagna, full"
-        )
+        errors.append(f"Unknown mode: {mode!r}. Valid: zoeppritz, shuey, lmr, castagna, full")
 
     if errors:
         result["errors"] = errors

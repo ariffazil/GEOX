@@ -826,12 +826,7 @@ async def _workflow_section_correlation(
                 user_tops.get(ref)
                 or user_tops.get(wid)
                 or next(
-                    (
-                        user_tops[k]
-                        for k in user_tops
-                        if str(k).upper() == str(ref).upper()
-                        or str(k).upper() == str(wid).upper()
-                    ),
+                    (user_tops[k] for k in user_tops if str(k).upper() == str(ref).upper() or str(k).upper() == str(wid).upper()),
                     None,
                 )
             )
@@ -861,11 +856,7 @@ async def _workflow_section_correlation(
                         "well": well_name,
                         "marker": top_name,
                         "depth_m": top_depth,
-                        "tie_type": (
-                            "observed"
-                            if user_tops and top_depth is not None
-                            else "hypothesized"
-                        ),
+                        "tie_type": ("observed" if user_tops and top_depth is not None else "hypothesized"),
                     }
                 )
 
@@ -1020,7 +1011,7 @@ async def _workflow_section_correlation(
             resolved_meta.append({"ref": ref, "source": "path_arg", "las_path": well_las_paths[i]})
     if not well_sources and well_las_paths:
         for i, lp in enumerate(well_las_paths):
-            wid = (well_refs[i] if well_refs and i < len(well_refs) else f"well_{i}")
+            wid = well_refs[i] if well_refs and i < len(well_refs) else f"well_{i}"
             well_sources.append((wid, lp))
             resolved_meta.append({"ref": wid, "source": "path_arg", "las_path": lp})
     if not well_sources:

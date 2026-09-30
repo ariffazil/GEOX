@@ -71,7 +71,9 @@ def scan_narrative_claims(
             blocked.append(
                 {
                     "code": code,
-                    "status": "BLOCKED" if code in ("DRILLING_BLOCKED", "ECONOMIC_RANKING_BLOCKED", "PROBABILITY_THEATRE") else "UNMEASURED",
+                    "status": "BLOCKED"
+                    if code in ("DRILLING_BLOCKED", "ECONOMIC_RANKING_BLOCKED", "PROBABILITY_THEATRE")
+                    else "UNMEASURED",
                     "reason": reason,
                     "match": rx.findall(text)[:3] if rx.groups else [rx.search(text).group(0)],  # type: ignore[union-attr]
                 }

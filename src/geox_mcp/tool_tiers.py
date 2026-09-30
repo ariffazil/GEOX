@@ -3,13 +3,22 @@
 TOOL_TIERS = {
     # Anon: pure functions, caller-supplied inputs only
     "anon": {
-        "geox_temporal", "geox_source", "geox_seismic_compute",
-        "geox_geomechanics", "geox_basin", "geox_deep_time",
-        "geox_map", "geox_spatial", "geox_model", "geox_prospect",
+        "geox_temporal",
+        "geox_source",
+        "geox_seismic_compute",
+        "geox_geomechanics",
+        "geox_basin",
+        "geox_deep_time",
+        "geox_map",
+        "geox_spatial",
+        "geox_model",
+        "geox_prospect",
     },
     # Session: server-held artifacts, workspace state
     "session": {
-        "geox_workspace", "geox_well", "geox_well_qc",
+        "geox_workspace",
+        "geox_well",
+        "geox_well_qc",
         "geox_petrophysics",  # stateless modes are anon, but tool is session
         "geox_seismic_interpret",  # reads existing interpretations
     },

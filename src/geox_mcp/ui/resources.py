@@ -183,4 +183,3 @@ def register_all_ui_resources(mcp: FastMCP) -> None:
     register_gravmag_studio_resource(mcp)
     register_alias_resources(mcp)
     register_project_state_resource(mcp)
-

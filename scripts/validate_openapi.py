@@ -9,6 +9,7 @@ try:
 except ImportError:
     print("jsonschema not installed, installing...")
     import subprocess
+
     subprocess.check_call([sys.executable, "-m", "pip", "install", "jsonschema", "pyyaml", "openapi-schema-validator"])
     import jsonschema
 
@@ -23,6 +24,7 @@ def resolve_ref(ref_str, current_dir):
     with open(path) as f:
         return yaml.safe_load(f), path.parent
 
+
 def inline_refs(schema, current_dir):
     """Recursively inline local $refs for jsonschema validation."""
     if isinstance(schema, dict):
@@ -34,6 +36,7 @@ def inline_refs(schema, current_dir):
         return [inline_refs(item, current_dir) for item in schema]
     return schema
 
+
 def main():
     base_dir = Path("/root/geox/contracts/openapi/v1")
     openapi_path = base_dir / "openapi.yaml"
@@ -42,7 +45,7 @@ def main():
     print(f"Loading OpenAPI skeleton from {openapi_path}...")
     with open(openapi_path) as f:
         spec = yaml.safe_load(f)
-    
+
     # 1. Validate OpenAPI skeleton (basic)
     print("Validating OpenAPI schema structure...")
     try:
@@ -60,23 +63,23 @@ def main():
         "pick": "components/schemas/pick.yaml",
         "interval": "components/schemas/interval.yaml",
         "correlation": "components/schemas/correlation.yaml",
-        "timescale_unit": "components/schemas/timescale_unit.yaml"
+        "timescale_unit": "components/schemas/timescale_unit.yaml",
     }
 
     for key, rel_path in schemas_to_test.items():
         schema_path = base_dir / rel_path
         with open(schema_path) as f:
             schema = yaml.safe_load(f)
-        
+
         # Inline local refs for jsonschema
         schema_dir = schema_path.parent
-        resolved_schema = inline_refs(schema, schema_dir) # schema_dir handles relative paths
-        
+        resolved_schema = inline_refs(schema, schema_dir)  # schema_dir handles relative paths
+
         data = payloads.get(key)
         if not data:
             print(f"❌ Missing example payload for {key}")
             sys.exit(1)
-            
+
         print(f"Validating {key} example against {rel_path}...")
         try:
             jsonschema.validate(instance=data, schema=resolved_schema)
@@ -86,6 +89,7 @@ def main():
             sys.exit(1)
 
     print("All contracts and examples passed validation.")
+
 
 if __name__ == "__main__":
     main()

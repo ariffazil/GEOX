@@ -392,14 +392,8 @@ async def geox_data_ingest_bundle(
                 check_registry=_artifact_exists,
             )
 
-            actor_id = (
-                (arguments.get("actor_id") if isinstance(arguments, dict) else None)
-                or "anonymous"
-            )
-            session_id = (
-                (arguments.get("session_id") if isinstance(arguments, dict) else None)
-                or "anonymous"
-            )
+            actor_id = (arguments.get("actor_id") if isinstance(arguments, dict) else None) or "anonymous"
+            session_id = (arguments.get("session_id") if isinstance(arguments, dict) else None) or "anonymous"
 
             seal = seal_receipt(
                 tool="geox_data_ingest_bundle",

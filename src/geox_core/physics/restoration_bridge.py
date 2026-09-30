@@ -2,7 +2,7 @@
 restoration_bridge.py — Petrophysics↔Restoration causal loop (G9)
 
 The bridge that the 30 July audit correctly identified as the bottleneck:
-    geox_petrophysics → EarthStateVector → geox_basin_backstrip → 
+    geox_petrophysics → EarthStateVector → geox_basin_backstrip →
     geox_thermal_maturity → EarthStateVector (enriched) → geox_prospect
 
 This module provides the translation layer that allows tools to share
@@ -11,6 +11,7 @@ petrophysical state through the EarthStateVector, closing the
 
 DITEMPA BUKAN DIBERI — 2026-07-31
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -21,7 +22,7 @@ def prepare_backstrip_input(
     esv: PetrophysicalEarthStateVector,
 ) -> dict[str, Any]:
     """Convert EarthStateVector to geox_basin_backstrip input parameters.
-    
+
     The restoration loop: measured porosity from petrophysics feeds into
     burial history reconstruction, which predicts expected porosity at
     maximum burial depth. The residual (measured - predicted) reveals
@@ -29,7 +30,7 @@ def prepare_backstrip_input(
     """
     if esv.porosity is None:
         return {"error": "EarthStateVector missing porosity — run petrophysics first"}
-    
+
     return {
         "current_porosity": esv.porosity,
         "current_depth_m": esv.depth_base_m,
@@ -50,13 +51,13 @@ def compute_porosity_residual(
     depth_m: float,
 ) -> dict[str, Any]:
     """Compare measured vs predicted porosity at depth.
-    
+
     Residual > 0: porosity higher than burial predicts → secondary porosity / undercompaction.
     Residual < 0: porosity lower than burial predicts → cementation / overcompaction.
     Residual ≈ 0: porosity explained by burial alone.
     """
     residual = measured_phi - predicted_phi
-    
+
     if abs(residual) < 0.02:
         interpretation = "burial_consistent — porosity explained by compaction"
         flag = "NORMAL"
@@ -69,7 +70,7 @@ def compute_porosity_residual(
     else:
         interpretation = "minor_deviation — within calibration uncertainty"
         flag = "MINOR"
-    
+
     return {
         "measured_phi": round(measured_phi, 4),
         "predicted_phi": round(predicted_phi, 4),

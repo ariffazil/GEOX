@@ -35,11 +35,12 @@ class PhaseIntegrity(str, Enum):
 @dataclass
 class SeismicDataClassification:
     """Immutable classification of seismic data provenance."""
+
     data_representation: DataRepresentation
     amplitude_integrity: AmplitudeIntegrity = AmplitudeIntegrity.UNKNOWN
     phase_integrity: PhaseIntegrity = PhaseIntegrity.UNKNOWN
-    source_hash: Optional[str] = None
-    source_uri: Optional[str] = None
+    source_hash: str | None = None
+    source_uri: str | None = None
 
     @property
     def permitted_uses(self) -> list[str]:

@@ -56,7 +56,7 @@ def _flame_post(
 
     if len(body) > MAX_BODY_CHARS * 4:  # rough UTF-8 byte check
         logger.warning("flame_client: payload too large (%d bytes), truncating", len(body))
-        body = body[:MAX_BODY_CHARS * 4]
+        body = body[: MAX_BODY_CHARS * 4]
 
     req = urllib.request.Request(
         url,
@@ -88,7 +88,8 @@ def _flame_post(
             if result.get("ok"):
                 logger.debug(
                     "flame_client: %s → HTTP %d but ok=True — accepting",
-                    endpoint, e.code,
+                    endpoint,
+                    e.code,
                 )
                 return result
         except Exception:
@@ -128,12 +129,16 @@ def flame_summarize(
         Dict with keys: ok (bool), content (str), model, provider,
         latency_ms, authority. Never None.
     """
-    result = _flame_post("/summarize", {
-        "text": text[:MAX_BODY_CHARS],
-        "caller_id": caller_id,
-        "sensitivity": "PUBLIC",
-        "task_class": "summarize",
-    }, timeout_s=timeout)
+    result = _flame_post(
+        "/summarize",
+        {
+            "text": text[:MAX_BODY_CHARS],
+            "caller_id": caller_id,
+            "sensitivity": "PUBLIC",
+            "task_class": "summarize",
+        },
+        timeout_s=timeout,
+    )
     if result and result.get("ok"):
         return {
             "ok": True,
@@ -224,12 +229,15 @@ def flame_contradiction_analysis(
         f"(3) explanation, (4) resolution path (VOID, HOLD, DEMOTE, ESCALATE)."
     )
 
-    result = _flame_post("/summarize", {
-        "text": prompt,
-        "caller_id": caller_id,
-        "sensitivity": "PUBLIC",
-        "task_type": "classify",
-    })
+    result = _flame_post(
+        "/summarize",
+        {
+            "text": prompt,
+            "caller_id": caller_id,
+            "sensitivity": "PUBLIC",
+            "task_type": "classify",
+        },
+    )
 
     if result and result.get("ok"):
         return {

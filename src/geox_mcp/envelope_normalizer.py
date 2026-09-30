@@ -26,6 +26,7 @@ tool returns pass through untouched.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import logging
@@ -173,10 +174,7 @@ def normalize_envelope_for_mutation(
     if isinstance(out.get("status"), str) and out["status"] in ("OK", "SUCCESS"):
         out["status"] = "ENVELOPE_INCOMPLETE"
         env["governance_verdict"] = "HOLD"
-        env["verification_reason"] = (
-            "synthesized by middleware — tool body did not call "
-            "seal_receipt / verify_artifact"
-        )
+        env["verification_reason"] = "synthesized by middleware — tool body did not call seal_receipt / verify_artifact"
         logger.warning(
             "ENVELOPE_INCOMPLETE: tool=%s returned status=%s without a "
             "complete envelope — downgraded to ENVELOPE_INCOMPLETE / HOLD",

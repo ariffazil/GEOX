@@ -78,7 +78,6 @@ async def geox_system_registry_status(
     return get_standard_envelope(artifact, tool_class="system")
 
 
-
 async def geox_history_audit(
     query: str,
     limit: int = 10,
@@ -116,7 +115,13 @@ async def geox_history_audit(
 
         # ── Source 1: VAULT999 SEALED_EVENTS.jsonl ──────────────────────────
         vault_paths = [
-            os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "arifosmcp", "VAULT999", "SEALED_EVENTS.jsonl"),
+            os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))),
+                "arifOS",
+                "arifosmcp",
+                "VAULT999",
+                "SEALED_EVENTS.jsonl",
+            ),
             os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))), "arifOS", "VAULT999", "outcomes.jsonl"),
             "/root/arifOS/arifosmcp/VAULT999/SEALED_EVENTS.jsonl",
             "/root/arifOS/VAULT999/outcomes.jsonl",
@@ -141,21 +146,29 @@ async def geox_history_audit(
                             if eid in seen:
                                 continue
                             seen.add(eid)
-                            records.append({
-                                "source": os.path.basename(vpath),
-                                "event_id": eid,
-                                "event_type": entry.get("event_type", entry.get("type", entry.get("verdict_issued", "unknown"))),
-                                "verdict": entry.get("verdict", entry.get("verdict_issued", "UNKNOWN")),
-                                "actor_id": entry.get("actor_id", entry.get("operator_override", "unknown")),
-                                "session_id": entry.get("session_id", ""),
-                                "stage": entry.get("stage", ""),
-                                "timestamp": entry.get("sealed_at", entry.get("timestamp", entry.get("timestamp_decision", ""))),
-                                "claim_state": "SEALED",
-                                "payload": entry.get("payload", {}),
-                                "floors": entry.get("floors", entry.get("constitutional_floors_checked", entry.get("floor_attribution", []))),
-                                "chain_hash": entry.get("chain_hash", ""),
-                                "risk_tier": entry.get("risk_tier", entry.get("harm_detected", "unknown")),
-                            })
+                            records.append(
+                                {
+                                    "source": os.path.basename(vpath),
+                                    "event_id": eid,
+                                    "event_type": entry.get(
+                                        "event_type", entry.get("type", entry.get("verdict_issued", "unknown"))
+                                    ),
+                                    "verdict": entry.get("verdict", entry.get("verdict_issued", "UNKNOWN")),
+                                    "actor_id": entry.get("actor_id", entry.get("operator_override", "unknown")),
+                                    "session_id": entry.get("session_id", ""),
+                                    "stage": entry.get("stage", ""),
+                                    "timestamp": entry.get(
+                                        "sealed_at", entry.get("timestamp", entry.get("timestamp_decision", ""))
+                                    ),
+                                    "claim_state": "SEALED",
+                                    "payload": entry.get("payload", {}),
+                                    "floors": entry.get(
+                                        "floors", entry.get("constitutional_floors_checked", entry.get("floor_attribution", []))
+                                    ),
+                                    "chain_hash": entry.get("chain_hash", ""),
+                                    "risk_tier": entry.get("risk_tier", entry.get("harm_detected", "unknown")),
+                                }
+                            )
                         except json.JSONDecodeError:
                             continue
             except Exception as e:
@@ -206,6 +219,7 @@ async def geox_history_audit(
         next_cursor = None
         if total > safe_limit:
             import base64
+
             cursor_payload = json.dumps({"offset": safe_limit, "query": clean_query})
             next_cursor = base64.b64encode(cursor_payload.encode()).decode()
 
@@ -242,5 +256,3 @@ async def geox_history_audit(
             claim_tag="HYPOTHESIS",
             claim_state="NO_VALID_EVIDENCE",
         )
-
-

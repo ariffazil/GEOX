@@ -10,7 +10,7 @@ os.makedirs(TEST_DIR, exist_ok=True)
 schemas = {}
 
 # 1. Uncertainty
-schemas['uncertainty.json'] = {
+schemas["uncertainty.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/uncertainty.json",
     "title": "Uncertainty Schema",
@@ -23,15 +23,15 @@ schemas['uncertainty.json'] = {
         "value": {"type": "number"},
         "distribution": {"type": "string"},
         "p10": {"type": "number"},
-        "p90": {"type": "number"}
+        "p90": {"type": "number"},
     },
     "required": ["value"],
     "examples": [{"value": 0.1, "distribution": "normal"}],
-    "invalid_examples": [{"distribution": "normal"}] # missing value
+    "invalid_examples": [{"distribution": "normal"}],  # missing value
 }
 
 # 2. Measurement
-schemas['measurement.json'] = {
+schemas["measurement.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/measurement.json",
     "title": "Measurement Schema",
@@ -40,17 +40,14 @@ schemas['measurement.json'] = {
     "schema_version": "1.0.0",
     "changelog": ["1.0.0 - Initial release"],
     "type": "object",
-    "properties": {
-        "value": {"type": "number"},
-        "unit": {"type": "string"}
-    },
+    "properties": {"value": {"type": "number"}, "unit": {"type": "string"}},
     "required": ["value", "unit"],
     "examples": [{"value": 1500.5, "unit": "m"}],
-    "invalid_examples": [{"value": 1500.5}]
+    "invalid_examples": [{"value": 1500.5}],
 }
 
 # 3. Earth Claim
-schemas['earth_claim.json'] = {
+schemas["earth_claim.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/earth_claim.json",
     "title": "Earth Claim Schema",
@@ -61,33 +58,21 @@ schemas['earth_claim.json'] = {
     "type": "object",
     "properties": {
         "claim_id": {"type": "string"},
-        "evidence": {
-            "type": "array",
-            "items": {"type": "string"},
-            "minItems": 1
-        },
-        "seal": {
-            "type": "object",
-            "properties": {
-                "hash": {"type": "string"}
-            },
-            "required": ["hash"]
-        }
+        "evidence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "seal": {"type": "object", "properties": {"hash": {"type": "string"}}, "required": ["hash"]},
     },
     "required": ["evidence", "seal"],
-    "examples": [{
-        "claim_id": "claim_001",
-        "evidence": ["well_log_1", "core_sample_2"],
-        "seal": {"hash": "abc123def456"}
-    }],
-    "invalid_examples": [{
-        "claim_id": "claim_002",
-        "evidence": [] # missing seal and empty array
-    }]
+    "examples": [{"claim_id": "claim_001", "evidence": ["well_log_1", "core_sample_2"], "seal": {"hash": "abc123def456"}}],
+    "invalid_examples": [
+        {
+            "claim_id": "claim_002",
+            "evidence": [],  # missing seal and empty array
+        }
+    ],
 }
 
 # 4. Dataset Manifest
-schemas['dataset_manifest.json'] = {
+schemas["dataset_manifest.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/dataset_manifest.json",
     "title": "Dataset Manifest Schema",
@@ -96,18 +81,14 @@ schemas['dataset_manifest.json'] = {
     "schema_version": "1.0.0",
     "changelog": ["1.0.0 - Initial release"],
     "type": "object",
-    "properties": {
-        "dataset_name": {"type": "string"},
-        "crs": {"type": "string"},
-        "datum": {"type": "string"}
-    },
+    "properties": {"dataset_name": {"type": "string"}, "crs": {"type": "string"}, "datum": {"type": "string"}},
     "required": ["dataset_name"],
     "examples": [{"dataset_name": "survey_xyz", "crs": "EPSG:4326"}],
-    "invalid_examples": [{}] # missing name
+    "invalid_examples": [{}],  # missing name
 }
 
 # 5. Well Header
-schemas['well_header.json'] = {
+schemas["well_header.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/well_header.json",
     "title": "Well Header Schema",
@@ -120,37 +101,30 @@ schemas['well_header.json'] = {
         "well_name": {"type": "string"},
         "coordinate": {
             "type": "object",
-            "properties": {
-                "x": {"type": "number"},
-                "y": {"type": "number"},
-                "crs": {"type": "string"}
-            },
-            "required": ["x", "y", "crs"]
+            "properties": {"x": {"type": "number"}, "y": {"type": "number"}, "crs": {"type": "string"}},
+            "required": ["x", "y", "crs"],
         },
         "depth": {
             "type": "object",
-            "properties": {
-                "value": {"type": "number"},
-                "datum": {"type": "string"}
-            },
-            "required": ["value", "datum"]
-        }
+            "properties": {"value": {"type": "number"}, "datum": {"type": "string"}},
+            "required": ["value", "datum"],
+        },
     },
     "required": ["well_name", "coordinate", "depth"],
-    "examples": [{
-        "well_name": "Well-1A",
-        "coordinate": {"x": 100.0, "y": 200.0, "crs": "EPSG:32631"},
-        "depth": {"value": 3000.0, "datum": "MSL"}
-    }],
-    "invalid_examples": [{
-        "well_name": "Well-1A",
-        "coordinate": {"x": 100.0, "y": 200.0}, 
-        "depth": {"value": 3000.0, "datum": "MSL"}
-    }]
+    "examples": [
+        {
+            "well_name": "Well-1A",
+            "coordinate": {"x": 100.0, "y": 200.0, "crs": "EPSG:32631"},
+            "depth": {"value": 3000.0, "datum": "MSL"},
+        }
+    ],
+    "invalid_examples": [
+        {"well_name": "Well-1A", "coordinate": {"x": 100.0, "y": 200.0}, "depth": {"value": 3000.0, "datum": "MSL"}}
+    ],
 }
 
 # 6. Well Log Curve
-schemas['well_log_curve.json'] = {
+schemas["well_log_curve.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/well_log_curve.json",
     "title": "Well Log Curve Schema",
@@ -159,18 +133,14 @@ schemas['well_log_curve.json'] = {
     "schema_version": "1.0.0",
     "changelog": ["1.0.0 - Initial release"],
     "type": "object",
-    "properties": {
-        "curve_name": {"type": "string"},
-        "unit": {"type": "string"},
-        "well_id": {"type": "string"}
-    },
+    "properties": {"curve_name": {"type": "string"}, "unit": {"type": "string"}, "well_id": {"type": "string"}},
     "required": ["curve_name", "unit"],
     "examples": [{"curve_name": "GR", "unit": "gAPI", "well_id": "Well-1A"}],
-    "invalid_examples": [{"curve_name": "GR"}] 
+    "invalid_examples": [{"curve_name": "GR"}],
 }
 
 # 7. Seismic Volume Metadata
-schemas['seismic_volume_metadata.json'] = {
+schemas["seismic_volume_metadata.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/seismic_volume_metadata.json",
     "title": "Seismic Volume Metadata Schema",
@@ -183,28 +153,18 @@ schemas['seismic_volume_metadata.json'] = {
         "volume_name": {"type": "string"},
         "coordinate": {
             "type": "object",
-            "properties": {
-                "bbox": {"type": "array", "items": {"type": "number"}},
-                "crs": {"type": "string"}
-            },
-            "required": ["crs"]
+            "properties": {"bbox": {"type": "array", "items": {"type": "number"}}, "crs": {"type": "string"}},
+            "required": ["crs"],
         },
-        "datum": {"type": "string"}
+        "datum": {"type": "string"},
     },
     "required": ["volume_name", "coordinate", "datum"],
-    "examples": [{
-        "volume_name": "Seismic-3D",
-        "coordinate": {"bbox": [0, 0, 100, 100], "crs": "EPSG:32631"},
-        "datum": "MSL"
-    }],
-    "invalid_examples": [{
-        "volume_name": "Seismic-3D",
-        "coordinate": {"bbox": [0, 0, 100, 100], "crs": "EPSG:32631"} 
-    }]
+    "examples": [{"volume_name": "Seismic-3D", "coordinate": {"bbox": [0, 0, 100, 100], "crs": "EPSG:32631"}, "datum": "MSL"}],
+    "invalid_examples": [{"volume_name": "Seismic-3D", "coordinate": {"bbox": [0, 0, 100, 100], "crs": "EPSG:32631"}}],
 }
 
 # 8. Horizon
-schemas['horizon.json'] = {
+schemas["horizon.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/horizon.json",
     "title": "Horizon Schema",
@@ -215,29 +175,16 @@ schemas['horizon.json'] = {
     "type": "object",
     "properties": {
         "horizon_name": {"type": "string"},
-        "coordinate": {
-            "type": "object",
-            "properties": {
-                "crs": {"type": "string"}
-            },
-            "required": ["crs"]
-        },
-        "datum": {"type": "string"}
+        "coordinate": {"type": "object", "properties": {"crs": {"type": "string"}}, "required": ["crs"]},
+        "datum": {"type": "string"},
     },
     "required": ["horizon_name", "coordinate", "datum"],
-    "examples": [{
-        "horizon_name": "Top-Jurassic",
-        "coordinate": {"crs": "EPSG:32631"},
-        "datum": "MSL"
-    }],
-    "invalid_examples": [{
-        "horizon_name": "Top-Jurassic",
-        "coordinate": {"crs": "EPSG:32631"} 
-    }]
+    "examples": [{"horizon_name": "Top-Jurassic", "coordinate": {"crs": "EPSG:32631"}, "datum": "MSL"}],
+    "invalid_examples": [{"horizon_name": "Top-Jurassic", "coordinate": {"crs": "EPSG:32631"}}],
 }
 
 # 9. Fault
-schemas['fault.json'] = {
+schemas["fault.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/fault.json",
     "title": "Fault Schema",
@@ -248,27 +195,15 @@ schemas['fault.json'] = {
     "type": "object",
     "properties": {
         "fault_name": {"type": "string"},
-        "coordinate": {
-            "type": "object",
-            "properties": {
-                "crs": {"type": "string"}
-            },
-            "required": ["crs"]
-        }
+        "coordinate": {"type": "object", "properties": {"crs": {"type": "string"}}, "required": ["crs"]},
     },
     "required": ["fault_name", "coordinate"],
-    "examples": [{
-        "fault_name": "Fault-F1",
-        "coordinate": {"crs": "EPSG:32631"}
-    }],
-    "invalid_examples": [{
-        "fault_name": "Fault-F1",
-        "coordinate": {} 
-    }]
+    "examples": [{"fault_name": "Fault-F1", "coordinate": {"crs": "EPSG:32631"}}],
+    "invalid_examples": [{"fault_name": "Fault-F1", "coordinate": {}}],
 }
 
 # 10. Interpretation Claim
-schemas['interpretation_claim.json'] = {
+schemas["interpretation_claim.json"] = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://geox.os/schemas/earth/interpretation_claim.json",
     "title": "Interpretation Claim Schema",
@@ -282,71 +217,46 @@ schemas['interpretation_claim.json'] = {
         "provenance": {"type": "string"},
         "confidence": {
             "type": "object",
-            "properties": {
-                "uncertainty": {
-                    "$ref": "uncertainty.json"
-                }
-            },
-            "required": ["uncertainty"]
+            "properties": {"uncertainty": {"$ref": "uncertainty.json"}},
+            "required": ["uncertainty"],
         },
-        "evidence": {
-            "type": "array",
-            "items": {"type": "string"},
-            "minItems": 1
-        },
-        "seal": {
-            "type": "object",
-            "properties": {
-                "hash": {"type": "string"}
-            },
-            "required": ["hash"]
-        }
+        "evidence": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "seal": {"type": "object", "properties": {"hash": {"type": "string"}}, "required": ["hash"]},
     },
     "required": ["provenance", "confidence", "evidence", "seal"],
-    "examples": [{
-        "claim_id": "interp_001",
-        "provenance": "Interpreter: Jane Doe, Tool: Petrel",
-        "confidence": {
-            "uncertainty": {
-                "value": 0.8
-            }
-        },
-        "evidence": ["seismic_volume_1"],
-        "seal": {"hash": "4a5b6c7d8e9f"}
-    }],
-    "invalid_examples": [{
-        "claim_id": "interp_001",
-        "confidence": {
-            "uncertainty": {
-                "value": 0.8
-            }
-        },
-        "evidence": ["seismic_volume_1"],
-        "seal": {"hash": "4a5b6c7d8e9f"}
-    }]
+    "examples": [
+        {
+            "claim_id": "interp_001",
+            "provenance": "Interpreter: Jane Doe, Tool: Petrel",
+            "confidence": {"uncertainty": {"value": 0.8}},
+            "evidence": ["seismic_volume_1"],
+            "seal": {"hash": "4a5b6c7d8e9f"},
+        }
+    ],
+    "invalid_examples": [
+        {
+            "claim_id": "interp_001",
+            "confidence": {"uncertainty": {"value": 0.8}},
+            "evidence": ["seismic_volume_1"],
+            "seal": {"hash": "4a5b6c7d8e9f"},
+        }
+    ],
 }
 
 # Write schemas
 for name, schema in schemas.items():
-    with open(os.path.join(SCHEMA_DIR, name), 'w') as f:
+    with open(os.path.join(SCHEMA_DIR, name), "w") as f:
         json.dump(schema, f, indent=2)
 
 # Write sample sealed interpretation claim
 sample_claim = {
     "claim_id": "interp_sample_01",
     "provenance": "GEOX Subsurface Auto-Interpreter Beta",
-    "confidence": {
-        "uncertainty": {
-            "value": 0.85,
-            "distribution": "normal"
-        }
-    },
+    "confidence": {"uncertainty": {"value": 0.85, "distribution": "normal"}},
     "evidence": ["synthetic_well_log_A", "synthetic_seismic_cube_B"],
-    "seal": {
-        "hash": "7a3f8b9d4c2e1a5f6b7c8d9e0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b"
-    }
+    "seal": {"hash": "7a3f8b9d4c2e1a5f6b7c8d9e0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b"},
 }
-with open(os.path.join(SCHEMA_DIR, "sample_sealed_interpretation_claim.json"), 'w') as f:
+with open(os.path.join(SCHEMA_DIR, "sample_sealed_interpretation_claim.json"), "w") as f:
     json.dump(sample_claim, f, indent=2)
 
 # Write test file
@@ -411,7 +321,7 @@ def test_sample_interpretation_claim():
     validate(instance=sample, schema=schema, resolver=resolver)
 """
 
-with open(os.path.join(TEST_DIR, "test_geox_schemas.py"), 'w') as f:
+with open(os.path.join(TEST_DIR, "test_geox_schemas.py"), "w") as f:
     f.write(test_code)
 
 # Write README
@@ -439,7 +349,7 @@ To run the pipeline:
 pytest /root/geox/tests/test_geox_schemas.py
 ```
 """
-with open(os.path.join(SCHEMA_DIR, "README.md"), 'w') as f:
+with open(os.path.join(SCHEMA_DIR, "README.md"), "w") as f:
     f.write(readme_content)
 
 print("Generated schemas, tests, and README.")

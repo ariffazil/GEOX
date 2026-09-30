@@ -12,6 +12,7 @@ becomes a deliverable artifact.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import io
@@ -22,6 +23,7 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib
+
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
@@ -65,12 +67,11 @@ def _formation_color(name: str) -> str:
 def _render_pcolormesh(ax, section, x_arr, z_arr, cmap, norm):
     """Render a 2D section as imshow with proper extent. Section shape: (nx, nz)."""
     # Convert display coordinates to km
-    extent = [x_arr.min() / 1000, x_arr.max() / 1000,
-              z_arr.max() / 1000, z_arr.min() / 1000]  # z inverted for display
+    extent = [x_arr.min() / 1000, x_arr.max() / 1000, z_arr.max() / 1000, z_arr.min() / 1000]  # z inverted for display
     # section is (nx, nz); imshow expects image shape (rows, cols) where rows map to y axis (z here), cols to x axis
-    return ax.imshow(section.T, cmap=cmap, norm=norm, aspect="auto",
-                    extent=extent, origin="upper",
-                    interpolation="nearest", rasterized=True)
+    return ax.imshow(
+        section.T, cmap=cmap, norm=norm, aspect="auto", extent=extent, origin="upper", interpolation="nearest", rasterized=True
+    )
 
 
 def render_gempy_section(
@@ -186,26 +187,41 @@ def render_gempy_section(
             cy = float(np.mean(z_arr[yy])) / 1000  # km
             cx = float(np.mean(x_arr[xx])) / 1000  # km
             # Avoid labeling layer if its centroid is outside plot extent
-            if (z_arr.min() / 1000 - 0.5 <= cy <= z_arr.max() / 1000 + 0.5 and
-                    x_arr.min() / 1000 <= cx <= x_arr.max() / 1000):
+            if z_arr.min() / 1000 - 0.5 <= cy <= z_arr.max() / 1000 + 0.5 and x_arr.min() / 1000 <= cx <= x_arr.max() / 1000:
                 color_short = layer_color_map.get(lid, "#3d4a52")
-                ax.text(cx, cy, name, fontsize=9, color=color_short, fontweight="bold",
-                        ha="center", va="center",
-                        bbox=dict(boxstyle="round,pad=0.25", fc="#161b22", ec=color_short, alpha=0.92))
+                ax.text(
+                    cx,
+                    cy,
+                    name,
+                    fontsize=9,
+                    color=color_short,
+                    fontweight="bold",
+                    ha="center",
+                    va="center",
+                    bbox=dict(boxstyle="round,pad=0.25", fc="#161b22", ec=color_short, alpha=0.92),
+                )
 
     # Domain labels (Senegal Basin context)
     x_max = x_arr.max() / 1000
     x_min = x_arr.min() / 1000
     domains = [
-        (x_min + 5,   -0.3, "COAST\nLAND",   "#ffa657"),
-        (x_min + 40,  -0.3, "SHELF",          "#39d2c0"),
-        (x_min + 100, -0.3, "SLOPE",          "#58a6ff"),
-        (x_min + 150, -0.3, "DEEPWATER",       "#bc8cff"),
+        (x_min + 5, -0.3, "COAST\nLAND", "#ffa657"),
+        (x_min + 40, -0.3, "SHELF", "#39d2c0"),
+        (x_min + 100, -0.3, "SLOPE", "#58a6ff"),
+        (x_min + 150, -0.3, "DEEPWATER", "#bc8cff"),
     ]
     for dx, dz, label, col in domains:
         if x_min <= dx <= x_max:
-            ax.text(dx, dz, label, fontsize=9, color=col, ha="center", fontweight="bold",
-                    bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec=col, alpha=0.85))
+            ax.text(
+                dx,
+                dz,
+                label,
+                fontsize=9,
+                color=col,
+                ha="center",
+                fontweight="bold",
+                bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec=col, alpha=0.85),
+            )
 
     # Sangomar fiducial (if Y-section and Sangomar exists in this slice)
     if section_axis == "y":
@@ -221,37 +237,69 @@ def render_gempy_section(
             sg_xx = np.clip(sg_xx, 0, len(x_arr) - 1)
             sang_x_world = float(np.mean(x_arr[sg_xx])) / 1000
             sang_z_world = float(np.mean(z_arr[sg_yy])) / 1000
-            if (z_arr.min() / 1000 - 0.5 <= sang_z_world <= z_arr.max() / 1000 + 0.5 and
-                    x_arr.min() / 1000 <= sang_x_world <= x_arr.max() / 1000):
-                ax.scatter(sang_x_world, sang_z_world, s=350, c="#3fb950", edgecolors="white",
-                           linewidths=2, marker="*", zorder=20)
-                ax.annotate("SANGOMAR FIELD\n~560 MMbo (2C)",
-                            (sang_x_world, sang_z_world),
-                            xytext=(sang_x_world - 25, sang_z_world + 1.0), fontsize=9,
-                            color="#3fb950", fontweight="bold",
-                            bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#3fb950", alpha=0.95),
-                            arrowprops=dict(arrowstyle="->", color="#3fb950", lw=1.5))
+            if (
+                z_arr.min() / 1000 - 0.5 <= sang_z_world <= z_arr.max() / 1000 + 0.5
+                and x_arr.min() / 1000 <= sang_x_world <= x_arr.max() / 1000
+            ):
+                ax.scatter(
+                    sang_x_world, sang_z_world, s=350, c="#3fb950", edgecolors="white", linewidths=2, marker="*", zorder=20
+                )
+                ax.annotate(
+                    "SANGOMAR FIELD\n~560 MMbo (2C)",
+                    (sang_x_world, sang_z_world),
+                    xytext=(sang_x_world - 25, sang_z_world + 1.0),
+                    fontsize=9,
+                    color="#3fb950",
+                    fontweight="bold",
+                    bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#3fb950", alpha=0.95),
+                    arrowprops=dict(arrowstyle="->", color="#3fb950", lw=1.5),
+                )
 
     # True SCALE watermark
-    ax.text(0.5, 0.02, "TRUE SCALE 1:1 · Lithology IDs from implicit-field cokriging (Mallet 1992)",
-            transform=ax.transAxes, fontsize=8, color="#8b949e", ha="center", style="italic")
+    ax.text(
+        0.5,
+        0.02,
+        "TRUE SCALE 1:1 · Lithology IDs from implicit-field cokriging (Mallet 1992)",
+        transform=ax.transAxes,
+        fontsize=8,
+        color="#8b949e",
+        ha="center",
+        style="italic",
+    )
 
     # Scale bars
     bar_x_start = x_max - 30
-    ax.annotate("", xy=(bar_x_start + 20, zmin / 1000 + 0.3),
-                xytext=(bar_x_start, zmin / 1000 + 0.3),
-                arrowprops=dict(arrowstyle="<->", color="#e6edf3", lw=2))
-    ax.text(bar_x_start + 10, zmin / 1000 + 0.8, "20 km", fontsize=9, color="#e6edf3",
-            ha="center", fontweight="bold",
-            bbox=dict(boxstyle="round,pad=0.2", fc="#161b22", ec="#8b949e", alpha=0.9))
+    ax.annotate(
+        "",
+        xy=(bar_x_start + 20, zmin / 1000 + 0.3),
+        xytext=(bar_x_start, zmin / 1000 + 0.3),
+        arrowprops=dict(arrowstyle="<->", color="#e6edf3", lw=2),
+    )
+    ax.text(
+        bar_x_start + 10,
+        zmin / 1000 + 0.8,
+        "20 km",
+        fontsize=9,
+        color="#e6edf3",
+        ha="center",
+        fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.2", fc="#161b22", ec="#8b949e", alpha=0.9),
+    )
 
     # Vertical scale
-    ax.annotate("", xy=(x_max + 5, zmin / 1000),
-                xytext=(x_max + 5, zmax / 1000),
-                arrowprops=dict(arrowstyle="<->", color="#e6edf3", lw=2))
-    ax.text(x_max + 8, (zmin + zmax) / 2000, f"{abs(zmax - zmin) / 1000:.0f} km",
-            fontsize=9, color="#e6edf3", ha="center", fontweight="bold",
-            bbox=dict(boxstyle="round,pad=0.2", fc="#161b22", ec="#8b949e", alpha=0.9))
+    ax.annotate(
+        "", xy=(x_max + 5, zmin / 1000), xytext=(x_max + 5, zmax / 1000), arrowprops=dict(arrowstyle="<->", color="#e6edf3", lw=2)
+    )
+    ax.text(
+        x_max + 8,
+        (zmin + zmax) / 2000,
+        f"{abs(zmax - zmin) / 1000:.0f} km",
+        fontsize=9,
+        color="#e6edf3",
+        ha="center",
+        fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.2", fc="#161b22", ec="#8b949e", alpha=0.9),
+    )
 
     # Lithology IDs legend (top right)
     legend_lines = ["Lithology IDs:"]
@@ -260,9 +308,17 @@ def render_gempy_section(
             legend_lines.append(f"  ID{lid}: {formations[lid - 1]}")
         else:
             legend_lines.append(f"  ID{lid}")
-    ax.text(x_max + 8, 0, "\n".join(legend_lines),
-            fontsize=7, color="#e6edf3", va="top", ha="left", family="monospace",
-            bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#30363d", alpha=0.92))
+    ax.text(
+        x_max + 8,
+        0,
+        "\n".join(legend_lines),
+        fontsize=7,
+        color="#e6edf3",
+        va="top",
+        ha="left",
+        family="monospace",
+        bbox=dict(boxstyle="round,pad=0.3", fc="#161b22", ec="#30363d", alpha=0.92),
+    )
 
     # Axes formatting
     ax.set_xlim(x_arr.min() / 1000, x_arr.max() / 1000)
@@ -321,15 +377,19 @@ async def geox_gempy_section_renderer(
         return {"ok": False, "error": "lithology_block required"}
     if isinstance(lithology_block, str):
         import json as _json
+
         lithology_block = _json.loads(lithology_block)
     if isinstance(extent, str):
         import json as _json
+
         extent = _json.loads(extent)
     if isinstance(formations, str):
         import json as _json
+
         formations = _json.loads(formations)
     if isinstance(layer_color_map, str):
         import json as _json
+
         layer_color_map = _json.loads(layer_color_map)
 
     block = np.array(lithology_block)

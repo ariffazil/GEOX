@@ -227,7 +227,6 @@ async def temporal_basin_lifecycle(
         basin_age_to_peak = peak_year - discovery_year
 
     # Years since peak — estimated from discovery if peak_year known
-    years_since_peak: int | None = None
     if basin_age_to_peak is not None:
         # Use an inferred current age (peak_year + basin_age_to_peak as proxy)
         # Without an explicit current_year we estimate conservatively

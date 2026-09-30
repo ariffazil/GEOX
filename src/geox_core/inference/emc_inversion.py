@@ -268,7 +268,6 @@ def invert_cls(
     """
     minerals = list(chem_result.minerals.keys())
     n_minerals = len(minerals)
-    n_proxies = sum(len(m.proxy_elements) for m in chem_result.minerals.values())
 
     # Build forward matrix: each row is a proxy element equation
     A_rows: list[list[float]] = []
@@ -277,7 +276,6 @@ def invert_cls(
 
     # Per-mineral proxy equation rows
     for j, mineral in enumerate(minerals):
-        mres = chem_result.minerals[mineral]
         row = [0.0] * n_minerals
         row[j] = 1.0
         A_rows.append(row)
@@ -488,8 +486,6 @@ def emc_verdict(
     # Chemistry lock
     has_fact = any(r.epistemic_label == EpistemicLabel.FACT for r in chemistry.minerals.values())
     has_unknown = any(r.epistemic_label == EpistemicLabel.UNKNOWN for r in chemistry.minerals.values())
-    has_interp = any(r.epistemic_label == EpistemicLabel.INTERPRET for r in chemistry.minerals.values())
-
     if has_unknown and not has_fact:
         candidates.append(RollUpVerdict.UNKNOWN)
     elif has_unknown:
@@ -554,9 +550,6 @@ def make_synthetic_calibration(
     element_names = ["Ca", "Si", "Al", "Fe", "K", "Na", "S"]
     mineral_names = ["carbonate", "quartz", "clay", "feldspar", "pyrite"]
     n_elements = len(element_names)
-    n_minerals = len(mineral_names)
-
-    # Ground-truth mineral fractions (random within constraints)
     # Order: carbonate, quartz, clay, feldspar, pyrite
     carbonate_frac = rng.uniform(0.1, 0.5, n_samples)
     quartz_frac = rng.uniform(0.1, 0.4, n_samples)
@@ -704,7 +697,7 @@ def _self_test() -> bool:
     cls_fractions = invert_cls(test_sample, chem, element_names)
     physics = physics_lock(cls_fractions, solver="CLS")
 
-    print(f"\n  L2 PHYSICS LOCK — CLS inversion:")
+    print("\n  L2 PHYSICS LOCK — CLS inversion:")
     print(f"    Closure sum:      {physics.closure_sum:.4f}")
     print(f"    Closure residual: {physics.closure_residual:.4f}")
     print(f"    Negative flags:   {physics.negative_flags if physics.negative_flags else 'none'}")
@@ -713,51 +706,51 @@ def _self_test() -> bool:
         print(f"      {mineral:12s} → {frac:.4f}")
 
     if physics.verdict != PhysicsVerdict.PASS:
-        print(f"    ⚠️  FAIL: Physics Lock should PASS on in-domain sample")
+        print("    ⚠️  FAIL: Physics Lock should PASS on in-domain sample")
         all_passed = False
 
     # ── L3 DOMAIN LOCK ───────────────────────────────────────────────────────
     domain_params = fit_domain(X)
     in_domain_result = domain_lock(test_sample, domain_params)
-    print(f"\n  L3 DOMAIN LOCK — in-domain sample:")
+    print("\n  L3 DOMAIN LOCK — in-domain sample:")
     print(f"    Mahalanobis D²:   {in_domain_result.mahalanobis_d2:.2f}")
     print(f"    Verdict:          {in_domain_result.verdict.value}")
 
     # Sabah-shift sample
     sabah_sample = make_sabah_shift_sample(X, element_names)
     sabah_result = domain_lock(sabah_sample, domain_params)
-    print(f"\n  L3 DOMAIN LOCK — Sabah-shift sample:")
+    print("\n  L3 DOMAIN LOCK — Sabah-shift sample:")
     print(f"    Mahalanobis D²:   {sabah_result.mahalanobis_d2:.2f}")
     print(f"    Verdict:          {sabah_result.verdict.value}")
 
     if in_domain_result.verdict != DomainVerdict.SEAL:
-        print(f"    ⚠️  FAIL: In-domain should be SEAL")
+        print("    ⚠️  FAIL: In-domain should be SEAL")
         all_passed = False
     if sabah_result.verdict != DomainVerdict.HOLD:
-        print(f"    ⚠️  FAIL: Sabah-shift should fire 888_HOLD")
+        print("    ⚠️  FAIL: Sabah-shift should fire 888_HOLD")
         all_passed = False
 
     # ── ROLL-UP ──────────────────────────────────────────────────────────────
     in_domain_verdict = emc_verdict(chem, physics, in_domain_result)
     sabah_verdict = emc_verdict(chem, physics, sabah_result)
 
-    print(f"\n  ROLL-UP:")
+    print("\n  ROLL-UP:")
     print(f"    In-domain:  {in_domain_verdict.roll_up.value} (blocked: {in_domain_verdict.minerals_blocked})")
     print(f"    Out-domain: {sabah_verdict.roll_up.value} (blocked: {sabah_verdict.minerals_blocked})")
 
     if in_domain_verdict.roll_up not in (RollUpVerdict.PARTIAL, RollUpVerdict.UNKNOWN):
-        print(f"    ⚠️  FAIL: In-domain should be PARTIAL or UNKNOWN (some minerals degenerate)")
+        print("    ⚠️  FAIL: In-domain should be PARTIAL or UNKNOWN (some minerals degenerate)")
         all_passed = False
     if sabah_verdict.roll_up != RollUpVerdict.HOLD:
-        print(f"    ⚠️  FAIL: Out-domain must be HOLD (Sabah-port guard fires)")
+        print("    ⚠️  FAIL: Out-domain must be HOLD (Sabah-port guard fires)")
         all_passed = False
 
     # ── FINAL ────────────────────────────────────────────────────────────────
     print(f"\n{'=' * 68}")
     if all_passed:
-        print(f"  ALL ASSERTIONS PASS ✅")
+        print("  ALL ASSERTIONS PASS ✅")
     else:
-        print(f"  SOME ASSERTIONS FAILED ❌")
+        print("  SOME ASSERTIONS FAILED ❌")
     print(f"{'=' * 68}\n")
 
     return all_passed

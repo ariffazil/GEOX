@@ -197,8 +197,6 @@ def _stage3_classify(
 
     # Build hypotheses based on AVO class patterns
     bright_spots = [a for a in anomalies if "Class III" in a.get("avo_class_estimate", "")]
-    phase_reversals = [a for a in anomalies if "Class II" in a.get("avo_class_estimate", "")]
-    hard_streaks = [a for a in anomalies if "Class I" in a.get("avo_class_estimate", "")]
     flat_spot_candidates = []
 
     # Check for flat spot (similar depth anomalies across lateral extent — proxy)
@@ -312,7 +310,7 @@ def _generate_synthetic_profile(
     anomaly_depths = [1200, 1850, 2400]
     anomaly_deltas = [-800, +1200, -1500]
 
-    for d, dz in zip(anomaly_depths, anomaly_deltas):
+    for d, dz in zip(anomaly_depths, anomaly_deltas, strict=False):
         idx = int(np.argmin(np.abs(depth_m - d)))
         spread = max(3, n_samples // 60)
         for j in range(max(0, idx - spread), min(n_samples, idx + spread + 1)):

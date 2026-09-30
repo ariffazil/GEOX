@@ -197,18 +197,14 @@ def main() -> int:
                 findings.append(
                     Finding(
                         "HOLD",
-                        "Commit "
-                        f"{commits[idx][:8]} REPO trailer mismatch "
-                        f"(declared={declared_repo}, remote={remote_repo}).",
+                        f"Commit {commits[idx][:8]} REPO trailer mismatch (declared={declared_repo}, remote={remote_repo}).",
                     )
                 )
             elif remote_repo and declared_repo == remote_slug:
                 findings.append(
                     Finding(
                         "WARN",
-                        "Commit "
-                        f"{commits[idx][:8]} uses legacy REPO trailer format '{remote_slug}'; "
-                        f"prefer '{remote_repo}'.",
+                        f"Commit {commits[idx][:8]} uses legacy REPO trailer format '{remote_slug}'; prefer '{remote_repo}'.",
                     )
                 )
 
@@ -226,15 +222,11 @@ def main() -> int:
 
     bad_json = validate_changed_json(changed_paths)
     if bad_json:
-        findings.append(
-            Finding("BLOCK", "Malformed governance JSON detected: " + ", ".join(bad_json))
-        )
+        findings.append(Finding("BLOCK", "Malformed governance JSON detected: " + ", ".join(bad_json)))
 
     secret_hits = scan_for_secrets(changed_paths)
     if secret_hits:
-        findings.append(
-            Finding("BLOCK", "Potential secret patterns detected in: " + ", ".join(secret_hits))
-        )
+        findings.append(Finding("BLOCK", "Potential secret patterns detected in: " + ", ".join(secret_hits)))
 
     if not findings:
         findings.append(Finding("INFO", "No issues found by repo guard."))

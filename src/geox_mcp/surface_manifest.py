@@ -270,10 +270,7 @@ def surface_attestation() -> dict:
     }
     raw = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     payload["surface_hash"] = hashlib.sha256(raw).hexdigest()
-    payload["ok"] = (
-        payload["public_count_target"] is None
-        or int(payload["public_count_target"]) == payload["public_count"]
-    )
+    payload["ok"] = payload["public_count_target"] is None or int(payload["public_count_target"]) == payload["public_count"]
     if not payload["ok"]:
         payload["error"] = "SURFACE_COUNT_DRIFT"
     return payload

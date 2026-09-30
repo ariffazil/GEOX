@@ -50,16 +50,18 @@ def parse_horizon_picks(source: str | list[dict] | Path) -> list[dict]:
             # CSV with header x,y,z,formation
             reader = csv.DictReader(io.StringIO(stripped))
             records = [
-                {"x": float(r["x"]), "y": float(r["y"]),
-                 "z": float(r["z"]), "formation": r["formation"].strip()}
-                for r in reader
+                {"x": float(r["x"]), "y": float(r["y"]), "z": float(r["z"]), "formation": r["formation"].strip()} for r in reader
             ]
     out = []
     for r in records:
-        out.append({
-            "x": float(r["x"]), "y": float(r["y"]),
-            "z": float(r["z"]), "formation": str(r["formation"]),
-        })
+        out.append(
+            {
+                "x": float(r["x"]),
+                "y": float(r["y"]),
+                "z": float(r["z"]),
+                "formation": str(r["formation"]),
+            }
+        )
     return out
 
 
@@ -81,10 +83,14 @@ def picks_to_gempy_inputs(
     surface_points = []
     for p in picks:
         z = p["z"] if z_convention == "elevation" else -p["z"]
-        surface_points.append({
-            "x": p["x"], "y": p["y"], "z": z,
-            "formation": p["formation"],
-        })
+        surface_points.append(
+            {
+                "x": p["x"],
+                "y": p["y"],
+                "z": z,
+                "formation": p["formation"],
+            }
+        )
 
     # One orientation per formation, at the centroid of its picks
     by_formation: dict[str, list[dict]] = {}
@@ -96,11 +102,16 @@ def picks_to_gempy_inputs(
         cx = float(np.mean([p["x"] for p in pts]))
         cy = float(np.mean([p["y"] for p in pts]))
         cz = float(np.mean([p["z"] for p in pts]))
-        orientations.append({
-            "x": cx, "y": cy, "z": cz,
-            "dip": dip_hint_deg, "azimuth": azimuth_hint_deg,
-            "formation": formation,
-        })
+        orientations.append(
+            {
+                "x": cx,
+                "y": cy,
+                "z": cz,
+                "dip": dip_hint_deg,
+                "azimuth": azimuth_hint_deg,
+                "formation": formation,
+            }
+        )
     return surface_points, orientations
 
 
@@ -219,26 +230,33 @@ async def geox_segy_horizon_bridge(
         ys = [p["y"] for p in picks]
         zs = [p["z"] for p in picks]
         # Detect convention: positive z values = depth, negative = elevation
-        max_z = max(zs); min_z = min(zs)
+        max_z = max(zs)
+        min_z = min(zs)
         if max_z > 0:
             # depth_positive_down — picks are positive; convert to elevation
             # and build extent covering [min elev - margin, max elev + margin]
             elev_min = -max_z - 1000
             elev_max = -min_z + 1000
-            if elev_min > elev_max: elev_min, elev_max = elev_max, elev_min
+            if elev_min > elev_max:
+                elev_min, elev_max = elev_max, elev_min
         else:
             elev_min = min_z - 1000
             elev_max = max_z + 1000
         margin = max(100.0, (max(xs) - min(xs)) * 0.2)
         model_extent = [
-            min(xs) - margin, max(xs) + margin,
-            min(ys) - margin, max(ys) + margin,
-            elev_min, elev_max,
+            min(xs) - margin,
+            max(xs) + margin,
+            min(ys) - margin,
+            max(ys) + margin,
+            elev_min,
+            elev_max,
         ]
 
     surface_points, orientations = picks_to_gempy_inputs(
-        picks, z_convention=z_convention,
-        dip_hint_deg=dip_hint_deg, azimuth_hint_deg=azimuth_hint_deg,
+        picks,
+        z_convention=z_convention,
+        dip_hint_deg=dip_hint_deg,
+        azimuth_hint_deg=azimuth_hint_deg,
     )
 
     result = await geox_gempy_implicit_3d(
@@ -259,7 +277,6 @@ async def geox_segy_horizon_bridge(
     section_info = None
     block = None
     if isinstance(result, dict):
-        payload = result
         # nested envelope? check one level deep (gempy_result.result)
         for candidate_dict in (result, result.get("result") if isinstance(result.get("result"), dict) else None):
             if candidate_dict is None:

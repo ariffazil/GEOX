@@ -66,9 +66,7 @@ def _load_plugin_export_surface() -> set[str]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
         tools = payload.get("paths", {}).get("/mcp", {}).get("post", {}).get("x-mcp-tools", [])
-        openapi_export = {
-            tool["name"] for tool in tools if isinstance(tool, dict) and tool.get("name")
-        }
+        openapi_export = {tool["name"] for tool in tools if isinstance(tool, dict) and tool.get("name")}
     except Exception:
         return manifest_export
     # Prefer manifest; openapi lag must not redefine the public surface

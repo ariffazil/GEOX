@@ -7,6 +7,7 @@ If well-tie fails → GEOX bug, not geology.
 Usage:
   PYTHONPATH=src python scripts/marmousi2_well_tie_validate.py
 """
+
 from __future__ import annotations
 
 import json
@@ -143,9 +144,7 @@ def main() -> int:
             "mistie_ms": round(best["mistie"], 2),
             "wavelet_hz": best["freq"],
             "polarity": best["pol"],
-            "quality": assess_tie_quality(
-                best["corr"], 0.3, 0.0, best["pol"] == "REVERSED"
-            ),
+            "quality": assess_tie_quality(best["corr"], 0.3, 0.0, best["pol"] == "REVERSED"),
             "pipeline_validate": "PASS" if pipeline else "FAIL",
             "strong_pass": strong,
         }

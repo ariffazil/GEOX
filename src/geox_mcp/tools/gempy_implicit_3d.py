@@ -170,23 +170,26 @@ async def geox_gempy_implicit_3d(
 
         model_id = uuid.uuid4().hex[:8]
 
-        sp_df = pd.DataFrame(surface_points).rename(
-            columns={"formation": "formation"}
-        )
+        sp_df = pd.DataFrame(surface_points).rename(columns={"formation": "formation"})
         sp_df.to_csv(TMP_OUT / f"gempy_sp_{model_id}.csv", index=False)
 
         ori_records = []
         for o in orientations:
-            dx, dy, dz = _dip_to_pole_vector(
-                o.get("dip", 2.0), o.get("azimuth", 90.0)
+            dx, dy, dz = _dip_to_pole_vector(o.get("dip", 2.0), o.get("azimuth", 90.0))
+            ori_records.append(
+                {
+                    "X": o["x"],
+                    "Y": o["y"],
+                    "Z": o["z"],
+                    "dip": o.get("dip", 2.0),
+                    "azimuth": o.get("azimuth", 90.0),
+                    "polarity": 1.0,
+                    "G_x": dx,
+                    "G_y": dy,
+                    "G_z": dz,
+                    "formation": o.get("formation", formations[0]),
+                }
             )
-            ori_records.append({
-                "X": o["x"], "Y": o["y"], "Z": o["z"],
-                "dip": o.get("dip", 2.0), "azimuth": o.get("azimuth", 90.0),
-                "polarity": 1.0,
-                "G_x": dx, "G_y": dy, "G_z": dz,
-                "formation": o.get("formation", formations[0]),
-            })
         ori_df = pd.DataFrame(ori_records)
         ori_df.to_csv(TMP_OUT / f"gempy_ori_{model_id}.csv", index=False)
 
@@ -206,9 +209,7 @@ async def geox_gempy_implicit_3d(
         # gempy 2026.x: compute_model returns the Solutions object directly.
         solutions = gp.compute_model(
             gempy_model=geo_model,
-            engine_config=gp.data.GemPyEngineConfig(
-                backend=gp.data.AvailableBackends.numpy
-            ),
+            engine_config=gp.data.GemPyEngineConfig(backend=gp.data.AvailableBackends.numpy),
         )
         lith_block = solutions.raw_arrays.lith_block
         # gempy 2026.x octree outputs may deliver lith_block flattened (1-D).
@@ -219,10 +220,7 @@ async def geox_gempy_implicit_3d(
             if int(lith_block.size) == _expected:
                 lith_block = lith_block.reshape(nx, ny, nz)
             else:
-                logger.warning(
-                    f"lith_block size {lith_block.size} != grid {_expected}; "
-                    "section rendering will be skipped"
-                )
+                logger.warning(f"lith_block size {lith_block.size} != grid {_expected}; section rendering will be skipped")
         scalar_fields = {}
 
         # Extract scalar potential fields per formation

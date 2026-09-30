@@ -93,7 +93,7 @@ def main() -> int:
             resp = _req("GET", "/health")
             if resp.get("status") == "healthy":
                 healthy = True
-                print(f"[SMOKE] Server healthy after {i+1}s")
+                print(f"[SMOKE] Server healthy after {i + 1}s")
                 break
         except Exception:
             pass
@@ -122,6 +122,7 @@ def main() -> int:
         if proc.poll() is None:
             # Server is still running, let's read whatever is in stderr
             import select
+
             stderr_data = []
             while sys.stdin in select.select([proc.stderr], [], [], 0.5)[0]:
                 line = proc.stderr.readline()
@@ -141,21 +142,26 @@ def main() -> int:
     fm = None
     for attempt in range(2):
         fm = _mcp_call(
-        "geox_seismic_compute",
-        {
-            "mode": "synthetic",
-            "well_id": "smoke_well",
-            "wavelet_type": "ricker",
-            "wavelet_freq": 25,
-            "output_format": "compact",
-        },
-    )
+            "geox_seismic_compute",
+            {
+                "mode": "synthetic",
+                "well_id": "smoke_well",
+                "wavelet_type": "ricker",
+                "wavelet_freq": 25,
+                "output_format": "compact",
+            },
+        )
         if fm and fm.get("execution_status") == "SUCCESS":
             break
         if attempt == 0:
             time.sleep(1)
     if not fm or fm.get("execution_status") != "SUCCESS":
-        print("[SMOKE] FAIL: Forward model failed:", fm.get("execution_status") if fm else "no_response", "| error:", fm.get("error_code") if fm else "none")
+        print(
+            "[SMOKE] FAIL: Forward model failed:",
+            fm.get("execution_status") if fm else "no_response",
+            "| error:",
+            fm.get("error_code") if fm else "none",
+        )
         proc.terminate()
         return 1
     pa = fm.get("primary_artifact", {})

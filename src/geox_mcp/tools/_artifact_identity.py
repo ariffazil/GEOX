@@ -43,6 +43,7 @@ remove the helpers file; everything still works the old way.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -101,9 +102,7 @@ def make_artifact_id(
         raise ValueError("canonical_id is required")
     clean_sha = sha256.removeprefix("sha256:")
     if not re.match(r"^[0-9a-f]{64}$", clean_sha):
-        raise ValueError(
-            f"invalid sha256: {sha256!r} (expected 64 hex chars)"
-        )
+        raise ValueError(f"invalid sha256: {sha256!r} (expected 64 hex chars)")
     if version is not None and (not isinstance(version, int) or version < 1):
         raise ValueError(f"invalid version: {version!r} (must be int >= 1)")
 
@@ -422,10 +421,7 @@ def verify_artifact(
                 recomputed_sha256=recomputed,
                 expected_sha256=expected_sha256,
                 checks=tuple(checks),
-                reason=(
-                    f"sha256 mismatch: recomputed={recomputed[:16]}... "
-                    f"expected={expected_sha256[:16]}..."
-                ),
+                reason=(f"sha256 mismatch: recomputed={recomputed[:16]}... expected={expected_sha256[:16]}..."),
             )
         checks.append("sha256_match:OK")
 

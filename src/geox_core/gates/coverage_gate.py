@@ -204,10 +204,7 @@ def check_coverage_gate(
         if layer is not None:
             layer_statuses[layer_name] = layer.status
             if layer.status == "FAIL":
-                hold_reasons.append(
-                    f"{layer.layer.value}_failure"
-                    + (f": {layer.root_cause}" if layer.root_cause else "")
-                )
+                hold_reasons.append(f"{layer.layer.value}_failure" + (f": {layer.root_cause}" if layer.root_cause else ""))
 
     # CHECK 5: If ANY qualitative layer fails, flag it
     has_layer_failure = any(s == "FAIL" for s in layer_statuses.values())
@@ -218,14 +215,9 @@ def check_coverage_gate(
     # CHECK 6: Sensing PASS but recognition/interpretation/memory FAIL
     # This is the Bekok Deep-1 pattern — data exists but wasn't recognized
     sensing_pass = layer_statuses.get("sensing") == "PASS"
-    any_other_fail = any(
-        layer_statuses.get(k) == "FAIL"
-        for k in ["recognition", "interpretation_layer", "institutional_memory"]
-    )
+    any_other_fail = any(layer_statuses.get(k) == "FAIL" for k in ["recognition", "interpretation_layer", "institutional_memory"])
     if sensing_pass and any_other_fail:
-        hold_reasons.append(
-            "sensing_exists_but_not_recognized_or_interpreted"
-        )
+        hold_reasons.append("sensing_exists_but_not_recognized_or_interpreted")
 
     # Determine final status
     is_hold = bool(hold_reasons)
@@ -311,11 +303,7 @@ def requires_coverage(min_level: CoverageLevel = CoverageLevel.PARTIAL):
                 }
 
             # Strip internal kwargs before calling wrapped function
-            clean_kwargs = {
-                k: v
-                for k, v in kwargs.items()
-                if not k.startswith("_coverage_")
-            }
+            clean_kwargs = {k: v for k, v in kwargs.items() if not k.startswith("_coverage_")}
             return func(*args, **clean_kwargs)
 
         return wrapper
