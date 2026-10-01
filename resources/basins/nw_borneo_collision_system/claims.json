@@ -3,37 +3,53 @@
     "claim_id": "sys_clm_1",
     "claim": "Layang-Layang, Sabah Trough and Kinabalu Basin are three structural positions within one collision system (lower plate / foredeep / upper plate), not three independent basins.",
     "claim_type": "interpreted",
-    "evidence_refs": ["tectonic_history.md", "basin_profile.yaml"],
+    "evidence_refs": [
+      "tectonic_history.md",
+      "basin_profile.yaml"
+    ],
     "source": "Arif ENTERPRISE synthesis relay 2026-09-30",
     "confidence": "MED",
     "valid_until": "2027-12-31",
-    "forbidden_uses": ["cross_provincial_stage_transfer_without_well_tie"]
+    "forbidden_uses": [
+      "cross_provincial_stage_transfer_without_well_tie"
+    ]
   },
   {
     "claim_id": "sys_clm_2",
     "claim": "One collision (COLLISION_MM), three opposite expressions: RU drowning without major erosion on the lower plate; foredeep onset in the trough; DRU uplift-erosion on the upper plate. They are physically different surfaces with different seismic signatures.",
     "claim_type": "interpreted",
-    "evidence_refs": ["basin_profile.yaml"],
+    "evidence_refs": [
+      "basin_profile.yaml"
+    ],
     "source": "Arif ENTERPRISE relay + Clift et al. 2008 + Hinz 1985",
     "confidence": "MED-HIGH for order, LOW for exact age",
     "valid_until": "2027-12-31",
-    "forbidden_uses": ["single_reflector_unification_of_RU_DRU_BMU_EMU"]
+    "forbidden_uses": [
+      "single_reflector_unification_of_RU_DRU_BMU_EMU"
+    ]
   },
   {
     "claim_id": "sys_clm_3",
     "claim": "Rifted Dangerous Grounds crust continues SE beneath Neogene Borneo sediments at least halfway between the Sabah shelf and slope toe; part of Kinabalu is stacked above Layang-Layang crust at depth.",
     "claim_type": "hypothesis",
-    "evidence_refs": ["tectonic_history.md"],
+    "evidence_refs": [
+      "tectonic_history.md"
+    ],
     "source": "Arif ENTERPRISE relay 2026-09-30 (INTERPRET — untested by cross-trough dip line)",
     "confidence": "low",
     "valid_until": "2027-06-30",
-    "forbidden_uses": ["plan_view_map_assertion", "drilling_decision"]
+    "forbidden_uses": [
+      "plan_view_map_assertion",
+      "drilling_decision"
+    ]
   },
   {
     "claim_id": "sys_clm_4",
     "claim": "SCS seafloor spreading terminated after ~16 Ma when the Dangerous Grounds collided with and jammed the Borneo trench; spreading onset ~33-32 Ma (C12) per IODP Exp 349.",
     "claim_type": "observed",
-    "evidence_refs": ["basin_profile.yaml"],
+    "evidence_refs": [
+      "basin_profile.yaml"
+    ],
     "source": "Clift et al. 2008; IODP Expedition 349 results (public)",
     "confidence": "HIGH",
     "valid_until": "2030-12-31",
@@ -43,30 +59,78 @@
     "claim_id": "sys_clm_5",
     "claim": "Subduction polarity and timing beneath NW Borneo is unresolved: older SE-directed proto-SCS subduction vs newer continental underthrusting from ~base Miocene. HOLD; both recorded; do not average.",
     "claim_type": "interpreted",
-    "evidence_refs": ["basin_profile.yaml"],
+    "evidence_refs": [
+      "basin_profile.yaml"
+    ],
     "source": "Arif ENTERPRISE relay 2026-09-30 + public literature debate",
     "confidence": "UNKNOWN",
     "valid_until": "2027-12-31",
-    "forbidden_uses": ["polarity_assumption_in_restoration"]
+    "forbidden_uses": [
+      "polarity_assumption_in_restoration"
+    ]
   },
   {
     "claim_id": "sys_clm_6",
     "claim": "BANGKIT (PROPOSED, not adopted): a Late Miocene lithospheric-rebalancing event beneath Sabah drives post-16 Ma deformation independent of renewed plate collision. Evidence verified 2026-09-30: uplift/exhumation ~8–3 Ma at >7 mm/yr (Menier et al. 2017); Late-Miocene apatite+zircon cooling of the Crocker belt (JGS 2000 thermochronology); PSCS slab remnant beneath Sabah confirmed geophysically (Cornwell et al. 2025 JGR W-dipping discontinuity 45–55 km; Pilia et al. 2023; Yu et al. 2021; Shi et al. 2020). Mechanism OPEN (break-off vs delamination vs dripping vs crustal melting). Kinabalu granite INTRUSION age UNVERIFIED (K-Ar range to 14 Ma contested); BizChat's 9–7 Ma window is narrower than the evidence. SRU (9–8.5 Ma) sits at the onset edge — BANGKIT as SRU driver plausible, unproven.",
     "claim_type": "hypothesis",
-    "evidence_refs": ["basin_profile.yaml :: proposed_events"],
+    "evidence_refs": [
+      "basin_profile.yaml :: proposed_events"
+    ],
     "source": "BizChat enterprise analysis 2026-09-30 (names INVENTED, pending F13) + FI-003 source verification 2026-09-30 (search-snippet class; full texts not yet read)",
     "confidence": "low-med",
     "valid_until": "2027-03-31",
-    "forbidden_uses": ["adopt_into_ladder_without_F13", "attribute_SRU_to_BANGKIT_before_ordering_test", "cite_granite_age_as_8_7_Ma"]
+    "forbidden_uses": [
+      "adopt_into_ladder_without_F13",
+      "attribute_SRU_to_BANGKIT_before_ordering_test",
+      "cite_granite_age_as_8_7_Ma"
+    ]
   },
   {
     "claim_id": "sys_clm_7",
     "claim": "GEMPA (PROPOSED, not adopted): present-day deformation of Sabah is real and mixed-regime — 2015 Ranau Mw 6.0; GPS NW motion of coastal Sabah; uplift-driven gravitational collapse with extensional accommodation; GNSS at Ranau records BOTH NW-SE compression and extension. Do not label extension-only or compression-only.",
     "claim_type": "observed",
-    "evidence_refs": ["basin_profile.yaml :: proposed_events"],
+    "evidence_refs": [
+      "basin_profile.yaml :: proposed_events"
+    ],
     "source": "FI-003 source verification 2026-09-30 (GSM papers, GPS literature — snippet class)",
     "confidence": "MED",
     "valid_until": "2028-12-31",
-    "forbidden_uses": ["single_regime_label", "hazard_assumption_from_evidence"]
+    "forbidden_uses": [
+      "single_regime_label",
+      "hazard_assumption_from_evidence"
+    ]
+  },
+  {
+    "claim_id": "sys_clm_8",
+    "claim": "Invariance across Layang-Layang, Sabah Trough and Kinabalu is TOPOLOGICAL, not chronological: no single unconformity reflector runs through all three provinces. What persists where preserved is the ORDER of events (RETAK -> BEBAS -> LANGGAR -> SABAR -> SENJA) and the ARRANGEMENT of surfaces around the collision; reflectors and absolute ages do not persist. LANGGAR (AM-07) is the one surface family recorded on BOTH plates - as RU (drowning, lower plate), base of foredeep fill (trough), DRU (uplift+erosion, upper plate) - in three different windows. SABAR (UIU) and SENJA (SRU) are upper-plate only.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "basin_profile.yaml#invariance_law",
+      "kinabalu_basin/tectonic_history.md"
+    ],
+    "source": "Arif (F13 SOVEREIGN) settlement 2026-10-01; Levell (1987) unconformity->onlap->correlative conformity; literature-consistent",
+    "confidence": "MED-HIGH",
+    "valid_until": "2028-12-31",
+    "falsifier": "A reflector traced continuously through all three provinces with one event identity for any single unconformity; or a province where the preserved event order differs from the ladder.",
+    "forbidden_uses": [
+      "single_unconformity_cross_province_correlation",
+      "treating_invariance_as_shared_reflector",
+      "sru_or_uui_cited_as_three_province_invariant"
+    ]
+  },
+  {
+    "claim_id": "sys_clm_9",
+    "claim": "Geometric rule (two surface families): surfaces OLDER than LANGGAR belong to the lower plate - formed on Dangerous Grounds crust, present everywhere, dipping SE beneath the Kinabalu wedge, imaged only on the NW side. Surfaces YOUNGER than LANGGAR belong to the upper plate - unconformities in Kinabalu fading NW-ward into the trough. The Sabah Trough is a STRATIGRAPHIC SUTURE where the two families meet: surfaces are hard to trace there because two clocks overlap. The ~3 Myr separation RU (16.9-15.5) -> foredeep onset (16-15) -> DRU (13.5-12.5) is the time the collision load took to move from lower to upper plate; one label would hide the mechanism.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "basin_profile.yaml#invariance_law"
+    ],
+    "source": "Arif (F13 SOVEREIGN) settlement 2026-10-01 (INTERPRET, strong support)",
+    "confidence": "MED",
+    "valid_until": "2028-12-31",
+    "falsifier": "A post-LANGGAR erosive unconformity confirmed on the lower plate (Layang/DG side), or a pre-LANGGAR surface imaged continuously inside the Kinabalu wedge above the detachment - either breaks the family partition.",
+    "forbidden_uses": [
+      "cross_family_correlation_across_trough_without_physical_tie"
+    ]
   }
 ]

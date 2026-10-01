@@ -185,12 +185,13 @@ basin:
       evidence: "Morley 2023"
       epistemic: "MED-HIGH"
     SRU:
-      age_ma: 8.5
+      age_ma: "HOLD ~9–8.5 (conflict: 9.53 top NN9 / ~8.6 base NN10A / 8.50 Rotan PDA) — 888 decision at Rotan-1 closes"
       type: canopy_burial
-      meaning: "Post-canopy burial by prograding shelf/delta systems"
-      legacy_equivalent: "SRU"
+      meaning: "Post-canopy burial by prograding shelf/delta systems (deepwater/NSPW usage)"
+      legacy_equivalent: "SRU (Levell 1987)"
       reclassification: "Marks transition from NSPW-influenced to shelf-dominated deposition"
-      evidence: "Morley 2023; deepwater stratigraphy"
+      plate_rule_2026_10_01: "KINABALU-ONLY upper-plate surface (sovereign settlement, Arif 2026-10-01): NOT an invariant across the three positions; downdip character ladder erosion → onlap → correlative conformity → none; only LANGGAR reaches both plates. In the NSPW columns it is a mixture of local unconformities + conformable stretches deformed by diapirs — do not read it as one regional erosive reflector."
+      evidence: "Morley 2023; deepwater stratigraphy; Levell 1987"
       epistemic: "MED"
 
   # ── NSPW MOBILE SHALE PROPERTIES ──
