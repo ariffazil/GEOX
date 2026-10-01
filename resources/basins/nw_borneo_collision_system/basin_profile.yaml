@@ -103,14 +103,19 @@ events:
     confidence: MED
     warning: "Some apparent 'regional sequence boundaries' here may be mobile-substrate accommodation surfaces, not tectonic or eustatic. Time-gap FIELD, not line."
 
-  - event_id: SRU_LATE_MIOCENE
-    age_bracket: "~9–8.5 Ma"
-    origin: "Continued compression"
+  - event_id: SRU_LATE_MIOCENE   # SETTLED as an UPPER-PLATE-ONLY surface — sovereign settlement Arif 2026-10-01
+    name_origin: "Shallow Regional Unconformity — named by Levell (1987) with the DRU, LIU/UIU and Horizons III–I, given biostratigraphic ages"
+    age_bracket: "~9–8.5 Ma — AGE HOLD: internal values conflict: 9.53 Ma (top NN9), ~8.6 Ma (base NN10A), 8.50 Ma (Rotan PDA)"
+    stage_position: "UNRESOLVED: top IVC in some files vs base IVD in the Atlas — held with the age until the 888 decision at Rotan-1"
+    origin: "Strong compression of the Inboard Belt (folding, uplift, erosion) WHILE transtension at the western margin opened the Outboard Belt and East Baram depocentres"
+    plate_assignment: "UPPER PLATE ONLY — the SRU is NOT one of the invariants; no expression expected in the lower plate"
+    character_downdip: "erosion (Inboard, type expression, angular discordance) → onlap (Outboard) → correlative conformity (East Baram; Levell showed each regional unconformity passes into an onlap surface offshore) → none (Sabah Trough, not imaged) → drape continues (Layang-Layang)"
     expressions:
-      layang_layang: {surface: drape, form: "drape"}
-      sabah_trough: {surface: deep_low_energy_fill, form: "deep, low-energy fill"}
-      kinabalu_basin: {surface: SRU, form: "inboard belt folded and eroded; outboard belt and East Baram depocentres open"}
-    confidence: MED
+      layang_layang: {surface: none, form: "no expression expected — pelagic drape continues through it (INTERPRET)"}
+      sabah_trough: {surface: UNKNOWN, form: "expected condensed or conformable distal surface — NOT imaged; no line crosses it (UNKNOWN)"}
+      kinabalu_basin: {surface: SRU, form: "inboard angular unconformity with strong truncation of folded IVA–IVC (type expression); onshore Crocker/Klias removed or merged with younger erosion; deepwater (Rotan, NSPW) = local unconformities + conformable stretches deformed by diapirs; candidate pick Rotan-1 NN11/NN10 boundary ~1994 m MD, ~5 m below top pay"}
+    what_to_map: "the SRU is not a line on a map — it is a surface whose character changes downdip. Map where the erosion stops and where the onlap stops (hinges along KL1–KL5): those two lines give the first map of Late Miocene uplift"
+    confidence: "structure SETTLED MED-HIGH (sovereign + Levell 1987) · age+stage HOLD until 888 · Trough/Layang expression UNKNOWN/none"
 
   - event_id: PLIOCENE_DEFORMATION
     age_bracket: "Pliocene–Quaternary"
@@ -145,7 +150,25 @@ proposed_events:
       sabah_trough: {surface: "—", form: "—"}
     confidence: OBSERVED (activity) / OPEN (regime partition)
 
+# ── INVARIANCE LAW — sovereign settlement Arif 2026-10-01 ─────────────────
+# What stays constant across the three positions is NOT a shared reflector.
+invariance_law:
+  statement: >
+    No single unconformity reflector runs through all three provinces. What is
+    invariant is the ORDER OF EVENTS and the ARRANGEMENT of the surfaces around
+    the collision — topological invariance, not chronological, not physical.
+    The order RETAK → BEBAS → LANGGAR → SABAR → SENJA holds everywhere it is
+    preserved; the reflectors and absolute ages do not.
+  two_plate_families:
+    lower_plate_family: "Surfaces OLDER than LANGGAR (ASAS, RETAK, BELAH, BEBAS, KAPUR, carbonate top, BU, IRU, ROU) formed on Dangerous Grounds crust. They are present everywhere but dip SE beneath the Kinabalu wedge and can be IMAGED ONLY on the NW side."
+    upper_plate_family: "Surfaces YOUNGER than LANGGAR (SABAR/UIU, SENJA/SRU, REDUP–MALAM / Horizons III–I) form as unconformities in Kinabalu and FADE NW-ward into the trough. SABAR and SENJA are upper-plate only."
+    langgar_exception: "LANGGAR (AM-07) is the ONE surface family that reaches BOTH plates — recorded in all three provinces as three different surfaces with different ages: RU (drowning, Layang), base of foredeep fill (Trough), DRU (uplift+erosion, Kinabalu). The ~3 Myr separation between them is the time the collision load took to move from the lower plate to the upper plate; one label would hide that mechanism."
+  suture_rule: "The Sabah Trough is a stratigraphic suture — the place where the two families of surfaces meet. Surfaces are hard to trace there because TWO CLOCKS OVERLAP; cross-family correlation across the trough requires a physical tie, never a name."
+  per_surface_verdicts: "AM-01 yes in position not meaning · AM-02 yes in crustal geometry, imaged only NW · AM-03 NO (patchy) · AM-04 yes in crust, time-transgressive · AM-06 NO · AM-07 YES (three expressions) · AM-08 NO (upper plate) · AM-09 NO (upper plate) · AM-10..12 NO"
+  unconformity_reading_rules: "An unconformity records VERTICAL MOVEMENT, not just deposition: angular discordance = tilt (how much the Inboard Belt folded before the IVD–IVG drape); hiatus triangle width = depth of erosion (Krebs' method — map the gap, get a contour map of uplift); the point where erosion turns to conformity = the hinge (linking SRU hinges along strike outlines the uplifted block and separates source from sink); timing mismatch between provinces = different mechanism."
+
 standing_holds:
+  - "HOLD — SRU (SENJA) age and stage position: 9.53 Ma (top NN9) vs ~8.6 Ma (base NN10A) vs 8.50 Ma (Rotan PDA); top IVC vs base IVD. Closes by the 888 decision at Rotan-1 (cand-A vs cand-B)."
   - "HOLD — subduction polarity and timing: older model = SE-directed subduction of proto-SCS beneath NW Borneo; newer model = underthrusting of CONTINENTAL crust from ~base Miocene. Both in literature. Do not average; do not pick without new evidence."
   - "HOLD — Stage III correlation across the trough until a dip line with well tie physically crosses it."
   - "HOLD — collision age: 20.5 Ma vs 16.9–15.5 Ma brackets remain open."
@@ -155,8 +178,12 @@ correlation_laws:
   - "Correlate FROM the continuous record (Kinabalu/NN zones) OUTWARD; never transfer Stage/IVA-style boxes into the lower plate without a well-age tie."
   - "A time-equivalent surface may record OPPOSITE processes by province — always record the sign (subsidence/uplift/starvation) with the age."
   - "TB sequences / NN anchors = translation layer only, never physical truth."
+  - "No single unconformity reflector runs through all three provinces — never chase one. Cross-province correlation transfers the EVENT AND ITS ORDER (topological), then re-derives each province's surface and age locally (invariance_law, 2026-10-01)."
 
 sources:
+  - "Arif (F13 SOVEREIGN) SRU + invariance settlement, 2026-10-01 (this session — BINDING for AM-07/AM-09 semantics)"
+  - "Levell (1987) — Late Oligocene to Miocene tectono-eustatic events in Sabah: named SRU/DRU/LIU-UIU + Horizons III–I; showed each regional unconformity passes downdip into an onlap surface/correlative conformity offshore"
+  - "Krebs et al. — chronosequence / hiatus-triangle method (gap widening inboard, closing offshore)"
   - "Arif ENTERPRISE synthesis relay 2026-09-30 (250 enterprise results / 84 meetings; deck 3133 NOT directly readable from KVM8 — relayed text only)"
   - "Clift et al. 2008 (collision ~16 Ma, trench jam)"
   - "IODP Exp 349 (SCS spreading onset ~33–32 Ma, C12)"

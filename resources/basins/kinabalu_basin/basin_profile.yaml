@@ -27,7 +27,7 @@ clock:
   - {event_id: COLLISION_MM, surface: thrust_loading, note: "uplift + erosion; block goes UP"}
   - {event_id: POST_COLLISION_UPLIFT_DRU, surface: DRU, note: "13.5–12.5 Ma; major erosion then prograding deltas — Stage IV begins; DRU dated ~13.5–12.5 Ma, DISTINCT from BMU/TCU"}
   - {event_id: WEDGE_FRONT_ADVANCE_UIU, note: "mini-basins, mud volcanoes, Rotan-type turbidite fairways (13–10.5 Ma)"}
-  - {event_id: SRU_LATE_MIOCENE, surface: SRU, note: "~9–8.5 Ma: inboard belt folded and eroded; OUTBOARD belt + East Baram depocentres open"}
+  - {event_id: SRU_LATE_MIOCENE, surface: SRU, note: "~9–8.5 Ma AGE HOLD (9.53 top NN9 / ~8.6 base NN10A / 8.50 Rotan PDA): inboard belt folded and eroded WHILE outboard belt + East Baram depocentres open (transtension). UPPER PLATE ONLY — not an invariant; downdip it changes erosion → onlap → correlative conformity → none. Stage position HOLD (top IVC vs base IVD). Levell 1987; settlement Arif 2026-10-01 — see tectonic_history.md"}
   - {event_id: PLIOCENE_DEFORMATION, note: "gentle anticlines + crestal faults outboard; continued progradation (IVG)"}
 
 stage_iv_nn_calibration_2026:  # ENTERPRISE RELAY — preliminary, NN-based nannofossil standard
@@ -51,9 +51,12 @@ petroleum_system_summary:
   record_quality: "BEST of the three positions — continuous progradational archive; this is the correlation MASTER: correlate outward FROM here, never inward by stage transfer"
 
 naming_note: "'Kinabalu Basin' is a group of wedge-top and foreland depocentres, not a single-origin basin."
-holds: ["Stage_III_cross_trough_CORRELATION_HOLD_until_well_tied_dip_line", "collision_age", "subduction_polarity"]
+holds: ["Stage_III_cross_trough_CORRELATION_HOLD_until_well_tied_dip_line", "collision_age", "subduction_polarity", "SRU_age_and_stage_HOLD_until_888_decision_at_Rotan1"]
 correlation_law: "Do NOT transfer Stage IV boxes into Layang-Layang: the equivalent lower-plate interval is a carbonate-and-drift package with a completely different origin."
+sru_rule_2026_10_01: "SRU is Kinabalu-only (upper plate): not an invariant; map where its erosion stops and where its onlap stops (hinges, KL1–KL5). No single unconformity reflector crosses all three provinces; the only surface family reaching both plates is LANGGAR."
 sources:
-  - "Arif ENTERPRISE synthesis relay 2026-09-30 (2026 Kinabalu NN framework; 2023 Borneo integration age anchors NN18/NN16/NN11/NN9/NN5/NN2/NP23/NP14/CC26/CC1 @ 2.0/3.1/8.11/9.53/14.2/19.3/29.62/46.29/57.21/66/145 Ma)"
+  - "Arif (F13 SOVEREIGN) SRU + invariance settlement 2026-10-01"
+  - "Levell (1987) — named SRU/DRU/LIU-UIU + Horizons III–I; unconformity → onlap → correlative conformity downdip"
+  - "Arif ENTERPRISE relay 2026-09-30 (2026 Kinabalu NN framework; 2023 Borneo integration age anchors NN18/NN16/NN11/NN9/NN5/NN2/NP23/NP14/CC26/CC1 @ 2.0/3.1/8.11/9.53/14.2/19.3/29.62/46.29/57.21/66/145 Ma)"
   - "PETRONAS MPM exploration page 2026-09-30 (Kinabalu-area wells usage — OBS)"
   - "Public NW Borneo mobile-shale and Crocker prism literature"

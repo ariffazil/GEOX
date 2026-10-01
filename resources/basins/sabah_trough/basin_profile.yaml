@@ -23,7 +23,7 @@ clock:
   - {event_id: COLLISION_MM, surface: foredeep_onset, note: "maximum flexure; forebulge on platform, moat here; onset difficult to trace — often conformity/condensed rather than erosional"}
   - {event_id: POST_COLLISION_UPLIFT_DRU, surface: distal_gravity_flows, note: "receives distal gravity flows from the uplifting wedge"}
   - {event_id: WEDGE_FRONT_ADVANCE_UIU, surface: UIU, note: "wedge front OVERRIDES the trough margin; mini-basins, mud canopy, mud volcanoes (13–10.5 Ma)"}
-  - {event_id: SRU_LATE_MIOCENE, surface: SRU, note: "deep, low-energy fill (~9–8.5 Ma)"}
+  - {event_id: SRU_LATE_MIOCENE, surface: UNKNOWN, note: "deep, low-energy fill continues (~9–8.5 Ma); SRU expression here UNKNOWN — expected condensed or conformable distal surface, NOT imaged (no line crosses; sovereign settlement 2026-10-01). SRU is upper-plate (Kinabalu) only; the trough is where the lower-plate and upper-plate surface families meet (stratigraphic suture)."}
   - {event_id: PLIOCENE_DEFORMATION, note: "stable to mildly deformed; fold belt nucleates at margins"}
 
 petroleum_system_summary:
