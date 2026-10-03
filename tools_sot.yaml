@@ -1,9 +1,9 @@
 organ: GEOX
-version: 2026.09.30
+version: 2026.10.01
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
 public_count: 26
-regenerated: '2026-09-30T15:51:06.827312+00:00'
+regenerated: '2026-10-01T12:42:09.801530+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:

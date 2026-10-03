@@ -1,6 +1,6 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-09-30T15:51:06.827312+00:00",
+  "generated_at": "2026-10-01T12:42:09.801530+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
   "public_count": 26,
   "internal_count": 22,
@@ -479,6 +479,7 @@
       "description": "Default discovery surface. All agents see these tools.",
       "intent": "Evaluate basin context, validate data, interpret wells/seismic, assess prospects.",
       "tools": [
+        "geox_surface_status",
         "geox_basin",
         "geox_claim",
         "geox_deep_time",
@@ -547,6 +548,7 @@
   "discovery_profiles": {
     "default": {
       "tools": [
+        "geox_surface_status",
         "geox_basin",
         "geox_claim",
         "geox_deep_time",
@@ -561,10 +563,11 @@
         "geox_well",
         "geox_well_qc"
       ],
-      "count": 13
+      "count": 14
     },
     "specialist": {
       "tools": [
+        "geox_surface_status",
         "geox_basin",
         "geox_claim",
         "geox_deep_time",
@@ -585,10 +588,11 @@
         "geox_seismic_ingest",
         "geox_well_ingest"
       ],
-      "count": 19
+      "count": 20
     },
     "research": {
       "tools": [
+        "geox_surface_status",
         "geox_basin",
         "geox_claim",
         "geox_deep_time",
@@ -610,10 +614,11 @@
         "geox_well_ingest",
         "geox_glof"
       ],
-      "count": 20
+      "count": 21
     },
     "full": {
       "tools": [
+        "geox_surface_status",
         "geox_basin",
         "geox_claim",
         "geox_deep_time",
@@ -635,7 +640,7 @@
         "geox_well_ingest",
         "geox_glof"
       ],
-      "count": 20
+      "count": 21
     }
   },
   "workflow_packs": {

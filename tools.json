@@ -112,6 +112,6 @@
     "geox_well_ingest",
     "geox_well_qc"
   ],
-  "version": "2026.09.30",
-  "policy": "Generated 2026-09-30T15:51:06.827312+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (26 tools)"
+  "version": "2026.10.01",
+  "policy": "Generated 2026-10-01T12:42:09.801530+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (26 tools)"
 }

@@ -723,10 +723,49 @@ class GeoxGovernanceMiddleware(Middleware):
             # Special-case: arifos_route_query gets a pass-through when feature-flagged
             if not (self._arifos_route_query_enabled and tool_name == "arifos_route_query"):
                 logger.warning(f"RT1_BLOCK: tool '{tool_name}' is not on canonical public surface")
+                # F2 TRUTH: the recovery suggestion is DERIVED from the registry,
+                # never a literal. A hardcoded name can silently go stale — if the
+                # suggested tool is renamed or ghosted, the literal keeps pointing
+                # callers at something they cannot call. derive_recovery_tool
+                # guarantees the returned name is in public_tool_names() or None.
+                # Lazy import: registry is imported at call time to avoid the
+                # circular-import chain (same pattern as authority_gate below).
+                _recovery_tool: str | None = None
+                try:
+                    from geox_mcp.registry import derive_recovery_tool, recovery_is_callable
+
+                    _candidate = derive_recovery_tool(tool_name)
+                    if recovery_is_callable(_candidate):
+                        _recovery_tool = _candidate
+                    elif _candidate is not None:
+                        # Derived a name that is NOT callable — that is a registry
+                        # inconsistency. Do not surface it; report it.
+                        logger.error(
+                            f"RT1_RECOVERY_UNCALLABLE: derived '{_candidate}' for rejected "
+                            f"'{tool_name}' but it is not in public_tool_names(). "
+                            f"Registry drift — recovery suggestion suppressed."
+                        )
+                except Exception as _rec_exc:
+                    # Fail closed on the suggestion, never on the rejection: RT1
+                    # still blocks. A missing hint must not open the gate.
+                    logger.error(f"RT1_RECOVERY_DERIVE_ERROR: {type(_rec_exc).__name__}: {_rec_exc}")
+
+                if _recovery_tool:
+                    _hint = f"Use {_recovery_tool}(mode='registry') to enumerate available tools."
+                    _rec_line = f"recommended_next: {_recovery_tool}"
+                else:
+                    _hint = (
+                        "No callable recovery tool is registered — the surface cannot be "
+                        "enumerated programmatically right now. This is a registry defect, "
+                        "not a caller error. Escalate to the organ owner."
+                    )
+                    _rec_line = "recommended_next: null"
+
                 raise ToolError(
                     f"RT1_GUARD: Tool '{tool_name}' is not on the canonical or compat surface. "
                     f"Canonical surface has {len(self._PUBLIC_SURFACE)} declared tools. "
-                    f"Use geox_surface_status(mode='registry') to enumerate available tools."
+                    f"{_hint} "
+                    f"[{_rec_line} · derived-from-registry, verified-callable={bool(_recovery_tool)}]"
                 )
 
         # ── T7: Deprecation warning for backward-compat aliases ──

@@ -1837,6 +1837,16 @@ capability_packs:
     description: Default discovery surface. All agents see these tools.
     intent: Evaluate basin context, validate data, interpret wells/seismic, assess prospects.
     tools:
+    # geox_surface_status is PINNED here (2026-10-01, Lane 333d Step 2).
+    # It is the RT1 recovery tool: when the middleware rejects an unknown or
+    # ghosted tool name, RT1 tells the caller to enumerate the surface via
+    # geox_surface_status(mode='registry'). If that tool is not in a pack, it
+    # is invisible to every discovery profile — so the recovery instruction
+    # points at a tool the caller cannot resolve. Tier A / OBSERVE /
+    # read_only / family=view: a default-visible pack is its correct home.
+    # earth_core is included by all four profiles (default, specialist,
+    # research, full), so one pin makes the recovery tool visible everywhere.
+    - geox_surface_status
     - geox_basin
     - geox_claim
     - geox_deep_time

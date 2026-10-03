@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-09-30T15:51:06.827312+00:00
+# Regenerated: 2026-10-01T12:42:09.801530+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.09.30
+schema_version: 2026.10.01
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -18,7 +18,7 @@ mcp_endpoints:
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
 canonical_tool_count: 26
-contract_epoch: 2026-09-30-GEOX-26TOOLS-ZEN
+contract_epoch: 2026-10-01-GEOX-26TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9

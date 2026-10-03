@@ -7,6 +7,7 @@ This script overwrites drifted surfaces to match.
 Usage:
   python scripts/generate_all_surfaces.py              # regenerate all
   python scripts/generate_all_surfaces.py --dry-run    # show what would change
+  python scripts/generate_all_surfaces.py --check      # CI gate: exit non-zero on drift
 
 Surfaces regenerated:
   1. tools_sot.yaml
@@ -21,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import io
 import json
 import re
 import sys
@@ -474,10 +476,175 @@ def regenerate_readme_badge(dry_run: bool) -> None:
         print(f"  → Would update README.md (badge={TRUTH_COUNT})")
 
 
+# ── CI drift gate (--check) ───────────────────────────────────────────────
+# Additive. Does NOT write to disk; regenerates each surface in memory and
+# compares its sha256 against the committed artifact's sha256.
+#
+# IMPORTANT — timestamp normalisation:
+#   4 of the 6 generators embed a wall-clock stamp (``datetime.now(...)`` in
+#   ``regenerated``/``generated_at``/``policy``/``version``/``schema_version``/
+#   ``contract_epoch``). A raw byte-for-byte sha256 of those outputs is
+#   therefore NOT reproducible: two runs one second apart differ even with a
+#   perfectly in-sync registry. Naively hashing raw output makes the gate
+#   permanently red and teaches agents to ignore red. So the gate hashes
+#   *timestamp-normalised* content. Clock churn is stripped; genuine surface
+#   drift (tool added/removed, domain changed, pack changed) still alters the
+#   hash and still fails the build.
+
+# Lines/fields that carry a generation timestamp. Normalised to a fixed token
+# so the hash measures surface *content*, not *when* it was generated.
+_TS_LINE_RE = re.compile(
+    r"^(\s*(?:regenerated|generated_at|policy|version|schema_version|contract_epoch|regenerated_by)\s*[:=].*)$"
+)
+_ISO_TS_RE = re.compile(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:\+00:00|Z)?")
+_DATE_RE = re.compile(r"\b\d{4}-\d{2}-\d{2}\b|\b\d{4}\.\d{2}\.\d{2}\b")
+_HEADER_TS_RE = re.compile(r"^(#\s*Regenerated:\s*).*$")
+_NORM = "__TS__"
+
+
+def normalize_timestamps(text: str) -> str:
+    """Strip generation timestamps so a hash reflects content, not clock.
+
+    Applied identically to the freshly-generated output and to the committed
+    on-disk artifact, so both sides are compared on the same footing.
+    """
+    out: list[str] = []
+    for line in text.split("\n"):
+        if _TS_LINE_RE.match(line) or _HEADER_TS_RE.match(line):
+            key = _HEADER_TS_RE.match(line)
+            if key:
+                out.append(f"{key.group(1)}{_NORM}")
+            else:
+                out.append(f"{line.split(':', 1)[0].split('=', 1)[0]}: {_NORM}")
+            continue
+        line = _ISO_TS_RE.sub(_NORM, line)
+        line = _DATE_RE.sub(_NORM, line)
+        out.append(line)
+    return "\n".join(out)
+
+
+def content_sha256(text: str) -> str:
+    """sha256 of timestamp-normalised content (the generator's hash function)."""
+    import hashlib
+
+    return hashlib.sha256(normalize_timestamps(text).encode("utf-8")).hexdigest()
+
+
+def _render_surface(fn, path: Path) -> str | None:
+    """Run a generator in dry-run, capturing the content it *would* write."""
+    captured: dict[str, str] = {}
+
+    def _capture(p: str, before: str, after: str) -> None:
+        captured[p] = after
+
+    saved = globals()["diff_label"]
+    globals()["diff_label"] = _capture
+    try:
+        # Generators print "→ Would write …" in dry-run. Silence them so the
+        # gate emits only its own verdict lines.
+        _sink = io.StringIO()
+        _saved_stdout = sys.stdout
+        sys.stdout = _sink
+        try:
+            fn(dry_run=True)
+        finally:
+            sys.stdout = _saved_stdout
+    finally:
+        globals()["diff_label"] = saved
+
+    if not captured:
+        return None
+    return next(iter(captured.values()))
+
+
+def run_check() -> int:
+    """CI gate: regenerate every surface in memory, compare hashes.
+
+    Exit codes:
+      0 — every committed artifact matches what registry.py generates (no drift)
+      1 — one or more artifacts drifted from registry.py truth
+    No file is written by this function.
+    """
+    print("═══ GEOX Surface Drift Gate (--check) ═══")
+    print("  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
+    print(f"  Truth count:  {TRUTH_COUNT}")
+    print("  Hash fn:      sha256 (timestamp-normalised content)")
+    print()
+
+    load_surface_manifest.cache_clear()
+
+    surfaces = [
+        ("tools_sot.yaml", ROOT / "tools_sot.yaml", regenerate_tools_sot_yaml),
+        (
+            "CANONICAL_PUBLIC_SURFACE.json",
+            ROOT / "src" / "geox_mcp" / "generated" / "CANONICAL_PUBLIC_SURFACE.json",
+            regenerate_canonical_public_surface_json,
+        ),
+        ("tools.json", ROOT / "tools.json", regenerate_tools_json),
+        ("llms.txt", ROOT / "llms.txt", regenerate_llms_txt),
+        ("contracts/tools.yaml", ROOT / "contracts" / "tools.yaml", regenerate_contracts_tools_yaml),
+        ("README.md", ROOT / "README.md", regenerate_readme_badge),
+    ]
+
+    drifted: list[str] = []
+    missing: list[str] = []
+
+    for label, path, fn in surfaces:
+        try:
+            generated = _render_surface(fn, path)
+        except Exception as exc:  # generator crashed → fail closed, never green
+            print(f"  ERROR   {label}: generator raised {type(exc).__name__}: {exc}")
+            drifted.append(label)
+            continue
+
+        if generated is None:
+            print(f"  ERROR   {label}: generator produced no comparable output")
+            drifted.append(label)
+            continue
+
+        if not path.exists():
+            print(f"  MISSING {label}: committed artifact absent at {path}")
+            missing.append(label)
+            continue
+
+        want = content_sha256(generated)
+        have = content_sha256(path.read_text())
+        if want == have:
+            print(f"  OK      {label}  sha256={have[:16]}…")
+        else:
+            print(f"  DRIFT   {label}  committed={have[:16]}…  generated={want[:16]}…")
+            drifted.append(label)
+
+    print()
+    print("═══ GATE RESULT ═══")
+    print(f"  Surfaces checked: {len(surfaces)}")
+    print(f"  Missing:          {len(missing)} {missing if missing else ''}")
+    print(f"  Drifted:          {len(drifted)} {drifted if drifted else ''}")
+
+    if missing or drifted:
+        print()
+        print("  FAIL — committed surfaces do not match registry.py truth.")
+        print("  Fix: run `python3 scripts/generate_all_surfaces.py` and commit the result.")
+        print("  registry.py is the ONLY truth. Every surface is GENERATED from it.")
+        return 1
+
+    print()
+    print("  PASS — every surface is in sync with registry.py. No drift.")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Regenerate all GEOX surfaces from registry.py truth")
     ap.add_argument("--dry-run", action="store_true", help="Show what would change without writing")
+    ap.add_argument(
+        "--check",
+        action="store_true",
+        help="CI gate: regenerate in memory, compare sha256, exit non-zero on drift (writes nothing)",
+    )
     args = ap.parse_args()
+
+    if args.check:
+        return run_check()
 
     print("═══ GEOX Surface Regeneration ═══")
     print("  Truth source: registry.py::CANONICAL_PUBLIC_TOOLS")
