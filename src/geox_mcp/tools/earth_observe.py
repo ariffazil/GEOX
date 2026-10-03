@@ -47,6 +47,7 @@ from geox_core.earth_witness.specialists import (
     seismic_display_observer,
     fossil_morphology_observer,
     physical_test_elicitor,
+    contradiction_auditor,
 )
 
 logger = logging.getLogger("geox.mcp.earth_observe")
@@ -169,6 +170,21 @@ def geox_observe(
         hypotheses.extend(hyps)
         limitations_cannot_determine.extend(lims)
 
+    # 4.5 Contradiction audit (checklist §5: runs before every final reply).
+    # Findings land in limitations[] (no schema drift) and force the packet
+    # state DOWN — a contradicted bundle can never be QUALIFIED_CANDIDATE.
+    audit = contradiction_auditor(
+        hypotheses=hypotheses,
+        ocr_items=ocr_items,
+        modality=modality,
+        context=context,
+    )
+    audit_forced_review = not audit["ok"]
+    for f in audit["findings"]:
+        limitations_cannot_determine.append(
+            f"CONTRADICTION_AUDIT[{f['rule']}] {f['type']} on {f['target']}: {f['detail']}"
+        )
+
     # 5. Physical Elicitor (Diagnostic Human Clues)
     scale_obj = None
     if "scale" in context and isinstance(context["scale"], dict):
@@ -188,6 +204,9 @@ def geox_observe(
         state = "QUALIFIED_CANDIDATE"
     else:
         state = "REVIEW_PENDING"
+    if audit_forced_review and state == "QUALIFIED_CANDIDATE":
+        # A contradicted bundle never ships as QUALIFIED_CANDIDATE (I9 posture).
+        state = "REVIEW_PENDING"
 
     epistemic_block = EpistemicBlock(
         claim_tag="INTERPRET",
@@ -200,7 +219,14 @@ def geox_observe(
                 model_id=resp.model_id,
                 timestamp=datetime.now(UTC).isoformat(),
                 hash=resp.response_hash,
-            )
+            ),
+            ProvenanceRecord(
+                step="contradiction_auditor",
+                agent_id="geox_earth_witness",
+                model_id="rule_engine_v1",
+                timestamp=datetime.now(UTC).isoformat(),
+                hash=resp.response_hash,
+            ),
         ],
         verdict="QUALIFIED_CANDIDATE" if state == "QUALIFIED_CANDIDATE" else "PARTIAL",
     )

@@ -284,7 +284,9 @@ class GeminiVertexVisionBackend(BaseVisionBackend):
 def get_vision_backend(backend_type: str = "auto") -> BaseVisionBackend:
     """Returns the configured vision backend."""
     if backend_type == "mock" or os.getenv("GEOX_VISION_FORCE_MOCK") == "1":
-        return DeterministicMockVisionBackend()
+        return DeterministicMockVisionBackend(
+            mock_scenario=os.getenv("GEOX_VISION_MOCK_SCENARIO", "limestone_outcrop")
+        )
     if backend_type == "gemini" or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"):
         return GeminiVertexVisionBackend()
     # Default to mock for safety & air-gapped testability
