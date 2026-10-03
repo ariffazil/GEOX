@@ -40,6 +40,21 @@ COOKIE_SECURE = os.getenv("EARTH_WITNESS_COOKIE_SECURE", "1") == "1"
 _mcp = McpClient()
 _sessions: dict[str, float] = {}
 _rate: dict[str, list[float]] = {}
+_SESSION_CAP = 10_000
+_RATE_CAP = 10_000
+
+
+def _prune_states(now: float) -> None:
+    """Bounded-memory guard (hardening 2026-10-03): expired keys are dropped once
+    the state dicts grow past their caps, so memory is bounded between restarts."""
+    if len(_sessions) > _SESSION_CAP:
+        for k in [k for k, t in _sessions.items() if now - t >= SESSION_TTL]:
+            _sessions.pop(k, None)
+    if len(_rate) > _RATE_CAP:
+        for k in [k for k, w in _rate.items() if not w or now - w[-1] >= PER_IP_WINDOW]:
+            _rate.pop(k, None)
+
+
 _budget = {"day": time.gmtime().tm_yday, "used": 0}
 STATICS = os.path.join(os.path.dirname(__file__), "static")
 
@@ -119,6 +134,7 @@ async def observe(
     # rate limit (per-IP) — checklist §9 "rate limit triggers HOLD"
     ip = request.client.host if request.client else "unknown"
     now = time.time()
+    _prune_states(now)
     window = [t for t in _rate.get(ip, []) if now - t < PER_IP_WINDOW]
     if len(window) >= PER_IP_MAX:
         return _hold("per-IP rate limit exceeded")
