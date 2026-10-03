@@ -94,21 +94,54 @@ def patch_landing() -> None:
 
 patch_landing()
 
-# ── Earth Witness CTA banner (2026-10-03, sovereign: "mana butang aku nak click?") ──
-# Static, marker-delimited, idempotent — survives SPA bundle rebuilds only until
-# the marker is stripped; the proper fix is restoring the landing SPA source.
-BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:START (owned by scripts/publish_docroot.py) -->"
+# ── Earth Witness CTA banner + nav injection (v2, 2026-10-03) ──
+# v1 was a static bar; sovereign still couldn't see a button IN the nav.
+# v2: sticky bar + a live <script> that injects "◉ Earth Witness" as the first
+# item of the SPA navbar (copying native link classes, amber highlight),
+# re-asserting after React re-renders. Owned by this publisher; replace-block
+# semantics via versioned markers.
+BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:v2:START (owned by scripts/publish_docroot.py) -->"
 BANNER = BANNER_OPEN + """
 <div id="ew-cta-bar" style="position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:#0b1220;color:#e8eefc;font-family:system-ui,sans-serif;font-size:15px;border-bottom:1px solid #233252">
   <a href="/observe/" style="display:inline-block;padding:9px 20px;border-radius:8px;background:#2f6df6;color:#fff;font-weight:700;text-decoration:none">🪨 Earth Witness — Tanya Bumi</a>
   <span style="opacity:.85">Chat langsung dengan organ geoscience &middot; <a href="/mcp-apps/" style="color:#8fb3ff">semua apps</a> &middot; <a href="/gui/" style="color:#8fb3ff">WellDesk GUI</a></span>
 </div>
-<!-- EARTH-WITNESS-CTA:END -->
+<script>
+(function(){
+  var VERSION='v2-20261003';
+  var OLDre=/<!-- EARTH-WITNESS-CTA:v1:START[\\s\\S]*?EARTH-WITNESS-CTA:END-->/;
+  function ensureNav(){
+    var navs=document.querySelectorAll('nav');
+    for(var i=0;i<navs.length;i++){
+      var nav=navs[i];
+      var sib=nav.querySelector('a[href="/platform"]');
+      if(!sib) continue;
+      if(nav.querySelector('a[data-ew-nav]')) continue;
+      var a=document.createElement('a');
+      a.setAttribute('data-ew-nav','1');
+      a.setAttribute('data-ew-version',VERSION);
+      a.href='/observe/';
+      a.className=sib.className.replace('text-bone-400','text-amber-300');
+      a.setAttribute('data-cursor','OPEN');
+      a.style.fontWeight='700';
+      a.textContent='\\u25C9 Earth Witness';
+      sib.parentNode.insertBefore(a,sib);
+    }
+  }
+  function loop(){ ensureNav(); setTimeout(loop,1500); }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',loop)}else{loop()}
+})();
+</script>
+<!-- EARTH-WITNESS-CTA:v2:END -->
 """
 
 def inject_banner(text: str) -> tuple[str, bool]:
-    if BANNER_OPEN in text:
-        return text, False
+    import re as _re
+    # replace any existing versioned/legacy block
+    pattern = _re.compile(r"<!-- EARTH-WITNESS-CTA:.*?:START -->.*?<!-- EARTH-WITNESS-CTA.*?:END -->", _re.S)
+    if pattern.search(text):
+        new_text = pattern.sub(BANNER.rstrip(), text, count=1)
+        return new_text, new_text != text
     for anchor in ("<body>", "<body ", "<body>"):
         idx = text.find(anchor)
         if idx != -1:
@@ -123,7 +156,7 @@ for name in ("index.html",):
     new_text, changed = inject_banner(p.read_text())
     if changed and not DRY:
         p.write_text(new_text)
-    receipt["patched"][f"{name}#ew-cta"] = "injected" if changed else "already present"
+    receipt["patched"][f"{name}#ew-cta"] = "injected v2" if changed else "already present"
 
 for name in SYNC:
     src, dst = REPO / name, DOCROOT / name
