@@ -1,0 +1,92 @@
+# ═══════════════════════════════════════════════════════════════════
+# Surface Drift Gate — registry.py is the ONLY truth
+# ═══════════════════════════════════════════════════════════════════
+# F8 LAW: tools/list MUST equal the committed surface artifacts.
+#
+# Every GEOX public surface (tools_sot.yaml, CANONICAL_PUBLIC_SURFACE.json,
+# tools.json, llms.txt, contracts/tools.yaml, README.md badge) is GENERATED
+# from src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS by
+# scripts/generate_all_surfaces.py.
+#
+# This gate regenerates each surface in memory, hashes it (sha256 over
+# timestamp-normalised content), and compares against the committed artifact.
+# Any mismatch => red build.
+#
+# FAIL-CLOSED CONTRACT — no exit-code swallowing, no advisory echo, no tee masking:
+#   - generator raises / crashes      -> non-zero exit -> red
+#   - committed artifact drifted      -> exit 1        -> red
+#   - committed artifact missing      -> exit 1        -> red
+#   - registry.py unimportable        -> red (setup step)
+# Only a genuine full match produces exit 0.
+#
+# The hash ignores generation timestamps on purpose: 4 of 6 artifacts embed
+# datetime.now(), so a raw byte hash would be red on every commit even with a
+# perfectly in-sync registry. Normalising the stamp keeps the gate measuring
+# real drift (tool set, domain, pack, count) instead of clock churn.
+#
+# Forged 2026-10-01 · Lane 333d · Step 1 of 3
+# DITEMPA BUKAN DIBERI — Forged, Not Given.
+# ═══════════════════════════════════════════════════════════════════
+
+name: "🔒 Surface Drift Gate (registry.py truth)"
+
+on:
+  push:
+    branches: [main, "feat/**", "fix/**", "chore/**"]
+    paths:
+      - 'src/geox_mcp/registry.py'
+      - 'src/geox_mcp/tools_manifest.yaml'
+      - 'src/geox_mcp/surface_manifest.py'
+      - 'registry/capability_registry.yaml'
+      - 'scripts/generate_all_surfaces.py'
+      - 'tools_sot.yaml'
+      - 'tools.json'
+      - 'llms.txt'
+      - 'README.md'
+      - 'contracts/tools.yaml'
+      - 'src/geox_mcp/generated/**'
+      - '.github/workflows/surface-drift-gate.yml'
+  pull_request:
+    branches: [main, "feat/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: surface-drift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  surface-drift:
+    if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'
+    name: "Surface drift vs registry.py"
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: "Gate — python3 scripts/generate_all_surfaces.py --check"
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
+        run: |
+          set -o errexit
+          set -o pipefail
+          python3 scripts/generate_all_surfaces.py --check
+
+      - name: "Failure guidance"
+        if: failure()
+        run: |
+          echo "::error::Surface drift detected — a committed public surface no longer matches registry.py."
+          echo "registry.py::CANONICAL_PUBLIC_TOOLS is the ONLY truth."
+          echo "Fix: python3 scripts/generate_all_surfaces.py && git add -A && git commit"
+          exit 1

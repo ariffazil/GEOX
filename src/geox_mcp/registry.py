@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -284,3 +285,89 @@ def is_escalation_required(tool_name: str) -> bool:
     reg = _load_capability_registry()
     visibility = reg.get("pack_visibility", {}).get(pack, {})
     return visibility.get("escalation_required", False)
+
+
+# ── RT1 recovery derivation (2026-10-01 · Lane 333d · Step 3) ────────────
+# RT1 rejects a tool name that is not on the executable surface. The rejection
+# message must tell the caller how to recover — and that suggestion must be
+# DERIVED from the registry, never a hardcoded literal.
+#
+# Why this matters (F2 TRUTH): a literal suggestion is an unfalsifiable claim.
+# If the suggested tool is later renamed, ghosted, or dropped from every pack,
+# the literal keeps recommending a tool the caller cannot actually call. The
+# RT1 recovery string used to say ``geox_surface_status`` by hand while that
+# very tool was in NO capability pack — invisible to every discovery profile.
+# Derivation makes the claim checkable: the returned name is guaranteed to be
+# in ``public_tool_names()`` at call time, or the function returns None.
+#
+# Contract:
+#   - returns a tool name that IS callable (in public_tool_names()), OR None
+#   - never fabricates a name
+#   - prefers a non-mutating tool in the same pack as the rejected tool
+
+# Name patterns that mark a tool as recovery-relevant (surface enumeration,
+# status probes, registry listing, discovery).
+_RECOVERY_NAME_RE = re.compile(r"surface|status|registry|discover", re.IGNORECASE)
+
+
+def _is_non_mutating(tool_name: str) -> bool:
+    """True iff the manifest declares this tool non-mutating / OBSERVE-class."""
+    entry = manifest_tool_map().get(tool_name)
+    if entry is None:
+        return False
+    gov = entry.governance or {}
+    if gov.get("mutation") is True:
+        return False
+    action = str(gov.get("action_class", "OBSERVE") or "OBSERVE").upper()
+    return action in ("OBSERVE", "OBSERVE_ONLY")
+
+
+def derive_recovery_tool(rejected_tool: str) -> str | None:
+    """Derive the RT1 recovery suggestion for ``rejected_tool``.
+
+    Selection order (first match wins):
+      1. Tools sharing a capability pack with ``rejected_tool``, that are
+         non-mutating, callable (in ``public_tool_names()``), and whose name
+         matches the recovery pattern.
+      2. Same criteria, searched across ALL packs — because the commonest RT1
+         rejection is a ghost/unknown name that belongs to no pack at all, and
+         the caller still needs a way to enumerate the real surface.
+      3. Same criteria over the whole callable public surface.
+
+    Returns None when no callable recovery tool exists. The caller MUST render
+    ``recommended_next: null`` in that case rather than invent a name.
+    """
+    callable_surface = set(public_tool_names())
+    packs = capability_packs()
+
+    def _qualifies(name: str) -> bool:
+        return name in callable_surface and bool(_RECOVERY_NAME_RE.search(name)) and _is_non_mutating(name)
+
+    # Scope 1 — packs that contain the rejected tool.
+    host_packs = [pn for pn, pv in packs.items() if rejected_tool in (pv.get("tools", []) if isinstance(pv, dict) else [])]
+    for pack_name in host_packs:
+        pv = packs.get(pack_name)
+        for name in pv.get("tools", []) if isinstance(pv, dict) else []:
+            if _qualifies(name):
+                return name
+
+    # Scope 2 — every pack (rejected tool is unpacked: ghost, unknown, or renamed).
+    for pack_name in packs:
+        pv = packs.get(pack_name)
+        for name in sorted(pv.get("tools", []) if isinstance(pv, dict) else []):
+            if _qualifies(name):
+                return name
+
+    # Scope 3 — the whole callable public surface.
+    for name in sorted(callable_surface):
+        if _qualifies(name):
+            return name
+
+    return None
+
+
+def recovery_is_callable(recovery_tool: str | None) -> bool:
+    """F2 TRUTH assertion helper: is the derived recovery actually callable?"""
+    if not recovery_tool:
+        return False
+    return recovery_tool in set(public_tool_names())
