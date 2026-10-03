@@ -70,16 +70,26 @@ class McpClient:
             # notifications/initialized per spec
             self._post({"jsonrpc": "2.0", "method": "notifications/initialized"})
 
+    def _invalidate_session(self) -> None:
+        # Organ restarts (deploys, env re-wiring) orphan the MCP session id;
+        # the server then answers 404. Drop it and re-initialize once.
+        self._session_id = None
+
     def call_tool(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
-        self._ensure_session()
-        resp = self._post(
-            {
-                "jsonrpc": "2.0",
-                "id": 2,
-                "method": "tools/call",
-                "params": {"name": name, "arguments": arguments},
-            }
-        )
+        for attempt in (0, 1):
+            self._ensure_session()
+            resp = self._post(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 2,
+                    "method": "tools/call",
+                    "params": {"name": name, "arguments": arguments},
+                }
+            )
+            if resp.status_code == 404 and attempt == 0:
+                self._invalidate_session()
+                continue
+            break
         resp.raise_for_status()
         body = resp.json()
         if "error" in body:
