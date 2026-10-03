@@ -68,7 +68,14 @@ def _session_id(request: Request, response: Response) -> str:
 
 
 def _strip_exif(raw: bytes, content_type: str) -> tuple[bytes, str]:
-    """Re-encode to clean pixels — EXIF/GPS removed BEFORE hashing (checklist §2)."""
+    """Re-encode to clean pixels — EXIF/GPS removed BEFORE hashing (checklist §2).
+
+    2026-10-03 hotfix: the old pixel-copy (putdata(list(img.getdata())))
+    materialised one Python tuple per pixel — a 12MP phone photo demanded
+    gigabytes and OOM-killed the service under MemoryMax. PIL re-save drops
+    EXIF/GPS/XMP unless explicitly passed back, so a bounded thumbnail +
+    plain re-save keeps the privacy promise at sane memory.
+    """
     if content_type == "application/pdf":
         import pymupdf
 
@@ -78,13 +85,15 @@ def _strip_exif(raw: bytes, content_type: str) -> tuple[bytes, str]:
         pix.save(buf, "png", compress_level=6)
         doc.close()
         return buf.getvalue(), "image/png"
-    img = Image.open(io.BytesIO(raw))
-    clean = Image.new(img.mode, img.size)
-    clean.putdata(list(img.getdata()))
-    buf = io.BytesIO()
-    fmt = "PNG" if content_type == "image/png" else "WEBP" if content_type == "image/webp" else "JPEG"
-    clean.save(buf, format=fmt, quality=92) if fmt != "PNG" else clean.save(buf, format=fmt)
-    mime = {"PNG": "image/png", "WEBP": "image/webp", "JPEG": "image/jpeg"}[fmt]
+    with Image.open(io.BytesIO(raw)) as img:
+        img.thumbnail((4096, 4096))  # evidence-grade resolution; bounds RAM
+        buf = io.BytesIO()
+        fmt = "PNG" if content_type == "image/png" else "WEBP" if content_type == "image/webp" else "JPEG"
+        if fmt != "PNG":
+            img.save(buf, format=fmt, quality=92)
+        else:
+            img.save(buf, format=fmt)
+        mime = {"PNG": "image/png", "WEBP": "image/webp", "JPEG": "image/jpeg"}[fmt]
     return buf.getvalue(), mime
 
 
