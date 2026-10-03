@@ -115,5 +115,5 @@
     "geox_well_qc"
   ],
   "version": "2026.10.03",
-  "policy": "Generated 2026-10-03T04:46:37.284303+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (27 tools)"
+  "policy": "Generated 2026-10-03T06:36:42.533258+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (27 tools)"
 }

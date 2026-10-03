@@ -1,7 +1,7 @@
-manifest_version: 2026.07.24-truth-loop-hardening
-generated_from: MASTER FORGE W8 — restore 32-tool public surface; no reduction this repair
+manifest_version: 2026.10.03-alignment
+generated_from: registry.py truth (27 tools); 31-target phantom retired 2026-10-03 — it kept surface_attestation permanently SURFACE_COUNT_DRIFT
 public_transport: mcp
-public_count_target: 31
+public_count_target: 27
 compat_tools:
 - geox_well_desk
 - geox_well_view
