@@ -16,6 +16,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import time
 import logging
 import os
 import urllib.request
@@ -534,17 +535,37 @@ class FederationVisionBackend(BaseVisionBackend):
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
             method="POST",
         )
-        try:
-            with urllib.request.urlopen(req, timeout=180) as resp:
-                resp_data = json.loads(resp.read().decode("utf-8"))
-        except urllib.error.HTTPError as exc:
-            detail = ""
+        resp_data = None
+        last_err: Exception | None = None
+        for attempt in (1, 2):
+            t0 = time.time()
             try:
-                detail = exc.read().decode("utf-8", "replace")[:400]
-            except Exception:
-                pass
-            logger.error("federation vision HTTP %s: %s", exc.code, detail)
-            raise
+                with urllib.request.urlopen(req, timeout=180) as resp:
+                    raw_body = resp.read().decode("utf-8")
+                logger.info(
+                    "federation vision attempt %d: HTTP 200 in %.1fs, %d bytes (model=%s)",
+                    attempt, time.time() - t0, len(raw_body), self.model_id,
+                )
+                if raw_body.strip():
+                    resp_data = json.loads(raw_body)
+                    break
+                last_err = ValueError("gateway returned HTTP 200 with an empty body")
+            except urllib.error.HTTPError as exc:
+                detail = ""
+                try:
+                    detail = exc.read().decode("utf-8", "replace")[:400]
+                except Exception:
+                    pass
+                logger.error("federation vision HTTP %s in %.1fs: %s", exc.code, time.time() - t0, detail)
+                if exc.code < 500 and exc.code != 429:
+                    raise
+                last_err = exc
+            except Exception as exc:
+                logger.error("federation vision attempt %d failed in %.1fs: %s", attempt, time.time() - t0, str(exc)[:200])
+                last_err = exc
+            time.sleep(2)
+        if resp_data is None:
+            raise last_err or ValueError("federation vision failed without detail")
         content = (resp_data.get("choices") or [{}])[0].get("message", {}).get("content") or ""
         raw_text = content.strip()
         if not raw_text:
