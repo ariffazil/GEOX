@@ -123,7 +123,7 @@ def test_fizz_powder_ranks_dolostone_first_and_stays_candidate(client):
 
 def test_bright_spot_never_says_gas_and_requests_polarity(client, monkeypatch):
     monkeypatch.setenv("EW_TEST_SCENARIO", "seismic")
-    r = _post(client, image=_jpeg_bytes((90,110,140)), modality_hint="seismic_display")
+    r = _post(client, image=_jpeg_bytes((90, 110, 140)), modality_hint="seismic_display")
     assert r.status_code == 200
     p = r.json()["packet"]
     blob = " ".join(h["label"].lower() for h in p["hypotheses"])
@@ -136,7 +136,7 @@ def test_bright_spot_never_says_gas_and_requests_polarity(client, monkeypatch):
 
 def test_false_label_is_ocr_text_only(client, monkeypatch):
     monkeypatch.setenv("EW_TEST_SCENARIO", "seismic")
-    r = _post(client, image=_jpeg_bytes((90,110,140)), modality_hint="seismic_display")
+    r = _post(client, image=_jpeg_bytes((90, 110, 140)), modality_hint="seismic_display")
     p = r.json()["packet"]
     ocrs = " ".join(o["text"] for o in p["observations"]["ocr_text"])
     assert "Inline 1420" in ocrs
@@ -191,3 +191,30 @@ def test_malformed_upload_governed_415_not_500(client):
             files={"image": (name, payload, ctype)},
         )
         assert r.status_code == 415, f"{name!r} returned {r.status_code}, expected governed 415"
+
+
+def test_prune_states_bounded_memory(monkeypatch):
+    """Expired keys are dropped once dicts exceed caps — memory bounded between restarts."""
+    import chat.server as srv
+
+    now = time.time()
+    monkeypatch.setattr(srv, "_SESSION_CAP", 2)
+    monkeypatch.setattr(srv, "_RATE_CAP", 2)
+    srv._sessions.clear()
+    srv._rate.clear()
+    # 3 stale + 1 fresh in each dict → len > cap → prune removes stale, keeps fresh
+    srv._sessions.update({f"old{i}": now - srv.SESSION_TTL - 1 for i in range(3)})
+    srv._sessions["fresh"] = now
+    srv._rate.update({f"old{i}": [now - srv.PER_IP_WINDOW - 1] for i in range(3)})
+    srv._rate["fresh"] = [now]
+    srv._prune_states(now)
+    assert set(srv._sessions) == {"fresh"}
+    assert set(srv._rate) == {"fresh"}
+    # empty-window entries are pruned too — but only when the cap fires again (O(1) steady state)
+    srv._rate["empty"] = []
+    srv._rate["dead1"] = [now - srv.PER_IP_WINDOW - 1]
+    srv._rate["dead2"] = [now - srv.PER_IP_WINDOW - 1]
+    srv._prune_states(now + 1)
+    assert "empty" not in srv._rate and "dead1" not in srv._rate and "dead2" not in srv._rate
+    srv._sessions.clear()
+    srv._rate.clear()
