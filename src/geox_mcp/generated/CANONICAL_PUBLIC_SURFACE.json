@@ -1,6 +1,6 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-10-03T04:46:37.284303+00:00",
+  "generated_at": "2026-10-03T06:36:42.533258+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
   "public_count": 27,
   "internal_count": 22,

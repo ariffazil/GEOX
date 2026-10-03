@@ -7454,12 +7454,12 @@ def register_tools_on(mcp):
     @mcp.tool(name="geox_surface_status", annotations=_geox_annotations("geox_surface_status"))
     async def _shim_surface_status(mode="registry", session_id=None, actor_id=None, trace_id=None):
         """Federation-standard registry probe for GEOX."""
-        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_VERSION
 
         return {
             "status": "healthy",
             "organ": "GEOX",
-            "surface_version": "v2026.08.26",
+            "surface_version": GEOX_VERSION,
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
             "public_count_target": len(CANONICAL_PUBLIC_TOOLS),
             "canonical_tools": sorted(list(CANONICAL_PUBLIC_TOOLS)),

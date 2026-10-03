@@ -17,6 +17,11 @@ from geox_mcp.surface_manifest import (
     runtime_tool_names,
 )
 
+# ── Version stamp (single source of truth) ────────────────────────────────
+# serverInfo, /health, and geox_surface_status all read this. Bump on each
+# surface-relevant release; never hardcode the version elsewhere.
+GEOX_VERSION = "v2026.10.03"
+
 # ── Ghost tools (ARCHIVED 2026-07-13) ─────────────────────────────────────
 # Tools that exist in the manifest but have been deregistered from the live
 # MCP surface. Excluded from SURFACE_TOOLS and INTERNAL_TOOLS so registry
