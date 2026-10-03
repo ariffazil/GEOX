@@ -37,6 +37,63 @@ PATCHES = {
 
 receipt = {"generated_from": f"registry truth ({N} tools)", "synced": [], "patched": {}, "skipped": []}
 
+# ── LIVE APPS publish (2026-10-03: webroot /apps/ was EMPTY — MCP Apps cards landed on SPA theater) ──
+import shutil
+
+APPS_SRC = Path("/opt/geox/apps")
+APPS_DST = DOCROOT / "apps"
+if APPS_SRC.exists():
+    APPS_DST.mkdir(parents=True, exist_ok=True)
+    published = []
+    for d in sorted(APPS_SRC.iterdir()):
+        if d.is_dir() and (d / "index.html").exists():
+            dst = APPS_DST / d.name
+            if not DRY:
+                if dst.exists():
+                    shutil.rmtree(dst)
+                shutil.copytree(d, dst)
+            published.append(d.name)
+    receipt["synced"].append(f"apps/ ({len(published)}: {', '.join(published)})")
+
+# ── Landing truth patch (minified bundle carries pre-consolidation counts) ──
+# Verified live truth only; unverified numbers are left untouched.
+LANDING_PATCHES = [
+    ("42 tools, 18 GUI apps", "27 tools, GUI apps"),
+    ("42 tools. Live surface.", "27 tools. Live surface."),
+    ('"tools": 42', '"tools": 27'),
+    ("42 tools over SSE at :8081", "27 tools over streamable-http at :8081"),
+    ('"transport": "sse"', '"transport": "streamable-http"'),
+    ("42 tools · 18 apps", f"27 tools · {len(list(APPS_DST.glob('*/index.html')))} apps"),
+    # dead pre-consolidation sample invocations -> live canonical equivalents
+    ("geox.egs_data_qc_bundle()", "geox.well_qc()"),
+    ("geox.egs_query_uncertainty()", "geox.prospect()"),
+    ("geox.egs_rock_physics()", "geox.geomechanics()"),
+    ("geox.egs_scenario_audit()", "geox.claim()"),
+    ("geox.witness_well()", "geox.well()"),
+    ("arifos.bridge_contract()", "arifos.arif_route()"),
+]
+
+def patch_landing() -> None:
+    targets = [DOCROOT / "index.html"] + list((DOCROOT / "assets").glob("index-*.js"))
+    # static well-known manifest, if present on disk
+    wk = DOCROOT / ".well-known" / "mcp.json"
+    if wk.exists():
+        targets.append(wk)
+    for f in targets:
+        if not f.exists():
+            continue
+        text = before = f.read_text()
+        hits = 0
+        for old, new in LANDING_PATCHES:
+            hits += text.count(old)
+            text = text.replace(old, new)
+        if text != before:
+            if not DRY:
+                f.write_text(text)
+            receipt["patched"][str(f.relative_to(DOCROOT))] = f"{hits} truth fixes"
+
+patch_landing()
+
 # ── Earth Witness CTA banner (2026-10-03, sovereign: "mana butang aku nak click?") ──
 # Static, marker-delimited, idempotent — survives SPA bundle rebuilds only until
 # the marker is stripped; the proper fix is restoring the landing SPA source.
