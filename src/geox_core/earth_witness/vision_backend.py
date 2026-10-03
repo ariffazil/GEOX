@@ -536,6 +536,8 @@ class FederationVisionBackend(BaseVisionBackend):
             method="POST",
         )
         resp_data = None
+        parsed_json = None
+        content = ""
         last_err: Exception | None = None
         for attempt in (1, 2):
             t0 = time.time()
@@ -546,10 +548,40 @@ class FederationVisionBackend(BaseVisionBackend):
                     "federation vision attempt %d: HTTP 200 in %.1fs, %d bytes (model=%s)",
                     attempt, time.time() - t0, len(raw_body), self.model_id,
                 )
-                if raw_body.strip():
-                    resp_data = json.loads(raw_body)
+                if not raw_body.strip():
+                    last_err = ValueError("gateway returned HTTP 200 with an empty body")
+                    time.sleep(2)
+                    continue
+                resp_data = json.loads(raw_body)
+                msg = (resp_data.get("choices") or [{}])[0].get("message", {})
+                content = msg.get("content") or ""
+                # Reasoning models may spend all tokens thinking and leave
+                # `content` empty — the JSON often survives in reasoning_content.
+                parsed_json = None
+                for cand in (content, msg.get("reasoning_content") or ""):
+                    raw_text = (cand or "").strip()
+                    if not raw_text:
+                        continue
+                    if not raw_text.startswith("{"):
+                        start = raw_text.find("{")
+                        end = raw_text.rfind("}")
+                        if start == -1 or end <= start:
+                            continue
+                        raw_text = raw_text[start : end + 1]
+                    try:
+                        cand_json = json.loads(raw_text)
+                        if isinstance(cand_json, dict):
+                            parsed_json = cand_json
+                            break
+                    except json.JSONDecodeError:
+                        continue
+                if parsed_json is not None:
                     break
-                last_err = ValueError("gateway returned HTTP 200 with an empty body")
+                last_err = ValueError(
+                    "federation vision returned no parsable JSON "
+                    f"(content_len={len(content)}, reasoning_len={len(msg.get('reasoning_content') or '')}, "
+                    f"finish={(resp_data.get('choices') or [{}])[0].get('finish_reason')})"
+                )
             except urllib.error.HTTPError as exc:
                 detail = ""
                 try:
@@ -564,19 +596,8 @@ class FederationVisionBackend(BaseVisionBackend):
                 logger.error("federation vision attempt %d failed in %.1fs: %s", attempt, time.time() - t0, str(exc)[:200])
                 last_err = exc
             time.sleep(2)
-        if resp_data is None:
+        if parsed_json is None:
             raise last_err or ValueError("federation vision failed without detail")
-        content = (resp_data.get("choices") or [{}])[0].get("message", {}).get("content") or ""
-        raw_text = content.strip()
-        if not raw_text:
-            raise ValueError("federation vision returned empty content")
-        # tolerant JSON extraction (reasoning models may wrap in prose/fences)
-        if not raw_text.startswith("{"):
-            start = raw_text.find("{")
-            end = raw_text.rfind("}")
-            if start != -1 and end > start:
-                raw_text = raw_text[start : end + 1]
-        parsed_json = json.loads(raw_text)
         resp_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
 
         return VisionBackendResponse(
