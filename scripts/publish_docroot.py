@@ -37,6 +37,37 @@ PATCHES = {
 
 receipt = {"generated_from": f"registry truth ({N} tools)", "synced": [], "patched": {}, "skipped": []}
 
+# ── Earth Witness CTA banner (2026-10-03, sovereign: "mana butang aku nak click?") ──
+# Static, marker-delimited, idempotent — survives SPA bundle rebuilds only until
+# the marker is stripped; the proper fix is restoring the landing SPA source.
+BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:START (owned by scripts/publish_docroot.py) -->"
+BANNER = BANNER_OPEN + """
+<div id="ew-cta-bar" style="position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:#0b1220;color:#e8eefc;font-family:system-ui,sans-serif;font-size:15px;border-bottom:1px solid #233252">
+  <a href="/observe/" style="display:inline-block;padding:9px 20px;border-radius:8px;background:#2f6df6;color:#fff;font-weight:700;text-decoration:none">🪨 Earth Witness — Tanya Bumi</a>
+  <span style="opacity:.85">Chat langsung dengan organ geoscience &middot; <a href="/mcp-apps/" style="color:#8fb3ff">semua apps</a> &middot; <a href="/gui/" style="color:#8fb3ff">WellDesk GUI</a></span>
+</div>
+<!-- EARTH-WITNESS-CTA:END -->
+"""
+
+def inject_banner(text: str) -> tuple[str, bool]:
+    if BANNER_OPEN in text:
+        return text, False
+    for anchor in ("<body>", "<body ", "<body>"):
+        idx = text.find(anchor)
+        if idx != -1:
+            return text[: idx + len(anchor)] + BANNER + text[idx + len(anchor) :], True
+    return text, False
+
+for name in ("index.html",):
+    p = DOCROOT / name
+    if not p.exists():
+        receipt["skipped"].append(f"{name} (missing in docroot)")
+        continue
+    new_text, changed = inject_banner(p.read_text())
+    if changed and not DRY:
+        p.write_text(new_text)
+    receipt["patched"][f"{name}#ew-cta"] = "injected" if changed else "already present"
+
 for name in SYNC:
     src, dst = REPO / name, DOCROOT / name
     if not src.exists():
