@@ -467,6 +467,97 @@ class GeminiVertexVisionBackend(BaseVisionBackend):
 
 # ── Backend Selector ────────────────────────────────────────────────────────
 
+class FederationVisionBackend(BaseVisionBackend):
+    """Vision via the federation's own LiteLLM gateway (OpenAI-compatible).
+
+    2026-10-03: live-model bench lane for Earth Witness. Routes to the
+    gateway's `fed/vision` deployment by default — keys stay inside the
+    federation env, spend flows through the existing LiteLLM budget/telemetry
+    instead of a new external vendor path.
+    """
+
+    def __init__(
+        self,
+        model_id: str | None = None,
+        base_url: str | None = None,
+        api_key: str | None = None,
+    ):
+        self.model_id = model_id or os.getenv("GEOX_VISION_MODEL", "fed/vision")
+        self.base_url = (base_url or os.getenv("GEOX_VISION_BASE_URL", "http://127.0.0.1:4013")).rstrip("/")
+        self.api_key = api_key or os.getenv("GEOX_VISION_API_KEY") or os.getenv("LITELLM_MASTER_KEY") or ""
+
+    def inspect_artifact(
+        self,
+        image_bytes: bytes,
+        mime_type: str,
+        system_instruction: str,
+        user_prompt: str,
+        response_schema: type[BaseModel] | None = None,
+    ) -> VisionBackendResponse:
+        if not self.api_key:
+            logger.warning("No federation vision key in environment; falling back to mock backend.")
+            return DeterministicMockVisionBackend().inspect_artifact(
+                image_bytes, mime_type, system_instruction, user_prompt, response_schema
+            )
+
+        schema_instruction = ""
+        if response_schema is not None:
+            try:
+                schema_instruction = (
+                    "\n\nRespond with ONLY a JSON object conforming to this schema "
+                    "(no prose, no markdown fences):\n"
+                    + json.dumps(response_schema.model_json_schema(), ensure_ascii=False)
+                )
+            except Exception:
+                schema_instruction = "\n\nRespond with ONLY a valid JSON object."
+
+        b64_img = base64.b64encode(image_bytes).decode("utf-8")
+        req_body = {
+            "model": self.model_id,
+            "messages": [
+                {"role": "system", "content": system_instruction + schema_instruction},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": user_prompt},
+                        {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64_img}"}},
+                    ],
+                },
+            ],
+            "temperature": 0.1,
+            "max_tokens": 4000,
+        }
+
+        req = urllib.request.Request(
+            f"{self.base_url}/chat/completions",
+            data=json.dumps(req_body).encode("utf-8"),
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            resp_data = json.loads(resp.read().decode("utf-8"))
+
+        content = (resp_data.get("choices") or [{}])[0].get("message", {}).get("content") or ""
+        raw_text = content.strip()
+        if not raw_text:
+            raise ValueError("federation vision returned empty content")
+        # tolerant JSON extraction (reasoning models may wrap in prose/fences)
+        if not raw_text.startswith("{"):
+            start = raw_text.find("{")
+            end = raw_text.rfind("}")
+            if start != -1 and end > start:
+                raw_text = raw_text[start : end + 1]
+        parsed_json = json.loads(raw_text)
+        resp_hash = hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+        return VisionBackendResponse(
+            backend_name="federation_litellm",
+            model_id=self.model_id,
+            raw_response=parsed_json,
+            response_hash=resp_hash,
+        )
+
+
 def get_vision_backend(backend_type: str = "auto") -> BaseVisionBackend:
     """Returns the configured vision backend."""
     if backend_type == "mock" or os.getenv("GEOX_VISION_FORCE_MOCK") == "1":
@@ -475,5 +566,10 @@ def get_vision_backend(backend_type: str = "auto") -> BaseVisionBackend:
         )
     if backend_type == "gemini" or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY"):
         return GeminiVertexVisionBackend()
+    if (
+        backend_type == "federation"
+        or os.getenv("GEOX_VISION_PROVIDER", "").lower() == "federation"
+    ):
+        return FederationVisionBackend()
     # Default to mock for safety & air-gapped testability
     return DeterministicMockVisionBackend()
