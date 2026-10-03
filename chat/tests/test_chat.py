@@ -177,3 +177,17 @@ def test_oversize_rejected(client):
     big = b"\x00" * (srv.MAX_BYTES + 1)
     r = _post(client, image=big, modality_hint="rock")
     assert r.status_code == 413
+
+
+def test_malformed_upload_governed_415_not_500(client):
+    """Garbage bytes and corrupt PDFs must be governed rejections, never unhandled 500s."""
+    for payload, name, ctype in (
+        (b"not-an-image-just-text-bytes", "x.bin", "application/octet-stream"),
+        (b"%PDF-garbage-truncated", "x.pdf", "application/pdf"),
+    ):
+        r = client.post(
+            "/api/observe",
+            data={"modality_hint": "rock", "field_tests_json": "{}", "scale_json": "{}", "seismic_json": "{}"},
+            files={"image": (name, payload, ctype)},
+        )
+        assert r.status_code == 415, f"{name!r} returned {r.status_code}, expected governed 415"
