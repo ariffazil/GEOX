@@ -56,7 +56,7 @@ curl -sf http://127.0.0.1:8081/health   # git_version must show the rollback sha
 | Process | `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081` |
 | Unit | `geox-mcp.service` (systemd; drop-ins: mesh-hosts, stateless, zz-sandbox) |
 | Public ingress | Caddy `geox.arif-fazil.com` → `/var/www/html/geox` SPA + `/mcp` proxy; auth `P3_AUTH_LITE` (`/root/GEOX/oauth/static_clients.yaml`) |
-| Earth Witness chat (local only) | `/root/GEOX/chat/` → `uvicorn chat.server:app --host 127.0.0.1 --port 8765` — NOT publicly exposed; Gate 6 Class-B pending |
+| Earth Witness chat | `/root/GEOX/chat/` → `earth-witness-chat.service` (`/opt/geox-chat-venv`, user `geox-chat`, 127.0.0.1:8765) — **PUBLIC at `geox.arif-fazil.com/observe/` since 2026-10-03** (Gate 6 Class-B, ARIF APPROVE; Caddy: 12MB cap, 30 req/min/IP rate-limit, security headers; rollback: `geox.arif-fazil.com.conf.bak-20261003-pre-gate6` + kill switch in `reports/earth_witness/06_chat.md`) |
 | Federation topology SOT | `/root/AAA/federation/organs.yaml` (machine) + `/root/AAA/docs/ORGAN.md` (human); live `/health` beats both |
 
 ## Prerequisites (portable / Docker)
