@@ -140,8 +140,22 @@ function collect(){
 }
 document.getElementById('go').addEventListener('click',async()=>{
   collect();
-  const f=document.getElementById('img').files[0],out=document.getElementById('out'),go=document.getElementById('go');
+  let f=document.getElementById('img').files[0],out=document.getElementById('out'),go=document.getElementById('go');
   if(!f){out.innerHTML='<div class="err">Choose a photo first.</div>';return}
+  const MAX=10*1024*1024;
+  if(f.size>MAX){
+    // Phone photos blow past the cap — downscale client-side (also strips EXIF/GPS).
+    try{
+      out.innerHTML='<div class="card mini">Gambar '+Math.round(f.size/1048576)+'MB — mampatkan dalam pelayar…</div>';
+      const bmp=await createImageBitmap(f);
+      const scale=Math.min(1,2800/Math.max(bmp.width,bmp.height));
+      const c=document.createElement('canvas');c.width=Math.round(bmp.width*scale);c.height=Math.round(bmp.height*scale);
+      c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+      const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',0.9));
+      if(blob&&blob.size<MAX){f=new File([blob],(f.name||'photo').replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'})}
+    }catch(_){/* fall through — server-side cap will judge */}
+    if(f.size>MAX){out.innerHTML=`<div class="card"><div class="err">Gambar ${Math.round(f.size/1048576)}MB melebihi 10MB dan gagal dimampat. Tangkap resolusi lebih rendah atau crop dahulu.</div></div>`;return}
+  }
   go.disabled=true;out.innerHTML='<div class="card mini">Observing… (vision backend + physics guards)</div>';
   const fd=new FormData();
   fd.append('image',f);
@@ -153,11 +167,18 @@ document.getElementById('go').addEventListener('click',async()=>{
   fd.append('seismic_json',JSON.stringify(state.seismic));
   try{
     const r=await fetch('/api/observe',{method:'POST',body:fd});
-    const j=await r.json();
-    if(j.status==='HOLD'){out.innerHTML=`<div class="card"><div class="err">HOLD — ${j.reason||j.verdict}</div></div>`}
+    const txt=await r.text();let j=null;
+    try{j=JSON.parse(txt)}catch(_){/* non-JSON body */}
+    if(j===null){
+      const human=r.status===413?'Gambar terlalu besar untuk pelayan (cap 12MB). Mampatkan dan cuba lagi.'
+        :r.status===429?'Terlalu banyak cubaan dalam satu minit — rehat sebentar.'
+        :`Server menjawab HTTP ${r.status} tanpa JSON. Cuba lagi; jika berterusan, lihat status organ di /health.`;
+      out.innerHTML=`<div class="card"><div class="err">${human}</div></div>`;
+    }
+    else if(j.status==='HOLD'){out.innerHTML=`<div class="card"><div class="err">HOLD — ${j.reason||j.verdict}</div></div>`}
     else if(j.status==='OK'){out.innerHTML=render(j.packet)}
     else{out.innerHTML=`<div class="card"><div class="err">${j.reason||'error'}</div></div>`}
-  }catch(e){out.innerHTML=`<div class="card"><div class="err">${e}</div></div>`}
+  }catch(e){out.innerHTML=`<div class="card"><div class="err">Sambungan terputus: ${esc(String(e))}</div></div>`}
   go.disabled=false;
 });
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
