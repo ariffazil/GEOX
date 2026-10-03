@@ -22,7 +22,7 @@ class McpError(RuntimeError):
 
 
 class McpClient:
-    def __init__(self, url: str = GEOX_MCP_URL, token: str = MCP_TOKEN, timeout: float = 60.0):
+    def __init__(self, url: str = GEOX_MCP_URL, token: str = MCP_TOKEN, timeout: float = 300.0):
         self.url = url
         self.token = token
         self.timeout = timeout
