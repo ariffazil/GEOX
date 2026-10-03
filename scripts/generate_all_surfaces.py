@@ -437,6 +437,14 @@ def regenerate_readme_badge(dry_run: bool) -> None:
             f"GEOX-{TRUTH_COUNT} Canonical Tools",
             text,
         )
+        # The shields.io URL carries the count with underscores; keeping it in
+        # sync closes the blind spot where alt-text updated but the URL stayed
+        # stale (invisible to any whitespace-based check).
+        text = re.sub(
+            r"GEOX-\d+_Canonical_Tools",
+            f"GEOX-{TRUTH_COUNT}_Canonical_Tools",
+            text,
+        )
     else:
         text = re.sub(
             r"(^# .+$)",
@@ -466,6 +474,21 @@ def regenerate_readme_badge(dry_run: bool) -> None:
         f"mcp_tools_live: {TRUTH_COUNT}",
         text,
     )
+
+    # Regenerate the canonical inventory list between GEOX:GENERATED markers.
+    # Names come straight from registry truth — a hand-typed inventory is how
+    # a README learns tool names that do not exist. CI-safe (no network).
+    inv_start = "<!-- GEOX:GENERATED:INVENTORY:START -->"
+    inv_end = "<!-- GEOX:GENERATED:INVENTORY:END -->"
+    if inv_start in text and inv_end in text:
+        names = sorted(CANONICAL_PUBLIC_TOOLS)
+        inv_lines = [inv_start, f"<!-- {TRUTH_COUNT} canonical names, generated from registry.py -->", ""]
+        inv_lines.append(", ".join(f"`{n}`" for n in names))
+        inv_lines.append("")
+        inv_lines.append(inv_end)
+        pre = text.split(inv_start, 1)[0]
+        post = text.split(inv_end, 1)[1]
+        text = pre + "\n".join(inv_lines) + post
 
     diff_label("README.md", original, text)
 

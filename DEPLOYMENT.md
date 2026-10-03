@@ -18,6 +18,47 @@ curl -sf http://127.0.0.1:8081/health
 
 Do not treat Docker Compose as the live path on this host.
 
+### Deploy verification — TWO checks, not one
+
+`/drift` only compares the runtime with **its own build** — `drift_count=0` never proves
+the runtime is current. Always check both:
+
+```bash
+# 1. surface parity (live == its build's canonical)
+curl -sf http://127.0.0.1:8081/drift | python3 -m json.tool | grep -E "drift_count|gap_count|\"ok\""
+
+# 2. runtime vs intended source commit (the honest lag signal)
+curl -sf http://127.0.0.1:8081/health | python3 -c "import json,sys; print(json.load(sys.stdin)['git_version'])"
+git -C /root/GEOX rev-parse --short main
+
+# 3. README status snapshot (host-side; needs the live organ)
+cd /root/GEOX && PYTHONPATH=src python3 scripts/generate_readme_status.py
+```
+
+`git_version` equal to the intended deploy commit = current. A feature-branch runtime
+ahead of `main` is lag-by-design until the branch merges; `main` is only truthful after a
+deploy from `main`.
+
+### Rollback
+
+```bash
+git -C /opt/geox reset --hard <previous-good-sha>
+systemctl restart geox-mcp.service
+curl -sf http://127.0.0.1:8081/health   # git_version must show the rollback sha
+```
+
+### Operational map (infra detail — the public README intentionally omits this)
+
+| Thing | Value |
+|---|---|
+| Source repo | `/root/GEOX` → `github.com/ariffazil/GEOX` |
+| Runtime | `/opt/geox` (FHS git clone; source ≠ runtime until deploy) |
+| Process | `/opt/geox/.venv/bin/python3 -m geox_mcp.server --host 127.0.0.1 --port 8081` |
+| Unit | `geox-mcp.service` (systemd; drop-ins: mesh-hosts, stateless, zz-sandbox) |
+| Public ingress | Caddy `geox.arif-fazil.com` → `/var/www/html/geox` SPA + `/mcp` proxy; auth `P3_AUTH_LITE` (`/root/GEOX/oauth/static_clients.yaml`) |
+| Earth Witness chat (local only) | `/root/GEOX/chat/` → `uvicorn chat.server:app --host 127.0.0.1 --port 8765` — NOT publicly exposed; Gate 6 Class-B pending |
+| Federation topology SOT | `/root/AAA/federation/organs.yaml` (machine) + `/root/AAA/docs/ORGAN.md` (human); live `/health` beats both |
+
 ## Prerequisites (portable / Docker)
 
 - Docker 24+ and Docker Compose v2
