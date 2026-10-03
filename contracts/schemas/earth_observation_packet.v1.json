@@ -1,0 +1,279 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.arif-fazil.com/schemas/earth_observation_packet.v1.json",
+  "title": "EarthObservationPacket",
+  "description": "Canonical multimodal Earth observation packet enforcing invariant Image != Specimen != Measurement != Earth. Captured evidence is observation-only at visual ingest, retaining physical gap, missing tests, and competing hypotheses.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "packet_id",
+    "artifact",
+    "context",
+    "observations",
+    "hypotheses",
+    "limitations",
+    "epistemic"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "earth_observation_packet.v1"
+    },
+    "packet_id": {
+      "type": "string",
+      "description": "Unique identifier for this observation packet (e.g. eop-uuid)"
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["id", "sha256", "media_type", "source_actor", "captured_at"],
+      "properties": {
+        "id": { "type": "string" },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "media_type": { "type": "string" },
+        "original_uri": { "type": ["string", "null"] },
+        "source_actor": { "type": "string" },
+        "captured_at": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "required": ["modality", "domain"],
+      "properties": {
+        "modality": {
+          "type": "string",
+          "enum": [
+            "rock",
+            "outcrop",
+            "core",
+            "thin_section",
+            "fossil",
+            "seismic_display",
+            "map",
+            "section",
+            "unknown"
+          ]
+        },
+        "subject_class": { "type": ["string", "null"] },
+        "scale": {
+          "type": ["object", "null"],
+          "properties": {
+            "value": { "type": "number" },
+            "unit": { "type": "string" },
+            "pixel_per_unit": { "type": "number" },
+            "is_calibrated": { "type": "boolean" }
+          }
+        },
+        "orientation": {
+          "type": ["object", "null"],
+          "properties": {
+            "strike": { "type": "number" },
+            "dip": { "type": "number" },
+            "facing": { "type": "string" },
+            "is_way_up_known": { "type": "boolean" }
+          }
+        },
+        "crs": { "type": ["string", "null"] },
+        "domain": {
+          "type": "string",
+          "enum": ["time", "depth", "na"]
+        },
+        "display_transform": {
+          "type": ["object", "null"],
+          "properties": {
+            "polarity": { "type": "string" },
+            "color_map": { "type": "string" },
+            "gain": { "type": "number" },
+            "has_enhancement": { "type": "boolean" }
+          }
+        },
+        "acquisition_metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "observations": {
+      "type": "object",
+      "required": ["visible_features", "ocr_text", "measurements"],
+      "properties": {
+        "visible_features": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["feature_id", "label", "category", "confidence"],
+            "properties": {
+              "feature_id": { "type": "string" },
+              "label": { "type": "string" },
+              "category": { "type": "string" },
+              "bounding_box": {
+                "type": ["array", "null"],
+                "items": { "type": "number" }
+              },
+              "description": { "type": "string" },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 0.90
+              }
+            }
+          }
+        },
+        "ocr_text": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "text": { "type": "string" },
+              "confidence": { "type": "number" },
+              "location": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["metric", "value", "unit", "method", "uncertainty"],
+            "properties": {
+              "metric": { "type": "string" },
+              "value": { "type": "number" },
+              "unit": { "type": "string" },
+              "method": { "type": "string" },
+              "uncertainty": { "type": "number" }
+            }
+          }
+        },
+        "annotations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "hypothesis_id",
+          "label",
+          "supporting",
+          "conflicting",
+          "falsifiers",
+          "confidence"
+        ],
+        "properties": {
+          "hypothesis_id": { "type": "string" },
+          "label": { "type": "string" },
+          "supporting": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "conflicting": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "falsifiers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 0.90
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "limitations": {
+      "type": "object",
+      "required": [
+        "image_cannot_determine",
+        "missing_metadata",
+        "requested_human_tests",
+        "requested_instrument_data"
+      ],
+      "properties": {
+        "image_cannot_determine": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "missing_metadata": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "requested_human_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["test_name", "purpose", "discriminates"],
+            "properties": {
+              "test_name": { "type": "string" },
+              "purpose": { "type": "string" },
+              "discriminates": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "requested_instrument_data": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "epistemic": {
+      "type": "object",
+      "required": ["claim_tag", "confidence", "state", "provenance"],
+      "properties": {
+        "claim_tag": {
+          "type": "string",
+          "enum": ["EVIDENCE", "INTERPRET", "HYPOTHESIS", "UNKNOWN"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 0.90
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "INPUT_REQUIRED",
+            "REVIEW_PENDING",
+            "QUALIFIED_CANDIDATE"
+          ]
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["step", "agent_id", "timestamp"],
+            "properties": {
+              "step": { "type": "string" },
+              "agent_id": { "type": "string" },
+              "model_id": { "type": ["string", "null"] },
+              "timestamp": { "type": "string" },
+              "hash": { "type": ["string", "null"] }
+            }
+          }
+        },
+        "verdict": {
+          "type": ["string", "null"],
+          "enum": ["QUALIFIED_CANDIDATE", "PARTIAL", "SABAR", "HOLD", "VOID", null]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

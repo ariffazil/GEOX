@@ -1,13 +1,13 @@
 organ: GEOX
-version: 2026.10.01
+version: 2026.10.03
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 26
-regenerated: '2026-10-01T12:42:09.801530+00:00'
+public_count: 27
+regenerated: '2026-10-03T04:19:55.521118+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
-  A: 14
+  A: 15
   B: 11
   C: 1
 tools:
@@ -171,6 +171,22 @@ tools:
   access: public
   description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
     3D. Modes: subsurface, geological_generate, gempy_3d.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_observe
+  domain: earth.multimodal
+  axis: observe
+  lane: evidence
+  family: evidence
+  tier: A
+  access: public
+  description: Canonical multimodal Earth observation umbrella (Earth Witness v1).
+    Rock/outcrop/core/thin_section/fossil/seismic_display/map/section intake → governed
+    EarthObservationPacket. Vision output is EVIDENCE only; interpretations stay HYPOTHESIS;
+    no hydrocarbon claim from image alone (I1-I9); missing diagnostics → INPUT_REQUIRED;
+    local ceiling QUALIFIED_CANDIDATE — arifOS seals only.
   annotations:
     read_only: true
     destructive: false

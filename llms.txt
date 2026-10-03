@@ -1,4 +1,4 @@
-# GEOX — Earth Intelligence Sovereign Kernel (26 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (27 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
 > Capability families: 9 | Sprint 1 classified
@@ -10,6 +10,7 @@
 - **geox_basin** [Tier A — Core]: Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
 - **geox_claim** [Tier A — Core]: Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.
 - **geox_deep_time** [Tier A — Core]: Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.
+- **geox_observe** [Tier A — Core]: Canonical multimodal Earth observation umbrella (Earth Witness v1). Rock/outcrop/core/thin_section/fossil/seismic_display/map/section intake → governed EarthObservationPacket. Vision output is EVIDENCE only; interpretations stay HYPOTHESIS; no hydrocarbon claim from image alone (I1-I9); missing diagnostics → INPUT_REQUIRED; local ceiling QUALIFIED_CANDIDATE — arifOS seals only.
 - **geox_paleobiodb_query** [Tier B — Specialist]: Query the Paleobiology Database (PBDB v1.2) for taxa, occurrences, and biozones. Modes: taxa (resolve a taxon), occurrence (fossil occurrence records), zone (biozones by scale), age_intervals (ICS / nanno / foram zones). Read-only, public-domain fossil data.
 - **geox_source** [Tier A — Core]: Source rock & diagenesis: TOC, kerogen, maturity, compaction. Modes: source_rock, diagenesis.
 - **geox_spatial** [Tier A — Core]: Spatial intelligence: H3, LanceDB, STAC. Modes: h3_index, lancedb_store, stac_discover.

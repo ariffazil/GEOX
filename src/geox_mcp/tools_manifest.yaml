@@ -49,6 +49,29 @@ tools:
     physics_guard_required: true
   family: interpret
   tier: A
+- name: geox_observe
+  domain: earth.multimodal
+  axis: observe
+  lane: evidence
+  face: surface
+  visibility: public
+  description: 'Canonical multimodal Earth observation umbrella (Earth Witness v1). Rock/outcrop/core/thin_section/fossil/seismic_display/map/section
+    intake → governed EarthObservationPacket. Vision output is EVIDENCE only; interpretations stay HYPOTHESIS; no hydrocarbon
+    claim from image alone (I1-I9); missing diagnostics → INPUT_REQUIRED; local ceiling QUALIFIED_CANDIDATE — arifOS seals only.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: false
+  ui: null
+  plugin:
+    exposed: true
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+  family: evidence
+  tier: A
 - name: geox_seismic_ingest
   domain: earth.seismic
   axis: observe
@@ -1826,7 +1849,7 @@ tools:
 sprint1_classified: true
 family_count: 7
 tier_distribution:
-  A: 13
+  A: 14
   B: 6
   C: 7
   Z: 54
@@ -1852,6 +1875,7 @@ capability_packs:
     - geox_deep_time
     - geox_map
     - geox_model
+    - geox_observe
     - geox_prospect
     - geox_seismic_interpret
     - geox_source
@@ -2042,6 +2066,10 @@ earth_capability_graph:
       family: evidence
       role: entry_point
       description: Basin context — most workflows start here
+    geox_observe:
+      family: evidence
+      role: entry_point
+      description: Multimodal Earth observation intake — governed visual evidence packets (Earth Witness v1)
     geox_claim:
       family: evidence
       role: decision_point
