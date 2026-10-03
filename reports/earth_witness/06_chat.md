@@ -111,6 +111,7 @@ ProtectHome=true
 PrivateTmp=true
 ReadWritePaths=
 MemoryMax=512M
+CPUQuota=50%
 Restart=on-failure
 RestartSec=5
 
@@ -128,8 +129,24 @@ sudo systemctl disable --now earth-witness-chat.service
 sudo cp /etc/caddy/vhosts/geox.arif-fazil.com.conf.bak-$(date +%Y%m%d) /etc/caddy/vhosts/geox.arif-fazil.com.conf && sudo systemctl reload caddy
 # 3. runtime source revert
 cd /opt/geox && sudo git reset --hard origin/main && sudo systemctl restart geox-mcp.service
-# 4. DNS: remove earth-witness A/CNAME record (registrar panel)
+# 4. DNS: (N/A on the /observe/ path revision — no new record exists to remove)
 ```
+
+### Kill switch (immediate)
+
+```bash
+systemctl stop earth-witness-chat.service                                   # app down
+# + one-line Caddy edit (pre-approved wording, reload is the Class-B act):
+#   handle_path /observe/* { respond 503 "Earth Witness paused" }
+```
+
+### Employment/IP review status (Blok I)
+
+`UNKNOWN` — the commercial-BSL licensing question against the licensor's
+employment terms is recorded as unresolved in
+`reports/readme_harden/2026-10-03_confidentiality_scan.md` and must be settled
+BEFORE any public promotion of paid access ("Get Access" page stays
+informational until then).
 
 ### Two-line risk summary
 
@@ -152,7 +169,7 @@ cd /opt/geox && sudo git reset --hard origin/main && sudo systemctl restart geox
 | Gate | State |
 |---|---|
 | Gate 0 (Phases 0–5) | ✅ EarthBench 7/7 · abstention 4/4 · I1–I9 in code · invariants in packet · §10 binding in design doc |
-| Gates 1–5 (contract/ingress/context/chips/agent/backend/proxy/UI/tests) | ✅ built + tested (receipts above) |
+| Gates 1–5 (contract/ingress/context/chips/agent/backend/proxy/UI/tests) | ✅ built + tested — EarthBench v3 34/34, battery 80+ green |
 | **Gate 6 (Class B)** | ⏸ **STOPPED — awaiting ARIF: APPROVE / DECLINE.** No merge to main, no service enable, no Caddy edit, no public exposure until then. |
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
