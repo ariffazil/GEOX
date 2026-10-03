@@ -402,4 +402,31 @@ The host can display the image directly in the conversation.
 
 ---
 
+## 10. EARTH WITNESS BINDING (2026-10-03)
+
+> **Authority:** ARIFOS::GEOX::EARTH_WITNESS_SLICE::v1  
+> **Status:** DRAFT — awaiting ratification  
+
+The Image Metabolizer CONSUME and METABOLIZE directions are canonically bound to the **Earth Witness** slice via `EarthObservationPacket` (`contracts/schemas/earth_observation_packet.v1.json`).
+
+### 10.1 Constitutional Invariants
+- **I1: Image != Specimen != Measurement != Earth.** Visual intake records display or surface reflectance, not the subsurface entity.
+- **I2: Vision output is EVIDENCE only for visible features;** interpretations remain HYPOTHESIS until physical or petrophysical falsification.
+- **I3: No hydrocarbon claim from image alone.** Amplitude != hydrocarbon; impedance != lithology.
+- **I4: No fossil age from morphology alone;** requires candidate taxon + PBDB biozone range validation.
+- **I5: Missing diagnostic metadata (scale, orientation, CRS, polarity, domain, HCl, hardness)** forces `INPUT_REQUIRED`, never guessed by LLM.
+- **I6: Provenance chaining:** SHA256 of original artifact, model ID, transform stack, and explicit limitations.
+- **I7: Basin Profile (`user:basin_profile`):** Provides geological context only; must never inflate confidence scores.
+- **I8: Public / Synthetic Demo Only:** Zero confidential PETRONAS operational data to external vision endpoints.
+- **I9: Local Verdict Ceiling:** Max local verdict is `QUALIFIED_CANDIDATE` / `PARTIAL`. Only arifOS kernel issues `SEAL`.
+
+### 10.2 Single Umbrella Tool: `geox_observe`
+Rather than fragmented ad-hoc vision tools, all multimodal intake converges on:
+```python
+geox_observe(artifact_ref, modality_hint=None, context=None, field_tests=None) -> EarthObservationPacket
+```
+Orchestrates single-turn specialist observers (`visual_inventory`, `rock_mineral_observer`, `seismic_display_observer`, `fossil_morphology_observer`, `physical_test_elicitor`, `contradiction_auditor`) returning structured schemas to AAA / arifOS.
+
+---
+
 **DITEMPA BUKAN DIBERI — Forged, Not Given**

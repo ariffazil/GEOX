@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-10-01T12:42:09.801530+00:00
+# Regenerated: 2026-10-03T04:19:55.521118+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.10.01
+schema_version: 2026.10.03
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 26
-contract_epoch: 2026-10-01-GEOX-26TOOLS-ZEN
+canonical_tool_count: 27
+contract_epoch: 2026-10-03-GEOX-27TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -129,6 +129,17 @@ tools:
     risk_tier: readonly
     description: 'Geological modeling: subsurface inversion, 2D cross-sections, GemPy
       3D. Modes: subsurface, geological_generate, gempy_3d.'
+  geox_observe:
+    category: earth.multimodal
+    lane: evidence
+    family: evidence
+    capability_tier: A
+    risk_tier: readonly
+    description: Canonical multimodal Earth observation umbrella (Earth Witness v1).
+      Rock/outcrop/core/thin_section/fossil/seismic_display/map/section intake → governed
+      EarthObservationPacket. Vision output is EVIDENCE only; interpretations stay
+      HYPOTHESIS; no hydrocarbon claim from image alone (I1-I9); missing diagnostics
+      → INPUT_REQUIRED; local ceiling QUALIFIED_CANDIDATE — arifOS seals only.
   geox_paleobiodb_query:
     category: earth.paleobiology
     lane: evidence

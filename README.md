@@ -1,12 +1,12 @@
 # GEOX — Earth Intelligence Engine
 
-![GEOX-26 Canonical Tools](https://img.shields.io/badge/GEOX-26_Canonical_Tools-0b7285)
+![GEOX-27 Canonical Tools](https://img.shields.io/badge/GEOX-26_Canonical_Tools-0b7285)
 ![port 8081](https://img.shields.io/badge/port-8081-0b7285)
 ![schema 2026.10.01](https://img.shields.io/badge/schema-2026.10.01-0b7285)
 ![authority 555_COMPUTE_ONLY](https://img.shields.io/badge/authority-555__COMPUTE__ONLY-0b7285)
 
 > The badge URL above is **hand-maintained**. `generate_all_surfaces.py` rewrites the
-> badge *alt-text* (`GEOX-26 Canonical Tools`) but its regex matches whitespace, not the
+> badge *alt-text* (`GEOX-27 Canonical Tools`) but its regex matches whitespace, not the
 > underscores in the shields.io URL — so a stale count in the URL is invisible to the
 > drift gate. Check it by eye when the count changes.
 

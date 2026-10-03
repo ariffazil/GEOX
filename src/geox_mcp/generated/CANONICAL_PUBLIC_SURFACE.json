@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-10-01T12:42:09.801530+00:00",
+  "generated_at": "2026-10-03T04:19:55.521118+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
-  "public_count": 26,
+  "public_count": 27,
   "internal_count": 22,
   "public_tools": [
     "geox_basin",
@@ -17,6 +17,7 @@
     "geox_list_registered_sources",
     "geox_map",
     "geox_model",
+    "geox_observe",
     "geox_paleobiodb_query",
     "geox_petrophysics",
     "geox_prospect",
@@ -220,6 +221,21 @@
       "governance": {
         "action_class": "OBSERVE",
         "mutation": false
+      }
+    },
+    {
+      "name": "geox_observe",
+      "domain": "earth.multimodal",
+      "axis": "observe",
+      "lane": "evidence",
+      "family": "evidence",
+      "tier": "A",
+      "description": "Canonical multimodal Earth observation umbrella (Earth Witness v1). Rock/outcrop/core/thin_section/fossil/seismic_display/map/section intake → governed EarthObservationPacket. Vision output is EVIDENCE only; interpretations stay HYPOTHESIS; no hydrocarbon claim from image alone (I1-I9); missing diagnostics → INPUT_REQUIRED; local ceiling QUALIFIED_CANDIDATE — arifOS seals only.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
       }
     },
     {
@@ -445,6 +461,7 @@
       "geox_deep_time",
       "geox_map",
       "geox_model",
+      "geox_observe",
       "geox_petrophysics",
       "geox_prospect",
       "geox_seismic_interpret",
@@ -485,6 +502,7 @@
         "geox_deep_time",
         "geox_map",
         "geox_model",
+        "geox_observe",
         "geox_prospect",
         "geox_seismic_interpret",
         "geox_source",
@@ -554,6 +572,7 @@
         "geox_deep_time",
         "geox_map",
         "geox_model",
+        "geox_observe",
         "geox_prospect",
         "geox_seismic_interpret",
         "geox_source",
@@ -563,7 +582,7 @@
         "geox_well",
         "geox_well_qc"
       ],
-      "count": 14
+      "count": 15
     },
     "specialist": {
       "tools": [
@@ -573,6 +592,7 @@
         "geox_deep_time",
         "geox_map",
         "geox_model",
+        "geox_observe",
         "geox_prospect",
         "geox_seismic_interpret",
         "geox_source",
@@ -588,7 +608,7 @@
         "geox_seismic_ingest",
         "geox_well_ingest"
       ],
-      "count": 20
+      "count": 21
     },
     "research": {
       "tools": [
@@ -598,6 +618,7 @@
         "geox_deep_time",
         "geox_map",
         "geox_model",
+        "geox_observe",
         "geox_prospect",
         "geox_seismic_interpret",
         "geox_source",
@@ -614,7 +635,7 @@
         "geox_well_ingest",
         "geox_glof"
       ],
-      "count": 21
+      "count": 22
     },
     "full": {
       "tools": [
@@ -624,6 +645,7 @@
         "geox_deep_time",
         "geox_map",
         "geox_model",
+        "geox_observe",
         "geox_prospect",
         "geox_seismic_interpret",
         "geox_source",
@@ -640,7 +662,7 @@
         "geox_well_ingest",
         "geox_glof"
       ],
-      "count": 21
+      "count": 22
     }
   },
   "workflow_packs": {
@@ -867,6 +889,11 @@
         "family": "evidence",
         "role": "entry_point",
         "description": "Basin context — most workflows start here"
+      },
+      "geox_observe": {
+        "family": "evidence",
+        "role": "entry_point",
+        "description": "Multimodal Earth observation intake — governed visual evidence packets (Earth Witness v1)"
       },
       "geox_claim": {
         "family": "evidence",

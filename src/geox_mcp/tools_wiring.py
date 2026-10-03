@@ -1,6 +1,7 @@
 # WARNING: Auto-generated from server.py to reduce monolith size.
 # DITEMPA BUKAN DIBERI
 
+import asyncio
 import functools
 import inspect
 import json
@@ -153,6 +154,43 @@ def register_tools_on(mcp):
             cc=cc,
             fossil_group=fossil_group,
             limit=limit,
+        )
+
+    # ── EARTH WITNESS v1 — canonical multimodal observation umbrella ──────────
+    # ARIFOS::GEOX::EARTH_WITNESS_SLICE::v1 (2026-10-03). 27th canonical tool.
+    # All multimodal intake converges here (contracts/IMAGE_METABOLIZER_DESIGN.md §10).
+    # I1-I9: image != specimen; vision output = EVIDENCE only; no fluid claim from
+    # image alone; missing diagnostics → INPUT_REQUIRED; local ceiling
+    # QUALIFIED_CANDIDATE — arifOS seals only.
+    @mcp.tool(name="geox_observe", annotations=_geox_annotations("geox_observe"))
+    async def _earth_observe(
+        artifact_ref: str | dict[str, Any],
+        modality_hint: str | None = None,
+        context: dict[str, Any] | None = None,
+        field_tests: dict[str, Any] | None = None,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Inspect any Earth visual artifact (rock, outcrop, core, thin_section, fossil, seismic_display, map, section) and return a governed EarthObservationPacket.
+
+        Earth Witness slice: vision output is EVIDENCE only — interpretations stay
+        HYPOTHESIS until field tests or petrophysics falsify (I1-I9). No hydrocarbon
+        claim from image alone. field_tests accepts HCl fizz, hardness, streak, and
+        magnetism observations. Missing diagnostics force INPUT_REQUIRED — never
+        guessed. Local verdict ceiling QUALIFIED_CANDIDATE; arifOS seals only.
+        """
+        from geox_mcp.tools.earth_observe import geox_observe as _impl
+
+        # VLM backend call is blocking IO — run in a worker thread so the event
+        # loop stays free (the impl is sync by design: pure intake, no loop-shared
+        # state; packet_id/timestamp differ per call by construction).
+        return await asyncio.to_thread(
+            _impl,
+            artifact_ref=artifact_ref,
+            modality_hint=modality_hint,
+            context=context,
+            field_tests=field_tests,
         )
 
     @mcp.tool(name="geox_well_ingest", annotations=_geox_annotations("geox_well_ingest"))
