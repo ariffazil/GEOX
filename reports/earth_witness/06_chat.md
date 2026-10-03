@@ -38,17 +38,22 @@ covered at the API layer. Add Playwright before Gate 6 if UI E2E is required.
 
 ## GATE 6 — CLASS B PACKAGE (awaiting ARIF's APPROVE — nothing below is applied)
 
-### Proposed Caddy block (`/etc/caddy/vhosts/geox.arif-fazil.com.conf`)
+### Proposed Caddy block — **REVISED per Gate 6 DECLINE: path route, NO new subdomain**
 
 ```
-	# Earth Witness Chat (Gate 6 pending ARIF APPROVE 2026-10-03)
-	earth-witness.arif-fazil.com {
-		encode zstd gzip
-		@proxy path /api/* /assets/*
-		handle @proxy {
+	# Earth Witness Chat (Gate 6 — pending ARIF APPROVE; revised 2026-10-03)
+	# Route /observe/* under the EXISTING geox.arif-fazil.com vhost.
+	# NO new subdomain, NO new DNS record, NO new TLS certificate — the name
+	# "Earth Witness" stays reserved for the /status page and Physics9 usage.
+	geox.arif-fazil.com {
+		# … existing handles …
+		handle_path /observe/* {
 			reverse_proxy 127.0.0.1:8765
 		}
-		handle {
+		@observe_root path /observe
+		redir @observe_root /observe/ 308
+		@ewapi path /observe/api/*
+		handle @ewapi {
 			reverse_proxy 127.0.0.1:8765
 		}
 		request_body {
@@ -56,7 +61,7 @@ covered at the API layer. Add Playwright before Gate 6 if UI E2E is required.
 		}
 		rate_limit {
 			zone ew_zone {
-				match path /api/*
+				match path /observe/*
 				key {remote_host}
 				events 30
 				window 1m
@@ -71,7 +76,18 @@ covered at the API layer. Add Playwright before Gate 6 if UI E2E is required.
 		}
 	}
 ```
-(DNS record + TLS cert issuance included in this approval; no directory listing anywhere.)
+(Inherits the vhost's existing TLS certificate — zero new attack surface from naming.)
+
+### Gate 6 RESUBMISSION EVIDENCE (2026-10-03, post-DECLINE directive)
+
+| Directive item | Evidence |
+|---|---|
+| 1. Deployment disclosure | `/opt/geox` runs commit `b0026426` (feat/earth-witness-v1) — **not on main**. Service restarted 2026-10-03 12:23:58 +08 by **FI-008** (kimi-code/k3), journal: `Stopping/Starting geox-mcp.service`. No public exposure occurred (no Caddy/DNS/chat-service change). Rollback to main (17802197) prepared and ready: `git -C /opt/geox reset --hard origin/main && systemctl restart geox-mcp.service`. **Sovereign to rule: KEEP (recommended — 27/27 parity, 80-test battery green; rollback would regress the live surface to 26 and re-break the drift gate) or ROLLBACK. No action taken either way.** |
+| 2. Runtime-edit forensics | `/opt/geox` tracked files: **zero modified** (only untracked runtime state: `app/`, `data/dde_cache/`, one ingest webp). The single historical runtime edit (mimo strike_dip/throw guard) is preserved in `stash@{0}` labelled `runtime-hotfix-mimo-strike-dip-superseded-by-feat/earth-witness-v1-2026-10-03` — its content already exists in source (source ⊇ stash). Author/time of the original edit: **UNKNOWN** (uncommitted when found; pre-dates 2026-10-03). Additional find: `stash@{1}` — older 2026-08-25 stash from another lane (geox_basin FALSE_SUCCESS postcondition fix) — flagged, untouched. |
+| 3. EarthBench ≥30 | **32/32** — mandatory traps all covered (reversed polarity, colormap/gain, fossil lookalike, weathered rind added as new mock scenarios). See `reports/earth_witness/04_earthbench.md` v2. Expansion forced 4 real pipeline fixes (backend tests/metadata were discarded; scenario shadowing; I4 regex). |
+| 4. Route | **`geox.arif-fazil.com/observe/*`** — no new subdomain/DNS/TLS (this section, revised). |
+| 5. Confidentiality of pushed branches | `git diff main..feat/earth-witness-v1 -- resources/` and `main..feat/earth-witness-chat` are **EMPTY** — my branches pushed zero new data files. The NW Borneo pack entered **main** at `9a132604`/`85f37a6b` (2026-09-30, before this session) — the exposure pre-exists on public main and is tracked in `reports/readme_harden/2026-10-03_confidentiality_scan.md` (sovereign decision pending). |
+| 6. Attribution | Resuming agent after agy 429: **FI-008** (kimi-code/k3, Kimi) — kernel session SEAL-a411996b7f0040d5. RT1 lane: authored by **Lane 333d (333-AGI)** 2026-10-01, committed as-found by FI-008 (stated in the commit message). Runtime hotfix author: UNKNOWN (see item 2). |
 
 ### Proposed hardened systemd unit (`/etc/systemd/system/earth-witness-chat.service`)
 

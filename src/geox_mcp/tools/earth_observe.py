@@ -48,6 +48,7 @@ from geox_core.earth_witness.specialists import (
     fossil_morphology_observer,
     physical_test_elicitor,
     contradiction_auditor,
+    HumanTestRequest,
 )
 
 logger = logging.getLogger("geox.mcp.earth_observe")
@@ -170,6 +171,15 @@ def geox_observe(
         hypotheses.extend(hyps)
         limitations_cannot_determine.extend(lims)
 
+    # Merge backend-declared missing metadata (the vision payload may know
+    # display-processing gaps — gain/AGC, colormap symmetry — that the generic
+    # per-modality observer does not). Dedupe, observers first.
+    _seen_meta = set(missing_metadata)
+    for bm in raw_payload.get("limitations", {}).get("missing_metadata", []) or []:
+        if bm and bm not in _seen_meta:
+            missing_metadata.append(bm)
+            _seen_meta.add(bm)
+
     # 4.5 Contradiction audit (checklist §5: runs before every final reply).
     # Findings land in limitations[] (no schema drift) and force the packet
     # state DOWN — a contradicted bundle can never be QUALIFIED_CANDIDATE.
@@ -195,6 +205,20 @@ def geox_observe(
         field_tests=field_tests_input,
         scale_present=(scale_obj is not None and scale_obj.is_calibrated),
     )
+    # Merge backend-requested tests (vision payload may know display-/fossil-
+    # specific diagnostics the generic elicitor does not). Dedupe by test_name;
+    # elicitor entries win on conflicts (they are constitutionally generic).
+    _seen = {t.test_name for t in requested_tests}
+    for bt in raw_payload.get("limitations", {}).get("requested_human_tests", []) or []:
+        if bt.get("test_name") and bt["test_name"] not in _seen:
+            requested_tests.append(
+                HumanTestRequest(
+                    test_name=bt["test_name"],
+                    purpose=bt.get("purpose", ""),
+                    discriminates=bt.get("discriminates", []),
+                )
+            )
+            _seen.add(bt["test_name"])
 
     # 6. Epistemic Posture & State
     state = "DRAFT"

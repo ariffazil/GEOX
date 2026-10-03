@@ -15,6 +15,7 @@ Phase 2.2: Specialists (single_turn, structured output, no transfer)
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 from geox_core.schemas.earth_observation import (
@@ -317,7 +318,7 @@ def contradiction_auditor(
 
         # I4: fossil age asserted from morphology
         if modality == "fossil":
-            if "age" in label_l or " ma " in f" {h.label} " or "million year" in label_l:
+            if "age" in label_l or re.search(r"\b\d+(\.\d+)?\s*ma\b", label_l) or "million year" in label_l:
                 findings.append(
                     {
                         "type": "FOSSIL_AGE_FROM_MORPHOLOGY",
