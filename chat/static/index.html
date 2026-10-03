@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>GEOX Earth Witness</title>
+<style>
+:root{--ink:#1a2233;--mut:#5a6478;--line:#dde3ee;--bg:#f4f6fb;--card:#fff;--acc:#0b7285;--warn:#b54708}
+*{box-sizing:border-box;margin:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:560px;margin:0 auto;padding-bottom:60px}
+.banner{background:#fff7e6;border:1px solid #f1d38a;border-radius:10px;padding:10px 12px;font-size:.82rem;margin-bottom:12px}
+h1{font-size:1.05rem;margin:4px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
+label{font-size:.78rem;color:var(--mut);display:block;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.04em}
+input[type=file]{width:100%;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);border-radius:16px;padding:6px 11px;font-size:.8rem;background:#fff;cursor:pointer}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+button.go{width:100%;padding:12px;border:0;border-radius:10px;background:var(--acc);color:#fff;font-size:1rem;margin-top:12px}
+button.go:disabled{opacity:.5}
+.sec{font-size:.75rem;color:var(--mut);margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
+.kv{margin:2px 0;font-size:.86rem}
+.kv b{color:var(--mut);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;display:block}
+.verdict{font-size:1.15rem;font-weight:700;padding:6px 10px;border-radius:8px;display:inline-block;background:#e7f5f0;color:#08614d}
+.hyp{border-left:3px solid var(--acc);padding:6px 10px;margin:8px 0;background:#f8fafd;border-radius:0 8px 8px 0}
+.hyp .conf{font-size:.75rem;color:var(--mut)}
+ul{padding-left:18px;font-size:.86rem}
+.wm{position:fixed;bottom:0;left:0;right:0;background:#111827cc;color:#e5e9f2;font-size:.72rem;text-align:center;padding:6px;backdrop-filter:blur(4px)}
+.err{background:#fdecea;color:#8c2f26;border-radius:8px;padding:10px;font-size:.86rem}
+.mini{font-size:.7rem;color:var(--mut)}
+</style>
+</head>
+<body>
+<h1>⛰️ GEOX Earth Witness</h1>
+<div class="banner">⚠️ Public / synthetic use only — do NOT upload confidential or operational data. Images are stripped of EXIF/GPS, hashed, and deleted after the reply. Verdicts are <b>QUALIFIED_CANDIDATE</b>, never interpretation of record.</div>
+
+<div class="card">
+  <label>Photo (jpg / png / webp / pdf, ≤10 MB)</label>
+  <input type="file" id="img" accept=".jpg,.jpeg,.png,.webp,.pdf">
+
+  <div class="sec">Modality</div>
+  <div class="chips" data-group="modality" data-single="1">
+    <span class="chip" data-v="rock">rock</span><span class="chip" data-v="outcrop">outcrop</span>
+    <span class="chip" data-v="core">core</span><span class="chip" data-v="thin_section">thin section</span>
+    <span class="chip" data-v="fossil">fossil</span><span class="chip" data-v="seismic_display">seismic</span>
+    <span class="chip" data-v="map">map</span><span class="chip" data-v="section">section</span>
+  </div>
+
+  <div class="sec">Basin (context only — never raises confidence)</div>
+  <div class="chips" data-group="basin" data-single="1">
+    <span class="chip" data-v="Sabah">Sabah</span><span class="chip" data-v="Malay">Malay</span>
+    <span class="chip" data-v="Sarawak">Sarawak</span><span class="chip" data-v="Other">Other</span>
+    <span class="chip on" data-v="">Unknown</span>
+  </div>
+
+  <div class="sec">Objective</div>
+  <div class="chips" data-group="objective" data-single="1">
+    <span class="chip on" data-v="">—</span><span class="chip" data-v="teaching">teaching</span>
+    <span class="chip" data-v="lithology">lithology</span><span class="chip" data-v="facies">facies</span>
+    <span class="chip" data-v="structure">structure</span>
+  </div>
+
+  <div class="sec">Field tests & metadata (rock/core)</div>
+  <div class="chips" data-group="hcl">
+    <span class="chip" data-v="vigorous">HCl: vigorous</span>
+    <span class="chip" data-v="weak_on_powder">HCl: powder only</span>
+    <span class="chip" data-v="none">HCl: silent</span>
+  </div>
+  <div class="chips" data-group="hardness" style="margin-top:6px">
+    <span class="chip" data-v="lt_fingernail">hardness &lt; nail</span>
+    <span class="chip" data-v="lt_copper">&lt; coin</span>
+    <span class="chip" data-v="lt_steel">&lt; steel</span>
+    <span class="chip" data-v="gt_steel">&gt; steel</span>
+  </div>
+  <div class="chips" data-group="magnetism" style="margin-top:6px">
+    <span class="chip" data-v="strongly_magnetic">magnetic</span>
+    <span class="chip" data-v="weakly_magnetic">weakly magnetic</span>
+    <span class="chip" data-v="non_magnetic">non-magnetic</span>
+  </div>
+  <div class="chips" data-group="grain_size" style="margin-top:6px">
+    <span class="chip" data-v="clay_silt">clay/silt</span><span class="chip" data-v="fine_sand">fine sand</span>
+    <span class="chip" data-v="coarse_sand">coarse sand</span><span class="chip" data-v="gravel_conglomerate">gravel</span>
+    <span class="chip" data-v="crystalline_aphanitic">crystalline (fine)</span>
+  </div>
+  <div class="chips" data-group="scale" data-single="1" style="margin-top:6px">
+    <span class="chip" data-v="coin">scale: coin</span><span class="chip" data-v="hand">scale: hand</span>
+    <span class="chip" data-v="ruler">scale: ruler</span>
+  </div>
+
+  <div class="sec">Seismic metadata</div>
+  <div class="chips" data-group="polarity" data-single="1">
+    <span class="chip" data-v="SEG-normal">SEG normal</span><span class="chip" data-v="SEG-reverse">SEG reverse</span>
+  </div>
+  <div class="chips" data-group="domain" data-single="1" style="margin-top:6px">
+    <span class="chip" data-v="time">time (ms)</span><span class="chip" data-v="depth">depth (m)</span>
+  </div>
+  <div class="chips" data-group="stacks" style="margin-top:6px">
+    <span class="chip" data-v="near">near stack</span><span class="chip" data-v="far">far stack</span>
+  </div>
+
+  <div class="sec">Fossil</div>
+  <div class="chips" data-group="fos_scale" data-single="1">
+    <span class="chip" data-v="scalebar">scale bar present</span>
+  </div>
+  <div class="chips" data-group="fos_source" data-single="1" style="margin-top:6px">
+    <span class="chip" data-v="outcrop">outcrop</span><span class="chip" data-v="core">core</span>
+    <span class="chip" data-v="cuttings">cuttings (caving risk!)</span>
+  </div>
+
+  <button class="go" id="go">Observe</button>
+  <div class="mini" style="margin-top:6px">Uploads live in memory only — nothing is written to disk.</div>
+</div>
+
+<div id="out"></div>
+<div class="wm">QUALIFIED_CANDIDATE — not interpretation of record · arifOS seals only</div>
+
+<script>
+const state={field_tests:{},scale:null,seismic:{}};
+function chips(){return[...document.querySelectorAll('.chip')]}
+chips().forEach(c=>c.addEventListener('click',()=>{
+  const g=c.closest('.chips'),single=g.dataset.single==='1';
+  if(single){[...g.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');}
+  else c.classList.toggle('on');
+  collect();
+}));
+function on(group){const g=document.querySelector(`[data-group=${group}]`);const el=[...g.children].find(x=>x.classList.contains('on')&&x.dataset.v);return el?el.dataset.v:null}
+function many(group){return[...document.querySelector(`[data-group=${group}]`).children].filter(x=>x.classList.contains('on')).map(x=>x.dataset.v)}
+function collect(){
+  state.field_tests={};
+  const hcl=on('hcl');if(hcl)state.field_tests.hcl=hcl;
+  const hd=on('hardness');if(hd)state.field_tests.hardness=hd;
+  const mg=on('magnetism');if(mg)state.field_tests.magnetism=mg;
+  const gs=on('grain_size');if(gs)state.field_tests.grain_size=gs;
+  const sc=on('scale');
+  state.scale=sc?{value:{"coin":24,"hand":180,"ruler":300}[sc]||10,unit:"mm",is_calibrated:true}:null;
+  state.seismic={};
+  const pol=on('polarity');if(pol)state.seismic.polarity=pol;
+  const dom=on('domain');if(dom)state.seismic.domain=dom;
+  const st=many('stacks');if(st.length)state.seismic.stacks=st.join("+");
+}
+document.getElementById('go').addEventListener('click',async()=>{
+  collect();
+  const f=document.getElementById('img').files[0],out=document.getElementById('out'),go=document.getElementById('go');
+  if(!f){out.innerHTML='<div class="err">Choose a photo first.</div>';return}
+  go.disabled=true;out.innerHTML='<div class="card mini">Observing… (vision backend + physics guards)</div>';
+  const fd=new FormData();
+  fd.append('image',f);
+  fd.append('modality_hint',on('modality')||'');
+  fd.append('basin',on('basin')||'');
+  fd.append('objective',on('objective')||'');
+  fd.append('field_tests_json',JSON.stringify(state.field_tests));
+  fd.append('scale_json',JSON.stringify(state.scale||{}));
+  fd.append('seismic_json',JSON.stringify(state.seismic));
+  try{
+    const r=await fetch('/api/observe',{method:'POST',body:fd});
+    const j=await r.json();
+    if(j.status==='HOLD'){out.innerHTML=`<div class="card"><div class="err">HOLD — ${j.reason||j.verdict}</div></div>`}
+    else if(j.status==='OK'){out.innerHTML=render(j.packet)}
+    else{out.innerHTML=`<div class="card"><div class="err">${j.reason||'error'}</div></div>`}
+  }catch(e){out.innerHTML=`<div class="card"><div class="err">${e}</div></div>`}
+  go.disabled=false;
+});
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function render(p){
+  const ep=p.epistemic||{},lim=p.limitations||{},obs=p.observations||{};
+  const hyps=(p.hypotheses||[]).map(h=>`<div class="hyp"><b>${esc(h.label)}</b> <span class="conf">conf ${h.confidence} · falsifiers: ${esc((h.falsifiers||[]).join('; ')||'—')}</span></div>`).join('')||'<div class="mini">none</div>';
+  const feats=(obs.visible_features||[]).map(f=>`<li>${esc(f.label)} <span class="mini">(${f.confidence})</span></li>`).join('')||'<li>none captured</li>';
+  const ocr=(obs.ocr_text||[]).map(o=>`<li>"${esc(o.text)}" <span class="mini">— evidence of the text only</span></li>`).join('')||'';
+  const cant=(lim.image_cannot_determine||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>—</li>';
+  const next=(lim.requested_human_tests||[]).map(t=>`<li><b>${esc(t.test_name)}</b> — ${esc(t.purpose||'')} <span class="mini">discriminates: ${esc((t.discriminates||[]).join(' | '))}</span></li>`).join('')||'<li>none — packet complete</li>';
+  const prov=(ep.provenance||[]).map(pr=>`<li class="mini">${esc(pr.step)} · ${esc(pr.model_id)} · ${esc((pr.hash||'').slice(0,12))}…</li>`).join('');
+  return `<div class="card">
+    <span class="verdict">${esc(ep.state||'?')} · ${esc(ep.verdict||'')}</span>
+    <div class="kv" style="margin-top:8px"><b>Confidence cap</b>${ep.confidence} (ceiling 0.90)</div>
+    <div class="kv"><b>Interpreted (hypotheses, with falsifiers)</b>${hyps}</div>
+    <div class="kv"><b>Observed (visible)</b><ul>${feats}</ul></div>
+    ${ocr?`<div class="kv"><b>OCR text (not earth evidence)</b><ul>${ocr}</ul></div>`:''}
+    <div class="kv"><b>Cannot tell / limitations</b><ul>${cant}</ul></div>
+    <div class="kv"><b>Next best test</b><ul>${next}</ul></div>
+    <div class="kv"><b>Provenance</b><ul>${prov}</ul></div>
+    <div class="mini">artifact sha256 ${esc((p.artifact&&p.artifact.sha256||'').slice(0,16))}… · packet ${esc(p.packet_id||'')}</div>
+  </div>`;
+}
+</script>
+</body>
+</html>

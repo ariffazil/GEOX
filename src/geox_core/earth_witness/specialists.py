@@ -226,3 +226,114 @@ def physical_test_elicitor(
         )
 
     return requested
+
+
+# ── 6. Contradiction Auditor (runs BEFORE any final reply) ──────────────────
+
+_FORBIDDEN_IMAGE_CLAIM_TERMS = (
+    "gas pay",
+    "oil leg",
+    "commercial hydrocarbon",
+    "proven gas",
+    "hydrocarbon accumulation",
+    "hydrocarbon discovery",
+    "flowing oil",
+)
+
+
+def contradiction_auditor(
+    hypotheses: list[Hypothesis],
+    ocr_items: list[OcrText],
+    modality: str,
+    context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Cross-modal contradiction check on a nearly-final observation bundle.
+
+    Enforced invariants (IMAGE_METABOLIZER_DESIGN.md §10.1):
+      I3 — no hydrocarbon/fluid claim from image alone.
+      I4 — no fossil age from morphology alone.
+      I6 — confidence ceiling 0.90.
+      I7 — basin context must never appear as hypothesis support.
+      OCR — text evidence is evidence of the TEXT, never of the Earth.
+
+    Returns {ok, findings[], checked} — findings are structured dicts so the
+    caller can surface them in limitations[] without schema drift.
+    """
+    context = context or {}
+    findings: list[dict[str, Any]] = []
+    ocr_terms = {w.lower() for o in ocr_items for w in o.text.split() if len(w) > 4}
+    basin = str(context.get("basin_profile") or context.get("basin") or "").lower()
+
+    for h in hypotheses:
+        label_l = h.label.lower()
+
+        # I3: hydrocarbon claims an image cannot make
+        for term in _FORBIDDEN_IMAGE_CLAIM_TERMS:
+            if term in label_l:
+                findings.append(
+                    {
+                        "type": "FORBIDDEN_IMAGE_CLAIM",
+                        "rule": "I3",
+                        "target": h.hypothesis_id,
+                        "detail": f"hyp_label_contains:{term}",
+                    }
+                )
+                break
+
+        # I6: confidence ceiling
+        if h.confidence > 0.90:
+            findings.append(
+                {
+                    "type": "CONFIDENCE_CEILING_BREACH",
+                    "rule": "I6",
+                    "target": h.hypothesis_id,
+                    "detail": f"confidence={h.confidence}",
+                }
+            )
+
+        # OCR text must never be the EARTH evidence behind a hypothesis
+        for s in h.supporting:
+            s_l = str(s).lower()
+            if ocr_terms and (s_l in ocr_terms or any(t in s_l for t in ocr_terms)):
+                findings.append(
+                    {
+                        "type": "OCR_AS_EARTH_EVIDENCE",
+                        "rule": "OCR_TEXT_ONLY",
+                        "target": h.hypothesis_id,
+                        "detail": f"supporting_ref:{s}",
+                    }
+                )
+
+        # I7: basin context presented as evidence inflates confidence
+        if basin and basin in label_l:
+            findings.append(
+                {
+                    "type": "BASIN_CONTEXT_INFLATION",
+                    "rule": "I7",
+                    "target": h.hypothesis_id,
+                    "detail": f"basin_in_label:{basin}",
+                }
+            )
+
+        # I4: fossil age asserted from morphology
+        if modality == "fossil":
+            if "age" in label_l or " ma " in f" {h.label} " or "million year" in label_l:
+                findings.append(
+                    {
+                        "type": "FOSSIL_AGE_FROM_MORPHOLOGY",
+                        "rule": "I4",
+                        "target": h.hypothesis_id,
+                        "detail": f"hyp_label:{h.label}",
+                    }
+                )
+
+    return {
+        "ok": not findings,
+        "findings": findings,
+        "checked": {
+            "hypotheses": len(hypotheses),
+            "ocr_items": len(ocr_items),
+            "modality": modality,
+            "basin_context": bool(basin),
+        },
+    }
