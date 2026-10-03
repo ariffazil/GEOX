@@ -139,16 +139,22 @@ async def observe(
         raise HTTPException(413, "file exceeds 10 MB limit")
 
     data_uri: str | dict[str, Any]
-    if image[:5] == b"%PDF-":
-        cleaned, mime = _strip_exif(image, "application/pdf")
-        data_uri = "data:application/pdf;base64," + base64.b64encode(cleaned).decode()
-    else:
-        sniff = Image.open(io.BytesIO(image)).format or "JPEG"
-        content_type = {"PNG": "image/png", "WEBP": "image/webp"}.get(sniff, "image/jpeg")
-        if content_type not in ALLOWED_TYPES:
-            raise HTTPException(415, "only jpg, png, webp, pdf allowed")
-        cleaned, mime = _strip_exif(image, content_type)
-        data_uri = f"data:{mime};base64," + base64.b64encode(cleaned).decode()
+    try:
+        if image[:5] == b"%PDF-":
+            cleaned, mime = _strip_exif(image, "application/pdf")
+            data_uri = "data:application/pdf;base64," + base64.b64encode(cleaned).decode()
+        else:
+            sniff = Image.open(io.BytesIO(image)).format or "JPEG"
+            content_type = {"PNG": "image/png", "WEBP": "image/webp"}.get(sniff, "image/jpeg")
+            if content_type not in ALLOWED_TYPES:
+                raise HTTPException(415, "only jpg, png, webp, pdf allowed")
+            cleaned, mime = _strip_exif(image, content_type)
+            data_uri = f"data:{mime};base64," + base64.b64encode(cleaned).decode()
+    except HTTPException:
+        raise
+    except Exception:
+        # magic-sniff/decode failure = malformed upload, never a 500 (hardening 2026-10-03)
+        raise HTTPException(415, "only jpg, png, webp, pdf allowed") from None
 
     import json as _json
 
