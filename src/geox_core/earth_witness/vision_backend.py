@@ -534,9 +534,17 @@ class FederationVisionBackend(BaseVisionBackend):
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=180) as resp:
-            resp_data = json.loads(resp.read().decode("utf-8"))
-
+        try:
+            with urllib.request.urlopen(req, timeout=180) as resp:
+                resp_data = json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            detail = ""
+            try:
+                detail = exc.read().decode("utf-8", "replace")[:400]
+            except Exception:
+                pass
+            logger.error("federation vision HTTP %s: %s", exc.code, detail)
+            raise
         content = (resp_data.get("choices") or [{}])[0].get("message", {}).get("content") or ""
         raw_text = content.strip()
         if not raw_text:
