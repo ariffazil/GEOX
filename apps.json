@@ -15,14 +15,16 @@
       "status": "LIVE",
       "tools": [
         "geox_geomechanics",
-        "geox_lem_predict",
         "geox_petrophysics",
-        "geox_sequence",
-        "geox_well_desk",
         "geox_well_ingest"
       ],
       "protocol": "mcp-apps/sep-1865",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "ghost_bindings_removed": [
+        "geox_lem_predict",
+        "geox_sequence",
+        "geox_well_desk"
+      ]
     },
     {
       "id": "geox-prospect",
@@ -34,13 +36,15 @@
       "tools": [
         "geox_basin",
         "geox_claim",
-        "geox_evidence",
-        "geox_map_scene_plan",
-        "geox_prospect",
-        "geox_to_wealth_bridge"
+        "geox_prospect"
       ],
       "protocol": "mcp-apps/sep-1865",
-      "version": "1.0.0"
+      "version": "1.0.0",
+      "ghost_bindings_removed": [
+        "geox_evidence",
+        "geox_map_scene_plan",
+        "geox_to_wealth_bridge"
+      ]
     },
     {
       "id": "geox-seismic",
@@ -52,12 +56,14 @@
       "tools": [
         "geox_seismic_compute",
         "geox_seismic_ingest",
-        "geox_seismic_interpret",
-        "geox_visual_generate_hypotheses",
-        "geox_visual_understand"
+        "geox_seismic_interpret"
       ],
       "protocol": "mcp-apps/sep-1865",
-      "version": "1.1.0"
+      "version": "1.1.0",
+      "ghost_bindings_removed": [
+        "geox_visual_generate_hypotheses",
+        "geox_visual_understand"
+      ]
     },
     {
       "id": "geox-basin",
@@ -65,8 +71,11 @@
       "url": "https://geox.arif-fazil.com/apps/earth-volume/index.html",
       "ui_resource": "ui://earth-volume/index.html",
       "description": "Basin modeling, deep time reconstruction, stratigraphy, sediment routing, and thermal history.",
-      "status": "LIVE",
-      "tools": [
+      "status": "NEEDS_REBIND",
+      "tools": [],
+      "protocol": "mcp-apps/sep-1865",
+      "version": "1.0.0",
+      "ghost_bindings_removed": [
         "geox_basin_backstrip",
         "geox_deep_time_state",
         "geox_gravmag_studio",
@@ -75,9 +84,7 @@
         "geox_sediment_mass_balance",
         "geox_subsurface_model",
         "geox_thermal_maturity_history"
-      ],
-      "protocol": "mcp-apps/sep-1865",
-      "version": "1.0.0"
+      ]
     },
     {
       "id": "geox-risk",
@@ -85,15 +92,16 @@
       "url": "https://geox.arif-fazil.com/apps/judge-console/index.html",
       "ui_resource": "ui://judge-console/index.html",
       "description": "Constitutional AC risk, claim-tag evidence, prospect evaluation, and kill matrix adjudication console.",
-      "status": "LIVE",
-      "tools": [
+      "status": "NEEDS_REBIND",
+      "tools": [],
+      "protocol": "mcp-apps/sep-1865",
+      "version": "1.0.0",
+      "ghost_bindings_removed": [
         "geox_claim_graph_evaluate",
         "geox_contradiction_scan",
         "geox_falsify",
         "geox_map_export_package"
-      ],
-      "protocol": "mcp-apps/sep-1865",
-      "version": "1.0.0"
+      ]
     },
     {
       "id": "geox-operator",
@@ -113,7 +121,7 @@
       "name": "GEOX Calibration Witness",
       "url": "https://geox.arif-fazil.com/apps/calibration-witness/index.html",
       "ui_resource": "ui://geox/calibration-witness",
-      "description": "Measurement acquisition instrument — interactive axis calibration, velocity/T-D binding, semantic picks, and gate readiness for structural interpretation. Human supplies physical grounding; GEOX retains provenance, uncertainty, and refusal logic.",
+      "description": "Measurement acquisition instrument \u2014 interactive axis calibration, velocity/T-D binding, semantic picks, and gate readiness for structural interpretation. Human supplies physical grounding; GEOX retains provenance, uncertainty, and refusal logic.",
       "status": "LIVE",
       "tools": [
         "geox_calibration_register_witness",
@@ -123,5 +131,6 @@
       "protocol": "mcp-apps/sep-1865",
       "version": "1.0.0"
     }
-  ]
+  ],
+  "_correction": "2026-10-03: ghost tool bindings filtered against live canonical surface (registry.py, 27 tools); apps retaining zero live bindings marked NEEDS_REBIND \u2014 re-audit pending"
 }
