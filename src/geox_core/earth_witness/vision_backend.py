@@ -68,8 +68,11 @@ class DeterministicMockVisionBackend(BaseVisionBackend):
     ) -> VisionBackendResponse:
         sha256 = hashlib.sha256(image_bytes).hexdigest()
         
-        # Scenarios for test determinism
-        if "seismic" in self.mock_scenario or "seismic" in user_prompt.lower():
+        # Scenarios for test determinism. Trap scenarios must win over the
+        # generic seismic/fossil matches (the generic user_prompt contains
+        # "seismic_display"/"fossil" for those modalities).
+        _IS_TRAP = any(t in self.mock_scenario for t in ("colormap", "reversed", "lookalike", "weathered"))
+        if not _IS_TRAP and ("seismic" in self.mock_scenario or "seismic" in user_prompt.lower()):
             payload = {
                 "modality": "seismic_display",
                 "visible_features": [
@@ -117,7 +120,7 @@ class DeterministicMockVisionBackend(BaseVisionBackend):
                     "requested_instrument_data": ["Well checkshot velocity survey", "Angle gathers for AVO gradient verification"]
                 }
             }
-        elif "fossil" in self.mock_scenario or "fossil" in user_prompt.lower():
+        elif not _IS_TRAP and ("fossil" in self.mock_scenario or "fossil" in user_prompt.lower()):
             payload = {
                 "modality": "fossil",
                 "visible_features": [
@@ -151,6 +154,188 @@ class DeterministicMockVisionBackend(BaseVisionBackend):
                     "requested_human_tests": [],
                     "requested_instrument_data": ["PaleoBioDB occurrence query", "Biostratigraphic assemblage cross-check"]
                 }
+            }
+        elif "colormap" in self.mock_scenario:
+            # Trap: gain/enhancement + ambiguous colorbar — display transform,
+            # not geology. Observer must flag display_transform, never interpret.
+            payload = {
+                "modality": "seismic_display",
+                "visible_features": [
+                    {
+                        "feature_id": "feat_cm_01",
+                        "label": "high_amplitude_band_after_gain",
+                        "category": "reflector",
+                        "confidence": 0.60,
+                        "description": "Bright band co-located with a gain change; amplitude reliability unknown under enhancement",
+                    }
+                ],
+                "ocr_text": [
+                    {"text": "AGC 500ms", "confidence": 0.90, "location": "header"},
+                    {"text": "colormap: red-white-blue (symmetric?)", "confidence": 0.55, "location": "colorbar"},
+                ],
+                "measurements": [],
+                "hypotheses": [
+                    {
+                        "hypothesis_id": "hyp_cm_01",
+                        "label": "Amplitude anomaly under AGC enhancement (display artifact candidate)",
+                        "supporting": ["high_amplitude_band_after_gain"],
+                        "conflicting": ["gain change co-located with anomaly"],
+                        "falsifiers": ["reprocess without AGC", "independent colormap calibration"],
+                        "confidence": 0.45,
+                    }
+                ],
+                "limitations": {
+                    "image_cannot_determine": [
+                        "True amplitude cannot be recovered from an AGC-enhanced display.",
+                        "Colormap symmetry cannot be certified from pixels; polarity reading is unsafe."
+                    ],
+                    "missing_metadata": [
+                        "Gain/AGC processing parameters",
+                        "Colorbar polarity convention (SEG normal vs reverse)",
+                        "Domain declaration (Time in ms vs Depth in m/ft)"
+                    ],
+                    "requested_human_tests": [
+                        {"test_name": "polarity_declaration", "purpose": "Declare seabed kick under the display's colormap", "discriminates": ["soft kick", "hard kick"]},
+                        {"test_name": "unenhanced_display", "purpose": "Re-render section without AGC/gain", "discriminates": ["true amplitude", "display artifact"]}
+                    ],
+                    "requested_instrument_data": ["Processing sequence / SEGY trace headers for gain stage"]
+                },
+            }
+        elif "reversed" in self.mock_scenario:
+            # Trap: polarity declared SEG-reverse — a naive reader flips every
+            # impedance call. Observer must record the declaration as context,
+            # not silently reinterpret amplitudes.
+            payload = {
+                "modality": "seismic_display",
+                "visible_features": [
+                    {
+                        "feature_id": "feat_rp_01",
+                        "label": "trough_at_seabed",
+                        "category": "reflector",
+                        "confidence": 0.80,
+                        "description": "Seabed reflection is a trough under the declared SEG-reverse convention",
+                    },
+                    {
+                        "feature_id": "feat_rp_02",
+                        "label": "bright_spot_at_flank",
+                        "category": "amplitude_anomaly",
+                        "confidence": 0.70,
+                        "description": "Local high amplitude at structural flank; polarity-dependent meaning",
+                    }
+                ],
+                "ocr_text": [
+                    {"text": "SEG reverse polarity", "confidence": 0.93, "location": "header"},
+                ],
+                "measurements": [],
+                "hypotheses": [
+                    {
+                        "hypothesis_id": "hyp_rp_01",
+                        "label": "Polarity-dependent amplitude anomaly (impedance meaning UNRESOLVED)",
+                        "supporting": ["bright_spot_at_flank"],
+                        "conflicting": ["declared SEG-reverse convention flips sign"],
+                        "falsifiers": ["well-tie polarity check", "seabedkick audit"],
+                        "confidence": 0.50,
+                    }
+                ],
+                "limitations": {
+                    "image_cannot_determine": [
+                        "Under SEG-reverse a trough is an impedance increase — but the declaration itself needs audit before any impedance call.",
+                        "Amplitude != Hydrocarbon regardless of polarity convention."
+                    ],
+                    "missing_metadata": [
+                        "Independent polarity audit (seabed kick vs declared convention)",
+                        "Near/far stack availability for AVO behaviour"
+                    ],
+                    "requested_human_tests": [
+                        {"test_name": "polarity_declaration_audit", "purpose": "Audit the SEG-reverse declaration against seabed reflection", "discriminates": ["declared-reverse correct", "declaration wrong"]},
+                        {"test_name": "angle_stacks", "purpose": "Provide near and far stacks for AVO sign behaviour", "discriminates": ["Class II/III AVO", "processing artifact"]}
+                    ],
+                    "requested_instrument_data": ["Well tie / VSP for polarity certification"]
+                },
+            }
+        elif "lookalike" in self.mock_scenario:
+            # Trap: two taxa with convergent morphology — I4 forbids picking an
+            # age from morphology alone; both candidates must survive with
+            # PBDB validation demanded.
+            payload = {
+                "modality": "fossil",
+                "visible_features": [
+                    {
+                        "feature_id": "feat_fla_01",
+                        "label": "biserial_chambered_test_withPeripheral_keel",
+                        "category": "morphology",
+                        "confidence": 0.75,
+                        "description": "Keeled biserial test — morphology shared by several long-ranging genera",
+                    }
+                ],
+                "ocr_text": [],
+                "measurements": [
+                    {"metric": "length", "value": 0.6, "unit": "mm", "method": "scale_bar", "uncertainty": 0.05}
+                ],
+                "hypotheses": [
+                    {
+                        "hypothesis_id": "hyp_fla_01",
+                        "label": "Candidate Heterohelicid / opportunist bathyal (morphology-convergent)",
+                        "supporting": ["biserial_chambered_test_withPeripheral_keel"],
+                        "conflicting": [],
+                        "falsifiers": ["wall structure test", "aperture position", "PBDB range check"],
+                        "confidence": 0.55,
+                    },
+                    {
+                        "hypothesis_id": "hyp_fla_02",
+                        "label": "Candidate Bolivinid / infaunal (morphology-convergent)",
+                        "supporting": ["biserial_chambered_test_withPeripheral_keel"],
+                        "conflicting": [],
+                        "falsifiers": ["PBDB range check", "ornament type"],
+                        "confidence": 0.50,
+                    },
+                ],
+                "limitations": {
+                    "image_cannot_determine": [
+                        "Convergent morphology cannot separate the candidates; PBDB biozone validation required before any age use."
+                    ],
+                    "missing_metadata": ["Orientation / wall-structure view", "Stratigraphic context"],
+                    "requested_human_tests": [],
+                    "requested_instrument_data": ["PBDB occurrence query for both candidates", "SEM wall-structure image"]
+                },
+            }
+        elif "weathered" in self.mock_scenario:
+            # Trap: weathered rind masks fresh lithology — observer must
+            # request a fresh surface; colour alone cannot testify.
+            payload = {
+                "modality": "rock",
+                "visible_features": [
+                    {
+                        "feature_id": "feat_we_01",
+                        "label": "oxidized_weathering_rind",
+                        "category": "texture",
+                        "confidence": 0.85,
+                        "description": "Brown weathering rind over unexposed interior; fresh surface not visible",
+                    }
+                ],
+                "ocr_text": [],
+                "measurements": [],
+                "hypotheses": [
+                    {
+                        "hypothesis_id": "hyp_we_01",
+                        "label": "Carbonate or variolitic host (rind-masked — UNRESOLVED)",
+                        "supporting": ["oxidized_weathering_rind"],
+                        "conflicting": ["rind masks true fabric and mineralogy"],
+                        "falsifiers": ["fresh surface break", "HCl on fresh and rind separately"],
+                        "confidence": 0.35,
+                    }
+                ],
+                "limitations": {
+                    "image_cannot_determine": [
+                        "Weathered rind cannot testify about fresh lithology, grain size, or mineralogy."
+                    ],
+                    "missing_metadata": ["Fresh (unweathered) surface view", "Scale reference"],
+                    "requested_human_tests": [
+                        {"test_name": "fresh_surface_break", "purpose": "Break or cut a fresh face and re-photograph", "discriminates": ["fresh fabric", "rind-only colour"]},
+                        {"test_name": "dilute_hcl", "purpose": "Acid on BOTH fresh face and rind", "discriminates": ["calcite", "dolomite", "silicate"]}
+                    ],
+                    "requested_instrument_data": []
+                },
             }
         else:
             # Default rock / outcrop
