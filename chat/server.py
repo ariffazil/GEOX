@@ -33,6 +33,9 @@ SESSION_TTL = 30 * 60  # checklist §7
 PER_IP_WINDOW = 60.0
 PER_IP_MAX = 10
 DAILY_BUDGET = int(os.getenv("EARTH_WITNESS_DAILY_BUDGET", "200"))
+# Secure cookie behind the TLS vhost (Gate checklist F). Local plain-http
+# dev may set EARTH_WITNESS_COOKIE_SECURE=0; prod default is ON.
+COOKIE_SECURE = os.getenv("EARTH_WITNESS_COOKIE_SECURE", "1") == "1"
 
 _mcp = McpClient()
 _sessions: dict[str, float] = {}
@@ -60,7 +63,7 @@ def _session_id(request: Request, response: Response) -> str:
         return sid
     sid = secrets.token_urlsafe(16)
     _sessions[sid] = now
-    response.set_cookie("ew_sid", sid, httponly=True, samesite="lax", max_age=SESSION_TTL)
+    response.set_cookie("ew_sid", sid, httponly=True, samesite="lax", secure=COOKIE_SECURE, max_age=SESSION_TTL)
     return sid
 
 

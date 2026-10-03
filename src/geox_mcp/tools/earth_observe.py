@@ -132,12 +132,22 @@ def geox_observe(
     )
     user_prompt = f"Analyze this Earth artifact (modality hint: {modality}). Extract visible features, text, and competing hypotheses."
 
-    resp = backend.inspect_artifact(
-        image_bytes=image_bytes,
-        mime_type=mime_type,
-        system_instruction=system_instruction,
-        user_prompt=user_prompt,
-    )
+    try:
+        resp = backend.inspect_artifact(
+            image_bytes=image_bytes,
+            mime_type=mime_type,
+            system_instruction=system_instruction,
+            user_prompt=user_prompt,
+        )
+    except Exception as exc:
+        # Backend failure (402/quota/network/model) is a governed refusal, never
+        # a raw crash: the caller gets a classified error envelope (house
+        # federation_safety pattern), the organ keeps serving, and nothing is
+        # guessed to compensate (I5 posture at the system boundary).
+        logger.error("VISION_BACKEND_FAILURE %s: %s", type(exc).__name__, str(exc)[:200])
+        from geox_mcp.federation_safety import classify_error
+
+        return classify_error(exc, source_tool="geox_observe", source_organ="geox")
     raw_payload = resp.raw_response
 
     # Update modality if detected by backend and previously unknown
@@ -188,6 +198,12 @@ def geox_observe(
         ocr_items=ocr_items,
         modality=modality,
         context=context,
+    )
+    # Gate-evidence log: every reply's audit outcome is recorded (checklist §5 —
+    # "contradiction_auditor runs before every final reply" must be observable).
+    logger.info(
+        "CONTRADICTION_AUDIT modality=%s hypotheses=%d findings=%d ok=%s",
+        modality, len(hypotheses), len(audit["findings"]), audit["ok"],
     )
     audit_forced_review = not audit["ok"]
     for f in audit["findings"]:
