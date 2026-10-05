@@ -100,16 +100,29 @@ patch_landing()
 # item of the SPA navbar (copying native link classes, amber highlight),
 # re-asserting after React re-renders. Owned by this publisher; replace-block
 # semantics via versioned markers.
-BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:v2:START (owned by scripts/publish_docroot.py) -->"
+BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:v3:START (owned by scripts/publish_docroot.py) -->"
 BANNER = BANNER_OPEN + """
-<div id="ew-cta-bar" style="position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:16px;padding:10px 16px;background:#0b1220;color:#e8eefc;font-family:system-ui,sans-serif;font-size:15px;border-bottom:1px solid #233252">
-  <a href="/observe/" style="display:inline-block;padding:9px 20px;border-radius:8px;background:#2f6df6;color:#fff;font-weight:700;text-decoration:none">🪨 Earth Witness — Tanya Bumi</a>
-  <span style="opacity:.85">Chat langsung dengan organ geoscience &middot; <a href="/mcp-apps/" style="color:#8fb3ff">semua apps</a> &middot; <a href="/gui/" style="color:#8fb3ff">WellDesk GUI</a></span>
+<style>
+/* v3 2026-10-05 FI-008: mobile repair — v2 bar covered/overflowed the SPA nav
+   on narrow screens (external audit 2026-10-05). Wrap + compact + hide the
+   longest sub-link on small viewports; nav stays reachable. */
+#ew-cta-bar{position:sticky;top:0;z-index:9999;display:flex;align-items:center;justify-content:center;gap:16px;row-gap:6px;flex-wrap:wrap;padding:10px 16px;background:#0b1220;color:#e8eefc;font-family:system-ui,sans-serif;font-size:15px;border-bottom:1px solid #233252}
+#ew-cta-bar a.ew-cta-main{display:inline-block;padding:9px 20px;border-radius:8px;background:#2f6df6;color:#fff;font-weight:700;text-decoration:none}
+#ew-cta-bar .ew-cta-sub{opacity:.85}
+@media (max-width:640px){
+  #ew-cta-bar{gap:8px;padding:7px 10px;font-size:12.5px}
+  #ew-cta-bar a.ew-cta-main{padding:7px 12px}
+  #ew-cta-bar .ew-hide-sm{display:none}
+}
+</style>
+<div id="ew-cta-bar">
+  <a class="ew-cta-main" href="/observe/">🪨 Earth Witness — Tanya Bumi</a>
+  <span class="ew-cta-sub">Chat langsung dengan organ geoscience &middot; <a href="/mcp-apps/" style="color:#8fb3ff">semua apps</a><span class="ew-hide-sm"> &middot; <a href="/gui/" style="color:#8fb3ff">WellDesk GUI</a></span></span>
 </div>
 <script>
 (function(){
-  var VERSION='v2-20261003';
-  var OLDre=/<!-- EARTH-WITNESS-CTA:v1:START[\\s\\S]*?EARTH-WITNESS-CTA:END-->/;
+  var VERSION='v3-20261005';
+  var OLDre=/<!-- EARTH-WITNESS-CTA:v[12]:START[\\s\\S]*?EARTH-WITNESS-CTA:END-->/;
   function ensureNav(){
     var navs=document.querySelectorAll('nav');
     for(var i=0;i<navs.length;i++){
@@ -132,7 +145,7 @@ BANNER = BANNER_OPEN + """
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',loop)}else{loop()}
 })();
 </script>
-<!-- EARTH-WITNESS-CTA:v2:END -->
+<!-- EARTH-WITNESS-CTA:v3:END -->
 """
 
 def inject_banner(text: str) -> tuple[str, bool]:
