@@ -150,8 +150,16 @@ BANNER = BANNER_OPEN + """
 
 def inject_banner(text: str) -> tuple[str, bool]:
     import re as _re
-    # replace any existing versioned/legacy block
-    pattern = _re.compile(r"<!-- EARTH-WITNESS-CTA:.*?:START -->.*?<!-- EARTH-WITNESS-CTA.*?:END -->", _re.S)
+    # 2026-10-05 FI-008 root-cause fix: the old pattern required ":START -->"
+    # verbatim, but v2/v3 markers are annotated ("...START (owned by ...) -->")
+    # so it NEVER matched and every publish INSERTED another banner
+    # (measured: 3 stacked banners after 3 runs). Tempered block match:
+    # from the first CTA comment opening to its first "END -->" (the banner's
+    # internal JS holds "END-->" without a space and cannot false-stop).
+    pattern = _re.compile(
+        r"<!-- EARTH-WITNESS-CTA:(?:(?!END -->).)*?END -->",
+        _re.S,
+    )
     if pattern.search(text):
         new_text = pattern.sub(BANNER.rstrip(), text, count=1)
         return new_text, new_text != text
