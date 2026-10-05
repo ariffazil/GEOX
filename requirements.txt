@@ -25,7 +25,7 @@
 #   but 3.4.6 is installed.
 #
 # mcp NOTE: uv.lock resolves mcp 1.29.1; 1.29.0 is what is actually installed.
-mcp==1.29.0
+mcp==2.2.0
 fastmcp==3.4.6
 fastmcp-slim==3.4.6
 pydantic==2.13.4
