@@ -444,6 +444,10 @@ MUTATION_TOOLS: set[str] = {
     "geox_claim",  # mode=seal writes immutable claims
     "geox_prospect",  # mode=seal writes sealed evaluations
     "geox_subsection_model",  # model building mutates workspace state
+    # 2026-10-05 FI-008 red-team: registering tools ARE writes — the registry
+    # rows persist. Were unmapped → default C1 (proceeded anonymously).
+    "geox_register_native_source",  # writes SEG-Y source registry
+    "geox_calibration_register_witness",  # writes calibration witness registry
 }
 
 # Authority rank ordering (from session_enforcement.AUTHORITY_LEVELS)
@@ -1105,6 +1109,18 @@ async def check_governance(
             risk_tier = RiskTier.C1_ADVISORY
         elif mode == "seal":
             risk_tier = RiskTier.IRREVERSIBLE
+
+    # D6 (2026-10-05 FI-008 red-team): geox_spatial is mode-dispatched —
+    # lancedb_store mutates the embedded store (create/drop/insert tables);
+    # h3/stac/query modes are pure compute and stay anonymous per the
+    # 27-tool public doctrine. Canary test proved ungated lancedb_store
+    # executed anonymously (blocked only by lancedb being uninstalled).
+    if tool_name == "geox_spatial" and arguments:
+        effective = arguments
+        if isinstance(arguments.get("arguments"), dict):
+            effective = arguments["arguments"]
+        if str(effective.get("mode") or "").lower() == "lancedb_store":
+            risk_tier = RiskTier.C2_EXECUTE
 
     # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
     id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id, arguments)
