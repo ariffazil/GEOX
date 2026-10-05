@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-09-17T21:51:50.766847+00:00",
+  "generated_at": "2026-10-05T13:29:21.255131+00:00",
   "organ": "GEOX",
-  "total_canonical_tools": 32,
+  "total_canonical_tools": 28,
   "total_ui_resources": 24,
   "active_ui_resources": 20,
   "deprecated_ui_resources": 3,
@@ -66,8 +66,11 @@
         "geox_basin",
         "geox_basin_backstrip",
         "geox_dde_reason",
+        "geox_paleobiodb_query",
         "geox_sediment_mass_balance",
         "geox_sequence",
+        "geox_source",
+        "geox_source_rock",
         "geox_thermal_maturity_history"
       ],
       "csp_domains": [
@@ -90,6 +93,8 @@
       "content_bytes": 3015,
       "content_hash": "sha256:258e3125718b63fe",
       "bound_tools": [
+        "geox_list_registered_sources",
+        "geox_register_native_source",
         "geox_surface_status"
       ],
       "csp_domains": [
@@ -113,10 +118,12 @@
       "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
         "geox_h3_spatial_index",
+        "geox_map",
         "geox_map_export_package",
         "geox_map_layers_list",
         "geox_map_render_preview",
         "geox_map_scene_plan",
+        "geox_spatial",
         "geox_stac_discover"
       ],
       "csp_domains": [
@@ -139,12 +146,23 @@
       "content_bytes": 9341,
       "content_hash": "sha256:c6a7b21f04f2f209",
       "bound_tools": [
+        "geox_deep_time",
         "geox_deep_time_state",
         "geox_gempy_implicit_3d",
         "geox_geological_model_generate",
+        "geox_glof",
+        "geox_glof_cascade_initialize",
+        "geox_glof_cascade_inverse",
+        "geox_glof_cascade_mcmc_inverse",
+        "geox_glof_cascade_metabolize",
+        "geox_glof_cascade_phase",
+        "geox_glof_cascade_propagate",
+        "geox_glof_cascade_step",
+        "geox_model",
         "geox_seismic_compute",
         "geox_seismic_interpret",
-        "geox_subsurface_model"
+        "geox_subsurface_model",
+        "geox_temporal"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -167,7 +185,6 @@
       "content_hash": "sha256:6b771f45c0ebd037",
       "bound_tools": [
         "geox_geomechanics",
-        "geox_prospect",
         "geox_to_wealth_bridge"
       ],
       "csp_domains": [
@@ -213,6 +230,7 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_extract_display_proxy",
         "geox_lancedb_embed_store",
         "geox_surface_status",
         "geox_visual_generate_hypotheses",
@@ -284,6 +302,7 @@
       "bound_tools": [
         "geox_claim",
         "geox_contradiction_scan",
+        "geox_contrast_metabolize",
         "geox_evidence",
         "geox_falsify",
         "geox_prospect"
@@ -356,7 +375,6 @@
       "content_bytes": 34295,
       "content_hash": "sha256:b7b25d6b5c9c0e25",
       "bound_tools": [
-        "geox_claim",
         "geox_claim_graph_evaluate"
       ],
       "csp_domains": [
@@ -379,6 +397,7 @@
       "content_bytes": 21894,
       "content_hash": "sha256:011cd775e36dc03f",
       "bound_tools": [
+        "geox_extract_native_trace",
         "geox_seismic_compute",
         "geox_seismic_ingest",
         "geox_seismic_interpret"
@@ -426,6 +445,7 @@
       "content_bytes": 142676,
       "content_hash": "sha256:9c4ced2659a2c670",
       "bound_tools": [
+        "geox_extract_display_proxy",
         "geox_lancedb_embed_store",
         "geox_surface_status",
         "geox_visual_generate_hypotheses",
@@ -453,6 +473,7 @@
       "bound_tools": [
         "geox_lem_predict",
         "geox_petrophysics",
+        "geox_well",
         "geox_well_desk",
         "geox_well_desurvey",
         "geox_well_ingest",
@@ -479,7 +500,7 @@
       "content_bytes": 11022,
       "content_hash": "sha256:352aba9157742bf8",
       "bound_tools": [
-        "geox_petrophysics"
+        "geox_calibration_register_witness"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -501,7 +522,8 @@
       "content_bytes": 18593,
       "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
-        "geox_map_layers_list"
+        "geox_map",
+        "geox_seismic_compute"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",
@@ -523,7 +545,8 @@
       "content_bytes": 18593,
       "content_hash": "sha256:c03c131cec85840d",
       "bound_tools": [
-        "geox_map_layers_list"
+        "geox_map",
+        "geox_seismic_compute"
       ],
       "csp_domains": [
         "geox.arif-fazil.com",

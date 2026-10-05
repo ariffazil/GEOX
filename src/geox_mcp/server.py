@@ -2833,7 +2833,94 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
                 },
                 status_code=400,
             )
+
+        # === F13 SAH 2026-10-05: 2026-07-28 G0.7 RATCHET (SEP-2567) ===
+        # When client declares protocolVersion=2026-07-28, the Mcp-Method header
+        # is REQUIRED on POST (fail-closed). GET discovery passes through.
+        if version == "2026-07-28" and request.method == "POST":
+            mcp_method = request.headers.get("mcp-method")
+            if not mcp_method:
+                logger.warning(
+                    "G0_7_RATCHET: 2026-07-28 POST without Mcp-Method header from %s",
+                    request.client.host if request.client else "?",
+                )
+                return JSONResponse(
+                    {
+                        "jsonrpc": "2.0",
+                        "error": {
+                            "code": -32020,
+                            "message": "HeaderMismatch: Mcp-Method header is required on MCP 2026-07-28 requests (G0.7 ratchet, fail-closed)",
+                        },
+                    },
+                    status_code=400,
+                )
+
         return await call_next(request)
+
+
+# === F13 SAH 2026-10-05: 2026-07-28 cacheable list (SEP-2549) ===
+# Augment tools/list responses with cacheScope + ttlMs + resultType so clients
+# can cache the tool catalog per the new spec. GEOX tool catalog changes only
+# on registry updates — 5-min private TTL is correct.
+class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
+    """Augment tools/list responses with cacheScope + ttlMs per MCP 2026-07-28 SEP-2549.
+
+    Federation consistency. cacheScope=private (per-host), ttlMs=300000 (5 min).
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        if request.method != "POST" or not request.url.path.startswith("/mcp"):
+            return await call_next(request)
+
+        # Peek body to detect tools/list
+        body = await request.body()
+        try:
+            req_data = json.loads(body)
+        except Exception:
+            return await call_next(request)
+
+        if req_data.get("method") != "tools/list":
+            return await call_next(request)
+
+        # Replay the body for downstream (BaseHTTPMiddleware consumed it)
+        async def replay_receive():
+            return {"type": "http.request", "body": body, "more_body": False}
+
+        request._receive = replay_receive
+
+        response = await call_next(request)
+
+        # Read + augment response body
+        try:
+            chunks = []
+            async for chunk in response.body_iterator:
+                chunks.append(chunk if isinstance(chunk, bytes) else chunk.encode())
+            full_body = b"".join(chunks)
+        except Exception:
+            return response
+
+        try:
+            data = json.loads(full_body)
+            result = data.get("result")
+            if isinstance(result, dict) and "tools" in result and "cacheScope" not in result:
+                result["cacheScope"] = "private"
+                result["ttlMs"] = 300000
+                result["resultType"] = "complete"
+                new_body = json.dumps(data).encode("utf-8")
+                new_resp = JSONResponse(
+                    content=json.loads(new_body),
+                    status_code=response.status_code,
+                )
+                for k, v in response.headers.items():
+                    if k.lower() not in ("content-length", "content-type"):
+                        new_resp.headers[k] = v
+                new_resp.headers["content-length"] = str(len(new_body))
+                logger.debug("CACHEABLE_LIST: augmented tools/list with cacheScope=private ttlMs=300000")
+                return new_resp
+        except Exception as e:
+            logger.debug("CACHEABLE_LIST: response augmentation skipped: %s", e)
+
+        return response
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -3996,7 +4083,8 @@ def create_app():
     # MCP spec compliance middlewares — outermost to innermost:
     #   OriginValidation → McpAuth → McpProtocolVersion → EarthAnchor → SlashRewrite → routes
     app.add_middleware(McpLifecycleMiddleware)  # Phase A1: init → initialized → tools/call
-    app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header
+    app.add_middleware(McpProtocolVersionMiddleware)  # MCP spec §Transport: version header (incl. G0.7 ratchet)
+    app.add_middleware(_CacheableListResponseMiddleware)  # 2026-07-28 cacheable list (SEP-2549)
     app.add_middleware(McpAuthMiddleware)  # MCP spec §Security: Bearer token
     app.add_middleware(OriginValidationMiddleware)  # SEP-2243: DNS rebinding guard
     # D7 ACCEPT-NEGOTIATION (2026-08-01): outermost — intercept GET /mcp*
