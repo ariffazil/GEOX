@@ -1,0 +1,89 @@
+# Kinabalu Basin Event Spine — W1 v0 (PUBLIC LANE ONLY)
+# Built 2026-10-06 by 333-AGI from the session citation register (dual-witnessed where noted).
+# GOVERNANCE: This file is METHOD + PUBLIC LITERATURE only. No PETRONAS-confidential data here, ever.
+# Execution of tests runs in the PETRONAS internal lane (IBS data environment); results return as
+# verdict-shaped receipts (pass/fail per decision_rule), not raw data. GEOX computes, never adjudicates.
+# Discovery context: /root/GEOX/okf/sabah-basin/IBS-KINABALU-DEEP-RESEARCH-2026-10-06.md (Addenda A+B)
+
+version: 0.1.0
+scope_note: >
+  NSPW-derived rows (canopy phases) are NORTHERN SABAH (Block H type area) ONLY.
+  Inboard Belt + East Baram Delta require independent evidence (scope law, sabah_basin_strat.yaml).
+
+surfaces:
+  - name: TOP_NIDO
+    aliases: [top Dangerous Grounds, Nido Limestone reflection]
+    age_ma: ~23
+    event_class: basement-of-wedge
+    role: NSPW base surface
+    witnesses: [GEOX ontology seismic_horizons (epistemic HIGH)]
+    status: anchored
+
+  - name: BMU_TCU
+    aliases: [Base Miocene Unconformity, Top Crocker Unconformity, Base Meligan Unconformity (senior), KAPUR phase]
+    age_range_ma: [23, 24]
+    competing_ages: {legacy: ~22, Levell_1987: "early Middle Miocene (conflated w/ DRU)"}
+    event_class: collision onset (Dangerous Grounds entry into subduction)
+    citation: "BMU = Lunt 2022 (JAES v.230)  # NEVER cite bare 'Lunt 2022' — two different papers"
+    witnesses: [GEOX ABKSS KAPUR, Morley 2023 (phase III onset), Lunt 2022 JAES]
+    falsifier: "BMU younger than 20 Ma in biostrat-bracketed wells collapses the 2-phase pre-DRU stack"
+    status: model_position
+
+  - name: DRU
+    aliases: [Deep Regional Unconformity, TB 2.4 sb (legacy), Stage III/IV boundary (approx)]
+    age_range_ma: [11.7, 13.77]          # Lunt 2022 (BGSM 74) body text — SINGLE-WITNESSED, dual pending
+    poster_age: "~13–12 Ma (younger part of bracket preferred)"
+    competing_ages:
+      Balaguru_Hall_2009: 15.5           # "MMU/DRU" conflation reading (AAPG S&D #30084)
+      Morrison_Lee_2003: "TB 2.4 sb ~15.5"
+      Morley_2023: "13.5–12.5 (Fig. 23 ca. 12) — age chain CITES Levell 1987 + Lunt & Madon 2017; only INDEPENDENT support = Tomani restoration ca. 12 Ma. Phrase as 'consistent with', never 'independently'."
+    event_class: composite wedge-top surface — "mixtures of conformable regions together with local unconformities" (Morley 2023, verbatim)
+    mechanism_field: [underthrusting+lithospheric stresses (Morley 2023), gravity-later, slab-breakoff=SYNTHESIS/INT]
+    identity_ruling: "DRU ≠ Sarawak MMU (~16 Ma, offshore West Sarawak) — separation ~3.5–4 My (Lunt 2022 BGSM 74 body, single-witnessed)"
+    scope: per-sub-basin unknown — THE testable question
+    status: evidence-supported age, per-belt identity OPEN
+
+  - name: LIU
+    aliases: [Lower Intermediate Unconformity]
+    age: late Middle Miocene
+    citation: Levell 1987 (BGSM 21)
+    status: not yet re-dated — internal lane
+
+  - name: UIU
+    aliases: [Upper Intermediate Unconformity, IRU (Balaguru usage — single-witnessed)]
+    age_ma: ~10.5
+    event_class: mud-canopy coalescence burst (<0.1 My, Morley 2023) + possible Kinabalu-emplacement link (Balaguru EAGE 10.6 — single-witnessed)
+    witnesses: [Morley 2023 Figs 2/26, GEOX nspw_phases (corrected 2026-10-06)]
+    status: anchored (north Sabah); basin-wide OPEN
+
+  - name: SRU
+    aliases: [Shallow Regional Unconformity, TB 3.2 sb]
+    age_range_ma: [8.5, 9]
+    event_class: caps the Stage IVC canopy-basin fill; post-wedge burial begins
+    competing_readings: {Morley_2023: canopy-basin fill top, Balaguru: transpression "Meliau" (coinage, unverified — keep off artifacts)}
+    block_H_fact: "chimneys/pipes CUT the SRU (Morley observed) — Inboard Belt untested"
+    status: anchored (north Sabah)
+
+  - name: MMU_SARAWAK
+    aliases: [Doust MMU, Early-Middle Miocene boundary event ~15.97 Ma]
+    age_ma: ~16
+    event_class: plate-scale subsidence (Bunguran Trough focused) — DIFFERENT CLASS from DRU
+    rule: "MMU must NOT appear in Sabah panels as a pick target; 'post-MMU' phrasing is banned in Sabah context (use post-DRU)"
+    status: anchored (Sarawak only)
+
+decision_rule_DRU_dating_test:            # THE decider — run in PETRONAS internal lane
+  inputs: "biostrat-controlled wells from the IBS 35+ set that cross the DRU"
+  method: "NN-standard ages immediately above and below the surface, per well → time gap per well"
+  outcomes:
+    - if: "DRU ≈ 13–12 Ma everywhere"
+      then: "Lunt 2022 + Morley 2023 hold basin-wide; purge all 15.5-ghost picks from keylines"
+    - if: "DRU ≈ 15–16 Ma in some belts"
+      then: "Balaguru & Hall reading wins in those belts — map the geographic split"
+    - if: "age varies between sub-basins"
+      then: "the 'surface' is a mixture of events (Morley's own prediction) — THIS IS THE FRAMEWORK RESULT, not a failure"
+  output_contract: "verdict-shaped receipts per well (age above, age below, gap, NN zones used) — no raw curves leave PETRONAS"
+
+lane_governance:
+  public_lane_GEOX: [event spine, hypothesis ledger, decision rules, citation register, audit of returned receipts]
+  internal_lane_PETRONAS: [biostrat tops, seismic, per-well test execution, uncertainty maps, crosscutting tests]
+  hard_wall: "No PETRONAS-confidential data on this VPS or any arif-fazil.com-reachable surface. Irreversible-risk class."

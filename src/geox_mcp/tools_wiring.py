@@ -6760,7 +6760,7 @@ def register_tools_on(mcp):
     # ── GROUP 7: geox_model — absorbs subsurface_model/geological_model_generate/gempy_implicit_3d ──
     @mcp.tool(
         name="geox_model",
-        description="Subsurface and geological modeling. Modes: subsurface (joint inversion, gravity/mag, MT forward), geological_generate (deterministic 2D cross-section from strata), gempy_3d (GemPy implicit 3D structural modeling).",
+        description="Subsurface and geological modeling. Modes: subsurface (joint inversion, gravity/mag, MT forward), geological_generate (deterministic 2D cross-section from strata), gempy_3d (GemPy implicit 3D), flexure (elastic plate Te → forebulge distance), physics_section (spine-driven, physics-annotated cross-section with confidentiality gate), critical_taper (REFERENCE-GATED: DSD 1983).",
         annotations=_geox_annotations("geox_model"),
     )
     async def _model_unified(
@@ -6781,6 +6781,18 @@ def register_tools_on(mcp):
         tolerance: float = 0.001,
         # ── geological_generate params (Pydantic model passed through) ──
         geological_params: dict[str, Any] | None = None,
+        # ── flexure / physics_section / critical_taper params ──
+        te_km: float | list[float] | None = None,
+        infill: str = "sediment",
+        plate: str = "continuous",
+        transect: str = "sabah_nw_se",
+        theme: str = "dark",
+        out_dir: str | None = None,
+        phi_internal_deg: float | None = None,
+        phi_basal_deg: float | None = None,
+        lambda_pore: float | None = None,
+        lambda_basal: float | None = None,
+        beta_decolletion_deg: float | None = None,
         # ── gempy_3d params ──
         surface_points: list | str | None = None,
         orientations: list | str | None = None,
@@ -6822,6 +6834,20 @@ def register_tools_on(mcp):
                 actor_id=actor_id,
                 trace_id=trace_id,
             )
+        elif mode in ("flexure", "physics_section", "critical_taper"):
+            from geox_mcp.tools.model_physics import (
+                compute_flexure, render_physics_section, critical_taper_reference,
+            )
+            if mode == "flexure":
+                _te = te_km if isinstance(te_km, (list, tuple)) else ([te_km] if te_km else None)
+                return compute_flexure(te_km=_te, infill=infill, plate=plate)
+            elif mode == "physics_section":
+                return render_physics_section(transect=transect, theme=theme, out_dir=out_dir)
+            else:
+                return critical_taper_reference(
+                    phi_deg=phi_internal_deg, phi_basal_deg=phi_basal_deg,
+                    lambda_pore=lambda_pore, lambda_basal=lambda_basal, beta_deg=beta_decolletion_deg,
+                )
         elif mode == "geological_generate":
             # D1 (2026-09-09, sovereign residual delta): honor caller `layers`
             # — previously ignored for this mode, so the renderer always drew

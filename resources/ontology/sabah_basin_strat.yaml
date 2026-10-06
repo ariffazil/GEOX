@@ -84,6 +84,9 @@ basin:
     top_surface: "diachronous — Palawan ~13 Ma, SW Sabah ~10.5 Ma"
     epistemic: "INT (synthesis of Morley 2023/2024, Aurelio 2014, Ilao 2018)"
     source: "Morley et al. 2023 Geosphere; Morley 2024 Earth-Science Reviews"
+    geographic_scope: "NORTHERN SABAH ONLY (North Block H type area). NSPW ABSENT in southern Sabah, where most deformation POST-DATES the SRU. DO NOT extrapolate the NSPW phase sequence basin-wide — Inboard Belt and East Baram Delta require independent evidence. (Scope flag 2026-10-06, after Morley 2023 primary text)"
+    synthesis_tags: "Top-surface diachroneity (Palawan ~13 Ma / SW Sabah ~10.5 Ma) and slab-breakoff attribution are SYNTHESIS/INT (Morley 2024 + Pilia 2023 lineage) — NOT stated in Morley 2023; treat as hypotheses. Morley 2023 DRU age: 13.5-12.5 Ma (Fig. 23 ca. 12 Ma). Morley 2023 on DRU/UIU/SRU: 'mixtures of conformable regions together with local unconformities rather than being simple widespread unconformities'."
+    citation_trap: "TWO Lunt 2022 papers exist — DRU age = Lunt 2022 (BGSM 74, sole author Peter Lunt, SEACARL/UTP); BMU re-examination = Lunt 2022 (JAES v.230). NEVER cite bare 'Lunt 2022'."
 
   # ── NSPW TECTONO-STRATIGRAPHIC FRAMEWORK (5 phases) ──
   nspw_phases:
@@ -111,9 +114,9 @@ basin:
     - name: "mud_canopy"
       age_ma: [8.5, 10.5]
       surfaces: [UIU, SRU]
-      processes: ["Mud volcano coalescence", "1900 km² canopy", "Stage IVC turbidite routing around canopy relief"]
-      evidence: "Morley et al. 2023; Rotan field reservoir data"
-      epistemic: "HIGH"
+      processes: ["Canopy coalescence AT the UIU in a short burst (<0.1 My)", "Stage IVC canopy-basin fill on top of the canopy (UIU to SRU ~8.5-9 Ma)", "Stage IVC turbidite routing around canopy relief", "Trigger: thrusting + inversion, then stress relaxation"]
+      evidence: "Morley et al. 2023 Geosphere 19(1), Figs 2 & 26; Rotan field reservoir data"
+      epistemic: "HIGH (corrected 2026-10-06 against primary text: coalescence is a UIU event, NOT SRU; SRU caps the canopy-basin fill; compression is the canopy trigger — not canopy-vs-compression either/or)"
 
     - name: "post_wedge_burial"
       age_ma: [0, 8.5]

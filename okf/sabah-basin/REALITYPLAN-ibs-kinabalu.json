@@ -1,0 +1,37 @@
+{
+  "$schema": "https://arifOS/contracts/reality-plan.schema.json",
+  "plan_id": "rp-ibs-kinabalu-2026-10-06",
+  "intent": "Establish a consistent tectono-stratigraphic framework across the Kinabalu and Brunei basins (IBS Phase I → Phase II) using the federation's sealed GEOX assets + published state of the art + 2025-26 AI/ML toolset; probe existing Kinabalu work and update reality (F13 order 2026-10-06, poster day).",
+  "current_state": {
+    "evidence_ref": "/root/GEOX/okf/sabah-basin/IBS-KINABALU-DEEP-RESEARCH-2026-10-06.md §2",
+    "summary": "Framework-grade assets sealed on machine (sabah_basin_strat.yaml NSPW-updated 2026-07-16; ABKSS event stack; biostrat canonical stack; OKF bundle seq 12); biostrat scar vindicated 2026-06-15 (SB409/SB412 invalid); 8 keylines + operator data NOT on this machine (UNKNOWN); no crosswalk registry, no RGT/ML compute wired.",
+    "kinabalu_scar_ref": "/root/memory/evidence/kinabalu_scar/evidence.json"
+  },
+  "intended_delta": {
+    "from": "Fragmented nomenclature + legacy marker picks + invalid biostrat tops + border uncertainty, knowledge split between PETRONAS systems and sealed federation assets with no executable Phase II method",
+    "to": "7-workstream blueprint executing: event-spine registry (W1) + biostrat recalibration protocol (W2) as governance fixes, keylines as versioned control objects (W3), cross-border anchors (W5), RGT-volume interpretation (W4), event-tagged restoration (W6), HD GDE/RDE + missed-opportunity screen (W7)"
+  },
+  "output_kind": ["artifact", "chat", "workflow"],
+  "persistence": {
+    "required": true,
+    "reasons": [
+      "F13 RealityPlan Binding 2026-10-06: persistent plan = controller IR",
+      "Poster commitment is public; Phase II scoping will consume this plan",
+      "scar-bound: kinabalu biostrat vindication must constrain any future biostrat workflow"
+    ],
+    "artifact_ref": "/root/GEOX/okf/sabah-basin/IBS-KINABALU-DEEP-RESEARCH-2026-10-06.md"
+  },
+  "workstreams": [
+    {"id": "W1", "name": "event-spine registry (kinabalu_event_spine.yaml)", "blocks": ["W4", "W6", "W7"], "state": "PROPOSED", "owner": "333-AGI + basin team", "evidence_required": "crosswalk row per regional surface with age_range + provenance"},
+    {"id": "W2", "name": "biostrat recalibration protocol (multi-group witness, reworking flags, calibrate-not-verify)", "blocks": ["W1"], "state": "PARTIAL — iron law already sealed in biostrat_reference_stack.yaml", "owner": "GEOX + TAC biostratigraphers", "scar_binding": "KINABALU-SCAR-2026-06-15"},
+    {"id": "W3", "name": "8 keylines as frozen hashed interpretation objects", "blocks": ["W4"], "state": "EXTERNAL-DATA (PETRONAS systems; UNKNOWN here)", "owner": "IBS basin team"},
+    {"id": "W4", "name": "RGT-volume + confidence maps, expert-in-loop (RGT-Est / HorAgent class)", "blocks": ["W7"], "state": "PROPOSED", "owner": "333-AGI"},
+    {"id": "W5", "name": "cross-border anchors: shelf-margin trajectory + provenance + isochron ranges", "blocks": ["W7"], "state": "PROPOSED", "owner": "Sabah Venture + Brunei team"},
+    {"id": "W6", "name": "event-tagged multi-step restoration (ABKSS phases, overprinting guard)", "blocks": ["W7"], "state": "PARTIAL — restoration doctrine + nw_sabah context sealed", "owner": "structural geologists"},
+    {"id": "W7", "name": "HD GDE/RDE + missed-opportunity screen (per-episode untested plays)", "blocks": [], "state": "PROPOSED", "owner": "play team"}
+  ],
+  "execution_order": "W1→W2 → (W3 ∥ W5) → W4 → W6 → W7",
+  "falsifier": "If Phase II trains ML before W1+W2 exist, it industrialises inconsistency — that falsifies this plan's ordering claim.",
+  "human_facing": {"routes_to_telegram": false, "reason": "schema/research artifact, not sovereign binary; poster-day summary delivered in chat"},
+  "provenance": {"session": "SEAL-5662675babe246f8", "actor": "333-AGI", "created_utc": "2026-10-06T06:50:00Z"}
+}
