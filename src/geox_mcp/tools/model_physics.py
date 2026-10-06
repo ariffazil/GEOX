@@ -29,6 +29,13 @@ RHO_WATER_INFILL = 1030.0  # kg/m³ (assumed)
 _SECTION_SCRIPT = Path("/root/GEOX/geox/skills/subsurface/section/asas_malam_xs.py")
 _SPINE_YAML = Path("/root/GEOX/okf/sabah-basin/kinabalu_event_spine.yaml")
 _FORBIDDEN_STRINGS = ["Pekaka", "LL-1", "Megah", "Zoisit", "Nuri", "Rotan"]
+# 2026-10-06 (auditor fix #3): pattern-level gate — reserve figures + well-name shapes
+_FORBIDDEN_PATTERNS = [
+    r"\b\d+(\.\d+)?\s*(?:MMbbl|MMstb|Tcf|Bcf|bboe)\b",   # volume/reserve figures
+    r"\bOOIP\b|\bGIIP\b|\bSTOIIP\b",                        # reserve-class terms
+    r"\b[A-Z][a-zA-Z]{2,}(?:\s?Deep)?\s?-?\s?\d\b",         # well-name shape ("Xxx-1", "Xxx Deep-1")
+]
+_FORBIDDEN_ALLOWLIST = ["Tepat"]  # published well (Banerjee & Salim 2020, JNGSE 83)
 
 
 def compute_flexure(
@@ -90,7 +97,8 @@ def compute_flexure(
         "formula": "D = E·Te³/(12(1-ν²));  a = (4D/((ρm-ρi)g))^(1/4);  forebulge = π·a (continuous) | 0.75π·a (broken)",
         "results": results,
         "note": "Assumed E, ν, ρ. A measured forebulge on 3D fixes Te; if no realistic Te fits, the trough is not a simple flexural moat.",
-        "public_safe": True,
+        "compute_output_partner_free": True,
+        "fail_closed": True,
         "residual_interpretation": "Computation = forebulge distance under stated assumptions. Interpretation = whether this mechanism explains Sabah Trough (requires measured forebulge on MC3D). Observation = whether the predicted feature exists on the actual transect (L2 until measured).",
         "source": "Watts (2001) Isostasy and Flexure; validated against ASAS-MALAM figure computation 2026-10-06.",
     }
@@ -168,6 +176,13 @@ def render_physics_section(
             if forbidden.lower() in svg_text.lower():
                 scan_clean = False
                 scan_hits.append(forbidden)
+        import re as _re
+        for pat in _FORBIDDEN_PATTERNS:
+            for m in _re.finditer(pat, svg_text):
+                token = m.group(0)
+                if not any(al.lower() in token.lower() for al in _FORBIDDEN_ALLOWLIST):
+                    scan_clean = False
+                    scan_hits.append(token)
     spine_hash = "UNKNOWN"
     if _SPINE_YAML.exists():
         spine_hash = hashlib.sha256(_SPINE_YAML.read_bytes()).hexdigest()[:16]
@@ -205,7 +220,7 @@ def render_physics_section(
             "hits": [],
             "action": "PASSED",
             "rule": "Public-only figure. Internal/partner well data is excluded by design.",
-            "scope": "SVG forbidden-string scan (6 strings). NOT a guarantee of full-output safety — HTML, PDF metadata, manifests not covered.",
+            "scope": f"SVG forbidden-string scan ({len(_FORBIDDEN_STRINGS)} strings + {len(_FORBIDDEN_PATTERNS)} patterns, allowlist {_FORBIDDEN_ALLOWLIST}). NOT a guarantee of full-output safety — HTML, PDF metadata, manifests not covered.",
         },
         "physics_annotations": [
             "Three blocks · two margins · one suture",
@@ -220,7 +235,7 @@ def render_physics_section(
             "L2": "Every subsurface surface, body, fault, closure — schematic, not seismic picks",
         },
         "renderer_stdout_tail": proc.stdout[-200:] if proc.stdout else "",
-        "public_safe": True,
+        "compute_output_partner_free": True,
         "fail_closed": True,
         "residual": {"velocity_model": "ABSENT — all depths are L2", "forebulge_measured": "ABSENT — Te range is L2", "restoration_balance": "NOT_RUN", "geomech": "NOT_RUN", "note": "A section that passes these gates earns PARTIAL, not SEAL. SEAL requires: velocity model at one well + measured forebulge + balanced restoration."},
     }
@@ -274,7 +289,7 @@ def critical_taper_reference(
             "note": "from DSD 1983 fig.14 — use as the pytest known-answer when implemented",
         },
         "implementation_task": "Extract eq(22) K-factor + eq(28) from DSD 1983 PDF → implement in this module → add pytest with Taiwan known-answer → activate this mode.",
-        "public_safe": True,
+        "compute_output_partner_free": True,
         "fail_closed": True,
         "note": "In the meantime, wedge taper is annotated as '~4° on shale detachment, within critical-taper bounds' on the physics_section figure (qualitative, from Morley et al. 2023 + GSA 2009 DWFTB).",
     }
