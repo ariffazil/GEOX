@@ -135,6 +135,9 @@ dependencies = [
     "netCDF4>=1.7",
     "h3>=4.5.0",
     "lancedb>=0.34.0",
+    "pyjwt>=2.15.1",
+    "tornado>=6.5.10",
+    "urllib3>=2.8.0",
 ]
 
 [project.optional-dependencies]
