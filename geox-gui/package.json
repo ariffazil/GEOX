@@ -22,7 +22,7 @@
     "framer-motion": "^12.38.0",
     "immer": "^11.1.4",
     "lucide-react": "^1.8.0",
-    "maplibre-gl": "^4.0.0",
+    "maplibre-gl": "^6.12.0",
     "protobufjs": "^7.6.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -65,7 +65,6 @@
     "directory": "geox-gui"
   },
   "overrides": {
-    "protobufjs": "^7.5.4",
     "js-yaml": "^4.1.1",
     "brace-expansion": "^5.0.2",
     "dompurify": "^3.3.4"
