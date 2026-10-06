@@ -20,7 +20,7 @@ from fastmcp import FastMCP
 from compatibility.legacy_aliases import get_alias_metadata
 from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
 from contracts.tools.canonical.dst import geox_dst_ingest_test
-from contracts.tools.canonical.evidence import geox_evidence_summarize_cross
+from geox_mcp.tools.evidence import geox_evidence_summarize_cross
 
 # ── Canonical tool implementations ───────────────────────────────────────────
 from contracts.tools.canonical.ingest import geox_data_ingest_bundle
