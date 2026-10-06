@@ -31,7 +31,7 @@ Probed 2026-10-06 by `rg` sweep + file reads. The federation is **not empty** on
 | Biostrat reference stack | `/root/GEOX/resources/ontology/biostrat_reference_stack.yaml` | LIVE, canonical | Nannotax3 + GTS2012 + operator Kinabalu/Sabah reports; LBF <2500m TVDSS, CNN deeper |
 | OKF Sabah bundle | `/root/GEOX/okf/sabah-basin/` (8 files) | SEALED 2026-07-20 (vault seq 12) | sabah-ladder (Stages I–VI), kinabalu prospect (INT conf 0.65), nw-sabah basin, bekantan-1 well, morley-2023 + nspw-mud-canopy evidence |
 | Kill matrix | `/root/GEOX/geox/skills/subsurface/petro/sabah_kill_matrix.py` | LIVE | Hypothesis-kill logic for Sabah plays |
-| Correlation doctrine | `/root/GEOX/well-correlation-rigor/SKILL.md` | LIVE | Well-tie discipline |
+| Correlation doctrine | `/root/GEOX/skills/well-correlation-rigor/SKILL.md` | LIVE | Well-tie discipline |
 | Macrostrat/JMG ingest | `/root/GEOX/ingest/macrostrat-malaysia/` | LIVE | MY-relevant strat packages + myGEMS catalog |
 | **Kinabalu scar** | `/root/memory/evidence/kinabalu_scar/` (+2026-09-cycle) | OBSERVED, critical | **2026-06-15: EGRS biostratigrapher Abd Hadi Hashim confirmed "the biostrat data is wrong" (SB409/SB412 tops)** — after Arif refused (Feb 2026) to polish a deliverable from broken biostrat inputs. Attendees include 3 of today's poster co-authors. This scar is the institutional genesis of the IBS revisit. |
 
