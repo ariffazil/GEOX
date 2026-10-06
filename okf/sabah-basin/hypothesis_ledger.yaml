@@ -1,0 +1,67 @@
+# Kinabalu Basin Hypothesis Ledger — capability 6, PUBLIC LANE
+# Each model carries its predictions + the observation that would falsify it.
+# Feeds geox_claim lifecycle (create→challenge→falsify/seal), geox_contradiction_scan, sabah_kill_matrix.
+# Cross-asset: /root/GEOX/resources/basins/kinabalu_basin/claims.json (DISCOVERED 2026-10-06, unread — reconcile next)
+#              /root/GEOX/resources/ontology/sabah_basin_strat.yaml (ABKSS + NSPW phases, scope-flagged)
+
+version: 0.1.0
+built: 2026-10-06
+
+models:
+  - id: LUNT2022-BGSM74
+    position: "DRU is a young, separate event (~13–12 Ma; bracket 13.77–11.7), distinct from the ~16 Ma Sarawak MMU; legacy 15 Ma was a rounding artifact"
+    predictions:
+      - "Biostrat-bracketed wells date DRU gaps inside 13.77–11.7"
+      - "No regional 15–17 Ma unconformity exists in north Sarawak / SW Sabah"
+      - "BMU ≈ 24 Ma, decoupled from DRU by ~10 My of Stage III"
+    deciding_observation: "per-well NN age-gap test (event spine decision_rule)"
+    status: leading, testable
+
+  - id: MORLEY2023-NSPW
+    position: "Surfaces are composites (conformable + locally unconformable); mini-basins begin ~DRU; canopy coalesces at UIU in a burst; compression triggers, gravity continues; NSPW = northern Sabah only"
+    predictions:
+      - "DRU age varies by sub-basin (mixture outcome of the test)"
+      - "Canopy-basin fill (Stage IVC) spans UIU→SRU ~10.5–8.5 in Block H geometry"
+      - "Southern Sabah deformation post-dates SRU"
+    deciding_observation: "spatial variance of per-well DRU ages + geometry of canopy-basin fill"
+    status: leading, testable
+
+  - id: BALAGURU-HALL-2009
+    position: "Middle Miocene Cagayan Arc/Palawan collision marks an MMU that 'has been noted to mark the DRU' (15.5 Ma)"
+    predictions:
+      - "DRU dates 15–16 Ma in collision-proximal belts"
+      - "Compression-driven erosion dominates over onlap at the surface"
+    deciding_observation: "same per-well test — wins locally if 15–16 Ma ages cluster geographically"
+    status: minority reading, testable
+
+  - id: GEOX-ABKSS-POSITION
+    position: "Event-named framework (ASAS→SENJA) reconciling Morley phases; SABAR = DRU + slab breakoff + NSPW termination; wedge-top not plate boundary"
+    predictions:
+      - "Slab-breakoff signature (uplift/exhumation pulse) co-timed with DRU — SYNTHESIS, not yet in Morley 2023; check Morley 2024 ESR"
+      - "Wedge-top diachroneity: Palawan ~13 → SW Sabah ~10.5"
+    deciding_observation: "Morley 2024 text check (public) + thermochron/exhumation data (internal)"
+    status: model_position — DOWNGRADED from 'answered' 2026-10-06; owns the framework, not the verdict
+
+  - id: TEPAT-PEKAKA-MODEL-C
+    position: "Post-spreading magmatic ridge <16 Ma at the Tepat–Pekaka high — volcanic edifice cutting the Oligo–E.Mio carbonate platform, post-RU onlap, basalt <16 Ma"
+    competing_frame: "vs A inherited rift horst (faults die at BU) · A-prime horst active during spreading 24–16 Ma (carbonate thins on crest, growth in carbonate) · B flexural reactivation <16 Ma (faults cut RU, throw grows toward Trough) [four-panel frame, Copilot 2026-10-06]"
+    prior: 0.15
+    verdict_class: "UNSUPPORTED (evidence class, not constitutional; geox-agent eval ses_eefdf2910ffe8bzYGDS6NwX2eL, 2026-10-06)"
+    predictions:
+      - "Faults/discontinuities cut the RU with displacement INCREASING upward into post-16 Ma units + growth-onlap thickening toward the high (the discriminating observation on existing 3D)"
+      - "Pekaka-1 basalt exists AND dates <16 Ma AND is MORB-affinity (not arc/crustal)"
+    against:
+      - "5-vector falsification 2026-09-30 (strength 5): young magmatism = crustal granite, not basalt"
+      - "Ridge died ~16–15 Ma at trench jam (Clift 2008); R2 rifting 37–32 Ma (strength 5)"
+      - "No magnetic anomalies <~15.5 Ma in the embayment (strength 4) — CAVEAT: local EMAG2 = offline stub = UNKNOWN, not absence; reprocessed public mag stays the cheapest resurrection test"
+    for:
+      - "Domzig 2024: end-of-rift volcanic activity across margin (strength 3)"
+      - "Hutchison 2010 trough seamounts 'volcanoes or mud volcanoes' (strength 2); ARPN 2016 ~20×5 km volcanic-like mag body, no seafloor intrusion (strength 2)"
+    basalt_triage: "absent → C collapses (mud-volcano/carbonate per Hutchison) · Paleogene → C rejected, A/A-prime confirmed · <16 Ma → C conditionally validated, requires MORB-vs-arc petrography + potential-field cross-check"
+    parsimony: "C structurally unnecessary — A/A-prime + B explain the topography without violating the SCS chronology"
+    data_wall: "Evaluation used public literature + federation-internal files only. Tepat/Pekaka partner data never touched (Copilot constraint respected)."
+
+kill_rules:
+  - "Same signature + same selection twice = no adaptation (AT-001) — if internal-lane results are metabolized into the spine, the spine version must change"
+  - "A model whose predictions all fail the per-well test is retired to 'historical reading', not deleted"
+  - "Any outcome where ages split by belt PROMOTES the Morley composite reading to framework result"
