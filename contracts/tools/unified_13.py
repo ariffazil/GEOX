@@ -4,7 +4,7 @@ from __future__ import annotations
 GEOX Sovereign 13 — Canonical Tool Orchestrator
 ═══════════════════════════════════════════════════════════════════════════════
 Thin registration layer. All tool implementations live in
-contracts.tools.canonical.* modules.
+src/geox_mcp/tools/* (live tree). Legacy contracts wrapper tree quarantined.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given
 """
@@ -19,30 +19,55 @@ from fastmcp import FastMCP
 
 from compatibility.legacy_aliases import get_alias_metadata
 from contracts.canonical_registry import CANONICAL_PUBLIC_TOOLS, LEGACY_ALIAS_MAP
-from contracts.tools.canonical.dst import geox_dst_ingest_test
-from geox_mcp.tools.evidence import geox_evidence_summarize_cross
 
-# ── Canonical tool implementations ───────────────────────────────────────────
-from contracts.tools.canonical.ingest import geox_data_ingest_bundle
-from contracts.tools.canonical.map_context import geox_map_context_scene
-from contracts.tools.canonical.prospect import (
-    geox_prospect_evaluate,
+# ── Canonical tool implementations — LIVE TREE ONLY ─────────────────────────
+# 2026-10-06 (333-AGI): contracts/tools/canonical/* wrapper tree is hollow
+# post-burn-down (kernel package emptied, sealed 4deae092/1e36595f) — all 18
+# symbols repointed to src/geox_mcp/tools/*, the implementations the live
+# :8081 server actually serves. Legacy wrapper tree remains quarantined.
+from geox_mcp.tools import compat as _compat
+
+
+def _explicit_shim(fn):
+    """Explicit-signature wrapper for legacy compat functions.
+
+    fastmcp refuses *args/**kwargs tools (function_parsing.py:190); the compat
+    wrappers forward **kwargs, so a fixed-arity shim registers cleanly and
+    forwards non-None params. 2026-10-06 333-AGI.
+    """
+    async def _w(well_id=None, source_uri=None, volume_ref=None, bundle_uri=None,
+                 prospect_ref=None, target_class=None, source_type=None):
+        kw = {k: v for k, v in dict(
+            well_id=well_id, source_uri=source_uri, volume_ref=volume_ref,
+            bundle_uri=bundle_uri, prospect_ref=prospect_ref,
+            target_class=target_class, source_type=source_type,
+        ).items() if v is not None}
+        return await fn(**kw)
+    _w.__name__ = fn.__name__
+    _w.__doc__ = fn.__doc__
+    return _w
+
+
+geox_data_ingest_bundle = _explicit_shim(_compat.geox_data_ingest_bundle)
+geox_data_qc_bundle = _explicit_shim(_compat.geox_data_qc_bundle)
+geox_map_context_scene = _explicit_shim(_compat.geox_map_context_scene)
+geox_prospect_evaluate = _explicit_shim(_compat.geox_prospect_evaluate)
+geox_subsurface_generate_candidates = _explicit_shim(_compat.geox_subsurface_generate_candidates)
+geox_subsurface_verify_integrity = _explicit_shim(_compat.geox_subsurface_verify_integrity)
+from geox_mcp.tools.dst import geox_dst_ingest_test
+from geox_mcp.tools.evidence import geox_evidence_summarize_cross
+from geox_mcp.tools.prospect import (
     geox_prospect_judge_preview,
     geox_prospect_judge_seal,
     geox_prospect_judge_verdict,
 )
-from contracts.tools.canonical.qc import geox_data_qc_bundle
-from contracts.tools.canonical.registry import (
+from geox_mcp.tools.registry import (
     geox_history_audit,
     geox_system_registry_status,
 )
-from contracts.tools.canonical.section import geox_section_interpret_correlation
-from contracts.tools.canonical.seismic import geox_seismic_analyze_volume
-from contracts.tools.canonical.subsurface import (
-    geox_subsurface_generate_candidates,
-    geox_subsurface_verify_integrity,
-)
-from contracts.tools.canonical.time4d import geox_time4d_analyze_system
+from geox_mcp.tools.section import geox_section_interpret_correlation
+from geox_mcp.tools.seismic import geox_seismic_analyze_volume
+from geox_mcp.tools.time4d import geox_time4d_analyze_system
 
 logger = logging.getLogger("geox.unified13")
 
@@ -128,10 +153,10 @@ def register_unified_tools(mcp: FastMCP, profile: str = "full") -> None:
         mcp.tool(name=name)(func)
 
     # ── Assert canonical count ───────────────────────────────────────────────
-    # Count is 16: 12 surface tools + 4 internal tools (claim, evidence, prospect, doctrine)
-    # Phase 2 (2026-06-26): canonical lock — 16 mode-consolidated tools, 21 was pre-consolidation
-    assert len(CANONICAL_PUBLIC_TOOLS) == 16, (
-        f"F0_CONSTITUTION_BREACH: Expected 16 sovereign tools (12 surface + 4 internal), got {len(CANONICAL_PUBLIC_TOOLS)}"
+    # 2026-10-06 SOT lock: 27 canonical tools (live :8081/health, README badge,
+    # tools_sot.yaml all agree; 16 was the 2026-06-26 Phase-2 lock, superseded)
+    assert len(CANONICAL_PUBLIC_TOOLS) == 27, (
+        f"F0_CONSTITUTION_BREACH: Expected 27 canonical tools (live SOT), got {len(CANONICAL_PUBLIC_TOOLS)}"
     )
 
     # ── Legacy alias bridge ──────────────────────────────────────────────────
