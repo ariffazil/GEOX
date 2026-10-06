@@ -289,6 +289,7 @@ def critical_taper_reference(
             "note": "from DSD 1983 fig.14 — use as the pytest known-answer when implemented",
         },
         "implementation_task": "Extract eq(22) K-factor + eq(28) from DSD 1983 PDF → implement in this module → add pytest with Taiwan known-answer → activate this mode.",
+        "retrieval_status_2026_10_06": "ATTEMPTED-BLOCKED: available copies (ResearchGate/AGU) are 1983 SCANS; OCR fragments render eqs as '= (27)', 'fl = 6 ø', 'Pb 0 85' — unusable for verbatim transcription. Gate stays CLOSED. Clean typeset source required (library/AGU access) or owner-approved reference swap (e.g. Dahlen 1990 review, typeset) — swap is an owner decision, not agent-implicit.",
         "compute_output_partner_free": True,
         "fail_closed": True,
         "note": "In the meantime, wedge taper is annotated as '~4° on shale detachment, within critical-taper bounds' on the physics_section figure (qualitative, from Morley et al. 2023 + GSA 2009 DWFTB).",
