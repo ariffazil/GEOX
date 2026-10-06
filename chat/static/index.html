@@ -175,13 +175,26 @@ document.getElementById('go').addEventListener('click',async()=>{
         :`Server menjawab HTTP ${r.status} tanpa JSON. Cuba lagi; jika berterusan, lihat status organ di /health.`;
       out.innerHTML=`<div class="card"><div class="err">${human}</div></div>`;
     }
-    else if(j.status==='HOLD'){out.innerHTML=`<div class="card"><div class="err">HOLD — ${j.reason||j.verdict}</div></div>`}
+    else if(j.status==='HOLD'){out.innerHTML=renderHold(j)}
     else if(j.status==='OK'){out.innerHTML=render(j.packet)}
-    else{out.innerHTML=`<div class="card"><div class="err">${j.reason||'error'}</div></div>`}
+    else{out.innerHTML=renderHold({reason:`Server returned HTTP ${r.status} with status=${j.status}`,reason_bm:'Bentuk jawapan tidak dikenali.',request_id:j.request_id||'',health_url:'/health'})}
   }catch(e){out.innerHTML=`<div class="card"><div class="err">Sambungan terputus: ${esc(String(e))}</div></div>`}
   go.disabled=false;
 });
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function renderHold(j){
+  const id=j.request_id?`req ${esc(j.request_id.slice(0,8))}… · `:'';
+  const en=esc(j.reason_en||j.reason||'HOLD');
+  const bm=esc(j.reason_bm||'Pegang — cuba lagi.');
+  const retry=j.retry_after_ms?` · retry in ${Math.round(j.retry_after_ms/1000)}s`:'';
+  const health=j.health_url?` · <a href="/health">/health</a>`:'';
+  return `<div class="card">
+    <span class="verdict" style="background:#fdecea;color:#8c2f26">HOLD</span>
+    <div class="kv" style="margin-top:8px"><b>Reason (EN)</b>${en}</div>
+    <div class="kv"><b>Sebab (BM)</b>${bm}</div>
+    <div class="kv mini">${id}${retry}${health}</div>
+  </div>`;
+}
 function render(p){
   const ep=p.epistemic||{},lim=p.limitations||{},obs=p.observations||{};
   const hyps=(p.hypotheses||[]).map(h=>`<div class="hyp"><b>${esc(h.label)}</b> <span class="conf">conf ${h.confidence} · falsifiers: ${esc((h.falsifiers||[]).join('; ')||'—')}</span></div>`).join('')||'<div class="mini">none</div>';

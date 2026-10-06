@@ -204,7 +204,29 @@ async def observe(
             },
         )
     except McpError as exc:
-        return JSONResponse(status_code=502, content={"status": "ERROR", "reason": str(exc)[:300]})
+        # Witness-Card-shaped error envelope (2026-10-06 repair): the frontend
+        # only renders structured HOLD/OK cards, so a bare {"status":"ERROR"}
+        # falls through to the generic "Server menjawab HTTP 502 tanpa JSON"
+        # BM copy and the user loses the request_id, retry cue and link to
+        # /health. Return the same envelope shape the OK path uses, so the
+        # page can always render a card.
+        import uuid as _uuid
+        req_id = _uuid.uuid4().hex
+        return JSONResponse(
+            status_code=502,
+            content={
+                "status": "HOLD",
+                "request_id": req_id,
+                "reason_en": str(exc)[:300],
+                "reason_bm": "Organ geox-mcp tidak sempat atau gagal menjawab.",
+                "verdict": (
+                    f"HOLD — geox-mcp did not return a usable observation "
+                    f"(request_id {req_id}). Retry; if it persists, see /health."
+                ),
+                "retry_after_ms": 4000,
+                "health_url": "/health",
+            },
+        )
 
     # geox_forbidden_claims_scan (fast in-process form) on EVERY outgoing reply — §7
     scan = scan_reply(packet)
