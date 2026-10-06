@@ -1,7 +1,7 @@
 {
   "name": "geox-gui",
   "version": "2026.04.10",
-  "description": "GEOX Earth Witness \u2014 Governed Geologist Cockpit (DITEMPA BUKAN DIBERI)",
+  "description": "GEOX Earth Witness — Governed Geologist Cockpit (DITEMPA BUKAN DIBERI)",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "immer": "^11.1.4",
     "lucide-react": "^1.8.0",
     "maplibre-gl": "^4.0.0",
+    "protobufjs": "^7.6.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^2.2.1",
@@ -62,5 +63,11 @@
     "type": "git",
     "url": "https://github.com/ariffazil/GEOX.git",
     "directory": "geox-gui"
+  },
+  "overrides": {
+    "protobufjs": "^7.5.4",
+    "js-yaml": "^4.1.1",
+    "brace-expansion": "^5.0.2",
+    "dompurify": "^3.3.4"
   }
 }
