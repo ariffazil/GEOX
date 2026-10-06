@@ -1035,14 +1035,73 @@ async def geox_prospect_judge_seal(
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
 ) -> dict:
-    """[DEPRECATED] Use geox_prospect_evaluate with verdict='seal'."""
-    return await geox_prospect_evaluate(
-        prospect_ref=prospect_ref,
-        mode="screen",
-        verdict="seal",
-        ack_irreversible=ack_irreversible,
-        judge_pin=judge_pin,
-    )
+    """888_JUDSEAL gateway: irreversible prospect adjudication.
+
+    Contract ported 2026-10-06 (333-AGI) from the sealed burn-down wrapper
+    (contracts/tools/canonical/prospect.py::geox_prospect_judge_seal) — the
+    F11 constant-time PIN gate + RT3 F1-Amanah fail-closed guard were lost
+    when this function was collapsed into geox_prospect_evaluate.
+    """
+    # F11 AUTH: constant-time PIN verification
+    import hmac
+    import os
+
+    _expected_pin = os.environ.get("GEOX_JUDGE_PIN", "")
+    if _expected_pin:
+        if not judge_pin or not hmac.compare_digest(str(judge_pin), _expected_pin):
+            return {
+                "tool": "geox_prospect_judge_seal",
+                "error_code": "F11_AUTH_FAILED",
+                "message": "F11 AUTH: Invalid or missing judge_pin. Constant-time check failed.",
+                "guard": "F11",
+                "floor": "F11_AUTH",
+                "claim_state": "NO_VALID_EVIDENCE",
+                "execution_status": "ERROR",
+                "governance_status": "HOLD",
+                "primary_artifact": {"error_code": "F11_AUTH_FAILED"},
+            }
+
+    # RT-3 Guard — F1 Amanah: irreversible adjudication requires explicit ack
+    if not ack_irreversible:
+        err = {
+            "tool": "geox_prospect_judge_seal",
+            "error_code": "RT3_GUARD_F1_AMANAH",
+            "message": (
+                "geox_prospect_judge_seal is a constitutional adjudication "
+                "(irreversible). F1 Amanah requires ack_irreversible=True. "
+                "Provide ack_irreversible=True in the tool call to proceed."
+            ),
+            "guard": "RT3",
+            "floor": "F1_AMANAH",
+            "claim_state": "NO_VALID_EVIDENCE",
+            "execution_status": "ERROR",
+            "governance_status": "HOLD",
+        }
+        err["primary_artifact"] = {k: err[k] for k in ("error_code", "guard", "floor")}
+        return err
+
+    verdict = "SEAL" if ac_risk_score < 0.5 else "HOLD"
+    artifact = {
+        "ref": prospect_ref,
+        "ac_risk": ac_risk_score,
+        "verdict": verdict,
+        "sealed": True,
+        "f13_compliance": {
+            "Recommendation": "Proceed to Capital Execution" if verdict == "SEAL" else "Hold / Reject Prospect",
+            "Uncertainty": f"Residual AC_Risk: {ac_risk_score}",
+            "Consequence": "Irreversible Capital and Safety Risk Bound to this Decision.",
+            "Authority": "HUMAN",
+        },
+    }
+    return {
+        "tool": "geox_prospect_judge_seal",
+        "execution_status": "SUCCESS",
+        "governance_status": verdict,
+        "artifact_status": "VERIFIED" if verdict == "SEAL" else "DRAFT",
+        "claim_state": "SEALED",
+        "primary_artifact": artifact,
+        "port_note": "Contract restored from sealed burn-down wrapper 2026-10-06; human authority preserved (Authority: HUMAN).",
+    }
 
 
 async def geox_prospect_judge_verdict(
@@ -1051,11 +1110,10 @@ async def geox_prospect_judge_verdict(
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
 ) -> dict:
-    """[DEPRECATED] Use geox_prospect_evaluate with verdict='seal'."""
-    return await geox_prospect_evaluate(
+    """Canonical-13 name → delegates to geox_prospect_judge_seal (RT-3 contract)."""
+    return await geox_prospect_judge_seal(
         prospect_ref=prospect_ref,
-        mode="screen",
-        verdict="seal",
+        ac_risk_score=ac_risk_score,
         ack_irreversible=ack_irreversible,
         judge_pin=judge_pin,
     )
