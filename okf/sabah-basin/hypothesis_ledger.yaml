@@ -119,14 +119,23 @@ models:
       serpentinised mantle floor is also magnetically quiet. Model C's own caveat already
       flags local EMAG2 as an offline stub = UNKNOWN, not absence.
     deciding_observation: >
-      (1) Constrain S — total sediment thickness to acoustic basement under the trough axis.
-      This OUTRANKS gravity in information value even though gravity is cheaper to measure,
-      because h = f(S) and Airy cannot pin h without it. (2) Bouguer along the real B-B'
-      from public satellite gravity — predicted dBouguer between h=7 km and the published
-      Moho is ~250 mGal, trivially resolvable. BLOCKED: no working live gravity source
-      (see data_wall). (3) Deep seismic Moho reflection ~4-5 s TWT. (4) Backstrip Tepat-1
-      (suture) + Pekaka-1/Nuri-1/Falkon-1 (layang_domain) — wells and timing_windows are
-      ALREADY parameterised in sabah_basin_strat.yaml under geox_basin_backstrip.
+      ORDERING CORRECTED 2026-10-08. An earlier version of this field said constraining S
+      OUTRANKS gravity, reasoning h = f(S). True only of the AIRY route. Executing the forward
+      model (trough_crust_thin_gravity.py) showed the GRAVITY route constrains h directly,
+      without S; once h is measured, S is whatever isostatic balance requires. So (1) precedes
+      (2). The external review and FI-003 both made the original error; recorded, not edited out.
+      (1) BOUGUER / FREE-AIR along the real B-B' (687 km) from public satellite gravity, compared
+      against the forward model. Measured dBouguer vs the published Moho: 341 mGal at h=5 km,
+      297 at 7, 253 at 9, 209 at 11, 166 at 13, 124 at 15, 62 at 18, 5 at 21, -49 at 24.
+      Resolvable for h <= ~18 km, i.e. across nearly the whole Airy-allowed range.
+      BLOCKED on T0.2 (no working live gravity source); the FORWARD half is DONE.
+      (2) Constrain S - total sediment thickness to acoustic basement under the trough axis.
+      Decides whether ISOSTASY ALONE explains the depth, which gravity does not.
+      (3) Deep seismic Moho reflection ~4-5 s TWT below trough basement.
+      (4) Backstrip Tepat-1 (suture) + Pekaka-1/Nuri-1/Falkon-1 (layang_domain) - wells and
+      timing_windows ALREADY parameterised in sabah_basin_strat.yaml under geox_basin_backstrip;
+      sabah_two_oceanics.yaml names Tepat-1 as 'loading overprint on thermal', the well that
+      separates flexural from thermal subsidence.
     isostasy_scope_limit: >
       Isostasy creates SPACE for sediment; it does not drive thrusting. NW vergence still
       requires the SE load (NSPW advance). This hypothesis explains trough DEPTH and Te.

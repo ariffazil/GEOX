@@ -103,8 +103,9 @@ This is the single highest-priority defect, because it blocks **the cheapest dec
 
 | ID | Task | Blocker | Falsifier |
 |---|---|---|---|
-| **T7** | **Constrain S** — total sediment thickness to acoustic basement under the trough axis | internal lane (KL2) | h = REF − (2.9 + 0.4185·S)/0.2203. S is the input that actually moves h; until pinned, no Airy argument means anything |
-| **T8** | **Measure free-air / Bouguer along real B–B′** (falsifier F1 of `TROUGH-CRUST-THIN`) | **T0.2** — no working gravity source | thin crust → Bouguer HIGH over the trough axis; the predicted ΔBouguer between h=7 km and published Moho is **~250 mGal**, i.e. trivially resolvable by satellite gravity |
+| **T8a** | ~~Build the forward Bouguer model~~ **DONE 2026-10-08** — `geox/skills/subsurface/gravity/trough_crust_thin_gravity.py`; `h` **swept, not drawn**; offshore observation only; atoll flagged as a 2D artifact | none — executed, `py_compile` clean | ΔBouguer vs published Moho: **341** mGal @ h=5 km · **297** @ 7 · **253** @ 9 · **209** @ 11 · **166** @ 13 · **124** @ 15 · **62** @ 18 · **5** @ 21 · **−49** @ 24. Detection threshold now quantified |
+| **T8b** | **Measure free-air / Bouguer along real B–B′** and compare against T8a (falsifier F1 of `TROUGH-CRUST-THIN`) | **T0.2** — no working gravity source | Thin crust → Bouguer HIGH over the trough axis. T8a says the signal is resolvable for **h ≤ ~18 km** (≥62 mGal), i.e. across nearly the whole Airy-allowed range |
+| **T7** | **Constrain S** — total sediment thickness to acoustic basement under the trough axis | internal lane (KL2) | `h = REF − (2.924 + 0.4185·S)/0.2203`. Needed to test **whether isostasy alone explains the depth** — NOT to obtain `h`, which T8b measures directly |
 | **T9** | **Depth-convert before any depocentre claim** — Rotan-1 + Barton-2 TZ | internal lane | checkshots exist (MALIGAN-1, PEKAKA-1, SUGUT, SOLISIP-1 measured; BARTON-2 in the DTS audit list; BULUH-1 flagged **pseudo-checkshot / SYNTHETIC**). If east-thickening survives → foredeep migration holds; if it vanishes → VOID |
 | **T10** | **Settle D14 — the velocity sign** (inboard faster, or velocity trends the same?) | internal lane, TZ data | one first-party measurement ends a two-report contradiction that the depocentre claim depends on |
 | **T11** | **Backstrip Tepat-1 + Pekaka-1** | internal lane; **method already parameterised** | `sabah_basin_strat.yaml → geox_basin_backstrip` already assigns **Tepat-1 = `suture`**, **Pekaka-1 / Nuri-1 / Falkon-1 = `layang_domain`**, with `timing_windows`. `sabah_two_oceanics.yaml` names Tepat-1 "**loading overprint on thermal**" — the well that separates flexural from thermal subsidence |
@@ -145,7 +146,9 @@ This is the single highest-priority defect, because it blocks **the cheapest dec
 | 8.0 | 1.6 | 3.6 | 6.6 | 9.6 |
 | 10.0 | −2.2 | −0.2 | 2.8 | 5.8 |
 
-`h = REF − (2.9 + 0.4185·S) / 0.2203`. Spans **−2 → 19 km**. It is a plausibility screen, not a discriminator. **⇒ T7 (constrain S) outranks T8 (gravity) in information value, even though gravity is the cheaper measurement.**
+`h = REF − (2.9 + 0.4185·S) / 0.2203`. Spans **−2 → 19 km**. It is a plausibility screen, not a discriminator.
+
+**⇒ ORDERING CORRECTED 2026-10-08 (v1 of this map had it inverted, and the external review endorsed the inversion).** The original claim was *T7 (constrain S) outranks T8 (gravity)*, reasoning `h = f(S)`. That holds **only for the Airy route**. Executing T8a showed the gravity route constrains `h` **directly, without `S`** — and once `h` is measured, `S` becomes whatever isostatic balance requires. So **T8b constrains T7, not the reverse.** They answer different questions: gravity *measures* `h`; `S` tests whether isostasy **alone** explains the depth. Measured ΔBouguer vs published Moho: **341** mGal @ h=5 km · 297 @ 7 · 253 @ 9 · 209 @ 11 · 166 @ 13 · 124 @ 15 · **62 @ 18** · 5 @ 21 · −49 @ 24 → resolvable for **h ≤ ~18 km**, i.e. across nearly the whole Airy-allowed range.
 
 **Scope limit recorded in the ledger (`isostasy_scope_limit`):** isostasy creates **space** for sediment; it does not drive thrusting. NW vergence still requires the SE load (NSPW advance). This hypothesis explains trough **depth and Te** — it must not be sold as replacing flexure.
 
@@ -199,7 +202,7 @@ Applied in `scripts/kl2_reality_calibration.py`.
 1. **Measured** — line geometry, GEBCO sampled elevation/depth, along-line trough minimum.
 2. **Derived** — water-depth input `dw`, line-specific source-to-trough separation (87 km).
 3. **Unknown** — `S`, Bouguer/free-air response, basement architecture, `Te`, Moho, OCT vs thinned continental.
-4. **Decision gate** — **T7 before T8** stands: `h` remains highly sensitive to `S`.
+4. **Decision gate — CORRECTED 2026-10-08.** This addendum first recorded "T7 before T8" on the reviewer's reasoning that `h` is highly sensitive to `S`. True for the **Airy** route only. T8a (forward model, now executed) shows gravity pins `h` directly, so **T8b before T7**. `S` stays decisive for a *different* question — whether isostasy alone explains the depth. Reviewer and FI-003 both made the original error; recorded, not silently edited.
 
 The 165→87 km correction changes the *spatial input* to any flexural/load–moat model by ~1.9× and upgrades the
 question from schematic plausibility to testable forward modelling. It does **not** by itself determine `Te`,
