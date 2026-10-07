@@ -1,0 +1,68 @@
+{
+  "generated_utc": "2026-10-07T16:56:59Z",
+  "lane": "PUBLIC \u2014 no PETRONAS-confidential data",
+  "transect": {
+    "name": "B-B' (sabah_nw_se)",
+    "B_nw": {
+      "lat": 7.78,
+      "lon": 113.0
+    },
+    "B_prime_se": {
+      "lat": 5.1,
+      "lon": 118.6
+    },
+    "anchors": {
+      "layang_layang_swallow_reef": {
+        "lat": 7.372,
+        "lon": 113.847,
+        "along_track_km": 103.9
+      },
+      "mt_kinabalu_4095m": {
+        "lat": 6.075,
+        "lon": 116.558,
+        "along_track_km": 435.9
+      }
+    },
+    "total_length_km": 686.7,
+    "n_samples": 700,
+    "method": "linear lat/lon interpolation (adequate at 700 km, 5-8 deg N); cumulative haversine for distance axis"
+  },
+  "datasets": {
+    "bathymetry": {
+      "data_mode": "UNMEASURED",
+      "reason": "GEBCO OPeNDAP and ETOPO2022 THREDDS both failed \u2014 see stdout; NOT substituted with a drawn profile",
+      "ext_witness_ready": false
+    },
+    "free_air_gravity": {
+      "data_mode": "UNMEASURED",
+      "reason": "no reachable server-side gravity subset found this session. The legacy Sandwell-Smith CGI (topex.ucsd.edu/cgi-bin/get_data.cgi) returns HTTP 500 on POST for both grav_32.1 and grav_3. Reachability of alternates recorded below. NOT substituted with a hand-drawn curve \u2014 that was the defect in the Copilot figure that F13 corrected.",
+      "sources_probed": {
+        "sandwell_ucsd_www": {
+          "http": null,
+          "url": "https://topex.ucsd.edu/WWW_cgi-bin/get_data.cgi",
+          "error": "HTTPError: HTTP Error 404: Not Found"
+        },
+        "bgi_wgm2012": {
+          "http": null,
+          "url": "http://bgi.obs-mip.fr/data-products/",
+          "error": "HTTPError: HTTP Error 404: Not Found"
+        },
+        "icgem": {
+          "http": null,
+          "url": "https://icgem.gfz-potsdam.de/service/getdata",
+          "error": "HTTPError: HTTP Error 404: Not Found"
+        },
+        "noaa_ngdc_gravity": {
+          "http": 200,
+          "url": "https://www.ngdc.noaa.gov/mgg/gravity/"
+        }
+      },
+      "ext_witness_ready": false,
+      "unblock_path": [
+        "WGM2012 global grid (BGI/IUGS) regional netCDF subset",
+        "ICGEM spherical-harmonic model (e.g. XGM2019e / GECO) synthesised along B-B'",
+        "UCSD Sandwell-Smith v32+ via the current REST endpoint (legacy CGI is 500)"
+      ]
+    }
+  }
+}

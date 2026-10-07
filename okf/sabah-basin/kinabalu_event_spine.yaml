@@ -5,7 +5,7 @@
 # verdict-shaped receipts (pass/fail per decision_rule), not raw data. GEOX computes, never adjudicates.
 # Discovery context: /root/GEOX/okf/sabah-basin/IBS-KINABALU-DEEP-RESEARCH-2026-10-06.md (Addenda A+B)
 
-version: 0.1.0
+version: 0.2.0
 scope_note: >
   NSPW-derived rows (canopy phases) are NORTHERN SABAH (Block H type area) ONLY.
   Inboard Belt + East Baram Delta require independent evidence (scope law, sabah_basin_strat.yaml).
@@ -40,6 +40,34 @@ surfaces:
     event_class: composite wedge-top surface — "mixtures of conformable regions together with local unconformities" (Morley 2023, verbatim)
     mechanism_field: [underthrusting+lithospheric stresses (Morley 2023), gravity-later, slab-breakoff=SYNTHESIS/INT]
     identity_ruling: "DRU ≠ Sarawak MMU (~16 Ma, offshore West Sarawak) — separation ~3.5–4 My (Lunt 2022 BGSM 74 body, single-witnessed)"
+    sabar_ruling_2026_10_08: >
+      DRU = SABAR - PROVISIONAL. This is NOT an identity seal, and no SEAL/HOLD/VOID verdict
+      is issued here (888-APEX lane only; GEOX computes, never adjudicates).
+      PROVENANCE CLASS: REPORTED/INTERPRET - external ENTERPRISE review 2026-10-08,
+      F13-relayed under directive "FORGE", and framed by that review itself as 888 HOLD
+      ("a working hypothesis call, not an irreversible identity seal"). It is NOT an
+      F13 first-person ruling and NOT a measurement.
+      RATIONALE: the public record supports DRU as a COMPOSITE, per-sub-basin surface with
+      an age bracket (Morley 2023 verbatim - already carried in event_class above) rather
+      than a demonstrated unique both-plates expression. LANGGAR stays a live, falsifiable
+      competing hypothesis and is NOT retired.
+      FALSIFIER: T12 = decision_rule_DRU_dating_test (per-well NN age gap above/below).
+      If DRU ages split by belt, the composite reading is promoted to framework result and
+      this ruling stands. If DRU ties basin-wide to one event, LANGGAR-as-both-plates must
+      be re-examined and this ruling revisited.
+      OPEN CONSEQUENCE - PRESERVE, DO NOT SMOOTH: nw_borneo_collision_system/claims.json
+      records LANGGAR's THREE expressions as RU (drowning, lower plate) / base-of-foredeep-
+      fill (trough) / DRU (uplift+erosion, upper plate). If DRU = SABAR, and SABAR is
+      upper-plate-only per nw_borneo basin_profile upper_plate_family, then LANGGAR LOSES
+      ITS UPPER-PLATE LEG and is no longer a both-plates family. That file must be
+      reconciled explicitly - not left silently contradicting this ruling.
+      COMPETING POSITION RETAINED: nw_borneo_collision_system/basin_profile.yaml maps
+      SABAR = UIU (upper_plate_family "SABAR/UIU, SENJA/SRU"), not DRU. Both positions are
+      on record; the contradiction is UNRESOLVED pending T12.
+      EFFECT ON D6: RU (lower plate, Layang-Layang) is untouched by this ruling, so
+      LAYANG_LAYANG_BASIN retains entity status and its RU witness survives. Demoting
+      Layang-Layang to "substrate only" would still delete the lower-plate leg and remains
+      rejected.
     scope: per-sub-basin unknown — THE testable question
     status: evidence-supported age, per-belt identity OPEN
 
