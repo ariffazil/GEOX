@@ -61,6 +61,90 @@ models:
     parsimony: "C structurally unnecessary — A/A-prime + B explain the topography without violating the SCS chronology"
     data_wall: "Evaluation used public literature + federation-internal files only. Tepat/Pekaka partner data never touched (Copilot constraint respected)."
 
+  # ── ADDED 2026-10-08 (RESTORED — original entry was reverted by an external git operation
+  #    during the session; provenance of the loss is UNRESOLVED, see KL2 task map §5) ──────
+  - id: TROUGH-CRUST-THIN
+    position: >
+      The Sabah Trough floor is THIN, near-oceanic crust in physical nature (hyperextended
+      Dangerous Grounds, possibly an ocean-continent transition with exhumed serpentinised
+      mantle), and the trough is deep PRIMARILY BECAUSE OF that crustal constitution —
+      isostatic sinking, not only flexural loading. Thin crust implies low Te, so it also
+      parameterises the flexural moat rather than competing with it.
+    origin: "F13 SOVEREIGN 2026-10-07 ('almost oceanic crust in physics nature, so thats why the crust terbenam masuk ke dalam'). Refinement of the earlier 'extension ridge' wording — see rename_note."
+    rename_note: >
+      RIDGE and THIN-CRUST are separable claims with different predictions (ridge: axial
+      high, hummocky basement, linear symmetric magnetics; thin-crust/OCT: smooth low,
+      tilted blocks, weak magnetics). KL2 shows TILTED HALF-GRABENS under Pekaka, i.e.
+      thinned continental/OCT, not an active ridge. Ledger therefore carries 'thin crust'
+      as OPEN and 'active ridge' as HOLD (that one remains TEPAT-PEKAKA-MODEL-C).
+      Name claims only what is measured.
+    relation_to_model_c: >
+      DISTINCT from TEPAT-PEKAKA-MODEL-C. Model C is a dated MAGMATIC claim (post-spreading
+      ridge <16 Ma at the Tepat-Pekaka high). TROUGH-CRUST-THIN is a CONSTITUTIONAL claim
+      about the trough floor. Model C's UNSUPPORTED verdict does NOT transfer — the absence
+      of a young magmatic ridge is fully compatible with a thin/OCT crustal floor.
+    prior: 0.35
+    predictions:
+      - "Bouguer HIGH over the trough axis on public satellite gravity along the REAL B-B' (687 km)"
+      - "Best-fit Te <= 10 km when flexure is run on the REAL water load, not a flat datum"
+      - "Moho reflection ~4-5 s TWT below trough basement (h ~ 7-13 km) on deep seismic"
+      - "Tectonic-subsidence curve at Tepat-1 / Pekaka-1 falls BETWEEN Parsons-Sclater oceanic and rifted-continental after backstripping"
+      - "Heat flow elevated toward the 50-65 C/km gradient GEOX already encodes for the Sabah hyperextended margin (claim_unified.py OCT gate)"
+      - "If exhumed serpentinised mantle: Vp ~5.5-7.0 km/s (NOT 8.0 peridotite, NOT 6.0-6.5 continental) AND weak magnetics from magnetite destruction"
+    for:
+      - "F13 CATCH (decisive): the Sidek et al. 2016 Moho 26-33 km is a GRAVITY INVERSION — non-unique and smoothing-regularised, therefore structurally biased AGAINST a narrow local Moho rise. It cannot falsify a forward isostatic claim, only fail to support it. DERIVED != MEASURED."
+      - "The magnetics argument is NON-DIAGNOSTIC: absent linear anomalies rule out magnetised oceanic layer 2A, but serpentinisation DESTROYS magnetite, so an exhumed serpentinised mantle floor is also magnetically quiet. It separates oceanic from not-oceanic; it does NOT separate continental from OCT."
+      - "sabah_basin_strat.yaml:62 already says 'hyperextended Dangerous Grounds crust'; sabah_trough crust_origin says 'extended crust' WITHOUT resolving how far extension went. The OCT end-member is genuinely under-resolved in SOT."
+      - "GEOX already encodes an OCT discriminator: claim_unified.py:564 regex (hyperextend|oct|ocean.continent|exhum|serpentin) and :573 documented 50-65 C/km Sabah hyperextended gradient."
+      - "PSCS oceanic crust is REAL in this system: sabah_prospect_discriminator.py:368 'PSCS oceanic crust fragments confirmed at Lahad Datu (Barremian-Aptian N-MORB)'; sabah_basin_strat.yaml:379 obducted Late Cretaceous-Eocene. A regional N-MORB reference exists for the Model C basalt triage."
+      - "NSPW is already the buffering mechanism in SOT: sabah_basin_strat.yaml calls it 'the mechanical spine connecting deep tectonic forcing to shallow stratigraphy'; IBS-2026-10-06:55 records 'Setap mobile-shale decollement (Morley et al. 2003, JSG): same detachment system runs both sides'. F13's 'compression ditampan oleh NSPW dan Setap shale' is that mechanism."
+      - "Domzig et al. 2024 (EAGE): mid-crustal detachments plus distal compression across the deepwater Sabah margin."
+    against:
+      - "TRUE OCEANIC crust is excluded by bathymetry: Parsons-Sclater puts 16-30 Ma oceanic crust at 3.9-4.5 km, but the observed trough water depth is 2.9 km. The live end-member is exhumed SERPENTINISED mantle / OCT, which is buoyant (rho ~2600 vs 3300) and therefore sits SHALLOWER than mature oceanic crust."
+      - "The Airy back-of-envelope is NON-DISCRIMINATING. h = REF - (2.9 + 0.4185*S)/0.2203 spans h = -2 to 19 km over plausible S (3-10 km) and REF (30-38 km). It is a plausibility screen, not evidence. S (total fill to acoustic basement) is the input that actually moves h and it is UNCONSTRAINED."
+      - "sabah_two_oceanics.yaml (F13-authored, SABAH_EUREKA_LEDGER v1.0 2026-07-10): Domain B = rifted CONTINENTAL, key_formations 'Mesozoic continental basement', initial_subsidence_km 2.0. The sovereign's own earlier ledger says continental."
+      - "Gilligan 2026: crustal thickness 24-60 km under the Crocker Range — thick on the SE side."
+      - "Copilot's figure carried THREE inconsistent values of h: drawn geometry 6.9 km, Airy with its own S=3.71 km 14.8 km, panel label '7-13 km'. The label was fitted to the drawing, not computed from the model."
+    non_unique_caveat: >
+      CRITICAL (F13 catch, 2026-10-07): the Sidek Moho is a GRAVITY INVERSION — the classic
+      forward/inverse non-uniqueness problem, and the figure itself labels it non-unique.
+      Smoothing regularisation systematically SUPPRESSES narrow local structure, so such a
+      model is structurally biased AGAINST exactly the local Moho rise this hypothesis
+      proposes; citing it as refutation is circular. Resolving Moho requires MEASUREMENT —
+      receiver functions, OBS/wide-angle refraction, deep seismic reflection, or Pn tomography.
+    magnetics_non_diagnostic: >
+      The Model C evidence 'no magnetic anomalies <~15.5 Ma in the embayment (strength 4)'
+      does NOT discriminate against this hypothesis. Absent linear anomalies rule out
+      magnetised oceanic layer 2A, but serpentinisation DESTROYS magnetite, so an exhumed
+      serpentinised mantle floor is also magnetically quiet. Model C's own caveat already
+      flags local EMAG2 as an offline stub = UNKNOWN, not absence.
+    deciding_observation: >
+      (1) Constrain S — total sediment thickness to acoustic basement under the trough axis.
+      This OUTRANKS gravity in information value even though gravity is cheaper to measure,
+      because h = f(S) and Airy cannot pin h without it. (2) Bouguer along the real B-B'
+      from public satellite gravity — predicted dBouguer between h=7 km and the published
+      Moho is ~250 mGal, trivially resolvable. BLOCKED: no working live gravity source
+      (see data_wall). (3) Deep seismic Moho reflection ~4-5 s TWT. (4) Backstrip Tepat-1
+      (suture) + Pekaka-1/Nuri-1/Falkon-1 (layang_domain) — wells and timing_windows are
+      ALREADY parameterised in sabah_basin_strat.yaml under geox_basin_backstrip.
+    isostasy_scope_limit: >
+      Isostasy creates SPACE for sediment; it does not drive thrusting. NW vergence still
+      requires the SE load (NSPW advance). This hypothesis explains trough DEPTH and Te.
+      It does not replace the flexural/compressional model and must not be sold as doing so.
+    data_wall: >
+      BLOCKED on live potential-field + bathymetry data as of 2026-10-08. Tested and dead:
+      GEBCO OPeNDAP (dap.ceda.ac.uk .dds -> 404, CEDA is not serving DAP at all — so
+      gebco_fetcher.py's documented live mode CANNOT work), ETOPO2022 THREDDS dodsC
+      (root 400, tile 'file not found') and fileServer (404), Sandwell-Smith legacy CGI
+      (HTTP 500 on POST for grav_32.1 and grav_3), NOAA CoastWatch ERDDAP (000, egress-
+      restricted), EMODnet WCS (404), OpenTopography API (400, key required). Two SEPARATE
+      failure classes: a GEOX code defect and host egress restriction. Federation governed
+      egress (A-FORGE forge_fetch / EgressPolicy.ts) was NOT attempted and is the next path.
+      Per-well backstrip execution is INTERNAL (hard_wall); results return as verdict-shaped
+      receipts only.
+    lane: "PUBLIC — method, potential fields, published ages, measured public geometry."
+    status: "open, testable, H-class — NOT SEALED. Real-transect calibration in scripts/kl2_reality_calibration.py"
+
 kill_rules:
   - "Same signature + same selection twice = no adaptation (AT-001) — if internal-lane results are metabolized into the spine, the spine version must change"
   - "A model whose predictions all fail the per-well test is retired to 'historical reading', not deleted"

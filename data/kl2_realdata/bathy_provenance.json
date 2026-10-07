@@ -1,0 +1,25 @@
+{
+  "data_mode": "live",
+  "source": "gebco2019_rutgers",
+  "source_uri": "https://tds.marine.rutgers.edu/thredds/dodsC/other/bathymetry/GEBCO_2019/GEBCO_2019.nc",
+  "variable": "elevation",
+  "retrieved_utc": "2026-10-07T17:15:26Z",
+  "grid_shape": [
+    708,
+    1404
+  ],
+  "stats": {
+    "min_m": -2924.48974609375,
+    "max_m": 3945.04296875,
+    "mean_m": -669.1337802996167
+  },
+  "deepest_nw400": {
+    "dist_km": 191.27321077290645,
+    "depth_m": -2924.48974609375,
+    "lat": 7.032360515021459,
+    "lon": 114.56223175965665
+  },
+  "sampling": "nearest-neighbour, no interpolation",
+  "ext_witness_ready": true,
+  "note": "Access path that WORKS. Previously-dead paths (CEDA dap .dds 404, NGDC dodsC 400/404, Sandwell CGI 500, ERDDAP 000) were unreachable FROM THIS HOST \u2014 products themselves are live. Rephrase per external review: 'runtime access path unavailable', not 'source dead'."
+}
