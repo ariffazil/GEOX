@@ -7,10 +7,133 @@ import os
 import re
 import subprocess
 import sys
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
 ALL_ZERO = "0" * 40
+
+# ── Gate 3: arifOS Governance Gate ───────────────────────────────────────────
+# Historically defined as "does :8088/health return 200". That definition cannot
+# distinguish a healthy kernel from one that is alive and 12/13 blind: measured
+# 2026-10-08, GEOX pushed twice through HTTP 200 while the kernel self-reported
+# status=degraded, floors_pass=1/13, F1 REVERSIBILITY failing, 11 floors defaulted
+# (not measured). The gate reported nothing because it only checked liveness.
+HEALTH_URL = os.getenv("ARIFOS_HEALTH_URL", "http://127.0.0.1:8088/health")
+# Floor detail lives only on the kernel. ARIFOS_HEALTH_URL is set to the PUBLIC surface in
+# this environment (https://mcp.arif-fazil.com/health — 455 bytes, no layer_health), so a
+# gate that reads only that URL sees liveness and status but is blind to all 13 floors.
+LOCAL_KERNEL_URL = os.getenv("ARIFOS_LOCAL_HEALTH_URL", "http://127.0.0.1:8088/health")
+HEALTH_TIMEOUT = float(os.getenv("ARIFOS_HEALTH_TIMEOUT", "10"))
+BLOCKING_VERDICTS = {"HOLD", "VOID"}
+
+
+def fetch_health(url: str) -> tuple[int, dict]:
+    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=HEALTH_TIMEOUT) as resp:
+        return getattr(resp, "status", 200), json.loads(resp.read().decode("utf-8", "replace"))
+
+
+def _ack(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in {"1", "true", "yes"}
+
+
+def check_governance_gate(findings: list[Finding]) -> None:
+    """Gate 3 — sensor first, blocker only where the push cannot be witnessed.
+
+    Follows the F13 hook-is-sensor doctrine: measure and REPORT the floor state so a
+    degraded kernel can never pass silently behind a bare HTTP 200. Hard-block only on
+    the two conditions that genuinely implicate the push:
+      * kernel unreachable / non-200 -> cannot witness -> fail closed (Void Guard:
+        "no data" means CANNOT WITNESS, never "all clear")
+      * kernel_verdict in {HOLD, VOID} -> a constitutional verdict against acting
+    status=degraded or floors short of target is WARN, not BLOCK: that is a standing
+    kernel-instrumentation state, not a property of the commit, so blocking on it would
+    deadlock every push without making the commit safer. The numbers are printed so the
+    warning cannot be ignored quietly.
+    """
+    if _ack("ARIFOS_GATE3_SKIP"):
+        findings.append(Finding(
+            "WARN",
+            "Gate 3 SKIPPED via ARIFOS_GATE3_SKIP=1 — governance state UNWITNESSED for this push.",
+        ))
+        return
+    try:
+        code, body = fetch_health(HEALTH_URL)
+    except Exception as exc:  # unreachable, timeout, or non-JSON body
+        findings.append(Finding(
+            "BLOCK",
+            f"Gate 3 arifOS Governance: {HEALTH_URL} unreachable "
+            f"({type(exc).__name__}: {str(exc)[:120]}). Cannot witness — fail closed. "
+            f"Override with ARIFOS_GATE3_SKIP=1 (records the push as unwitnessed).",
+        ))
+        return
+    if code != 200:
+        findings.append(Finding("BLOCK", f"Gate 3 arifOS Governance: HTTP {code} != 200 from {HEALTH_URL}"))
+        return
+
+    verdict = str(body.get("kernel_verdict") or "").strip().upper()
+    if verdict in BLOCKING_VERDICTS:
+        findings.append(Finding(
+            "BLOCK",
+            f"Gate 3 arifOS Governance: kernel_verdict={verdict} — constitutional verdict against acting.",
+        ))
+        return
+
+    con = (body.get("layer_health") or {}).get("constitutional") or {}
+    status = body.get("status")
+    head = (f"Gate 3 arifOS Governance: HTTP 200 · url={HEALTH_URL} · status={status} · "
+            f"kernel_verdict={verdict or 'None'}")
+    degraded = bool(status) and status != "healthy"
+
+    floor_src = HEALTH_URL
+    if not con and HEALTH_URL.rstrip("/") != LOCAL_KERNEL_URL.rstrip("/"):
+        # ADDITIVE FALLBACK: the configured endpoint exposes no layer_health, so ask the
+        # kernel for floor detail instead of reporting a measurement of zero. The configured
+        # URL still governs liveness / status / verdict — this only supplies the floors, and
+        # the split is named in the output so nobody thinks one endpoint produced all of it.
+        try:
+            lcode, lbody = fetch_health(LOCAL_KERNEL_URL)
+            lcon = (lbody.get("layer_health") or {}).get("constitutional") or {}
+            if lcode == 200 and lcon:
+                con = lcon
+                floor_src = f"{LOCAL_KERNEL_URL} (fallback; {HEALTH_URL} exposes no layer_health)"
+        except Exception:
+            pass  # best-effort: the primary result is still reported below
+
+    if not con:
+        # layer_health is absent on the public surface. Printing "floors None/None" would
+        # read as a measurement of zero — the exact silent-blindness defect this gate exists
+        # to remove. Report UNMEASURABLE, name the endpoint that can see it, and keep the
+        # status signal, which IS present on both surfaces.
+        findings.append(Finding(
+            "WARN",
+            head + " · floors UNMEASURABLE — layer_health.constitutional ABSENT from this "
+            "endpoint, so Gate 3 witnessed liveness + status only, not floor state. "
+            "Point ARIFOS_HEALTH_URL at the local kernel (http://127.0.0.1:8088/health) "
+            "for floor-level witnessing."
+            + (" Kernel self-reports DEGRADED." if degraded else ""),
+        ))
+        return
+
+    passed, active = con.get("floors_pass"), con.get("floors_active")
+    target = con.get("floors_target")
+    failing = con.get("floors_failing") or []
+    defaulted = con.get("floors_defaulted") or []
+    measured = con.get("floors_measured") or []
+    summary = (head + f" · floors {passed}/{active} pass (target {target}) [src: {floor_src}] · "
+               f"measured={measured} · failing={failing} · defaulted={len(defaulted)} (not measured)")
+    if degraded:
+        findings.append(Finding(
+            "WARN",
+            summary + " — kernel DEGRADED. Liveness alone no longer passes this gate silently.",
+        ))
+    elif isinstance(passed, int) and isinstance(target, int) and passed < target:
+        findings.append(Finding("WARN", summary + f" — {target - passed} floor(s) short of target."))
+    else:
+        findings.append(Finding("INFO", summary))
+
+
 SAFETY_TEST_PATTERNS = [
     re.compile(r"^tests/.+", re.IGNORECASE),
     re.compile(r"^tests/.*/", re.IGNORECASE),
@@ -227,6 +350,10 @@ def main() -> int:
     secret_hits = scan_for_secrets(changed_paths)
     if secret_hits:
         findings.append(Finding("BLOCK", "Potential secret patterns detected in: " + ", ".join(secret_hits)))
+
+    # Gate 3 — arifOS Governance. Sensor first: always reports the measured floor state,
+    # and blocks only on unreachable kernel or a HOLD/VOID verdict.
+    check_governance_gate(findings)
 
     if not findings:
         findings.append(Finding("INFO", "No issues found by repo guard."))
