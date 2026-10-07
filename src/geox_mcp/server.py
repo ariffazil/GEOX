@@ -2844,6 +2844,25 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
                     "G0_7_RATCHET: 2026-07-28 POST without Mcp-Method header from %s",
                     request.client.host if request.client else "?",
                 )
+                # OPEN DEFECT (measured 2026-10-07, not yet fixed).
+                # A strict HTTP client cannot read this 400: httpx reports
+                #   RemoteProtocolError: peer closed connection without sending
+                #   complete message body (received 0 bytes, expected 154)
+                # The JSONResponse is built correctly (154 bytes declared) but no
+                # body reaches the wire, because returning from a
+                # BaseHTTPMiddleware dispatch WITHOUT calling call_next aborts the
+                # response stream. Draining the request body first
+                # (`await request.body()`) was tried and does NOT help — same
+                # error, byte-identical. The security control still fails closed
+                # (the request is rejected; nothing gets through), so this is a
+                # DIAGNOSABILITY defect, not a bypass: a client cannot distinguish
+                # "your Mcp-Method header is missing" (schema failure) from
+                # "the network failed" (transport failure) — the exact collapse
+                # FAILURE-CLASS-SEPARATION forbids.
+                # Candidate fix, unverified: reject from a pure-ASGI middleware
+                # (not BaseHTTPMiddleware) so the 400 body is written directly to
+                # the send channel. Do not claim this fixed until a strict client
+                # reads the body — curl hides it entirely.
                 return JSONResponse(
                     {
                         "jsonrpc": "2.0",
@@ -2906,15 +2925,38 @@ class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
                 result["cacheScope"] = "private"
                 result["ttlMs"] = 300000
                 result["resultType"] = "complete"
-                new_body = json.dumps(data).encode("utf-8")
+                # CONTENT-LENGTH BUG FIX (2026-10-07). This block used to do:
+                #     new_body = json.dumps(data).encode("utf-8")
+                #     JSONResponse(content=json.loads(new_body), ...)
+                #     new_resp.headers["content-length"] = str(len(new_body))
+                # `json.dumps(data)` uses DEFAULT separators (", " / ": ") and
+                # ensure_ascii=True; Starlette's JSONResponse.render uses COMPACT
+                # separators and ensure_ascii=False. The header was therefore
+                # computed from a DIFFERENT serialization than the body actually
+                # written, over-declaring it by 6,051 bytes (measured live:
+                # content-length 86694, body 80643).
+                #
+                # Strict HTTP clients fail closed on that mismatch:
+                #   httpx -> "peer closed connection without sending complete
+                #            message body (received 80643 bytes, expected 86694)"
+                # Consequence chain: arifOS _list_organ_tools("GEOX") -> [] ->
+                # GEOX attested DEGRADED_CLAIM -> the arifOS->GEOX bridge blocked
+                # BEFORE invoking GEOX, and the Qwen MCP client registered zero
+                # geox tools. curl hides the defect entirely (it reads to EOF and
+                # reports what arrived), which is why the 2026-10-05 verification
+                # of this middleware passed 4/4 and the bug shipped anyway.
+                # Verify response-length changes with a strict client, never curl.
+                #
+                # Fix: hand `data` to JSONResponse and let Starlette derive
+                # content-length from the exact bytes it renders. No manual
+                # override — the framework already owns that invariant.
                 new_resp = JSONResponse(
-                    content=json.loads(new_body),
+                    content=data,
                     status_code=response.status_code,
                 )
                 for k, v in response.headers.items():
                     if k.lower() not in ("content-length", "content-type"):
                         new_resp.headers[k] = v
-                new_resp.headers["content-length"] = str(len(new_body))
                 logger.debug("CACHEABLE_LIST: augmented tools/list with cacheScope=private ttlMs=300000")
                 return new_resp
         except Exception as e:
