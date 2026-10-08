@@ -1,0 +1,53 @@
+{
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.seismic.vision",
+  "name": "GEOX Seismic Vision",
+  "version": "1.1.0",
+  "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened — MapLibre 4.7.1 integrated.",
+  "ui_entry": {
+    "type": "resource_uri",
+    "resource_uri": "https://geox.arif-fazil.com/apps/seismic-vision-review/index.html"
+  },
+  "capabilities": {
+    "events": [
+      "app.initialize",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "physics.result",
+      "vault.seal"
+    ],
+    "tools": [
+      "geox_seismic_compute",
+      "geox_seismic_ingest",
+      "geox_seismic_interpret"
+    ],
+    "render_modes": ["inline_slice", "crossline_slice", "amplitude_map", "horizon_overlay", "anomaly_contrast", "well_tie"],
+    "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"]
+  },
+  "arifos": {
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "physics_engine": "physics9",
+    "vault_route": "999_VAULT",
+    "human_judge": "888"
+  },
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"]
+  },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  },
+  "permissions": {
+    "compute": ["amplitude_attribute", "horizon_extract", "wavelet_extract", "well_tie"],
+    "network": ["vault_999_submit"]
+  }
+}

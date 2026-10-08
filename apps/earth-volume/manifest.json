@@ -1,107 +1,55 @@
 {
-  "$schema": "https://geox.arif-fazil.com/schemas/app-manifest/v1.json",
-  "app_id": "geox.seismic.viewer",
-  "version": "1.0.0",
-  "domain": "seismic",
-  "display_name": "Seismic Viewer",
-  "description": "Interactive 2D/3D seismic data visualization with interpretation tools",
-  "icon": "https://geox.arif-fazil.com/apps/seismic-viewer/icon.svg",
-  "required_tools": [
-    "mcp.geox.load_seismic_line",
-    "mcp.geox.build_structural_candidates",
-    "mcp.geox.evaluate_prospect"
-  ],
-  "optional_tools": [
-    "mcp.geox.verify_geospatial",
-    "mcp.geox.basin_profile",
-    "mcp.geox.query_memory"
-  ],
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.basin.explorer",
+  "name": "GEOX Basin Explorer",
+  "version": "1.0.0-AAA",
+  "description": "Basin modeling, deep time reconstruction, stratigraphy, sediment routing, and thermal history. Basin-scale geological mapping with play fairway analysis.",
   "ui_entry": {
-    "resource_uri": "https://geox.arif-fazil.com/apps/seismic_viewer/index.html",
-    "mode": "inline-or-external",
-    "capability_required": [
-      "webgl2",
-      "wasm"
-    ],
-    "csp_policy": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; connect-src 'self' https://api.geox.arif-fazil.com wss://realtime.geox.arif-fazil.com; img-src 'self' blob: data:; worker-src 'self' blob:;",
-    "sandbox": "allow-scripts allow-same-origin allow-downloads",
-    "inline_config": {
-      "max_width": 1400,
-      "max_height": 900,
-      "resize": true
-    },
-    "external_config": {
-      "window_features": "width=1600,height=1000,menubar=no,toolbar=no,location=no"
-    }
+    "type": "resource_uri",
+    "resource_uri": "https://geox.arif-fazil.com/apps/earth-volume/index.html"
   },
-  "auth": {
-    "mode": "jwt",
-    "token_ttl_seconds": 600,
-    "scopes": [
-      "tenant:{tenant_id}",
-      "role:geoscientist|manager|viewer",
-      "survey:read",
-      "well:read"
-    ],
-    "refreshable": true
-  },
-  "events": {
-    "supported": [
+  "capabilities": {
+    "events": [
       "app.initialize",
-      "app.context.patch",
       "app.state.sync",
       "tool.request",
       "tool.result",
-      "tool.progress",
       "ui.action",
-      "ui.state.change",
-      "ui.error",
-      "auth.challenge",
-      "auth.result",
-      "host.resize",
-      "host.focus",
-      "telemetry.emit"
+      "physics.result",
+      "vault.seal"
     ],
-    "max_payload_size": 2097152
-  },
-  "fallback": {
-    "chain": [
-      "inline",
-      "external",
-      "card",
-      "text"
+    "tools": [
+      "geox_basin",
+      "geox_deep_time",
+      "geox_spatial",
+      "geox_observe",
+      "geox_paleobiodb_query"
     ],
-    "external_url": "https://geox.shell/apps/seismic-viewer?session={session_id}",
-    "card_template": "/apps/seismic-viewer/card.html"
+    "render_modes": ["basin_map", "play_fairway", "deep_time", "sediment_routing", "thermal_history"],
+    "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"]
   },
   "arifos": {
-    "required_floors": [
-      "F1",
-      "F2",
-      "F4",
-      "F7",
-      "F9",
-      "F11"
-    ],
-    "audit_level": "full",
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "physics_engine": "physics9",
     "vault_route": "999_VAULT",
-    "human_in_the_loop": [
-      "export_data",
-      "destructive_operations"
-    ]
+    "human_judge": "888"
   },
-  "meta": {
-    "author": "GEOX Platform Team",
-    "license": "MIT",
-    "repository": "https://github.com/ariffazil/arifos-geox",
-    "homepage": "https://geox.arif-fazil.com/apps/seismic-viewer",
-    "keywords": [
-      "seismic",
-      "visualization",
-      "interpretation",
-      "geophysics"
-    ],
-    "created_at": "2026-04-09T00:00:00Z",
-    "updated_at": "2026-04-09T00:00:00Z"
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"]
+  },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071", "https://api.macrostrat.org"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  },
+  "permissions": {
+    "compute": ["basin_model", "deep_time_reconstruct", "stratigraphy", "sediment_routing", "thermal_history"],
+    "network": ["vault_999_submit", "macrostrat_query"]
   }
 }

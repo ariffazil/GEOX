@@ -95,66 +95,14 @@ def below(u, v):
 S = smooth(
     pts(
         [
-            0,
-            60,
-            100,
-            140,
-            170,
-            200,
-            218,
-            240,
-            260,
-            285,
-            320,
-            345,
-            352,
-            360,
-            372,
-            390,
-            400,
-            412,
-            424,
-            436,
-            452,
-            470,
-            490,
-            510,
-            530,
-            548,
-            562,
-            580,
-            600,
+            0, 60, 100, 140, 170, 191, 200, 218, 240, 260, 285, 320, 345, 352,
+            360, 372, 390, 400, 412, 424, 436, 452, 470, 490, 510, 530, 548,
+            562, 580, 600,
         ],
         [
-            -1.5,
-            -1.9,
-            -1.5,
-            -2.3,
-            -2.6,
-            -2.8,
-            -2.9,
-            -2.6,
-            -2.1,
-            -1.6,
-            -1.1,
-            -0.5,
-            -0.15,
-            0.05,
-            0.25,
-            0.7,
-            1.1,
-            4.095,
-            1.3,
-            0.8,
-            0.45,
-            0.3,
-            0.5,
-            0.35,
-            0.15,
-            0.0,
-            -0.5,
-            -1.0,
-            -1.6,
+            -1.5, -1.9, -1.5, -2.3, -2.7, -2.924,  # KL2 measured trough -2,924 m @ chainage 191.3 km of 523.7 km geodesic (≈ 219 of 600 schematic)
+            -2.8, -2.9, -2.6, -2.1, -1.6, -1.1, -0.5, -0.15, 0.05, 0.25, 0.7,
+            1.1, 4.095, 1.3, 0.8, 0.45, 0.3, 0.5, 0.35, 0.15, 0.0, -0.5, -1.0, -1.6,
         ],
     ),
     6,
@@ -276,7 +224,7 @@ for fx0 in (330, 344):
 
 band(BMU - 1.3, BMU - 0.15, CARB, m=(x >= 84) & (x <= 98), z=6, hatch="o")  # Tepat-1 Olig. carbonate buildup
 for cx, cy, c in [(90, -5.45, HC_G), (90, -5.05, HC_O)]: ax.add_patch(Ellipse((cx, cy), 4.5, 0.4, facecolor=c, alpha=0.85, zorder=11, edgecolor="none"))
-wells = [("Tepat-1", 90, -5.6, 1.1), ("Well B", 255, -4.6, 1.1), ("Well A", 280, -5.2, 1.0), ("Zoisit Deep-1", 288, -8.8, 2.3)]  # staggered labels (QA D2)
+wells = [("Tepat-1", 90, -5.6, 1.1), ("Well B", 255, -4.6, 1.1), ("Well A", 280, -5.2, 1.0), ("Well D", 288, -8.8, 2.3)]  # dossier v2 convention; staggered labels (QA D2)
 for name, wx, td, yoff in wells:
     ax.plot([wx, wx], [np.interp(wx, x, S), td], color=FG, lw=1.1, zorder=10)
     ax.plot(wx, np.interp(wx, x, S), marker="^", ms=5, color=FG, zorder=10)
@@ -340,7 +288,7 @@ fig.text(0.035, 0.965, "KINABALU BASIN — NW→SE REGIONAL CROSS-SECTION · NW 
 fig.text(
     0.035,
     0.935,
-    f"Schematic — not seismic picks · no volumetrics shown · ages from GEOX event spine v0.1 · BMU {L_BMU} (Lunt 2022, BGSM 74) · DRU {L_DRU} · SRU {L_SRU} · vertical exaggeration ≈ {ve}×",
+    f"Schematic — not seismic picks · no volumetrics shown · ages from GEOX event spine v0.1 · BMU {L_BMU} (Lunt 2022, BGSM 74) · DRU {L_DRU} · SRU {L_SRU} · vertical exaggeration ≈ {ve}× · seafloor: KL2 measured (GEBCO_2019 15″ Rutgers THREDDS) · Tepat-1 + Wells A/B/D per dossier v2",
     fontsize=6.3,
     color=NOTE,
 )
@@ -367,8 +315,9 @@ axr.text(
     0,
     0.5,
     "EVENTS (spine v0.1): BMU ~24 Ma collision onset · DRU ~13–12 Ma composite surface (Morley et al. 2023) · "
-    "SRU ~8.5 Ma canopy-basin fill top (N Sabah only) · granite ~7.85–7.22 Ma, <800 ka, post-SRU · Megah-1 withheld (HOLD) · "
-    "Plio–Recent transpression (unnamed) · NSPW phases apply to N Sabah only",
+    "SRU ~8.5 Ma canopy-basin fill top (N Sabah only) · granite ~7.85–7.22 Ma, <800 ka, post-SRU · "
+    "Plio–Recent transpression (unnamed) · NSPW phases apply to N Sabah only · "
+    "DRU = SABAR provisional (per-well DRU dating test T12 = falsifier)",
     fontsize=5.0,
     color=FG,
     va="center",

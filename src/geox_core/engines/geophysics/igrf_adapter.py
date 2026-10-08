@@ -34,7 +34,16 @@ _PPIGRF_AVAILABLE: bool = False
 try:
     import ppigrf as _pp
 
-    _PPIGRF_VERSION = getattr(_pp, "__version__", "unknown")
+    _PPIGRF_VERSION = getattr(_pp, "__version__", None)
+    if _PPIGRF_VERSION is None:
+        # ppigrf 2.x does not export __version__. Resolve from package metadata so
+        # the service registry never surfaces "unknown" for an installed library.
+        try:
+            from importlib.metadata import version as _pkg_version
+
+            _PPIGRF_VERSION = _pkg_version("ppigrf")
+        except Exception:
+            _PPIGRF_VERSION = "unknown"
     _PPIGRF_AVAILABLE = True
 except ImportError:
     _PPIGRF_AVAILABLE = False
@@ -43,6 +52,23 @@ except ImportError:
 def _sha256_params(params: dict) -> str:
     canonical = json.dumps(params, sort_keys=True, default=str)
     return f"sha256:{hashlib.sha256(canonical.encode()).hexdigest()[:16]}"
+
+
+def _decimal_year_to_datetime(epoch_year: float):
+    """Convert a decimal year (e.g. 2026.5) to a stdlib datetime.
+
+    ppigrf 2.x takes a datetime/Timestamp for its date argument; 1.x took a float
+    decimal year. Kept as a pure function so the conversion is testable alone.
+    """
+    import datetime as _dt
+
+    yr = int(epoch_year)
+    frac = epoch_year - yr
+    if not 0.0 <= frac < 1.0:
+        raise ValueError(f"epoch_year fractional part out of range [0,1): {epoch_year}")
+    start = _dt.datetime(yr, 1, 1)
+    span = (_dt.datetime(yr + 1, 1, 1) - start).total_seconds()
+    return start + _dt.timedelta(seconds=frac * span)
 
 
 class IGRFAdapter:
@@ -97,8 +123,25 @@ class IGRFAdapter:
             now = datetime.datetime.now()
             epoch_year = now.year + (now.timetuple().tm_yday - 1) / 365.25
 
+        # ppigrf does NOT range-check its inputs: lat=116.5 returns a plausible
+        # looking field for a location that does not exist. Validate here so a
+        # swapped or malformed coordinate fails loudly instead of silently.
+        if not -90.0 <= latitude_deg <= 90.0:
+            raise ValueError(f"latitude_deg out of range [-90, 90]: {latitude_deg}")
+        if not -180.0 <= longitude_deg <= 180.0:
+            raise ValueError(f"longitude_deg out of range [-180, 180]: {longitude_deg}")
+        if not -1000.0 <= altitude_m <= 100_000.0:
+            raise ValueError(f"altitude_m out of range [-1000, 100000] m: {altitude_m}")
+
+        # ppigrf 2.x signature is igrf(lon, lat, h, date) with date a datetime.
+        # 1.x was igrf(lat, lon, h, decimal_year, isv=, iextrap=). Passing the 1.x
+        # order silently evaluates the field at the wrong location.
+        date = _decimal_year_to_datetime(epoch_year)
+        date_sv = _decimal_year_to_datetime(epoch_year + 1.0)
+
         # ppigrf.igrf returns (Be, Bn, Bu) in nanotesla
-        Be, Bn, Bu = pp.igrf(latitude_deg, longitude_deg, altitude_m, epoch_year)
+        Be, Bn, Bu = pp.igrf(longitude_deg, latitude_deg, altitude_m, date)
+        Be, Bn, Bu = float(np.ravel(Be)[0]), float(np.ravel(Bn)[0]), float(np.ravel(Bu)[0])
 
         # Derived quantities
         H = np.sqrt(Be**2 + Bn**2)  # horizontal intensity [nT]
@@ -107,14 +150,23 @@ class IGRFAdapter:
         # Declination [degrees, positive east]
         D = np.arctan2(Be, Bn) * 180 / np.pi
 
-        # Inclination [degrees, positive down]
-        I = np.arctan2(Bu, H) * 180 / np.pi
+        # Inclination [degrees, positive down]. ppigrf's Bu is the UPWARD component,
+        # and its own reference definition is I = arctan(-Bu / sqrt(Be^2 + Bn^2)).
+        # The previous arctan2(Bu, H) inverted the sign in BOTH hemispheres, so
+        # northern-hemisphere dip read negative — contradicting the docstring above.
+        I = np.arctan2(-Bu, H) * 180 / np.pi
 
-        # Secular variation (annual change in field)
-        dBe, dBn, dBu = pp.igrf(latitude_deg, longitude_deg, altitude_m, epoch_year + 1.0, isv=1, iextrap=0)
-        dD = np.arctan2(dBe, dBn) * 180 / np.pi - D
-        dI = np.arctan2(dBu, np.sqrt(dBe**2 + dBn**2)) * 180 / np.pi - I
-        dF = np.sqrt(dBe**2 + dBn**2 + dBu**2) - F
+        # Secular variation as a one-year finite difference. ppigrf 2.x removed the
+        # isv/iextrap coefficient switch, so the annual rate comes from two main-field
+        # evaluations. This also corrects a dimensional error in the previous form,
+        # which subtracted a main-field angle from an SV-coefficient angle.
+        nBe, nBn, nBu = pp.igrf(longitude_deg, latitude_deg, altitude_m, date_sv)
+        nBe, nBn, nBu = float(np.ravel(nBe)[0]), float(np.ravel(nBn)[0]), float(np.ravel(nBu)[0])
+        nH = np.sqrt(nBe**2 + nBn**2)
+        nF = np.sqrt(nH**2 + nBu**2)
+        dD = np.arctan2(nBe, nBn) * 180 / np.pi - D
+        dI = np.arctan2(-nBu, nH) * 180 / np.pi - I
+        dF = nF - F
 
         params_hash = _sha256_params(
             {

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEOX Seismic Vision — 2D Cross-Section</title>
+  <link rel="stylesheet" href="./styles/seismic-vision.css">
+</head>
+<body>
+  <div class="sv-layout">
+    <header class="sv-header">
+      <span class="sv-header-title">Seismic Vision</span>
+      <span id="dataClassBadge" class="sv-header-epistemic" title="F2 TRUTH — data class">SYNTHETIC</span>
+      <span id="mcpStatus" style="color:#666;font-size:9px;">STANDALONE</span>
+      <span class="sv-header-badge">DITEMPA BUKAN DIBERI</span>
+    </header>
+    <main class="sv-main">
+      <section class="sv-controls">
+        <h3>Controls</h3>
+        <label>Inline <input id="inlineX" type="number" value="200" /></label>
+        <label>Crossline <input id="crosslineX" type="number" value="300" /></label>
+        <label>Color scale
+          <select id="colorScale">
+              <option value="seismic">seismic</option>
+              <option value="gray">gray</option>
+              <option value="RdBu">RdBu</option>
+            </select>
+          </label>
+        <button id="renderBtn">Render section</button>
+      </section>
+      <section class="sv-viewer">
+        <div id="seismicPlot" class="sv-plot">Loading section…</div>
+      </section>
+      <section class="sv-interpretation">
+        <h3>Horizons</h3>
+        <ul id="horizonList"><li class="sv-empty">No horizons yet.</li></ul>
+      </section>
+    </main>
+    <footer class="sv-footer">
+      <span>SEP-1865 MCP App · Phase 2 hardened · MapLibre 4.7.1 integrated · geox_seismic_compute + geox_seismic_interpret</span>
+    </footer>
+  </div>
+  <script src="./vendor/plotly-stub.js"></script>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

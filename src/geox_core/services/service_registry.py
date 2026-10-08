@@ -162,7 +162,11 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
     "igrf_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geophysics.igrf_adapter",
         library_name="ppigrf",
-        library_version=">=2024.0",
+        # Was ">=2024.0" (date-based scheme). ppigrf now publishes semver; 2.1.0 is
+        # current and ">=2024.0" is unsatisfiable. Corrected 2026-10-08 to match the
+        # pyproject declaration. Documentation field only — no comparison is enforced
+        # at runtime (geophysics_studio surfaces the runtime-detected version).
+        library_version=">=2.1.0",
         canonical_tools=["geox_basin", "geox_subsurface_model"],
         status=AdapterStatus.STABLE,
         acrisk="QUALIFY",
