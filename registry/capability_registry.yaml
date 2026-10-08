@@ -7,10 +7,11 @@ manifest_version: 2026.09.15-discovery-governance
 # Principle: Capability Exists ≠ Capability Visible ≠ Capability Activated
 #
 # Profiles:
-#   default    → earth_core only (13 tools)
-#   specialist → earth_core + earth_specialist (19 tools)
-#   research   → all packs (26 tools)
-#   full       → all packs (26 tools, alias for research)
+#   default    → earth_core only
+#   specialist → earth_core + earth_specialist
+#   research   → all packs
+#   full       → all packs (alias for research)
+# Counts are measured by tools_for_profile — see docs/canonical_public_tools.json
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 
