@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-10-05T13:29:21.255131+00:00",
+  "generated_at": "2026-10-07T04:25:05.770540+00:00",
   "organ": "GEOX",
   "total_canonical_tools": 28,
-  "total_ui_resources": 24,
-  "active_ui_resources": 20,
+  "total_ui_resources": 25,
+  "active_ui_resources": 21,
   "deprecated_ui_resources": 3,
   "planned_ui_resources": 1,
   "active_zero_bound": 0,
@@ -597,6 +597,25 @@
         "macrostrat.org",
         "tile.openstreetmap.org",
         "unpkg.com"
+      ],
+      "component_domains": [
+        "geox.arif-fazil.com"
+      ],
+      "deprecation_note": null
+    },
+    {
+      "id": "operator",
+      "uri": "ui://geox/operator",
+      "title": "GEOX Operator Console",
+      "status": "active",
+      "mime_type": "text/html;profile=mcp-app",
+      "content_bytes": 0,
+      "content_hash": "sha256:0000000000000000",
+      "bound_tools": [
+        "geox_surface_status"
+      ],
+      "csp_domains": [
+        "geox.arif-fazil.com"
       ],
       "component_domains": [
         "geox.arif-fazil.com"

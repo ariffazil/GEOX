@@ -138,6 +138,20 @@ dependencies = [
     "pyjwt>=2.15.1",
     "tornado>=6.5.10",
     "urllib3>=2.8.0",
+    # ─── P0-A/P0-C 2026-10-08: unblock adapters that were already written ──────
+    # ppigrf — service_registry.py declares igrf_adapter as AdapterStatus.STABLE
+    # (library_name="ppigrf") contributing to geox_basin + geox_subsurface_model,
+    # but the library was never declared or installed, so the live adapter raised
+    # ImportError at call time: a registry-declared STABLE capability that did not
+    # resolve. ppigrf moved from date-based (2024.x) to semver; 2.1.0 is current,
+    # so the registry's old ">=2024.0" string was unsatisfiable and is corrected.
+    "ppigrf>=2.1.0",
+    # pystac-client — gates src/geox_mcp/tools/stac_discover.py:85 and
+    # src/geox_core/io/landsat_stac_fetcher.py:70, both of which already return an
+    # honest epistemic="TOOL_UNAVAILABLE" solely because this package was absent.
+    # Note: pulls pystac 1.15.x, which is now modularised into pystac-core plus
+    # ~20 pystac-ext-* packages (25 total), not the 3 deps older docs describe.
+    "pystac-client>=0.9.0",
 ]
 
 [project.optional-dependencies]

@@ -1,4 +1,13 @@
 """
+ORPHAN — NOT THE LIVE IGRF ADAPTER. Do not patch magnetics behaviour here.
+
+service_registry.py registers `igrf_adapter` as
+`geox_core.engines.geophysics.igrf_adapter`, which fails hard with ImportError when
+ppigrf is absent. This module has zero importers across src/, geox/ and tests/
+(measured 2026-10-08), so its MockIGRFBackend fallback is unreachable in production.
+Retained per no-delete doctrine, marked so a future audit does not mistake this mock
+path for the live one (two-truth surface, cf. KL2 task-map N2).
+
 ppigrf — IGRF-14 magnetic field model adapter for GEOX.
 
 Supports: field components (Be, Bn, Bu), total intensity (F),

@@ -1,12 +1,12 @@
 {
   "schema_version": "io.modelcontextprotocol/ui/1.0",
-  "app_id": "geox.ac_risk.console",
-  "name": "GEOX AC_Risk Console",
-  "version": "1.0.0-AAA",
-  "description": "Constitutional AC risk, claim-tag evidence, prospect evaluation, and kill matrix adjudication console. Interactive Theory of Anomalous Contrast risk calculator with real-time verdict display.",
+  "app_id": "geox.seismic.vision",
+  "name": "GEOX Seismic Vision",
+  "version": "1.1.0",
+  "description": "Seismic inline/crossline slices with amplitude attributes, horizon overlay, anomalous contrast detection, wavelet extraction, well ties, cognition review, and visual hypothesis generation. Phase 2 hardened — MapLibre 4.7.1 integrated.",
   "ui_entry": {
     "type": "resource_uri",
-    "resource_uri": "https://geox.arif-fazil.com/apps/judge-console/index.html"
+    "resource_uri": "https://geox.arif-fazil.com/apps/seismic-vision-review/index.html"
   },
   "capabilities": {
     "events": [
@@ -15,19 +15,15 @@
       "tool.request",
       "tool.result",
       "ui.action",
-      "ui.state.change",
-      "ac_risk.calculated",
-      "ac_risk.reset",
       "physics.result",
       "vault.seal"
     ],
     "tools": [
-      "geox_claim",
-      "geox_prospect",
-      "geox_contrast_metabolize",
-      "geox_surface_status"
+      "geox_seismic_compute",
+      "geox_seismic_ingest",
+      "geox_seismic_interpret"
     ],
-    "render_modes": ["claim_graph", "kill_matrix", "ac_risk_meter", "verdict_ledger"],
+    "render_modes": ["inline_slice", "crossline_slice", "amplitude_map", "horizon_overlay", "anomaly_contrast", "well_tie"],
     "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"]
   },
   "arifos": {
@@ -43,7 +39,7 @@
   "_meta": {
     "ui": {
       "csp": {
-        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "https://api.geox.arif-fazil.com"],
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071"],
         "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
         "frameDomains": ["'none'"],
         "baseUriDomains": ["'none'"]
@@ -51,7 +47,7 @@
     }
   },
   "permissions": {
-    "compute": ["ac_risk_compute", "claim_graph_evaluate", "prospect_evaluate", "kill_matrix_adjudicate"],
+    "compute": ["amplitude_attribute", "horizon_extract", "wavelet_extract", "well_tie"],
     "network": ["vault_999_submit"]
   }
 }

@@ -1,0 +1,26 @@
+/* GEOX Seismic Vision — minimal SEP-1865 chrome */
+:root {
+  --bg: #0a0b0d;
+  --fg: #e6e6e6;
+  --muted: #888;
+  --accent: #4ec9b0;
+  --warn: #d29922;
+}
+* { box-sizing: border-box; }
+body, html { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: Inter, system-ui, sans-serif; }
+.sv-layout { display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+.sv-header { display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #222; }
+.sv-header-title { font-family: "Sora", sans-serif; font-weight: 700; }
+.sv-header-epistemic { font-size: 10px; padding: 2px 6px; border: 1px solid var(--warn); color: var(--warn); border-radius: 4px; }
+.sv-header-badge { margin-left: auto; font-size: 10px; color: var(--accent); letter-spacing: 0.1em; }
+.sv-main { display: grid; grid-template-columns: 220px 1fr 240px; gap: 12px; padding: 12px; }
+.sv-controls, .sv-interpretation { background: #111; padding: 12px; border-radius: 6px; border: 1px solid #1f1f1f; }
+.sv-controls label { display: block; font-size: 11px; color: var(--muted); margin: 8px 0 2px; }
+.sv-controls input, .sv-controls select { width: 100%; background: #000; color: var(--fg); border: 1px solid #333; padding: 4px; border-radius: 3px; }
+.sv-controls button { margin-top: 10px; width: 100%; background: var(--accent); color: #000; border: none; padding: 6px; border-radius: 3px; font-weight: 600; cursor: pointer; }
+.sv-viewer { background: #000; border: 1px solid #1f1f1f; border-radius: 6px; min-height: 480px; }
+.sv-plot { width: 100%; height: 100%; }
+.sv-interpretation ul { list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--muted); }
+.sv-interpretation li { padding: 4px 0; border-bottom: 1px dashed #222; }
+.sv-empty { font-style: italic; opacity: 0.6; }
+.sv-footer { padding: 6px 16px; font-size: 10px; color: var(--muted); border-top: 1px solid #222; }

@@ -1,0 +1,49 @@
+{
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.operator.console",
+  "name": "GEOX Operator Console",
+  "version": "1.0.0",
+  "description": "Unified operator dashboard — tool health, app links, canonical tool list, diagnostic tools, and federation status.",
+  "ui_entry": {
+    "type": "resource_uri",
+    "resource_uri": "https://geox.arif-fazil.com/"
+  },
+  "capabilities": {
+    "events": [
+      "app.initialize",
+      "app.state.sync",
+      "tool.request",
+      "tool.result",
+      "ui.action",
+      "host.resize"
+    ],
+    "tools": [
+      "geox_surface_status"
+    ],
+    "render_modes": ["dashboard", "tool_grid", "federation_status"],
+    "data_classes": ["MEASURED"]
+  },
+  "arifos": {
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F11"],
+    "vault_route": "999_VAULT",
+    "human_judge": "888"
+  },
+  "fallback": {
+    "chain": ["inline", "external", "card", "text"]
+  },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "https://api.geox.arif-fazil.com"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  },
+  "permissions": {
+    "compute": ["surface_status"],
+    "network": ["vault_999_submit"]
+  }
+}
