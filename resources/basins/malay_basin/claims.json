@@ -21,7 +21,7 @@
       "reservoir_seal_matrix.yaml",
       "stratigraphy_groups.yaml"
     ],
-    "source": "NOC Carigali regional studies",
+    "source": "internal operator regional studies (de-referenced 2026-10-08 purge; values are our synthesis)",
     "confidence": "HIGH",
     "valid_until": "2030-12-31",
     "forbidden_uses": [

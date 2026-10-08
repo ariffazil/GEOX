@@ -73,39 +73,38 @@
   },
   {
     "claim_id": "kin_clm_6",
-    "claim": "RESOLVED 2026-09-30 (was UNKNOWN): Rotan-1 TD = 2141 MD / 2114.7 m TVDSS (2660 ms; seabed/WD 1149.4 m) per WCR Rotan-1 via KL2_Wells_Data_Compilation.xlsx (WELL_HEADERS, FORMATION_TOPS) — Hyp-B correct. The machine KL2V2 roster row (TD 3200 m TVDSS, 2810 ms, seabed 750 m) is a DATA-LINEAGE FAULT: synthetic/modelled or another well's header, NOT the Rotan-1 well. Hyp-A retained in lineage only; superseded rows in kl2_kinabalu_well_data_v2.xlsx must not be used for depth targeting. Note: the earlier Hyp-B line 'nothing tied below IVE' was itself wrong — it was scaled from DER_MODEL picks; real picks (kin_clm_7) tie NN11 and NN10 at Rotan.",
+    "claim": "RESOLVED 2026-09-30 (was UNKNOWN): for the de-identified NSPW deepwater well DW-A (identity ledger held privately; well-file values PURGED from this public repo 2026-10-08 by F13 sovereign decision — synthesis retained, numbers removed), the well-completion-report header (TD, seabed, TVDSS — values withheld) resolves a roster contradiction: Hyp-B correct. The machine roster row was a DATA-LINEAGE FAULT (synthetic/modelled or another header), NOT the real well; superseded roster rows must not be used for depth targeting. The earlier Hyp-B line 'nothing tied below IVE' was itself wrong — it was scaled from derived picks; real picks tie NN11 and NN10 at DW-A (kin_clm_7).",
     "claim_type": "observed",
     "evidence_refs": [
-      "KL2_Wells_Data_Compilation.xlsx :: WELL_HEADERS / FORMATION_TOPS (WCR Rotan-1, Geoservice)",
-      "VSI VSP checkshot 106 shots 1268-2130 m MD, tie correlation 0.85"
+      "internal WCR header + formation tops relay (artifacts de-referenced 2026-10-08; originals in private store)",
+      "VSP checkshot depth-time tie (metrics withheld)"
     ],
-    "source": "Arif enterprise resolution 2026-09-30 (enterprise files not locally readable on KVM8 — RELAY class)",
+    "source": "Arif enterprise resolution 2026-09-30 (RELAY class; provenance de-referenced 2026-10-08)",
     "confidence": "HIGH",
     "valid_until": "2030-12-31",
     "forbidden_uses": [
-      "depth_targeting_from_roster_3200",
+      "depth_targeting_from_superseded_roster",
       "average_the_two_TDs"
     ]
   },
   {
     "claim_id": "kin_clm_7",
-    "claim": "Rotan-1 carries REAL biostrat + seismic-tie picks (DER_MODEL superseded): IVG upper 1144-1836 m MD (source reads NN12 — flagged), NN11 1836.4-1993.9 m MD (HIGH, coarsening-upward funnel), NN10 1993.9-2143.4 m MD to TD (MEDIUM, blocky/aggrading); Landmark IVD Kamunsu top 1933.7 m MD, IVC Kinarut top 1990.7 m MD; top reservoir 1988.7 MD (1962.5 TVDSS), GWC/flat event 2072.1 MD (2045.8 TVDSS). Depth-time link is REAL via VSP (tie 0.85).",
+    "claim": "DW-A carries REAL biostrat + seismic-tie picks (derived-model superseded): upper unit's source reads NN12 (flagged); an NN11 interval (HIGH confidence, coarsening-upward funnel); NN10 to TD (MEDIUM, blocky/aggrading); interpreter intra-IVD and intra-IVC tops present; top reservoir and a flat-event GWC lie within the NN10 interval (all MD/TVDSS depths withheld 2026-10-08 purge — private ledger). Depth-time link is REAL via VSP.",
     "claim_type": "observed",
     "evidence_refs": [
-      "KL2_SOURCE_OF_TRUTH_MASTER.xlsx :: BIO_ZONE_INTERVALS (ACTIVE_SOURCE_OF_TRUTH)",
-      "KL2V2 Landmark picks",
-      "KL2_Wells_Data_Compilation.xlsx FORMATION_TOPS"
+      "enterprise bio-zone intervals (ACTIVE_SOURCE_OF_TRUTH relay; artifact names de-referenced 2026-10-08)",
+      "interpreter picks relay"
     ],
-    "source": "Arif enterprise resolution 2026-09-30 (RELAY class)",
+    "source": "Arif enterprise resolution 2026-09-30 (RELAY class; de-referenced)",
     "confidence": "HIGH",
     "valid_until": "2030-12-31",
     "forbidden_uses": [
-      "treat_rotan_picks_as_der_model"
+      "treat_DW-A_picks_as_derived_model"
     ]
   },
   {
     "claim_id": "kin_clm_8",
-    "claim": "The Rotan-1 gas pay (1988.7-2072.1 m MD, 78 m net, NTG 94%, phi 33%) and TD sit entirely within NN10 (~8.29-9.53 Ma): top reservoir, IVC Kinarut top (1990.7) and the NN11/NN10 boundary (1993.9) coincide within ~5 m. By operator/Landmark label the pay is 'IVC Kinarut'; by the Borneo-2023 NN ladder NN10 = Stage IVD; Wheeler SRU (base NN10A ~8.6 Ma) lies inside NN10 near or below TD. INTERPRET: the zone-to-surface transfer error caught in a real well — 'IVC' here is a label, not an age. OPEN 888 QUESTION: is SRU/SENJA at Rotan the NN11/NN10 boundary (~1994 m MD, just above pay) or base NN10A (near TD ~2141 m MD)? The two differ ~150 m and ~0.3-0.9 Myr; the answer decides whether Kinabalu SRU ties regionally to NN9 or NN10. LANGGAR-DRU and SABAR-UIU are below TD on this line — seismic-only under every hypothesis.",
+    "claim": "The DW-A gas pay sits entirely within NN10 (~8.29–9.53 Ma): top reservoir, the intra-IVC top and the NN11/NN10 boundary coincide within a few metres. By operator label the pay is 'IVC Kinarut'; by the Borneo-2023 NN ladder NN10 = Stage IVD; Wheeler SRU (base NN10A ~8.6 Ma) lies inside NN10 at or below TD. INTERPRET: the zone-to-surface transfer error caught in a real well — 'IVC' here is a label, not an age. OPEN 888 QUESTION: is SRU/SENJA at DW-A the NN11/NN10 boundary (just above pay) or base NN10A (near TD)? The two candidates differ ~0.3–0.9 Myr and ~150 m of section; the answer decides whether Kinabalu SRU ties regionally to NN9 or NN10. LANGGAR-DRU and SABAR-UIU are below TD on this line — seismic-only under every hypothesis.",
     "claim_type": "interpreted",
     "evidence_refs": [
       "kin_clm_7",
@@ -115,13 +114,13 @@
     "confidence": "MED",
     "valid_until": "2027-03-31",
     "forbidden_uses": [
-      "call_rotan_pay_IVC_without_age_qualifier",
+      "call_DW-A_pay_IVC_without_age_qualifier",
       "seal_SENJA_age_before_SRU_decision"
     ]
   },
   {
     "claim_id": "kin_clm_9",
-    "claim": "KL2 scaffold v3 shipped 2026-09-30 (T4): /root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_well_data_v3.xlsx + penetration_chart_v3.png. Rotan-1 = REAL header (WCR) + REAL picks; other 7 wells remain DER_SYNTHETIC unchanged; v2 files retained but SUPERSEDED (lineage fault). Penetration asserts recomputed honestly: NN9 8→7, NN8 5→4, NN7 5→4 — v1 pattern not preserved because it was built on the faulty row.",
+    "claim": "KL2 scaffold v3 shipped 2026-09-30 (T4): local kl2 workbook + penetration chart under /root/GEOX/outputs/kl2_kinabalu/. DW-A = REAL header (WCR) + REAL picks; other 7 wells remain DER_SYNTHETIC unchanged; v2 files retained but SUPERSEDED (lineage fault). Penetration asserts recomputed honestly: NN9 8→7, NN8 5→4, NN7 5→4 — v1 pattern not preserved because it was built on the faulty row.",
     "claim_type": "observed",
     "evidence_refs": [
       "/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_v3.py",
@@ -137,17 +136,17 @@
   },
   {
     "claim_id": "kin_clm_10",
-    "claim": "SRU (Shallow Regional Unconformity; Levell 1987, named with DRU, LIU/UIU and Horizons III-I) is a KINABALU-ONLY upper-plate surface: strong Inboard Belt compression (fold+uplift+erosion) SIMULTANEOUS with transtension opening the Outboard Belt and East Baram depocentres. Character changes downdip: angular unconformity inboard (type; onshore Crocker/Klias removed or merged with younger erosion) -> onlap outboard -> correlative conformity (East Baram) -> local unconformities + conformable stretches in deepwater (Rotan/NSPW, diapir-deformed; cand pick NN11/NN10 ~1994 m MD, ~5 m below top pay) -> UNKNOWN in Sabah Trough (not imaged) -> none in Layang-Layang (drape continues). Age ~9-8.5 Ma HOLD (conflict: 9.53 top NN9 / ~8.6 base NN10A / 8.50 Rotan PDA); stage HOLD (top IVC vs base IVD).",
+    "claim": "SRU (Shallow Regional Unconformity; Levell 1987, named with DRU, LIU/UIU and Horizons III-I) is a KINABALU-ONLY upper-plate surface: strong Inboard Belt compression (fold+uplift+erosion) SIMULTANEOUS with transtension opening the Outboard Belt and East Baram depocentres. Character changes downdip: angular unconformity inboard (type; onshore Crocker/Klias removed or merged with younger erosion) -> onlap outboard -> correlative conformity (East Baram) -> local unconformities + conformable stretches in deepwater (DW-A/NSPW, diapir-deformed; candidate pick at the NN11/NN10 boundary a few metres below top pay — depth withheld) -> UNKNOWN in Sabah Trough (not imaged) -> none in Layang-Layang (drape continues). Age ~9-8.5 Ma HOLD (candidates: 9.53 top NN9 / ~8.6 base NN10A / an internal well-product value near 8.5 Ma — figure withheld 2026-10-08 purge); stage HOLD (top IVC vs base IVD).",
     "claim_type": "interpreted",
     "evidence_refs": [
       "tectonic_history.md#sru-settlement",
       "basin_profile.yaml#sru_rule_2026_10_01",
       "../nw_borneo_collision_system/claims.json"
     ],
-    "source": "Arif (F13 SOVEREIGN) settlement 2026-10-01; Levell 1987; Rotan-1 WCR picks (enterprise relay)",
+    "source": "Arif (F13 SOVEREIGN) settlement 2026-10-01; Levell 1987; DW-A WCR picks relay (de-identified)",
     "confidence": "structure SETTLED MED-HIGH / age+stage HOLD",
     "valid_until": "2027-12-31",
-    "falsifier": "Rotan-1 DSG tops + re-zoned NN counts settling cand-B re-date the surface (~8.6 Ma) and move it to base IVD; any 2D line across the trough imaging SRU as an EROSIVE surface on the lower plate refutes the upper-plate rule.",
+    "falsifier": "DW-A DSG tops + re-zoned NN counts settling cand-B re-date the surface (~8.6 Ma) and move it to base IVD; any 2D line across the trough imaging SRU as an EROSIVE surface on the lower plate refutes the upper-plate rule.",
     "forbidden_uses": [
       "sru_as_three_province_invariant",
       "seal_SENJA_age_before_888",
@@ -156,7 +155,7 @@
   },
   {
     "claim_id": "kin_clm_11",
-    "claim": "SRU consequences for the petroleum system: (1) reservoir - the Late Miocene sediment-routing switch set up by SRU uplift charged the IVD-IVE fairways incl. the Rotan pay (NN10); (2) trap - SRU deformation timing vs diapir growth controls whether Rotan-type closure against the diapir pre-dates charge; (3) seal - inboard SRU erosion can breach seals, offshore (conformable SRU) cannot; (4) correlation - equating the inboard angular SRU with a deepwater zone boundary is the Rotan 'IVC vs IVD' error, the mechanism by which an age model goes wrong. Reading rules: angular discordance = tilt; hiatus-triangle width (Krebs) = depth of erosion = contour of uplift; erosion->conformity transition = hinge separating source from sink.",
+    "claim": "SRU consequences for the petroleum system: (1) reservoir - the Late Miocene sediment-routing switch set up by SRU uplift charged the IVD-IVE fairways incl. the NN10 deepwater pay at DW-A; (2) trap - SRU deformation timing vs diapir growth controls whether shale-diapir-flank (DW-A-type) closure pre-dates charge; (3) seal - inboard SRU erosion can breach seals, offshore (conformable SRU) cannot; (4) correlation - equating the inboard angular SRU with a deepwater zone boundary is the 'IVC vs IVD' label error, the mechanism by which an age model goes wrong. Reading rules: angular discordance = tilt; hiatus-triangle width (Krebs) = depth of erosion = contour of uplift; erosion->conformity transition = hinge separating source from sink.",
     "claim_type": "interpreted",
     "evidence_refs": [
       "tectonic_history.md#sru-settlement",
@@ -165,10 +164,97 @@
     "source": "Arif (F13 SOVEREIGN) settlement 2026-10-01",
     "confidence": "MED",
     "valid_until": "2027-12-31",
-    "falsifier": "IVD-IVE fairway provenance showing no Late Miocene inboard surge decouples reservoir from SRU uplift; documented pre-SRU closure of a Rotan-type trap refutes the trap-timing control.",
+    "falsifier": "IVD-IVE fairway provenance showing no Late Miocene inboard surge decouples reservoir from SRU uplift; documented pre-SRU closure of a DW-A-type trap refutes the trap-timing control.",
     "forbidden_uses": [
       "inboard_seal_breach_risk_applied_to_deepwater",
       "stage_box_transfers_as_sr_u_correlation"
+    ]
+  },
+  {
+    "claim_id": "kin_clm_12",
+    "claim": "SRU age NARROWED INBOARD (2026-10-08, independent well-witness, external chronostrat build, FI-008-arithmetic-verified): at three de-identified inboard wells (INB-1..3; identity ledger private, values purged from repo) the SRU / B.S.IVD pick sits INSIDE NN10 with NN9 immediately beneath; constant-rate interpolation within NN10 (GTS2012 8.29-9.53) gives 9.36-9.41 Ma (three wells agree within 0.05 Myr). Inboard 'SRU = 8.5-8.6 Ma' is REJECTED at those wells: 8.6 is the BKSA95 age of base NN11, far up-section of the picks. kin_clm_10's age HOLD narrows to: inboard SRU ~9.4-9.53 Ma vs deepwater candidate ~8.29-8.5 Ma (DW-A NN11/NN10 boundary / internal product) - one diachronous family vs two surfaces stays OPEN. A fourth well toward N Sabah (de-identified) marks the transition (NN11 below its pick). Interpolation is INT (constant-rate assumption); raw occurrence charts with reworking/caving control still required.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "enterprise penetration-chart witness relay 2026-10-08 (wells de-identified; values in private store)",
+      "kin_clm_10",
+      "kin_clm_8"
+    ],
+    "source": "External chronostrat v2 build 2026-10-08 + FI-008 validation session; Backman-2012 GTS2012 zone bases",
+    "confidence": "MED-HIGH inboard / OPEN deepwater",
+    "valid_until": "2027-12-31",
+    "falsifier": "Re-zoned raw occurrences or depth-converted tops showing NN10 NOT above the pick at any of the three wells; DW-A tops dating the deepwater surface younger than the pay.",
+    "forbidden_uses": [
+      "apply_9.4_to_deepwater_SRU",
+      "apply_8.5_to_inboard_SRU",
+      "seal_SENJA_age_before_888"
+    ]
+  },
+  {
+    "claim_id": "kin_clm_13",
+    "claim": "Reading rules CONFIRMED (2026-10-08 audit): (1) TOP-equals-BASE convention - project 2026 ages are TOP-of-stage ages, legacy TB ages BASE-of-stage ages, naming the SAME physical surfaces: Top III=Base IVA=DRU; Top IVA=Base IVB=LIU; Top IVB=Base IVC=UIU; Top IVC=Base IVD=SRU; Top IVD=Base IVE=Horizon III; Top IVE=Base IVF=Horizon II; Top IVF=Base IVG=Horizon I. Mixing conventions mislabels stage boxes. (2) COMPOSITE PICKS - on inversion highs (three de-identified high wells; one with NN5-NN8 absent at a 'DRU'-labelled pick) the unconformity NAME attaches to whichever erosion surface is deepest, with intervening stages missing. Composite picks must be EXCLUDED from single-surface age calibration - extends kin_clm_10's character ladder.",
+    "claim_type": "observed",
+    "evidence_refs": [
+      "enterprise unified chart + penetration-chart witness (de-identified 2026-10-08)",
+      "kin_clm_10"
+    ],
+    "source": "External chronostrat v2 audit + FI-008 validation 2026-10-08",
+    "confidence": "HIGH",
+    "valid_until": "2028-12-31",
+    "forbidden_uses": [
+      "mixed_convention_stage_labels",
+      "calibrate_single_surface_from_composite_pick"
+    ]
+  },
+  {
+    "claim_id": "kin_clm_14",
+    "claim": "DRU age - FOUR candidates on register, none averaged: (a) legacy TB 15.4 Ma base-of-stage; (b) legacy recalibrated 14.91 Ma - legacy 15.4-15.6 IS the BKSA95 age of base NN5; under GTS2012 base NN5 = 14.91, so ~41% of the project-vs-legacy gap is a TIMESCALE ARTEFACT and the residual 0.71 Myr is real; (c) project 14.2 Ma (Top III at NN5) - numerically equal to the two-oceanics MMU 'post-collisional restart' 14.2 Ma, consistent with the MMU(DG)-vs-DRU(Sabah) near-coeval-but-different-surfaces fork (east-sabah adjudication, sys_clm_8/9); (d) federation ladder 13.5-12.5 Ma (kin_clm_2 / sys_clm_9 F13-settled RU 16.9-15.5 -> foredeep 16-15 -> DRU 13.5-12.5). The one composite 'DRU'-labelled pick only brackets it at <14.91. HOLD: no non-composite, NN-controlled DRU pick exists in the witness set.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "kin_clm_2",
+      "../nw_borneo_collision_system/claims.json#sys_clm_9",
+      "../sabah_two_oceanics.yaml",
+      "../east_sabah_dg_models/models.json"
+    ],
+    "source": "FI-008 cross-validation 2026-10-08 (external chronostrat v2 + GEOX packs)",
+    "confidence": "HOLD (age), HIGH (that 41% is calibration)",
+    "valid_until": "2027-12-31",
+    "falsifier": "Raw NN4/NN5 occurrences at the de-identified high wells (NN5 below pick falsifies (b), supports (c)); well-tied dip line across the trough discriminating (d).",
+    "forbidden_uses": [
+      "average_the_four_DRU_candidates",
+      "DRU_MMU_single_surface_label"
+    ]
+  },
+  {
+    "claim_id": "kin_clm_15",
+    "claim": "Inboard palaeobathymetry CORRECTED (falsifies a prior uniform picture): Stage III was BATHYAL inboard (three de-identified high wells: bathyal to outer-neritic below DRU; Kudat Wedge / Setap-equivalent). Shoaling is DIACHRONOUS with the shelf edge stepping NW: coastal facies on inversion highs immediately post-DRU, outer shelf bathyal until SRU-IVE time (de-identified outer-shelf well bathyal to SRU then coastal; another bathyal to IVE; shelf wells coastal-plain through IVD). Same time does not mean same facies. Consistent with kin_clm_11's SRU-routing logic (inboard uplift charges IVD-IVE fairways).",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "enterprise penetration-chart EOD witness (wells de-identified 2026-10-08)",
+      "kin_clm_11",
+      "kin_clm_10"
+    ],
+    "source": "External chronostrat v2 + FI-008 validation 2026-10-08",
+    "confidence": "MED-HIGH",
+    "valid_until": "2027-12-31",
+    "falsifier": "EOD-vs-age plot for the full biostrat well set showing synchronous (not stepped) shoaling.",
+    "forbidden_uses": [
+      "single_facies_band_per_stage",
+      "inboard_shallow_from_base_Miocene_assertion"
+    ]
+  },
+  {
+    "claim_id": "kin_clm_16",
+    "claim": "Kinabalu granite age TENSION on record: external chronostrat v2 cites Cottam et al. 2010 U-Pb 7.85-7.22 Ma as literature fact; sys_clm_6 (source-verified 2026-09-30) holds the intrusion age UNVERIFIED (K-Ar range to ~14 Ma contested; 9-7 Ma window narrower than the evidence; forbidden: cite_granite_age_as_8_7_Ma); the sealed two-oceanics ledger carries 9.5 Ma decompression-melt onset / 7.0 Ma emplacement / 360 degC/Myr cooling (Cottam 2013). U-Pb 7.85-7.22 is PLAUSIBLE and consistent with the cooling data but any PUBLIC artifact must carry the contest note ('~7-8 Ma U-Pb; older K-Ar ages contested'), not a bare 7.85-7.22 fact. Internal resolution pending: read Cottam et al. 2010 full text.",
+    "claim_type": "interpreted",
+    "evidence_refs": [
+      "../nw_borneo_collision_system/claims.json#sys_clm_6",
+      "../sabah_two_oceanics.yaml"
+    ],
+    "source": "FI-008 validation 2026-10-08",
+    "confidence": "MED (plausible, unsealed)",
+    "valid_until": "2027-06-30",
+    "forbidden_uses": [
+      "bare_7.85_7.22_in_public_artifacts"
     ]
   }
 ]

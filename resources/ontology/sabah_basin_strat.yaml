@@ -115,7 +115,7 @@ basin:
       age_ma: [8.5, 10.5]
       surfaces: [UIU, SRU]
       processes: ["Canopy coalescence AT the UIU in a short burst (<0.1 My)", "Stage IVC canopy-basin fill on top of the canopy (UIU to SRU ~8.5-9 Ma)", "Stage IVC turbidite routing around canopy relief", "Trigger: thrusting + inversion, then stress relaxation"]
-      evidence: "Morley et al. 2023 Geosphere 19(1), Figs 2 & 26; Rotan field reservoir data"
+      evidence: "Morley et al. 2023 Geosphere 19(1), Figs 2 & 26"
       epistemic: "HIGH (corrected 2026-10-06 against primary text: coalescence is a UIU event, NOT SRU; SRU caps the canopy-basin fill; compression is the canopy trigger — not canopy-vs-compression either/or)"
 
     - name: "post_wedge_burial"
@@ -188,7 +188,7 @@ basin:
       evidence: "Morley 2023"
       epistemic: "MED-HIGH"
     SRU:
-      age_ma: "HOLD ~9–8.5 (conflict: 9.53 top NN9 / ~8.6 base NN10A / 8.50 Rotan PDA) — 888 decision at Rotan-1 closes"
+      age_ma: "HOLD ~9–8.5 (conflict: 9.53 top NN9 / ~8.6 base NN10A / internal well-product value withheld) — 888 decision at DW-A closes"
       type: canopy_burial
       meaning: "Post-canopy burial by prograding shelf/delta systems (deepwater/NSPW usage)"
       legacy_equivalent: "SRU (Levell 1987)"
@@ -268,7 +268,7 @@ basin:
       explains: "Late Neogene onshore-offshore coupling, strike-slip segmentation, continuing differential subsidence"
       evidence_strength: "MED (satellite gravity, GPS, SAR, earthquake distribution)"
       limitation: "Describes kinematics, not mechanics — needs Morley for wedge physics"
-      source: "PETRONAS internal (Ahmad Hakim, M Hafiz)"
+      source: "internal contributors (names redacted 2026-10-08 purge)"
 
     - name: "Lunt Stratigraphic Critique"
       scale: "stratigraphy"
