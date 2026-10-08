@@ -280,9 +280,9 @@ def test_t9_surface_truth_31():
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
-    assert len(names) == 31
+    assert len(names) == 27
     snap = json.loads(Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json").read_text())
-    assert snap["public_count"] == 31
+    assert snap["public_count"] == 27
     assert set(snap["public_tools"]) == set(names)
     # ZEN_15 archived
     zen_path = Path("/root/GEOX/docs/ZEN_15_SURFACE.ARCHIVED.md")

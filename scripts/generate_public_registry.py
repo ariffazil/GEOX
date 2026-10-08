@@ -106,7 +106,7 @@ def build_root_tools_manifest() -> dict:
     return {
         "version": datetime.now(UTC).strftime("%Y.%m.%d"),
         "manifest_path": str(MANIFEST_PATH.relative_to(ROOT)),
-        "policy": f"Generated {datetime.now(UTC).isoformat()} — app_export ⊂ public ({len(app_export)} of {len(public_list)} tools plugin-exposed)",
+        "policy": f"Generated {datetime.now(UTC).strftime('%Y.%m.%d')} — app_export ⊂ public ({len(app_export)} of {len(public_list)} tools plugin-exposed)",
         "public": [tool.name for tool in public_list],
         "app_export": [tool.name for tool in public_list if tool.name in app_export],
         "internal": [tool.name for tool in manifest_tools() if tool.is_internal],

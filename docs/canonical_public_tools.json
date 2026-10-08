@@ -1,12 +1,13 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-09-19T04:27:01.704976+00:00",
+  "generated_at": "2026-10-08T09:49:16.988221+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 25,
+  "public_count": 27,
   "internal_count": 61,
   "public_tools": [
     "geox_well_ingest",
     "geox_petrophysics",
+    "geox_observe",
     "geox_seismic_ingest",
     "geox_seismic_compute",
     "geox_seismic_interpret",
@@ -25,6 +26,7 @@
     "geox_well",
     "geox_contrast_metabolize",
     "geox_glof",
+    "geox_surface_status",
     "geox_calibration_register_witness",
     "geox_extract_display_proxy",
     "geox_register_native_source",
@@ -51,6 +53,19 @@
       "axis": "reason",
       "lane": "reasoning",
       "description": "Unified petrophysics: Vsh, porosity, Sw, permeability, net pay, LEM inference, QC. Modes: generate, verify, lem_inference, stoip_feed, qc.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false,
+        "physics_guard_required": true
+      }
+    },
+    {
+      "name": "geox_observe",
+      "domain": "earth.multimodal",
+      "axis": "observe",
+      "lane": "evidence",
+      "description": "Canonical multimodal Earth observation umbrella (Earth Witness v1). Rock/outcrop/core/thin_section/fossil/seismic_display/map/section intake \u2192 governed EarthObservationPacket. Vision output is EVIDENC",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -292,6 +307,18 @@
         "zen_33": true,
         "phase_c": true,
         "unified_mode": true
+      }
+    },
+    {
+      "name": "geox_surface_status",
+      "domain": "earth.registry",
+      "axis": "compute",
+      "lane": "compute",
+      "description": "Canonical registry probe: public surface truth (count, canonical_tools, verdict). Self-witness for surface SOT.",
+      "ui": null,
+      "governance": {
+        "action_class": "OBSERVE",
+        "mutation": false
       }
     },
     {

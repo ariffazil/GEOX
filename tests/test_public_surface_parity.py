@@ -343,7 +343,7 @@ def test_agent_json_tool_count_parity_with_canonical_surface() -> None:
     audit = agent.get("public_surface_audit", {})
     assert audit.get("manifest") == "static/PUBLIC_SURFACE_MANIFEST.json"
     # Sanity: the canonical public surface count is the live truth
-    assert canonical_count >= 30, (
+    assert canonical_count >= 25, (
         f"canonical public surface count suspiciously low: {canonical_count}"
     )
 

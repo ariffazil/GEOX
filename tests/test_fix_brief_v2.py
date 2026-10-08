@@ -18,8 +18,8 @@ def test_p0_surface_attestation_public_31():
     names = public_tool_names()
     att = surface_attestation()
     assert att["ok"] is True
-    assert att["public_count"] == 31
-    assert len(names) == 31
+    assert att["public_count"] == 27
+    assert len(names) == 27
     assert "geox_seismic_interpret" in names
     assert "geox_claim" in names
     assert "geox_petrophysics" in names

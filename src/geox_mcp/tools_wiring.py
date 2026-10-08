@@ -162,7 +162,11 @@ def register_tools_on(mcp):
     # I1-I9: image != specimen; vision output = EVIDENCE only; no fluid claim from
     # image alone; missing diagnostics → INPUT_REQUIRED; local ceiling
     # QUALIFIED_CANDIDATE — arifOS seals only.
-    @mcp.tool(name="geox_observe", annotations=_geox_annotations("geox_observe"))
+    @mcp.tool(
+        name="geox_observe",
+        annotations=_geox_annotations("geox_observe"),
+        meta={"ui": {"resourceUri": "ui://geox/earth-volume"}},
+    )
     async def _earth_observe(
         artifact_ref: str | dict[str, Any],
         modality_hint: str | None = None,
