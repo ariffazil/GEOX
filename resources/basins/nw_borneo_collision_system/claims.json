@@ -71,12 +71,12 @@
   },
   {
     "claim_id": "sys_clm_6",
-    "claim": "BANGKIT (PROPOSED, not adopted): a Late Miocene lithospheric-rebalancing event beneath Sabah drives post-16 Ma deformation independent of renewed plate collision. Evidence verified 2026-09-30: uplift/exhumation ~8–3 Ma at >7 mm/yr (Menier et al. 2017); Late-Miocene apatite+zircon cooling of the Crocker belt (JGS 2000 thermochronology); PSCS slab remnant beneath Sabah confirmed geophysically (Cornwell et al. 2025 JGR W-dipping discontinuity 45–55 km; Pilia et al. 2023; Yu et al. 2021; Shi et al. 2020). Mechanism OPEN (break-off vs delamination vs dripping vs crustal melting). Kinabalu granite INTRUSION age UNVERIFIED (K-Ar range to 14 Ma contested); BizChat's 9–7 Ma window is narrower than the evidence. SRU (9–8.5 Ma) sits at the onset edge — BANGKIT as SRU driver plausible, unproven.",
+    "claim": "BANGKIT (PROPOSED, not adopted): a Late Miocene lithospheric-rebalancing event beneath Sabah drives post-16 Ma deformation independent of renewed plate collision. Evidence verified 2026-09-30: uplift/exhumation ~8–3 Ma at >7 mm/yr (Menier et al. 2017); Late-Miocene apatite+zircon cooling of the Crocker belt (JGS 2000 thermochronology); PSCS slab remnant beneath Sabah confirmed geophysically (Cornwell et al. 2025 JGR W-dipping discontinuity 45–55 km; Pilia et al. 2023; Yu et al. 2021; Shi et al. 2020). Mechanism OPEN (break-off vs delamination vs dripping vs crustal melting). Kinabalu granite INTRUSION age UNVERIFIED (K-Ar range to 14 Ma contested); an enterprise-AI-analysis 9–7 Ma window is narrower than the evidence. SRU (9–8.5 Ma) sits at the onset edge — BANGKIT as SRU driver plausible, unproven.",
     "claim_type": "hypothesis",
     "evidence_refs": [
       "basin_profile.yaml :: proposed_events"
     ],
-    "source": "BizChat enterprise analysis 2026-09-30 (names INVENTED, pending F13) + FI-003 source verification 2026-09-30 (search-snippet class; full texts not yet read)",
+    "source": "Enterprise AI analysis 2026-09-30 (names INVENTED, pending F13; tool de-referenced 2026-10-08) + FI-003 source verification 2026-09-30 (search-snippet class; full texts not yet read)",
     "confidence": "low-med",
     "valid_until": "2027-03-31",
     "forbidden_uses": [

@@ -1,5 +1,5 @@
 # NW Borneo Collision System — parent entity (one system, three positions)
-# Forged 2026-09-30 under Arif ENTERPRISE synthesis (deck 3133 proxy relay).
+# Forged 2026-09-30 under Arif ENTERPRISE synthesis (internal deck relay — de-referenced 2026-10-08 purge).
 # Ontology law: NOT three separate basins — three structural positions in ONE
 # collision system. Stratigraphy differs because POSITION differs, not time.
 basin_id: NW_BORNEO_COLLISION_SYSTEM
@@ -105,15 +105,15 @@ events:
 
   - event_id: SRU_LATE_MIOCENE   # SETTLED as an UPPER-PLATE-ONLY surface — sovereign settlement Arif 2026-10-01
     name_origin: "Shallow Regional Unconformity — named by Levell (1987) with the DRU, LIU/UIU and Horizons III–I, given biostratigraphic ages"
-    age_bracket: "~9–8.5 Ma — AGE HOLD: internal values conflict: 9.53 Ma (top NN9), ~8.6 Ma (base NN10A), 8.50 Ma (Rotan PDA)"
-    stage_position: "UNRESOLVED: top IVC in some files vs base IVD in the Atlas — held with the age until the 888 decision at Rotan-1"
+    age_bracket: "~9–8.5 Ma — AGE HOLD: candidates conflict: 9.53 Ma (top NN9), ~8.6 Ma (base NN10A), an internal well-product value near 8.5 Ma (figure withheld 2026-10-08 purge)"
+    stage_position: "UNRESOLVED: top IVC in some files vs base IVD in the Atlas — held with the age until the 888 decision at DW-A (de-identified deepwater well)"
     origin: "Strong compression of the Inboard Belt (folding, uplift, erosion) WHILE transtension at the western margin opened the Outboard Belt and East Baram depocentres"
     plate_assignment: "UPPER PLATE ONLY — the SRU is NOT one of the invariants; no expression expected in the lower plate"
     character_downdip: "erosion (Inboard, type expression, angular discordance) → onlap (Outboard) → correlative conformity (East Baram; Levell showed each regional unconformity passes into an onlap surface offshore) → none (Sabah Trough, not imaged) → drape continues (Layang-Layang)"
     expressions:
       layang_layang: {surface: none, form: "no expression expected — pelagic drape continues through it (INTERPRET)"}
       sabah_trough: {surface: UNKNOWN, form: "expected condensed or conformable distal surface — NOT imaged; no line crosses it (UNKNOWN)"}
-      kinabalu_basin: {surface: SRU, form: "inboard angular unconformity with strong truncation of folded IVA–IVC (type expression); onshore Crocker/Klias removed or merged with younger erosion; deepwater (Rotan, NSPW) = local unconformities + conformable stretches deformed by diapirs; candidate pick Rotan-1 NN11/NN10 boundary ~1994 m MD, ~5 m below top pay"}
+      kinabalu_basin: {surface: SRU, form: "inboard angular unconformity with strong truncation of folded IVA–IVC (type expression); onshore Crocker/Klias removed or merged with younger erosion; deepwater (DW-A, NSPW) = local unconformities + conformable stretches deformed by diapirs; candidate pick DW-A NN11/NN10 boundary, metres below top pay (depth withheld 2026-10-08)"}
     what_to_map: "the SRU is not a line on a map — it is a surface whose character changes downdip. Map where the erosion stops and where the onlap stops (hinges along KL1–KL5): those two lines give the first map of Late Miocene uplift"
     confidence: "structure SETTLED MED-HIGH (sovereign + Levell 1987) · age+stage HOLD until 888 · Trough/Layang expression UNKNOWN/none"
 
@@ -127,12 +127,12 @@ events:
     confidence: MED
 
 # ── EVENTS ADOPTED BY F13 RULING 2026-09-30 (Arif, this session) ──
-# BANGKIT adopted at the EVIDENCE window 8–3 Ma (not BizChat's 9–7).
-# GEMPA adopted as an event. Names INVENTED (BizChat), ages as verified.
+# BANGKIT adopted at the EVIDENCE window 8–3 Ma (not the enterprise-AI 9–7).
+# GEMPA adopted as an event. Names INVENTED (enterprise AI analysis), ages as verified.
 proposed_events:
   - event_id: BANGKIT_LM_REBALANCING   # status: ADOPTED_F13_2026-09-30
     name_proposed: "BANGKIT (bangkit — rise)"
-    age_bracket: "uplift/exhumation ~8–3 Ma CONFIRMED (Menier et al. 2017 >7 mm/yr Late-Miocene–Pliocene; JGS 2000 Late-Miocene apatite+zircon cooling of Crocker belt). BizChat window 9–7 Ma NARROWER than evidence. Kinabalu granite INTRUSION age UNVERIFIED — K-Ar range up to 14 Ma contested (Hall review); 2026 geochemistry paper (RG 15-Jul-2026) not yet full-text-read."
+    age_bracket: "uplift/exhumation ~8–3 Ma CONFIRMED (Menier et al. 2017 >7 mm/yr Late-Miocene–Pliocene; JGS 2000 Late-Miocene apatite+zircon cooling of Crocker belt). Enterprise-AI window 9–7 Ma NARROWER than evidence. Kinabalu granite INTRUSION age UNVERIFIED — K-Ar range up to 14 Ma contested (Hall review); 2026 geochemistry paper (RG 15-Jul-2026) not yet full-text-read."
     origin: "Lithospheric rebalancing beneath Sabah — mechanism OPEN: slab break-off vs delamination vs dripping vs crustal melting. Physical substrate CONFIRMED: PSCS slab remnant beneath Sabah (Cornwell et al. 2025 JGR: W-dipping discontinuity 45–55 km, 75–100 km wide; Pilia et al. 2023 W Sabah HVA; Yu et al. 2021 SE-dipping HVA; Shi et al. 2020)."
     expressions:
       kinabalu_basin: {surface: "SRU candidate + Crocker sediment surge", form: "inboard uplift + new source — may be a SEPARATE driver, not collision echo"}
@@ -168,7 +168,7 @@ invariance_law:
   unconformity_reading_rules: "An unconformity records VERTICAL MOVEMENT, not just deposition: angular discordance = tilt (how much the Inboard Belt folded before the IVD–IVG drape); hiatus triangle width = depth of erosion (Krebs' method — map the gap, get a contour map of uplift); the point where erosion turns to conformity = the hinge (linking SRU hinges along strike outlines the uplifted block and separates source from sink); timing mismatch between provinces = different mechanism."
 
 standing_holds:
-  - "HOLD — SRU (SENJA) age and stage position: 9.53 Ma (top NN9) vs ~8.6 Ma (base NN10A) vs 8.50 Ma (Rotan PDA); top IVC vs base IVD. Closes by the 888 decision at Rotan-1 (cand-A vs cand-B)."
+  - "HOLD — SRU (SENJA) age and stage position: 9.53 Ma (top NN9) vs ~8.6 Ma (base NN10A) vs an internal well-product value near 8.5 Ma (withheld); top IVC vs base IVD. Closes by the 888 decision at DW-A (cand-A vs cand-B)."
   - "HOLD — subduction polarity and timing: older model = SE-directed subduction of proto-SCS beneath NW Borneo; newer model = underthrusting of CONTINENTAL crust from ~base Miocene. Both in literature. Do not average; do not pick without new evidence."
   - "HOLD — Stage III correlation across the trough until a dip line with well tie physically crosses it."
   - "HOLD — collision age: 20.5 Ma vs 16.9–15.5 Ma brackets remain open."
@@ -184,7 +184,7 @@ sources:
   - "Arif (F13 SOVEREIGN) SRU + invariance settlement, 2026-10-01 (this session — BINDING for AM-07/AM-09 semantics)"
   - "Levell (1987) — Late Oligocene to Miocene tectono-eustatic events in Sabah: named SRU/DRU/LIU-UIU + Horizons III–I; showed each regional unconformity passes downdip into an onlap surface/correlative conformity offshore"
   - "Krebs et al. — chronosequence / hiatus-triangle method (gap widening inboard, closing offshore)"
-  - "Arif ENTERPRISE synthesis relay 2026-09-30 (250 enterprise results / 84 meetings; deck 3133 NOT directly readable from KVM8 — relayed text only)"
+  - "Arif ENTERPRISE synthesis relay 2026-09-30 (250 enterprise results / 84 meetings; internal deck NOT directly readable from KVM8 — relayed text only; deck de-referenced 2026-10-08)"
   - "Clift et al. 2008 (collision ~16 Ma, trench jam)"
   - "IODP Exp 349 (SCS spreading onset ~33–32 Ma, C12)"
   - "Chang et al. 2023 C.R. Geoscience (IRU, R2 37–32 Ma)"

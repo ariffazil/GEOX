@@ -112,7 +112,7 @@
     ],
     "evidence_against": [
       "no_seismic_refraction_Vp_through_wedge_specifically",
-      "ophiolite_Vp_5p0_to_6p5_overlaps_lower_crustal_continental_Vp_at_comparable_depths (depth CONTESTED — dossier places KT-7 at 12-21 km; federation code + CLM-NWS-002 place it at 6-8 km; see CLM-NWS-008)"
+      "ophiolite_Vp_5p0_to_6p5_overlaps_lower_crustal_continental_Vp_at_comparable_depths (depth CONTESTED — an internal dossier reading places KT-7 deeper (value withheld 2026-10-08); federation code + CLM-NWS-002 place it at 6-8 km; see CLM-NWS-008)"
     ],
     "missing_tests": [
       "KT_7_depth_conversion_BLOCKED_velocity_unresolved",
@@ -122,11 +122,11 @@
       "p10": 0.25,
       "p50": 0.45,
       "p90": 0.7,
-      "basis": "published point value INT 0.45 (dossier p.25, UNTESTED); bands are brackets, not a posterior"
+      "basis": "published point value INT 0.45 (internal dossier value, UNTESTED — de-referenced); bands are brackets, not a posterior"
     },
     "falsifier": "Depth-converted KT-7 with Vp outside 5.0-6.5 km/s, or OBS line showing no ophiolitic Vp through the wedge",
     "residual_ambiguity": "KT-7 narrows H1-vs-H2 only; it does not kill H2",
-    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8 / p.25",
+    "source_dossier": "internal enterprise dossier (de-referenced 2026-10-08)",
     "registered_at": "2026-09-15",
     "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
   }
@@ -167,7 +167,7 @@
       "basis": "QUALITATIVE_ONLY - dossier ranks 'moderate', publishes no numeric value; p50 is an a-priori bracket flagged for correction"
     },
     "falsifier": "KT-7 depth conversion or OBS Vp profile showing ophiolitic velocities (5.0-6.5 km/s) through the wedge with no detachment surface",
-    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "source_dossier": "internal enterprise dossier (de-referenced 2026-10-08)",
     "registered_at": "2026-09-15",
     "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
   }
@@ -205,7 +205,7 @@
     },
     "falsifier": "Reprocessed public magnetic and gravity data - a volcanic-continental signature can be killed or strengthened at near-zero cost",
     "sequencing_note": "Cheapest hypothesis to kill. Should be sequenced before any acquisition spend.",
-    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "source_dossier": "internal enterprise dossier (de-referenced 2026-10-08)",
     "registered_at": "2026-09-15",
     "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
   }
@@ -246,14 +246,14 @@
     },
     "falsifier": "OBS refraction Vp profile penetrating below the mobile-shale interval to image primary crustal structure and Moho",
     "residual_ambiguity": "Mobile-shale low-velocity zones will themselves contaminate any velocity-based discriminator",
-    "source_dossier": "GEOX Kinabalu Basin Geologist Dossier Fig.8",
+    "source_dossier": "internal enterprise dossier (de-referenced 2026-10-08)",
     "registered_at": "2026-09-15",
     "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"
   }
 },
 {
   "claim_id": "CLM-NWS-008",
-  "claim": "DECISION TEST: KT-7 depth-conversion discriminates H1-H4 (CLM-NWS-004..007) — UNTESTED, currently UNRUNNABLE, and federation-internal depth contradiction OPEN (6-8 km in code + CLM-NWS-002 vs 12-21 km in the external Kinabalu dossier).",
+  "claim": "DECISION TEST: KT-7 depth-conversion discriminates H1-H4 (CLM-NWS-004..007) — UNTESTED, currently UNRUNNABLE, and federation-internal depth contradiction OPEN (6-8 km in code + CLM-NWS-002 vs a deeper internal-dossier reading — value withheld 2026-10-08).",
   "claim_type": "other",
   "confidence_prior": 0.6,
   "confidence": "LOW",
@@ -267,17 +267,17 @@
     "sabah_basin/claims.json#CLM-NWS-004..007",
     "geox://skill/subsurface/petro/sabah_prospect_discriminator.py"
   ],
-  "source": "GEOX Kinabalu Basin Geologist Dossier Fig.8 + p.19 | Franke et al. 2008 MPG 25 606-624 | sabah_prospect_discriminator._default_pscs_filter()",
+  "source": "internal enterprise dossier (de-referenced 2026-10-08) | Franke et al. 2008 MPG 25 606-624 | sabah_prospect_discriminator._default_pscs_filter()",
   "metadata": {
     "test_status": "BLOCKED — not merely unrun",
     "blockers": [
       "pscs_velocity_available=False — exact Vp inversion sequence (3200->3760->6041 m/s) NOT PUBLISHED",
-      "depth_geometry_contradiction_open: code+CLM-NWS-002 place the Franke 2008 high-Vp body at 6-8 km; the dossier places KT-7 at 12-21 km. Same source paper, two geometries, unreconciled.",
+      "depth_geometry_contradiction_open: code+CLM-NWS-002 place the Franke 2008 high-Vp body at 6-8 km; the an internal dossier reading places KT-7 deeper (value withheld 2026-10-08). Same source paper, two geometries, unreconciled.",
       "no executable depth-conversion routine found on host — the 'code is written' claim resolves to a dataclass filter with a PENDING slot, not a runnable tool"
     ],
-    "discrimination_power": "PARTIAL — even if run, ophiolite Vp 5.0-6.5 km/s overlaps lower-crustal continental Vp at 12-21 km, so KT-7 narrows H1-vs-H2 only. The dossier's claim that it 'separates all four hypotheses' is an overclaim.",
+    "discrimination_power": "PARTIAL — even if run, ophiolite Vp 5.0-6.5 km/s overlaps lower-crustal continental Vp at the deeper internal depth reading (withheld 2026-10-08), so KT-7 narrows H1-vs-H2 only. The dossier's claim that it 'separates all four hypotheses' is an overclaim.",
     "downstream_effect": "PSCS confidence is reduced whenever kt7_result='PENDING' and the prospect requires Vp for confirmation (discriminator line 857).",
-    "auto_upgrade_condition": "This claim upgrades from BLOCKED to RUNNABLE the moment a Vp profile for the KT-7 reflector is published, OR the 6-8 km vs 12-21 km geometry is reconciled against Franke et al. 2008 full text.",
+    "auto_upgrade_condition": "This claim upgrades from BLOCKED to RUNNABLE the moment a Vp profile for the KT-7 reflector is published, OR the 6-8 km vs the deeper internal reading is reconciled against Franke et al. 2008 full text.",
     "sequencing": "Per dossier doctrine (information per dollar): KT-7 first once unblocked, then mag/grav reprocessing for H3, then the USD 5-10M OBS line.",
     "registered_at": "2026-09-15",
     "registered_by": "Hermes (edge bridge) on F13 approval ('do all')"

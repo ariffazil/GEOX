@@ -4,6 +4,11 @@ Position: UPPER PLATE of the NW Borneo Collision System. Basin fill resting on
 the Borneo (Crocker) accretionary wedge and its seaward flank — a group of
 wedge-top and foreland depocentres, not a single-origin basin.
 
+> Provenance note 2026-10-08: internal well-file values (TD/TVDSS, MD picks,
+> GWC, internal age products) were PURGED from this public pack by F13
+> sovereign decision — synthesis and flow retained, numbers withheld. Identity
+> ledger + originals: private store on the VPS, outside all repos.
+
 ## Clock (this position's expression)
 - Before ~23 Ma: not a basin in the modern sense. Its SUBSTRATE is the
   actively accreting Crocker prism — proto-South China Sea material subducted/
@@ -67,14 +72,15 @@ upper plate.
 | Onshore Crocker / Klias | removed or merged with younger erosion; section missing | INTERPRET |
 | Inboard Belt | angular unconformity, strong truncation of folded IVA–IVC — TYPE expression | settled |
 | Outboard Belt / East Baram | becomes onlap, then correlative conformity (each Levell regional unconformity passes into an onlap surface offshore) | settled |
-| Kinabalu deepwater (Rotan, NSPW) | mixture of local unconformities + conformable stretches, deformed by diapirs; candidate pick Rotan-1 NN11/NN10 ~1994 m MD, ~5 m below top pay | cand-A vs cand-B: 888 decision |
+| Kinabalu deepwater (DW-A, NSPW — de-identified) | mixture of local unconformities + conformable stretches, deformed by diapirs; candidate pick DW-A NN11/NN10 boundary, metres below top pay (depth withheld) | cand-A vs cand-B: 888 decision |
 | Sabah Trough | expected condensed/conformable distal surface — NOT imaged | UNKNOWN |
 | Layang-Layang | no expression; pelagic drape continues through it | INTERPRET |
 
-**Age and stage — HOLD.** ~9–8.5 Ma in the literature; internal values conflict:
-9.53 Ma at top NN9, ~8.6 Ma at base NN10A, 8.50 Ma in the Rotan PDA. Stage
-position unresolved: top IVC in some files, base IVD in the Atlas. ASAS–MALAM:
-AM-09 SENJA. Age is HOLD until the 888 decision on Rotan-1.
+**Age and stage — HOLD.** ~9–8.5 Ma in the literature; candidates conflict:
+9.53 Ma at top NN9, ~8.6 Ma at base NN10A, and an internal well-product value
+near 8.5 Ma (figure withheld 2026-10-08 purge). Stage position unresolved:
+top IVC in some files, base IVD in the Atlas. ASAS–MALAM: AM-09 SENJA. Age is
+HOLD until the 888 decision on DW-A.
 
 **What to map.** The two hinge lines: where the SRU erosion stops and where its
 onlap stops along KL1–KL5. Those two lines give the first map of the Late
@@ -82,16 +88,45 @@ Miocene uplift. Reading rules: angular discordance = tilt; hiatus-triangle width
 (Krebs) = depth of erosion, i.e. a contour map of uplift; erosion→conformity
 transition = hinge, separating source from sink.
 
-**Why it matters.** Reservoir: IVD–IVE fairways incl. the Rotan pay (NN10) depend
-on SRU uplift supplying sediment. Trap: SRU deformation timing vs diapir growth
-controls whether Rotan-type closure against the diapir pre-dates charge. Seal:
+**Why it matters.** Reservoir: IVD–IVE fairways incl. the NN10 deepwater pay
+depend on SRU uplift supplying sediment. Trap: SRU deformation timing vs diapir
+growth controls whether shale-diapir-flank closure pre-dates charge. Seal:
 inboard SRU erosion can breach seals — offshore, where the SRU is conformable,
 it cannot. Correlation: treating the inboard angular SRU and a deepwater zone
-boundary as one thing is the Rotan "IVC vs IVD" error — how an age model goes
+boundary as one thing is the "IVC vs IVD" label error — how an age model goes
 wrong.
 
 Sources: Arif ENTERPRISE relay 2026-09-30 (2026 NN framework; 2023 Borneo
-integration anchors); PETRONAS MPM page 2026-09-30; public Crocker prism /
-mobile-shale literature; **Arif (F13 SOVEREIGN) SRU + invariance settlement
-2026-10-01**; **Levell (1987)**; **Krebs hiatus-triangle method (via enterprise
-relay)**.
+integration anchors); internal corporate page 2026-09-30 (de-referenced
+2026-10-08 purge); public Crocker prism / mobile-shale literature; **Arif (F13
+SOVEREIGN) SRU + invariance settlement 2026-10-01**; **Levell (1987)**;
+**Krebs hiatus-triangle method (via enterprise relay)**.
+
+## 2026-10-08 — chronostrat v2 validation relay (FI-008)
+
+An external data-first chronostrat chart v2 (penetration-chart well witness —
+wells de-identified, values purged from repo; local build, internal class) was
+audited against this pack. FI-008 re-verified the arithmetic independently.
+Outcomes registered as kin_clm_12..16:
+
+- **Validated:** SRU inboard ~9.4 Ma (3 wells, NN10-above-pick; 8.6 rejected
+  inboard — deepwater ~8.3–8.5 stays open as the family-vs-surfaces fork);
+  TOP≡BASE convention + composite-pick exclusion rule; DRU 41% calibration
+  artefact (BKSA95→GTS2012) with four candidates now on register incl. the
+  federation ladder 13.5–12.5; inboard Stage III bathyal with diachronous
+  NW-stepping shoaling; Crocker as source, not depocentre; MMU(DG) ≠ DRU.
+- **Flagged:** granite age 7.85–7.22 stated as bare fact vs sys_clm_6
+  UNVERIFIED (carry contest note in public artifacts); IVE–IVG definitional
+  split (project vs legacy = two schemes, 1.7–2.4 Myr — F13 naming decision
+  needed before Phase II mapping); witness rests on penetration-chart NN
+  intervals, raw occurrence charts still required; Kinarut fan stage (IVC vs
+  IVE Atlas claim) unverified.
+- **Editorial (endorsed decks):** NN9 is Late not Middle Miocene; Bunguran is
+  Natuna (Indonesia); Priabonian is Late Eocene (Stage I label); IVA is
+  Langhian–Serravallian (Tortonian label). Fix before IRS#1.
+- **East Sabah three-model adjudication (same day):** GEOX claims
+  clm_1d43072344d54ec5 (A ridge, SPEC) / clm_da9c21d8c3e54874 (B underthrust+
+  canopy, DER) / clm_bebd2c76b29049dd (C hybrid corridor, INT preferred).
+  Kernel judge lane was down (L11 SCT alias defect) — no machine seal; see
+  /root/AAA/reports/east-sabah-three-model-adjudication-2026-10-08.md and
+  kinabalu-chronostrat-validation-2026-10-08.md.

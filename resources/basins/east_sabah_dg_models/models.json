@@ -1,0 +1,93 @@
+{
+  "pack_id": "east_sabah_dg_models",
+  "title": "East Sabah — Dangerous Grounds: three competing tectonic working models",
+  "created": "2026-10-08",
+  "status": "WORKING MODEL - NOT SEALED",
+  "classification": "PUBLIC-SAFE SYNTHESIS; excludes PETRONAS well-level values and internal maps. Hypotheses and falsifiers only.",
+  "source_handoff": "F13 sovereign handoff east_sabah_dangerous_grounds_models.json 2026-10-08 (rendered on arif-fazil.com/earth lane)",
+  "orientation": "NW Dangerous Grounds -> SE East Sabah; ridge axis question along PEKAKA-LAYANG2-TEPAT strike line",
+  "protocol": "GEOX computes and contrasts; ARIF or arifOS adjudicates. Local ceiling QUALIFIED_CANDIDATE.",
+
+  "models": [
+    {
+      "id": "A",
+      "name": "ARIF EXTENSION-RIDGE MODEL",
+      "state": "SPEC/HOLD",
+      "geox_claim_id": "clm_1d43072344d54ec5",
+      "core": "A linked Tepat-Layang-Layang-Pekaka magmatic/extensional axis created a basaltic ridge or segmented spreading-like corridor; later shortening transmitted stress toward Kinabalu and Dangerous Grounds.",
+      "supports": [
+        "Volcanic and volcaniclastic penetrations/interpretations occur along the trend",
+        "Deep-seated faults and crustal thinning provide magma conduits",
+        "Gravity and magnetic anomalies identify dense and susceptible bodies"
+      ],
+      "registered_tension": [
+        "DG province is attenuated/rifted CONTINENTAL crust (dgr_clm_1, MED-HIGH) - a continuous oceanic-type ridge conflicts with crust truth",
+        "SCS spreading terminated >=16 Ma (sys_clm_4, HIGH) while Kinabalu magmatism is ~7-14 Ma contested (sys_clm_6) - magmatism is demonstrably multi-generation, not one syn-extensional axis",
+        "Deep-crust hypothesis H3 volcanic/rifted basement is weakest of four (p50 0.18, CLM-NWS-006) with a near-zero-cost mag/grav kill test",
+        "Chronostrat v2 witness record (0-66 Ma) contains NO volcanic body along the trough axis - the 'unrecorded event' remains unrecorded everywhere in the witness set (weak evidence: record is interpretive)",
+        "Post-collision trough regime is LOADING_DOMINANT (two-oceanics 4.25x) with gravity-driven toe-thrusting - an ACTIVE extensional ridge during Miocene shortening lacks a kinematic home; A survives mainly as an INHERITED (>=16 Ma) feature, which converges on Model C"
+      ],
+      "fails_if": [
+        "No along-strike continuity in corrected gravity/magnetics",
+        "Intrusions have unrelated ages or geochemistry",
+        "Restoration shows no shared extensional kinematics"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "UNDERTHRUST + MUD-CANOPY MODEL",
+      "state": "DER/INT",
+      "geox_claim_id": "clm_da9c21d8c3e54874",
+      "core": "Dangerous Grounds continental crust underthrust NW Sabah; overpressured Setap-equivalent shale, sediment loading and gravity-driven deformation formed minibasins, mud pipes, flows and the North Sabah-Pagasa mud canopy.",
+      "evidence_split": [
+        "Canopy half DOCUMENTED: Morley et al. 2023 Geosphere - ~50 centres, ~1,900 km2 dense canopy; Morley 2024 NSPW mobile shale 8-9 km over ~75,000 km2 (= CLM-NWS-007 p50 0.32)",
+        "Underthrust half UNTESTED HYPOTHESIS: sys_clm_3/dgr_clm_2 LOW confidence, pending well-tied dip line across the trough; forbidden for drilling decisions",
+        "Subduction polarity and timing UNDER RESOLUTION - HOLD, both recorded, do not average (sys_clm_5)",
+        "Geometry admitted (not proven) by the F13-settled two-surface-family rule: pre-LANGGAR lower-plate surfaces dip SE beneath the wedge (sys_clm_8/9)"
+      ],
+      "fails_if": [
+        "Deep anomalies require a continuous igneous ridge",
+        "Observed strain cannot be balanced by underthrust/loading",
+        "Mud bodies prove igneous rather than sedimentary origin"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "HYBRID INHERITED CORRIDOR MODEL",
+      "state": "PREFERRED WORKING MODEL",
+      "geox_claim_id": "clm_bebd2c76b29049dd",
+      "core": "An inherited SEGMENTED extensional-magmatic corridor localized volcanism and rifting before and during margin reorganization; later Dangerous Grounds underthrust, flexure, sediment loading and shale mobility overprinted it. The ridge is discontinuous and multi-stage, not one simple spreading center.",
+      "compatibility": "Contradicted by ZERO registered GEOX claims. Inherited rift fabric (dgr_clm_1), forebulge carbonates (dgr_clm_4), loading-dominant collision (two-oceanics), BANGKIT late-Miocene overprint (sys_clm_6), two-surface-family geometry (sys_clm_8/9), chronostrat two-generation magmatic record (DG NP23 volcanics + Kinabalu granite) all compatible.",
+      "fails_if": [
+        "All volcanic bodies postdate deformation and lack structural linkage",
+        "No inherited extensional fabric beneath the trough",
+        "A single end-member model explains all seismic and potential-field observations"
+      ]
+    }
+  ],
+
+  "adjudication_2026_10_08": {
+    "verdict": "C preferred working model; A and B live falsifiable alternatives; NONE sealable",
+    "adjudicator": "FI-008 warga analysis, grounded in registered claims (kernel judge lane BLOCKED: L11 SCT alias defect, 3 attempts, documented kernel-actor-mismatch-falsehold-2026-10-02.md - no machine seal rendered)",
+    "contrast_one_liner": "A's strong form fails crust truth + timing; A's weak form collapses into C. B is half-documented (canopy) and half-open (underthrust untested, polarity HOLD). C is the only model contradicted by nothing registered.",
+    "open_holds": [
+      "underthrust_continuation_untested (dgr holds; falsifier = well-tied dip line across trough)",
+      "subduction_polarity HOLD (sys_clm_5)",
+      "KT-7 depth conversion BLOCKED (CLM-NWS-008)"
+    ]
+  },
+
+  "discriminating_tests": [
+    {"test": "Potential-field continuity", "detail": "Band-pass gravity/magnetics + 2.5D/3D forward models along/across the PEKAKA-LAYANG2-TEPAT strike", "decision": "Continuous narrow deep anomaly favors A; discontinuous bodies favor C; no magmatic anomaly favors B", "cost": "NEAR-ZERO (public data reprocessing, ~6 months; already registered as CLM-NWS-006 H3 kill test)", "sequence": 1},
+    {"test": "Age-geochemistry chain", "detail": "Radiometric ages, whole-rock/trace-element, isotopes for volcanic intervals along trend", "decision": "Shared age/geochemical lineage favors A/C; unrelated pulses weaken A", "cost": "LOW-MED", "sequence": 2},
+    {"test": "Restoration and fault polarity", "detail": "Depth-restored transects with uncertainty envelopes", "decision": "Common extension axis and outward fault polarity favor A/C", "cost": "MED", "sequence": 3},
+    {"test": "Seismic velocity and impedance", "detail": "Wide-angle/refraction (OBS 150 km across Sabah Trough), PSDM velocity, MT/CSEM", "decision": "Mafic ridge needs high Vp/density beneath sediment; mobile shale predicts low velocity in overburden (but shale LVZ contaminates the discriminator - CLM-NWS-007)", "cost": "HIGH (USD 5-10M OBS line)", "sequence": 4},
+    {"test": "Mud versus magma plumbing", "detail": "Reflection terminations, feeder geometry, density, velocity, petrology", "decision": "Mud-canopy pipes/flows must remain distinct from dikes/sills and volcanic edifices", "cost": "MED", "sequence": 3}
+  ],
+
+  "cross_links": {
+    "packs": ["../dangerous_grounds/", "../nw_borneo_collision_system/", "../sabah_basin/", "../layang_layang_basin/", "../kinabalu_basin/", "../../basins/sabah_two_oceanics.yaml"],
+    "reports": ["/root/AAA/reports/east-sabah-three-model-adjudication-2026-10-08.md", "/root/AAA/reports/kinabalu-chronostrat-validation-2026-10-08.md"],
+    "literature": ["Morley et al. 2023 Geosphere 19(1) 291 - North Sabah-Pagasa mud canopy", "Steuer et al. 2012/2014", "Clift et al. 2008", "IODP Exp 349", "Chang et al. 2023", "Hutchison 2010"]
+  }
+}
