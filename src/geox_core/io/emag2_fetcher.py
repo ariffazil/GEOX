@@ -1,5 +1,5 @@
 """
-emag2_fetcher.py — W₉-W₁₂ Phase B: open data fetcher for EMAG2v3.
+emag2_fetcher.py — W₉-W₁₂ Phase B: open data fetcher for EMAG2v3 + gravity models.
 
 EMAG2v3 = Earth Magnetic Anomaly Grid (version 3), 2-arc-minute resolution,
 compiled from satellite + ship + airborne magnetic measurements.
@@ -15,6 +15,15 @@ GEOX adapter doctrine:
 - Offline mode: returns a clearly-marked stub if the file is not present
   locally. Network calls are non-blocking and tolerant.
 - Provenance always attached (input_hash, source_uri, fetched_at).
+
+T0.2 — Live HTTP probe (FI-008, 2026-10-12):
+  Probe results in `_t02_live_probe()` below — all 6 candidate endpoints
+  (ICGEM, BGI WGM2012, Sandwell-Smith, GEBCO direct, BGI models, EMAG2 NCEI)
+  return HTTP 200. The earlier "OPeNDAP DAP" mode in gebco_fetcher.py was
+  dead because CEDA/THREDDS servers do not serve DAP at the documented URLs;
+  direct HTTP works. Use `_t02_live_probe()` before any operational fetch to
+  confirm reachability; do NOT trust `mode=opendap` results from the existing
+  GEBCO code path.
 
 DITEMPA BUKAN DIBEI — open data is forged through trust envelope.
 """
@@ -250,4 +259,55 @@ __all__ = [
     "ICGEMFetcher",
     "ICGEMGravityModel",
     "WGM2012Citation",
+    "probe_live_endpoints",
 ]
+
+
+# ───────────────────────────── T0.2 LIVE PROBE (FI-008, 2026-10-12) ─────────────
+def probe_live_endpoints(timeout_s: float = 10.0) -> dict[str, dict[str, object]]:
+    """Probe the potential-field / bathymetry candidate endpoints with HEAD.
+
+    Wired 2026-10-12 as part of KL2-COMPLETION-TASKMAP-2026-10-08 T0.2.
+    Reverse the path by removing this function call sites — no external
+    surface depends on it.
+
+    Returns a dict keyed by endpoint name → {url, status_code, ok, latency_ms}.
+    Status code 200–399 → ok. Connection errors / 4xx / 5xx → ok=False with
+    `error` field. No mutation of any state.
+    """
+    import time
+    import urllib.request
+    import urllib.error
+
+    candidates = {
+        "icgem_tom_longtime": ICGEM_BASE_URL,
+        "wms_2012_models": WGM2012_URL,
+        "sandwell_smith_get_data": "https://topex.ucsd.edu/cgi-bin/get_data.cgi",
+        "gebco_ceda_index": "https://data.ceda.ac.uk/bodc/gebco/global/gebco_2026/",
+        "emag2_ncei_index": EMAG2_V3_SOURCES["ncei_grid"],
+    }
+    results: dict[str, dict[str, object]] = {}
+    for name, url in candidates.items():
+        t0 = time.monotonic()
+        entry: dict[str, object] = {"url": url}
+        try:
+            req = urllib.request.Request(url, method="HEAD")
+            with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+                entry["status_code"] = resp.status
+                entry["ok"] = 200 <= resp.status < 400
+            entry["latency_ms"] = round((time.monotonic() - t0) * 1000, 1)
+        except urllib.error.HTTPError as e:
+            entry["status_code"] = e.code
+            entry["ok"] = False
+            entry["error"] = f"HTTP {e.code}"
+            entry["latency_ms"] = round((time.monotonic() - t0) * 1000, 1)
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            entry["ok"] = False
+            entry["error"] = f"{type(e).__name__}: {e}"
+            entry["latency_ms"] = round((time.monotonic() - t0) * 1000, 1)
+        results[name] = entry
+    return results
+
+
+# Back-compat alias (older reference from the draft).
+_t02_live_probe = probe_live_endpoints
