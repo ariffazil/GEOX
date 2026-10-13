@@ -15,15 +15,15 @@
 |1 | ASAS | Paleogene–Early Miocene (40–23 Ma) | Extension | PSCS rifting |
 |2 | BEBAS | Oligocene | Extension (reoriented) | Intra-rift reorganisation |
 |3 | KAPUR | ~23 Ma (BMU/TCU) | Collision | Dangerous Grounds underthrusting |
-|4 | SABAR | ~13–10.5 Ma (DRU) | Post-collisional rebound | Slab breakoff, wedge-top |
+|4 | SABAR | ~13–10.5 Ma (DRU) | Post-collisional rebound | Slab detachment (mechanism OPEN: break-off vs drip vs delamination), wedge-top |
 |5 | SENJA |10.5–0 Ma | Gravity-driven | Mud canopy, DWFTB |
 
 ## Key Unconformities
 
 - **BMU/TCU** (23 Ma) — Collision onset / NSPW base
-- **DRU** (13 Ma) — Wedge-top / slab breakoff response (NOT collision start)
+- **DRU** (13.5–12.5 Ma, Morley 2023; diachronous family) — Wedge-top / slab-detachment response (mechanism OPEN; NOT collision start)
 - **UIU** (10.5 Ma) — End of mini-basin development
-- **SRU** (8.5 Ma) — Post-canopy burial
+- **SRU** (~9–8.5 Ma, AGE HOLD — candidates 9.53 top NN9-hamatus / ~8.6 base NN10A; inboard wells validate ~9.4) — Post-canopy burial
 
 ## Restoration-Specific Considerations
 
@@ -43,7 +43,8 @@ Nido Limestone growing on Dangerous Grounds platform during syn-rift. Carbonate 
 
 - Morley et al. 2023 (Geosphere) — NSPW definition, mud canopy, mobile shale
 - Morley 2024 (Earth-Science Reviews) — NSPW tectonic synthesis
-- Pilia et al. 2023 (Nature Geoscience) — Detached PSCS slab tomography
+- Pilia, Rawlinson et al. 2023 (Gondwana Research) — P/S-wave arrival-time tomography: PSCS slab remnant >250 km beneath NW Borneo
+- Pilia et al. 2023 (Nature Geoscience, doi:10.1038/s41561-023-01201-7) — post-subduction extension driven by lithospheric drip (mechanism model; break-off vs drip vs delamination remains OPEN)
 - Cottam et al. 2013 (JGS) — Kinabalu Granite cooling at 360°C/Myr
 - Lunt & Madon 2017 — DRU redating to 13–12 Ma
 

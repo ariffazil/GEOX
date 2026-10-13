@@ -146,7 +146,7 @@
     "basin_profile.yaml",
     "tectonic_history.md"
   ],
-  "source": "Franke 2008 (detachment at 6-8 km, FTB triangle zone) | Madon 2025 (continental Moho 26-33 km)",
+  "source": "Franke 2008 (detachment at 6-8 km, FTB triangle zone) | Madon, Linang & Pilia 2025, Tectonophysics 914:230916 (seismic-constrained gravity inversion: Moho 32.8-52.5 km, mean 40.8 km; Sabah not in complete isostatic equilibrium). [CORRECTION 2026-10-13: previously misquoted as 'Madon 2025 continental Moho 26-33 km' — 26-33 km matches older receiver-function point estimates (Lipke 2008: 27 km Kota Kinabalu, 33 km Lahad Datu), not Madon 2025. Verified against publisher abstract + ResearchGate record. KT_6 evidence handles retain their frozen id strings; their numeric labels are superseded by this correction.]",
   "metadata": {
     "evidence_for": [
       "Franke_2008_6_to_8km_reflector_interpreted_as_thrust_detachment_in_TZ",

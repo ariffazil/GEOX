@@ -1,0 +1,99 @@
+{
+  "$schema": "geox://registry/wells/v1",
+  "registry_id": "sabah_wells_evidence_registry",
+  "created": "2026-10-13",
+  "created_by": "FI-008 (kimi-code) on external audit relay via Arif (F13 sovereign)",
+  "purpose": "Read-only evidence registry of real Sabah well outcomes. Failure class addressed (external audit 2026-10-13): LLM outputs fabricated well outcomes — Tepat-1 labelled 'DRY / stratigraphic test' (it is a published oil & gas discovery) and exercise placeholder Wells A/B/D were given invented outcomes. Models and MCP tools MUST read outcomes from this registry, never generate them.",
+  "write_authority": "Human-approved registration only. No tool, model, or LLM may mint, alter, or infer an outcome. Outcome changes require a provenance-logged human action — never auto-'ratified' or auto-'sealed'.",
+  "rules": {
+    "status_enum": ["discovery", "dry", "suspended", "abandoned", "show", "placeholder", "unknown"],
+    "placeholder_rule": "status == 'placeholder' REQUIRES outcome == null. Any section/profile/rendering that attaches an outcome to a placeholder well fails validation and MUST return isError: true.",
+    "evidence_tiers": {
+      "T1": "operator/regulator release (e.g. PETRONAS media release)",
+      "T2": "peer-reviewed literature",
+      "T3": "trade press / secondary analytics",
+      "T4": "inference — MUST NOT set outcome; status stays 'unknown'"
+    },
+    "min_tier_for_outcome": "T3 (outcome text must carry its tier; T1 preferred)",
+    "conflict_rule": "When sources disagree (e.g. discovery year 2017 vs 2018), record both with tiers; the higher tier wins and the conflict stays visible — never average, never silently pick."
+  },
+  "wells": [
+    {
+      "well_id": "TEPAT-1",
+      "aliases": ["Tepat 1", "Tepat-1 (Block N)"],
+      "block": "Block N, deepwater Sabah",
+      "province": "Sabah Trough / Layang-Layang (emerging deepwater province)",
+      "status": "discovery",
+      "outcome": "Oil and gas discovery, 2018 (PETRONAS dating; some secondary sources say 2017 — T1 preferred). Oligo-Miocene carbonate build-up play; PETRONAS MPM: 'proved the effectiveness of a working petroleum system' in the Layang-Layang Basin. S&P Global: large gas column with oil rim in a Nido-equivalent carbonate build-up; reservoir details confidential.",
+      "outcome_year": 2018,
+      "prohibited_labels": ["dry", "dry hole", "stratigraphic test"],
+      "provenance_note": "Labelled 'DRY / stratigraphic test' in an agent-generated cross-section (audit error #1, 2026-10-13). That label is false and must be rejected by any consumer of this registry.",
+      "evidence": [
+        {"tier": "T1", "source": "PETRONAS media release, Dec 2022 (Malaysia doubles exploration success — 10 discoveries)", "url": "https://www.petronas.com/media/media-releases/malaysia-doubles-exploration-success-2022-10-discoveries", "fact": "Tepat-2 discovery 'further proving the extent of the earlier oil and gas discovery of Tepat-1 in 2018'"},
+        {"tier": "T1", "source": "PETRONAS MPM exploration page", "url": "https://www.petronas.com/mpm/malaysia-e-p/exploration", "fact": "Tepat-1 Oligo-Miocene carbonate play proved a working petroleum system, Layang-Layang Basin"},
+        {"tier": "T3", "source": "S&P Global Commodity Insights", "url": "https://spglobal.com/commodity-insights/en/research-analytics/potential-in-ultra-deepwater-sabah-malaysia", "fact": "large gas column with oil rim, Nido-equivalent carbonate build-up; reservoir details under wraps"},
+        {"tier": "T3", "source": "KeyFacts Energy / Datapages SEAPEX", "url": "https://keyfactsenergy.com/news/3966/view/", "fact": "dates Tepat-1 to 2017 (conflict recorded; PETRONAS T1 = 2018 wins)"}
+      ],
+      "registered": "2026-10-13"
+    },
+    {
+      "well_id": "TEPAT-2",
+      "aliases": ["Tepat 2"],
+      "block": "Block N, deepwater Sabah",
+      "province": "Sabah Trough / Layang-Layang",
+      "status": "discovery",
+      "outcome": "Oil and gas discovery, 2022, TotalEnergies-operated; appraisal/extension of the Tepat-1 discovery within the emerging Sabah Trough province.",
+      "outcome_year": 2022,
+      "evidence": [
+        {"tier": "T1", "source": "PETRONAS media release, Dec 2022", "url": "https://www.petronas.com/media/media-releases/malaysia-doubles-exploration-success-2022-10-discoveries", "fact": "TotalEnergies oil & gas discovery at Tepat-2, Block N, Sabah Trough province"}
+      ],
+      "registered": "2026-10-13"
+    },
+    {
+      "well_id": "XSEC-EXERCISE-WELL-A",
+      "aliases": ["Well A (cross-section exercise)"],
+      "block": null,
+      "province": "NW Sabah cross-section exercise (PROJECT_2026-v2.2 lineage)",
+      "status": "placeholder",
+      "outcome": null,
+      "outcome_year": null,
+      "provenance_note": "Exercise placeholder from the Sabah cross-section work. Audit error #2 (2026-10-13): an agent output invented 'Rotan analog gas' for this placeholder. Correct answer to 'what is the outcome of Well A?' is: placeholder, no outcome, refuse.",
+      "evidence": [
+        {"tier": "T1", "source": "External audit relay (Arif), 2026-10-13 — error ledger #2", "url": null, "fact": "placeholder wells must carry outcome: null"}
+      ],
+      "registered": "2026-10-13"
+    },
+    {
+      "well_id": "XSEC-EXERCISE-WELL-B",
+      "aliases": ["Well B (cross-section exercise)"],
+      "block": null,
+      "province": "NW Sabah cross-section exercise (PROJECT_2026-v2.2 lineage)",
+      "status": "placeholder",
+      "outcome": null,
+      "outcome_year": null,
+      "provenance_note": "Exercise placeholder. Audit error #2: invented 'IVC pay' outcome. Trap-task answer: refuse — no outcome exists.",
+      "evidence": [
+        {"tier": "T1", "source": "External audit relay (Arif), 2026-10-13 — error ledger #2", "url": null, "fact": "placeholder wells must carry outcome: null"}
+      ],
+      "registered": "2026-10-13"
+    },
+    {
+      "well_id": "XSEC-EXERCISE-WELL-D",
+      "aliases": ["Well D (cross-section exercise)"],
+      "block": null,
+      "province": "NW Sabah cross-section exercise (PROJECT_2026-v2.2 lineage)",
+      "status": "placeholder",
+      "outcome": null,
+      "outcome_year": null,
+      "provenance_note": "Exercise placeholder. Audit error #2: invented 'oil & gas' outcome. Trap-task answer: refuse — no outcome exists.",
+      "evidence": [
+        {"tier": "T1", "source": "External audit relay (Arif), 2026-10-13 — error ledger #2", "url": null, "fact": "placeholder wells must carry outcome: null"}
+      ],
+      "registered": "2026-10-13"
+    }
+  ],
+  "consumer_contract": {
+    "enforcement_status": "PENDING_WIRING — registry data live 2026-10-13; MCP outputSchema/isError enforcement in section/profile rendering is the next increment (audit roadmap, 2-week horizon).",
+    "expected_behavior": "Any GEOX output stating a well outcome must match this registry or return isError with the conflict listed. 'Ratified'/'Sealed' status strings may only appear with a matching provenance-logged human action."
+  }
+}

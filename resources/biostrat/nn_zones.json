@@ -8,6 +8,7 @@
   "calibration_note": "Nannotax3 stores stratigraphic ranges in primary units (e.g. 'Zone NN12'), with GTS2012/GTS2020 lookup for age conversion. Zone-to-Ma mapping can be updated by changing the lookup table — zone names are stable, ages are calibration-dependent.",
   "not_radiometric_ages": true,
   "diachroneity_warning": "Bioevents may be diachronous across basins. Age brackets are global averages — local calibration may shift boundaries by 0.5–1.0 Ma in marginal settings.",
+  "boundary_scheme_note": "NN9/NN10 boundary is SCHEME-DEPENDENT: this table follows LO Discoaster kugleri (10.41 Ma, GPTS2020 lookup). SE Asian industry practice (BKSA/Shell lineage) and several other GEOX Sabah files instead label LO Discoaster hamatus (9.53 Ma) as 'top NN9', with NN10 spanning ~8.29–9.53 Ma (GTS2012). NEVER quote 'top NN9' without naming the boundary marker. Nannotax caution: only LARGE (≥15 µm) D. hamatus specimens are stratigraphically reliable — small specimens occur above and below the datum. Added 2026-10-13 (external audit relay).",
   "zones": {
     "NN21": {"age_top_ma": 0.00, "age_base_ma": 0.46, "epoch": "Holocene-Pleistocene", "stage": "Calabrian-Ionian"},
     "NN20": {"age_top_ma": 0.46, "age_base_ma": 1.04, "epoch": "Pleistocene", "stage": "Calabrian"},
