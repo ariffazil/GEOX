@@ -11,7 +11,9 @@ canonical_workflows:
   - repo-routing-validation.yml # Enforces REPO= trailer on commits
   - governance-gate.yml         # Constitutional audit on every push
   - sentinel-premerge-gate.yml  # Pre-merge binary gate
-  - auto-merge-dependabot.yml   # Dependabot auto-merge
+  # auto-merge-dependabot.yml — REMOVED 2026-10-13 (Tier 2 refactor):
+  # Native GitHub auto-merge via dependabot.yml::auto-merge: block. Bot
+  # workflow superseded. See dependabot.yml header for divergence note.
   - auto-tag-date.yml           # Auto tag on date
   - copilot-setup-steps.yml     # Copilot agent setup
   - scorecards.yml              # OpenSSF Scorecards — supply-chain risk (Tier 1)
