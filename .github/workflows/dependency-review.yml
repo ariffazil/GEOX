@@ -1,0 +1,65 @@
+# ═══════════════════════════════════════════════════════════════════
+# Dependency Review — Block vulnerable deps at PR time
+# Forged 2026-10-13 · Lane 333d · Tier 1 Security Baseline
+# DITEMPA BUKAN DIBEI — Forged, Not Given.
+# ═══════════════════════════════════════════════════════════════════
+# Source: https://github.com/actions/dependency-review-action (v5)
+#
+# Trust domain:
+#   - Trigger: pull_request (opened, synchronize, reopened)
+#   - Privileges: contents: read (GitHub-managed diff API)
+#   - Public repo: works without GitHub Advanced Security.
+#     (GHAS only required for private repos — GEOX is public.)
+#
+# What this catches:
+#   - New dependency introduces a known vulnerability (fail-on-severity: moderate)
+#   - License incompatible with BSL-1.1 baseline (deny-licenses)
+#   - Dependency group/scope blocked (deny-packages for constitutional deps
+#     that need F13 review)
+#
+# Constitutional package denylist (mirrors .github/dependabot.yml):
+#   These must never be introduced via a PR without F13 review — every PR
+#   adding these (even a patch bump on a non-dependabot PR) gets blocked here.
+#   This is independent of dependabot auto-merge, which only governs deps
+#   introduced via Dependabot PRs.
+#
+# Reference: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
+#            https://github.com/actions/dependency-review-action#configuration-options
+
+name: "🔒 Dependency Review"
+
+on:
+  pull_request:
+    branches: [main, "feat/**", "fix/**"]
+    types: [opened, synchronize, reopened]
+
+# Read-only. Per docs, more would be over-permissioned.
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: dependency-review
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: "Dependency Review"
+        uses: actions/dependency-review-action@869d0dceb9d49f31c5b7b55f80bf3a4e9147c8d # v5.0.0
+        with:
+          # GEOX default: fail at moderate severity and above.
+          # License check: keep on; vuln check: keep on.
+          fail-on-severity: moderate
+          # Match the baseline declared in LICENSE (BSL-1.1) plus the
+          # production stack. GPL family is denied (copyleft viral in BSL context).
+          deny-licenses: GPL-2.0, GPL-3.0, AGPL-3.0, SSPL-1.0, BUSL-1.1
+          # OpenSSF scorecard visibility for changed deps — informational.
+          show-openssf-scorecard: true
+          # Skip OS-level dev scopes (build-only, not runtime).
+          fail-on-scopes: runtime
