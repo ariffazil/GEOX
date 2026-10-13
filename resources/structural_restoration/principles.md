@@ -86,4 +86,5 @@ When fill_ratio > 1:
 - Athy (1930) — Porosity-depth law
 - Jervey (1988) — Accommodation space
 - Morley (2023, 2024) — NW Sabah NSPW
-- Pilia et al. (2023) — Slab breakoff tomography
+- Pilia, Rawlinson et al. (2023, Gondwana Research) — PSCS slab remnant tomography (>250 km)
+- Pilia et al. (2023, Nature Geoscience) — lithospheric-drip-driven extension; slab break-off is a rival OPEN mechanism, not an established fact
