@@ -47,7 +47,7 @@
       "ui": {
         "type": "object",
         "properties": {
-          "resourceUri": { "type": "string", "const": "ui://well_desk" },
+          "resourceUri": { "type": "string", "const": "ui://geox/well-desk" },
           "render_mode": { "type": "string" },
           "track_count": { "type": "integer" }
         }

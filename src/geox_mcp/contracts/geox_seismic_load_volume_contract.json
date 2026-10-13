@@ -48,7 +48,7 @@
       "ui": {
         "type": "object",
         "properties": {
-          "resourceUri": {"type": "string", "const": "ui://geox_seismic_viewer"},
+          "resourceUri": {"type": "string", "const": "ui://geox/seismic-vision"},
           "mode": {"type": "string", "const": "inline-or-external"},
           "app_id": {"type": "string", "const": "geox.seismic.viewer"},
           "version": {"type": "string", "const": "0.1.0"}
@@ -88,7 +88,7 @@
   "mcp_apps_plane": {
     "app_id": "geox.seismic.viewer",
     "app_version": "0.1.0",
-    "resource_uri": "ui://geox_seismic_viewer",
+    "resource_uri": "ui://geox/seismic-vision",
     "host_path": "/srv/mcp/apps/geox-seismic-viewer/dist/",
     "events": ["app.initialize", "app.state.sync", "seismic.slice.change", "attribute.change"]
   }
