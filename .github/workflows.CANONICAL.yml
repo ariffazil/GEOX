@@ -14,6 +14,8 @@ canonical_workflows:
   - auto-merge-dependabot.yml   # Dependabot auto-merge
   - auto-tag-date.yml           # Auto tag on date
   - copilot-setup-steps.yml     # Copilot agent setup
+  - scorecards.yml              # OpenSSF Scorecards — supply-chain risk (Tier 1)
+  - dependency-review.yml       # License+vuln gate at PR time (Tier 1)
 
 required_checks_for_main:
   - "🧠 Agentic CI"
@@ -21,4 +23,8 @@ required_checks_for_main:
   - "Repo Routing Validation"
   - "🛡️ GEOX Sentinel"
 
-last_audit: "2026-06-30"
+optional_advisory_checks_for_main:
+  - "🛡️ OpenSSF Scorecards"     # Weekly; not required for merge
+  - "🔒 Dependency Review"      # PR-time only; not applicable to push
+
+last_audit: "2026-10-13"
