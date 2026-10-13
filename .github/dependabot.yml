@@ -1,6 +1,5 @@
 # ═══════════════════════════════════════════════════════════════════════════
-# arifOS — Dependabot configuration
-# Forged 2026-08-10 — F13 verdict, CI governance repair
+# arifOS — Dependabot configuration (Forged 2026-08-10, F13 verdict)
 # ═══════════════════════════════════════════════════════════════════════════
 #
 # Resolver authority: pyproject.toml + uv.lock (PEP 621 + PEP 735).
@@ -14,16 +13,29 @@
 #     sentence-transformers) are KEPT UN-GROUPED — one PR per package, easy
 #     to bisect, no combinatorial ambiguity. They are NOT placed under
 #     `ignore:` (would lose visibility). Auto-merge is BLOCKED for them via
-#     .github/workflows/auto-merge-dependabot.yml (constitutional package
-#     denylist check) — regardless of semver patch/minor/major.
+#     the `auto-merge.exclude:` block below — regardless of semver
+#     patch/minor/major.
 #   - Cooldown default-days: 3 prevents back-to-back cascading bumps when
 #     pip resolves transitive constraints.
 #   - Open-pull-requests-limit: 5 prevents cognitive flood (root cause of
 #     the 10-PR pile-up that triggered this CI governance repair).
 #
+# 2026-10-13 — Native auto-merge refactor (Tier 2):
+#   - Replaces .github/workflows/auto-merge-dependabot.yml (128 lines, bot
+#     pattern) with native GitHub auto-merge via the `auto-merge:` block.
+#   - Constitutional denylist preserved via `auto-merge.exclude:` (NOT
+#     via `ignore:` — visibility stays).
+#   - Requires repo Settings → General → Pull Requests →
+#     "Allow auto-merge" = ON. Branch protection must enforce required
+#     status checks (🧠 Agentic CI, GEOX Forge Pipeline, Repo Routing
+#     Validation, 🛡️ GEOX Sentinel) and CODEOWNERS review.
+#   - DIVERGENCE FROM FEDERATION CONVENTION: arifOS, A-FORGE, WEALTH still
+#     use the bot pattern (auto-merge-dependabot.yml). GEOX moves first
+#     to the simpler mechanism. If you want to revert: restore the bot
+#     workflow and remove `auto-merge:` from this file.
+#
 # References:
 #   - https://docs.github.com/en/code-security/dependabot/working-with-dependabot
-#   - https://docs.github.com/en/code-security/reference/supply-chain-security/troubleshoot-dependabot/dependabot-on-actions
 #   - https://docs.astral.sh/uv/guides/integration/dependency-bots/#dependabot
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -77,10 +89,26 @@ updates:
           - "urllib3"
       # NOTE: `protobuf`, `cryptography`, `caio`, `fastmcp-slim` are NOT in any
       # group. Each produces its own single-package PR. Auto-merge for these
-      # is BLOCKED at .github/workflows/auto-merge-dependabot.yml.
-    # INTENTIONALLY no top-level `ignore:` block — losing visibility is worse
-    # than review noise. Constitutional packages are gated at auto-merge time,
-    # not at PR-creation time.
+      # is BLOCKED via `auto-merge.exclude:` below (not `ignore:` — visibility
+      # stays per F13 directive: "losing visibility is worse than review noise").
+    # Native auto-merge (GitHub-managed, replaces bot pattern):
+    #   - patch + minor bumps → auto-merge eligible IF all checks pass
+    #   - constitutional packages → excluded (F13 SOVEREUE)
+    #   - major bumps → not matched, never auto-merged (require human review)
+    auto-merge:
+      - match:
+          update-types:
+            - "version-update:semver-patch"
+            - "version-update:semver-minor"
+        exclude:
+          - dependency-name: "protobuf"
+          - dependency-name: "cryptography"
+          - dependency-name: "fastmcp"
+          - dependency-name: "fastmcp-slim"
+          - dependency-name: "caio"
+          - dependency-name: "sentence-transformers"
+          - dependency-name: "pynacl"
+          - dependency-name: "blake3"
 
   # ── GitHub Actions versions ──────────────────────────────────────────────
   - package-ecosystem: "github-actions"
@@ -108,3 +136,11 @@ updates:
         exclude-patterns:
           - "actions/*"
           - "github/*"
+    # Native auto-merge for actions: all patch + minor version updates.
+    # Actions have no constitutional denylist (per F13 directive — only
+    # python packages are denylisted).
+    auto-merge:
+      - match:
+          update-types:
+            - "version-update:semver-patch"
+            - "version-update:semver-minor"
