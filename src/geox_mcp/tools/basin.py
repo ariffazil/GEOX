@@ -405,6 +405,11 @@ async def geox_basin_profile(
         normalized = "malay_basin"
 
     basin_dir = RESOURCES_DIR / "basins" / normalized
+    if not basin_dir.exists():
+        alias_hit = _find_alias_match(normalized)
+        if alias_hit:
+            normalized = alias_hit
+            basin_dir = RESOURCES_DIR / "basins" / normalized
 
     # Macrostrat modes fetch from API — local basin resource dir is optional
     if not mode.startswith("macrostrat_"):

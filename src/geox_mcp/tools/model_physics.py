@@ -5,7 +5,8 @@ proper cross section and geological model based on physics and geomechanics of d
 
 Three modes:
   flexure         — elastic plate flexure: Te → forebulge distance (known-answer tested)
-  physics_section — spine-driven cross-section renderer (asas_malam_xs.py) with confidentiality gate
+  physics_section — spine-driven cross-section renderer (asas_malam_xs.py) with confidentiality
+                    gate (semantic-surface scan since 2026-10-13, IRFANclaw-approved)
   critical_taper  — REFERENCE-GATED: Davis-Supe-Dahlen 1983 eq(22)+(28) not yet implemented
                     from verified source text (F2 discipline — no hand-written formulas from memory)
 
@@ -35,7 +36,124 @@ _FORBIDDEN_PATTERNS = [
     r"\bOOIP\b|\bGIIP\b|\bSTOIIP\b",                        # reserve-class terms
     r"\b[A-Z][a-zA-Z]{2,}(?:\s?Deep)?\s?-?\s?\d\b",         # well-name shape ("Xxx-1", "Xxx Deep-1")
 ]
-_FORBIDDEN_ALLOWLIST = ["Tepat"]  # published well (Banerjee & Salim 2020, JNGSE 83)
+# 2026-10-13 (IRFANclaw-approved patch): allowlist exempts PATTERN tokens only — the six
+# forbidden partner strings are NEVER allowlisted. Entries are the audited renderer's own
+# public annotation vocabulary (asas_malam_xs.py labels) + published geography. Deliberately
+# SPECIFIC: "BLOCK 1"/"BLOCK 2" are exempt, a hypothetical "Block 9" is NOT. "BUT " carries
+# a trailing space (annotation sentence "BUT 2.9 km of moat relief…") so "Butuan-1" stays caught.
+# Additions require sovereign-aware review; never add a partner/well token here.
+_FORBIDDEN_ALLOWLIST = [
+    "Tepat",      # published well (Banerjee & Salim 2020, JNGSE 83)
+    "SCALE 1",    # figure header "A · TRUE SCALE 1:1"
+    "BLOCK 1",    # renderer block labels (case-insensitive match)
+    "BLOCK 2",
+    "MARGIN 1",   # renderer margin labels
+    "MARGIN 2",
+    "Kinabalu",   # public mountain/belt (4,095 m — world-public)
+    "Crocker",    # public mountain range
+    "BUT ",       # annotation sentence opener (trailing space is intentional)
+]
+
+
+# ── Confidentiality-gate scan surface ─────────────────────────────────────────
+# 2026-10-13, IRFANclaw binary approval via Arif (F13): "YA, LULUSKAN PATCH REGEX GATE."
+# Failure class: raw-file scanning false-positives on renderer-internal tokens —
+# matplotlib path-mode SVGs embed every glyph as id/use references ("DejaVuSans-3",
+# "DejaVuSans-Oblique-3", "Bold-3") and the doctype carries "SVG 1.1"; the well-name-shape
+# pattern matched 532 tokens in asas_malam_xs.svg and 206 in kinabalu_xs_dark.svg with
+# ZERO real disclosure, withholding legitimate public artifacts.
+# Approved fix: scan RENDERED SEMANTIC CONTENT only — DOM text nodes (incl. <script>,
+# <title>, <desc>), XML comments, and EXTERNAL (non-fragment) href values. Excluded:
+# renderer internals (id/class/style/coordinate/path-data attributes, fragment refs,
+# <style> CSS, doctype header). The forbidden-string wall is unchanged: allowlist still
+# applies to pattern tokens only, never to _FORBIDDEN_STRINGS.
+# Fail-closed: XML-unparseable SVG → strict raw scan (old behaviour).
+# Honest limit (stated in every gate scope note): in path-mode SVGs the visible glyphs
+# are vector paths — NO text scan (raw or DOM) can read them; visual-leak prevention
+# rests on the audited renderer inputs (public spine YAML + audited asas_malam_xs.py).
+
+def _extract_svg_semantic_text(svg_path: Path) -> str | None:
+    """Semantic scan surface of an SVG: text nodes + comments + external refs.
+
+    Returns None if the file is not parseable XML (caller must fail closed to raw scan).
+    """
+    import xml.etree.ElementTree as ET
+
+    try:
+        parser = ET.XMLParser(target=ET.TreeBuilder(insert_comments=True))
+        root = ET.parse(str(svg_path), parser=parser).getroot()
+    except Exception:
+        return None
+    chunks: list[str] = []
+    for el in root.iter():
+        if el.tag is ET.Comment:
+            if el.text and el.text.strip():
+                chunks.append(el.text.strip())
+            continue
+        if not isinstance(el.tag, str):
+            continue  # processing instructions etc.
+        local = el.tag.rsplit("}", 1)[-1].lower()
+        if local == "style":
+            continue  # CSS = internal styling string, excluded per approved design
+        if el.text and el.text.strip():
+            chunks.append(el.text.strip())
+        if el.tail and el.tail.strip():
+            chunks.append(el.tail.strip())
+        for attr, val in el.attrib.items():
+            a_local = attr.rsplit("}", 1)[-1].lower()
+            if a_local == "href" and val and not val.startswith("#"):
+                chunks.append(val)  # external references are semantic surface
+    return "\n".join(chunks)
+
+
+def _scan_svg_confidential(svg_path: Path) -> dict:
+    """Run the forbidden-string/pattern gate over the SVG semantic surface.
+
+    Returns {scan_clean, scan_hits, scan_surface, raw_surface_advisory_matches}.
+    The advisory count reports what the OLD raw scan would have flagged (styling
+    tokens) — informational only, NEVER blocks.
+    """
+    import re as _re
+
+    semantic = _extract_svg_semantic_text(svg_path)
+    if semantic is None:
+        # fail-closed: unparseable SVG → strict raw scan
+        scan_surface = "raw_fallback_xml_parse_failed"
+        svg_text = svg_path.read_text(errors="ignore")
+    else:
+        scan_surface = "svg_semantic_content(text_nodes+comments+external_refs)"
+        svg_text = semantic
+    scan_clean = True
+    scan_hits: list[str] = []
+    for forbidden in _FORBIDDEN_STRINGS:
+        if forbidden.lower() in svg_text.lower():
+            scan_clean = False
+            scan_hits.append(forbidden)
+    for pat in _FORBIDDEN_PATTERNS:
+        for m in _re.finditer(pat, svg_text):
+            token = m.group(0)
+            if not any(al.lower() in token.lower() for al in _FORBIDDEN_ALLOWLIST):
+                scan_clean = False
+                scan_hits.append(token)
+    # advisory only — never blocks: raw-surface matches are renderer internals
+    advisory = 0
+    if scan_surface.startswith("svg_semantic"):
+        raw = svg_path.read_text(errors="ignore")
+        for forbidden in _FORBIDDEN_STRINGS:
+            if forbidden.lower() in raw.lower():
+                advisory += 1
+        for pat in _FORBIDDEN_PATTERNS:
+            advisory += sum(
+                1
+                for m in _re.finditer(pat, raw)
+                if not any(al.lower() in m.group(0).lower() for al in _FORBIDDEN_ALLOWLIST)
+            )
+    return {
+        "scan_clean": scan_clean,
+        "scan_hits": scan_hits,
+        "scan_surface": scan_surface,
+        "raw_surface_advisory_matches": advisory,
+    }
 
 
 def compute_flexure(
@@ -121,7 +239,9 @@ def render_physics_section(
 
     The renderer reads age labels from kinabalu_event_spine.yaml, ensuring figure
     and framework cannot drift. Includes a confidentiality gate: the rendered
-    SVG is scanned for forbidden partner-data strings before returning.
+    SVG's SEMANTIC surface (text nodes, comments, external refs) is scanned for
+    forbidden partner-data strings before returning (2026-10-13 approved patch;
+    renderer-internal styling tokens excluded; fail-closed to raw on parse error).
 
     Returns: artifact paths + provenance + physics annotations + L0/L1/L2 manifest.
     """
@@ -167,22 +287,23 @@ def render_physics_section(
     svg = Path(out) / "asas_malam_xs.svg"
     pdf = Path(out) / "asas_malam_xs_print.pdf"
     artifacts = [str(p) for p in (png, svg, pdf) if p.exists()]
-    # confidentiality gate
-    scan_clean = True
-    scan_hits = []
-    if svg.exists():
-        svg_text = svg.read_text(errors="ignore")
-        for forbidden in _FORBIDDEN_STRINGS:
-            if forbidden.lower() in svg_text.lower():
-                scan_clean = False
-                scan_hits.append(forbidden)
-        import re as _re
-        for pat in _FORBIDDEN_PATTERNS:
-            for m in _re.finditer(pat, svg_text):
-                token = m.group(0)
-                if not any(al.lower() in token.lower() for al in _FORBIDDEN_ALLOWLIST):
-                    scan_clean = False
-                    scan_hits.append(token)
+    if not svg.exists():
+        # fail-closed (2026-10-13, IRFANclaw-approved gate patch): renderer exited 0 but no
+        # SVG at the expected path → the confidentiality gate CANNOT run. Never return OK
+        # without a gate verdict (previously this path silently skipped the scan).
+        return {
+            "mode": "physics_section",
+            "tool": "geox_model",
+            "status": "ERROR",
+            "artifacts": [],  # WITHHELD — gate did not run
+            "transect": transect,
+            "theme": theme,
+            "error": f"Renderer exited 0 but produced no SVG at {svg} — confidentiality gate cannot run; artifacts withheld (fail-closed).",
+        }
+    # confidentiality gate (semantic-surface scan — IRFANclaw-approved 2026-10-13)
+    gate = _scan_svg_confidential(svg)
+    scan_clean = gate["scan_clean"]
+    scan_hits = gate["scan_hits"]
     spine_hash = "UNKNOWN"
     if _SPINE_YAML.exists():
         spine_hash = hashlib.sha256(_SPINE_YAML.read_bytes()).hexdigest()[:16]
@@ -200,6 +321,8 @@ def render_physics_section(
                 "clean": False,
                 "forbidden_strings_scanned": _FORBIDDEN_STRINGS,
                 "hits": scan_hits,
+                "scan_surface": gate["scan_surface"],
+                "raw_surface_advisory_matches": gate["raw_surface_advisory_matches"],
                 "action": "ARTIFACTS_WITHHELD",
                 "rule": "Public-only figure. Partner-data hits = render is quarantined, not served.",
             },
@@ -218,9 +341,11 @@ def render_physics_section(
             "clean": True,
             "forbidden_strings_scanned": _FORBIDDEN_STRINGS,
             "hits": [],
+            "scan_surface": gate["scan_surface"],
+            "raw_surface_advisory_matches": gate["raw_surface_advisory_matches"],
             "action": "PASSED",
             "rule": "Public-only figure. Internal/partner well data is excluded by design.",
-            "scope": f"SVG forbidden-string scan ({len(_FORBIDDEN_STRINGS)} strings + {len(_FORBIDDEN_PATTERNS)} patterns, allowlist {_FORBIDDEN_ALLOWLIST}). NOT a guarantee of full-output safety — HTML, PDF metadata, manifests not covered.",
+            "scope": f"SVG SEMANTIC-surface scan ({len(_FORBIDDEN_STRINGS)} strings + {len(_FORBIDDEN_PATTERNS)} patterns, allowlist {_FORBIDDEN_ALLOWLIST}): DOM text nodes + XML comments + external (non-fragment) hrefs. Renderer-internal tokens (glyph ids, styling/coordinate attributes, <style> CSS, doctype) excluded per IRFANclaw-approved patch 2026-10-13; raw-surface matches reported as advisory only. Unparseable SVG fails CLOSED to full raw scan. PATH-MODE LIMIT: matplotlib renders visible glyphs as vector paths — no text scan can read them; visual-leak prevention rests on audited renderer inputs (public spine YAML). HTML, PDF metadata, manifests not covered.",
         },
         "physics_annotations": [
             "Three blocks · two margins · one suture",
@@ -231,7 +356,7 @@ def render_physics_section(
         ],
         "evidence_tiers": {
             "L0": "Topography/bathymetry (green line), Tepat-1 public result",
-            "L1": "Granite U-Pb 7.85–7.22 Ma, Moho 26–33 km (non-unique), flexure curves",
+            "L1": "Granite U-Pb 7.85–7.22 Ma, Moho 32.8–52.5 km (Madon 2025 gravity inversion; non-unique), flexure curves",
             "L2": "Every subsurface surface, body, fault, closure — schematic, not seismic picks",
         },
         "renderer_stdout_tail": proc.stdout[-200:] if proc.stdout else "",
