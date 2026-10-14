@@ -175,7 +175,7 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
         "render_mode": "panel",
         "mime_type": "text/html;profile=mcp-app",
         "resource_type": "rawHtml",
-        "html_path": "apps/workbench-v1.html",
+        "html_path": "src/geox_mcp/ui/workspace_v1.html",
         "external_url": "https://geox.arif-fazil.com/apps/workbench-v1.html",
     },
     "workbench_v1": {

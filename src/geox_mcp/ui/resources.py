@@ -121,7 +121,6 @@ def register_alias_resources(mcp: FastMCP) -> None:
             GRAVMAG_STUDIO_MIME,
             "GEOX GravMag Studio alias (without .html extension)",
         ),
-        ("ui://well/desk", WORKSPACE_FILE, WORKSPACE_MIME, "Well Desk alias (mirrored from GEOX WellDesk)"),
     ]
     for uri, filepath, mime, desc in aliases:
         if filepath.exists() and not _uri_registered(mcp, uri):
