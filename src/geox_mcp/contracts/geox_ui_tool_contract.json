@@ -26,7 +26,7 @@
         "resourceUri": {
           "type": "string",
           "pattern": "^ui://",
-          "description": "MCP resource URI for the app (e.g., ui://geox_seismic_viewer)"
+          "description": "MCP resource URI for the app (e.g., ui://geox/seismic-vision)"
         },
         "mode": {
           "type": "string",
