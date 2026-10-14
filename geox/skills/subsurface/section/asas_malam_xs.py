@@ -200,7 +200,7 @@ axA.plot(x, S, color=L0, lw=1.6, zorder=6)
 axA.text(
     30,
     -23,
-    "Moho 26–33 km · gravity/magnetic model, non-unique (Sidek et al. 2016) · L1",
+    "Moho 26–33 km (Sidek et al. 2016) · 32.8–52.5 km, mean 40.8 (Madon et al. 2025 grav. inv.) · non-unique · L1",
     fontsize=7.5,
     color="#f87171",
     zorder=7,
@@ -520,7 +520,7 @@ ev.axis("off")
 ev.text(0, 1.0, "MEASURED vs MODELLED", fontsize=8.5, weight="bold", color=FONT, va="top")
 rows = [
     ("L0", "#1b5e20", "Topography, bathymetry, Tepat-1 public result"),
-    ("L1", "#c0392b", "Granite U-Pb 7.85–7.22 Ma · Moho 26–33 km (non-unique) · flexure curves (this figure)"),
+    ("L1", "#c0392b", "Granite U-Pb 7.85–7.22 Ma · Moho 26–33 (Sidek 2016) / 32.8–52.5 km (Madon 2025), non-unique · flexure curves (this figure)"),
     ("L2", "#b45309", "Every surface, body, fault, closure — depths uncalibrated (no velocity model)"),
     ("L2", "#b45309", "Bending-extension faults: PREDICTED here — verify soles + strike ∥ trough on 3D"),
     ("L2", "#b45309", "Forebulge position: untested — measuring it fixes Te"),
