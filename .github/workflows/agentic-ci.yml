@@ -36,6 +36,18 @@ jobs:
     name: 🔐 Secrets Scan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Job-scoped, not workflow-scoped: only this job needs to enumerate PR
+    # commits. gitleaks-action@v3 calls GET /repos/{owner}/{repo}/pulls/{n}/commits
+    # to bound the scan to the PR range; the workflow-level block grants
+    # contents/checks/statuses only, so that call 403s. On a public repo the
+    # endpoint is readable and the job passed; after GEOX was made private
+    # (2026-10-14) it began failing with "Resource not accessible by integration",
+    # silently blinding the secrets gate on every PR. Same defect is live on
+    # ariffazil/AAA (private since 2026-10-04): Secrets Scan FAILURE on
+    # #203/#204/#205/#208 with an identical permissions block.
+    permissions:
+      contents: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v7
         with:
