@@ -128,6 +128,7 @@ async def observe(
     field_tests_json: str = Form("{}"),
     scale_json: str = Form("{}"),
     seismic_json: str = Form("{}"),
+    notes_json: str = Form("{}"),
 ) -> JSONResponse:
     _session_id(request, response)
 
@@ -183,15 +184,25 @@ async def observe(
     if scale and scale.get("value"):
         context["scale"] = scale
     seismic = _json.loads(seismic_json) if seismic_json and seismic_json != "{}" else None
+    meta: dict[str, Any] = {}
     if seismic:
         if seismic.get("domain"):
             context["domain"] = seismic["domain"]
         dt = {k: v for k, v in seismic.items() if k in ("polarity", "color_map", "gain") and v}
         if dt:
             context["display_transform"] = dt
-        meta = {k: v for k, v in seismic.items() if k in ("phase_deg", "stacks", "nearby_well") and v}
-        if meta:
-            context["acquisition_metadata"] = meta
+        meta.update({k: v for k, v in seismic.items() if k in ("phase_deg", "stacks", "nearby_well") and v})
+    # Field notes the camera cannot invent. Context only — never a confidence raise (I7).
+    notes = _json.loads(notes_json) if notes_json and notes_json != "{}" else None
+    if isinstance(notes, dict):
+        if notes.get("fossil_source") in ("outcrop", "core", "cuttings"):
+            meta["fossil_source"] = notes["fossil_source"]
+        if notes.get("scale_bar_present") is True:
+            meta["scale_bar_present"] = True
+        if notes.get("way_up") in ("known", "unknown"):
+            context["orientation"] = {"is_way_up_known": notes["way_up"] == "known"}
+    if meta:
+        context["acquisition_metadata"] = meta
 
     try:
         packet = _mcp.call_tool(
