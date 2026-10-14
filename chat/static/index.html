@@ -2,219 +2,372 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>GEOX Earth Witness</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GEOX Earth Witness — Tanya Bumi</title>
+<meta name="description" content="Look at a rock, outcrop, fossil, core, or seismic picture. The camera records what is visible. Acid, hardness, and a real scale still have to come from you. The answer is a qualified candidate, never a seal.">
 <style>
-:root{--ink:#1a2233;--mut:#5a6478;--line:#dde3ee;--bg:#f4f6fb;--card:#fff;--acc:#0b7285;--warn:#b54708}
-*{box-sizing:border-box;margin:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);padding:12px;max-width:560px;margin:0 auto;padding-bottom:60px}
-.banner{background:#fff7e6;border:1px solid #f1d38a;border-radius:10px;padding:10px 12px;font-size:.82rem;margin-bottom:12px}
-h1{font-size:1.05rem;margin:4px 0 10px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
-label{font-size:.78rem;color:var(--mut);display:block;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.04em}
-input[type=file]{width:100%;font-size:.9rem}
+:root{--ink:#1a2233;--mut:#5c6678;--line:#dde3ee;--bg:#f3f5f4;--card:#fff;--acc:#0b7285;--amber:#8a5a12;--warnbg:#fff7e6;--warnbd:#f1d38a}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+a{color:var(--acc)}
+.wrap{max-width:760px;margin:0 auto;padding:16px 16px 72px}
+.top{display:flex;justify-content:space-between;gap:12px;align-items:baseline;margin-bottom:8px}
+.brand{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:1.55rem;line-height:1.15;margin:0 0 8px}
+.lede{margin:0 0 12px;font-size:1.02rem}
+.live{font-size:.8rem;color:var(--mut);margin:0 0 12px}
+.live b{color:var(--ink);font-weight:650}
+.banner{background:var(--warnbg);border:1px solid var(--warnbd);border-radius:10px;padding:10px 12px;font-size:.86rem;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.sec{font-size:.75rem;color:var(--mut);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+.sec:first-child{margin-top:0}
+.why{font-size:.82rem;color:var(--mut);margin:0 0 8px}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);border-radius:16px;padding:6px 11px;font-size:.8rem;background:#fff;cursor:pointer}
+.chip{border:1px solid var(--line);border-radius:16px;padding:7px 11px;font-size:.82rem;background:#fff;cursor:pointer}
 .chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-button.go{width:100%;padding:12px;border:0;border-radius:10px;background:var(--acc);color:#fff;font-size:1rem;margin-top:12px}
-button.go:disabled{opacity:.5}
-.sec{font-size:.75rem;color:var(--mut);margin-top:10px;text-transform:uppercase;letter-spacing:.05em}
-.kv{margin:2px 0;font-size:.86rem}
-.kv b{color:var(--mut);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.04em;display:block}
-.verdict{font-size:1.15rem;font-weight:700;padding:6px 10px;border-radius:8px;display:inline-block;background:#e7f5f0;color:#08614d}
+.panel{display:none}
+.panel.on{display:block}
+label.file{display:block;font-size:.78rem;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+input[type=file],input[type=number]{font-size:1rem}
+input[type=number]{width:8rem;padding:8px;border:1px solid var(--line);border-radius:8px}
+button.go{width:100%;padding:13px;border:0;border-radius:10px;background:var(--acc);color:#fff;font-size:1.05rem;margin-top:14px;cursor:pointer}
+button.go:disabled{opacity:.5;cursor:wait}
+.laws{font-size:.84rem}
+.laws li{margin:4px 0}
+.kv{margin:8px 0;font-size:.9rem}
+.kv b{color:var(--mut);font-weight:650;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:2px}
+.verdict{font-size:1.05rem;font-weight:700;padding:6px 10px;border-radius:8px;display:inline-block;background:#e7f5f0;color:#08614d}
 .hyp{border-left:3px solid var(--acc);padding:6px 10px;margin:8px 0;background:#f8fafd;border-radius:0 8px 8px 0}
 .hyp .conf{font-size:.75rem;color:var(--mut)}
-ul{padding-left:18px;font-size:.86rem}
-.wm{position:fixed;bottom:0;left:0;right:0;background:#111827cc;color:#e5e9f2;font-size:.72rem;text-align:center;padding:6px;backdrop-filter:blur(4px)}
-.err{background:#fdecea;color:#8c2f26;border-radius:8px;padding:10px;font-size:.86rem}
-.mini{font-size:.7rem;color:var(--mut)}
+ul{padding-left:18px;margin:4px 0}
+.err{background:#fdecea;color:#8c2f26;border-radius:8px;padding:10px;font-size:.9rem}
+.mini{font-size:.75rem;color:var(--mut)}
+.foot{position:sticky;bottom:0;background:#111827ee;color:#e5e9f2;font-size:.75rem;text-align:center;padding:8px 12px}
 </style>
 </head>
 <body>
-<h1>⛰️ GEOX Earth Witness</h1>
-<div class="banner">⚠️ Public / synthetic use only — do NOT upload confidential or operational data. Images are stripped of EXIF/GPS, hashed, and deleted after the reply. Verdicts are <b>QUALIFIED_CANDIDATE</b>, never interpretation of record.</div>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">GEOX · Earth intelligence</div>
+    <a href="/">Home</a>
+  </div>
+  <h1>Earth Witness</h1>
+  <p class="lede">A photo is not the rock. This page writes down what the picture shows, asks for the tests a camera cannot do, and stops at a candidate. It does not seal a well, a prospect, or an age.</p>
+  <p class="live" id="live">Reading organ status…</p>
 
-<div class="card">
-  <label>Photo (jpg / png / webp / pdf, ≤10 MB)</label>
-  <input type="file" id="img" accept=".jpg,.jpeg,.png,.webp,.pdf">
+  <div class="banner">Public and synthetic pictures only. Do not upload confidential or operational data. Location tags are stripped, the file is hashed, and nothing is kept after the reply. Tanya Bumi — tanya gambar, bukan simpan data.</div>
 
-  <div class="sec">Modality</div>
-  <div class="chips" data-group="modality" data-single="1">
-    <span class="chip" data-v="rock">rock</span><span class="chip" data-v="outcrop">outcrop</span>
-    <span class="chip" data-v="core">core</span><span class="chip" data-v="thin_section">thin section</span>
-    <span class="chip" data-v="fossil">fossil</span><span class="chip" data-v="seismic_display">seismic</span>
-    <span class="chip" data-v="map">map</span><span class="chip" data-v="section">section</span>
+  <div class="card">
+    <label class="file" for="img">Photo — jpg, png, webp, or a one-page pdf, up to 10 MB</label>
+    <input type="file" id="img" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf">
+    <p class="why">Put a ruler in the frame when you can. A coin or a hand is only a rough size. Compton’s field rule still holds: measure, then name.</p>
+
+    <div class="sec">What is in the picture</div>
+    <p class="why">Pick the kind of picture. The tests below change with it. Leave it blank and the organ will guess the kind of picture, not the rock.</p>
+    <div class="chips" data-group="modality" data-single="1">
+      <span class="chip" data-v="rock">hand specimen</span>
+      <span class="chip" data-v="outcrop">outcrop</span>
+      <span class="chip" data-v="core">core</span>
+      <span class="chip" data-v="thin_section">thin section</span>
+      <span class="chip" data-v="fossil">fossil</span>
+      <span class="chip" data-v="seismic_display">seismic</span>
+      <span class="chip" data-v="map">map</span>
+      <span class="chip" data-v="section">cross-section</span>
+    </div>
+
+    <div class="panel" data-show="rock outcrop core thin_section">
+      <div class="sec">Tests the camera cannot do</div>
+      <p class="why">These remove impossible names. They do not prove one name. 10% dilute HCl: vigorous fizz is calcite, powder-only is dolomite, silence is not a carbonate. Steel is about Mohs 5.5. Grain size is Wentworth.</p>
+      <div class="chips" data-group="hcl">
+        <span class="chip" data-v="vigorous">HCl vigorous</span>
+        <span class="chip" data-v="weak_on_powder">HCl powder only</span>
+        <span class="chip" data-v="none">HCl silent</span>
+      </div>
+      <div class="chips" data-group="hardness" style="margin-top:6px">
+        <span class="chip" data-v="lt_fingernail">softer than a nail</span>
+        <span class="chip" data-v="lt_copper">softer than a coin</span>
+        <span class="chip" data-v="lt_steel">softer than steel</span>
+        <span class="chip" data-v="gt_steel">harder than steel</span>
+      </div>
+      <div class="chips" data-group="magnetism" style="margin-top:6px">
+        <span class="chip" data-v="strongly_magnetic">strongly magnetic</span>
+        <span class="chip" data-v="weakly_magnetic">weakly magnetic</span>
+        <span class="chip" data-v="non_magnetic">not magnetic</span>
+      </div>
+      <div class="chips" data-group="grain_size" style="margin-top:6px">
+        <span class="chip" data-v="clay_silt">clay / silt</span>
+        <span class="chip" data-v="fine_sand">fine sand</span>
+        <span class="chip" data-v="medium_sand">medium sand</span>
+        <span class="chip" data-v="coarse_sand">coarse sand</span>
+        <span class="chip" data-v="gravel_conglomerate">gravel</span>
+        <span class="chip" data-v="crystalline_aphanitic">crystals, too fine to see</span>
+        <span class="chip" data-v="crystalline_phaneritic">crystals you can see</span>
+      </div>
+      <div class="chips" data-group="cleavage" data-single="1" style="margin-top:6px">
+        <span class="chip" data-v="perfect_rhombohedral">rhombohedral cleavage</span>
+        <span class="chip" data-v="basal_sheet">sheets</span>
+        <span class="chip" data-v="none_conchoidal">conchoidal fracture</span>
+        <span class="chip" data-v="prismatic">prismatic</span>
+        <span class="chip" data-v="cubic">cubic</span>
+      </div>
+      <div class="sec">Which way is up</div>
+      <p class="why">Only if you saw the beds in place. A loose specimen has no way-up.</p>
+      <div class="chips" data-group="way_up" data-single="1">
+        <span class="chip" data-v="known">way-up known</span>
+        <span class="chip" data-v="unknown">way-up unknown</span>
+      </div>
+    </div>
+
+    <div class="panel" data-show="rock outcrop core thin_section fossil map section">
+      <div class="sec">Scale in the frame</div>
+      <p class="why">A measured ruler is calibrated. A coin (~24 mm) or a hand (~180 mm) is a hint, and the reply will still ask for a real scale.</p>
+      <div class="chips" data-group="scale" data-single="1">
+        <span class="chip" data-v="ruler">ruler in frame</span>
+        <span class="chip" data-v="coin">coin only</span>
+        <span class="chip" data-v="hand">hand only</span>
+      </div>
+      <div id="rulerBox" style="display:none;margin-top:8px">
+        <label class="file" for="scaleMm">Length of the scale you can see, in millimetres</label>
+        <input type="number" id="scaleMm" min="1" max="100000" step="1" inputmode="numeric" placeholder="300">
+      </div>
+    </div>
+
+    <div class="panel" data-show="seismic_display">
+      <div class="sec">Display, not the earth</div>
+      <p class="why">A bright spot is not gas. Amplitude is not a fluid. Say the display polarity and whether the axis is time or depth. Without polarity, a hard kick and a soft kick cannot be told apart.</p>
+      <div class="chips" data-group="polarity" data-single="1">
+        <span class="chip" data-v="SEG-normal">SEG normal</span>
+        <span class="chip" data-v="SEG-reverse">SEG reverse</span>
+      </div>
+      <div class="chips" data-group="domain" data-single="1" style="margin-top:6px">
+        <span class="chip" data-v="time">time (ms)</span>
+        <span class="chip" data-v="depth">depth (m)</span>
+      </div>
+      <div class="chips" data-group="stacks" style="margin-top:6px">
+        <span class="chip" data-v="near">near stack</span>
+        <span class="chip" data-v="far">far stack</span>
+      </div>
+    </div>
+
+    <div class="panel" data-show="fossil">
+      <div class="sec">Shape is not an age</div>
+      <p class="why">The picture can support a look-alike. An age needs a taxon and a public range (Paleobiology Database), then a person. Cuttings can be caved from higher up the hole.</p>
+      <div class="chips" data-group="fos_scale" data-single="1">
+        <span class="chip" data-v="scalebar">scale bar is in the photo</span>
+      </div>
+      <div class="chips" data-group="fos_source" data-single="1" style="margin-top:6px">
+        <span class="chip" data-v="outcrop">from an outcrop</span>
+        <span class="chip" data-v="core">from core</span>
+        <span class="chip" data-v="cuttings">from cuttings</span>
+      </div>
+    </div>
+
+    <div class="sec">Basin — context only</div>
+    <p class="why">Naming Sabah or the Malay Basin does not make the guess stronger.</p>
+    <div class="chips" data-group="basin" data-single="1">
+      <span class="chip on" data-v="">unknown</span>
+      <span class="chip" data-v="Sabah">Sabah</span>
+      <span class="chip" data-v="Malay">Malay</span>
+      <span class="chip" data-v="Sarawak">Sarawak</span>
+      <span class="chip" data-v="Other">other</span>
+    </div>
+
+    <div class="sec">What you want from the look</div>
+    <div class="chips" data-group="objective" data-single="1">
+      <span class="chip on" data-v="">just look</span>
+      <span class="chip" data-v="teaching">teaching</span>
+      <span class="chip" data-v="lithology">lithology</span>
+      <span class="chip" data-v="facies">facies</span>
+      <span class="chip" data-v="structure">structure</span>
+    </div>
+
+    <button class="go" id="go" type="button">Observe</button>
+    <p class="mini" style="margin-top:8px">The upload stays in memory for this reply. Strike and dip are not read off a photograph — measure those with a compass.</p>
   </div>
 
-  <div class="sec">Basin (context only — never raises confidence)</div>
-  <div class="chips" data-group="basin" data-single="1">
-    <span class="chip" data-v="Sabah">Sabah</span><span class="chip" data-v="Malay">Malay</span>
-    <span class="chip" data-v="Sarawak">Sarawak</span><span class="chip" data-v="Other">Other</span>
-    <span class="chip on" data-v="">Unknown</span>
+  <div class="card laws">
+    <div class="sec">What this page will not do</div>
+    <ul>
+      <li>Call oil or gas from a bright spot.</li>
+      <li>Date a fossil from its shape.</li>
+      <li>Treat a basin name as evidence.</li>
+      <li>Go past a qualified candidate. A seal, if one is ever made, is a separate act.</li>
+    </ul>
+    <p class="mini">Field habit from Compton, Geology in the Field: describe the outcrop before you interpret it, and compare grain size with a real scale. Wentworth cuts used here: clay/silt under 0.0625 mm, fine sand to 0.25, medium to 0.5, coarse to 2, gravel above that.</p>
   </div>
 
-  <div class="sec">Objective</div>
-  <div class="chips" data-group="objective" data-single="1">
-    <span class="chip on" data-v="">—</span><span class="chip" data-v="teaching">teaching</span>
-    <span class="chip" data-v="lithology">lithology</span><span class="chip" data-v="facies">facies</span>
-    <span class="chip" data-v="structure">structure</span>
-  </div>
-
-  <div class="sec">Field tests & metadata (rock/core)</div>
-  <div class="chips" data-group="hcl">
-    <span class="chip" data-v="vigorous">HCl: vigorous</span>
-    <span class="chip" data-v="weak_on_powder">HCl: powder only</span>
-    <span class="chip" data-v="none">HCl: silent</span>
-  </div>
-  <div class="chips" data-group="hardness" style="margin-top:6px">
-    <span class="chip" data-v="lt_fingernail">hardness &lt; nail</span>
-    <span class="chip" data-v="lt_copper">&lt; coin</span>
-    <span class="chip" data-v="lt_steel">&lt; steel</span>
-    <span class="chip" data-v="gt_steel">&gt; steel</span>
-  </div>
-  <div class="chips" data-group="magnetism" style="margin-top:6px">
-    <span class="chip" data-v="strongly_magnetic">magnetic</span>
-    <span class="chip" data-v="weakly_magnetic">weakly magnetic</span>
-    <span class="chip" data-v="non_magnetic">non-magnetic</span>
-  </div>
-  <div class="chips" data-group="grain_size" style="margin-top:6px">
-    <span class="chip" data-v="clay_silt">clay/silt</span><span class="chip" data-v="fine_sand">fine sand</span>
-    <span class="chip" data-v="coarse_sand">coarse sand</span><span class="chip" data-v="gravel_conglomerate">gravel</span>
-    <span class="chip" data-v="crystalline_aphanitic">crystalline (fine)</span>
-  </div>
-  <div class="chips" data-group="scale" data-single="1" style="margin-top:6px">
-    <span class="chip" data-v="coin">scale: coin</span><span class="chip" data-v="hand">scale: hand</span>
-    <span class="chip" data-v="ruler">scale: ruler</span>
-  </div>
-
-  <div class="sec">Seismic metadata</div>
-  <div class="chips" data-group="polarity" data-single="1">
-    <span class="chip" data-v="SEG-normal">SEG normal</span><span class="chip" data-v="SEG-reverse">SEG reverse</span>
-  </div>
-  <div class="chips" data-group="domain" data-single="1" style="margin-top:6px">
-    <span class="chip" data-v="time">time (ms)</span><span class="chip" data-v="depth">depth (m)</span>
-  </div>
-  <div class="chips" data-group="stacks" style="margin-top:6px">
-    <span class="chip" data-v="near">near stack</span><span class="chip" data-v="far">far stack</span>
-  </div>
-
-  <div class="sec">Fossil</div>
-  <div class="chips" data-group="fos_scale" data-single="1">
-    <span class="chip" data-v="scalebar">scale bar present</span>
-  </div>
-  <div class="chips" data-group="fos_source" data-single="1" style="margin-top:6px">
-    <span class="chip" data-v="outcrop">outcrop</span><span class="chip" data-v="core">core</span>
-    <span class="chip" data-v="cuttings">cuttings (caving risk!)</span>
-  </div>
-
-  <button class="go" id="go">Observe</button>
-  <div class="mini" style="margin-top:6px">Uploads live in memory only — nothing is written to disk.</div>
+  <div id="out"></div>
 </div>
-
-<div id="out"></div>
-<div class="wm">QUALIFIED_CANDIDATE — not interpretation of record · arifOS seals only</div>
+<div class="foot">Qualified candidate — not an interpretation of record</div>
 
 <script>
-const state={field_tests:{},scale:null,seismic:{}};
-function chips(){return[...document.querySelectorAll('.chip')]}
-chips().forEach(c=>c.addEventListener('click',()=>{
-  const g=c.closest('.chips'),single=g.dataset.single==='1';
-  if(single){[...g.children].forEach(x=>x.classList.remove('on'));c.classList.add('on');}
-  else c.classList.toggle('on');
-  collect();
+const ROCK = ["rock","outcrop","core","thin_section"];
+function chips(){return [...document.querySelectorAll(".chip")]}
+chips().forEach(c => c.addEventListener("click", () => {
+  const g = c.closest(".chips");
+  if (g.dataset.single === "1") [...g.children].forEach(x => x.classList.remove("on"));
+  if (g.dataset.single === "1") c.classList.add("on");
+  else c.classList.toggle("on");
+  showPanels();
 }));
-function on(group){const g=document.querySelector(`[data-group=${group}]`);const el=[...g.children].find(x=>x.classList.contains('on')&&x.dataset.v);return el?el.dataset.v:null}
-function many(group){return[...document.querySelector(`[data-group=${group}]`).children].filter(x=>x.classList.contains('on')).map(x=>x.dataset.v)}
-function collect(){
-  state.field_tests={};
-  const hcl=on('hcl');if(hcl)state.field_tests.hcl=hcl;
-  const hd=on('hardness');if(hd)state.field_tests.hardness=hd;
-  const mg=on('magnetism');if(mg)state.field_tests.magnetism=mg;
-  const gs=on('grain_size');if(gs)state.field_tests.grain_size=gs;
-  const sc=on('scale');
-  state.scale=sc?{value:{"coin":24,"hand":180,"ruler":300}[sc]||10,unit:"mm",is_calibrated:true}:null;
-  state.seismic={};
-  const pol=on('polarity');if(pol)state.seismic.polarity=pol;
-  const dom=on('domain');if(dom)state.seismic.domain=dom;
-  const st=many('stacks');if(st.length)state.seismic.stacks=st.join("+");
+function on(group){
+  const g = document.querySelector(`[data-group="${group}"]`);
+  if (!g) return null;
+  const el = [...g.children].find(x => x.classList.contains("on") && x.dataset.v);
+  return el ? el.dataset.v : null;
 }
-document.getElementById('go').addEventListener('click',async()=>{
-  collect();
-  let f=document.getElementById('img').files[0],out=document.getElementById('out'),go=document.getElementById('go');
-  if(!f){out.innerHTML='<div class="err">Choose a photo first.</div>';return}
-  const MAX=10*1024*1024;
-  if(f.size>MAX){
-    // Phone photos blow past the cap — downscale client-side (also strips EXIF/GPS).
-    try{
-      out.innerHTML='<div class="card mini">Gambar '+Math.round(f.size/1048576)+'MB — mampatkan dalam pelayar…</div>';
-      const bmp=await createImageBitmap(f);
-      const scale=Math.min(1,2800/Math.max(bmp.width,bmp.height));
-      const c=document.createElement('canvas');c.width=Math.round(bmp.width*scale);c.height=Math.round(bmp.height*scale);
-      c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
-      const blob=await new Promise(res=>c.toBlob(res,'image/jpeg',0.9));
-      if(blob&&blob.size<MAX){f=new File([blob],(f.name||'photo').replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'})}
-    }catch(_){/* fall through — server-side cap will judge */}
-    if(f.size>MAX){out.innerHTML=`<div class="card"><div class="err">Gambar ${Math.round(f.size/1048576)}MB melebihi 10MB dan gagal dimampat. Tangkap resolusi lebih rendah atau crop dahulu.</div></div>`;return}
+function many(group){
+  const g = document.querySelector(`[data-group="${group}"]`);
+  if (!g) return [];
+  return [...g.children].filter(x => x.classList.contains("on") && x.dataset.v).map(x => x.dataset.v);
+}
+function showPanels(){
+  const m = on("modality") || "";
+  document.querySelectorAll(".panel").forEach(p => {
+    const keys = (p.dataset.show || "").split(" ");
+    p.classList.toggle("on", keys.includes(m));
+  });
+  document.getElementById("rulerBox").style.display = (on("scale") === "ruler") ? "block" : "none";
+}
+function fieldTests(){
+  const m = on("modality");
+  if (m && !ROCK.includes(m)) return {};
+  const ft = {};
+  for (const k of ["hcl","hardness","magnetism","grain_size","cleavage"]) {
+    const v = on(k);
+    if (v) ft[k] = v;
   }
-  go.disabled=true;out.innerHTML='<div class="card mini">Observing… (vision backend + physics guards)</div>';
-  const fd=new FormData();
-  fd.append('image',f);
-  fd.append('modality_hint',on('modality')||'');
-  fd.append('basin',on('basin')||'');
-  fd.append('objective',on('objective')||'');
-  fd.append('field_tests_json',JSON.stringify(state.field_tests));
-  fd.append('scale_json',JSON.stringify(state.scale||{}));
-  fd.append('seismic_json',JSON.stringify(state.seismic));
-  try{
-    const r=await fetch('/api/observe',{method:'POST',body:fd});
-    const txt=await r.text();let j=null;
-    try{j=JSON.parse(txt)}catch(_){/* non-JSON body */}
-    if(j===null){
-      const human=r.status===413?'Gambar terlalu besar untuk pelayan (cap 12MB). Mampatkan dan cuba lagi.'
-        :r.status===429?'Terlalu banyak cubaan dalam satu minit — rehat sebentar.'
-        :`Server menjawab HTTP ${r.status} tanpa JSON. Cuba lagi; jika berterusan, lihat status organ di /health.`;
-      out.innerHTML=`<div class="card"><div class="err">${human}</div></div>`;
+  return ft;
+}
+function scaleApplies(){
+  const m = on("modality");
+  return !m || ["rock","outcrop","core","thin_section","fossil","map","section"].includes(m);
+}
+function scalePayload(){
+  if (!scaleApplies()) return null;
+  const kind = on("scale");
+  if (!kind) return null;
+  if (kind === "ruler") {
+    const mm = Number(document.getElementById("scaleMm").value);
+    if (mm > 0) return {value: mm, unit: "mm", is_calibrated: true};
+    return null;
+  }
+  if (kind === "coin") return {value: 24, unit: "mm", is_calibrated: false};
+  if (kind === "hand") return {value: 180, unit: "mm", is_calibrated: false};
+  return null;
+}
+function notesPayload(){
+  const m = on("modality");
+  const notes = {};
+  if (m === "fossil") {
+    const src = on("fos_source");
+    if (src) notes.fossil_source = src;
+    if (on("fos_scale") === "scalebar") notes.scale_bar_present = true;
+  }
+  if (!m || ROCK.includes(m)) {
+    const wu = on("way_up");
+    if (wu && ROCK.includes(m)) notes.way_up = wu;
+  }
+  return notes;
+}
+function seismicPayload(){
+  if (on("modality") !== "seismic_display") return {};
+  const s = {};
+  const pol = on("polarity"); if (pol) s.polarity = pol;
+  const dom = on("domain"); if (dom) s.domain = dom;
+  const st = many("stacks"); if (st.length) s.stacks = st.join("+");
+  return s;
+}
+document.getElementById("go").addEventListener("click", async () => {
+  const out = document.getElementById("out");
+  const go = document.getElementById("go");
+  let f = document.getElementById("img").files[0];
+  if (!f) { out.innerHTML = '<div class="card"><div class="err">Choose a photo first.</div></div>'; return; }
+  const MAX = 10 * 1024 * 1024;
+  if (f.size > MAX) {
+    try {
+      out.innerHTML = '<div class="card mini">That photo is ' + Math.round(f.size/1048576) + ' MB. Compressing in the browser…</div>';
+      const bmp = await createImageBitmap(f);
+      const scale = Math.min(1, 2800 / Math.max(bmp.width, bmp.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(bmp.width * scale);
+      c.height = Math.round(bmp.height * scale);
+      c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+      const blob = await new Promise(res => c.toBlob(res, "image/jpeg", 0.9));
+      if (blob && blob.size < MAX) f = new File([blob], (f.name || "photo").replace(/\.\w+$/, "") + ".jpg", {type: "image/jpeg"});
+    } catch (_) {}
+    if (f.size > MAX) {
+      out.innerHTML = '<div class="card"><div class="err">Still over 10 MB after compression. Crop it or take a smaller photo.</div></div>';
+      return;
     }
-    else if(j.status==='HOLD'){out.innerHTML=renderHold(j)}
-    else if(j.status==='OK'){out.innerHTML=render(j.packet)}
-    else{out.innerHTML=renderHold({reason:`Server returned HTTP ${r.status} with status=${j.status}`,reason_bm:'Bentuk jawapan tidak dikenali.',request_id:j.request_id||'',health_url:'/health'})}
-  }catch(e){out.innerHTML=`<div class="card"><div class="err">Sambungan terputus: ${esc(String(e))}</div></div>`}
-  go.disabled=false;
+  }
+  if (scaleApplies() && on("scale") === "ruler" && !(Number(document.getElementById("scaleMm").value) > 0)) {
+    out.innerHTML = '<div class="card"><div class="err">A ruler only counts if you type the length you can see, in millimetres. Otherwise pick coin or hand, or leave scale blank.</div></div>';
+    return;
+  }
+  go.disabled = true;
+  out.innerHTML = '<div class="card mini">Looking. Visible facts first. Names stay hypotheses.</div>';
+  const fd = new FormData();
+  fd.append("image", f);
+  fd.append("modality_hint", on("modality") || "");
+  fd.append("basin", on("basin") || "");
+  fd.append("objective", on("objective") || "");
+  fd.append("field_tests_json", JSON.stringify(fieldTests()));
+  fd.append("scale_json", JSON.stringify(scalePayload() || {}));
+  fd.append("seismic_json", JSON.stringify(seismicPayload()));
+  fd.append("notes_json", JSON.stringify(notesPayload()));
+  try {
+    const r = await fetch("/api/observe", {method: "POST", body: fd});
+    const txt = await r.text();
+    let j = null;
+    try { j = JSON.parse(txt); } catch (_) {}
+    if (j === null) {
+      const human = r.status === 413 ? "The server refused the file (12 MB cap). Compress and try again."
+        : r.status === 429 ? "Too many looks in one minute. Wait, then try again. Nothing was guessed."
+        : "The server answered HTTP " + r.status + " without a packet. Check organ status.";
+      out.innerHTML = '<div class="card"><div class="err">' + human + '</div></div>';
+    } else if (j.status === "HOLD") out.innerHTML = renderHold(j);
+    else if (j.status === "OK") out.innerHTML = render(j.packet);
+    else out.innerHTML = renderHold({reason_en: "Unrecognised reply status " + (j.status || r.status), reason_bm: "Bentuk jawapan tidak dikenali.", request_id: j.request_id || ""});
+  } catch (e) {
+    out.innerHTML = '<div class="card"><div class="err">The connection dropped: ' + esc(String(e)) + '</div></div>';
+  }
+  go.disabled = false;
 });
-function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function esc(s){return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function renderHold(j){
-  const id=j.request_id?`req ${esc(j.request_id.slice(0,8))}… · `:'';
-  const en=esc(j.reason_en||j.reason||'HOLD');
-  const bm=esc(j.reason_bm||'Pegang — cuba lagi.');
-  const retry=j.retry_after_ms?` · retry in ${Math.round(j.retry_after_ms/1000)}s`:'';
-  const health=j.health_url?` · <a href="/health">/health</a>`:'';
-  return `<div class="card">
-    <span class="verdict" style="background:#fdecea;color:#8c2f26">HOLD</span>
-    <div class="kv" style="margin-top:8px"><b>Reason (EN)</b>${en}</div>
-    <div class="kv"><b>Sebab (BM)</b>${bm}</div>
-    <div class="kv mini">${id}${retry}${health}</div>
-  </div>`;
+  const id = j.request_id ? "request " + esc(String(j.request_id).slice(0, 8)) + "… · " : "";
+  return '<div class="card"><span class="verdict" style="background:#fdecea;color:#8c2f26">HOLD</span>'
+    + '<div class="kv"><b>What happened</b>' + esc(j.reason_en || j.reason || "HOLD") + '</div>'
+    + '<div class="kv"><b>Dalam bahasa biasa</b>' + esc(j.reason_bm || "Pegang. Tiada tekaan dibuat untuk mengganti jawapan.") + '</div>'
+    + '<div class="kv mini">' + id + (j.health_url ? '<a href="/health">organ health</a>' : "") + '</div></div>';
 }
 function render(p){
-  const ep=p.epistemic||{},lim=p.limitations||{},obs=p.observations||{};
-  const hyps=(p.hypotheses||[]).map(h=>`<div class="hyp"><b>${esc(h.label)}</b> <span class="conf">conf ${h.confidence} · falsifiers: ${esc((h.falsifiers||[]).join('; ')||'—')}</span></div>`).join('')||'<div class="mini">none</div>';
-  const feats=(obs.visible_features||[]).map(f=>`<li>${esc(f.label)} <span class="mini">(${f.confidence})</span></li>`).join('')||'<li>none captured</li>';
-  const ocr=(obs.ocr_text||[]).map(o=>`<li>"${esc(o.text)}" <span class="mini">— evidence of the text only</span></li>`).join('')||'';
-  const cant=(lim.image_cannot_determine||[]).map(x=>`<li>${esc(x)}</li>`).join('')||'<li>—</li>';
-  const next=(lim.requested_human_tests||[]).map(t=>`<li><b>${esc(t.test_name)}</b> — ${esc(t.purpose||'')} <span class="mini">discriminates: ${esc((t.discriminates||[]).join(' | '))}</span></li>`).join('')||'<li>none — packet complete</li>';
-  const prov=(ep.provenance||[]).map(pr=>`<li class="mini">${esc(pr.step)} · ${esc(pr.model_id)} · ${esc((pr.hash||'').slice(0,12))}…</li>`).join('');
-  return `<div class="card">
-    <span class="verdict">${esc(ep.state||'?')} · ${esc(ep.verdict||'')}</span>
-    <div class="kv" style="margin-top:8px"><b>Confidence cap</b>${ep.confidence} (ceiling 0.90)</div>
-    <div class="kv"><b>Interpreted (hypotheses, with falsifiers)</b>${hyps}</div>
-    <div class="kv"><b>Observed (visible)</b><ul>${feats}</ul></div>
-    ${ocr?`<div class="kv"><b>OCR text (not earth evidence)</b><ul>${ocr}</ul></div>`:''}
-    <div class="kv"><b>Cannot tell / limitations</b><ul>${cant}</ul></div>
-    <div class="kv"><b>Next best test</b><ul>${next}</ul></div>
-    <div class="kv"><b>Provenance</b><ul>${prov}</ul></div>
-    <div class="mini">artifact sha256 ${esc((p.artifact&&p.artifact.sha256||'').slice(0,16))}… · packet ${esc(p.packet_id||'')}</div>
-  </div>`;
+  const ep = p.epistemic || {}, lim = p.limitations || {}, obs = p.observations || {};
+  const hyps = (p.hypotheses || []).map(h => '<div class="hyp"><b>' + esc(h.label) + '</b> <span class="conf">confidence ' + esc(h.confidence) + ' · would be wrong if: ' + esc((h.falsifiers || []).join("; ") || "—") + '</span></div>').join("") || '<div class="mini">No name offered.</div>';
+  const feats = (obs.visible_features || []).map(f => "<li>" + esc(f.label) + ' <span class="mini">(' + esc(f.confidence) + ")</span></li>").join("") || "<li>Nothing visible was recorded.</li>";
+  const ocr = (obs.ocr_text || []).map(o => "<li>“" + esc(o.text) + "” <span class=\"mini\">— this is evidence of the text, not of the earth</span></li>").join("");
+  const cant = (lim.image_cannot_determine || []).map(x => "<li>" + esc(x) + "</li>").join("") || "<li>—</li>";
+  const miss = (lim.missing_metadata || []).map(x => "<li>" + esc(x) + "</li>").join("");
+  const next = (lim.requested_human_tests || []).map(t => "<li><b>" + esc(t.test_name) + "</b> — " + esc(t.purpose || "") + "</li>").join("") || "<li>No further test was requested.</li>";
+  const prov = (ep.provenance || []).map(pr => "<li class=\"mini\">" + esc(pr.step) + " · " + esc(pr.model_id || "") + "</li>").join("");
+  return '<div class="card"><span class="verdict">' + esc(ep.state || "?") + " · " + esc(ep.verdict || "") + "</span>"
+    + '<div class="kv"><b>How this answer is tagged</b>' + esc(ep.claim_tag || "INTERPRET") + " · confidence ceiling " + esc(ep.confidence) + " (never above 0.90)</div>"
+    + '<div class="kv"><b>Possible names, each with a way to be wrong</b>' + hyps + "</div>"
+    + '<div class="kv"><b>What is actually visible</b><ul>' + feats + "</ul></div>"
+    + (ocr ? '<div class="kv"><b>Writing in the picture</b><ul>' + ocr + "</ul></div>" : "")
+    + '<div class="kv"><b>What a picture cannot decide</b><ul>' + cant + "</ul></div>"
+    + (miss ? '<div class="kv"><b>Still missing</b><ul>' + miss + "</ul></div>" : "")
+    + '<div class="kv"><b>Next useful test</b><ul>' + next + "</ul></div>"
+    + '<div class="kv"><b>How this reply was made</b><ul>' + prov + "</ul></div>"
+    + '<div class="mini">picture hash ' + esc(((p.artifact && p.artifact.sha256) || "").slice(0, 16)) + "… · packet " + esc(p.packet_id || "") + "</div></div>";
 }
+fetch("/health").then(r => r.json()).then(h => {
+  const el = document.getElementById("live");
+  const st = h.status || "unknown";
+  el.innerHTML = "Organ <b>" + esc(st) + "</b> · kernel <b>" + esc(h.kernel_verdict || "—") + "</b> · <b>" + esc(h.tools_loaded ?? "—") + "</b> public tools · " + esc(h.version || "") + " · ceiling " + esc(h.authority_ceiling || "compute only") + '. <a href="/health">raw health</a>';
+}).catch(() => { document.getElementById("live").textContent = "Organ status unread from this page."; });
 </script>
 </body>
 </html>
