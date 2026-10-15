@@ -384,12 +384,12 @@ nats pub arifos.well.operator.arif '{"fatigue": 0.9, "decision_class": "C5"}'
 ## References
 
 - **Copilot's diagnosis:** `/root/CONTEXT.md` references + previous turn
-- **AGENTS.md:** `/root/geox/AGENTS.md` (Steel Security Layer, 56 tools, F13 SOVEREIGN)
-- **PAI Receipt:** `/root/geox/src/geox_mcp/pai_receipt.py`
-- **ACP (Agent Control Plane):** `/root/geox/src/geox_core/governance/acp_logic.py`
+- **AGENTS.md:** `/root/GEOX/AGENTS.md` (Steel Security Layer, 56 tools, F13 SOVEREIGN)
+- **PAI Receipt:** `/root/GEOX/src/geox_mcp/pai_receipt.py`
+- **ACP (Agent Control Plane):** `/root/GEOX/src/geox_core/governance/acp_logic.py`
 - **NATS topic conventions:** `arifos.{organ}.{stream_type}.{subject}` (existing convention)
-- **MCP_TRANSPORT_SURFACE.md:** `/root/geox/docs/MCP_TRANSPORT_SURFACE.md` (companion doc)
-- **AGENTICS_INTEGRATION.md:** `/root/geox/docs/AGENTICS_INTEGRATION.md` (companion doc)
+- **MCP_TRANSPORT_SURFACE.md:** `/root/GEOX/docs/MCP_TRANSPORT_SURFACE.md` (companion doc)
+- **AGENTICS_INTEGRATION.md:** `/root/GEOX/docs/AGENTICS_INTEGRATION.md` (companion doc)
 
 ---
 

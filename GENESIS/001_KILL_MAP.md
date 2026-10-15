@@ -4,7 +4,7 @@ last_verified: 2026-07-11
 valid_from: 2026-06-14
 valid_until: 2026-08-10
 confidence: high
-scope: /root/geox/GENESIS
+scope: /root/GEOX/GENESIS
 -->
 
 # DSG → GEOX ARCHITECTURAL KILL MAP

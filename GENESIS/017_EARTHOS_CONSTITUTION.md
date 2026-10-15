@@ -4,14 +4,14 @@ last_verified: 2026-07-11
 valid_from: 2026-07-09
 valid_until: 2026-08-10
 confidence: high
-scope: /root/geox/GENESIS
+scope: /root/GEOX/GENESIS
 -->
 
 # GENESIS/017 — EARTHOS CONSTITUTION
 
 > **Authority:** F13 SOVEREIGN (Arif)  
 > **Status:** CANON draft — enforceable as GEOX law; VAULT999 seal only after F13 ceremony  
-> **SoT:** `/root/geox/GENESIS/017_EARTHOS_CONSTITUTION.md`  
+> **SoT:** `/root/GEOX/GENESIS/017_EARTHOS_CONSTITUTION.md`  
 > **Canonical floors:** arifOS `GENESIS/000_KERNEL_CANON.md` + GEOX `003_CONSTITUTIONAL_ALIGNMENT.md`  
 > **Pairs:** 007 Charter · 009 Organ Contract · 010 AEI · 011 Competitive Layer · 012 GEOX-001 · 013 Metabolic · 015 Agentic Geology · 016 Prompt Standard  
 > **One line:** Earth physics first; geology second; arifOS seals; Arif vetoes.
