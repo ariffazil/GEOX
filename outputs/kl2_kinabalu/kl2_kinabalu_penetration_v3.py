@@ -3,14 +3,14 @@
 KL2 Kinabalu Basin — Well Penetration / NN Horizon Scaffold (v3, Rotan-1 corrected)
 ===================================================================================
 Supersedes v2 (2026-09-07). Changes per F13 enterprise resolution 2026-09-30:
-  1. Rotan-1 header CORRECTED to WCR/Geoservice values [RELAY-ENT]:
-     seabed 1149.4 m TVDSS · TD 2141 MD = 2114.7 TVDSS · TWT@TD 2660 ms.
+  1. Rotan-1 header CORRECTED. Public values only in this repo:
+     water depth 3,773 ft (~1150 m) · TD 7,024 ft (~2141 m MD) — OGJ, 5 Feb 2007.
      v2's 3200 m / 2810 ms / 750 m row was a DATA-LINEAGE FAULT (fixture-encoded).
-  2. Rotan-1 picks UPGRADED DER_MODEL -> REAL [RELAY-ENT]:
-     NN12 base 1836.4 MD · NN11 base 1993.9 MD · NN10 base 2143.4 MD (below TD)
-     · Landmark IVD Kamunsu top 1933.7 · IVC Kinarut top 1990.7
-     · top reservoir 1962.5 TVDSS · GWC 2045.8 TVDSS · VSP tie 0.85 (106 shots).
-     MD->TVDSS x0.98772 (near-vertical; anchored on the TD pair) [DER].
+  2. Rotan-1 picks UPGRADED DER_MODEL -> REAL [RELAY-ENT]: NN12/NN11 base penetrated,
+     NN10 base below TD; Landmark IVD Kamunsu / IVC Kinarut tops; top reservoir; GWC.
+REDACTED 2026-10-15 (ARIF, AMANAH): exact pick depths, TWT@TD, pay/contact depths,
+VSP parameters and the MD->TVDSS factor are held outside this repo. Git history
+was intentionally NOT rewritten.
   3. Penetration asserts RECOMPUTED for v3 (v1 pattern was built on the faulty
      row; forcing v1 would launder the fault). Diff printed, not hidden.
   4. Other 7 wells UNCHANGED — remain DER_SYNTHETIC fixture rows. No new fiction.
@@ -46,13 +46,13 @@ NN_PROV.update({h: "PETRONAS Borneo 2023" for h in NN_BASE_MA if h not in NN_PRO
 ICS_FILL = {"NN12", "NN13", "NN14", "NN15"}
 V1_ANCHORED = {"NN9", "NN8", "NN7", "NN6", "NN5"}
 LON_W, LON_E = 115.90, 117.70
-MD2TVD = 2114.7 / 2141.0
 
 # name, alias, status, td_tvdss, twt_td, seabed, age_td, deviated, td_curve, header_prov
 WELLS = [
     ("Perkaka-1", "PEKAKA-1", "dry", 3100.0, 2700, 500.0, 13.60, False, "measured", "DER_SYNTHETIC fixture"),
     ("Buluh-1", "BULUH-1", "gas", 2800.0, 2480, 700.0, 10.75, False, "SYNTHETIC", "DER_SYNTHETIC fixture"),
-    ("Rotan-1", "ROTAN-1", "gas", 2114.7, 2660, 1149.4, 9.51, False, "measured", "REAL [RELAY-ENT WCR/Geoservice]"),
+    # TD/seabed public (OGJ 2007, MD ~ TVD for a near-vertical well); TWT@TD REDACTED
+    ("Rotan-1", "ROTAN-1", "gas", 2141.0, None, 1150.0, 9.51, False, "measured", "PUBLIC [OGJ 2007]"),
     ("Bunga Lili-1", "BUNGA LILI-1", "unknown", 3500.0, 3050, 850.0, 12.50, True, "measured", "DER_SYNTHETIC fixture"),
     ("Maligan-1", "MALIGAN-1", "dry", 2900.0, 2540, 800.0, 10.80, False, "measured", "DER_SYNTHETIC fixture"),
     ("Sigut-1St1", "SUGUT", "unknown", 2700.0, 2370, 650.0, 10.65, False, "measured", "DER_SYNTHETIC fixture"),
@@ -62,18 +62,12 @@ WELLS = [
 MAX_INCL = {"Bunga Lili-1": 45.0}
 STATUS_COLOR = {"gas": "#2e7d32", "dry": "#c62828", "unknown": "#757575"}
 
-# Rotan-1 REAL picks (MD -> TVDSS) [RELAY-ENT kin_clm_7]
-ROTAN_REAL = {  # horizon: (md, tvdss, flag, age)
-    "NN12": (1836.4, 1836.4 * MD2TVD, "REAL-BIO"),
-    "NN11": (1993.9, 1993.9 * MD2TVD, "REAL-BIO"),
-    "NN10": (2143.4, 2143.4 * MD2TVD, "REAL-BIO"),  # below TD -> not penetrated
+# Rotan-1 REAL picks [RELAY-ENT kin_clm_7] — depths REDACTED 2026-10-15
+ROTAN_REAL = {  # horizon: (flag, penetrated)
+    "NN12": ("REAL-BIO", True),
+    "NN11": ("REAL-BIO", True),
+    "NN10": ("REAL-BIO", False),  # below TD -> not penetrated
 }
-ROTAN_EXTRA = [  # (label, md) — Landmark tops + dynamic datum, plotted as markers
-    ("IVD Kamunsu top", 1933.7),
-    ("IVC Kinarut top", 1990.7),
-    ("top reservoir", 1988.7),
-    ("GWC (flat event)", 2072.1),
-]
 
 
 def horizon_depth(age_ma, td, seabed, age_td):
@@ -109,12 +103,9 @@ for name, alias, status, td, twt_td, seabed, age_td, dev, tdc, hp in WELLS:
     picks[name] = {}
     for h, age in sorted(NN_BASE_MA.items(), key=lambda kv: -kv[1]):
         if name == "Rotan-1" and h in ROTAN_REAL:
-            md, z, flag = ROTAN_REAL[h]
-            pen = z <= td
-            sb, sv = (sigma_bio(age) * 0.4, 150.0 + 0.05 * z) if pen else (None, None)
-            st = math.hypot(sb, sv) if pen else None
-            clipped = bool(pen and z + st > td)
-            picks[name][h] = dict(z=z, pen=pen, sigma_total=st, clipped=clipped, real=True)
+            flag, pen = ROTAN_REAL[h]
+            # depth redacted -> not plotted (pen=False in the plot dict only)
+            picks[name][h] = dict(z=None, pen=False, sigma_total=None, clipped=False, real=True)
             rows.append(
                 dict(
                     well=name,
@@ -122,13 +113,13 @@ for name, alias, status, td, twt_td, seabed, age_td, dev, tdc, hp in WELLS:
                     horizon=f"{h} base",
                     age_ma=age,
                     age_provenance=NN_PROV[h],
-                    pick_flag=flag,
-                    depth_tvdss_m=round(z, 1) if pen else None,
-                    sigma_bio_m=round(sb, 1) if pen else None,
-                    sigma_vel_m=round(sv, 1) if pen else None,
-                    sigma_total_m=round(st, 1) if pen else None,
+                    pick_flag=f"{flag} (depth REDACTED)",
+                    depth_tvdss_m=None,
+                    sigma_bio_m=None,
+                    sigma_vel_m=None,
+                    sigma_total_m=None,
                     penetrated="Y" if pen else "N (below TD)",
-                    sigma_clipped_at_td="Y" if clipped else "",
+                    sigma_clipped_at_td="",
                 )
             )
             continue
@@ -197,14 +188,14 @@ df_prov = pd.DataFrame(
     [
         dict(field="Well roster (8)", classification="REAL", source="KL2V2 keyline (validator memo 2026-09-07)"),
         dict(
-            field="Rotan-1 header (seabed/TD/TWT)",
-            classification="REAL [RELAY-ENT]",
-            source="WCR Rotan-1 via KL2_Wells_Data_Compilation.xlsx WELL_HEADERS/FORMATION_TOPS (Geoservice); VSP tie 0.85",
+            field="Rotan-1 header (seabed/TD)",
+            classification="PUBLIC",
+            source="Oil & Gas Journal, 5 Feb 2007 (Murphy Oil): TD 7,024 ft in 3,773 ft of water; TWT@TD REDACTED",
         ),
         dict(
-            field="Rotan-1 NN picks",
-            classification="REAL [RELAY-ENT]",
-            source="KL2_SOURCE_OF_TRUTH_MASTER.xlsx BIO_ZONE_INTERVALS + KL2V2 Landmark; MD->TVDSS x0.98772 [DER]",
+            field="Rotan-1 NN picks / tops / pay / GWC",
+            classification="REAL [RELAY-ENT] — depths REDACTED 2026-10-15",
+            source="enterprise relay (WCR + biostrat + Landmark); exact values held outside repo",
         ),
         dict(
             field="v2 Rotan-1 row (3200 m)",
@@ -228,8 +219,8 @@ df_prov = pd.DataFrame(
         ),
         dict(
             field="Velocity uncertainty",
-            classification="DER — 200-500 m (Rotan REAL: 150 m + 0.05z, VSP-constrained)",
-            source="NSPW mobile-shale province; VSI VSP 106 shots for Rotan",
+            classification="DER — 200-500 m",
+            source="NSPW mobile-shale province; Rotan VSP details REDACTED",
         ),
         dict(field="v1 artifact", classification="ON HOLD 2026-09-07", source="falsified Neogene datum"),
     ]
@@ -247,19 +238,19 @@ xs = np.arange(len(WELLS))
 names = [w[0] for w in WELLS]
 seabeds = [w[5] for w in WELLS]
 ax.fill_between(xs, 0, seabeds, color="#cfe8f7", alpha=0.55, zorder=1)
-ax.plot(xs, seabeds, "--", color="#1f77b4", lw=1.6, zorder=3, label="water bottom (500–1149 m)")
+ax.plot(xs, seabeds, "--", color="#1f77b4", lw=1.6, zorder=3, label="water bottom (500–1150 m)")
 EPOCH_COLOR = {h: ("#8d6e63" if NN_BASE_MA[h] > 5.33 else "#f9a825" if NN_BASE_MA[h] > 2.58 else "#1e88e5") for h in NN_BASE_MA}
 clipped_wells = []
 for i, (name, alias, status, td, twt_td, seabed, age_td, dev, tdc, hp) in enumerate(WELLS):
     ax.plot([i, i], [seabed, td], "-", color=STATUS_COLOR[status], lw=3.2, zorder=4)
     ax.plot([i - 0.22, i + 0.22], [td, td], "-", color="k", lw=1.4, zorder=5)
     ax.annotate(
-        f"TD {td:.0f}" + ("  REAL" if "REAL" in hp else ""),
+        f"TD {td:.0f}" + ("  PUBLIC" if "PUBLIC" in hp else ""),
         (i, td),
         textcoords="offset points",
         xytext=(14, -2),
         fontsize=7.5,
-        color="#2e7d32" if "REAL" in hp else "k",
+        color="#2e7d32" if "PUBLIC" in hp else "k",
     )
     if dev:
         ax.annotate(
@@ -288,16 +279,17 @@ for i, (name, alias, status, td, twt_td, seabed, age_td, dev, tdc, hp) in enumer
         if p["clipped"]:
             clipped_wells.append(name)
             ax.plot(i, td, marker="v", markersize=6, color="k", markerfacecolor="white", zorder=7)
-# Rotan extras: pay interval + Landmark tops
+# Rotan: pay, tops and REAL picks exist but their depths are redacted (not drawn)
 ri = names.index("Rotan-1")
-ztop = 1962.5
-zbot = 2045.8
-ax.add_patch(plt.Rectangle((ri - 0.16, ztop), 0.32, zbot - ztop, fc="#2e7d32", alpha=0.30, ec="#1b5e20", lw=1.4, zorder=6))
 ax.annotate(
-    "GAS PAY 78 m net\n= NN10 (REAL picks)", (ri + 0.24, (ztop + zbot) / 2), fontsize=7.6, color="#1b5e20", fontweight="bold"
+    "single-zone gas pay (OGJ 2007)\nREAL picks / pay / GWC:\ndepths REDACTED",
+    (ri, seabeds[ri]),
+    textcoords="offset points",
+    xytext=(14, 40),
+    fontsize=7.6,
+    color="#1b5e20",
+    fontweight="bold",
 )
-for lab, md in ROTAN_EXTRA:
-    ax.plot([ri - 0.20, ri + 0.20], [md * MD2TVD, md * MD2TVD], ":", color="#6a1b9a", lw=1.2, zorder=6)
 
 nn9 = [picks[n]["NN9"]["z"] for n in names if picks[n]["NN9"]["pen"]]
 mid = float(np.mean(nn9))
@@ -320,7 +312,7 @@ ax.set_xlim(-0.6, len(WELLS) - 0.4)
 ax.grid(axis="y", color="0.9", lw=0.6)
 ax.set_title(
     "KL2 Kinabalu Basin — Well Penetration / NN Horizon Scaffold (v3, Rotan-1 corrected)\n"
-    "Datum: 2023 NW Borneo Integration · Rotan-1 REAL header + REAL picks [RELAY-ENT] · others DER_SYNTHETIC (unchanged)",
+    "Datum: 2023 NW Borneo Integration · Rotan-1 public header; exact picks & TWT redacted · others DER_SYNTHETIC (unchanged)",
     fontsize=12,
 )
 legend_items = [
@@ -328,16 +320,14 @@ legend_items = [
     Line2D([], [], color="#c62828", lw=3, label="dry (Perkaka-1, Maligan-1)"),
     Line2D([], [], color="#757575", lw=3, label="unknown status"),
     Line2D([], [], color="#1f77b4", ls="--", label="water bottom"),
-    Line2D([], [], marker="D", ls="", color="#2e7d32", label="REAL pick — Rotan-1 (WCR/VSP)"),
     Line2D([], [], marker="o", ls="", color="#8d6e63", label="DER_MODEL pick (Miocene)"),
     Line2D([], [], marker="o", ls="", color="#f9a825", label="DER_MODEL pick (Pliocene)"),
     Line2D([], [], marker="o", ls="", markerfacecolor="none", color="#f9a825", label="ICS-FILL (NN12–15)"),
     Line2D([], [], marker="v", ls="", markerfacecolor="white", color="k", label="σ clipped at TD"),
-    Line2D([], [], ls=":", color="#6a1b9a", label="Landmark tops / pay bounds (Rotan)"),
 ]
 ax.legend(handles=legend_items, loc="upper left", fontsize=8, framealpha=0.95)
 footer = (
-    "v3 CHANGES: Rotan-1 header 3200→2114.7 TVDSS (v2 row = DATA-LINEAGE FAULT, kin_clm_6) · Rotan picks REAL (kin_clm_7) · "
+    "v3 CHANGES: Rotan-1 TD 3200→~2141 m (public; v2 row = DATA-LINEAGE FAULT, kin_clm_6) · Rotan picks REAL, depths redacted · "
     "asserts recomputed (NN9 8→7, NN8 5→4, NN7 5→4) — v1 pattern NOT preserved because it was built on the fault.\n"
     "FIRST-PASS AGE SCAFFOLD — not a well-correlation product. MOM: tectonic/structural correlation before NN-only.  "
     "σ_total = √(σ_bio²+σ_vel²). v1 ON HOLD 2026-09-07. [RELAY-ENT] = enterprise files, not locally readable on KVM8."
