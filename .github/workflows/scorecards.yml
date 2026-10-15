@@ -64,16 +64,22 @@ jobs:
           persist-credentials: false
 
       - name: "Run analysis"
+        # Private repo: scorecard's GraphQL probes (ListCommits, SAST detection)
+        # need a PAT via `repo_token` — GITHUB_TOKEN cannot read a private repo's
+        # GraphQL data ("Resource not accessible by integration"). No SCORECARD_PAT
+        # is configured yet, so the scan is best-effort (skip, don't fail the
+        # pipeline). Add the secret and results.sarif starts flowing to the
+        # Security tab. publish_results stays off (private).
+        continue-on-error: true
         uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
         with:
           results_file: results.sarif
           results_format: sarif
-          # Private repo: publishing to the public scorecard.dev API requires a
-          # PAT (SCORECARD_PAT) and is not available via GITHUB_TOKEN, so keep it off.
+          repo_token: ${{ secrets.SCORECARD_PAT }}
           publish_results: false
 
       - name: "Upload artifact"
-        if: always()
+        if: hashFiles('results.sarif') != ''
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: SARIF file
@@ -81,7 +87,7 @@ jobs:
           retention-days: 5
 
       - name: "Upload to code-scanning"
-        if: always()
+        if: hashFiles('results.sarif') != ''
         uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4.38.3
         with:
           sarif_file: results.sarif
