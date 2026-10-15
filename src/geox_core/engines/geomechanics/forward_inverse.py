@@ -45,18 +45,10 @@ class WorkflowStep(BaseModel):
     direction: WorkflowDirection = Field(..., description="Forward or inverse")
     source_layer: GraphLayer = Field(..., description="Layer being read from")
     target_layer: GraphLayer = Field(..., description="Layer being written to")
-    action: str = Field(
-        ..., description="What this step does (compute, infer, validate, interpret)"
-    )
-    inputs: list[str] = Field(
-        default_factory=list, description="Input node IDs"
-    )
-    outputs: list[str] = Field(
-        default_factory=list, description="Output node IDs"
-    )
-    qc_check: str | None = Field(
-        default=None, description="QC check applied at this step"
-    )
+    action: str = Field(..., description="What this step does (compute, infer, validate, interpret)")
+    inputs: list[str] = Field(default_factory=list, description="Input node IDs")
+    outputs: list[str] = Field(default_factory=list, description="Output node IDs")
+    qc_check: str | None = Field(default=None, description="QC check applied at this step")
     verdict: str = Field(default="PENDING", description="Step verdict")
 
 
@@ -69,9 +61,7 @@ class ForwardInverseWorkflow(BaseModel):
     """
 
     workflow_id: str = Field(..., description="Unique workflow ID")
-    workflow_type: WorkflowDirection = Field(
-        ..., description="Forward, inverse, or loop"
-    )
+    workflow_type: WorkflowDirection = Field(..., description="Forward, inverse, or loop")
     basin_name: str = Field(default="", description="Basin this applies to")
     steps: list[WorkflowStep] = Field(..., description="Ordered steps")
 
@@ -80,9 +70,7 @@ class ForwardInverseWorkflow(BaseModel):
         default_factory=list,
         description="Stress phases evaluated (for inverse workflows)",
     )
-    tectonic_events: list[str] = Field(
-        default_factory=list, description="Tectonic event IDs involved"
-    )
+    tectonic_events: list[str] = Field(default_factory=list, description="Tectonic event IDs involved")
 
     # Audit
     assumptions: list[str] = Field(default_factory=list)
@@ -282,9 +270,7 @@ def build_loop_workflow(
     what the inverse model infers?
     """
     forward = build_forward_workflow(basin_name, stress_phases)
-    inverse = build_inverse_workflow(
-        basin_name, seismic_interpretation_ids, stress_phases
-    )
+    inverse = build_inverse_workflow(basin_name, seismic_interpretation_ids, stress_phases)
 
     # Add the closure step
     closure_step = WorkflowStep(

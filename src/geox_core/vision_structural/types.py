@@ -61,9 +61,7 @@ class Measurement:
             if self.value is None:
                 raise ValueError("MEASURED requires a value")
             if self.coverage is None:
-                raise ValueError(
-                    "MEASURED requires coverage — confidence without coverage is invalid"
-                )
+                raise ValueError("MEASURED requires coverage — confidence without coverage is invalid")
         if self.status == "UNMEASURED":
             if self.value is not None:
                 raise ValueError("UNMEASURED must not carry a value")
@@ -97,9 +95,7 @@ def unmeasured(unit: str, *, method: str = "", reason: str = "", **kw: Any) -> M
     notes = list(kw.pop("notes", []) or [])
     if reason:
         notes.append(reason)
-    return Measurement(
-        value=None, unit=unit, status="UNMEASURED", method=method, notes=notes, **kw
-    )
+    return Measurement(value=None, unit=unit, status="UNMEASURED", method=method, notes=notes, **kw)
 
 
 def measured(

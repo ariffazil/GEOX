@@ -32,9 +32,9 @@ _SPINE_YAML = Path("/root/GEOX/okf/sabah-basin/kinabalu_event_spine.yaml")
 _FORBIDDEN_STRINGS = ["Pekaka", "LL-1", "Megah", "Zoisit", "Nuri", "Rotan"]
 # 2026-10-06 (auditor fix #3): pattern-level gate — reserve figures + well-name shapes
 _FORBIDDEN_PATTERNS = [
-    r"\b\d+(\.\d+)?\s*(?:MMbbl|MMstb|Tcf|Bcf|bboe)\b",   # volume/reserve figures
-    r"\bOOIP\b|\bGIIP\b|\bSTOIIP\b",                        # reserve-class terms
-    r"\b[A-Z][a-zA-Z]{2,}(?:\s?Deep)?\s?-?\s?\d\b",         # well-name shape ("Xxx-1", "Xxx Deep-1")
+    r"\b\d+(\.\d+)?\s*(?:MMbbl|MMstb|Tcf|Bcf|bboe)\b",  # volume/reserve figures
+    r"\bOOIP\b|\bGIIP\b|\bSTOIIP\b",  # reserve-class terms
+    r"\b[A-Z][a-zA-Z]{2,}(?:\s?Deep)?\s?-?\s?\d\b",  # well-name shape ("Xxx-1", "Xxx Deep-1")
 ]
 # 2026-10-13 (IRFANclaw-approved patch): allowlist exempts PATTERN tokens only — the six
 # forbidden partner strings are NEVER allowlisted. Entries are the audited renderer's own
@@ -43,15 +43,15 @@ _FORBIDDEN_PATTERNS = [
 # a trailing space (annotation sentence "BUT 2.9 km of moat relief…") so "Butuan-1" stays caught.
 # Additions require sovereign-aware review; never add a partner/well token here.
 _FORBIDDEN_ALLOWLIST = [
-    "Tepat",      # published well (Banerjee & Salim 2020, JNGSE 83)
-    "SCALE 1",    # figure header "A · TRUE SCALE 1:1"
-    "BLOCK 1",    # renderer block labels (case-insensitive match)
+    "Tepat",  # published well (Banerjee & Salim 2020, JNGSE 83)
+    "SCALE 1",  # figure header "A · TRUE SCALE 1:1"
+    "BLOCK 1",  # renderer block labels (case-insensitive match)
     "BLOCK 2",
-    "MARGIN 1",   # renderer margin labels
+    "MARGIN 1",  # renderer margin labels
     "MARGIN 2",
-    "Kinabalu",   # public mountain/belt (4,095 m — world-public)
-    "Crocker",    # public mountain range
-    "BUT ",       # annotation sentence opener (trailing space is intentional)
+    "Kinabalu",  # public mountain/belt (4,095 m — world-public)
+    "Crocker",  # public mountain range
+    "BUT ",  # annotation sentence opener (trailing space is intentional)
 ]
 
 
@@ -71,6 +71,7 @@ _FORBIDDEN_ALLOWLIST = [
 # Honest limit (stated in every gate scope note): in path-mode SVGs the visible glyphs
 # are vector paths — NO text scan (raw or DOM) can read them; visual-leak prevention
 # rests on the audited renderer inputs (public spine YAML + audited asas_malam_xs.py).
+
 
 def _extract_svg_semantic_text(svg_path: Path) -> str | None:
     """Semantic scan surface of an SVG: text nodes + comments + external refs.
@@ -144,9 +145,7 @@ def _scan_svg_confidential(svg_path: Path) -> dict:
                 advisory += 1
         for pat in _FORBIDDEN_PATTERNS:
             advisory += sum(
-                1
-                for m in _re.finditer(pat, raw)
-                if not any(al.lower() in m.group(0).lower() for al in _FORBIDDEN_ALLOWLIST)
+                1 for m in _re.finditer(pat, raw) if not any(al.lower() in m.group(0).lower() for al in _FORBIDDEN_ALLOWLIST)
             )
     return {
         "scan_clean": scan_clean,
@@ -362,7 +361,13 @@ def render_physics_section(
         "renderer_stdout_tail": proc.stdout[-200:] if proc.stdout else "",
         "compute_output_partner_free": True,
         "fail_closed": True,
-        "residual": {"velocity_model": "ABSENT — all depths are L2", "forebulge_measured": "ABSENT — Te range is L2", "restoration_balance": "NOT_RUN", "geomech": "NOT_RUN", "note": "A section that passes these gates earns PARTIAL, not SEAL. SEAL requires: velocity model at one well + measured forebulge + balanced restoration."},
+        "residual": {
+            "velocity_model": "ABSENT — all depths are L2",
+            "forebulge_measured": "ABSENT — Te range is L2",
+            "restoration_balance": "NOT_RUN",
+            "geomech": "NOT_RUN",
+            "note": "A section that passes these gates earns PARTIAL, not SEAL. SEAL requires: velocity model at one well + measured forebulge + balanced restoration.",
+        },
     }
 
 

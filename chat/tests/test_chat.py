@@ -153,9 +153,6 @@ def test_gps_stripped_and_no_disk_persistence(client, tmp_path, monkeypatch):
     assert r.status_code == 200
     p = r.json()["packet"]
     # hash recorded in provenance is of the CLEANED pixels, not the raw upload
-    import base64 as b64
-
-    sent_b64 = p  # packet only carries sha; recompute cleaned sha locally
     assert p["artifact"]["sha256"] == hashlib.sha256(expected_clean).hexdigest()
     assert p["artifact"]["sha256"] != hashlib.sha256(raw).hexdigest()
     # no new upload file left on disk

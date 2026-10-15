@@ -287,9 +287,7 @@ async def geox_claim_create(
         "claim_id": claim_id,
         "truth_class": truth_class,
         "explanation_class": payload["explanation_class"],
-        "explanation_class_action_eligible": evaluate_explanation_gate(
-            claim_text, explanation_class
-        )["allowed"],
+        "explanation_class_action_eligible": evaluate_explanation_gate(claim_text, explanation_class)["allowed"],
         "claim_type": claim_type,
         "claim_text": claim_text,
         "uncertainty": uncertainty,
@@ -749,15 +747,11 @@ async def geox_claim_seal(
             # Legacy gates keep their legacy error code. When the explanatory
             # class is the ONLY failure, surface its own code so the caller is
             # not sent chasing an evidence problem that does not exist.
-            _legacy_failures = [
-                g for g in pre_seal_checks if g.get("gate") != "explanation_class_action_eligible"
-            ]
+            _legacy_failures = [g for g in pre_seal_checks if g.get("gate") != "explanation_class_action_eligible"]
             if _legacy_failures:
                 _seal_error_code = "PRE_SEAL_CONTRADICTION_GATE"
             else:
-                _seal_error_code = (
-                    pre_seal_checks[0].get("error_code") or ERROR_EXPLANATION_NOT_ACTION_ELIGIBLE
-                )
+                _seal_error_code = pre_seal_checks[0].get("error_code") or ERROR_EXPLANATION_NOT_ACTION_ELIGIBLE
             return {
                 "status": "HOLD",
                 "error_code": _seal_error_code,

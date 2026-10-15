@@ -38,16 +38,10 @@ class CRSProof(BaseModel):
     Z units, datum and polarity.
     """
 
-    crs_epsg: int | None = Field(
-        default=None, description="EPSG code (e.g., 4326, 32650)"
-    )
+    crs_epsg: int | None = Field(default=None, description="EPSG code (e.g., 4326, 32650)")
     crs_name: str = Field(default="", description="CRS name (e.g., WGS84 / UTM50N)")
-    xy_units: str = Field(
-        default="m", description="XY units (m, ft, deg)"
-    )
-    z_units: str = Field(
-        default="m", description="Z units (m, ft, ms TWT, s TWT)"
-    )
+    xy_units: str = Field(default="m", description="XY units (m, ft, deg)")
+    z_units: str = Field(default="m", description="Z units (m, ft, ms TWT, s TWT)")
     z_convention: ZConvention = Field(
         default=ZConvention.POSITIVE_DOWN,
         description="Z polarity: positive_up (elevation) or positive_down (depth)",
@@ -56,33 +50,21 @@ class CRSProof(BaseModel):
         default="MSL",
         description="Vertical datum (MSL, MLLW, SRVD, KB, etc.)",
     )
-    horizontal_datum: str = Field(
-        default="WGS84", description="Horizontal datum"
-    )
+    horizontal_datum: str = Field(default="WGS84", description="Horizontal datum")
 
     def is_compatible_with(self, other: CRSProof) -> list[str]:
         """Check compatibility with another CRS proof. Returns list of mismatches."""
         mismatches: list[str] = []
         if self.crs_epsg != other.crs_epsg:
-            mismatches.append(
-                f"CRS EPSG mismatch: {self.crs_epsg} vs {other.crs_epsg}"
-            )
+            mismatches.append(f"CRS EPSG mismatch: {self.crs_epsg} vs {other.crs_epsg}")
         if self.xy_units != other.xy_units:
-            mismatches.append(
-                f"XY units mismatch: {self.xy_units} vs {other.xy_units}"
-            )
+            mismatches.append(f"XY units mismatch: {self.xy_units} vs {other.xy_units}")
         if self.z_units != other.z_units:
-            mismatches.append(
-                f"Z units mismatch: {self.z_units} vs {other.z_units}"
-            )
+            mismatches.append(f"Z units mismatch: {self.z_units} vs {other.z_units}")
         if self.z_convention != other.z_convention:
-            mismatches.append(
-                f"Z convention mismatch: {self.z_convention} vs {other.z_convention}"
-            )
+            mismatches.append(f"Z convention mismatch: {self.z_convention} vs {other.z_convention}")
         if self.vertical_datum != other.vertical_datum:
-            mismatches.append(
-                f"Vertical datum mismatch: {self.vertical_datum} vs {other.vertical_datum}"
-            )
+            mismatches.append(f"Vertical datum mismatch: {self.vertical_datum} vs {other.vertical_datum}")
         return mismatches
 
 
@@ -100,15 +82,9 @@ class SurfaceIdentity(BaseModel):
 
     surface_id: str = Field(..., description="Unique surface identifier")
     name: str = Field(..., description="Human-readable name (e.g., 'Top Crocker')")
-    age_ma: float | None = Field(
-        default=None, description="Interpreted age (Ma, 0=present)"
-    )
-    age_uncertainty_ma: float | None = Field(
-        default=None, description="Age uncertainty (Ma)"
-    )
-    stratigraphic_unit: str = Field(
-        default="", description="Stratigraphic unit name"
-    )
+    age_ma: float | None = Field(default=None, description="Interpreted age (Ma, 0=present)")
+    age_uncertainty_ma: float | None = Field(default=None, description="Age uncertainty (Ma)")
+    stratigraphic_unit: str = Field(default="", description="Stratigraphic unit name")
     surface_type: str = Field(
         default="horizon",
         description="Type: horizon, unconformity, fault, basement, etc.",
@@ -122,18 +98,10 @@ class SurfaceIdentity(BaseModel):
         default_factory=dict,
         description="Spatial extent: {xmin, xmax, ymin, ymax}",
     )
-    grid_cells: int | None = Field(
-        default=None, description="Number of grid cells"
-    )
-    cell_size_m: float | None = Field(
-        default=None, description="Cell size in metres"
-    )
-    data_source: str = Field(
-        default="", description="Origin: seismic_interp, well_tie, map_digitize, etc."
-    )
-    hash: str = Field(
-        default="", description="SHA-256 of the surface grid data"
-    )
+    grid_cells: int | None = Field(default=None, description="Number of grid cells")
+    cell_size_m: float | None = Field(default=None, description="Cell size in metres")
+    data_source: str = Field(default="", description="Origin: seismic_interp, well_tie, map_digitize, etc.")
+    hash: str = Field(default="", description="SHA-256 of the surface grid data")
 
 
 class FaultIdentity(BaseModel):
@@ -145,22 +113,14 @@ class FaultIdentity(BaseModel):
 
     fault_id: str = Field(..., description="Unique fault identifier")
     name: str = Field(default="", description="Human-readable fault name")
-    mapped_azimuth_deg: float | None = Field(
-        default=None, ge=0.0, lt=360.0, description="Mapped fault strike (degrees)"
-    )
-    proposed_generation: str | None = Field(
-        default=None, description="Proposed tectonic generation"
-    )
-    active_interval_ma: tuple[float, float] | None = Field(
-        default=None, description="(start, end) age range of activity"
-    )
+    mapped_azimuth_deg: float | None = Field(default=None, ge=0.0, lt=360.0, description="Mapped fault strike (degrees)")
+    proposed_generation: str | None = Field(default=None, description="Proposed tectonic generation")
+    active_interval_ma: tuple[float, float] | None = Field(default=None, description="(start, end) age range of activity")
     reactivation_status: str = Field(
         default="unknown",
         description="Reactivation status: primary, reactivated, unknown",
     )
-    confidence: str = Field(
-        default="unknown", description="Confidence in generation assignment"
-    )
+    confidence: str = Field(default="unknown", description="Confidence in generation assignment")
     relational_evidence: dict[str, Any] = Field(
         default_factory=dict,
         description=(
@@ -198,10 +158,7 @@ class CompactionScenario(BaseModel):
     scenario_name: str = Field(..., description="Scenario identifier")
     reference_curve: str = Field(
         ...,
-        description=(
-            "Named curve or dataset (e.g., 'Sclater & Christie 1980', "
-            "'Dickinson 1953', 'in-house NW Sabah')"
-        ),
+        description=("Named curve or dataset (e.g., 'Sclater & Christie 1980', 'Dickinson 1953', 'in-house NW Sabah')"),
     )
     measured_depth_limit_m: float | None = Field(
         default=None,
@@ -224,12 +181,8 @@ class CompactionScenario(BaseModel):
         default=None,
         description="Depth interval for uncertainty accumulation (m)",
     )
-    surface_porosity: float | None = Field(
-        default=None, ge=0.0, le=1.0, description="Surface porosity (fraction)"
-    )
-    compaction_coefficient: float | None = Field(
-        default=None, description="Compaction coefficient (1/m or 1/km)"
-    )
+    surface_porosity: float | None = Field(default=None, ge=0.0, le=1.0, description="Surface porosity (fraction)")
+    compaction_coefficient: float | None = Field(default=None, description="Compaction coefficient (1/m or 1/km)")
     dominant_lithology: str = Field(
         default="sandstone",
         description="Dominant lithology for this scenario",
@@ -295,33 +248,19 @@ class RestorationScenario(BaseModel):
     Source surfaces are NEVER mutated.
     """
 
-    scenario_id: str = Field(
-        ..., description="Unique scenario identifier (UUID or hash-based)"
-    )
+    scenario_id: str = Field(..., description="Unique scenario identifier (UUID or hash-based)")
     name: str = Field(..., description="Human-readable scenario name")
     description: str = Field(default="", description="What this scenario represents")
 
     # Source and restored states
-    source_state: SurfaceIdentity = Field(
-        ..., description="Present-day or source state surface"
-    )
-    target_state: SurfaceIdentity = Field(
-        ..., description="Restored or target state surface"
-    )
-    basement_source: SurfaceIdentity | None = Field(
-        default=None, description="Basement surface in source state"
-    )
-    basement_target: SurfaceIdentity | None = Field(
-        default=None, description="Basement surface in target state"
-    )
+    source_state: SurfaceIdentity = Field(..., description="Present-day or source state surface")
+    target_state: SurfaceIdentity = Field(..., description="Restored or target state surface")
+    basement_source: SurfaceIdentity | None = Field(default=None, description="Basement surface in source state")
+    basement_target: SurfaceIdentity | None = Field(default=None, description="Basement surface in target state")
 
     # Ages and stratigraphy
-    source_age_ma: float = Field(
-        ..., ge=0.0, description="Age of source state (Ma)"
-    )
-    target_age_ma: float = Field(
-        ..., ge=0.0, description="Age of target state (Ma)"
-    )
+    source_age_ma: float = Field(..., ge=0.0, description="Age of source state (Ma)")
+    target_age_ma: float = Field(..., ge=0.0, description="Age of target state (Ma)")
     stratigraphic_order: list[str] = Field(
         default_factory=list,
         description="Stratigraphic ordering from oldest to youngest",
@@ -338,14 +277,10 @@ class RestorationScenario(BaseModel):
     )
 
     # Compaction
-    compaction_scenario: CompactionScenario | None = Field(
-        default=None, description="Compaction scenario used"
-    )
+    compaction_scenario: CompactionScenario | None = Field(default=None, description="Compaction scenario used")
 
     # Faults
-    faults: list[FaultIdentity] = Field(
-        default_factory=list, description="Faults in this scenario"
-    )
+    faults: list[FaultIdentity] = Field(default_factory=list, description="Faults in this scenario")
 
     # Uncertainty
     uncertainty: UncertaintyEnvelope = Field(
@@ -360,26 +295,17 @@ class RestorationScenario(BaseModel):
     )
     restoration_type: str = Field(
         default="2d_cross_section",
-        description=(
-            "Type: 2d_cross_section, 3d_surface, palinspastic, "
-            "backstrip, kinematic"
-        ),
+        description=("Type: 2d_cross_section, 3d_surface, palinspastic, backstrip, kinematic"),
     )
 
     # Audit
-    created_at: str = Field(
-        default="", description="ISO-8601 UTC creation timestamp"
-    )
-    created_by: str = Field(
-        default="", description="Agent or human that created this scenario"
-    )
+    created_at: str = Field(default="", description="ISO-8601 UTC creation timestamp")
+    created_by: str = Field(default="", description="Agent or human that created this scenario")
     provenance: dict[str, Any] = Field(
         default_factory=dict,
         description="Full provenance chain: input data → computation → this scenario",
     )
-    assumptions: list[str] = Field(
-        default_factory=list, description="All assumptions used in this scenario"
-    )
+    assumptions: list[str] = Field(default_factory=list, description="All assumptions used in this scenario")
 
     # Immutability marker
     immutable: bool = Field(

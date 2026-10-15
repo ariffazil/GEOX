@@ -17,41 +17,41 @@ from pydantic import BaseModel, Field
 # ── Field Test Literal Enums ────────────────────────────────────────────────
 
 HclEffervescence = Literal[
-    "vigorous",         # Immediate vigorous effervescence -> Calcite / Limestone
-    "weak_on_powder",   # Effervescence only when scratched to powder -> Dolomite / Dolostone
-    "none",             # No reaction -> Clastic (Quartz), Shale, Chert, Igneous
+    "vigorous",  # Immediate vigorous effervescence -> Calcite / Limestone
+    "weak_on_powder",  # Effervescence only when scratched to powder -> Dolomite / Dolostone
+    "none",  # No reaction -> Clastic (Quartz), Shale, Chert, Igneous
     "not_tested",
 ]
 
 MohsHardnessCategory = Literal[
-    "lt_fingernail",    # < 2.5 (e.g. Gypsum, Talc, Halite, soft claystone)
-    "lt_copper",        # 2.5 - 3.5 (e.g. Calcite)
-    "lt_steel",         # 3.5 - 5.5 (e.g. Dolomite, Fluorite, Apatite)
-    "gt_steel",         # > 5.5 (e.g. Quartz, Chert, Feldspar, Pyrite)
+    "lt_fingernail",  # < 2.5 (e.g. Gypsum, Talc, Halite, soft claystone)
+    "lt_copper",  # 2.5 - 3.5 (e.g. Calcite)
+    "lt_steel",  # 3.5 - 5.5 (e.g. Dolomite, Fluorite, Apatite)
+    "gt_steel",  # > 5.5 (e.g. Quartz, Chert, Feldspar, Pyrite)
     "not_tested",
 ]
 
 StreakColor = Literal[
     "white",
     "grey_black",
-    "red_brown",        # Hematite
-    "yellow_brown",     # Limonite / Goethite
+    "red_brown",  # Hematite
+    "yellow_brown",  # Limonite / Goethite
     "greenish_black",
     "not_tested",
 ]
 
 MagnetismResponse = Literal[
-    "strongly_magnetic",# Magnetite
+    "strongly_magnetic",  # Magnetite
     "weakly_magnetic",  # Ilmenite, Pyrrhotite
     "non_magnetic",
     "not_tested",
 ]
 
 GrainSizeClass = Literal[
-    "clay_silt",            # < 0.0625 mm
-    "fine_sand",            # 0.0625 - 0.25 mm
-    "medium_sand",          # 0.25 - 0.5 mm
-    "coarse_sand",          # 0.5 - 2.0 mm
+    "clay_silt",  # < 0.0625 mm
+    "fine_sand",  # 0.0625 - 0.25 mm
+    "medium_sand",  # 0.25 - 0.5 mm
+    "coarse_sand",  # 0.5 - 2.0 mm
     "gravel_conglomerate",  # > 2.0 mm
     "crystalline_aphanitic",
     "crystalline_phaneritic",
@@ -69,11 +69,11 @@ LustreType = Literal[
 ]
 
 CleavageFracture = Literal[
-    "perfect_rhombohedral", # Calcite / Dolomite
-    "cubic",                # Halite / Galena
-    "basal_sheet",          # Mica
-    "prismatic",            # Feldspar / Amphibole
-    "none_conchoidal",      # Quartz / Chert / Obsidian
+    "perfect_rhombohedral",  # Calcite / Dolomite
+    "cubic",  # Halite / Galena
+    "basal_sheet",  # Mica
+    "prismatic",  # Feldspar / Amphibole
+    "none_conchoidal",  # Quartz / Chert / Obsidian
     "not_tested",
 ]
 
@@ -86,6 +86,7 @@ FizzOnScratch = Literal[
 
 class FieldTestInput(BaseModel):
     """Field sensory and physical test inputs provided by human geologist or field tool."""
+
     hcl: HclEffervescence = "not_tested"
     hardness: MohsHardnessCategory = "not_tested"
     streak: StreakColor = "not_tested"
@@ -98,6 +99,7 @@ class FieldTestInput(BaseModel):
 
 class DiscriminatorReport(BaseModel):
     """Output from evaluating physical field tests against candidate hypotheses."""
+
     tests_applied: list[str] = Field(default_factory=list)
     eliminated_hypotheses: list[dict[str, str]] = Field(
         default_factory=list,
@@ -130,28 +132,34 @@ def evaluate_field_discriminators(
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["quartzite", "chert", "basalt", "sandstone", "shale", "dolostone", "granite"]):
                     if "calcareous" not in c_lower:
-                        eliminated.append({
-                            "hypothesis": c,
-                            "reason_eliminated": "Vigorous HCl effervescence contradicts non-calcareous or pure dolomite lithologies",
-                        })
+                        eliminated.append(
+                            {
+                                "hypothesis": c,
+                                "reason_eliminated": "Vigorous HCl effervescence contradicts non-calcareous or pure dolomite lithologies",
+                            }
+                        )
                         candidates.discard(c)
         elif field_tests.hcl == "weak_on_powder":
             for c in list(candidates):
                 c_lower = c.lower()
                 if "limestone" in c_lower and "dolomitic" not in c_lower:
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": "Effervescence only on powder indicates dolomite, not pure calcite/limestone",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": "Effervescence only on powder indicates dolomite, not pure calcite/limestone",
+                        }
+                    )
                     candidates.discard(c)
         elif field_tests.hcl == "none":
             for c in list(candidates):
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["limestone", "chalk", "calcite", "marble"]):
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": "Complete absence of HCl reaction eliminates carbonate lithologies",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": "Complete absence of HCl reaction eliminates carbonate lithologies",
+                        }
+                    )
                     candidates.discard(c)
 
     # 2. Hardness Rules
@@ -162,20 +170,24 @@ def evaluate_field_discriminators(
             for c in list(candidates):
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["limestone", "dolostone", "chalk", "halite", "gypsum"]):
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": "Hardness > steel (> 5.5) eliminates soft carbonate/evaporite minerals",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": "Hardness > steel (> 5.5) eliminates soft carbonate/evaporite minerals",
+                        }
+                    )
                     candidates.discard(c)
         elif field_tests.hardness in ["lt_fingernail", "lt_copper"]:
             # Hardness < 3.5: Quartz and Chert (Mohs 7) are eliminated
             for c in list(candidates):
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["quartzite", "chert", "granite", "basalt"]):
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": f"Hardness {field_tests.hardness} eliminates silicate minerals (Mohs 6-7)",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": f"Hardness {field_tests.hardness} eliminates silicate minerals (Mohs 6-7)",
+                        }
+                    )
                     candidates.discard(c)
 
     # 3. Magnetism Rules
@@ -185,10 +197,12 @@ def evaluate_field_discriminators(
             for c in list(candidates):
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["limestone", "sandstone", "chert", "pure_shale"]):
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": "Strong magnetism indicates significant magnetite/ferromagnetic minerals",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": "Strong magnetism indicates significant magnetite/ferromagnetic minerals",
+                        }
+                    )
                     candidates.discard(c)
 
     # 4. Cleavage / Fracture Rules
@@ -198,10 +212,12 @@ def evaluate_field_discriminators(
             for c in list(candidates):
                 c_lower = c.lower()
                 if any(k in c_lower for k in ["calcite_cleavage", "feldspar", "mica_schist"]):
-                    eliminated.append({
-                        "hypothesis": c,
-                        "reason_eliminated": "Conchoidal fracture contradicts minerals with perfect cleavage planes",
-                    })
+                    eliminated.append(
+                        {
+                            "hypothesis": c,
+                            "reason_eliminated": "Conchoidal fracture contradicts minerals with perfect cleavage planes",
+                        }
+                    )
                     candidates.discard(c)
 
     remaining_ambiguities: list[str] = []

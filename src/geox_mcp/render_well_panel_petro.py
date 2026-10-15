@@ -65,6 +65,20 @@ def resolve_las(well_id: str, las_path: str | None = None) -> Path | None:
         if compact == kk or compact in kk or kk in compact:
             if path.is_file():
                 return path
+    # Canonical demo registry (resources/demo_wells.json) resolves DEMO-* ids to real
+    # committed fixtures. data/geox_las/*.las entries may be host-local symlinks
+    # (e.g. /root/GEOX/...) that do not resolve on CI runners, so honor the registry
+    # before the on-disk glob below.
+    try:
+        from geox_mcp.tools.integration_well import _resolve_demo_entry
+
+        demo_entry = _resolve_demo_entry(well_id)
+        if demo_entry and demo_entry.get("las_path"):
+            demo_path = _ROOT / demo_entry["las_path"]
+            if demo_path.is_file():
+                return demo_path
+    except Exception:
+        pass
     for root in (
         _ROOT / "data/geox_las",
         _ROOT / "data/real_wells",
@@ -76,7 +90,7 @@ def resolve_las(well_id: str, las_path: str | None = None) -> Path | None:
             if not root.exists():
                 continue
             for p in root.rglob("*.las"):
-                if compact in p.stem.lower().replace("_", "-"):
+                if p.is_file() and compact in p.stem.lower().replace("_", "-"):
                     return p
         except OSError:
             continue

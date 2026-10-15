@@ -36,6 +36,7 @@ logger = logging.getLogger("geox.earth_witness.specialists")
 
 # ── 1. Visual Inventory Specialist ──────────────────────────────────────────
 
+
 def visual_inventory_observer(raw_payload: dict[str, Any]) -> tuple[list[VisibleFeature], list[OcrText], list[Measurement]]:
     """Extracts factual visible features, OCR labels, and scale measurements."""
     visible_features: list[VisibleFeature] = []
@@ -79,6 +80,7 @@ def visual_inventory_observer(raw_payload: dict[str, Any]) -> tuple[list[Visible
 
 # ── 2. Rock & Mineral Observer ──────────────────────────────────────────────
 
+
 def rock_mineral_observer(
     raw_payload: dict[str, Any],
     field_tests: FieldTestInput | None = None,
@@ -103,11 +105,11 @@ def rock_mineral_observer(
 
     hypotheses: list[Hypothesis] = []
     for idx, h in enumerate(raw_hyps):
-        label = h.get("label", f"Candidate {idx+1}")
+        label = h.get("label", f"Candidate {idx + 1}")
         if label in surviving:
             hypotheses.append(
                 Hypothesis(
-                    hypothesis_id=h.get("hypothesis_id", f"hyp_{idx+1}"),
+                    hypothesis_id=h.get("hypothesis_id", f"hyp_{idx + 1}"),
                     label=label,
                     supporting=h.get("supporting", []),
                     conflicting=h.get("conflicting", []),
@@ -120,6 +122,7 @@ def rock_mineral_observer(
 
 
 # ── 3. Seismic Display Observer ─────────────────────────────────────────────
+
 
 def seismic_display_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypothesis], list[str], list[str]]:
     """Inspects seismic displays, strictly enforcing Amplitude != Hydrocarbon."""
@@ -135,13 +138,13 @@ def seismic_display_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypothes
 
     hypotheses: list[Hypothesis] = []
     for idx, h in enumerate(raw_hyps):
-        label = h.get("label", f"Seismic Feature {idx+1}")
+        label = h.get("label", f"Seismic Feature {idx + 1}")
         # Enforce invariant I3: strip or sanitize direct hydrocarbon claims
         if any(term in label.lower() for term in ["gas pay", "oil leg", "commercial hydrocarbon"]):
             label = f"Acoustic Impedance Anomaly ({label})"
         hypotheses.append(
             Hypothesis(
-                hypothesis_id=h.get("hypothesis_id", f"seis_hyp_{idx+1}"),
+                hypothesis_id=h.get("hypothesis_id", f"seis_hyp_{idx + 1}"),
                 label=label,
                 supporting=h.get("supporting", []),
                 conflicting=h.get("conflicting", []),
@@ -155,6 +158,7 @@ def seismic_display_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypothes
 
 # ── 4. Fossil Morphology Observer ───────────────────────────────────────────
 
+
 def fossil_morphology_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypothesis], list[str]]:
     """Generates candidate taxa from morphology and bounds chronostratigraphic claims."""
     raw_hyps = raw_payload.get("hypotheses", [])
@@ -165,12 +169,12 @@ def fossil_morphology_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypoth
 
     hypotheses: list[Hypothesis] = []
     for idx, h in enumerate(raw_hyps):
-        label = h.get("label", f"Taxon candidate {idx+1}")
+        label = h.get("label", f"Taxon candidate {idx + 1}")
         if not label.startswith("Candidate "):
             label = f"Candidate {label}"
         hypotheses.append(
             Hypothesis(
-                hypothesis_id=h.get("hypothesis_id", f"fos_hyp_{idx+1}"),
+                hypothesis_id=h.get("hypothesis_id", f"fos_hyp_{idx + 1}"),
                 label=label,
                 supporting=h.get("supporting", []),
                 conflicting=h.get("conflicting", []),
@@ -183,6 +187,7 @@ def fossil_morphology_observer(raw_payload: dict[str, Any]) -> tuple[list[Hypoth
 
 
 # ── 5. Physical Test Elicitor (The Sensory Clues Engine) ─────────────────────
+
 
 def physical_test_elicitor(
     modality: str,
@@ -198,7 +203,11 @@ def physical_test_elicitor(
                 HumanTestRequest(
                     test_name="dilute_hcl",
                     purpose="Test 10% dilute HCl acid effervescence to determine carbonate mineralogy",
-                    discriminates=["Calcite / Limestone (vigorous)", "Dolomite (powder only)", "Silicate / Sandstone / Shale (none)"],
+                    discriminates=[
+                        "Calcite / Limestone (vigorous)",
+                        "Dolomite (powder only)",
+                        "Silicate / Sandstone / Shale (none)",
+                    ],
                 )
             )
         if not field_tests or field_tests.hardness == "not_tested":

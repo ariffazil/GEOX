@@ -73,8 +73,8 @@ from geox_mcp.domain.seismic_physics.receipts import make_gate_receipt, receipt_
 # ── Epistemic tiers ──────────────────────────────────────────────────────────
 
 TIER_KINEMATIC = "KINEMATIC"  # directly readable from geometry
-TIER_STRAIN = "STRAIN"        # requires restoration + plane-strain assumptions
-TIER_DYNAMIC = "DYNAMIC"      # requires fault-slip inversion; 4 of 6 params at best
+TIER_STRAIN = "STRAIN"  # requires restoration + plane-strain assumptions
+TIER_DYNAMIC = "DYNAMIC"  # requires fault-slip inversion; 4 of 6 params at best
 
 # ── Andersonian reference geometry (Anderson 1951; Byerlee 1978) ─────────────
 
@@ -92,7 +92,7 @@ DEFAULT_SMOOTHING_BINS = 1.0
 MIN_POPULATION_N = 12
 MIN_PER_MODE = 4
 MIN_MODE_SEPARATION_DEG = 30.0
-MIN_VALLEY_DEPTH = 0.25          # valley must dip to <= 75% of the smaller peak
+MIN_VALLEY_DEPTH = 0.25  # valley must dip to <= 75% of the smaller peak
 MIN_HALF_DIP_FOR_STRATA_SENSE = 0.5
 RIEDEL_REFERENCE_DEG = {"R": 15.0, "R_prime": 75.0, "P": 12.5}
 RIEDEL_TOLERANCE_DEG = 10.0
@@ -577,8 +577,8 @@ def _gate_axis_c_calibration(*, domain: str, velocity_model: dict[str, Any] | No
             "depth domain and/or velocity model supplied — strike/azimuth claims permitted"
             if permitted
             else "Strikes were read on a TIME section with no velocity model. A strike read from a time "
-                 "slice without velocity correction is meaningless: the time-to-depth mapping stretches "
-                 "and rotates apparent geometry, so no azimuth claim may be emitted."
+            "slice without velocity correction is meaningless: the time-to-depth mapping stretches "
+            "and rotates apparent geometry, so no azimuth claim may be emitted."
         ),
         equation="strike_claim permitted <=> (domain == depth) OR (velocity model applied); time != depth",
         inputs={"domain": dom or None, "velocity_model_present": vm},
@@ -589,11 +589,13 @@ def _gate_axis_c_calibration(*, domain: str, velocity_model: dict[str, Any] | No
         ],
         missing_inputs=[] if permitted else ["domain=depth OR velocity_model"],
         calculated_result={"strike_claim_permitted": permitted},
-        findings=[{
-            "verdict": "PASS" if permitted else "UNMEASURED",
-            "note": "Determinism is reproducibility; it is not dimensional truth. A reproducible "
-                    "time-domain azimuth is still a wrong azimuth.",
-        }],
+        findings=[
+            {
+                "verdict": "PASS" if permitted else "UNMEASURED",
+                "note": "Determinism is reproducibility; it is not dimensional truth. A reproducible "
+                "time-domain azimuth is still a wrong azimuth.",
+            }
+        ],
         gate_type="hard_epistemic",
     )
 
@@ -680,11 +682,12 @@ def _spatial_rotation_subgate(
             "stress-axis rotation",
             "sampling bias: the two halves may sample different structural domains",
         ],
-        findings=[{
-            "verdict": "WARN" if rotated else "PASS",
-            "note": "A split-half azimuth difference ENUMERATES alternatives; it never concludes "
-                    "'the regime changed'.",
-        }],
+        findings=[
+            {
+                "verdict": "WARN" if rotated else "PASS",
+                "note": "A split-half azimuth difference ENUMERATES alternatives; it never concludes 'the regime changed'.",
+            }
+        ],
         gate_type="soft_conditional",
     )
 
@@ -757,21 +760,24 @@ def analyse_fault_orientation_population(
             continue
         x = _valid_float(rec.get("x", rec.get("x_m", rec.get("trace"))))
         y = _valid_float(rec.get("y", rec.get("y_m", rec.get("line"))))
-        measured.append({
-            "index": i,
-            "fault_id": str(rec.get("fault_id") or rec.get("id") or f"F-{i:04d}"),
-            "strike_deg": round(_wrap180(strike), 6),
-            "dip_deg": round(dip, 6) if dip is not None else None,
-            "x": x,
-            "y": y,
-        })
+        measured.append(
+            {
+                "index": i,
+                "fault_id": str(rec.get("fault_id") or rec.get("id") or f"F-{i:04d}"),
+                "strike_deg": round(_wrap180(strike), 6),
+                "dip_deg": round(dip, 6) if dip is not None else None,
+                "x": x,
+                "y": y,
+            }
+        )
 
     n_supplied = len(rows)
     coverage = round(len(measured) / n_supplied, 6) if n_supplied else 0.0
 
     # ── preconditions ────────────────────────────────────────────────────────
-    def _finish(receipt: dict[str, Any], *, riedel_sub: dict[str, Any] | None = None,
-                spatial_sub: dict[str, Any] | None = None) -> dict[str, Any]:
+    def _finish(
+        receipt: dict[str, Any], *, riedel_sub: dict[str, Any] | None = None, spatial_sub: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         # NOTE: the top-level receipt IS C-POPULATION — it is never nested inside
         # sub_gates (that would be a self-reference and would break hashing/dumps).
         subs: dict[str, Any] = {
@@ -841,7 +847,10 @@ def analyse_fault_orientation_population(
 
     if n_supplied == 0:
         r = _receipt(
-            "C-POPULATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=0.0,
+            "C-POPULATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=0.0,
             reason="No fault records supplied — the population question was not covered.",
             equation=common_eq,
             inputs={"n_supplied": 0, "n_measured": 0},
@@ -850,9 +859,14 @@ def analyse_fault_orientation_population(
             evidence_refs=common_refs,
             missing_inputs=["faults[].strike_deg"],
             calculated_result={
-                "n_supplied": 0, "n_measured": 0, "strike_rose": [], "conjugate": None,
-                "acute_bisector_azimuth_deg": None, "candidate_sigma1_azimuth_deg": None,
-                "riedel": None, "regime_candidate": None,
+                "n_supplied": 0,
+                "n_measured": 0,
+                "strike_rose": [],
+                "conjugate": None,
+                "acute_bisector_azimuth_deg": None,
+                "candidate_sigma1_azimuth_deg": None,
+                "riedel": None,
+                "regime_candidate": None,
             },
             gate_type="hard_epistemic",
         )
@@ -860,7 +874,10 @@ def analyse_fault_orientation_population(
 
     if coverage < 0.7:
         r = _receipt(
-            "C-POPULATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 f"Only {len(measured)}/{n_supplied} supplied faults carry a usable strike "
                 f"(coverage {coverage}). A DEFICIT test below the 0.7 coverage floor is UNMEASURED, "
@@ -869,7 +886,8 @@ def analyse_fault_orientation_population(
             equation=common_eq,
             inputs={"n_supplied": n_supplied, "n_measured": len(measured), "coverage": coverage},
             thresholds={
-                "coverage_floor": 0.7, "min_population_n": min_population_n,
+                "coverage_floor": 0.7,
+                "min_population_n": min_population_n,
                 "min_population_n_basis": MIN_N_BASIS,
                 "coverage_rule": MAX_COVER_FRACTION,
             },
@@ -877,10 +895,16 @@ def analyse_fault_orientation_population(
             evidence_refs=common_refs,
             missing_inputs=sorted({"faults[].strike_deg"} | {"faults[].strike_deg (unusable on record)"}),
             calculated_result={
-                "n_supplied": n_supplied, "n_measured": len(measured), "coverage": coverage,
-                "skipped": skipped, "strike_rose": [], "conjugate": None,
-                "acute_bisector_azimuth_deg": None, "candidate_sigma1_azimuth_deg": None,
-                "riedel": None, "regime_candidate": None,
+                "n_supplied": n_supplied,
+                "n_measured": len(measured),
+                "coverage": coverage,
+                "skipped": skipped,
+                "strike_rose": [],
+                "conjugate": None,
+                "acute_bisector_azimuth_deg": None,
+                "candidate_sigma1_azimuth_deg": None,
+                "riedel": None,
+                "regime_candidate": None,
             },
             gate_type="hard_epistemic",
         )
@@ -927,7 +951,10 @@ def analyse_fault_orientation_population(
 
     if not strike_claim_permitted:
         r = _receipt(
-            "C-POPULATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 "Strikes are present but no depth correction / velocity model was supplied. The rose "
                 "COUNTS are reported as a coverage descriptor; every azimuth-domain output (bisector, "
@@ -937,8 +964,10 @@ def analyse_fault_orientation_population(
             equation=common_eq,
             inputs={"n_measured": len(measured), "domain": domain, "velocity_model_present": bool(velocity_model)},
             thresholds={
-                "min_population_n": min_population_n, "min_population_n_basis": MIN_N_BASIS,
-                "bin_width_deg": bin_width, "coverage_floor": 0.7,
+                "min_population_n": min_population_n,
+                "min_population_n_basis": MIN_N_BASIS,
+                "bin_width_deg": bin_width,
+                "coverage_floor": 0.7,
             },
             exceptions_considered=common_exceptions,
             evidence_refs=common_refs,
@@ -951,7 +980,10 @@ def analyse_fault_orientation_population(
     if len(measured) < min_population_n:
         base["insufficient_population"] = True
         r = _receipt(
-            "C-POPULATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 f"N={len(measured)} is below the minimum statistically meaningful population "
                 f"(N_min={min_population_n}). No bisector is emitted: a bisector at this N has an error "
@@ -1007,7 +1039,10 @@ def analyse_fault_orientation_population(
         )
         base["conjugate"] = conjugate
         r = _receipt(
-            "C-POPULATION", "PARTIALLY_MEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "PARTIALLY_MEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 "Strike population measured but UNIMODAL — no conjugate pair. The modal azimuth must NOT "
                 "be re-read as a sigma1 azimuth; a single cluster is equally consistent with an inherited "
@@ -1016,8 +1051,10 @@ def analyse_fault_orientation_population(
             equation=common_eq,
             inputs={"n_measured": len(measured), "n_modes": len(peak_records)},
             thresholds={
-                "min_population_n": min_population_n, "min_per_mode": min_per_mode,
-                "min_mode_separation_deg": min_mode_separation_deg, "min_valley_depth": min_valley_depth,
+                "min_population_n": min_population_n,
+                "min_per_mode": min_per_mode,
+                "min_mode_separation_deg": min_mode_separation_deg,
+                "min_valley_depth": min_valley_depth,
             },
             exceptions_considered=common_exceptions,
             evidence_refs=common_refs,
@@ -1042,7 +1079,10 @@ def analyse_fault_orientation_population(
         )
         base["conjugate"] = conjugate
         r = _receipt(
-            "C-POPULATION", "PARTIALLY_MEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "PARTIALLY_MEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 "Rose has more than one local maximum but no SECOND mode separated by the minimum "
                 "angular distance. No conjugate set is resolvable — no bisector is emitted."
@@ -1050,7 +1090,8 @@ def analyse_fault_orientation_population(
             equation=common_eq,
             inputs={"n_measured": len(measured), "n_modes": len(peak_records)},
             thresholds={
-                "min_mode_separation_deg": min_mode_separation_deg, "min_per_mode": min_per_mode,
+                "min_mode_separation_deg": min_mode_separation_deg,
+                "min_per_mode": min_per_mode,
                 "min_population_n": min_population_n,
             },
             exceptions_considered=common_exceptions,
@@ -1067,7 +1108,10 @@ def analyse_fault_orientation_population(
         conjugate["reasons"].append("mode refinement produced no members inside the peak window")
         base["conjugate"] = conjugate
         r = _receipt(
-            "C-POPULATION", "PARTIALLY_MEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "PARTIALLY_MEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason="Mode refinement failed — the modes are not populated enough to refine. Bisector withheld.",
             equation=common_eq,
             exceptions_considered=common_exceptions,
@@ -1088,29 +1132,35 @@ def analyse_fault_orientation_population(
     separation_ok = separation >= min_mode_separation_deg and separation < 90.0 - 1e-9
     valley_ok = valley_ratio is not None and valley_ratio <= (1.0 - min_valley_depth)
 
-    conjugate.update({
-        "mode_azimuths_deg": [round(m1, 4), round(m2, 4)],
-        "mode_support_counts": [n_m1, n_m2],
-        "mode_separation_deg": round(separation, 4),
-        "valley_ratio": valley_ratio,
-        "valley_azimuth_deg": round(v_az, 4) if v_az is not None else None,
-        "criteria": {
-            "separation_ge_min": {"value": round(separation, 4), "threshold": min_mode_separation_deg, "ok": separation_ok},
-            "valley_le_threshold": {
-                "value": valley_ratio, "threshold": round(1.0 - min_valley_depth, 4), "ok": valley_ok,
-                "definition": "valley / smaller_peak on the short arc between the two modes",
+    conjugate.update(
+        {
+            "mode_azimuths_deg": [round(m1, 4), round(m2, 4)],
+            "mode_support_counts": [n_m1, n_m2],
+            "mode_separation_deg": round(separation, 4),
+            "valley_ratio": valley_ratio,
+            "valley_azimuth_deg": round(v_az, 4) if v_az is not None else None,
+            "criteria": {
+                "separation_ge_min": {"value": round(separation, 4), "threshold": min_mode_separation_deg, "ok": separation_ok},
+                "valley_le_threshold": {
+                    "value": valley_ratio,
+                    "threshold": round(1.0 - min_valley_depth, 4),
+                    "ok": valley_ok,
+                    "definition": "valley / smaller_peak on the short arc between the two modes",
+                },
+                "mode_support_ge_min_per_mode": {
+                    "value": sorted([n_m1, n_m2]),
+                    "threshold": min_per_mode,
+                    "ok": counts_ok,
+                    "definition": f"measurements within +/- {bin_width} deg of each refined mode azimuth",
+                },
+                "raw_peak_bin_counts_diagnostic": {
+                    "value": sorted([peak_records[0]["peak_count_raw"], m2_rec["peak_count_raw"]]),
+                    "note": "single-bin counts, reported for audit only — bin-edge effects make them a poor "
+                    "support statistic at small N",
+                },
             },
-            "mode_support_ge_min_per_mode": {
-                "value": sorted([n_m1, n_m2]), "threshold": min_per_mode, "ok": counts_ok,
-                "definition": f"measurements within +/- {bin_width} deg of each refined mode azimuth",
-            },
-            "raw_peak_bin_counts_diagnostic": {
-                "value": sorted([peak_records[0]["peak_count_raw"], m2_rec["peak_count_raw"]]),
-                "note": "single-bin counts, reported for audit only — bin-edge effects make them a poor "
-                        "support statistic at small N",
-            },
-        },
-    })
+        }
+    )
 
     if not (separation_ok and valley_ok and counts_ok):
         if not separation_ok:
@@ -1125,12 +1175,14 @@ def analyse_fault_orientation_population(
             )
         if not counts_ok:
             conjugate["reasons"].append(
-                f"at least one mode carries fewer than {min_per_mode} measurements — a single-measurement "
-                "'mode' is noise"
+                f"at least one mode carries fewer than {min_per_mode} measurements — a single-measurement 'mode' is noise"
             )
         base["conjugate"] = conjugate
         r = _receipt(
-            "C-POPULATION", "PARTIALLY_MEASURED", tier=TIER_KINEMATIC, coverage=coverage,
+            "C-POPULATION",
+            "PARTIALLY_MEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=coverage,
             reason=(
                 "Population measured; the CONJUGATE test did not survive. No bisector is emitted — an "
                 "unsurvived conjugate test is a DEFICIT, so it can never KILL, only return partial. "
@@ -1139,8 +1191,10 @@ def analyse_fault_orientation_population(
             equation=common_eq,
             inputs={"n_measured": len(measured), "n_modes": len(peak_records), "coverage": coverage},
             thresholds={
-                "min_mode_separation_deg": min_mode_separation_deg, "min_per_mode": min_per_mode,
-                "min_valley_depth": min_valley_depth, "min_population_n": min_population_n,
+                "min_mode_separation_deg": min_mode_separation_deg,
+                "min_per_mode": min_per_mode,
+                "min_valley_depth": min_valley_depth,
+                "min_population_n": min_population_n,
             },
             exceptions_considered=common_exceptions,
             evidence_refs=common_refs,
@@ -1212,9 +1266,7 @@ def analyse_fault_orientation_population(
     modal_strike, _ = _axial_mean_deg(strikes)
     perp = _wrap180(modal_strike + 90.0) if modal_strike is not None else None
     mandate_applicable = regime_candidate in ("normal", "thrust")
-    base["candidate_sigma1_azimuth_deg"] = (
-        base["acute_bisector_azimuth_deg"] if mandate_applicable else None
-    )
+    base["candidate_sigma1_azimuth_deg"] = base["acute_bisector_azimuth_deg"] if mandate_applicable else None
     base["candidate_sigma1_basis"] = (
         (
             "acute bisector azimuth of the conjugate strike population (map-view bisector). Reported as a "
@@ -1256,17 +1308,23 @@ def analyse_fault_orientation_population(
             "Both are reported; neither is a tensor."
         ),
     }
-    base["anderson_cross_check"] = {**anderson, "per_regime_axis_readings": anderson_relation["per_regime_axis_readings"],
-                                    "modal_strike_azimuth_deg": anderson_relation["modal_strike_azimuth_deg"],
-                                    "strike_perpendicular_azimuth_deg": anderson_relation["strike_perpendicular_azimuth_deg"],
-                                    "divergence_note": anderson_relation["divergence_note"]}
+    base["anderson_cross_check"] = {
+        **anderson,
+        "per_regime_axis_readings": anderson_relation["per_regime_axis_readings"],
+        "modal_strike_azimuth_deg": anderson_relation["modal_strike_azimuth_deg"],
+        "strike_perpendicular_azimuth_deg": anderson_relation["strike_perpendicular_azimuth_deg"],
+        "divergence_note": anderson_relation["divergence_note"],
+    }
 
     # ── Riedel relativity against a supplied master azimuth ─────────────────
     master = _valid_float(master_fault_azimuth_deg)
     riedel_sub: dict[str, Any] | None = None
     if master is None:
         riedel_sub = _receipt(
-            "C-RIEDEL", "NOT_APPLICABLE", tier=TIER_KINEMATIC, scope="population_relativity",
+            "C-RIEDEL",
+            "NOT_APPLICABLE",
+            tier=TIER_KINEMATIC,
+            scope="population_relativity",
             coverage=coverage,
             reason="No master_fault_azimuth_deg supplied — synthetic/antithetic relativity is undefined.",
             equation="delta = axial angle from master; R ~15 deg synthetic, P ~10-15 deg synthetic, R' ~75 deg antithetic",
@@ -1288,25 +1346,38 @@ def analyse_fault_orientation_population(
                 class_counts["unclassified"] += 1
         n_classified = len(measured) - class_counts["unclassified"]
         r_cov = round(n_classified / len(measured), 6) if measured else 0.0
-        pattern_present = (class_counts["R"] > 0 and class_counts["R_prime"] > 0)
+        pattern_present = class_counts["R"] > 0 and class_counts["R_prime"] > 0
         if n_classified == 0:
-            status, reason = "UNMEASURED", (
-                "Master azimuth supplied but NO fault falls inside any Riedel window. This is a DEFICIT "
-                "and may only return UNMEASURED — absence of Riedel shears never kills the structure."
+            status, reason = (
+                "UNMEASURED",
+                (
+                    "Master azimuth supplied but NO fault falls inside any Riedel window. This is a DEFICIT "
+                    "and may only return UNMEASURED — absence of Riedel shears never kills the structure."
+                ),
             )
         elif n_classified == 1 or not pattern_present:
-            status, reason = "PARTIALLY_MEASURED", (
-                f"{n_classified}/{len(measured)} faults fall in a Riedel window (coverage {r_cov}); the "
-                "conjugate synthetic+antithetic PAIR is not established. Coverage fraction carried; "
-                "below the 0.7 floor this stays partial."
+            status, reason = (
+                "PARTIALLY_MEASURED",
+                (
+                    f"{n_classified}/{len(measured)} faults fall in a Riedel window (coverage {r_cov}); the "
+                    "conjugate synthetic+antithetic PAIR is not established. Coverage fraction carried; "
+                    "below the 0.7 floor this stays partial."
+                ),
             )
         else:
-            status, reason = "PASS", (
-                f"{n_classified}/{len(measured)} faults fall in a Riedel window with both synthetic and "
-                "antithetic families present (coverage {r_cov})."
+            status, reason = (
+                "PASS",
+                (
+                    f"{n_classified}/{len(measured)} faults fall in a Riedel window with both synthetic and "
+                    "antithetic families present (coverage {r_cov})."
+                ),
             )
         riedel_sub = _receipt(
-            "C-RIEDEL", status, tier=TIER_KINEMATIC, scope="population_relativity", coverage=r_cov,
+            "C-RIEDEL",
+            status,
+            tier=TIER_KINEMATIC,
+            scope="population_relativity",
+            coverage=r_cov,
             reason=reason,
             equation="delta = axial angular difference from the master azimuth; R ~15 deg (synthetic), P ~10-15 deg (synthetic), R' ~75 deg (antithetic)",
             inputs={
@@ -1315,8 +1386,12 @@ def analyse_fault_orientation_population(
                 "n_classified": n_classified,
                 "class_counts": class_counts,
             },
-            thresholds={**RIEDEL_REFERENCE_DEG, "tolerance_deg": riedel_tolerance_deg,
-                        "coverage_floor": 0.7, "coverage_rule": MAX_COVER_FRACTION},
+            thresholds={
+                **RIEDEL_REFERENCE_DEG,
+                "tolerance_deg": riedel_tolerance_deg,
+                "coverage_floor": 0.7,
+                "coverage_rule": MAX_COVER_FRACTION,
+            },
             exceptions_considered=[
                 "R and P windows overlap at ~15 deg — both are synthetic and may be reported for one fault",
                 "a Riedel family requires the master fault to be identified independently of this population",
@@ -1370,7 +1445,10 @@ def analyse_fault_orientation_population(
         )
 
     r = _receipt(
-        "C-POPULATION", status, tier=TIER_KINEMATIC, coverage=coverage,
+        "C-POPULATION",
+        status,
+        tier=TIER_KINEMATIC,
+        coverage=coverage,
         reason=reason,
         equation=common_eq,
         inputs={
@@ -1537,15 +1615,15 @@ def _overlap_eval(
         return {"ok": False, "reason": "bed does not overlap the reference x-range"}
     idx = np.where(inside)[0]
     i0, i1 = int(idx[0]), int(idx[-1])
-    zr = np.interp(bx[i0:i1 + 1], rx, rz)
-    gaps = zr - bz[i0:i1 + 1]
+    zr = np.interp(bx[i0 : i1 + 1], rx, rz)
+    gaps = zr - bz[i0 : i1 + 1]
     return {
         "ok": True,
         "i0": i0,
         "i1": i1,
         "gaps": gaps,
-        "x_sub": bx[i0:i1 + 1],
-        "z_sub": bz[i0:i1 + 1],
+        "x_sub": bx[i0 : i1 + 1],
+        "z_sub": bz[i0 : i1 + 1],
         "z_ref_sub": zr,
         "max_abs_gap": float(np.max(np.abs(gaps))),
         "contact_tol": contact_tol,
@@ -1582,14 +1660,16 @@ def surfaces_from_amplitude_ridges(
             pts.append((float(p[0]), float(p[1])))
             seg_dips.append(math.degrees(float(dip[z, x])))
         pts.sort(key=lambda t: t[0])
-        out.append({
-            "surface_id": str(ridge.get("ridge_id") or f"RIDGE-{len(out):04d}"),
-            "kind": "amplitude_ridge",
-            "points": pts,
-            "points_provenance": "ridge_extraction (seismic_classical) — trace/sample indices",
-            "structure_tensor_dip_deg": round(float(np.median(seg_dips)), 4) if seg_dips else None,
-            "structure_tensor_dip_note": "local structure-tensor dip in SECTION coordinates, in degrees",
-        })
+        out.append(
+            {
+                "surface_id": str(ridge.get("ridge_id") or f"RIDGE-{len(out):04d}"),
+                "kind": "amplitude_ridge",
+                "points": pts,
+                "points_provenance": "ridge_extraction (seismic_classical) — trace/sample indices",
+                "structure_tensor_dip_deg": round(float(np.median(seg_dips)), 4) if seg_dips else None,
+                "structure_tensor_dip_note": "local structure-tensor dip in SECTION coordinates, in degrees",
+            }
+        )
     return out
 
 
@@ -1634,7 +1714,11 @@ def classify_stratal_terminations(
     ctol = _valid_float(contact_tolerance)
     if ctol is None or ctol <= 0:
         ctol = _default_contact_tolerance(ref_pts)
-    ctol_source = "supplied" if _valid_float(contact_tolerance) else "derived: 0.5 x median |dz| of the reference surface (the vertical sampling quantum)"
+    ctol_source = (
+        "supplied"
+        if _valid_float(contact_tolerance)
+        else "derived: 0.5 x median |dz| of the reference surface (the vertical sampling quantum)"
+    )
 
     sec_az = _valid_float(section_azimuth_deg)
 
@@ -1679,7 +1763,10 @@ def classify_stratal_terminations(
 
     if len(ref_pts) < 2:
         r = _receipt(
-            "D-STRATAL-TERMINATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=0.0,
+            "D-STRATAL-TERMINATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=0.0,
             reason="No usable reference surface (>= 2 points required) — no termination can be measured.",
             equation=base_eq,
             inputs={"n_reference_points": len(ref_pts), "n_beds": len(beds), "n_faults": len(fault_in)},
@@ -1688,8 +1775,11 @@ def classify_stratal_terminations(
             evidence_refs=base_refs,
             missing_inputs=["reference_surface.points"],
             calculated_result={
-                "terminations": [], "classification_counts": {}, "chronology_partial_order": [],
-                "absolute_age_permitted": False, "absolute_age_requires": list(ABSOLUTE_AGE_REQUIREMENT),
+                "terminations": [],
+                "classification_counts": {},
+                "chronology_partial_order": [],
+                "absolute_age_permitted": False,
+                "absolute_age_requires": list(ABSOLUTE_AGE_REQUIREMENT),
                 "chronology_kind": "RELATIVE_PARTIAL_ORDER",
             },
             gate_type="hard_epistemic",
@@ -1698,7 +1788,10 @@ def classify_stratal_terminations(
 
     if not beds and not fault_in:
         r = _receipt(
-            "D-STRATAL-TERMINATION", "UNMEASURED", tier=TIER_KINEMATIC, coverage=0.0,
+            "D-STRATAL-TERMINATION",
+            "UNMEASURED",
+            tier=TIER_KINEMATIC,
+            coverage=0.0,
             reason="Reference surface present but no underlying surfaces or faults supplied.",
             equation=base_eq,
             inputs={"n_reference_points": len(ref_pts), "n_beds": 0, "n_faults": 0},
@@ -1707,8 +1800,11 @@ def classify_stratal_terminations(
             evidence_refs=base_refs,
             missing_inputs=["underlying_surfaces[].points"],
             calculated_result={
-                "terminations": [], "classification_counts": {}, "chronology_partial_order": [],
-                "absolute_age_permitted": False, "absolute_age_requires": list(ABSOLUTE_AGE_REQUIREMENT),
+                "terminations": [],
+                "classification_counts": {},
+                "chronology_partial_order": [],
+                "absolute_age_permitted": False,
+                "absolute_age_requires": list(ABSOLUTE_AGE_REQUIREMENT),
                 "chronology_kind": "RELATIVE_PARTIAL_ORDER",
             },
             gate_type="hard_epistemic",
@@ -1770,78 +1866,96 @@ def classify_stratal_terminations(
         }
 
         if crosses:
-            entry.update({
-                "classification": "crosses_fault_zero_offset",
-                "side": None,
-                "relative_dip_deg": None,
-                "angle_to_reference_deg": None,
-                "relative_chronology": {
-                    "horizon": sid, "feature": best["fault_id"],
-                    "relation": "UNDETERMINED",
-                    "alternatives": [
-                        "fault is DEAD at this level (the horizon postdates faulting)",
-                        "fault-tip / nucleation zone with no resolvable throw at this level",
-                        "horizon and fault synchronous (the horizon crossed an active fault surface)",
-                    ],
-                },
-                "note": "A horizon present on BOTH sides with no offset does not fix the fault age; the "
-                        "alternatives are enumerated rather than collapsed.",
-            })
+            entry.update(
+                {
+                    "classification": "crosses_fault_zero_offset",
+                    "side": None,
+                    "relative_dip_deg": None,
+                    "angle_to_reference_deg": None,
+                    "relative_chronology": {
+                        "horizon": sid,
+                        "feature": best["fault_id"],
+                        "relation": "UNDETERMINED",
+                        "alternatives": [
+                            "fault is DEAD at this level (the horizon postdates faulting)",
+                            "fault-tip / nucleation zone with no resolvable throw at this level",
+                            "horizon and fault synchronous (the horizon crossed an active fault surface)",
+                        ],
+                    },
+                    "note": "A horizon present on BOTH sides with no offset does not fix the fault age; the "
+                    "alternatives are enumerated rather than collapsed.",
+                }
+            )
         elif offset is None:
-            entry.update({
-                "classification": "abut_undetermined",
-                "side": None,
-                "relative_dip_deg": None,
-                "angle_to_reference_deg": None,
-                "relative_chronology": {
-                    "horizon": sid, "feature": best["fault_id"], "relation": "UNDETERMINED",
-                    "alternatives": ["zero offset (synchronous)", "measurable offset (the fault postdates the horizon)"],
-                },
-                "note": "No offset value at the contact — chronology cannot be decided from geometry alone.",
-            })
+            entry.update(
+                {
+                    "classification": "abut_undetermined",
+                    "side": None,
+                    "relative_dip_deg": None,
+                    "angle_to_reference_deg": None,
+                    "relative_chronology": {
+                        "horizon": sid,
+                        "feature": best["fault_id"],
+                        "relation": "UNDETERMINED",
+                        "alternatives": ["zero offset (synchronous)", "measurable offset (the fault postdates the horizon)"],
+                    },
+                    "note": "No offset value at the contact — chronology cannot be decided from geometry alone.",
+                }
+            )
         elif offset <= zero_offset_threshold_m:
-            entry.update({
-                "classification": "abut_synchronous",
-                "side": None,
-                "relative_dip_deg": None,
-                "angle_to_reference_deg": None,
-                "offset_at_contact_m": offset,
-                "offset_source": offset_source,
-                "relative_chronology": {
-                    "horizon": sid, "feature": best["fault_id"],
-                    "relation": "SYNCHRONOUS",
-                    "means": (
-                        "the horizon abutted the fault with ZERO measurable offset at the contact: the "
-                        "horizon and the fault surface sat at the depositional surface together. The "
-                        "horizon is NOT younger than the fault."
-                    ),
-                },
-                "pitfall_flag": "ZERO_OFFSET_ABUT_SYNCHRONOUS",
-            })
+            entry.update(
+                {
+                    "classification": "abut_synchronous",
+                    "side": None,
+                    "relative_dip_deg": None,
+                    "angle_to_reference_deg": None,
+                    "offset_at_contact_m": offset,
+                    "offset_source": offset_source,
+                    "relative_chronology": {
+                        "horizon": sid,
+                        "feature": best["fault_id"],
+                        "relation": "SYNCHRONOUS",
+                        "means": (
+                            "the horizon abutted the fault with ZERO measurable offset at the contact: the "
+                            "horizon and the fault surface sat at the depositional surface together. The "
+                            "horizon is NOT younger than the fault."
+                        ),
+                    },
+                    "pitfall_flag": "ZERO_OFFSET_ABUT_SYNCHRONOUS",
+                }
+            )
             pitfall_rows.append({"surface_id": sid, "fault_id": best["fault_id"], "relation": "SYNCHRONOUS"})
         else:
-            entry.update({
-                "classification": "abut_offset",
-                "side": None,
-                "relative_dip_deg": None,
-                "angle_to_reference_deg": None,
-                "offset_at_contact_m": offset,
-                "offset_source": offset_source,
-                "relative_chronology": {
-                    "horizon": sid, "feature": best["fault_id"],
-                    "relation": "HORIZON_OLDER_THAN_FAULT",
-                    "means": f"the fault offsets the horizon by {offset} m at the contact — the fault postdates it",
-                },
-            })
+            entry.update(
+                {
+                    "classification": "abut_offset",
+                    "side": None,
+                    "relative_dip_deg": None,
+                    "angle_to_reference_deg": None,
+                    "offset_at_contact_m": offset,
+                    "offset_source": offset_source,
+                    "relative_chronology": {
+                        "horizon": sid,
+                        "feature": best["fault_id"],
+                        "relation": "HORIZON_OLDER_THAN_FAULT",
+                        "means": f"the fault offsets the horizon by {offset} m at the contact — the fault postdates it",
+                    },
+                }
+            )
         terminations.append(entry)
         if entry["relative_chronology"]["relation"] in ("SYNCHRONOUS", "HORIZON_OLDER_THAN_FAULT"):
-            chronology.append({
-                "older": sid if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT" else best["fault_id"],
-                "younger": best["fault_id"] if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT" else None,
-                "basis": "fault offset at contact" if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT"
-                         else "zero-offset abutment => synchronous (no ordering edge)",
-                "relation": entry["relative_chronology"]["relation"],
-            })
+            chronology.append(
+                {
+                    "older": sid if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT" else best["fault_id"],
+                    "younger": best["fault_id"]
+                    if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT"
+                    else None,
+                    "basis": "fault offset at contact"
+                    if entry["relative_chronology"]["relation"] == "HORIZON_OLDER_THAN_FAULT"
+                    else "zero-offset abutment => synchronous (no ordering edge)",
+                    "relation": entry["relative_chronology"]["relation"],
+                }
+            )
 
     # ── lap / top terminations against the reference surface ────────────────
     for bed in beds:
@@ -1870,33 +1984,37 @@ def classify_stratal_terminations(
             x_t0 = float(xs[0])
             a_ref0 = _ref_dip_at_deg(ref_pts, x_t0)
             a_bed0 = _terminal_dip_deg(pts, "first")
-            terminations.append({
-                "surface_id": sid,
-                "kind": str(bed.get("kind") or "strata"),
-                "contact_feature": ref_id,
-                "contact_feature_kind": "reference_surface",
-                "ends": "whole",
-                "termination_xy": [round(x_t0, 6), round(float(zs[0]), 6)],
-                "side": None,
-                "gap_inside": None,
-                "gap_at_termination": round(float(gaps[0]), 6),
-                "max_abs_gap_over_bed": round(float(np.max(np.abs(gaps))), 6),
-                "terminal_dip_deg": round(a_bed0, 4) if a_bed0 is not None else None,
-                "reference_dip_deg": round(a_ref0, 4) if a_ref0 is not None else None,
-                "relative_dip_deg": round(a_bed0 - a_ref0, 4) if (a_bed0 is not None and a_ref0 is not None) else None,
-                "angle_to_reference_deg": round(abs(a_bed0 - a_ref0), 4) if (a_bed0 is not None and a_ref0 is not None) else None,
-                "dip_source": "section polyline geometry",
-                "map_dip_apparent_deg": round(map_app, 4) if map_app is not None else None,
-                "map_dip_provenance": map_src,
-                "classification": "offlap_concordant",
-                "classification_basis": (
-                    "the bed tracks the reference surface within the contact tolerance over its WHOLE "
-                    "extent — no convergence anywhere, so there is no termination point; this is "
-                    "offlap-concordant"
-                ),
-                "boundary_contact": False,
-                "relative_chronology": None,
-            })
+            terminations.append(
+                {
+                    "surface_id": sid,
+                    "kind": str(bed.get("kind") or "strata"),
+                    "contact_feature": ref_id,
+                    "contact_feature_kind": "reference_surface",
+                    "ends": "whole",
+                    "termination_xy": [round(x_t0, 6), round(float(zs[0]), 6)],
+                    "side": None,
+                    "gap_inside": None,
+                    "gap_at_termination": round(float(gaps[0]), 6),
+                    "max_abs_gap_over_bed": round(float(np.max(np.abs(gaps))), 6),
+                    "terminal_dip_deg": round(a_bed0, 4) if a_bed0 is not None else None,
+                    "reference_dip_deg": round(a_ref0, 4) if a_ref0 is not None else None,
+                    "relative_dip_deg": round(a_bed0 - a_ref0, 4) if (a_bed0 is not None and a_ref0 is not None) else None,
+                    "angle_to_reference_deg": round(abs(a_bed0 - a_ref0), 4)
+                    if (a_bed0 is not None and a_ref0 is not None)
+                    else None,
+                    "dip_source": "section polyline geometry",
+                    "map_dip_apparent_deg": round(map_app, 4) if map_app is not None else None,
+                    "map_dip_provenance": map_src,
+                    "classification": "offlap_concordant",
+                    "classification_basis": (
+                        "the bed tracks the reference surface within the contact tolerance over its WHOLE "
+                        "extent — no convergence anywhere, so there is no termination point; this is "
+                        "offlap-concordant"
+                    ),
+                    "boundary_contact": False,
+                    "relative_chronology": None,
+                }
+            )
             continue
 
         ends_to_check: list[str] = []
@@ -1905,11 +2023,13 @@ def classify_stratal_terminations(
         if abs(gaps[-1]) <= ctol and n_sub > 1 and "last" not in consumed:
             ends_to_check.append("last")
         if not ends_to_check:
-            unevaluable.append({
-                "surface_id": sid,
-                "reason": "the bed never reaches the reference surface within the contact tolerance "
-                          "(no termination to classify)",
-            })
+            unevaluable.append(
+                {
+                    "surface_id": sid,
+                    "reason": "the bed never reaches the reference surface within the contact tolerance "
+                    "(no termination to classify)",
+                }
+            )
             continue
 
         for end in ends_to_check:
@@ -1950,8 +2070,11 @@ def classify_stratal_terminations(
 
             if side == "above":
                 # lap class: convergence direction vs the reference's dip direction
-                dg_dx = float(gaps[min(n_sub - 1, end_idx + 1)] - gaps[max(0, end_idx - 1)]) if n_sub > 2 else \
-                    float(gaps[-1] - gaps[0])
+                dg_dx = (
+                    float(gaps[min(n_sub - 1, end_idx + 1)] - gaps[max(0, end_idx - 1)])
+                    if n_sub > 2
+                    else float(gaps[-1] - gaps[0])
+                )
                 if abs(dg_dx) < 1e-12:
                     t_dir = 0
                 else:
@@ -1970,10 +2093,9 @@ def classify_stratal_terminations(
                 if d_ref != 0:
                     lap = "downlap" if t_dir == d_ref else "onlap"
                     basis_used = (
-                        "convergence direction equals the reference surface's dip direction (downdip) "
-                        "=> downlap" if lap == "downlap" else
-                        "convergence runs opposite to the reference surface's dip direction (updip) "
-                        "=> onlap"
+                        "convergence direction equals the reference surface's dip direction (downdip) => downlap"
+                        if lap == "downlap"
+                        else "convergence runs opposite to the reference surface's dip direction (updip) => onlap"
                     )
                 elif strata_dir != 0:
                     lap = "downlap" if t_dir == strata_dir else "onlap"
@@ -1988,11 +2110,13 @@ def classify_stratal_terminations(
                         "both the reference surface and the strata are flat in section — the downdip "
                         "direction is not resolvable from this input"
                     )
-                    unevaluable.append({
-                        "surface_id": sid,
-                        "reason": "flat reference and flat strata: add dip_deg + dip_azimuth_deg or "
-                                  "section_azimuth_deg to resolve the downdip direction",
-                    })
+                    unevaluable.append(
+                        {
+                            "surface_id": sid,
+                            "reason": "flat reference and flat strata: add dip_deg + dip_azimuth_deg or "
+                            "section_azimuth_deg to resolve the downdip direction",
+                        }
+                    )
                     terminations.append(entry)
                     continue
 
@@ -2007,11 +2131,12 @@ def classify_stratal_terminations(
                             "rather than collapsed."
                         )
                         entry["classification_alternatives"] = sorted({lap, strata_reading})
-                        chron_ok = True
                         entry["relative_chronology"] = {
-                            "horizon": sid, "feature": ref_id, "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
+                            "horizon": sid,
+                            "feature": ref_id,
+                            "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
                             "means": "beds that LAP onto the reference surface are younger than it (they "
-                                     "were deposited onto an existing surface)",
+                            "were deposited onto an existing surface)",
                         }
                         terminations.append(entry)
                         continue
@@ -2019,16 +2144,21 @@ def classify_stratal_terminations(
                 entry["classification"] = lap
                 entry["classification_basis"] = basis_used
                 entry["relative_chronology"] = {
-                    "horizon": sid, "feature": ref_id, "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
+                    "horizon": sid,
+                    "feature": ref_id,
+                    "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
                     "means": "beds that LAP onto the reference surface are younger than it (they were "
-                             "deposited onto an existing surface)",
+                    "deposited onto an existing surface)",
                 }
                 terminations.append(entry)
-                chronology.append({
-                    "older": ref_id, "younger": sid,
-                    "basis": f"{lap} termination (lap beds postdate the surface they lap onto)",
-                    "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
-                })
+                chronology.append(
+                    {
+                        "older": ref_id,
+                        "younger": sid,
+                        "basis": f"{lap} termination (lap beds postdate the surface they lap onto)",
+                        "relation": "HORIZON_YOUNGER_THAN_REFERENCE",
+                    }
+                )
                 continue
 
             # side == below or indeterminate
@@ -2056,15 +2186,20 @@ def classify_stratal_terminations(
                 )
                 entry["erosion_confirmed"] = False
                 entry["relative_chronology"] = {
-                    "horizon": sid, "feature": ref_id, "relation": "HORIZON_OLDER_THAN_REFERENCE",
+                    "horizon": sid,
+                    "feature": ref_id,
+                    "relation": "HORIZON_OLDER_THAN_REFERENCE",
                     "means": "strata terminating at their top below the surface predate that surface",
                 }
                 terminations.append(entry)
-                chronology.append({
-                    "older": sid, "younger": ref_id,
-                    "basis": "toplap: strata below the surface terminate at their top",
-                    "relation": "HORIZON_OLDER_THAN_REFERENCE",
-                })
+                chronology.append(
+                    {
+                        "older": sid,
+                        "younger": ref_id,
+                        "basis": "toplap: strata below the surface terminate at their top",
+                        "relation": "HORIZON_OLDER_THAN_REFERENCE",
+                    }
+                )
             else:
                 entry["classification"] = "truncation"
                 entry["classification_basis"] = (
@@ -2074,15 +2209,20 @@ def classify_stratal_terminations(
                 entry["erosion_confirmed"] = False
                 entry["erosion_note"] = EROSION_INTERPRETATION_CAVEAT
                 entry["relative_chronology"] = {
-                    "horizon": sid, "feature": ref_id, "relation": "HORIZON_OLDER_THAN_REFERENCE",
+                    "horizon": sid,
+                    "feature": ref_id,
+                    "relation": "HORIZON_OLDER_THAN_REFERENCE",
                     "means": "truncated strata predate the surface that cuts them",
                 }
                 terminations.append(entry)
-                chronology.append({
-                    "older": sid, "younger": ref_id,
-                    "basis": "truncation: the surface cuts the strata below",
-                    "relation": "HORIZON_OLDER_THAN_REFERENCE",
-                })
+                chronology.append(
+                    {
+                        "older": sid,
+                        "younger": ref_id,
+                        "basis": "truncation: the surface cuts the strata below",
+                        "relation": "HORIZON_OLDER_THAN_REFERENCE",
+                    }
+                )
 
     # ── dip-consistency audit (map dip direction vs section geometry) ────────
     for t in terminations:
@@ -2123,10 +2263,13 @@ def classify_stratal_terminations(
             return {
                 "available": False,
                 "reason": "the reference surface is flat in section — the downdip direction needed for a "
-                          "migration ordering is not resolvable",
+                "migration ordering is not resolvable",
             }
         cls = "onlap" if chosen is onlaps else "downlap"
-        key = (lambda t: t["termination_xy"][0] * d_ref)
+
+        def key(t):
+            return t["termination_xy"][0] * d_ref
+
         ordered = sorted(chosen, key=key)
         youngest_first = list(reversed(ordered)) if cls == "onlap" else ordered
         return {
@@ -2149,9 +2292,7 @@ def classify_stratal_terminations(
     n_candidates = len(beds)
     evaluated = len(evaluated_ids)
     coverage = round(evaluated / n_candidates, 6) if n_candidates else 0.0
-    n_classified = sum(
-        v for k, v in counts.items() if k in (set(TERMINATION_CLASSES) | set(FAULT_CONTACT_CLASSES))
-    )
+    n_classified = sum(v for k, v in counts.items() if k in (set(TERMINATION_CLASSES) | set(FAULT_CONTACT_CLASSES)))
     n_withheld = sum(v for k, v in counts.items() if k in CAVEAT_CLASSES)
     pitfall = {
         "zero_offset_abut_detected": bool(pitfall_rows),
@@ -2228,13 +2369,15 @@ def classify_stratal_terminations(
         "time_domain_warning": (
             None
             if (str(domain or "").lower() == "depth" or velocity_model)
-            else "time domain without a velocity model: section angles are NOT true dips (classification "
-                 "topology still valid)"
+            else "time domain without a velocity model: section angles are NOT true dips (classification topology still valid)"
         ),
     }
 
     r = _receipt(
-        "D-STRATAL-TERMINATION", status, tier=TIER_KINEMATIC, coverage=coverage,
+        "D-STRATAL-TERMINATION",
+        status,
+        tier=TIER_KINEMATIC,
+        coverage=coverage,
         reason=reason,
         equation=base_eq,
         inputs={
@@ -2257,7 +2400,8 @@ def classify_stratal_terminations(
         exceptions_considered=base_exceptions,
         evidence_refs=base_refs,
         missing_inputs=(
-            [] if status == "PASS"
+            []
+            if status == "PASS"
             else sorted({u["reason"] for u in unevaluable}) or ["terminations reaching the reference surface"]
         ),
         calculated_result=cr,

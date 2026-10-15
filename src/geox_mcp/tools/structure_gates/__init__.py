@@ -196,9 +196,13 @@ def _classify_receipts(receipts: dict[str, Any]) -> dict[str, list[str]]:
     """Bucket receipt ids by status. UNMEASURED is NOT a pass — it lands in
     `unmeasured`, never in `passes`."""
     buckets: dict[str, list[str]] = {
-        "kills": [], "passes": [], "warns": [],
-        "unmeasured": [], "not_applicable": [],
-        "partially_measured": [], "computable": [],
+        "kills": [],
+        "passes": [],
+        "warns": [],
+        "unmeasured": [],
+        "not_applicable": [],
+        "partially_measured": [],
+        "computable": [],
     }
     for gid, r in receipts.items():
         v = str(r.get("status") or r.get("verdict") or "UNMEASURED")
@@ -354,9 +358,7 @@ def run_all_structure_gates(
     if include_regime_gates:
         regime_block = _run_regime_falsification_block(framework)
     else:
-        regime_block = _regime_skipped_block(
-            "include_regime_gates=False — K-REGIME matrix not executed"
-        )
+        regime_block = _regime_skipped_block("include_regime_gates=False — K-REGIME matrix not executed")
     regime_receipts = _regime_gate_receipts(regime_block)
     regime_buckets = _classify_receipts(regime_receipts)
     regime_kills = regime_buckets["kills"]

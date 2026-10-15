@@ -229,6 +229,7 @@ def _stamp_qualified(
 ) -> dict[str, Any]:
     result.setdefault("tool", "geox_seismic_interpret")
     result["mode"] = mode
+
     # WALL WINS OVER BRANDING (2026-09-18): a structure the K-* physics gates rejected must not be
     # relabelled a candidate on the way out. The kill signal is looked for wherever the payload
     # actually reports it — at top level (the interpret branch writes it there) or inside

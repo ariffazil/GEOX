@@ -61,7 +61,7 @@ except Exception as e:  # noqa: BLE001
 try:
     RestorationBundle(epistemic_class="CERTAIN", **valid_restoration())
     check("2_forbidden_claim", False, "CERTAIN was accepted")
-except ValidationError as e:
+except ValidationError:
     check("2_forbidden_claim", True, "CERTAIN rejected (not in EpistemicClass / FORBIDDEN)")
 except Exception as e:  # noqa: BLE001
     check("2_forbidden_claim", False, repr(e))

@@ -86,16 +86,14 @@ def apply_ve_correction(dip_apparent_deg: float, ve: float) -> float:
     ve_f = float(ve)
     if not math.isfinite(ve_f) or ve_f <= 0.0:
         raise ValueError(
-            f"vertical exaggeration (ve) must be finite and > 0 — it is a dimensionless "
-            f"display ratio, not a velocity; got {ve!r}"
+            f"vertical exaggeration (ve) must be finite and > 0 — it is a dimensionless display ratio, not a velocity; got {ve!r}"
         )
     dip_f = float(dip_apparent_deg)
     if not math.isfinite(dip_f):
         raise ValueError(f"dip_apparent_deg must be finite, got {dip_apparent_deg!r}")
     if abs(dip_f) >= 90.0 - 1e-9:
         raise ValueError(
-            f"apparent dip {dip_f} deg is at or beyond vertical — tan() is unbounded and "
-            "no finite VE correction exists"
+            f"apparent dip {dip_f} deg is at or beyond vertical — tan() is unbounded and no finite VE correction exists"
         )
     theta_apparent_rad = math.radians(dip_f)
     theta_true_rad = math.atan(math.tan(theta_apparent_rad) / ve_f)
@@ -141,9 +139,7 @@ def time_to_depth(twt_ms: float | np.ndarray, interval_velocity_m_s: float) -> f
     if not np.all(np.isfinite(t)):
         raise ValueError("twt_ms contains non-finite values; a NaN time is not a depth")
     if np.any(t < 0.0):
-        raise ValueError(
-            f"twt_ms must be non-negative two-way time; got min={float(np.min(t))!r}"
-        )
+        raise ValueError(f"twt_ms must be non-negative two-way time; got min={float(np.min(t))!r}")
     depth = v * (t / 1000.0) / 2.0
     if np.ndim(twt_ms) == 0:
         return float(depth)
@@ -199,9 +195,7 @@ def declare_calibration_state(
 
     ms = str(migration_state).strip().lower()
     if ms not in MIGRATION_STATES:
-        raise ValueError(
-            f"migration_state must be one of {MIGRATION_STATES}, got {migration_state!r}"
-        )
+        raise ValueError(f"migration_state must be one of {MIGRATION_STATES}, got {migration_state!r}")
 
     ve: float | None
     if vertical_exaggeration is None:
@@ -215,14 +209,10 @@ def declare_calibration_state(
             ve = float(vertical_exaggeration)
         except (TypeError, ValueError):
             ve = None
-            problems.append(
-                f"vertical_exaggeration not a number ({vertical_exaggeration!r}) — treated as undeclared"
-            )
+            problems.append(f"vertical_exaggeration not a number ({vertical_exaggeration!r}) — treated as undeclared")
         else:
             if not math.isfinite(ve) or ve <= 0.0:
-                problems.append(
-                    f"vertical_exaggeration={ve} is not a valid display ratio (> 0 required)"
-                )
+                problems.append(f"vertical_exaggeration={ve} is not a valid display ratio (> 0 required)")
                 ve = None
             elif abs(ve - 1.0) > _VE_UNITY_TOL and not ve_corrected:
                 problems.append(

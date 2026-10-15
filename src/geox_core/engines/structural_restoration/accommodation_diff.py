@@ -57,10 +57,7 @@ def compute_accommodation(
     """
     # SR_INV-003: verify shapes match
     if source_grid.shape != target_grid.shape:
-        raise ValueError(
-            f"Grid shape mismatch: source {source_grid.shape} vs "
-            f"target {target_grid.shape}. SR_INV-003 violated."
-        )
+        raise ValueError(f"Grid shape mismatch: source {source_grid.shape} vs target {target_grid.shape}. SR_INV-003 violated.")
 
     # SR_INV-001: never mutate inputs
     src = np.array(source_grid, dtype=np.float64)

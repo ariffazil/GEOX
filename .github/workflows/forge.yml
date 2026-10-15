@@ -130,8 +130,15 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy
-        uses: actions/deploy-pages@v5
         id: deployment
+        # GitHub Pages is unavailable on private repositories under the free plan
+        # ("Your current plan does not support GitHub Pages for this repository",
+        # HTTP 422 since GEOX went private on 2026-10-14). The skills validation +
+        # site build above are the real gate; deploy is best-effort and must not
+        # fail the pipeline. Re-enable by removing `continue-on-error` when the
+        # repo is public again or the plan supports Pages.
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
 
   test-mcp:
     if: github.actor != 'dependabot[bot]' && github.actor != 'app/dependabot'

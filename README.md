@@ -139,6 +139,8 @@ A reply that claims to overcome any of these has failed the constitution.
 
 27 canonical tools. The names below are **generated from `registry.py`** — do not transcribe them by hand.
 
+mcp_tools_live: dynamic_from_tools_list
+
 <!-- GEOX:GENERATED:INVENTORY:START -->
 <!-- 27 canonical names, generated from registry.py -->
 

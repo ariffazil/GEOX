@@ -109,9 +109,7 @@ def dtw_align_traces(
     if A.size == 0 or B.size == 0:
         raise ValueError("dtw_align_traces received an empty trace")
     if not np.all(np.isfinite(A)) or not np.all(np.isfinite(B)):
-        raise ValueError(
-            "traces contain non-finite values — a NaN cost silently wrecks the DP; fill or mask first"
-        )
+        raise ValueError("traces contain non-finite values — a NaN cost silently wrecks the DP; fill or mask first")
 
     n, m = int(A.size), int(B.size)
     if band is None:
@@ -147,9 +145,7 @@ def dtw_align_traces(
             cost[i, j] = local + (diag if best == 0 else up if best == 1 else left)
 
     if not np.isfinite(cost[n - 1, m - 1]):
-        raise ValueError(
-            f"no admissible DTW path exists within band={band_eff} for traces of length {n} and {m}"
-        )
+        raise ValueError(f"no admissible DTW path exists within band={band_eff} for traces of length {n} and {m}")
 
     # Backtrack.
     path: list[tuple[int, int]] = [(n - 1, m - 1)]
@@ -360,15 +356,12 @@ def compute_isopach(
                 "min_m": float(np.min(thick)),
                 "max_m": float(np.max(thick)),
                 "std_m": float(np.std(thick)) if thick.size > 1 else 0.0,
-                "range_p95_p5_m": float(np.percentile(thick, 95) - np.percentile(thick, 5))
-                if thick.size > 1
-                else 0.0,
+                "range_p95_p5_m": float(np.percentile(thick, 95) - np.percentile(thick, 5)) if thick.size > 1 else 0.0,
             },
             notes=notes
             + (
                 [
-                    f"PARTIAL: only {n_measured}/{n_traces} traces carry both picks "
-                    f"(coverage {coverage:.3f})",
+                    f"PARTIAL: only {n_measured}/{n_traces} traces carry both picks (coverage {coverage:.3f})",
                 ]
                 if coverage < 1.0
                 else []
@@ -382,8 +375,9 @@ def compute_isopach(
         coverage=float(coverage),
         method=method + "; coverage = traces with both picks / total traces",
         uncertainty={"gap_report": gap},
-        notes=["coverage is reported as a first-class Measurement — it is mandatory alongside any "
-               "number downstream (CONTRACT §5)"],
+        notes=[
+            "coverage is reported as a first-class Measurement — it is mandatory alongside any number downstream (CONTRACT §5)"
+        ],
     )
     return out
 
@@ -416,9 +410,7 @@ def expansion_index(
     hw = np.asarray(thickness_hangingwall, dtype=float).ravel()
     fw = np.asarray(thickness_footwall, dtype=float).ravel()
     if hw.size != fw.size:
-        raise ValueError(
-            f"hangingwall ({hw.size}) and footwall ({fw.size}) thickness arrays must have equal length"
-        )
+        raise ValueError(f"hangingwall ({hw.size}) and footwall ({fw.size}) thickness arrays must have equal length")
 
     finite_hw = np.isfinite(hw)
     finite_fw = np.isfinite(fw)
@@ -503,8 +495,7 @@ def expansion_index(
             notes=notes
             + (
                 [
-                    f"PARTIAL: {n_pairs}/{n_total} traces form a valid pair "
-                    f"(coverage {coverage:.3f})",
+                    f"PARTIAL: {n_pairs}/{n_total} traces form a valid pair (coverage {coverage:.3f})",
                 ]
                 if coverage < 1.0
                 else []
@@ -583,9 +574,7 @@ def isopach_differential(
     if tmap.ndim != 2:
         raise ValueError(f"thickness_map must be 2-D or 1-D, got ndim={tmap.ndim}")
     if int(structure_axis) not in (0, 1):
-        raise ValueError(
-            f"structure_axis must be 0 or 1 for a 2-D map, got {structure_axis!r}"
-        )
+        raise ValueError(f"structure_axis must be 0 or 1 for a 2-D map, got {structure_axis!r}")
     axis_along = int(structure_axis)
     axis_across = 1 - axis_along
 
@@ -691,8 +680,7 @@ def isopach_differential(
 
     ratio = s_across / s_along
     notes = [
-        f"S_across={s_across:g} m / S_along={s_along:g} m = {ratio:g} "
-        "(robust spreads, medians over profiles)",
+        f"S_across={s_across:g} m / S_along={s_along:g} m = {ratio:g} (robust spreads, medians over profiles)",
         _NON_DECOMPACTED_NOTE,
     ]
     if abs(ratio - 1.0) <= 0.25:
@@ -724,9 +712,7 @@ def isopach_differential(
                 "along_spread_profile_spreads_m": [float(v) for v in s_along_profiles],
                 "across_spread_profile_spreads_m": [float(v) for v in s_across_profiles],
                 "ratio_iqr_of_profile_spreads": (
-                    float(
-                        np.percentile(s_across_profiles, 75) - np.percentile(s_across_profiles, 25)
-                    )
+                    float(np.percentile(s_across_profiles, 75) - np.percentile(s_across_profiles, 25))
                     if len(s_across_profiles) > 1
                     else 0.0
                 ),
