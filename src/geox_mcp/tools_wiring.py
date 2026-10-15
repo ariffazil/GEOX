@@ -7504,35 +7504,24 @@ def register_tools_on(mcp):
         except Exception:
             deployed_sha = "unknown"
 
-        def _map_len(mgr, names):
-            for n in names:
-                obj = getattr(mgr, n, None)
-                if isinstance(obj, dict):
-                    return len(obj)
-            return None
-
-        async def _live_count(mgr_names, map_names, list_name):
-            mgr = next((getattr(mcp, n, None) for n in mgr_names if getattr(mcp, n, None) is not None), None)
-            if mgr is None:
+        # FastMCP 3.4.6: async list_tools()/list_resources()/list_prompts()
+        # live directly on the instance (no _tool_manager attr).
+        async def _live_count(list_name):
+            fn = getattr(mcp, list_name, None)
+            if not callable(fn):
                 return None
-            n = _map_len(mgr, map_names)
-            if n is not None:
-                return n
-            fn = getattr(mgr, list_name, None)
-            if callable(fn):
-                try:
-                    res = fn()
-                    if _inspect.isawaitable(res):
-                        res = await res
-                    return len(list(res or []))
-                except Exception:
-                    return None
-            return None
+            try:
+                res = fn()
+                if _inspect.isawaitable(res):
+                    res = await res
+                return len(list(res or []))
+            except Exception:
+                return None
 
         live_counts = {
-            "tools": await _live_count(("_tool_manager", "_components"), ("_tools", "tools"), "list_tools"),
-            "resources": await _live_count(("_resource_manager",), ("_resources", "resources"), "list_resources"),
-            "prompts": await _live_count(("_prompt_manager",), ("_prompts", "prompts"), "list_prompts"),
+            "tools": await _live_count("list_tools"),
+            "resources": await _live_count("list_resources"),
+            "prompts": await _live_count("list_prompts"),
         }
 
         return {

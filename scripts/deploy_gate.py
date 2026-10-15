@@ -106,7 +106,14 @@ def main() -> int:
 
     print(f"[GATE] GEOX deploy gate — target {args.url} expect sha {expect_sha}")
 
-    # ── 1. wait for health ─────────────────────────────────────────────
+    # ── 1. wait for the organ to answer with the RIGHT identity ───────
+    # GEOX /health mirrors the arifOS kernel's own status: when the kernel is
+    # in a standing degraded/HOLD state, GEOX honestly reports degraded even
+    # though the GEOX deploy is correct. Per the repo's own pre-push doctrine
+    # (repo_guard.py Gate 3): standing kernel state is WARN, never BLOCK —
+    # blocking on it would deadlock every deploy without making it safer.
+    # GEOX-owned BLOCKs: wrong SHA, surface drift, registry mismatch,
+    # resultType contract failure (checked below).
     deadline = time.time() + args.timeout
     health: dict = {}
     with httpx.Client(base_url=args.url, timeout=10.0) as client:
@@ -115,20 +122,26 @@ def main() -> int:
                 r = client.get("/health")
                 if r.status_code == 200:
                     health = r.json()
-                    if health.get("status") == "healthy":
+                    ident_ok = (health.get("identity") or {}).get("verified") is True
+                    if ident_ok and expect_sha in str(health.get("git_version", "")):
                         break
             except Exception:
                 pass
             time.sleep(2.0)
-        if health.get("status") != "healthy":
-            fail(f"/health not healthy after {args.timeout}s (last: {health.get('status')})")
+        if not health:
+            fail(f"/health unreachable after {args.timeout}s")
             return _summary()
+        if expect_sha not in str(health.get("git_version", "")):
+            fail(f"/health git_version={health.get('git_version')!r} != expected {expect_sha!r}")
+            return _summary()
+        ok(f"/health serving identity {health.get('git_version')} (matches deployed {expect_sha})")
 
-        git_version = str(health.get("git_version", ""))
-        if expect_sha in git_version:
-            ok(f"/health git_version={git_version} matches deployed {expect_sha}")
-        else:
-            fail(f"/health git_version={git_version!r} != expected {expect_sha!r}")
+        if health.get("status") != "healthy":
+            print(
+                f"  [WARN] /health status={health.get('status')!r} — inherited arifOS kernel "
+                f"state (reasons: {(health.get('owner_summary') or {}).get('reasons', [])}); "
+                f"not a property of this deploy. GEOX-owned gates still enforced below."
+            )
 
         # ── 2. registry truth ──────────────────────────────────────────
         drift = health.get("surface_drift", {})
