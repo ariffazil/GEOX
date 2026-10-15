@@ -217,6 +217,62 @@ async def test_bridge_json_error_reply_untouched():
 
 
 @pytest.mark.asyncio
+async def test_bridge_tool_error_result_still_complete():
+    """Spec (draft server/tools): a COMPLETED tools/call reply carries
+    resultType:'complete' even when the tool itself failed (isError:true).
+    content/structuredContent/isError must be preserved verbatim — only the
+    discriminator is added."""
+    raw = json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": 10,
+            "result": {"content": [{"type": "text", "text": "boom"}], "isError": True},
+        }
+    ).encode()
+    status, headers, chunks = await _drive(
+        {
+            "*": {
+                "headers": [(b"content-type", b"application/json"), (b"content-length", str(len(raw)).encode())],
+                "chunks": [raw],
+            }
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 10,
+            "method": "tools/call",
+            "params": {"name": "geox_well_ingest", "arguments": {"bad": 1}, **_meta()},
+        },
+    )
+    data = json.loads(b"".join(chunks))
+    res = data["result"]
+    assert res["isError"] is True, "isError must survive the rewrite"
+    assert res["content"] == [{"type": "text", "text": "boom"}], "content must be byte-preserving"
+    assert res["resultType"] == "complete", "completed tool errors still carry resultType=complete"
+    if "content-length" in headers:
+        assert int(headers["content-length"]) == len(b"".join(chunks))
+
+
+@pytest.mark.asyncio
+async def test_bridge_existing_discriminator_preserved():
+    """An existing resultType (e.g. input_required from MRTR elicitation)
+    is NEVER overwritten with 'complete' — the fix is additive only."""
+    raw = json.dumps(
+        {
+            "jsonrpc": "2.0",
+            "id": 11,
+            "result": {"resultType": "input_required", "content": [{"type": "text", "text": "name?"}]},
+        }
+    ).encode()
+    status, headers, chunks = await _drive(
+        {"*": {"headers": [(b"content-type", b"application/json")], "chunks": [raw]}},
+        {"jsonrpc": "2.0", "id": 11, "method": "tools/call", "params": {"name": "geox_claim", "arguments": {}, **_meta()}},
+    )
+    data = json.loads(b"".join(chunks))
+    assert data["result"]["resultType"] == "input_required", "existing discriminator must be preserved, not clobbered"
+    assert data["result"]["content"] == [{"type": "text", "text": "name?"}]
+
+
+@pytest.mark.asyncio
 async def test_bridge_sse_stream_frames_get_resulttype():
     """Streamed replies (text/event-stream) must be rewritten frame by frame —
     including a JSON frame split across two body chunks."""
