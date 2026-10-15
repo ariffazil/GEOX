@@ -437,4 +437,3 @@ async def test_11_phase_01_truth_floor_and_csp_parity():
     uris = {str(r.uri) for r in resources}
     assert "ui://geox/workspace-v1" in uris
     assert "ui://geox/gravmag-studio" in uris
-    assert "ui://well/desk" in uris

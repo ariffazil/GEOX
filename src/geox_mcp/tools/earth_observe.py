@@ -130,7 +130,9 @@ def geox_observe(
         "Strict Rule: You are a tri-witness, not a judge. Never assert fluid content (Amplitude != Hydrocarbon). "
         "Enumerate visible facts only; all geological classifications are hypotheses."
     )
-    user_prompt = f"Analyze this Earth artifact (modality hint: {modality}). Extract visible features, text, and competing hypotheses."
+    user_prompt = (
+        f"Analyze this Earth artifact (modality hint: {modality}). Extract visible features, text, and competing hypotheses."
+    )
 
     try:
         resp = backend.inspect_artifact(
@@ -203,13 +205,14 @@ def geox_observe(
     # "contradiction_auditor runs before every final reply" must be observable).
     logger.info(
         "CONTRADICTION_AUDIT modality=%s hypotheses=%d findings=%d ok=%s",
-        modality, len(hypotheses), len(audit["findings"]), audit["ok"],
+        modality,
+        len(hypotheses),
+        len(audit["findings"]),
+        audit["ok"],
     )
     audit_forced_review = not audit["ok"]
     for f in audit["findings"]:
-        limitations_cannot_determine.append(
-            f"CONTRADICTION_AUDIT[{f['rule']}] {f['type']} on {f['target']}: {f['detail']}"
-        )
+        limitations_cannot_determine.append(f"CONTRADICTION_AUDIT[{f['rule']}] {f['type']} on {f['target']}: {f['detail']}")
 
     # 5. Physical Elicitor (Diagnostic Human Clues)
     scale_obj = None
@@ -289,7 +292,9 @@ def geox_observe(
             orientation=OrientationMetadata(**context["orientation"]) if "orientation" in context else None,
             crs=context.get("crs"),
             domain=context.get("domain", "time" if modality == "seismic_display" else "na"),
-            display_transform=DisplayTransformMetadata(**context["display_transform"]) if "display_transform" in context else None,
+            display_transform=DisplayTransformMetadata(**context["display_transform"])
+            if "display_transform" in context
+            else None,
             acquisition_metadata=context.get("acquisition_metadata", {}),
         ),
         observations=ObservationsBlock(

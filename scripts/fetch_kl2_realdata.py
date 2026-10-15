@@ -119,7 +119,7 @@ if xr is not None:
             # sample along the transect (nearest-neighbour — no invented interpolation)
             bathy = np.array([arr[int(np.argmin(np.abs(blat - la))),
                                   int(np.argmin(np.abs(blon - lo)))]
-                              for la, lo in zip(LAT, LON)], dtype=float)
+                              for la, lo in zip(LAT, LON, strict=False)], dtype=float)
             np.savez(f"{OUT}/real_bathy.npz", dist_km=DIST, lat=LAT, lon=LON,
                      bathy_m=bathy, grid_lat=blat, grid_lon=blon, source=label)
             report["datasets"][label] = {

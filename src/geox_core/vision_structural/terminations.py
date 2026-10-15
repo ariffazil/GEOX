@@ -141,12 +141,10 @@ def _skeleton_endpoints(skel: np.ndarray) -> list[tuple[int, int]]:
     kernel = np.array([[1, 1, 1], [1, 0, 1], [1, 1, 1]], dtype=np.uint8)
     counts = ndi.convolve(skel.astype(np.uint8), kernel, mode="constant", cval=0)
     rows, cols = np.nonzero(skel & (counts == 1))
-    return [(int(r), int(c)) for r, c in zip(rows, cols)]
+    return [(int(r), int(c)) for r, c in zip(rows, cols, strict=False)]
 
 
-def _walk_tangent(
-    skel: np.ndarray, start: tuple[int, int], steps: int
-) -> tuple[float, float, float, float] | None:
+def _walk_tangent(skel: np.ndarray, start: tuple[int, int], steps: int) -> tuple[float, float, float, float] | None:
     """Walk a skeleton from an endpoint; return (orientation_deg, length_px, ux, uy).
 
     (ux, uy) is the unit vector pointing INWARD along the bed axis (from the endpoint
@@ -203,18 +201,11 @@ def _ray_profile(
     cols = endpoint[1] + t * ox
     coords = np.vstack([rows, cols])
     vals = ndi.map_coordinates(field, coords, order=1, mode="constant", cval=0.0)
-    inside = (
-        (coords[0] >= 0.0)
-        & (coords[0] <= field.shape[0] - 1)
-        & (coords[1] >= 0.0)
-        & (coords[1] <= field.shape[1] - 1)
-    )
+    inside = (coords[0] >= 0.0) & (coords[0] <= field.shape[0] - 1) & (coords[1] >= 0.0) & (coords[1] <= field.shape[1] - 1)
     return np.asarray(vals, dtype=float), np.asarray(inside, dtype=bool)
 
 
-def _local_perpendicular_thickness(
-    label_map: np.ndarray, endpoint: tuple[int, int], own_label: int, ux: float
-) -> float:
+def _local_perpendicular_thickness(label_map: np.ndarray, endpoint: tuple[int, int], own_label: int, ux: float) -> float:
     """Perpendicular bed thickness (px) at an endpoint from the body's column height.
 
     A body of true thickness T dipping by alpha has column height T / cos(alpha), so
@@ -302,10 +293,15 @@ def _taper_estimate(
     thickness = _local_perpendicular_thickness(label_map, endpoint, own_label, ux)
     angle = float(np.degrees(np.arctan2(thickness, max(taper_length, 1e-6))))
     angle = float(min(max(angle, 0.0), 90.0))
-    return angle, float(taper_length), float(thickness), (
-        f"taper angle {angle:.2f} deg from atan(thickness {thickness:.2f} px / "
-        f"taper length {taper_length:.2f} px); envelope decays to "
-        f"{float(decay_frac):.2f} * peak at {t_zero:.0f} px"
+    return (
+        angle,
+        float(taper_length),
+        float(thickness),
+        (
+            f"taper angle {angle:.2f} deg from atan(thickness {thickness:.2f} px / "
+            f"taper length {taper_length:.2f} px); envelope decays to "
+            f"{float(decay_frac):.2f} * peak at {t_zero:.0f} px"
+        ),
     )
 
 
@@ -389,9 +385,7 @@ def detect_terminations(
     range continues off the data and yields zero candidates (edge-of-data, not geology).
     """
     if method not in _GRADIENT_FILTERS:
-        raise ValueError(
-            f"unknown gradient method {method!r}; available: {sorted(_GRADIENT_FILTERS)}"
-        )
+        raise ValueError(f"unknown gradient method {method!r}; available: {sorted(_GRADIENT_FILTERS)}")
 
     img = np.asarray(section, dtype=float)
     if img.ndim != 2:
@@ -526,9 +520,7 @@ def detect_terminations(
                 "taper_length_px": float(taper_length),
                 "local_thickness_px": float(thickness),
                 "contact_angle_deg": float(angle),
-                "class": (
-                    "truncation" if angle >= float(angular_threshold_deg) else "onlap"
-                ),
+                "class": ("truncation" if angle >= float(angular_threshold_deg) else "onlap"),
                 "class_reason": (
                     f"{reason}; threshold {float(angular_threshold_deg):.2f} deg — "
                     "geometric proxy only, horizon_mask required to stratigraphically "
@@ -685,9 +677,7 @@ def build_cross_cutting_table(
     def _members(horizon: dict[str, Any], key: str) -> list[str]:
         return [str(v) for v in (horizon.get(key) or [])]
 
-    feature_ids = sorted(
-        {fid for h in hz for fid in (_members(h, "offset_by") + _members(h, "draped_by"))}
-    )
+    feature_ids = sorted({fid for h in hz for fid in (_members(h, "offset_by") + _members(h, "draped_by"))})
 
     relations: list[dict[str, Any]] = []
     unconstrained: list[str] = []
@@ -699,16 +689,8 @@ def build_cross_cutting_table(
             unconstrained.append(fid)
             continue
 
-        younger_h = (
-            min(offset_horizons, key=lambda h: ranks[str(h["id"])])
-            if offset_horizons
-            else None
-        )
-        older_h = (
-            max(drape_horizons, key=lambda h: ranks[str(h["id"])])
-            if drape_horizons
-            else None
-        )
+        younger_h = min(offset_horizons, key=lambda h: ranks[str(h["id"])]) if offset_horizons else None
+        older_h = max(drape_horizons, key=lambda h: ranks[str(h["id"])]) if drape_horizons else None
 
         def _bound(h: dict[str, Any] | None) -> dict[str, Any] | None:
             if h is None:
@@ -735,20 +717,13 @@ def build_cross_cutting_table(
                 "oldest horizon that drapes it locally)"
             )
         elif younger_bound:
-            statement = (
-                f"{fid} is younger than {younger_bound['horizon_id']}; no drape "
-                "observation bounds it from above"
-            )
+            statement = f"{fid} is younger than {younger_bound['horizon_id']}; no drape observation bounds it from above"
         else:
             statement = (
-                f"{fid} is older than {older_bound['horizon_id']} (local drape); no "
-                "offset observation bounds it from below"
+                f"{fid} is older than {older_bound['horizon_id']} (local drape); no offset observation bounds it from below"
             )
         if consistent is False:
-            statement += (
-                " — CONTRADICTION: the supplied offset and drape observations give an "
-                "empty age interval"
-            )
+            statement += " — CONTRADICTION: the supplied offset and drape observations give an empty age interval"
 
         evidence: dict[str, Any] = {
             "n_candidates": n_candidates_available,
@@ -794,9 +769,7 @@ def build_cross_cutting_table(
     unconstrained.extend(
         str(h["id"])
         for h in hz
-        if str(h["id"]) not in seen_features
-        and not _members(h, "offset_by")
-        and not _members(h, "draped_by")
+        if str(h["id"]) not in seen_features and not _members(h, "offset_by") and not _members(h, "draped_by")
     )
 
     return {

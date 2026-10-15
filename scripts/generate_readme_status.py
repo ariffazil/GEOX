@@ -99,7 +99,7 @@ def build_block() -> str:
         f"- Discovery profiles: default **{profile_counts.get('default', '?')}** · specialist **{profile_counts.get('specialist', '?')}** · research **{profile_counts.get('research', '?')}** (pack policy, not the gate)",
         f"- Internal (hidden, executable in-process): **{len(INTERNAL_TOOLS)}** names — `registry.py::INTERNAL_TOOLS`, never on `tools/list`",
         att_note,
-        f"- Generated surfaces in sync: **run `scripts/generate_all_surfaces.py --check`** (CI-gated; this block is not one of them)",
+        "- Generated surfaces in sync: **run `scripts/generate_all_surfaces.py --check`** (CI-gated; this block is not one of them)",
         END,
     ]
     return "\n".join(lines)

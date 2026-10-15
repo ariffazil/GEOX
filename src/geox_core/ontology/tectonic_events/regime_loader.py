@@ -633,9 +633,7 @@ def _read_yaml(path: Path) -> tuple[dict[str, Any], str]:
     except yaml.YAMLError as exc:  # unparseable
         raise RegimeRegistryParseError(f"Unparseable YAML in {path}: {exc}") from exc
     if not isinstance(document, Mapping):
-        raise RegimeRegistryParseError(
-            f"Top-level YAML in {path} must be a mapping, got {type(document).__name__}"
-        )
+        raise RegimeRegistryParseError(f"Top-level YAML in {path} must be a mapping, got {type(document).__name__}")
     return {str(k): v for k, v in document.items()}, digest
 
 
@@ -661,9 +659,7 @@ def _direction(test_id: str) -> str:
     return "undeclared"
 
 
-def _parse_falsifier_test(
-    test_id: str, regime_id: str, body: Any, prov: Provenance
-) -> FalsifierTest:
+def _parse_falsifier_test(test_id: str, regime_id: str, body: Any, prov: Provenance) -> FalsifierTest:
     body_map = _as_mapping(body)
     return FalsifierTest(
         id=str(test_id),
@@ -741,11 +737,7 @@ def load_registry(path: str | Path | None = None) -> RegimeRegistry:
             provenance=prov(regime_path),
             contradiction_tests=contradiction_tests,
             deficit_tests=deficit_tests,
-            **{
-                k: v
-                for k, v in body_map.items()
-                if k not in ("contradiction_tests", "deficit_tests", "id")
-            },
+            **{k: v for k, v in body_map.items() if k not in ("contradiction_tests", "deficit_tests", "id")},
         )
 
     corrections = raw.get("corrections_log")
@@ -823,15 +815,11 @@ def corrections_log() -> list[Correction]:
 
 
 def hard_invariant(invariant_id: str) -> HardInvariant | None:
-    return get_registry().hard_invariants.get(invariant_id) or _lookup(
-        get_registry().hard_invariants, invariant_id
-    )
+    return get_registry().hard_invariants.get(invariant_id) or _lookup(get_registry().hard_invariants, invariant_id)
 
 
 def soft_invariant(invariant_id: str) -> SoftInvariant | None:
-    return get_registry().soft_invariants.get(invariant_id) or _lookup(
-        get_registry().soft_invariants, invariant_id
-    )
+    return get_registry().soft_invariants.get(invariant_id) or _lookup(get_registry().soft_invariants, invariant_id)
 
 
 def decoupling_mechanism(mechanism_id: str) -> DecouplingMechanism | None:
@@ -903,9 +891,7 @@ def _id_index(raw: Mapping[str, Any]) -> dict[str, tuple[str, str, str]]:
         "decoupling_mechanisms",
     ):
         for entry_id in _as_mapping(raw.get(section)):
-            index.setdefault(
-                _norm(entry_id), (section, str(entry_id), f"{section}.{entry_id}")
-            )
+            index.setdefault(_norm(entry_id), (section, str(entry_id), f"{section}.{entry_id}"))
     for regime_id, body in _as_mapping(raw.get("falsifier_registry")).items():
         index.setdefault(
             _norm(regime_id),
@@ -926,9 +912,7 @@ def _id_index(raw: Mapping[str, Any]) -> dict[str, tuple[str, str, str]]:
         for position, entry in enumerate(corrections):
             entry_id = _text(_as_mapping(entry).get("id"))
             if entry_id:
-                index.setdefault(
-                    _norm(entry_id), ("corrections_log", entry_id, f"corrections_log[{position}]")
-                )
+                index.setdefault(_norm(entry_id), ("corrections_log", entry_id, f"corrections_log[{position}]"))
     return index
 
 
@@ -946,9 +930,7 @@ def _gate_index(raw: Mapping[str, Any]) -> dict[str, list[tuple[str, str, str]]]
             body_map = _as_mapping(body)
             for field in ("gate", "gates", "entry_gate"):
                 for gate in _text_list(body_map.get(field)):
-                    index.setdefault(_norm(gate), []).append(
-                        (section, str(entry_id), f"{section}.{entry_id}")
-                    )
+                    index.setdefault(_norm(gate), []).append((section, str(entry_id), f"{section}.{entry_id}"))
     return index
 
 
@@ -962,9 +944,7 @@ def _is_citation_literal(text: str, start: int, value: float) -> bool:
     return bool(_CITATION_CONTEXT_RE.search(window))
 
 
-def _extract_literals(
-    text: str, *, max_length: int = 96, include_citations: bool = False
-) -> list[tuple[float, str]]:
+def _extract_literals(text: str, *, max_length: int = 96, include_citations: bool = False) -> list[tuple[float, str]]:
     """Numeric literals in a text, each with the quoted source span.
 
     Citation years (Byerlee 1978, Steno 1669) are excluded unless
@@ -1015,9 +995,7 @@ def _entry_strings(raw: Mapping[str, Any], yaml_path: str) -> list[tuple[str, st
     body, found = _resolve_path(raw, yaml_path)
     if not found:
         return []
-    return [
-        (f"{yaml_path}.{rel}" if rel else yaml_path, text) for rel, text in _iter_strings(body)
-    ]
+    return [(f"{yaml_path}.{rel}" if rel else yaml_path, text) for rel, text in _iter_strings(body)]
 
 
 def _correction_blobs(raw: Mapping[str, Any]) -> list[tuple[int, str, dict[str, Any]]]:
@@ -1028,9 +1006,7 @@ def _correction_blobs(raw: Mapping[str, Any]) -> list[tuple[int, str, dict[str, 
         return out
     for position, entry in enumerate(corrections):
         entry_map = _as_mapping(entry)
-        out.append(
-            (position, _text(entry_map.get("id")) or f"corrections_log[{position}]", entry_map)
-        )
+        out.append((position, _text(entry_map.get("id")) or f"corrections_log[{position}]", entry_map))
     return out
 
 
@@ -1043,9 +1019,7 @@ def _correction_blob(entry_map: Mapping[str, Any]) -> str:
     )
 
 
-def _related_corrections(
-    registry: RegimeRegistry, entry_text: str, literals: Sequence[float]
-) -> list[dict[str, Any]]:
+def _related_corrections(registry: RegimeRegistry, entry_text: str, literals: Sequence[float]) -> list[dict[str, Any]]:
     """Corrections sharing a numeric literal or a *distinctive* keyword.
 
     Heuristic linkage, labelled as such in the payload — the registry declares
@@ -1054,11 +1028,7 @@ def _related_corrections(
     corrections entry), so generic doctrine words do not drag in every
     correction in the log.
     """
-    tokens = {
-        token
-        for token in _TOKEN_RE.findall(entry_text.upper())
-        if len(token) >= 6 and token not in _TOKEN_STOPWORDS
-    }
+    tokens = {token for token in _TOKEN_RE.findall(entry_text.upper()) if len(token) >= 6 and token not in _TOKEN_STOPWORDS}
     entries = _correction_blobs(registry.raw)
     if not entries or not (tokens or literals):
         return []
@@ -1112,11 +1082,7 @@ def _keyword_candidates(raw: Mapping[str, Any], tokens: Sequence[str]) -> list[s
             continue
         owner_id = f"{parts[0]}.{parts[1]}"
         per_entry[owner_id] = per_entry.get(owner_id, "") + " " + text.upper()
-    matched = [
-        owner_id
-        for owner_id, blob in per_entry.items()
-        if all(token in blob for token in tokens)
-    ]
+    matched = [owner_id for owner_id, blob in per_entry.items() if all(token in blob for token in tokens)]
     if len(matched) <= 1:
         return matched
 
@@ -1125,11 +1091,7 @@ def _keyword_candidates(raw: Mapping[str, Any], tokens: Sequence[str]) -> list[s
         body_map = _as_mapping(body) if found else {}
         declares_status = any(not _blank(body_map.get(key)) for key in _THRESHOLD_STATUS_KEYS)
         section = owner_id.split(".")[0]
-        section_rank = (
-            _SECTION_PREFERENCE.index(section)
-            if section in _SECTION_PREFERENCE
-            else len(_SECTION_PREFERENCE)
-        )
+        section_rank = _SECTION_PREFERENCE.index(section) if section in _SECTION_PREFERENCE else len(_SECTION_PREFERENCE)
         return (0 if declares_status else 1, section_rank)
 
     best = min(rank(owner_id) for owner_id in matched)
@@ -1208,9 +1170,9 @@ def threshold_source(
         if owners:
             owners = sorted(
                 owners,
-                key=lambda item: _SECTION_PREFERENCE.index(item[0])
-                if item[0] in _SECTION_PREFERENCE
-                else len(_SECTION_PREFERENCE),
+                key=lambda item: (
+                    _SECTION_PREFERENCE.index(item[0]) if item[0] in _SECTION_PREFERENCE else len(_SECTION_PREFERENCE)
+                ),
             )
             location = owners[0]
             resolved_via = "gate_id"
@@ -1243,19 +1205,12 @@ def threshold_source(
             ranked = _rank_paths(matched_paths, raw)
             if ranked:
                 location = next(
-                    (
-                        (path.split(".")[0], path.split(".")[-1], path)
-                        for path in ranked
-                    ),
+                    ((path.split(".")[0], path.split(".")[-1], path) for path in ranked),
                     None,
                 )
                 resolved_via = "numeric_literal_match"
         if location is None:
-            tokens = [
-                token
-                for token in _TOKEN_RE.findall(query.upper())
-                if len(token) >= 4 and token not in _TOKEN_STOPWORDS
-            ]
+            tokens = [token for token in _TOKEN_RE.findall(query.upper()) if len(token) >= 4 and token not in _TOKEN_STOPWORDS]
             candidates = _keyword_candidates(raw, tokens)
             if len(candidates) == 1:
                 section_name, entry_name = candidates[0].split(".", 1)
@@ -1287,9 +1242,7 @@ def threshold_source(
     section, entry_id, yaml_path = location
     body, found = _resolve_path(raw, yaml_path)
     if not found:
-        return _not_found(
-            active, query, f"resolved path {yaml_path!r} is not present in the YAML", []
-        )
+        return _not_found(active, query, f"resolved path {yaml_path!r} is not present in the YAML", [])
     entry = _as_mapping(body)
 
     status_value, status_key = _declared(entry, _THRESHOLD_STATUS_KEYS)
@@ -1362,9 +1315,7 @@ def _rank_paths(matched_paths: Sequence[str], raw: Mapping[str, Any]) -> list[st
         declares_status = False
         if found:
             body_map = _as_mapping(body)
-            declares_status = any(
-                not _blank(body_map.get(key)) for key in _THRESHOLD_STATUS_KEYS
-            )
+            declares_status = any(not _blank(body_map.get(key)) for key in _THRESHOLD_STATUS_KEYS)
         section_rank = (
             _SECTION_PREFERENCE.index(owner.split(".")[0])
             if owner.split(".")[0] in _SECTION_PREFERENCE
@@ -1377,9 +1328,7 @@ def _rank_paths(matched_paths: Sequence[str], raw: Mapping[str, Any]) -> list[st
 
 def threshold_status(gate_id_or_constant: str, *, registry: RegimeRegistry | None = None) -> str | None:
     """Convenience: the declared threshold status, or ``None`` if undeclared."""
-    return threshold_source(gate_id_or_constant, registry=registry, include_literals=False).get(
-        "threshold_status"
-    )
+    return threshold_source(gate_id_or_constant, registry=registry, include_literals=False).get("threshold_status")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -1414,9 +1363,7 @@ def _law_a(raw: Mapping[str, Any]) -> dict[str, Any]:
         path = f"falsifier_registry.{regime_id}.{field}.{test_id}"
         verdict = _verdict(test.get("returns"))
         if verdict is None:
-            violations.append(
-                _finding(_LAW_A, "CONTRADICTION_MISSING_RETURNS", path, "no 'returns' declared")
-            )
+            violations.append(_finding(_LAW_A, "CONTRADICTION_MISSING_RETURNS", path, "no 'returns' declared"))
         elif verdict != VERDICT_KILL:
             violations.append(
                 _finding(
@@ -1473,9 +1420,7 @@ def _law_b(raw: Mapping[str, Any]) -> dict[str, Any]:
         path = f"falsifier_registry.{regime_id}.{field}.{test_id}"
         verdict = _verdict(test.get("returns"))
         if verdict is None:
-            violations.append(
-                _finding(_LAW_B, "DEFICIT_MISSING_RETURNS", path, "no 'returns' declared")
-            )
+            violations.append(_finding(_LAW_B, "DEFICIT_MISSING_RETURNS", path, "no 'returns' declared"))
         elif verdict == VERDICT_KILL:
             violations.append(
                 _finding(
@@ -1570,9 +1515,7 @@ def _law_c(raw: Mapping[str, Any]) -> dict[str, Any]:
                 )
             )
     if not hard:
-        violations.append(
-            _finding(_LAW_C, "SECTION_MISSING", "hard_invariants", "section absent or empty")
-        )
+        violations.append(_finding(_LAW_C, "SECTION_MISSING", "hard_invariants", "section absent or empty"))
     return {"passed": not violations, "violations": violations, "warnings": warnings, "checked": checked}
 
 
@@ -1609,9 +1552,7 @@ def _law_d(raw: Mapping[str, Any]) -> dict[str, Any]:
                     )
                 )
     if not corrections:
-        violations.append(
-            _finding(_LAW_D, "SECTION_MISSING", "corrections_log", "no corrections recorded")
-        )
+        violations.append(_finding(_LAW_D, "SECTION_MISSING", "corrections_log", "no corrections recorded"))
     return {"passed": not violations, "violations": violations, "warnings": [], "checked": checked}
 
 
@@ -1682,9 +1623,7 @@ def validate_registry(
             "artifact_id": artifact_id,
             "source_file": source_file,
             "laws": {},
-            "violations": [
-                _finding("input", "REGISTRY_NOT_A_MAPPING", "$", "registry root is not a mapping")
-            ],
+            "violations": [_finding("input", "REGISTRY_NOT_A_MAPPING", "$", "registry root is not a mapping")],
             "warnings": [],
             "checked": {},
         }

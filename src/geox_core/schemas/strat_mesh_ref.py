@@ -64,7 +64,7 @@ class StratMeshRef(BaseModel):
     engine_version: str = "strat_forward/1.0.0"
 
     @model_validator(mode="after")
-    def _enforce_invariants(self) -> "StratMeshRef":
+    def _enforce_invariants(self) -> StratMeshRef:
         if self.epistemic_class in FORBIDDEN_EPISTEMIC:
             raise ValueError(f"forbidden epistemic_class: {self.epistemic_class}")
         if self.preferred_scenario is not None:

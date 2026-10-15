@@ -120,9 +120,7 @@ DEFAULT_CANDIDATE_REGIMES: tuple[str, ...] = (
 
 # CONTRACT §7 item 3 — the SAME set governs the extraction surface. A framework
 # key matching one of these must be an explicit boolean, never a probability.
-_EVIDENCE_KEYS: frozenset[str] = frozenset(
-    {"spatial_differential", "isopach_reversal", "preferred_hypothesis"}
-)
+_EVIDENCE_KEYS: frozenset[str] = frozenset({"spatial_differential", "isopach_reversal", "preferred_hypothesis"})
 
 # The falsifier engine module — absolute name, resolved lazily.
 _TECTONIC_REGIME_MODULE = "geox_mcp.tools.structure_gates.tectonic_regime"
@@ -153,11 +151,7 @@ def strip_forbidden_keys(payload: Any) -> Any:
     because the result crosses a JSON boundary at the MCP edge anyway.
     """
     if isinstance(payload, dict):
-        return {
-            k: strip_forbidden_keys(v)
-            for k, v in payload.items()
-            if not _is_forbidden(k)
-        }
+        return {k: strip_forbidden_keys(v) for k, v in payload.items() if not _is_forbidden(k)}
     if isinstance(payload, (list, tuple)):
         return [strip_forbidden_keys(v) for v in payload]
     return payload
@@ -217,8 +211,7 @@ def _to_plain(obj: Any) -> Any:
                 return out
         except Exception:  # pragma: no cover — defensive
             pass
-    fields = ("value", "unit", "status", "n_samples", "coverage", "method",
-              "uncertainty", "notes")
+    fields = ("value", "unit", "status", "n_samples", "coverage", "method", "uncertainty", "notes")
     if any(hasattr(obj, f) for f in fields):
         return {f: getattr(obj, f, None) for f in fields}
     return obj
@@ -308,11 +301,13 @@ def unified_status(axes: dict[str, Any], coverage: float | None) -> str:
     Counts only quantities that structurally carry a `status`. Absence of any
     measurable quantity is UNMEASURED — not PARTIAL, not MEASURED.
     """
-    stats = [str(m.get("status") or "").upper()
-             for axis in axes.values()
-             if isinstance(axis, dict)
-             for m in axis.values()
-             if isinstance(m, dict) and m.get("status")]
+    stats = [
+        str(m.get("status") or "").upper()
+        for axis in axes.values()
+        if isinstance(axis, dict)
+        for m in axis.values()
+        if isinstance(m, dict) and m.get("status")
+    ]
     if not stats:
         return "UNMEASURED"
     n_measured = sum(1 for s in stats if s == "MEASURED")
@@ -331,28 +326,30 @@ def unified_status(axes: dict[str, Any], coverage: float | None) -> str:
 
 def _core_unavailable(reason: str) -> dict[str, Any]:
     """Structured HOLD for a missing/broken vision core. NEVER raises."""
-    return _sanitize({
-        "ok": False,
-        "tool": "geox_structural_vision_extract",
-        "error": VISION_CORE_UNAVAILABLE,
-        "message": reason,
-        "governance_status": GOVERNANCE_HOLD,
-        "local_verdict": LOCAL_VERDICT,
-        "seal_authority": SEAL_AUTHORITY,
-        "axes": {},
-        "coverage": None,
-        "calibration_state": None,
-        "decompaction_declared": False,
-        "method_receipt": {},
-        "status": "UNMEASURED",
-        "preferred_hypothesis": None,
-        "note": (
-            "Deterministic structural-vision core is not importable. UNMEASURED, "
-            "not FAILED: no geometry was measured, so nothing may be inferred. "
-            "Do NOT substitute a vision-language model to fill the gap — reading "
-            "spatial metrics from pixels is the failure this lane prevents."
-        ),
-    })
+    return _sanitize(
+        {
+            "ok": False,
+            "tool": "geox_structural_vision_extract",
+            "error": VISION_CORE_UNAVAILABLE,
+            "message": reason,
+            "governance_status": GOVERNANCE_HOLD,
+            "local_verdict": LOCAL_VERDICT,
+            "seal_authority": SEAL_AUTHORITY,
+            "axes": {},
+            "coverage": None,
+            "calibration_state": None,
+            "decompaction_declared": False,
+            "method_receipt": {},
+            "status": "UNMEASURED",
+            "preferred_hypothesis": None,
+            "note": (
+                "Deterministic structural-vision core is not importable. UNMEASURED, "
+                "not FAILED: no geometry was measured, so nothing may be inferred. "
+                "Do NOT substitute a vision-language model to fill the gap — reading "
+                "spatial metrics from pixels is the failure this lane prevents."
+            ),
+        }
+    )
 
 
 async def geox_structural_vision_extract(
@@ -421,10 +418,7 @@ async def geox_structural_vision_extract(
 
     declared = getattr(core, "declare_calibration_state", None)
     if declared is None:
-        return _core_unavailable(
-            "geox_core.vision_structural is importable but incomplete: "
-            "declare_calibration_state is absent"
-        )
+        return _core_unavailable("geox_core.vision_structural is importable but incomplete: declare_calibration_state is absent")
 
     import importlib.metadata as _md
 
@@ -448,9 +442,7 @@ async def geox_structural_vision_extract(
     axes = _plain_axes(axes_raw)
     coverage = aggregate_coverage(axes, explicit=axes_raw.get("coverage") if isinstance(axes_raw, dict) else None)
 
-    _velocity_model_present = bool(
-        cal.get("velocity_model_present") or cal.get("interval_velocity_m_s")
-    )
+    _velocity_model_present = bool(cal.get("velocity_model_present") or cal.get("interval_velocity_m_s"))
     try:
         calibration_state = declared(
             vertical_exaggeration=cal.get("vertical_exaggeration"),
@@ -505,13 +497,15 @@ async def geox_structural_vision_extract(
             "migration_state": migration_state or "UNSPECIFIED",
             "decompaction_applied_before_thickness": bool(decompacted),
         },
-        "methods_run": sorted({
-            str(m.get("method"))
-            for axis in axes.values()
-            if isinstance(axis, dict)
-            for m in axis.values()
-            if isinstance(m, dict) and m.get("method")
-        }),
+        "methods_run": sorted(
+            {
+                str(m.get("method"))
+                for axis in axes.values()
+                if isinstance(axis, dict)
+                for m in axis.values()
+                if isinstance(m, dict) and m.get("method")
+            }
+        ),
         "axes_extracted": sorted(axes.keys()),
         "elapsed_ms": elapsed_ms,
         "declared_at_iso": datetime.now(UTC).isoformat(),
@@ -650,11 +644,13 @@ def bundle_to_framework(bundle: dict[str, Any] | None) -> dict[str, Any]:
     if azimuth is not None:
         # strike_deg is a POPULATION statistic (circular mean), never one
         # fault's azimuth dressed up as the population (CONTRACT §7.7).
-        fw["faults"] = [{
-            "name": "structural_vision_azimuth_population",
-            "strike_deg": azimuth,
-            "source": "circular_mean_of_polyline_chords",
-        }]
+        fw["faults"] = [
+            {
+                "name": "structural_vision_azimuth_population",
+                "strike_deg": azimuth,
+                "source": "circular_mean_of_polyline_chords",
+            }
+        ]
 
     # ── cross_cutting[] <- D_superposition relations ────────────────────────
     d_axis = axes.get("D_superposition")
@@ -668,9 +664,7 @@ def bundle_to_framework(bundle: dict[str, Any] | None) -> dict[str, Any]:
     cal = b.get("calibration_state") if isinstance(b.get("calibration_state"), dict) else {}
     fw["display"] = {
         "vertical_exaggeration": cal.get("vertical_exaggeration"),
-        "velocity_model": bool(
-            cal.get("velocity_model_present") or cal.get("interval_velocity_m_s")
-        ),
+        "velocity_model": bool(cal.get("velocity_model_present") or cal.get("interval_velocity_m_s")),
         "time_domain": bool(cal.get("time_domain")),
     }
     if cal.get("problems"):
@@ -768,20 +762,17 @@ async def geox_structural_regime_falsify(
             "inversion yields paleostress (4 of 6 parameters)."
         ),
         "unmeasured_is_not_a_kill": (
-            "EI missing -> UNMEASURED. A fault moving slower than the sedimentation "
-            "rate leaves no growth signature at all."
+            "EI missing -> UNMEASURED. A fault moving slower than the sedimentation rate leaves no growth signature at all."
         ),
         "non_balance_is_a_diagnostic": (
-            "Failure to restore means a structure is missing from the section — never "
-            "that the picks were wrong."
+            "Failure to restore means a structure is missing from the section — never that the picks were wrong."
         ),
         "uniform_thickness_is_non_discriminating": (
             "Uniform thickness favours neither eustasy nor tectonics on its own. The "
             "eustatic test is a regionally correlative surface with synchronous onlap."
         ),
         "cross_cutting_is_not_walther": (
-            "Superposition is Steno 1669 / Hutton 1795 / Lyell 1830. Walther 1894 "
-            "governs conformable facies succession."
+            "Superposition is Steno 1669 / Hutton 1795 / Lyell 1830. Walther 1894 governs conformable facies succession."
         ),
     }
     return _sanitize(out)

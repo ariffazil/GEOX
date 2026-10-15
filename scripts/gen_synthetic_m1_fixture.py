@@ -27,8 +27,8 @@ def gen() -> tuple[list[list[float]], list[list[float]]]:
     fw_x = np.linspace(-4.0, -0.2, 20)
     hw_x = np.linspace(0.2, 4.0, 20)
     jitter = rng.normal(0.0, 0.3, size=40)
-    footwall = [[float(x), float(0.0 + j)] for x, j in zip(fw_x, jitter[:20])]
-    hanging = [[float(x), float(THROW + j)] for x, j in zip(hw_x, jitter[20:])]
+    footwall = [[float(x), float(0.0 + j)] for x, j in zip(fw_x, jitter[:20], strict=False)]
+    hanging = [[float(x), float(THROW + j)] for x, j in zip(hw_x, jitter[20:], strict=False)]
     return footwall, hanging
 
 

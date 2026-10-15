@@ -36,8 +36,6 @@ from __future__ import annotations
 
 import httpx as _httpx
 
-__all__ = ["httpx"]
-
 
 def __getattr__(name: str):
     """Delegate every attribute lookup to the installed httpx module.

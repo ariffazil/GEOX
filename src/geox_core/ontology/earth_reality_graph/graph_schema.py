@@ -103,48 +103,28 @@ class EarthNode(BaseModel):
     node_type: str = Field(..., description="Node type identifier")
     name: str = Field(..., description="Human-readable name")
     layer: GraphLayer = Field(..., description="Which Reality Graph layer this node belongs to")
-    epistemic_class: EpistemicClass = Field(
-        ..., description="What kind of knowledge this represents"
-    )
+    epistemic_class: EpistemicClass = Field(..., description="What kind of knowledge this represents")
 
-    scenario_id: str | None = Field(
-        default=None, description="Restoration scenario this node belongs to"
-    )
-    spatial_reference_id: str | None = Field(
-        default=None, description="Spatial context (basin, block, well)"
-    )
-    temporal_reference_id: str | None = Field(
-        default=None, description="Temporal context (event, age interval)"
-    )
+    scenario_id: str | None = Field(default=None, description="Restoration scenario this node belongs to")
+    spatial_reference_id: str | None = Field(default=None, description="Spatial context (basin, block, well)")
+    temporal_reference_id: str | None = Field(default=None, description="Temporal context (event, age interval)")
 
     source_ids: list[str] = Field(
         default_factory=list,
         description="IDs of nodes this depends on (upstream edges)",
     )
-    evidence_class: EvidenceClass = Field(
-        default=EvidenceClass.ASSUMED, description="Provenance classification"
-    )
-    confidence: ConfidenceClass = Field(
-        default=ConfidenceClass.UNKNOWN, description="Confidence level"
-    )
+    evidence_class: EvidenceClass = Field(default=EvidenceClass.ASSUMED, description="Provenance classification")
+    confidence: ConfidenceClass = Field(default=ConfidenceClass.UNKNOWN, description="Confidence level")
 
-    values: dict[str, Any] = Field(
-        default_factory=dict, description="Typed values for this node"
-    )
-    assumptions: list[str] = Field(
-        default_factory=list, description="Assumptions made"
-    )
-    uncertainties: list[str] = Field(
-        default_factory=list, description="Uncertainty sources"
-    )
+    values: dict[str, Any] = Field(default_factory=dict, description="Typed values for this node")
+    assumptions: list[str] = Field(default_factory=list, description="Assumptions made")
+    uncertainties: list[str] = Field(default_factory=list, description="Uncertainty sources")
 
     created_at: str = Field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat(),
         description="ISO-8601 UTC creation time",
     )
-    created_by: str = Field(
-        default="", description="Agent or human that created this node"
-    )
+    created_by: str = Field(default="", description="Agent or human that created this node")
     source_mutated: Literal[False] = Field(
         default=False,
         description="Must always be False — source geometry is immutable (SR_INV_001)",
@@ -169,22 +149,14 @@ class StressTensorNode(EarthNode):
     sigma_1_mpa: float | None = Field(default=None, description="σ1 magnitude (MPa)")
     sigma_2_mpa: float | None = Field(default=None, description="σ2 magnitude (MPa)")
     sigma_3_mpa: float | None = Field(default=None, description="σ3 magnitude (MPa)")
-    sigma_1_azimuth_deg: float | None = Field(
-        default=None, ge=0.0, lt=360.0, description="σ1 azimuth (degrees CW from N)"
-    )
-    sigma_1_plunge_deg: float | None = Field(
-        default=None, description="σ1 plunge (degrees from horizontal)"
-    )
+    sigma_1_azimuth_deg: float | None = Field(default=None, ge=0.0, lt=360.0, description="σ1 azimuth (degrees CW from N)")
+    sigma_1_plunge_deg: float | None = Field(default=None, description="σ1 plunge (degrees from horizontal)")
     stress_regime: str = Field(
         default="UNKNOWN",
         description="NORMAL, STRIKE_SLIP, REVERSE, TRANSTENSIONAL, TRANSPRESSIONAL, UNKNOWN",
     )
-    age_ma: float | None = Field(
-        default=None, description="Age this stress state applies to (Ma)"
-    )
-    event_id: str | None = Field(
-        default=None, description="Tectonic event this stress belongs to"
-    )
+    age_ma: float | None = Field(default=None, description="Age this stress state applies to (Ma)")
+    event_id: str | None = Field(default=None, description="Tectonic event this stress belongs to")
 
 
 class BoundaryConditionNode(EarthNode):
@@ -197,9 +169,7 @@ class BoundaryConditionNode(EarthNode):
         default="displacement",
         description="Type: displacement, force, temperature, pressure",
     )
-    direction: str = Field(
-        default="", description="Direction or normal of the boundary"
-    )
+    direction: str = Field(default="", description="Direction or normal of the boundary")
     magnitude: float | None = Field(default=None, description="Magnitude")
 
 
@@ -210,12 +180,8 @@ class ThermalFieldNode(EarthNode):
     node_type: Literal["thermal_field"] = "thermal_field"
 
     temperature_c: float | None = Field(default=None, description="Temperature (°C)")
-    heat_flow_mw_m2: float | None = Field(
-        default=None, description="Heat flow (mW/m²)"
-    )
-    gradient_c_km: float | None = Field(
-        default=None, description="Geothermal gradient (°C/km)"
-    )
+    heat_flow_mw_m2: float | None = Field(default=None, description="Heat flow (mW/m²)")
+    gradient_c_km: float | None = Field(default=None, description="Geothermal gradient (°C/km)")
 
 
 class PressureFieldNode(EarthNode):
@@ -224,15 +190,9 @@ class PressureFieldNode(EarthNode):
     layer: Literal[GraphLayer.F0_PHYSICS] = GraphLayer.F0_PHYSICS
     node_type: Literal["pressure_field"] = "pressure_field"
 
-    pore_pressure_mpa: float | None = Field(
-        default=None, description="Pore pressure (MPa)"
-    )
-    overpressure_mpa: float | None = Field(
-        default=None, description="Overpressure above hydrostatic (MPa)"
-    )
-    fracture_pressure_mpa: float | None = Field(
-        default=None, description="Fracture pressure (MPa)"
-    )
+    pore_pressure_mpa: float | None = Field(default=None, description="Pore pressure (MPa)")
+    overpressure_mpa: float | None = Field(default=None, description="Overpressure above hydrostatic (MPa)")
+    fracture_pressure_mpa: float | None = Field(default=None, description="Fracture pressure (MPa)")
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -258,9 +218,7 @@ class MechanicalLayerNode(EarthNode):
     pore_pressure_mpa: float | None = Field(default=None)
     property_support: str = Field(
         default="UNKNOWN",
-        description=(
-            "LAB_MEASURED, LOG_DERIVED, REGIONAL_ANALOGUE, ASSUMED, UNKNOWN"
-        ),
+        description=("LAB_MEASURED, LOG_DERIVED, REGIONAL_ANALOGUE, ASSUMED, UNKNOWN"),
     )
 
 
@@ -298,12 +256,8 @@ class FaultReactivationNode(EarthNode):
     strike_deg: float | None = Field(default=None, description="Fault strike")
     dip_deg: float | None = Field(default=None, description="Fault dip")
     rake_deg: float | None = Field(default=None, description="Resolved rake")
-    slip_tendency: float | None = Field(
-        default=None, description="τ/σn ratio (slip tendency)"
-    )
-    dilation_tendency: float | None = Field(
-        default=None, description="(σ1-σn)/(σ1-σ3) ratio"
-    )
+    slip_tendency: float | None = Field(default=None, description="τ/σn ratio (slip tendency)")
+    dilation_tendency: float | None = Field(default=None, description="(σ1-σn)/(σ1-σ3) ratio")
     is_reactivated: bool | None = Field(
         default=None,
         description="True if mechanical conditions favour reactivation",
@@ -381,9 +335,7 @@ class BasementFabricNode(EarthNode):
         default="gravity",
         description="Source: gravity, magnetics, seismic, well, combined",
     )
-    wavelength_km: float | None = Field(
-        default=None, description="Wavelength of the fabric trend"
-    )
+    wavelength_km: float | None = Field(default=None, description="Wavelength of the fabric trend")
 
 
 class RestorationStateNode(EarthNode):
@@ -397,12 +349,8 @@ class RestorationStateNode(EarthNode):
     node_type: Literal["restoration_state"] = "restoration_state"
 
     age_ma: float = Field(..., description="Age this state represents")
-    surface_ids: list[str] = Field(
-        default_factory=list, description="Surfaces in this state"
-    )
-    fault_ids: list[str] = Field(
-        default_factory=list, description="Faults in this state"
-    )
+    surface_ids: list[str] = Field(default_factory=list, description="Surfaces in this state")
+    fault_ids: list[str] = Field(default_factory=list, description="Faults in this state")
     crs_epsg: int | None = Field(default=None)
     z_convention: str = Field(default="positive_down")
 
@@ -427,12 +375,8 @@ class SubsidenceNode(EarthNode):
         default="unknown",
         description="Proposed mechanism (thermal, flexural, tectonic, dynamic)",
     )
-    source_state_id: str = Field(
-        default="", description="Source restoration state ID"
-    )
-    target_state_id: str = Field(
-        default="", description="Target restoration state ID"
-    )
+    source_state_id: str = Field(default="", description="Source restoration state ID")
+    target_state_id: str = Field(default="", description="Target restoration state ID")
 
 
 class AccommodationNode(EarthNode):
@@ -448,9 +392,7 @@ class AccommodationNode(EarthNode):
     accommodation_m: float | None = Field(default=None)
     source_state_id: str = Field(default="")
     target_state_id: str = Field(default="")
-    subtraction_order: str = Field(
-        default="", description="Which state minus which"
-    )
+    subtraction_order: str = Field(default="", description="Which state minus which")
     sign_convention: str = Field(default="")
 
 
@@ -558,9 +500,7 @@ class InterpretationNode(EarthNode):
     layer: Literal[GraphLayer.F7_HUMAN] = GraphLayer.F7_HUMAN
     node_type: Literal["interpretation"] = "interpretation"
 
-    interpreter: str = Field(
-        default="", description="Who or what made this interpretation"
-    )
+    interpreter: str = Field(default="", description="Who or what made this interpretation")
     interpretation_type: str = Field(
         default="",
         description="Type: horizon_pick, fault_surface, facies_body, etc.",
@@ -582,12 +522,8 @@ class TectonicHypothesisNode(EarthNode):
     node_type: Literal["tectonic_hypothesis"] = "tectonic_hypothesis"
 
     hypothesis: str = Field(default="", description="The hypothesis statement")
-    probability: float = Field(
-        default=0.5, ge=0.0, le=1.0, description="Relative probability"
-    )
-    competing_hypothesis_ids: list[str] = Field(
-        default_factory=list, description="Other hypotheses explaining same observations"
-    )
+    probability: float = Field(default=0.5, ge=0.0, le=1.0, description="Relative probability")
+    competing_hypothesis_ids: list[str] = Field(default_factory=list, description="Other hypotheses explaining same observations")
     evidence_for: list[str] = Field(default_factory=list)
     evidence_against: list[str] = Field(default_factory=list)
     falsification_criteria: list[str] = Field(default_factory=list)
@@ -619,21 +555,13 @@ class GraphEdge(BaseModel):
     Every edge is evidence-bearing — not decorative.
     """
 
-    edge_id: str = Field(
-        default_factory=lambda: str(uuid.uuid4()), description="Unique edge ID"
-    )
+    edge_id: str = Field(default_factory=lambda: str(uuid.uuid4()), description="Unique edge ID")
     source_node_id: str = Field(..., description="Upstream node")
     target_node_id: str = Field(..., description="Downstream node")
     edge_type: EdgeType = Field(..., description="Type of relationship")
-    evidence: str = Field(
-        default="", description="Evidence supporting this edge"
-    )
-    confidence: ConfidenceClass = Field(
-        default=ConfidenceClass.UNKNOWN
-    )
-    created_at: str = Field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    evidence: str = Field(default="", description="Evidence supporting this edge")
+    confidence: ConfidenceClass = Field(default=ConfidenceClass.UNKNOWN)
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -32,7 +32,8 @@ DITEMPA BUKAN DIBERI.
 from __future__ import annotations
 
 import math
-from typing import Any, Sequence
+from typing import Any
+from collections.abc import Sequence
 
 import numpy as np
 
@@ -226,10 +227,7 @@ def extract_fault_azimuths(
     for idx, raw in enumerate(polylines):
         poly = _as_polyline(raw)
         if poly is None:
-            rejects.append(
-                f"polyline[{idx}]: not an (N>=2, 2) finite float array — skipped, "
-                "no azimuth defined"
-            )
+            rejects.append(f"polyline[{idx}]: not an (N>=2, 2) finite float array — skipped, no azimuth defined")
             continue
         chord = _chord_azimuth(poly)
         if chord is None:
@@ -247,9 +245,7 @@ def extract_fault_azimuths(
 
     n_valid = len(azimuths)
     array = np.asarray(azimuths, dtype=float)
-    population = azimuth_population_stats(
-        array, axial=axial, min_r_for_preferred=min_r_for_preferred
-    )
+    population = azimuth_population_stats(array, axial=axial, min_r_for_preferred=min_r_for_preferred)
 
     method = (
         "end_to_end_chord_azimuth atan2(dx,dy) degrees clockwise from north (+y); "
@@ -260,9 +256,7 @@ def extract_fault_azimuths(
 
     az_meas = population["circular_mean_deg"]
     if az_meas.status == "UNMEASURED":
-        azimuth_deg = unmeasured(
-            unit, method=method, reason=f"no usable polyline chord (n_input={n_input})"
-        )
+        azimuth_deg = unmeasured(unit, method=method, reason=f"no usable polyline chord (n_input={n_input})")
     elif az_meas.status == "PARTIAL":
         azimuth_deg = Measurement(
             value=az_meas.value,
@@ -302,17 +296,13 @@ def extract_fault_azimuths(
             "x_origin_m": float(x_origin_m),
             "y_origin_m": float(y_origin_m),
             "population_centroid_offset_m": [dx, dy],
-            "note_on_origin": (
-                "azimuth is translation-invariant; origins are provenance only"
-            ),
+            "note_on_origin": ("azimuth is translation-invariant; origins are provenance only"),
         }
     )
 
     cov, _ = _coverage_status(n_valid, n_input)
     if n_input == 0:
-        n_polylines = unmeasured(
-            "count", method=method, reason="no polylines supplied — nothing to measure"
-        )
+        n_polylines = unmeasured("count", method=method, reason="no polylines supplied — nothing to measure")
     else:
         n_polylines = measured(
             float(n_valid),
@@ -373,9 +363,8 @@ def azimuth_population_stats(
     n = int(finite.size)
     cov, partial_by_coverage = _coverage_status(n, n_total)
 
-    method = (
-        "circular statistics — resultant vector of unit vectors "
-        + ("at doubled angles (axial / line data)" if axial else "at full angles")
+    method = "circular statistics — resultant vector of unit vectors " + (
+        "at doubled angles (axial / line data)" if axial else "at full angles"
     )
     period = 180.0 if axial else 360.0
     unit = "deg"
@@ -384,15 +373,9 @@ def azimuth_population_stats(
 
     if n == 0:
         return {
-            "circular_mean_deg": unmeasured(
-                unit, method=method, reason="no finite azimuths — mean undefined"
-            ),
-            "circular_std_deg": unmeasured(
-                unit, method=method, reason="no finite azimuths — dispersion undefined"
-            ),
-            "r_vector_length": unmeasured(
-                "ratio", method=method, reason="no finite azimuths — R undefined"
-            ),
+            "circular_mean_deg": unmeasured(unit, method=method, reason="no finite azimuths — mean undefined"),
+            "circular_std_deg": unmeasured(unit, method=method, reason="no finite azimuths — dispersion undefined"),
+            "r_vector_length": unmeasured("ratio", method=method, reason="no finite azimuths — R undefined"),
             "n": measured(
                 0.0,
                 "count",
@@ -448,8 +431,7 @@ def azimuth_population_stats(
 
     mean_notes = list(excluded) if partial_by_coverage else []
     mean_notes.append(
-        "circular mean only — a linear mean of azimuths is wrong by construction "
-        "(350 deg + 10 deg averages linearly to 180 deg)."
+        "circular mean only — a linear mean of azimuths is wrong by construction (350 deg + 10 deg averages linearly to 180 deg)."
     )
     if no_preference:
         mean_notes.append(
@@ -668,11 +650,7 @@ def conjugate_pair_test(
     dihedral = acute_angle_between_deg(mean_a, mean_b)
     bisector, _ = circular_mean_deg(np.array([mean_a, mean_b]), axial=True)
 
-    detected = (
-        r_a >= float(min_r)
-        and r_b >= float(min_r)
-        and float(min_dihedral_deg) <= dihedral <= float(max_dihedral_deg)
-    )
+    detected = r_a >= float(min_r) and r_b >= float(min_r) and float(min_dihedral_deg) <= dihedral <= float(max_dihedral_deg)
     if not detected:
         why = []
         if r_a < float(min_r) or r_b < float(min_r):
@@ -682,8 +660,7 @@ def conjugate_pair_test(
             )
         if not (float(min_dihedral_deg) <= dihedral <= float(max_dihedral_deg)):
             why.append(
-                f"acute dihedral {dihedral:.2f} deg is outside "
-                f"[{float(min_dihedral_deg):.1f}, {float(max_dihedral_deg):.1f}] deg"
+                f"acute dihedral {dihedral:.2f} deg is outside [{float(min_dihedral_deg):.1f}, {float(max_dihedral_deg):.1f}] deg"
             )
         return {
             "pair_detected": False,

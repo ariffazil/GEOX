@@ -63,7 +63,8 @@ DITEMPA BUKAN DIBERI.
 
 from __future__ import annotations
 
-from typing import Any, Sequence
+from typing import Any
+from collections.abc import Sequence
 
 import numpy as np
 
@@ -127,8 +128,7 @@ _EVIDENCE = [
     "Sakoe & Chiba 1978 — constrained dynamic time warping (slop / band constraint)",
     "Castelltort et al. — sedimentary vs tectonic mimic of growth geometry",
     "Chopra — seismic attribute expression of differential compaction",
-    "Suppe et al. 1992 — growth strata geometry set by folding mechanism AND the relative rates "
-    "of sedimentation and uplift",
+    "Suppe et al. 1992 — growth strata geometry set by folding mechanism AND the relative rates of sedimentation and uplift",
 ]
 
 _LIMITATIONS = [
@@ -837,10 +837,13 @@ def extract_expansion_index_candidate(
             result_extra={
                 "n_valid_traces": n_valid,
                 "n_traces": n_traces,
-                "resolution": {"median_interval_thickness": _round(t_med), "dominant_wavelength": _round(lam),
-                               "thickness_over_lambda": _round(tuning_ratio, 4), "units": lam_units},
-                "qc": {"verdict": "UNMEASURED", "checks": [tuning_check], "contamination_flags": [],
-                       "limitations": _LIMITATIONS},
+                "resolution": {
+                    "median_interval_thickness": _round(t_med),
+                    "dominant_wavelength": _round(lam),
+                    "thickness_over_lambda": _round(tuning_ratio, 4),
+                    "units": lam_units,
+                },
+                "qc": {"verdict": "UNMEASURED", "checks": [tuning_check], "contamination_flags": [], "limitations": _LIMITATIONS},
                 "withheld": {"expansion_index": "withheld_below_lambda_8_absolute_floor"},
             },
             input_domain=dom,
@@ -856,8 +859,7 @@ def extract_expansion_index_candidate(
     else:
         tuning_check["verdict"] = "PASS"
         tuning_check["note"] = (
-            f"median interval thickness is {tuning_ratio:.4f} of the dominant wavelength — above the "
-            "lambda/4 tuning limit."
+            f"median interval thickness is {tuning_ratio:.4f} of the dominant wavelength — above the lambda/4 tuning limit."
         )
 
     # ── 5. Reference thickness and the EI series ─────────────────────────────
@@ -910,8 +912,7 @@ def extract_expansion_index_candidate(
     ei_series = np.where(valid, t_smooth / t_ref, np.nan)
 
     # Domain handling for the emitted EI.
-    input_thickness = t_smooth.copy()
-    units = ("ms of two-way time" if dom == "TIME" else "m")
+    units = "ms of two-way time" if dom == "TIME" else "m"
     emitted_domain = dom
     conversion: dict[str, Any] = {"applied": False, "reason": "EMITTED IN THE INPUT DOMAIN"}
     if tdom == "DEPTH":
@@ -931,7 +932,6 @@ def extract_expansion_index_candidate(
                     "laterally varying V(t,x) changes it. The depth thickness changes; the ratio does not."
                 ),
             }
-            input_thickness = depth_series
             t_ref = ref_depth
             units = "m"
             emitted_domain = "DEPTH"
@@ -1072,10 +1072,12 @@ def extract_expansion_index_candidate(
     checks.append(
         {
             "name": "wavelet_phase_rotation",
-            "measured": {"median_adjacent_trace_phase_step_deg": _round(phase_step, 3),
-                         "end_to_end_phase_drift_deg": _round(phase_drift, 3),
-                         "n_traces_measured": int(np.count_nonzero(ph_ok)),
-                         "search_window_samples_above_upper_pick": phase_guard},
+            "measured": {
+                "median_adjacent_trace_phase_step_deg": _round(phase_step, 3),
+                "end_to_end_phase_drift_deg": _round(phase_drift, 3),
+                "n_traces_measured": int(np.count_nonzero(ph_ok)),
+                "search_window_samples_above_upper_pick": phase_guard,
+            },
             "threshold": {"step_tol_deg": float(phase_step_tol_deg), "drift_tol_deg": float(phase_drift_tol_deg)},
             "verdict": phase_verdict,
             "note": (
@@ -1111,8 +1113,10 @@ def extract_expansion_index_candidate(
     checks.append(
         {
             "name": "lateral_amplitude_change",
-            "measured": {"median_adjacent_trace_rms_change_db": _round(amp_db_med, 3),
-                         "max_adjacent_trace_rms_change_db": _round(amp_db_max, 3)},
+            "measured": {
+                "median_adjacent_trace_rms_change_db": _round(amp_db_med, 3),
+                "max_adjacent_trace_rms_change_db": _round(amp_db_max, 3),
+            },
             "threshold": {"median_tol_db": float(lateral_amplitude_tol_db), "max_tol_db": 3.0 * float(lateral_amplitude_tol_db)},
             "verdict": "PASS" if "lateral_amplitude_change" not in flags else "CONTAMINATED",
             "note": (
@@ -1148,7 +1152,9 @@ def extract_expansion_index_candidate(
             "name": "lateral_coherence",
             "measured": {"median_interval_lateral_semblance": _round(coh_median, 4)},
             "threshold": {"floor": float(lateral_coherence_floor)},
-            "verdict": ("NOT_EVALUATED" if coh_median is None else ("PASS" if "low_lateral_coherence" not in flags else "CONTAMINATED")),
+            "verdict": (
+                "NOT_EVALUATED" if coh_median is None else ("PASS" if "low_lateral_coherence" not in flags else "CONTAMINATED")
+            ),
             "note": coh_note
             or (
                 "Lateral semblance across a 5-trace window inside the interval (semblance_coherence "
@@ -1172,12 +1178,11 @@ def extract_expansion_index_candidate(
                 "n_pairs_total": n_pairs_total,
                 "n_pairs_sampled": n_sampled,
             },
-            "threshold": {"censored_fraction_tol": float(warp_censored_fraction_tol), "max_slop_fraction": float(max_slop_fraction)},
-            "verdict": (
-                "PASS"
-                if not any(f.startswith("dtw_warp_") for f in flags)
-                else "CONTAMINATED"
-            ),
+            "threshold": {
+                "censored_fraction_tol": float(warp_censored_fraction_tol),
+                "max_slop_fraction": float(max_slop_fraction),
+            },
+            "verdict": ("PASS" if not any(f.startswith("dtw_warp_") for f in flags) else "CONTAMINATED"),
             "note": (
                 "Warp paths that ride the band edge (or whose chord exceeds the maximum plausible "
                 "per-trace thickness change) are censored/rejected: the optimum wanted more warp than "
@@ -1194,7 +1199,9 @@ def extract_expansion_index_candidate(
             "name": "pick_correlation_consistency",
             "measured": {"agreement_fraction": _round(agreement_fraction, 4), "n_pairs_compared": n_compared},
             "threshold": {"relative_tol": float(warp_agreement_tol), "min_fraction": float(warp_agreement_min_fraction)},
-            "verdict": "NOT_EVALUATED" if agreement_fraction is None else ("PASS" if "pick_correlation_conflict" not in flags else "CONTAMINATED"),
+            "verdict": "NOT_EVALUATED"
+            if agreement_fraction is None
+            else ("PASS" if "pick_correlation_conflict" not in flags else "CONTAMINATED"),
             "note": (
                 "Fraction of adjacent-trace pairs where the slop-constrained warp-implied stretch agrees "
                 "with the pick-derived thickness ratio within tolerance. Disagreement means either the "
@@ -1215,7 +1222,9 @@ def extract_expansion_index_candidate(
         structural = {
             "informational_only": True,
             "attribute_apparent_dip_median_pixels_per_trace": _round(float(np.median(np.abs(m_sel))), 5) if m_sel.size else None,
-            "pick_structural_shift_median_samples_per_trace": _round(float(np.median(pick_shift_ok)), 5) if pick_shift_ok.size else None,
+            "pick_structural_shift_median_samples_per_trace": _round(float(np.median(pick_shift_ok)), 5)
+            if pick_shift_ok.size
+            else None,
             "note": (
                 "structure_tensor gives an amplitude-derived apparent dip (pixels/trace) independent of "
                 "the picks. Reported as context only — it is not a gate here and never modifies the EI."
@@ -1311,8 +1320,7 @@ def extract_expansion_index_candidate(
         coverage=_round(coverage, 4),
         reason=(
             f"Candidate EI={_round(ei_candidate, 4)} in {emitted_domain} domain from "
-            f"{n_valid}/{n_traces} valid traces; QC verdict {qc_verdict}"
-            + (f" (flags: {', '.join(flags)})" if flags else "")
+            f"{n_valid}/{n_traces} valid traces; QC verdict {qc_verdict}" + (f" (flags: {', '.join(flags)})" if flags else "")
         ),
         equation=_EQUATION,
         inputs={**base_inputs, "reference_traces": None if reference_traces is None else list(map(int, reference_traces))},
@@ -1338,7 +1346,9 @@ def extract_expansion_index_candidate(
                 "contamination_flags": list(flags),
                 "source_gate": GATE_ID,
                 "epistemic_tier": TIER_KINEMATIC,
-                "trust": "QC_CLEAN" if qc_verdict == "CLEAN" else ("QC_CAVEATED" if qc_verdict == "CAVEATED" else "QC_CONTAMINATED"),
+                "trust": "QC_CLEAN"
+                if qc_verdict == "CLEAN"
+                else ("QC_CAVEATED" if qc_verdict == "CAVEATED" else "QC_CONTAMINATED"),
                 "note": (
                     "Feed to claims.expansion_index (K-GROWTH / K-EXT-GROWTH) ONLY together with the QC "
                     "verdict and domain. Never the number alone."

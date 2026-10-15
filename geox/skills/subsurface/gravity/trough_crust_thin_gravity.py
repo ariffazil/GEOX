@@ -237,13 +237,14 @@ aD.set_title("D · WHY h IS SWEPT, NOT DRAWN — the Airy check does not discrim
              fontsize=9, color=FG, loc="left")
 rm, rc, rw, rs = RHO_M, RHO_C, RHO_W, RHO_S
 f_sed, f_crust = (rm - rs) / (rm - rw), (rm - rc) / (rm - rw)
-rows = ["h = REF − (dw + %.3f·S) / %.3f      (dw = %.1f km)" % (f_sed, f_crust, DW_TROUGH), "",
+rows = [f"h = REF − (dw + {f_sed:.3f}·S) / {f_crust:.3f}      (dw = {DW_TROUGH:.1f} km)", "",
         "      S (km fill) │ ref=30 │ ref=32 │ ref=35 │ ref=38",
         "      ────────────┼────────┼────────┼────────┼───────"]
 for S in (3.0, 3.7, 5.0, 6.0, 8.0, 10.0):
     zu = DW_TROUGH + f_sed * S
-    rows.append("      %11.1f │ %6.1f │ %6.1f │ %6.1f │ %6.1f"
-                % (S, *[R - zu / f_crust for R in (30, 32, 35, 38)]))
+    rows.append("      {:11.1f} │ {:6.1f} │ {:6.1f} │ {:6.1f} │ {:6.1f}".format(
+        S, *[R - zu / f_crust for R in (30, 32, 35, 38)]
+    ))
 rows += ["",
          "Airy spans h ≈ −2 → 19 km over plausible inputs. It is a",
          "plausibility screen, NOT evidence: it can be made to 'fit'",

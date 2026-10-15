@@ -22,6 +22,7 @@ public surface. Modes:
 
 DITEMPA BUKAN DIBERI — the cascade is forged, not given.
 """
+
 from __future__ import annotations
 
 import math
@@ -31,12 +32,12 @@ from typing import Any, Literal, Optional
 from pydantic import BaseModel, Field
 
 from geox_mcp.tools.glof_cascade import (  # noqa: F401 — DEPRECATED surface kept internal
-    geox_glof_cascade_initialize as _cascade_init,      # DEPRECATED: use geox_glof(mode='run')
-    geox_glof_cascade_step as _cascade_step,            # DEPRECATED: use geox_glof(mode='run')
-    geox_glof_cascade_phase as _cascade_phase,          # DEPRECATED: use geox_glof(mode='phase')
-    geox_glof_cascade_inverse as _cascade_inverse,      # DEPRECATED: use geox_glof(mode='inverse')
-    geox_glof_cascade_metabolize as _cascade_metabolize,# DEPRECATED: use geox_glof(mode='run')
-    geox_glof_cascade_mcmc_inverse as _cascade_mcmc,    # DEPRECATED: use geox_glof(mode='mcmc')
+    geox_glof_cascade_initialize as _cascade_init,  # DEPRECATED: use geox_glof(mode='run')
+    geox_glof_cascade_step as _cascade_step,  # DEPRECATED: use geox_glof(mode='run')
+    geox_glof_cascade_phase as _cascade_phase,  # DEPRECATED: use geox_glof(mode='phase')
+    geox_glof_cascade_inverse as _cascade_inverse,  # DEPRECATED: use geox_glof(mode='inverse')
+    geox_glof_cascade_metabolize as _cascade_metabolize,  # DEPRECATED: use geox_glof(mode='run')
+    geox_glof_cascade_mcmc_inverse as _cascade_mcmc,  # DEPRECATED: use geox_glof(mode='mcmc')
     geox_glof_cascade_propagate as _cascade_propagate,  # DEPRECATED: use geox_glof(mode='propagate')
     GLOFCascadeInitRequest,
     GLOFCascadePhaseRequest,
@@ -68,20 +69,21 @@ def _err(message: str, code: str = "BAD_MODE") -> dict[str, Any]:
 
 # ─────────────────────────────────────────────── mode='run' (full cascade)
 
+
 async def _run_full_cascade(
     domain_bounds_x_m: float = 4000.0,
     domain_bounds_z_m: float = 600.0,
     resolution_m: float = 10.0,
     dam_height_m: float = 150.0,
     water_head_initial_m: float = 0.0,
-    initial_state_33: Optional[dict] = None,
+    initial_state_33: dict | None = None,
     panel_focus: str = "all",
     # step params
     n_steps: int = 50,
     dt_sec: float = 1.0,
     # metabolize params
     cycle_id: str = "",
-    observation: Optional[dict] = None,
+    observation: dict | None = None,
 ) -> dict[str, Any]:
     """Full cascade: init → step(n_steps) → metabolize. One-call summary."""
     # 1. init
@@ -97,13 +99,13 @@ async def _run_full_cascade(
         )
     )
     if not init_r.ok:
-        return {"ok": False, "tool": _TOOL, "result": {}, "error": init_r.error,
-                "message": "init failed"}
+        return {"ok": False, "tool": _TOOL, "result": {}, "error": init_r.error, "message": "init failed"}
 
     state_id = init_r.result["snapshot"]["state_id"]
 
     # 2. step
     from geox_mcp.tools.glof_cascade import GLOFCascadeStepRequest
+
     step_r = await _cascade_step(
         GLOFCascadeStepRequest(
             state_id=state_id,
@@ -113,8 +115,7 @@ async def _run_full_cascade(
         )
     )
     if not step_r.ok:
-        return {"ok": False, "tool": _TOOL, "result": {}, "error": step_r.error,
-                "message": "step failed"}
+        return {"ok": False, "tool": _TOOL, "result": {}, "error": step_r.error, "message": "step failed"}
 
     step_summary = step_r.result.get("step_summary", {})
 
@@ -188,6 +189,7 @@ async def _run_full_cascade(
 
 # ─────────────────────────────────────────────── unified entry point
 
+
 async def geox_glof(
     mode: Literal["run", "inverse", "mcmc", "propagate", "phase"] = "run",
     # ── run mode params ─────────────────────────────────────────────────────
@@ -196,14 +198,14 @@ async def geox_glof(
     resolution_m: float = 10.0,
     dam_height_m: float = 150.0,
     water_head_initial_m: float = 0.0,
-    initial_state_33: Optional[dict] = None,
+    initial_state_33: dict | None = None,
     panel_focus: str = "all",
     n_steps: int = 50,
     dt_sec: float = 1.0,
     cycle_id: str = "",
     # ── inverse / mcmc mode params ──────────────────────────────────────────
-    observation: Optional[dict] = None,
-    base_theta: Optional[dict] = None,
+    observation: dict | None = None,
+    base_theta: dict | None = None,
     n_grid: int = 4,
     n_warmup: int = 80,
     n_iter: int = 200,
@@ -224,7 +226,7 @@ async def geox_glof(
     tau_applied: float = 80_000.0,
     velocity: float = 0.0,
     sigma_applied: float = 0.0,
-    saturation: Optional[float] = None,
+    saturation: float | None = None,
 ) -> dict[str, Any]:
     """Unified GLOF multi-phase cascade simulation tool.
 
