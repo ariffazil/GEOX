@@ -4,7 +4,7 @@ DITEMPA BUKAN DIBERI — Structural geology is forged, not given.
 
 Constitutional wrapper for LoopStructural (structural geology modeling).
 
-LoopStructural (Loop3D / CC-BY) provides:
+LoopStructural (Loop3D / MIT) provides:
   - 3D structural geology modeling: fault networks, folds, foliations
   - Overprinting relationship handling (sequential structural history)
   - Geological timeline: relative age of structures
@@ -19,8 +19,9 @@ F7 HUMILITY: Confidence hard-capped at 0.75 for kinematic restorations.
 F9 ANTI-HANTU: LoopStructural does not "know" the geology — it interpolates
   what the interpreter tells it to model.
 
-Requires: loopstructural>=2.0.0
+Requires: loopstructural>=1.8.0,<2
 Install: pip install loopstructural
+License: MIT — PyPI JSON API verified 2026-10-14 (latest 1.8.2, installed 1.8.0). Repo LICENSE audit pending 555-ASI.
 """
 
 from __future__ import annotations
@@ -69,7 +70,7 @@ class LoopStructuralAdapter:
     def _check_dependencies(self) -> None:
         if not _LOOPSTRUCTURAL_AVAILABLE:
             raise ImportError(
-                "loopstructural>=2.0.0 is required for structural geology modeling. Install with: pip install loopstructural"
+                "loopstructural>=1.8.0,<2 is required for structural geology modeling. Install with: pip install loopstructural"
             )
 
     def fault_network_model(

@@ -407,3 +407,18 @@ Recent changes live in [CHANGELOG.md](CHANGELOG.md).
 Business Source License 1.1 — parameters are defined in [LICENSE](LICENSE): **Change Date 2029-06-29**, **Change License Apache-2.0**, **Additional Use Grant** non-production / evaluation / academic use; production use in commercial undertakings (including petroleum exploration, CCS, geothermal, SaaS) requires a separate paid commercial license from the Licensor.
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
+
+<!-- FEDERATION-STANDARD v2026-10-15 START :: 333-AGI audit :: source: organs.yaml + git + live probes :: regenerate: re-run audit -->
+## 🔗 Federation Identity (auto-audit 2026-10-15)
+| Field | Value |
+|---|---|
+| Organ | `geox` · CORE · domain_evidence |
+| Ports | 8081 |
+| Unit | geox-mcp.service |
+| Authority ceiling | COMPUTE_ONLY |
+| Live (SOT probe @audit) | UP |
+| Repo HEAD @audit | `d69a6374 2026-10-14` |
+| Public MCP | https://geox.arif-fazil.com/mcp |
+| Rollback | — |
+| Flow graph | [FEDERATION-FLOW-GRAPH.md](../FEDERATION-FLOW-GRAPH.md) — peta semua organ + repo |
+<!-- FEDERATION-STANDARD v2026-10-15 END -->

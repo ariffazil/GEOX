@@ -1,0 +1,4 @@
+unit,dip_deg,dip_azimuth_deg
+SYNTH_TOP_C,2.99,90
+SYNTH_TOP_B,3.83,90
+SYNTH_TOP_A,7.15,90

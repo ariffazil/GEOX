@@ -1,0 +1,113 @@
+# reconciliation_vocabulary_0.1.0-draft.yaml
+# Step 3.5 — vocabulary reconciliation artifact (DRAFT, not ratified).
+#
+# Purpose: THREE claim vocabularies currently coexist in GEOX. This maps them
+# and proposes a clean four-dimension target for the capability bundles.
+# Open questions are flagged, NOT silently resolved.
+#
+# Status: DRAFT_CANDIDATE — pending human acceptance of exact mapping.
+
+schema_version: 0.1.0-draft
+forged_at: 2026-10-14
+author: 333-AGI
+status: DRAFT_CANDIDATE
+
+# ── Observed vocabularies (OBS, 2026-10-14) ──────────────────────────────
+
+vocabularies:
+  mission_rule04:
+    source: "GEOX AAA FORGE INIT v2 (Arif) RULE-04"
+    claim_state:
+      - OBSERVED
+      - COMPUTED
+      - INTERPRETED_LOCAL
+      - HYPOTHESIS
+    forbidden:
+      - CERTAIN
+      - PROVEN
+      - FINAL
+    note: "epistemic-class semantics (what kind of knowledge)."
+
+  claim_envelope_locked:
+    source: "src/geox_core/schemas/claim_envelope.py (ClaimState enum)"
+    claim_state:
+      - NO_VALID_EVIDENCE
+      - INGESTED
+      - QC_VERIFIED
+      - INTERPRETED
+      - DERIVED_CANDIDATE
+      - SEALED
+      - JUDGE_PREVIEW
+      - HOLD
+      - VOID
+    note: >
+      CONFLATES lifecycle (INGESTED→QC_VERIFIED) with verdict (SEALED/VOID/HOLD).
+      File status: NO_STATIC_CONSUMER_FOUND (no `import` of the module anywhere).
+      Broken under pydantic>=2.14 (`_internal` field rejected). IMMUTABLE — do not
+      fix/retire without 888 + dependency graph.
+
+  claims_live:
+    source: "src/geox_mcp/tools/claims.py::_build_claim_envelope (LIVE, used by auto_mint.py)"
+    truth_class:
+      - FACT
+      - INTERPRETATION
+      - SPECULATION
+    claim_state:
+      - DRAFT
+      - VALIDATED
+      - REVIEWED
+      - SEALED
+      - VOID
+    explanation_class:
+      - MEASURED
+      - MECHANISM
+      - PATTERN
+      - NARRATIVE
+      - UNCLASSIFIED
+    epistemic_label: [OBS, DER, INT, SPEC]
+    note: "This is the ACTUAL live envelope. It already separates truth_class (epistemic)
+            from claim_state (lifecycle) from explanation_class (explanatory kind)."
+
+# ── Proposed four-dimension target (for capability bundles) ─────────────
+
+dimensions:
+  epistemic_class:
+    values: [OBSERVED, COMPUTED, INTERPRETED_LOCAL, HYPOTHESIS]
+    source: mission_rule04
+
+  lifecycle_state:
+    values: [NO_VALID_EVIDENCE, INGESTED, QC_VERIFIED, INTERPRETED, DERIVED_CANDIDATE]
+    source: claim_envelope_locked (verdict states removed)
+
+  authority_ceiling:
+    value: QUALIFIED_CANDIDATE
+    constant: true
+
+  constitutional_verdict:
+    value: null
+    owner: arifOS
+    values: [SEALED, SABAR, VOID, HOLD]
+
+# ── Open questions (do NOT resolve silently — 888 / Arif) ───────────────
+
+open_questions:
+  - id: OQ-1
+    issue: >
+      "FACT" is FORBIDDEN in mission RULE-04 but is a VALID truth_class in the live
+      claims.py envelope. These may be different senses (assertion-of-certainty vs
+      measured-fact), or a real conflict. Needs ruling.
+  - id: OQ-2
+    issue: >
+      claim_envelope_locked lifecycle (INGESTED→QC_VERIFIED→DERIVED_CANDIDATE) vs
+      claims_live lifecycle (DRAFT→VALIDATED→REVIEWED→SEALED) are TWO different
+      lifecycle spaces. Which governs engine-internal vs governance/vault state?
+  - id: OQ-3
+    issue: >
+      claim_envelope.py has NO_STATIC_CONSUMER_FOUND and is broken under pydantic>=2.14,
+      yet is marked IMMUTABLE and referenced by doctrine (upstream_registry.py:10).
+      Fix, retire, or leave? Requires dependency graph + provenance first.
+  - id: OQ-4
+    issue: >
+      claims.py truth_class (FACT/INTERPRETATION/SPECULATION) vs mission epistemic_class
+      (OBSERVED/COMPUTED/INTERPRETED_LOCAL/HYPOTHESIS) overlap but are not identical.
+      Are these the same axis renamed, or two axes?
