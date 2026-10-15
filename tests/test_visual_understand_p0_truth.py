@@ -4,11 +4,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import os
+
 import pytest
 
 from geox_mcp.tools.seismic_vision_ai import geox_visual_understand
 
 
+@pytest.mark.skipif(not os.path.exists("/root/GEOX/geox/seismic/rsi/seismic_section.jpg"), reason="local image not present (CI)")
 def test_no_backend_holds_not_fabricates():
     img = Path("/root/GEOX/geox/seismic/rsi/seismic_section.jpg")
     assert img.is_file()

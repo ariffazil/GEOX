@@ -31,6 +31,7 @@ DITEMPA BUKAN DIBERI — forged, not given.
 from __future__ import annotations
 
 import re
+import os
 from unittest.mock import patch
 
 import pytest
@@ -43,29 +44,30 @@ from geox_mcp.session_enforcement import validate_session
 # ─────────────────────────────────────────────────────────────────────────────
 
 VALID_SEAL_SESSION_IDS = [
-    "SEAL-abcdef1234567890",          # 21 chars (5+16)
-    "SEAL-0000000000000000",          # 21 chars, all zeros
-    "SEAL-FFFFFFFFFFFFFFFF",          # 21 chars, upper hex
-    "SEAL-1234567890abcdef",          # 21 chars, mixed
+    "SEAL-abcdef1234567890",  # 21 chars (5+16)
+    "SEAL-0000000000000000",  # 21 chars, all zeros
+    "SEAL-FFFFFFFFFFFFFFFF",  # 21 chars, upper hex
+    "SEAL-1234567890abcdef",  # 21 chars, mixed
 ]
 
 INVALID_FORMAT_SESSION_IDS = [
     "not-a-valid-format-session-id",  # 30 chars, no SEAL- prefix
-    "deadbeef1234567890abcdef",       # 24 chars, no SEAL- prefix
-    "SEALXXXX",                       # 8 chars, too short
-    "short",                          # 5 chars
+    "deadbeef1234567890abcdef",  # 24 chars, no SEAL- prefix
+    "SEALXXXX",  # 8 chars, too short
+    "short",  # 5 chars
     "a-very-long-string-without-the-SEAL-prefix-but-quite-long-yes",  # 65 chars
 ]
 
 INVALID_BUT_FORMAT_PATH2_SESSION_IDS = [
-    "SEAL-abcdef1234567890",          # 21 chars but arifOS rejects (fake)
-    "SEAL-deadbeefdeadbeef",          # 21 chars but arifOS rejects (fake)
+    "SEAL-abcdef1234567890",  # 21 chars but arifOS rejects (fake)
+    "SEAL-deadbeefdeadbeef",  # 21 chars but arifOS rejects (fake)
 ]
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 1. session_enforcement.py — validate_session round-trip
 # ─────────────────────────────────────────────────────────────────────────────
+
 
 class TestValidateSessionPreservesFullSessionId:
     """Round-trip: error_message must contain the FULL session_id, never a slice."""
@@ -91,8 +93,7 @@ class TestValidateSessionPreservesFullSessionId:
             # And the error must NOT contain a truncated form like "SEAL-abcdef1234567..."
             # (i.e., 16-char ellipsis truncation pattern).
             assert "..." not in result.error_message, (
-                f"Path 3 error_message must NOT use '...' truncation. "
-                f"Got: {result.error_message!r}"
+                f"Path 3 error_message must NOT use '...' truncation. Got: {result.error_message!r}"
             )
 
     @pytest.mark.parametrize("session_id", VALID_SEAL_SESSION_IDS)
@@ -121,6 +122,7 @@ class TestValidateSessionPreservesFullSessionId:
 #    module except the intentional artifact_id format in organ_governance.
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class TestSourceLevelNoIdMutation:
     """No session_id[:N] or sid[:N] slice anywhere in the GEOX source tree.
 
@@ -136,7 +138,7 @@ class TestSourceLevelNoIdMutation:
     #   - trace_id generation (uuid.uuid4().hex[:12] is intentional short trace_id)
     FORBIDDEN_TRUNCATION_PATTERNS = [
         (r"session_id\[:", "session_id slice"),
-        (r"\bsid\[:",      "sid slice"),
+        (r"\bsid\[:", "sid slice"),
     ]
 
     # Files that are ALLOWED to use session_id[:N] (none after Stage 0.1).
@@ -149,8 +151,9 @@ class TestSourceLevelNoIdMutation:
     def test_no_session_id_slice_in_middleware(self):
         """geox_middleware.py must NOT slice session_id."""
         import pathlib
+
         mw = pathlib.Path("/root/GEOX/src/geox_mcp/geox_middleware.py")
-        if not mw.exists():
+        if not os.path.exists(mw):
             pytest.skip("geox_middleware.py not present")
         text = mw.read_text()
         for pat, desc in self.FORBIDDEN_TRUNCATION_PATTERNS:
@@ -164,62 +167,62 @@ class TestSourceLevelNoIdMutation:
     def test_no_session_id_slice_in_session_enforcement(self):
         """session_enforcement.py must NOT slice session_id in error_message."""
         import pathlib
+
         se = pathlib.Path("/root/GEOX/src/geox_mcp/session_enforcement.py")
-        if not se.exists():
+        if not os.path.exists(se):
             pytest.skip("session_enforcement.py not present")
         text = se.read_text()
         for pat, desc in self.FORBIDDEN_TRUNCATION_PATTERNS:
             matches = list(re.finditer(pat, text))
             assert not matches, (
-                f"session_enforcement.py contains {desc} pattern: {pat!r}. "
-                f"Matches: {[m.group() for m in matches]}."
+                f"session_enforcement.py contains {desc} pattern: {pat!r}. Matches: {[m.group() for m in matches]}."
             )
 
     def test_no_session_id_slice_in_server(self):
         """server.py must NOT slice session_id in log handlers."""
         import pathlib
+
         sv = pathlib.Path("/root/GEOX/src/geox_mcp/server.py")
-        if not sv.exists():
+        if not os.path.exists(sv):
             pytest.skip("server.py not present")
         text = sv.read_text()
         for pat, desc in self.FORBIDDEN_TRUNCATION_PATTERNS:
             matches = list(re.finditer(pat, text))
-            assert not matches, (
-                f"server.py contains {desc} pattern: {pat!r}. "
-                f"Matches: {[m.group() for m in matches]}."
-            )
+            assert not matches, f"server.py contains {desc} pattern: {pat!r}. Matches: {[m.group() for m in matches]}."
 
     def test_no_session_id_slice_in_authority_gate(self):
         """authority_gate.py must NOT slice session_id in AUTH_OK log."""
         import pathlib
+
         ag = pathlib.Path("/root/GEOX/src/geox_mcp/authority_gate.py")
-        if not ag.exists():
+        if not os.path.exists(ag):
             pytest.skip("authority_gate.py not present")
         text = ag.read_text()
         for pat, desc in self.FORBIDDEN_TRUNCATION_PATTERNS:
             matches = list(re.finditer(pat, text))
-            assert not matches, (
-                f"authority_gate.py contains {desc} pattern: {pat!r}. "
-                f"Matches: {[m.group() for m in matches]}."
-            )
+            assert not matches, f"authority_gate.py contains {desc} pattern: {pat!r}. Matches: {[m.group() for m in matches]}."
 
 
 # ─────────────────────────────────────────────────────────────────────────────
 # 3. Property-style: for any arbitrary session_id, error_message preserves it
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class TestPropertyRoundTripPreservation:
     """Property: for any input session_id, the error response preserves it."""
 
-    @pytest.mark.parametrize("session_id", [
-        "x" * 8,                # 8 chars
-        "x" * 12,               # 12 chars
-        "x" * 16,               # 16 chars
-        "x" * 21,               # 21 chars (SEAL- size)
-        "x" * 32,               # 32 chars (UUID-style)
-        "x" * 64,               # 64 chars
-        "x" * 128,              # 128 chars
-    ])
+    @pytest.mark.parametrize(
+        "session_id",
+        [
+            "x" * 8,  # 8 chars
+            "x" * 12,  # 12 chars
+            "x" * 16,  # 16 chars
+            "x" * 21,  # 21 chars (SEAL- size)
+            "x" * 32,  # 32 chars (UUID-style)
+            "x" * 64,  # 64 chars
+            "x" * 128,  # 128 chars
+        ],
+    )
     def test_any_length_session_id_preserved_in_path_3(self, session_id):
         """For any session_id length, the path-3 error keeps the full id."""
         # Avoid Path 1 (sct_v1.) and Path 2 (SEAL-*) triggers.
@@ -228,8 +231,7 @@ class TestPropertyRoundTripPreservation:
         result = validate_session(session_id, actor_id="test-actor")
         if result.error_code == "SESSION_INVALID" and "format not recognized" in (result.error_message or ""):
             assert session_id in (result.error_message or ""), (
-                f"Path 3 error must preserve full session_id (len={len(session_id)}). "
-                f"Got: {result.error_message!r}"
+                f"Path 3 error must preserve full session_id (len={len(session_id)}). Got: {result.error_message!r}"
             )
 
 
@@ -242,47 +244,41 @@ STAGE_0_1_FIX_HISTORY = {
     "issue": "16 hex to 12 hex session_id truncation across middleware; [:16] in error_message",
     "blast_radius": "audit trail corruption, regression test failure, no security exposure",
     "sites_fixed": [
-        ("/root/GEOX/src/geox_mcp/session_enforcement.py", "497",
-         "{session_id[:16]}... -> {session_id}",
-         "Path 3 (format-not-recognized) error message"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "67",
-         "session_id[:12] -> session_id",
-         "lifecycle PENDING log"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "78",
-         "session_id[:12] -> session_id",
-         "lifecycle READY log"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "308",
-         "sid[:12] -> sid",
-         "lifecycle awaiting notifications/initialized log"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "332",
-         "sid[:12] -> sid",
-         "lifecycle READY (notifications/initialized) log"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "355",
-         "sid[:12] -> sid",
-         "lifecycle READY via on_message log"),
-        ("/root/GEOX/src/geox_mcp/server.py", "2446",
-         "sid[:12] -> sid",
-         "LIFECYCLE_BLOCK_HTTP log"),
-        ("/root/GEOX/src/geox_mcp/server.py", "2516",
-         "session_id[:8] -> session_id",
-         "MCP_VERSION_MISSING log"),
-        ("/root/GEOX/src/geox_mcp/server.py", "3150",
-         "session_id[:8] -> session_id",
-         "MCP_SESSION_TERMINATE log"),
-        ("/root/GEOX/src/geox_mcp/authority_gate.py", "285",
-         "session_id[:12] -> session_id",
-         "AUTH_OK log"),
+        (
+            "/root/GEOX/src/geox_mcp/session_enforcement.py",
+            "497",
+            "{session_id[:16]}... -> {session_id}",
+            "Path 3 (format-not-recognized) error message",
+        ),
+        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "67", "session_id[:12] -> session_id", "lifecycle PENDING log"),
+        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "78", "session_id[:12] -> session_id", "lifecycle READY log"),
+        (
+            "/root/GEOX/src/geox_mcp/geox_middleware.py",
+            "308",
+            "sid[:12] -> sid",
+            "lifecycle awaiting notifications/initialized log",
+        ),
+        (
+            "/root/GEOX/src/geox_mcp/geox_middleware.py",
+            "332",
+            "sid[:12] -> sid",
+            "lifecycle READY (notifications/initialized) log",
+        ),
+        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "355", "sid[:12] -> sid", "lifecycle READY via on_message log"),
+        ("/root/GEOX/src/geox_mcp/server.py", "2446", "sid[:12] -> sid", "LIFECYCLE_BLOCK_HTTP log"),
+        ("/root/GEOX/src/geox_mcp/server.py", "2516", "session_id[:8] -> session_id", "MCP_VERSION_MISSING log"),
+        ("/root/GEOX/src/geox_mcp/server.py", "3150", "session_id[:8] -> session_id", "MCP_SESSION_TERMINATE log"),
+        ("/root/GEOX/src/geox_mcp/authority_gate.py", "285", "session_id[:12] -> session_id", "AUTH_OK log"),
     ],
     "preserved_intentionally": [
-        ("/root/GEOX/src/geox_mcp/organ_governance.py", "709",
-         "session_short = (session_id or \"nosession\")[:16]",
-         "artifact_id format: geox:{session_short}:{tool_name}:{content_hash} — by design"),
-        ("/root/GEOX/src/geox_mcp/verify_ingest.py", "63,75",
-         "sha256[:16]",
-         "SHA256 hash display (not session_id)"),
-        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "689",
-         "uuid.uuid4().hex[:12]",
-         "trace_id generation (not session_id)"),
+        (
+            "/root/GEOX/src/geox_mcp/organ_governance.py",
+            "709",
+            'session_short = (session_id or "nosession")[:16]',
+            "artifact_id format: geox:{session_short}:{tool_name}:{content_hash} — by design",
+        ),
+        ("/root/GEOX/src/geox_mcp/verify_ingest.py", "63,75", "sha256[:16]", "SHA256 hash display (not session_id)"),
+        ("/root/GEOX/src/geox_mcp/geox_middleware.py", "689", "uuid.uuid4().hex[:12]", "trace_id generation (not session_id)"),
     ],
 }
 
@@ -297,6 +293,7 @@ def test_stage_0_1_fix_history_recorded():
 # 5. Severity-graded failure messages
 # ─────────────────────────────────────────────────────────────────────────────
 
+
 class TestFailureMessagesAreActionable:
     """When the contract fails, the error message must tell the dev exactly where to fix."""
 
@@ -308,6 +305,4 @@ class TestFailureMessagesAreActionable:
         if result.error_code == "SESSION_INVALID":
             msg = result.error_message or ""
             # The full session_id must appear, not a truncated form.
-            assert "not-a-valid-format" in msg, (
-                f"Path 3 error must contain full session_id. Got: {msg!r}"
-            )
+            assert "not-a-valid-format" in msg, f"Path 3 error must contain full session_id. Got: {msg!r}"

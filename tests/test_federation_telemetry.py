@@ -18,8 +18,11 @@ from __future__ import annotations
 
 import importlib
 import json
+import os
 import sys
 from pathlib import Path
+
+import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC = REPO_ROOT / "src"
@@ -132,6 +135,7 @@ def test_federation_line_matches_shared_contract(tmp_path, monkeypatch):
     assert fr["host"]
 
 
+@pytest.mark.skipif(not os.path.exists("/var/lib/geox"), reason="local organ ledger not present (CI)")
 def test_live_organ_local_ledger_still_wellformed():
     """The 580+ line production ledger must keep the frozen shape."""
     rows = _rows(LIVE_LOCAL)

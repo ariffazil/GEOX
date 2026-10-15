@@ -31,20 +31,12 @@ def make_png(width: int = 80, height: int = 60, grey: int = 128) -> bytes:
         raw += b"\x00"  # PNG filter byte
         for x in range(width):
             raw += bytes([grey, grey, grey])
+
     def chunk(typ: bytes, data: bytes) -> bytes:
-        return (
-            struct.pack(">I", len(data))
-            + typ
-            + data
-            + struct.pack(">I", zlib.crc32(typ + data) & 0xFFFFFFFF)
-        )
+        return struct.pack(">I", len(data)) + typ + data + struct.pack(">I", zlib.crc32(typ + data) & 0xFFFFFFFF)
+
     ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
-    return (
-        b"\x89PNG\r\n\x1a\n"
-        + chunk(b"IHDR", ihdr)
-        + chunk(b"IDAT", zlib.compress(raw))
-        + chunk(b"IEND", b"")
-    )
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
 
 
 def b64_png(width: int = 80, height: int = 60, grey: int = 128) -> str:
@@ -130,9 +122,7 @@ async def test_t2_image_only_minimum_three_distinct_hypotheses():
     # No true dip / no throw in metres / no depth relief in any hypothesis
     for h in hyp:
         for f in h.get("faults", []) or []:
-            assert f.get("true_subsurface_dip_deg") in (None, "unmeasured"), (
-                f"image-only fault leaked true dip: {f}"
-            )
+            assert f.get("true_subsurface_dip_deg") in (None, "unmeasured"), f"image-only fault leaked true dip: {f}"
             assert f.get("throw_m") in (None,), f"image-only fault leaked throw in metres: {f}"
         for hor in h.get("horizons", []) or []:
             assert hor.get("depth_geometry") in (None,), "image-only horizon leaked depth geometry"
@@ -148,9 +138,7 @@ async def test_t2_image_only_minimum_three_distinct_hypotheses():
         # Render is part of the W6 workflow but the bundle output alone
         # is sufficient evidence here. The presence of an interpretation_bundle
         # with render_refs at the hypothesis level passes the W6 contract.
-        ib_render_refs = [
-            h.get("render_ref") for h in hyp if h.get("render_ref")
-        ]
+        ib_render_refs = [h.get("render_ref") for h in hyp if h.get("render_ref")]
         if not ib_render_refs:
             # Render is not yet wired into the interpret_section path for
             # image-only input. The full render path is exercised by the
@@ -285,7 +273,9 @@ async def test_t5_impossible_fault_killed():
     # is non-tapering. The non-tapering throw is a hard kill.
     ib = r.get("interpretation_bundle") or {}
     rejected = [h for h in ib.get("hypotheses", []) if h.get("status") == "REJECTED"]
-    assert rejected, f"expected at least one REJECTED hypothesis, got statuses: {[h.get('status') for h in ib.get('hypotheses', [])]}"
+    assert rejected, (
+        f"expected at least one REJECTED hypothesis, got statuses: {[h.get('status') for h in ib.get('hypotheses', [])]}"
+    )
 
 
 # ── T6 — Independent witnesses ─────────────────────────────────────────────
@@ -380,9 +370,7 @@ async def test_t7_direct_vs_bridge_normalized_payload_hash():
     )
     h_bridge = (r_bridge.get("provenance") or {}).get("normalized_payload_hash")
     assert h_bridge, f"bridge call missing normalized_payload_hash: {r_bridge.get('provenance')}"
-    assert h_direct == h_bridge, (
-        f"direct vs bridge payload hash diverged: {h_direct} vs {h_bridge}"
-    )
+    assert h_direct == h_bridge, f"direct vs bridge payload hash diverged: {h_direct} vs {h_bridge}"
 
 
 # ── T8 — Expired session (kernel side) ─────────────────────────────────────
@@ -423,21 +411,19 @@ def test_t9_surface_truth_count_parity():
     canonical_path = Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json")
     well_known_path = Path("/root/GEOX/.well-known/tools.json")
 
-    if not manifest_path.exists():
+    if not os.path.exists(manifest_path):
         pytest.skip("tools_manifest.yaml not present")
-    if not canonical_path.exists():
+    if not os.path.exists(canonical_path):
         pytest.skip("CANONICAL_PUBLIC_SURFACE.json not present")
 
     manifest = yaml.safe_load(manifest_path.read_text())
-    manifest_public = [
-        t for t in manifest.get("tools", []) if t.get("visibility") == "public"
-    ]
+    manifest_public = [t for t in manifest.get("tools", []) if t.get("visibility") == "public"]
     manifest_count = len(manifest_public)
 
     canonical = json.loads(canonical_path.read_text())
     canonical_count = canonical.get("public_count", len(canonical.get("tools", [])))
 
-    if well_known_path.exists():
+    if os.path.exists(well_known_path):
         well_known = json.loads(well_known_path.read_text())
         # `surface_tools` may be a list OR a count (int)
         st = well_known.get("surface_tools")
@@ -460,9 +446,7 @@ def test_t9_surface_truth_count_parity():
         f"canonical public surface drift: manifest={manifest_count} canonical={canonical_count}"
     )
     # Record the live fact (may differ from manifest if deployment has not been refreshed)
-    assert wk_count >= canonical_count * 0.5, (
-        f"well-known/tools.json count collapsed: {wk_count} vs canonical {canonical_count}"
-    )
+    assert wk_count >= canonical_count * 0.5, f"well-known/tools.json count collapsed: {wk_count} vs canonical {canonical_count}"
 
 
 # ── T10 — Render determinism (byte-identical) ────────────────────────────
@@ -532,9 +516,7 @@ async def test_w6_render_artifact_metadata():
         assert r.get("receipt_hash"), "render missing receipt_hash"
         assert r.get("content_hash"), "render missing content_hash"
         # The honest_banner / honesty_banner labels the style identification
-        assert r.get("honesty_banner") or r.get("title"), (
-            "render missing style identification"
-        )
+        assert r.get("honesty_banner") or r.get("title"), "render missing style identification"
         # RenderArtifact model can be constructed from these fields
         ra = RenderArtifact(
             render_ref=f"geox://render/{r['png_sha256'][:16]}",
@@ -593,13 +575,11 @@ def test_w8_surface_truth_one_source():
     manifest_path = Path("/root/GEOX/src/geox_mcp/tools_manifest.yaml")
     canonical_path = Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json")
 
-    if not manifest_path.exists() or not canonical_path.exists():
+    if not os.path.exists(manifest_path) or not os.path.exists(canonical_path):
         pytest.skip("manifest or canonical surface missing")
 
     manifest = yaml.safe_load(manifest_path.read_text())
-    manifest_tools = [
-        t["name"] for t in manifest.get("tools", []) if t.get("visibility") == "public"
-    ]
+    manifest_tools = [t["name"] for t in manifest.get("tools", []) if t.get("visibility") == "public"]
 
     canonical = json.loads(canonical_path.read_text())
     canonical_tools = [t.get("name") for t in canonical.get("tools", [])]
@@ -652,12 +632,12 @@ def test_w9_identity_bands_no_silent_upgrade():
         pytest.skip("arifOS runtime path missing")
     # Run the helper in isolation
     import importlib.util
-    spec = importlib.util.spec_from_file_location(
-        "_gov_id_only", runtime_path
-    )
+
+    spec = importlib.util.spec_from_file_location("_gov_id_only", runtime_path)
     # We cannot fully import the module (deps missing), so we extract the
     # helper function source and exec the body in a synthetic namespace.
     import re
+
     src = open(runtime_path).read()
     m = re.search(r"def coerce_identity_dict\([^)]*\)[^:]*:\n((?:\n|    .*)+)", src)
     assert m, "coerce_identity_dict not found in source"
@@ -694,6 +674,7 @@ def test_w9_session_expired_marker_in_runtime():
 # ── W10 — Deployment truth invariant ─────────────────────────────────────
 
 
+@pytest.mark.skipif(not os.path.exists("/root/GEOX"), reason="local GEOX deployment not present (CI)")
 def test_w10_deployment_drift_invariant():
     """The deployment drift invariant is:
         source_commit == built_commit == deployed_commit == health_commit.
@@ -717,9 +698,7 @@ def test_w10_deployment_drift_invariant():
         src = sw.get("source_commit", "")
         bld = sw.get("built_commit", "")
         dep = sw.get("deployed_commit", "")
-        assert src == bld == dep, (
-            f"arifOS deployment drift detected in /health: src={src} bld={bld} dep={dep}"
-        )
+        assert src == bld == dep, f"arifOS deployment drift detected in /health: src={src} bld={bld} dep={dep}"
         assert sw.get("drift") is False, f"arifOS /health reports drift=true: {sw}"
         # health_commit is implied by source==built==deployed
         assert src, "arifOS /health missing source_commit"
@@ -727,7 +706,9 @@ def test_w10_deployment_drift_invariant():
     # GEOX HEAD must be readable and non-empty
     geox_head = subprocess.run(
         ["git", "-C", "/root/GEOX", "rev-parse", "HEAD"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout.strip()
     assert geox_head, "GEOX HEAD missing"
     # The dirty working tree on GEOX is expected (this hardening pass)
@@ -766,14 +747,10 @@ def test_no_fixed_probability_values_in_bundle_output():
     for forbidden in ("0.55", "0.45", "0.25", "0.35"):
         # As standalone values (not part of a longer number)
         if f'"{forbidden}"' in body:
-            raise AssertionError(
-                f"bundle output contains fixed probability value {forbidden}: {body[:300]}"
-            )
+            raise AssertionError(f"bundle output contains fixed probability value {forbidden}: {body[:300]}")
     # confidence_value must be None or absent everywhere
     for h in b.get("hypotheses", []):
-        assert h.get("confidence_value") in (None, 0.0), (
-            f"hypothesis carries a confidence_value: {h.get('confidence_value')}"
-        )
+        assert h.get("confidence_value") in (None, 0.0), f"hypothesis carries a confidence_value: {h.get('confidence_value')}"
 
 
 def test_no_fabricated_alternatives_in_bundle():
