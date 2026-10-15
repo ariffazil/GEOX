@@ -4,7 +4,7 @@ last_verified: 2026-07-11
 valid_from: 2026-06-14
 valid_until: 2026-08-10
 confidence: high
-scope: /root/geox/BOUNDARY.md
+scope: /root/GEOX/BOUNDARY.md
 -->
 
 # BOUNDARY.md — GEOX Earth Intelligence / Governed World Model
@@ -61,7 +61,7 @@ scope: /root/geox/BOUNDARY.md
 1. **Canonical server location** — `src/geox_mcp/server.py` is the canonical unified MCP server, but `geox/geox/core/` also has a dimension-native structure (1D/2D/3D/4D). Two server surfaces exist. **Fix: Archive or merge `geox/geox/core/` into `src/geox_mcp/`. Deprecation set 2026-07-30.**
 2. **Dual entrypoints** — `entrypoint.sh` and `entrypoint_unified.sh` are functionally identical (both exec `python -m geox_mcp.server`). **Fix: Remove `entrypoint_unified.sh`, symlink to `entrypoint.sh`.**
 3. **A-FORGE root contamination** — GEOX artifacts (`arifos_od_siphon.py`, `tests/`, `docker-compose.*`) were found co-located in A-FORGE root. Source of truth must be clarified.
-4. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/geox/server.py` directly. GEOX build context should be self-contained.
+4. **arifOS deploy references** — `arifOS/deploy/arifOS/docker-compose.yml` references `/root/GEOX/server.py` directly. GEOX build context should be self-contained.
 
 ## Canonical Tool Surface (Live)
 

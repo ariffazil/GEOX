@@ -7,7 +7,7 @@ Full doctrine: [`GENESIS/012_GEOX_001_WELL_SEISMIC_TRUTH.md`](../../GENESIS/012_
 ## Run
 
 ```bash
-cd /root/geox
+cd /root/GEOX
 PYTHONPATH=src python -m geox_core.benchmarks.geox_001_well_seismic_truth --scenario mistie_hold
 PYTHONPATH=src pytest tests/benchmarks/test_geox_001_well_seismic_truth.py -q
 ```
