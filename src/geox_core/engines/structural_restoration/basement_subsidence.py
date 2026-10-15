@@ -52,8 +52,7 @@ def compute_basement_subsidence(
     """
     if basement_source_grid.shape != basement_target_grid.shape:
         raise ValueError(
-            f"Basement grid shape mismatch: source {basement_source_grid.shape} "
-            f"vs target {basement_target_grid.shape}"
+            f"Basement grid shape mismatch: source {basement_source_grid.shape} vs target {basement_target_grid.shape}"
         )
 
     # SR_INV-001: never mutate inputs

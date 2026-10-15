@@ -8,7 +8,10 @@ SRU "~8.5 Ma (Morley: 8.5–9)", footer "no volumetrics shown", Megah-1 neutral,
 Usage: python3 kinabalu_xs.py dark|light
 """
 
-import sys, os, numpy as np, matplotlib
+import sys
+import os
+import numpy as np
+import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt

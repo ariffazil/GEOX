@@ -61,7 +61,7 @@ class ChargeResult(BaseModel):
     engine_version: str = "petroleum_system/1.0.0"
 
     @model_validator(mode="after")
-    def _enforce_invariants(self) -> "ChargeResult":
+    def _enforce_invariants(self) -> ChargeResult:
         if self.epistemic_class in FORBIDDEN_EPISTEMIC:
             raise ValueError(f"forbidden epistemic_class: {self.epistemic_class}")
         if self.preferred_thermal_history is not None:

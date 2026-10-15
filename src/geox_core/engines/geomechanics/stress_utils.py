@@ -92,8 +92,7 @@ def classify_fault_orientation(
         "stress_regime": regime,
         "preferred_relation": relation,
         "note": (
-            "Consistency score ≥ 0.7 means the orientation is compatible "
-            "with the stress regime. It does NOT prove fault age."
+            "Consistency score ≥ 0.7 means the orientation is compatible with the stress regime. It does NOT prove fault age."
         ),
     }
 
@@ -114,6 +113,5 @@ def compute_slip_tendency(
     # The actual implementation requires proper3D stress rotation
     # onto the fault plane normal
     raise NotImplementedError(
-        "Full3D slip tendency requires tensor decomposition. "
-        "Use check_reactivation_viability() for the simplified version."
+        "Full3D slip tendency requires tensor decomposition. Use check_reactivation_viability() for the simplified version."
     )

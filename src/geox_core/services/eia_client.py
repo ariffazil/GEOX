@@ -32,6 +32,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import httpx
+
 try:
     import httpx2  # type: ignore[import-not-found]  # FastMCP 4 migration — present in some environments
 except ModuleNotFoundError:  # absent here; alias the httpx API (see geox_core.httpx2_shim)

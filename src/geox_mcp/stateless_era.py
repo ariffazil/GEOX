@@ -511,8 +511,8 @@ class McpStatelessEraMiddleware:
             forward_scope = _scope_with_headers(scope, {"mcp-session-id": sid})
             captured: list[dict[str, Any]] = []
 
-            async def _capture(message):
-                captured.append(message)
+            async def _capture(message, _captured=captured):
+                _captured.append(message)
 
             await self.app(forward_scope, _body_receive(body), _capture)
             status = next((m["status"] for m in captured if m["type"] == "http.response.start"), 0)

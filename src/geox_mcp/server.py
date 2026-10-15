@@ -65,6 +65,7 @@ logger = logging.getLogger("geox.unified")
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from geox_mcp.registry import GEOX_VERSION  # single source of truth (registry.py)
+
 # Phase 2.1 Clean Architecture (2026-06-28): 30 canonical tools (18 original + 12 EGS + 4 internal).
 # Phase 2.7 (2026-07-03): +1 geox_biostrat_parse — biostratigraphy parsing (NN zones, GDE, lithology).
 # Backward-compat wrappers for 49 legacy alias names.

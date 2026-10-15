@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Phase 4: Deterministic layer assignment based on directory structure."""
-import json, os
+import json
+import os
 from collections import defaultdict, Counter
 
 UA_DIR = '/root/GEOX/.ua'
