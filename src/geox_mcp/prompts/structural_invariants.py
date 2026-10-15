@@ -429,21 +429,25 @@ def render_structural_invariants(
     _BAR = "\u2501" * 76
 
     context = _NL.join(
-        line for line in (
+        line
+        for line in (
             f"  section_ref       : {section_ref}" if section_ref else "",
             f"  basin / area      : {basin}" if basin else "",
             f"  candidate regimes : {regimes}",
-        ) if line
+        )
+        if line
     )
 
     body = (_NL * 2).join(text for _, text in STRUCTURAL_INVARIANTS)
 
-    return (_NL * 2).join((
-        _HEADER,
-        _BAR + _NL + "TASK CONTEXT" + _NL + _BAR + _NL + context,
-        _BAR + _NL + "THE INVARIANTS (I01-I15)" + _NL + _BAR + _NL + body,
-        _FOOTER,
-    ))
+    return (_NL * 2).join(
+        (
+            _HEADER,
+            _BAR + _NL + "TASK CONTEXT" + _NL + _BAR + _NL + context,
+            _BAR + _NL + "THE INVARIANTS (I01-I15)" + _NL + _BAR + _NL + body,
+            _FOOTER,
+        )
+    )
 
 
 #: The invariant text with an empty task context — a stable module-level

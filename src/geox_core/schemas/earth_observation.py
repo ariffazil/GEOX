@@ -59,6 +59,7 @@ LocalVerdict = Literal[
 
 # ── Sub-Schemas ─────────────────────────────────────────────────────────────
 
+
 class ArtifactMetadata(BaseModel):
     id: str
     sha256: str = Field(..., pattern=r"^[a-f0-9]{64}$")
@@ -189,8 +190,10 @@ class EpistemicBlock(BaseModel):
 
 # ── The Canonical Root Packet ───────────────────────────────────────────────
 
+
 class EarthObservationPacket(BaseModel):
     """Canonical multimodal Earth observation packet enforcing invariant Image != Specimen != Measurement != Earth."""
+
     schema_version: Literal["earth_observation_packet.v1"] = "earth_observation_packet.v1"
     packet_id: str
     artifact: ArtifactMetadata
@@ -205,11 +208,17 @@ class EarthObservationPacket(BaseModel):
         # Invariant I3: No hydrocarbon claim from image alone
         for hyp in self.hypotheses:
             label_lower = hyp.label.lower()
-            if any(term in label_lower for term in ["hydrocarbon", "oil leg", "gas pay", "direct hydrocarbon indicator", "dhi confirmed"]):
+            if any(
+                term in label_lower
+                for term in ["hydrocarbon", "oil leg", "gas pay", "direct hydrocarbon indicator", "dhi confirmed"]
+            ):
                 # Downgrade or force INPUT_REQUIRED
                 if self.epistemic.claim_tag == "EVIDENCE":
                     self.epistemic.claim_tag = "HYPOTHESIS"
-                if "Fluid cannot be confirmed from image alone (Amplitude != Hydrocarbon)" not in self.limitations.image_cannot_determine:
+                if (
+                    "Fluid cannot be confirmed from image alone (Amplitude != Hydrocarbon)"
+                    not in self.limitations.image_cannot_determine
+                ):
                     self.limitations.image_cannot_determine.append(
                         "Fluid cannot be confirmed from image alone (Amplitude != Hydrocarbon). Requires AVO or well tie."
                     )

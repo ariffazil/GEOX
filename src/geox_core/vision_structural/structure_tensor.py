@@ -160,9 +160,7 @@ _INTERIOR_NOTE = (
 def _as_section(section: np.ndarray) -> np.ndarray:
     arr = np.asarray(section, dtype=float)
     if arr.ndim != 2:
-        raise ValueError(
-            f"section must be a 2-D float array of shape (n_samples_z, n_traces), got ndim={arr.ndim}"
-        )
+        raise ValueError(f"section must be a 2-D float array of shape (n_samples_z, n_traces), got ndim={arr.ndim}")
     if arr.size == 0:
         raise ValueError("section is empty — nothing to measure")
     if not np.all(np.isfinite(arr)):
@@ -241,9 +239,7 @@ def _dip_field(
         disc = np.sqrt(np.maximum((Txx - Tzz) ** 2 + 4.0 * Txz**2, 0.0))
         e_major = 0.5 * (trace + disc)
         e_minor = 0.5 * (trace - disc)
-        anisotropy = np.where(
-            trace > 0.0, (e_major - e_minor) / np.where(trace > 0.0, trace, 1.0), 0.0
-        )
+        anisotropy = np.where(trace > 0.0, (e_major - e_minor) / np.where(trace > 0.0, trace, 1.0), 0.0)
         anisotropy = np.nan_to_num(anisotropy, nan=0.0, posinf=0.0, neginf=0.0)
 
     valid = finite & interior & (Tzz > 0.0) & (anisotropy >= float(min_anisotropy))
@@ -270,9 +266,7 @@ def _dip_field(
     # reflector: that manufactures curvature out of nothing (measured: mean|kappa| ~2.5e-4 1/m
     # over a perfectly planar section before this erosion). So the curvature needs its
     # neighbourhood valid, not just the pixel — 1 px morphological core.
-    curv_core = valid & np.asarray(
-        ndimage.binary_erosion(valid, structure=np.ones((3, 3), dtype=bool)), dtype=bool
-    )
+    curv_core = valid & np.asarray(ndimage.binary_erosion(valid, structure=np.ones((3, 3), dtype=bool)), dtype=bool)
     curvature_1_m = np.where(curv_core, curvature_1_m, 0.0)
 
     # In-section apparent dip azimuth, clockwise from +x. Only defined where the reflector
@@ -447,8 +441,7 @@ def compute_dip_field(
         out["dip_azimuth_deg"] = unmeasured(
             "deg_azimuth",
             method=method,
-            reason=reason
-            + "; an azimuth also requires a non-zero dip, which is unavailable here",
+            reason=reason + "; an azimuth also requires a non-zero dip, which is unavailable here",
             uncertainty=shared_unc,
         )
         return out
@@ -483,9 +476,7 @@ def compute_dip_field(
         unit="1/m",
         coverage=(n_curv / n_interior) if n_interior else 0.0,
         n_samples=n_curv,
-        method=method
-        + "; curvature kappa = d(theta)/d(s) in the true metric "
-        "(dtheta/dx + dtheta/dz*tan(theta)) * cos(theta)",
+        method=method + "; curvature kappa = d(theta)/d(s) in the true metric (dtheta/dx + dtheta/dz*tan(theta)) * cos(theta)",
         uncertainty={
             **shared_unc,
             "reduction": "mean of |kappa| over valid samples",
@@ -531,11 +522,9 @@ def compute_dip_field(
                 "n_azimuth_samples": int(az_valid.size),
                 "azimuth_min_abs_dip_deg": AZIMUTH_MIN_ABS_DIP_DEG,
                 "azimuth_convention": "clockwise from +x (the trace / section x axis), in-section apparent",
-                "dimension": "2-D section — this is NOT a 3-D azimuth; a 3-D orientation needs "
-                "spatial import (Axis C)",
+                "dimension": "2-D section — this is NOT a 3-D azimuth; a 3-D orientation needs spatial import (Axis C)",
                 "r_vector_length": (
-                    float(np.hypot(np.sum(np.sin(np.radians(az_valid))), np.sum(np.cos(np.radians(az_valid)))))
-                    / az_valid.size
+                    float(np.hypot(np.sum(np.sin(np.radians(az_valid))), np.sum(np.cos(np.radians(az_valid))))) / az_valid.size
                     if az_valid.size
                     else None
                 ),
@@ -552,26 +541,24 @@ def compute_dip_field(
 # ── geometry classification (declared rules only) ──────────────────────────────────────
 def _rule_planar(dip_mag: np.ndarray, curvature_mean: float) -> tuple[bool, str, dict[str, Any]]:
     spread = _spread_deg(dip_mag)
-    ok = (
-        dip_mag.size >= 5
-        and spread <= PLANAR_MAX_SPREAD_DEG
-        and abs(curvature_mean) <= PLANAR_MAX_ABS_CURVATURE_1_M
-    )
+    ok = dip_mag.size >= 5 and spread <= PLANAR_MAX_SPREAD_DEG and abs(curvature_mean) <= PLANAR_MAX_ABS_CURVATURE_1_M
     receipt = (
         f"{RULE_PLANAR} spread_p95_p5={spread:.3f} deg (max {PLANAR_MAX_SPREAD_DEG:g}), "
         f"|curvature_mean|={abs(curvature_mean):.3e} 1/m (max {PLANAR_MAX_ABS_CURVATURE_1_M:g}), "
         f"n={dip_mag.size} -> {'FIRED' if ok else 'not fired'}"
     )
-    return ok, receipt, {
-        "spread_p95_p5_deg": spread,
-        "curvature_mean_1_m": float(curvature_mean),
-        "n_samples": int(dip_mag.size),
-    }
+    return (
+        ok,
+        receipt,
+        {
+            "spread_p95_p5_deg": spread,
+            "curvature_mean_1_m": float(curvature_mean),
+            "n_samples": int(dip_mag.size),
+        },
+    )
 
 
-def _rule_kinked(
-    dip_mag: np.ndarray, z_m: np.ndarray, x_m: np.ndarray
-) -> tuple[bool, str, dict[str, Any]]:
+def _rule_kinked(dip_mag: np.ndarray, z_m: np.ndarray, x_m: np.ndarray) -> tuple[bool, str, dict[str, Any]]:
     """Discrete dip-domain boundary: two tight dip domains separated by a jump, in x order."""
     n = dip_mag.size
     min_side = max(3, int(math.ceil(KINK_MIN_GROUP_FRACTION * n)))
@@ -590,11 +577,7 @@ def _rule_kinked(
             jump = abs(hi_mean - lo_mean)
             lo_spread = _spread_deg(lo)
             hi_spread = _spread_deg(hi)
-            if (
-                jump >= KINK_MIN_GAP_DEG
-                and lo_spread <= KINK_MAX_SIDE_SPREAD_DEG
-                and hi_spread <= KINK_MAX_SIDE_SPREAD_DEG
-            ):
+            if jump >= KINK_MIN_GAP_DEG and lo_spread <= KINK_MAX_SIDE_SPREAD_DEG and hi_spread <= KINK_MAX_SIDE_SPREAD_DEG:
                 if best is None or jump > best["jump_deg"]:
                     best = {
                         "boundary_index": int(k),
@@ -609,18 +592,15 @@ def _rule_kinked(
                         "boundary_zone_samples": int(2 * KINK_BOUNDARY_SKIP_SAMPLES),
                     }
     ok = best is not None
-    receipt = (
-        f"{RULE_KINKED} "
-        + (
-            f"boundary at index {best['boundary_index']} (x={best['x_boundary_m']:.1f} m): "
-            f"jump={best['jump_deg']:.3f} deg (min {KINK_MIN_GAP_DEG:g}), "
-            f"side spreads={best['lo_spread_deg']:.3f}/{best['hi_spread_deg']:.3f} deg "
-            f"(max {KINK_MAX_SIDE_SPREAD_DEG:g}) -> FIRED"
-            if best is not None
-            else f"no split with jump >= {KINK_MIN_GAP_DEG:g} deg and both sides tight "
-            f"(p95-p5 <= {KINK_MAX_SIDE_SPREAD_DEG:g} deg) and both sides >= {KINK_MIN_GROUP_FRACTION:g} "
-            f"of n={n} -> not fired"
-        )
+    receipt = f"{RULE_KINKED} " + (
+        f"boundary at index {best['boundary_index']} (x={best['x_boundary_m']:.1f} m): "
+        f"jump={best['jump_deg']:.3f} deg (min {KINK_MIN_GAP_DEG:g}), "
+        f"side spreads={best['lo_spread_deg']:.3f}/{best['hi_spread_deg']:.3f} deg "
+        f"(max {KINK_MAX_SIDE_SPREAD_DEG:g}) -> FIRED"
+        if best is not None
+        else f"no split with jump >= {KINK_MIN_GAP_DEG:g} deg and both sides tight "
+        f"(p95-p5 <= {KINK_MAX_SIDE_SPREAD_DEG:g} deg) and both sides >= {KINK_MIN_GROUP_FRACTION:g} "
+        f"of n={n} -> not fired"
     )
     return ok, receipt, best or {"n_samples": int(n)}
 
@@ -634,26 +614,25 @@ def _rule_listric(dip_mag: np.ndarray, z_m: np.ndarray) -> tuple[bool, str, dict
         res = _stats.spearmanr(z_m, dip_mag)
         rho = float(res.statistic)
         p_value = float(res.pvalue)
-    ok = (
-        rho is not None
-        and n >= LISTRIC_MIN_SAMPLES
-        and span >= LISTRIC_MIN_DIP_RANGE_DEG
-        and rho >= LISTRIC_MIN_SPEARMAN
-    )
+    ok = rho is not None and n >= LISTRIC_MIN_SAMPLES and span >= LISTRIC_MIN_DIP_RANGE_DEG and rho >= LISTRIC_MIN_SPEARMAN
     receipt = (
         f"{RULE_LISTRIC} n={n} (min {LISTRIC_MIN_SAMPLES}), dip_range_p95_p5={span:.3f} deg "
         f"(min {LISTRIC_MIN_DIP_RANGE_DEG:g}), spearman(|dip|, depth)="
         f"{'n/a' if rho is None else f'{rho:.3f}'} (min {LISTRIC_MIN_SPEARMAN:g}) -> "
         f"{'FIRED' if ok else 'not fired'}"
     )
-    return ok, receipt, {
-        "spearman_rho": rho,
-        "spearman_p_value": p_value,
-        "dip_range_p95_p5_deg": span,
-        "n_samples": int(n),
-        "reduction": "dip magnitude vs sample depth (relative to section top: the absolute datum is "
-        "unknown and Spearman is rank-based, so the datum does not matter)",
-    }
+    return (
+        ok,
+        receipt,
+        {
+            "spearman_rho": rho,
+            "spearman_p_value": p_value,
+            "dip_range_p95_p5_deg": span,
+            "n_samples": int(n),
+            "reduction": "dip magnitude vs sample depth (relative to section top: the absolute datum is "
+            "unknown and Spearman is rank-based, so the datum does not matter)",
+        },
+    )
 
 
 def extract_axis_a(
@@ -684,17 +663,17 @@ def extract_axis_a(
     arr = _as_section(section)
     mask = np.asarray(horizon_mask, dtype=bool)
     if mask.shape != arr.shape:
-        raise ValueError(
-            f"horizon_mask shape {mask.shape} does not match section shape {arr.shape}"
-        )
+        raise ValueError(f"horizon_mask shape {mask.shape} does not match section shape {arr.shape}")
     f = _dip_field(arr, dz_m=dz_m, dx_m=dx_m, ve=ve)
     method = _field_method(f)
 
     n_mask = int(mask.sum())
     if n_mask == 0:
         reason = "horizon_mask contains no True samples — there is no horizon to measure"
-        empty = {k: unmeasured(_unit_for(k), method=method, reason=reason) for k in
-                 ("dip_deg_mean", "dip_deg_p95", "curvature_mean", "dip_azimuth_deg")}
+        empty = {
+            k: unmeasured(_unit_for(k), method=method, reason=reason)
+            for k in ("dip_deg_mean", "dip_deg_p95", "curvature_mean", "dip_azimuth_deg")
+        }
         empty["geometry_class_fired"] = unmeasured(
             "count",
             method="geometry-rule-set[" + "|".join(GEOMETRY_RULES) + "]",
@@ -733,8 +712,7 @@ def extract_axis_a(
         "invalid_mask_fraction": 1.0 - coverage,
         "n_curvature_samples": n_curv,
         "n_curvature_dropped_for_invalid_neighbour": n_valid - n_curv,
-        "depth_basis": "depth measured from the top of the section array (relative); absolute datum "
-        "is unknown to this layer",
+        "depth_basis": "depth measured from the top of the section array (relative); absolute datum is unknown to this layer",
     }
     gap_note = (
         f"coverage={coverage:.3f}: {n_mask - n_valid} of {n_mask} picked samples had no valid "
@@ -783,9 +761,7 @@ def extract_axis_a(
         unit="1/m",
         coverage=curv_coverage,
         n_samples=n_curv,
-        method=method
-        + "; curvature kappa = d(theta)/d(s) in the true metric "
-        "(dtheta/dx + dtheta/dz*tan(theta)) * cos(theta)",
+        method=method + "; curvature kappa = d(theta)/d(s) in the true metric (dtheta/dx + dtheta/dz*tan(theta)) * cos(theta)",
         uncertainty={
             **shared_unc,
             "reduction": "mean SIGNED curvature over the picked horizon (a horizon rolls one way; "
@@ -828,15 +804,10 @@ def extract_axis_a(
                 "n_azimuth_samples": int(az_valid.size),
                 "azimuth_convention": "clockwise from +x (trace axis), in-section apparent dip azimuth",
                 "dimension": "2-D section — NOT a 3-D azimuth",
-                "r_vector_length": float(
-                    np.hypot(
-                        np.sum(np.sin(np.radians(az_valid))), np.sum(np.cos(np.radians(az_valid)))
-                    )
-                )
+                "r_vector_length": float(np.hypot(np.sum(np.sin(np.radians(az_valid))), np.sum(np.cos(np.radians(az_valid)))))
                 / az_valid.size,
             },
-            notes=shared_notes
-            + ["a circular mean of dip directions: 350 deg and 10 deg average to 0 deg, never to 180 deg"],
+            notes=shared_notes + ["a circular mean of dip directions: 350 deg and 10 deg average to 0 deg, never to 180 deg"],
         )
 
     out["geometry_class_fired"] = _classify(
@@ -844,9 +815,7 @@ def extract_axis_a(
         z_m=z_m,
         x_m=x_m,
         curvature_mean=curv_mean,
-        inputs_measured=(
-            out["dip_deg_p95"].status == "MEASURED" and out["curvature_mean"].status == "MEASURED"
-        ),
+        inputs_measured=(out["dip_deg_p95"].status == "MEASURED" and out["curvature_mean"].status == "MEASURED"),
         input_statuses={
             "dip_deg_p95": out["dip_deg_p95"].status,
             "curvature_mean": out["curvature_mean"].status,
@@ -934,9 +903,7 @@ def _classify(
                 fired = RULE_LISTRIC
 
     evidence["rule_evaluations"] = evaluations
-    evidence["rule_precedence"] = {
-        name: rule["precedence"] for name, rule in GEOMETRY_RULES.items()
-    }
+    evidence["rule_precedence"] = {name: rule["precedence"] for name, rule in GEOMETRY_RULES.items()}
 
     if fired is None:
         return unmeasured(

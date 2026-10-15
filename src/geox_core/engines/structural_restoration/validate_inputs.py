@@ -33,21 +33,11 @@ class ValidationResult(BaseModel):
     """Result of restoration input validation."""
 
     verdict: ValidationVerdict = Field(..., description="Overall validation verdict")
-    checks_passed: list[str] = Field(
-        default_factory=list, description="Checks that passed"
-    )
-    checks_failed: list[str] = Field(
-        default_factory=list, description="Checks that failed"
-    )
-    checks_missing: list[str] = Field(
-        default_factory=list, description="Checks that could not be run (missing data)"
-    )
-    mismatches: list[str] = Field(
-        default_factory=list, description="Detected mismatches"
-    )
-    missing_metadata: list[str] = Field(
-        default_factory=list, description="Required metadata that is missing"
-    )
+    checks_passed: list[str] = Field(default_factory=list, description="Checks that passed")
+    checks_failed: list[str] = Field(default_factory=list, description="Checks that failed")
+    checks_missing: list[str] = Field(default_factory=list, description="Checks that could not be run (missing data)")
+    mismatches: list[str] = Field(default_factory=list, description="Detected mismatches")
+    missing_metadata: list[str] = Field(default_factory=list, description="Required metadata that is missing")
     permitted_calculations: list[str] = Field(
         default_factory=list,
         description="Calculations permitted given this validation result",
@@ -56,9 +46,7 @@ class ValidationResult(BaseModel):
         default_factory=list,
         description="Calculations blocked due to validation failures",
     )
-    details: dict[str, Any] = Field(
-        default_factory=dict, description="Detailed validation results"
-    )
+    details: dict[str, Any] = Field(default_factory=dict, description="Detailed validation results")
 
 
 def validate_restoration_inputs(
@@ -84,10 +72,7 @@ def validate_restoration_inputs(
         checks_passed.append("SR_INV_001: source_geometry_is_immutable")
     else:
         checks_failed.append("SR_INV_001: source_geometry_not_marked_immutable")
-        mismatches.append(
-            f"Source surface '{scenario.source_state.surface_id}' "
-            f"is not marked as immutable source geometry"
-        )
+        mismatches.append(f"Source surface '{scenario.source_state.surface_id}' is not marked as immutable source geometry")
 
     if scenario.immutable:
         checks_passed.append("SR_INV_001: scenario_marked_immutable")
@@ -124,9 +109,7 @@ def validate_restoration_inputs(
             details["age_order"] = "source_younger_than_target"
         else:
             checks_failed.append("SR_INV_004: ages_equal")
-            mismatches.append(
-                "Source and target ages are equal — no temporal difference to restore"
-            )
+            mismatches.append("Source and target ages are equal — no temporal difference to restore")
     else:
         if scenario.source_age_ma is None:
             checks_missing.append("SR_INV_004: source_age_missing")
@@ -144,10 +127,8 @@ def validate_restoration_inputs(
         missing_metadata.append("stratigraphic_order")
 
     # ─── Surface Identity Checks ─────────────────────────────────────────
-    _validate_surface(scenario.source_state, "source", checks_passed,
-                      checks_failed, missing_metadata)
-    _validate_surface(scenario.target_state, "target", checks_passed,
-                      checks_failed, missing_metadata)
+    _validate_surface(scenario.source_state, "source", checks_passed, checks_failed, missing_metadata)
+    _validate_surface(scenario.target_state, "target", checks_passed, checks_failed, missing_metadata)
 
     # ─── Z Convention Check ──────────────────────────────────────────────
     if source_crs.z_convention and target_crs.z_convention:
@@ -157,8 +138,7 @@ def validate_restoration_inputs(
         else:
             checks_failed.append("SR_INV_003: z_convention_mismatch")
             mismatches.append(
-                f"Z convention mismatch: source={source_crs.z_convention.value}, "
-                f"target={target_crs.z_convention.value}"
+                f"Z convention mismatch: source={source_crs.z_convention.value}, target={target_crs.z_convention.value}"
             )
             details["z_convention_mismatch"] = {
                 "source": source_crs.z_convention.value,
@@ -182,12 +162,8 @@ def validate_restoration_inputs(
 
         if cs.measured_depth_limit_m and cs.extrapolation_end_depth_m:
             if cs.extrapolation_end_depth_m > cs.measured_depth_limit_m:
-                details["extrapolation_interval_m"] = (
-                    cs.extrapolation_end_depth_m - cs.measured_depth_limit_m
-                )
-                checks_passed.append(
-                    "SR_INV_009: extrapolation_interval_declared"
-                )
+                details["extrapolation_interval_m"] = cs.extrapolation_end_depth_m - cs.measured_depth_limit_m
+                checks_passed.append("SR_INV_009: extrapolation_interval_declared")
     else:
         checks_missing.append("compaction_scenario_missing")
         missing_metadata.append("compaction_scenario")
@@ -221,9 +197,7 @@ def validate_restoration_inputs(
         if scenario.faults:
             permitted.append("analyse_fault_inheritance")
         else:
-            blocked.append(
-                "analyse_fault_inheritance (no faults provided)"
-            )
+            blocked.append("analyse_fault_inheritance (no faults provided)")
     else:
         blocked.extend(
             [

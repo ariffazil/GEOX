@@ -123,7 +123,7 @@ def main() -> int:
     with open(BASE / "SYNTHETIC_orientation.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["unit", "dip_deg", "dip_azimuth_deg"])
-        for u, base_dip in zip(UNITS, [3.0, 5.0, 7.0]):
+        for u, base_dip in zip(UNITS, [3.0, 5.0, 7.0], strict=False):
             w.writerow([u, round(float(base_dip + rng.normal(0, 0.5)), 2), 90])
 
     # 4. velocity: V0 + k per unit (linear v(z))
@@ -141,7 +141,7 @@ def main() -> int:
         {
             "units": [
                 {"name": u, "age_top_ma": round(float(a), 1), "age_base_ma": round(float(a) - 5.0, 1)}
-                for u, a in zip(UNITS, [5.0, 10.0, 20.0])
+                for u, a in zip(UNITS, [5.0, 10.0, 20.0], strict=False)
             ],
         },
     )

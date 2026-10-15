@@ -53,15 +53,17 @@ from typing import Any, Literal
 
 ExtractionStatus = Literal["MEASURED", "PARTIAL", "UNMEASURED"]
 
+
 @dataclass(frozen=True)
 class Measurement:
     """One measured quantity. Never a probability. Never a verdict."""
-    value: float | None              # None iff status == UNMEASURED
-    unit: str                        # "deg" | "m" | "ratio" | "count" | "deg_azimuth"
+
+    value: float | None  # None iff status == UNMEASURED
+    unit: str  # "deg" | "m" | "ratio" | "count" | "deg_azimuth"
     status: ExtractionStatus
-    n_samples: int = 0               # how many samples produced this number
-    coverage: float | None = None    # 0..1 fraction of the horizon with VALID input
-    method: str = ""                 # the algorithm actually run, named
+    n_samples: int = 0  # how many samples produced this number
+    coverage: float | None = None  # 0..1 fraction of the horizon with VALID input
+    method: str = ""  # the algorithm actually run, named
     uncertainty: dict[str, Any] = field(default_factory=dict)  # window, residuals, bounds
     notes: list[str] = field(default_factory=list)
 
@@ -83,8 +85,12 @@ UNMEASURED as *not tested*, never as PASS and never as KILL.
 
 ```python
 def compute_dip_field(
-    section: np.ndarray,            # 2-D float array, shape (n_samples_z, n_traces)
-    *, dz_m: float, dx_m: float, ve: float = 1.0, sigma: float = 1.0,
+    section: np.ndarray,  # 2-D float array, shape (n_samples_z, n_traces)
+    *,
+    dz_m: float,
+    dx_m: float,
+    ve: float = 1.0,
+    sigma: float = 1.0,
 ) -> dict[str, Measurement]:
     """Structure-tensor dip/azimuth field over the whole section.
 
@@ -92,10 +98,14 @@ def compute_dip_field(
     MUST apply the VE correction: tan(theta_true) = tan(theta_apparent) / ve.
     """
 
+
 def extract_axis_a(
     section: np.ndarray,
-    horizon_mask: np.ndarray,       # bool, same shape; True where the horizon is picked
-    *, dz_m: float, dx_m: float, ve: float = 1.0,
+    horizon_mask: np.ndarray,  # bool, same shape; True where the horizon is picked
+    *,
+    dz_m: float,
+    dx_m: float,
+    ve: float = 1.0,
 ) -> dict[str, Measurement]:
     """Per-horizon shape metrics: dip_deg_mean, dip_deg_p95, curvature_mean,
     dip_azimuth_deg, plus a Measurement for geometry_class_fired (value None/1).
@@ -111,7 +121,10 @@ def extract_axis_a(
 
 ```python
 def dtw_align_traces(
-    a: np.ndarray, b: np.ndarray, *, band: int | None = None,
+    a: np.ndarray,
+    b: np.ndarray,
+    *,
+    band: int | None = None,
 ) -> dict[str, Any]:
     """Numpy DTW. Returns {"path": int ndarray (n,2), "distance": float,
     "warp_stretch_profile": float ndarray, "band": int}.
@@ -120,24 +133,33 @@ def dtw_align_traces(
     thickness. Thickness needs horizon picks on both traces. Do not conflate them.
     """
 
+
 def compute_isopach(
-    top_mask: np.ndarray, bot_mask: np.ndarray, *, dz_m: float,
+    top_mask: np.ndarray,
+    bot_mask: np.ndarray,
+    *,
+    dz_m: float,
 ) -> dict[str, Measurement]:
     """Per-trace thickness from two picked horizons. Keys: "thickness_m", "coverage".
     Returns UNMEASURED where either pick is absent — never interpolate silently over a gap
     without recording it in `Measurement.notes` and lowering `coverage`.
     """
 
+
 def expansion_index(
-    thickness_hangingwall: np.ndarray, thickness_footwall: np.ndarray,
+    thickness_hangingwall: np.ndarray,
+    thickness_footwall: np.ndarray,
 ) -> dict[str, Measurement]:
     """EI = hw/fw per trace, then reduced. Keys: "expansion_index", "n_pairs".
     If either array has no valid entries -> UNMEASURED (NOT 1.0, NOT 0.0).
     **Absence of a growth wedge does not kill extension** — see CONTRACT §7.
     """
 
+
 def isopach_differential(
-    thickness_map: np.ndarray, *, structure_axis: int = 1,
+    thickness_map: np.ndarray,
+    *,
+    structure_axis: int = 1,
 ) -> dict[str, Measurement]:
     """The tectonic test: does the SAME interval change thickness ACROSS the structure?
     Keys: "differential_ratio" (across-structure spread / along-structure spread).
@@ -149,7 +171,10 @@ def isopach_differential(
 
 ```python
 def extract_fault_azimuths(
-    fault_polylines: list[np.ndarray], *, x_origin_m: float = 0.0, y_origin_m: float = 0.0,
+    fault_polylines: list[np.ndarray],
+    *,
+    x_origin_m: float = 0.0,
+    y_origin_m: float = 0.0,
 ) -> dict[str, Measurement]:
     """Azimuth of each polyline's end-to-end chord. Keys: "azimuth_deg" (circular mean),
     "azimuth_rosenbusch" (list), "n_polylines".
@@ -159,12 +184,14 @@ def extract_fault_azimuths(
     180 deg, which is 170 deg wrong.
     """
 
+
 def azimuth_population_stats(
     azimuths: np.ndarray,
 ) -> dict[str, Measurement]:
     """Keys: "circular_mean_deg", "circular_std_deg", "r_vector_length" (0..1, how
     concentrated), "n". r_vector_length near 0 => no preferred orientation; say so.
     """
+
 
 def conjugate_pair_test(
     azimuths: np.ndarray,
@@ -181,7 +208,10 @@ def conjugate_pair_test(
 
 ```python
 def detect_terminations(
-    section: np.ndarray, *, do_smoothing: bool = True, method: str = "sobel",
+    section: np.ndarray,
+    *,
+    do_smoothing: bool = True,
+    method: str = "sobel",
 ) -> dict[str, Any]:
     """Edge detection + contour logic. Returns {"onlap_contacts": list[tuple[float,float]],
     "truncation_contacts": list, "n_candidates", "method": str}.
@@ -190,8 +220,10 @@ def detect_terminations(
     A bare gradient edge is NOT a termination.
     """
 
+
 def build_cross_cutting_table(
-    terminations: dict[str, Any], horizons: list[dict[str, Any]],
+    terminations: dict[str, Any],
+    horizons: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Relative chronology: a feature is younger than the youngest horizon it offsets,
     older than the oldest that drapes it. Returns {"relations": list[dict], "n": int}.
@@ -206,11 +238,15 @@ def build_cross_cutting_table(
 def apply_ve_correction(dip_apparent_deg: float, ve: float) -> float:
     """tan(theta_true) = tan(theta_apparent) / ve. Returns degrees."""
 
+
 def time_to_depth(twt_ms: float, interval_velocity_m_s: float) -> float:
     """Returns depth in metres. Raises ValueError on non-positive velocity."""
 
+
 def declare_calibration_state(
-    *, vertical_exaggeration: float | None, velocity_model_present: bool,
+    *,
+    vertical_exaggeration: float | None,
+    velocity_model_present: bool,
     time_domain: bool,
 ) -> dict[str, Any]:
     """Returns {"dips_trustworthy": bool, "problems": list[str]}.

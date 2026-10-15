@@ -84,12 +84,8 @@ class TectonicEvent(BaseModel):
     event_id: str = Field(..., description="Unique event identifier")
     event_class: TectonicEventClass = Field(..., description="Canonical event class")
     name: str = Field(..., description="Human-readable event name")
-    age_range_ma: tuple[float, float] = Field(
-        ..., description="(older, younger) age bounds in Ma"
-    )
-    stress_regime: StressRegime = Field(
-        default=StressRegime.UNKNOWN, description="Stress regime during this event"
-    )
+    age_range_ma: tuple[float, float] = Field(..., description="(older, younger) age bounds in Ma")
+    stress_regime: StressRegime = Field(default=StressRegime.UNKNOWN, description="Stress regime during this event")
     stress_orientation_deg: float | None = Field(
         default=None,
         ge=0.0,
@@ -125,10 +121,7 @@ class EventTransition(BaseModel):
     to_event_id: str = Field(..., description="Target event ID")
     transition_type: str = Field(
         ...,
-        description=(
-            "Type of transition: stress_rotation, regime_change, "
-            "reactivation, onset, cessation"
-        ),
+        description=("Type of transition: stress_rotation, regime_change, reactivation, onset, cessation"),
     )
     signal: str = Field(
         ...,
@@ -138,12 +131,8 @@ class EventTransition(BaseModel):
         ...,
         description="What can be observed in the data (geometry, unconformity, etc.)",
     )
-    age_ma: float | None = Field(
-        default=None, description="Best estimate of transition age (Ma)"
-    )
-    age_uncertainty_ma: float | None = Field(
-        default=None, description="Uncertainty on transition age (Ma)"
-    )
+    age_ma: float | None = Field(default=None, description="Best estimate of transition age (Ma)")
+    age_uncertainty_ma: float | None = Field(default=None, description="Uncertainty on transition age (Ma)")
     confidence: ConfidenceLevel = Field(
         default=ConfidenceLevel.UNKNOWN,
         description="Confidence that this transition occurred",
@@ -159,12 +148,8 @@ class TectonicScenario(BaseModel):
 
     scenario_id: str = Field(..., description="Unique scenario identifier")
     basin_name: str = Field(..., description="Basin this scenario applies to")
-    events: list[TectonicEvent] = Field(
-        ..., description="Ordered sequence of tectonic events"
-    )
-    transitions: list[EventTransition] = Field(
-        default_factory=list, description="Transitions between events"
-    )
+    events: list[TectonicEvent] = Field(..., description="Ordered sequence of tectonic events")
+    transitions: list[EventTransition] = Field(default_factory=list, description="Transitions between events")
     probability: float = Field(
         default=0.5,
         ge=0.0,
@@ -175,19 +160,13 @@ class TectonicScenario(BaseModel):
         default_factory=list,
         description="IDs of other scenarios that explain the same observations",
     )
-    evidence_for: list[str] = Field(
-        default_factory=list, description="Evidence that supports this scenario"
-    )
-    evidence_against: list[str] = Field(
-        default_factory=list, description="Evidence that challenges this scenario"
-    )
+    evidence_for: list[str] = Field(default_factory=list, description="Evidence that supports this scenario")
+    evidence_against: list[str] = Field(default_factory=list, description="Evidence that challenges this scenario")
     falsification_criteria: list[str] = Field(
         default_factory=list,
         description="What evidence would falsify this scenario",
     )
-    assumptions: list[str] = Field(
-        default_factory=list, description="Key assumptions in this scenario"
-    )
+    assumptions: list[str] = Field(default_factory=list, description="Key assumptions in this scenario")
     provenance: dict[str, Any] = Field(
         default_factory=dict,
         description="Source of this scenario (literature, interpreter, model)",
@@ -204,30 +183,15 @@ class RestorationObservation(BaseModel):
     observation_id: str = Field(..., description="Unique observation identifier")
     product_type: str = Field(
         ...,
-        description=(
-            "Type of restoration product: accommodation, subsidence, "
-            "fill_ratio, thickness, uncertainty"
-        ),
+        description=("Type of restoration product: accommodation, subsidence, fill_ratio, thickness, uncertainty"),
     )
     value: float | None = Field(default=None, description="Numeric value if scalar")
-    grid_ref: str | None = Field(
-        default=None, description="Reference to grid file if spatial"
-    )
-    restoration_scenario_id: str = Field(
-        ..., description="ID of the restoration scenario that produced this"
-    )
-    source_state: str = Field(
-        ..., description="Present-day or restored state description"
-    )
-    target_state: str = Field(
-        ..., description="The other state used in differencing"
-    )
-    equation: str = Field(
-        ..., description="The computation that produced this product"
-    )
-    sign_convention: str = Field(
-        ..., description="Z convention used (positive=up, positive=down, etc.)"
-    )
+    grid_ref: str | None = Field(default=None, description="Reference to grid file if spatial")
+    restoration_scenario_id: str = Field(..., description="ID of the restoration scenario that produced this")
+    source_state: str = Field(..., description="Present-day or restored state description")
+    target_state: str = Field(..., description="The other state used in differencing")
+    equation: str = Field(..., description="The computation that produced this product")
+    sign_convention: str = Field(..., description="Z convention used (positive=up, positive=down, etc.)")
     units: str = Field(..., description="Units of the value/grid")
     assumptions: list[str] = Field(
         default_factory=list,
@@ -271,21 +235,17 @@ class DiagnosticChecklist(BaseModel):
     """
 
     observation_id: str = Field(..., description="Observation that triggered this")
-    anomaly_type: str = Field(
-        ..., description="Type of anomaly (e.g., fill_ratio_gt_1)"
-    )
+    anomaly_type: str = Field(..., description="Type of anomaly (e.g., fill_ratio_gt_1)")
     possible_causes: list[dict[str, str]] = Field(
         ...,
         description=(
-            "Each cause has: cause, test, evidence_required, priority. "
-            "Must test ALL before invoking tectonic explanation."
+            "Each cause has: cause, test, evidence_required, priority. Must test ALL before invoking tectonic explanation."
         ),
     )
     tectonic_explanation: dict[str, Any] | None = Field(
         default=None,
         description=(
-            "Tectonic explanation (e.g., fault_activity) — ONLY after all "
-            "non-tectonic causes have been tested and excluded"
+            "Tectonic explanation (e.g., fault_activity) — ONLY after all non-tectonic causes have been tested and excluded"
         ),
     )
     status: str = Field(

@@ -72,7 +72,7 @@ class RestorationBundle(BaseModel):
     engine_version: str = "structural_restoration/1.0.0"
 
     @model_validator(mode="after")
-    def _enforce_invariants(self) -> "RestorationBundle":
+    def _enforce_invariants(self) -> RestorationBundle:
         if self.epistemic_class in FORBIDDEN_EPISTEMIC:
             raise ValueError(f"forbidden epistemic_class: {self.epistemic_class}")
         if self.preferred_model is not None:

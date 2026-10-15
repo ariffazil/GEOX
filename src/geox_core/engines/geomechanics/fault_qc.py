@@ -37,23 +37,13 @@ class FaultQCResult(BaseModel):
     verdict: QCVerdict = Field(..., description="QC verdict")
 
     # What was checked
-    checks_performed: list[str] = Field(
-        default_factory=list, description="Checks that were run"
-    )
-    checks_passed: list[str] = Field(
-        default_factory=list, description="Checks that passed"
-    )
-    checks_failed: list[str] = Field(
-        default_factory=list, description="Checks that failed"
-    )
-    checks_skipped: list[str] = Field(
-        default_factory=list, description="Checks that could not run (missing data)"
-    )
+    checks_performed: list[str] = Field(default_factory=list, description="Checks that were run")
+    checks_passed: list[str] = Field(default_factory=list, description="Checks that passed")
+    checks_failed: list[str] = Field(default_factory=list, description="Checks that failed")
+    checks_skipped: list[str] = Field(default_factory=list, description="Checks that could not run (missing data)")
 
     # Findings
-    findings: list[dict[str, Any]] = Field(
-        default_factory=list, description="Per-check findings"
-    )
+    findings: list[dict[str, Any]] = Field(default_factory=list, description="Per-check findings")
     anomalies: list[str] = Field(
         default_factory=list,
         description="Anomalies that require explanation",
@@ -64,20 +54,14 @@ class FaultQCResult(BaseModel):
     )
 
     # Geomechanical context
-    evaluated_stress_regime: str = Field(
-        default="UNKNOWN", description="Stress regime used for evaluation"
-    )
-    evaluated_stress_age_ma: float | None = Field(
-        default=None, description="Age of stress tensor used"
-    )
+    evaluated_stress_regime: str = Field(default="UNKNOWN", description="Stress regime used for evaluation")
+    evaluated_stress_age_ma: float | None = Field(default=None, description="Age of stress tensor used")
     slip_tendency: float | None = Field(default=None)
     dilation_tendency: float | None = Field(default=None)
     is_yielding: bool | None = Field(default=None)
 
     # Recommendations
-    recommendation: str = Field(
-        default="", description="Recommended next action"
-    )
+    recommendation: str = Field(default="", description="Recommended next action")
 
 
 def check_azimuth_vs_stress(
@@ -93,9 +77,7 @@ def check_azimuth_vs_stress(
     """
     from .stress_utils import classify_fault_orientation
 
-    classification = classify_fault_orientation(
-        fault_azimuth_deg, stress_regime, sigma1_azimuth_deg
-    )
+    classification = classify_fault_orientation(fault_azimuth_deg, stress_regime, sigma1_azimuth_deg)
 
     return {
         "check": "azimuth_vs_stress",
@@ -172,10 +154,7 @@ def check_reactivation_viability(
         "dilation_tendency": round(dilation_tendency, 3),
         "is_yielding": is_yielding,
         "friction_coefficient": friction_coefficient,
-        "note": (
-            "Simplified Mohr-Coulomb analysis. Full3D requires "
-            "tensor decomposition on fault plane."
-        ),
+        "note": ("Simplified Mohr-Coulomb analysis. Full3D requires tensor decomposition on fault plane."),
     }
 
 
@@ -211,10 +190,7 @@ def check_basement_inheritance(
         "angular_difference_deg": round(diff, 1),
         "tolerance_deg": tolerance_deg,
         "is_inherited": is_inherited,
-        "note": (
-            "Inheritance is a hypothesis, not a conclusion. "
-            "Requires cross-cutting and displacement evidence (SR_INV_008)."
-        ),
+        "note": ("Inheritance is a hypothesis, not a conclusion. Requires cross-cutting and displacement evidence (SR_INV_008)."),
     }
 
 
@@ -238,9 +214,7 @@ def check_stress_rotation_evidence(
     for phase in stress_phases:
         regime = phase.get("stress_regime", "UNKNOWN")
         sigma1_az = phase.get("sigma1_azimuth_deg")
-        result = classify_fault_orientation(
-            fault_azimuth_deg, regime, sigma1_az
-        )
+        result = classify_fault_orientation(fault_azimuth_deg, regime, sigma1_az)
         score = result.get("consistency_score", 0.0)
         if score > best_score:
             best_score = score
@@ -258,8 +232,7 @@ def check_stress_rotation_evidence(
         "n_stress_phases_evaluated": len(stress_phases),
         "best_matching_phase": best_match,
         "note": (
-            "Best-matching stress phase is a hypothesis, not a conclusion. "
-            "Fault age requires relational evidence beyond azimuth."
+            "Best-matching stress phase is a hypothesis, not a conclusion. Fault age requires relational evidence beyond azimuth."
         ),
     }
 

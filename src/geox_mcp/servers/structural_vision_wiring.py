@@ -90,7 +90,7 @@ def describe_arming_plan() -> dict[str, Any]:
                 "file": "src/geox_mcp/tools_manifest.yaml",
                 "action": "add manifest entries for the two tools above",
                 "why": "registry.SURFACE_TOOLS -> surface_manifest.public_tool_names() reads this file; "
-                       "without it RT1_BLOCK rejects every call (geox_middleware.py ~line 704)",
+                "without it RT1_BLOCK rejects every call (geox_middleware.py ~line 704)",
             },
             {
                 "file": "src/geox_mcp/server.py",
@@ -112,10 +112,7 @@ def describe_arming_plan() -> dict[str, Any]:
             ),
         },
         "seal_authority": "F13_only",
-        "note": (
-            "Arming mutates the canonical public tool surface. Not done by an agent without "
-            "explicit F13 acknowledgment."
-        ),
+        "note": ("Arming mutates the canonical public tool surface. Not done by an agent without explicit F13 acknowledgment."),
     }
 
 

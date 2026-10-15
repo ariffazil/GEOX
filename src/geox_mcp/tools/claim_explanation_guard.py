@@ -48,7 +48,8 @@ DITEMPA BUKAN DIBERI — Forged, Not Given.
 from __future__ import annotations
 
 import sys
-from typing import Any, Mapping
+from typing import Any
+from collections.abc import Mapping
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # claim_kernel binding — resolver, not a hard dependency
@@ -130,9 +131,7 @@ def vocabulary_matches_kernel() -> bool:
     if k is None:
         return False
     classes, eligible = _kernel_vocabulary()
-    return classes == EXPLANATION_CLASSES and tuple(sorted(eligible)) == tuple(
-        sorted(ACTION_ELIGIBLE_EXPLANATION_CLASSES)
-    )
+    return classes == EXPLANATION_CLASSES and tuple(sorted(eligible)) == tuple(sorted(ACTION_ELIGIBLE_EXPLANATION_CLASSES))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

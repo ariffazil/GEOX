@@ -59,10 +59,7 @@ def compute_fill_ratio(
         scenario_id: str
     """
     if thickness_grid.shape != accommodation_grid.shape:
-        raise ValueError(
-            f"Grid shape mismatch: thickness {thickness_grid.shape} "
-            f"vs accommodation {accommodation_grid.shape}"
-        )
+        raise ValueError(f"Grid shape mismatch: thickness {thickness_grid.shape} vs accommodation {accommodation_grid.shape}")
 
     # SR_INV-001: never mutate inputs
     thick = np.array(thickness_grid, dtype=np.float64)

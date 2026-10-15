@@ -143,8 +143,14 @@ def register_structural_restoration_tools(mcp: Any, _geox_annotations: Any, _saf
         thick = np.array(thickness_grid, dtype=np.float64)
         accom = np.array(accommodation_grid, dtype=np.float64)
         result = compute_fill_ratio(s, thick, accom)
-        for key in ("fill_ratio_grid", "classification_grid", "invalid_mask",
-                     "anomaly_mask", "negative_mask", "zero_denominator_mask"):
+        for key in (
+            "fill_ratio_grid",
+            "classification_grid",
+            "invalid_mask",
+            "anomaly_mask",
+            "negative_mask",
+            "zero_denominator_mask",
+        ):
             if key in result and hasattr(result[key], "tolist"):
                 result[key] = result[key].tolist()
         return result
@@ -254,17 +260,19 @@ def register_structural_restoration_tools(mcp: Any, _geox_annotations: Any, _saf
             fab_az = basement_fabric.get("trend_azimuth_deg") if basement_fabric else None
             inheritance = check_basement_inheritance(azimuth, fab_az)
             stress_match = check_stress_rotation_evidence(azimuth, stress_phases)
-            hypotheses.append({
-                "fault_id": fault.get("fault_id", "unknown"),
-                "mapped_azimuth_deg": azimuth,
-                "basement_inheritance": inheritance,
-                "stress_rotation_match": stress_match,
-                "note": (
-                    "SR_INV-008: These are HYPOTHESES, not deterministic ages. "
-                    "Fault age requires relational evidence (cross-cutting, "
-                    "termination, bending, displacement)."
-                ),
-            })
+            hypotheses.append(
+                {
+                    "fault_id": fault.get("fault_id", "unknown"),
+                    "mapped_azimuth_deg": azimuth,
+                    "basement_inheritance": inheritance,
+                    "stress_rotation_match": stress_match,
+                    "note": (
+                        "SR_INV-008: These are HYPOTHESES, not deterministic ages. "
+                        "Fault age requires relational evidence (cross-cutting, "
+                        "termination, bending, displacement)."
+                    ),
+                }
+            )
         return {
             "verdict": "PARTIAL",
             "fault_hypotheses": hypotheses,
@@ -298,17 +306,11 @@ def register_structural_restoration_tools(mcp: Any, _geox_annotations: Any, _saf
             check_reactivation_viability,
         )
 
-        azimuth_check = check_azimuth_vs_stress(
-            fault_azimuth_deg, stress_regime, sigma1_azimuth_deg
-        )
+        azimuth_check = check_azimuth_vs_stress(fault_azimuth_deg, stress_regime, sigma1_azimuth_deg)
         reactivation = check_reactivation_viability(
-            fault_azimuth_deg, fault_dip_deg,
-            sigma1_azimuth_deg or 0, 0,
-            (sigma1_azimuth_deg or 0) + 90, friction_coefficient
+            fault_azimuth_deg, fault_dip_deg, sigma1_azimuth_deg or 0, 0, (sigma1_azimuth_deg or 0) + 90, friction_coefficient
         )
-        inheritance = check_basement_inheritance(
-            fault_azimuth_deg, basement_fabric_azimuth_deg
-        )
+        inheritance = check_basement_inheritance(fault_azimuth_deg, basement_fabric_azimuth_deg)
 
         consistent = azimuth_check.get("consistent", False)
         verdict = "CONSISTENT" if consistent else "INCONSISTENT"

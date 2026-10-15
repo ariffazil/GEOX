@@ -92,14 +92,14 @@ _STRUCTURAL_VISION_ANNOTATIONS: dict[str, dict] = {
         "title": "Structural Vision Extract (deterministic CV, not a VLM)",
         "readOnlyHint": True,
         "destructiveHint": False,
-        "idempotentHint": True,   # deterministic CV: same input -> same numbers
-        "openWorldHint": False,   # local compute only; no model, no network
+        "idempotentHint": True,  # deterministic CV: same input -> same numbers
+        "openWorldHint": False,  # local compute only; no model, no network
     },
     "geox_structural_regime_falsify": {
         "title": "Structural Regime Falsify (thin adapter onto the one K-REGIME engine)",
         "readOnlyHint": True,
         "destructiveHint": False,
-        "idempotentHint": True,   # falsification is a pure function of the framework
+        "idempotentHint": True,  # falsification is a pure function of the framework
         "openWorldHint": False,
     },
 }
