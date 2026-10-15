@@ -1,0 +1,5 @@
+# Deny-by-default: nothing new lands here without `git add -f` (AMANAH, 2026-10-15).
+# Already-tracked files are unaffected.
+*
+!.gitignore
+!README.md
