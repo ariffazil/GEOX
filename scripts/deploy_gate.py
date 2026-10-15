@@ -116,7 +116,7 @@ def main() -> int:
     # resultType contract failure (checked below).
     deadline = time.time() + args.timeout
     health: dict = {}
-    with httpx.Client(base_url=args.url, timeout=10.0) as client:
+    with httpx.Client(base_url=args.url, timeout=30.0) as client:
         while time.time() < deadline:
             try:
                 r = client.get("/health")
