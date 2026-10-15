@@ -51,12 +51,12 @@ These demo wells were constructed to approximate the Sandakan depth window but d
 
 ## Disposition
 
-Relocated from `/root/geox/fixtures/` on 2026-06-25 by `FORGE-000_INIT`
+Relocated from `/root/GEOX/fixtures/` on 2026-06-25 by `FORGE-000_INIT`
 per sovereign directive from Arif. Original names (`BOKOR_1_demo.las`,
 `BOKOR_2_demo.las`) were misleading — "Bokor" is a real Operator field
 in offshore Sabah.
 
-**Restore:** `mv /root/geox/fixtures/_DEMO_SYNTHETIC/*.las /root/geox/fixtures/`
+**Restore:** `mv /root/GEOX/fixtures/_DEMO_SYNTHETIC/*.las /root/GEOX/fixtures/`
 
 ---
 

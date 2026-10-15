@@ -19,5 +19,5 @@ Validation is done via `jsonschema` in Python. We test:
 
 To run the pipeline:
 ```bash
-pytest /root/geox/tests/test_geox_schemas.py
+pytest /root/GEOX/tests/test_geox_schemas.py
 ```
