@@ -38,6 +38,12 @@ smoke-require-live:
 smoke-mcp-roundtrip:
 	PYTHONPATH=src $(PYTHON) scripts/smoke_mcp_tool_roundtrip.py
 
+# P0 protocol trust (2026-10-15): fail the deploy unless the LIVE surface
+# matches the registry and every 2026-07-28 stateless reply carries resultType.
+# Usage: make deploy-gate  |  ARGS="--url http://127.0.0.1:8081 --expect-sha <sha>"
+deploy-gate:
+	PYTHONPATH=src $(PYTHON) scripts/deploy_gate.py $(ARGS)
+
 # Deploy gate: health honesty + require-live + MCP tool wire
 smoke-deploy: smoke-require-live smoke-mcp-roundtrip
 	@echo "✓ smoke-deploy green"

@@ -32,6 +32,19 @@ uv run python scripts/generate_all_surfaces.py
 cd /opt/geox && git pull && sudo systemctl restart geox-mcp.service
 ```
 
+### Deploy gate (P0 protocol trust, 2026-10-15)
+
+After EVERY restart/deploy, the gate must pass or the deploy FAILED:
+
+```bash
+make deploy-gate   # health+SHA+registry parity + 2026-07-28 resultType contract (strict httpx)
+```
+
+Checks: `/health` git SHA == deployed commit · `surface_drift.ok` (registry truth) ·
+tools/list, tools/call, resources/list, prompts/list all reply `resultType:"complete"` ·
+`geox_surface_status` reports matching SHA + live counts. Exit 1 = BLOCKED.
+Contract tests: `tests/test_stateless_resulttype_contract.py`.
+
 ## 3. Constitutional audit (every push to main)
 
 ```bash
