@@ -7506,6 +7506,9 @@ def register_tools_on(mcp):
 
         # FastMCP 3.4.6: async list_tools()/list_resources()/list_prompts()
         # live directly on the instance (no _tool_manager attr).
+        # tools = PUBLIC-SURFACE count (names in CANONICAL_PUBLIC_TOOLS) so it
+        # is directly comparable to canonical_counts.tools; the instance also
+        # registers internal/compat tools — tools_total keeps that visible.
         async def _live_count(list_name):
             fn = getattr(mcp, list_name, None)
             if not callable(fn):
@@ -7518,8 +7521,22 @@ def register_tools_on(mcp):
             except Exception:
                 return None
 
+        async def _live_tool_names():
+            fn = getattr(mcp, "list_tools", None)
+            if not callable(fn):
+                return None
+            try:
+                res = fn()
+                if _inspect.isawaitable(res):
+                    res = await res
+                return [getattr(t, "name", str(t)) for t in (res or [])]
+            except Exception:
+                return None
+
+        _tool_names = await _live_tool_names()
         live_counts = {
-            "tools": await _live_count("list_tools"),
+            "tools": len([n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS]) if _tool_names is not None else None,
+            "tools_total": len(_tool_names) if _tool_names is not None else None,
             "resources": await _live_count("list_resources"),
             "prompts": await _live_count("list_prompts"),
         }
