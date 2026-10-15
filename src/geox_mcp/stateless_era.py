@@ -163,6 +163,126 @@ async def _send_json(send, payload: dict[str, Any], status: int = 200, extra_hea
     await send({"type": "http.response.body", "body": body, "more_body": False})
 
 
+# ── 2026-07-28 resultType contract (P0 protocol fix, 2026-10-15) ─────────────
+#
+# Root cause (measured live 2026-10-15): every reply this bridge relayed
+# lacked ``resultType``, so strict 2026-07-28 clients (Claude Code) rejected
+# or dropped ALL of them — tools/call, resources/*, prompts/*, ping — while
+# only tools/list survived via an outer method-matching middleware
+# (server.py::_CacheableListResponseMiddleware) and server/discover via
+# _discover_result. Per spec, success responses on this era carry
+# ``resultType: "complete"``. The bridge is the single choke point every
+# modern-era reply crosses, so the obligation is enforced HERE, at the
+# protocol layer — not by matching method names in HTTP middleware.
+#
+# Contract (tests/test_stateless_resulttype_contract.py):
+#   * JSON result replies      → resultType injected, content-length corrected
+#   * SSE data: frames         → rewritten frame-by-frame, split chunks safe
+#   * JSON-RPC error replies   → untouched (resultType is a RESULT obligation)
+#   * legacy 2025-11-25 traffic→ untouched (never reaches the bridge)
+
+
+def augment_stateless_result(payload: Any) -> Any:
+    """Add ``resultType: "complete"`` to a JSON-RPC result payload (additive only).
+
+    Errors, notifications, and payloads that already carry resultType pass
+    through unchanged. Idempotent by construction.
+    """
+    if isinstance(payload, dict) and isinstance(payload.get("result"), dict):
+        result = payload["result"]
+        if "resultType" not in result:
+            result["resultType"] = "complete"
+    return payload
+
+
+def augment_sse_text(text: str) -> str:
+    """Rewrite complete SSE lines: any ``data: <json>`` frame carrying a
+    JSON-RPC result gets resultType. Structure (event:/id:/comments/blank
+    separators) is preserved. Callers must only pass line-complete text
+    (ends with a newline or is the final remainder) — see _augment_captured_response.
+    """
+    out_lines: list[str] = []
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+        if stripped.startswith("data:"):
+            body = stripped[len("data:") :]
+            if body.startswith(" "):
+                body = body[1:]
+            try:
+                payload = json.loads(body)
+            except Exception:
+                out_lines.append(line)
+                continue
+            if isinstance(payload, dict) and isinstance(payload.get("result"), dict):
+                augment_stateless_result(payload)
+                indent = line[: len(line) - len(stripped)]
+                out_lines.append(f"{indent}data: {json.dumps(payload, separators=(',', ':'), ensure_ascii=False)}")
+                continue
+        out_lines.append(line)
+    return "\n".join(out_lines)
+
+
+def _augment_captured_response(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Rewrite captured ASGI response messages so every result reply on this
+    era carries resultType. The bridge has already materialized the full
+    response (the inner app ran to completion), so rewriting is total, not
+    racy: JSON bodies are re-serialized once; SSE text is rewritten
+    line-wise with the final remainder flushed. content-length, when the
+    transport declared it, is recomputed from the exact bytes re-emitted —
+    the strict-client invariant curl cannot check (scar 2026-10-07).
+    """
+    start = next((m for m in messages if m["type"] == "http.response.start"), None)
+    if start is None:
+        return messages
+    body_msgs = [m for m in messages if m["type"] == "http.response.body"]
+    if not body_msgs:
+        return messages
+    if body_msgs[-1].get("more_body", False):
+        # Inner app did not terminate the body — do not risk corrupting a
+        # half-open stream; relay verbatim (never observed in practice).
+        return messages
+
+    ctype = ""
+    headers = list(start.get("headers", []))
+    for k, v in headers:
+        if k.decode("latin-1").lower() == "content-type":
+            ctype = v.decode("latin-1").lower()
+
+    body = b"".join(m.get("body", b"") or b"" for m in body_msgs)
+    new_body = body
+
+    if "application/json" in ctype:
+        try:
+            payload = json.loads(body.decode("utf-8")) if body.strip() else None
+        except Exception:
+            payload = None
+        if isinstance(payload, dict):
+            augment_stateless_result(payload)
+            new_body = json.dumps(payload, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    elif "text/event-stream" in ctype:
+        text = body.decode("utf-8", errors="replace")
+        # SSE frames are line-delimited; JSON strings cannot contain raw
+        # newlines, so line-splitting cannot cut a data payload in half.
+        # split("\n") naturally handles a trailing unterminated remainder.
+        new_body = augment_sse_text(text).encode("utf-8")
+
+    if new_body == body:
+        return messages
+
+    # Recompute content-length from the exact bytes we re-emit.
+    new_headers: list[tuple[bytes, bytes]] = []
+    for k, v in headers:
+        if k.decode("latin-1").lower() == "content-length":
+            new_headers.append((k, str(len(new_body)).encode("latin-1")))
+        else:
+            new_headers.append((k, v))
+    out = [dict(start, headers=new_headers)]
+    for m in body_msgs[:-1]:
+        out.append({"type": "http.response.body", "body": b"", "more_body": True})
+    out.append({"type": "http.response.body", "body": new_body, "more_body": False})
+    return out
+
+
 class McpStatelessEraMiddleware:
     """Serve the stateless MCP 2026-07-28 era over the stateful FastMCP transport."""
 
@@ -402,10 +522,10 @@ class McpStatelessEraMiddleware:
                 sid = None
                 continue
             logger.info("MCP_ERA_BRIDGE_FORWARD: method=%s status=%s", method, status)
-            for message in captured:
+            # P0 protocol fix (2026-10-15): enforce the 2026-07-28 resultType
+            # obligation at this choke point for EVERY method (JSON + SSE).
+            for message in _augment_captured_response(captured):
                 if message["type"] == "http.response.start":
-                    message["headers"] = list(message.get("headers", [])) + [
-                        (b"x-mcp-era", b"stateless-2026-07-28")
-                    ]
+                    message["headers"] = list(message.get("headers", [])) + [(b"x-mcp-era", b"stateless-2026-07-28")]
                 await send(message)
             return

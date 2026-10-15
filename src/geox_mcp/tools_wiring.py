@@ -6840,8 +6840,11 @@ def register_tools_on(mcp):
             )
         elif mode in ("flexure", "physics_section", "critical_taper"):
             from geox_mcp.tools.model_physics import (
-                compute_flexure, render_physics_section, critical_taper_reference,
+                compute_flexure,
+                render_physics_section,
+                critical_taper_reference,
             )
+
             if mode == "flexure":
                 _te = te_km if isinstance(te_km, (list, tuple)) else ([te_km] if te_km else None)
                 return compute_flexure(te_km=_te, infill=infill, plate=plate)
@@ -6849,8 +6852,11 @@ def register_tools_on(mcp):
                 return render_physics_section(transect=transect, theme=theme, out_dir=out_dir)
             else:
                 return critical_taper_reference(
-                    phi_deg=phi_internal_deg, phi_basal_deg=phi_basal_deg,
-                    lambda_pore=lambda_pore, lambda_basal=lambda_basal, beta_deg=beta_decolletion_deg,
+                    phi_deg=phi_internal_deg,
+                    phi_basal_deg=phi_basal_deg,
+                    lambda_pore=lambda_pore,
+                    lambda_basal=lambda_basal,
+                    beta_deg=beta_decolletion_deg,
                 )
         elif mode == "geological_generate":
             # D1 (2026-09-09, sovereign residual delta): honor caller `layers`
@@ -7486,6 +7492,49 @@ def register_tools_on(mcp):
         """Federation-standard registry probe for GEOX."""
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS, GEOX_VERSION
 
+        # P0 protocol-trust (2026-10-15): report the deployed git SHA and the
+        # LIVE surface counts so clients — and scripts/deploy_gate.py — can
+        # verify the surface they are talking to matches the registry.
+        # Counts are best-effort in-process facts; None = could not witness.
+        import inspect as _inspect
+
+        deployed_sha = "unknown"
+        try:
+            from geox_mcp.server import _GIT_VERSION as deployed_sha
+        except Exception:
+            deployed_sha = "unknown"
+
+        def _map_len(mgr, names):
+            for n in names:
+                obj = getattr(mgr, n, None)
+                if isinstance(obj, dict):
+                    return len(obj)
+            return None
+
+        async def _live_count(mgr_names, map_names, list_name):
+            mgr = next((getattr(mcp, n, None) for n in mgr_names if getattr(mcp, n, None) is not None), None)
+            if mgr is None:
+                return None
+            n = _map_len(mgr, map_names)
+            if n is not None:
+                return n
+            fn = getattr(mgr, list_name, None)
+            if callable(fn):
+                try:
+                    res = fn()
+                    if _inspect.isawaitable(res):
+                        res = await res
+                    return len(list(res or []))
+                except Exception:
+                    return None
+            return None
+
+        live_counts = {
+            "tools": await _live_count(("_tool_manager", "_components"), ("_tools", "tools"), "list_tools"),
+            "resources": await _live_count(("_resource_manager",), ("_resources", "resources"), "list_resources"),
+            "prompts": await _live_count(("_prompt_manager",), ("_prompts", "prompts"), "list_prompts"),
+        }
+
         return {
             "status": "healthy",
             "organ": "GEOX",
@@ -7493,6 +7542,9 @@ def register_tools_on(mcp):
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
             "public_count_target": len(CANONICAL_PUBLIC_TOOLS),
             "canonical_tools": sorted(list(CANONICAL_PUBLIC_TOOLS)),
+            "deployed_git_sha": deployed_sha,
+            "live_counts": live_counts,
+            "canonical_counts": {"tools": len(CANONICAL_PUBLIC_TOOLS)},
             "verdict": "REGISTRY_PASS",
             "session_id": session_id,
             "actor_id": actor_id,
