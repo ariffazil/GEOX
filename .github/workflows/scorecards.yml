@@ -54,6 +54,9 @@ jobs:
       checks: read
       # Needed for Code Scanning upload (SARIF).
       security-events: write
+      # codeql-action upload-sarif resolves the workflow run for SARIF
+      # attribution (GET /actions/runs/{id}) — needs actions read.
+      actions: read
       # Kept for the OIDC path; publish_results is off for private repos.
       id-token: write
 
