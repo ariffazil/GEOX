@@ -42,7 +42,7 @@ journalctl -u geox-mcp -f   # follow
 
 ## Tests
 ```bash
-cd /root/geox
+cd /root/GEOX
 pip install -e ".[dev]"
 PYTHONPATH=src pytest tests/ -q --tb=short
 # Expected: 89 passed, 3 skipped (live-server drift)
@@ -175,7 +175,7 @@ If the W13+ FORGE breaks something in production:
 
 ```bash
 # 1. Roll back to last known-good commit
-cd /root/geox
+cd /root/GEOX
 git log --oneline -5
 git revert --no-commit 657b9eb0
 # Or: git reset --hard 7cb1d5c8 (HEAD before W13+)
