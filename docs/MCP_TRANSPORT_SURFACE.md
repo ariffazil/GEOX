@@ -419,8 +419,8 @@ src/geox_mcp/
 - **GEOX registry:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS)
 - **GEOX contracts mirror:** `contracts/canonical_registry.py`
 - **Forge receipt:** `/root/forge_work/2026-06-21_geox-w2-w13-multiphysics-earth-witness.md`
-- **AGENTS.md:** `/root/geox/AGENTS.md`
-- **RUNBOOK.md:** `/root/geox/RUNBOOK.md`
+- **AGENTS.md:** `/root/GEOX/AGENTS.md`
+- **RUNBOOK.md:** `/root/GEOX/RUNBOOK.md`
 - **Steel Security Layer:** non-blocking, no pre-commit hooks, no pnpm migration
 
 ---

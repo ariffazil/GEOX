@@ -4,7 +4,7 @@ last_verified: 2026-07-02
 valid_from: 2026-07-02
 valid_until: 2026-08-02
 confidence: high
-scope: /root/geox
+scope: /root/GEOX
 changes_since_last_verified:
   - 2026-07-11: MCP Apps registration — 10 ui:// resources, workbench View, MapLibre interactive map
   - 2026-07-11: Registry cleanup — 76 public tools (-4 deregistered, -1 duplicate)

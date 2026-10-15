@@ -34,7 +34,7 @@ LAS load → Vp·ρ AI → TWT integrate → RC → Ricker convolve
 ## Run
 
 ```bash
-cd /root/geox
+cd /root/GEOX
 # SEG-Y once:
 # tar -xzf data/elastic-marmousi-model/processed_data/SEGY-Time/SYNTHETIC_time.segy.tar.gz -C data/marmousi_work
 PYTHONPATH=src python scripts/marmousi2_well_tie_validate.py
