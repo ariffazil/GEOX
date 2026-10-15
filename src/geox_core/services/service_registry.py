@@ -213,7 +213,7 @@ SERVICE_REGISTRY: dict[str, AdapterEntry] = {
     "loopstructural_adapter": AdapterEntry(
         adapter_name="geox_core.engines.geospatial.loopstructural_adapter",
         library_name="loopstructural",
-        library_version=">=1.0",
+        library_version=">=1.8.0,<2",
         canonical_tools=["geox_subsurface_model"],
         status=AdapterStatus.EXPERIMENTAL,
         acrisk="ADVISORY",

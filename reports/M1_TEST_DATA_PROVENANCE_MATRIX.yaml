@@ -1,0 +1,89 @@
+# M1_TEST_DATA_PROVENANCE_MATRIX.yaml — GATE C
+# Decision per candidate file: ALLOW | HOLD | REJECT
+# Rule: Sabah/Kinabalu operational-looking => HOLD until provenance + permission.
+# Synthetic fixtures: label SYNTHETIC, no geological-validity claims, purpose = schema/adapter/invariants/failure-path only.
+
+generated_at: 2026-10-14
+status: DRAFT
+rule: "no fixture generation until this matrix is complete and decisions are recorded"
+
+files:
+  - path: fixtures/_DEMO_SYNTHETIC/DEMO_WELL_A_SANDAKAN.las
+    hash: sha256:80a5575626250b6621d0ebe08e6dbd42cbd9f7a4f29de77db7e54100d748b67a
+    owner: GEOX (demo)
+    source: synthetic (README: "NOT REAL FIELD DATA. FOR TESTING ONLY.")
+    license: internal
+    confidentiality_class: PUBLIC_SYNTHETIC
+    synthetic: true
+    permitted_purpose: [schema, adapter, invariants, failure_path]
+    missing_metadata: [no_marker_ages, no_velocity, no_orientation]
+    decision: ALLOW
+
+  - path: fixtures/_DEMO_SYNTHETIC/DEMO_WELL_B_SANDAKAN.las
+    hash: sha256:d59a4094b544a4d7e14a4bfc6c2cc910100c9e8c92245f8cb90c059bbe66b3fd
+    owner: GEOX (demo)
+    source: synthetic (README)
+    license: internal
+    confidentiality_class: PUBLIC_SYNTHETIC
+    synthetic: true
+    permitted_purpose: [schema, adapter, invariants, failure_path]
+    missing_metadata: [no_marker_ages, no_velocity, no_orientation]
+    decision: ALLOW
+    note: "Uses real formation name 'Sandakan Fm' + basin 'Sabah (North Borneo Trough)' — public geological nomenclature, synthetic VALUES. No PETRONAS well/field/coordinate names."
+
+  - path: fixtures/geox_smoke_test.las
+    hash: sha256:5c1f74053272b6b8443c0e7e0c2df87c9450df3ceeeace69750da05cd0343b59
+    owner: GEOX (smoke)
+    source: synthetic (Volve 15/9-F-1B approximation, Equinor public dataset)
+    license: internal
+    confidentiality_class: PUBLIC_SYNTHETIC
+    synthetic: true
+    permitted_purpose: [schema, adapter, invariants, failure_path]
+    missing_metadata: [no_marker_ages, no_velocity]
+    decision: ALLOW
+
+  - path: fixtures/QQQ_FFF_test_well.las
+    hash: sha256:5c1f74053272b6b8443c0e7e0c2df87c9450df3ceeeace69750da05cd0343b59
+    owner: GEOX (test)
+    source: duplicate of geox_smoke_test.las (identical sha256)
+    license: internal
+    confidentiality_class: PUBLIC_SYNTHETIC
+    synthetic: true
+    permitted_purpose: [schema, adapter, invariants, failure_path]
+    missing_metadata: [no_marker_ages, no_velocity]
+    decision: ALLOW
+    note: "Exact duplicate of geox_smoke_test.las — flag for fixture-set consolidation later (not this run)."
+
+  - path: okf/sabah-basin/REALITYPLAN-ibs-kinabalu.json
+    hash: sha256:4eb12537620189feae5153291b5e8bcbf5a1a69e16d9a9ba9f5c9d56259ce8ec
+    owner: 333-AGI (FI-003) — "executes board task T9"
+    source: federation RealityPlan (Kinabalu + Brunei basins, IBS Phase I→II)
+    license: internal
+    confidentiality_class: RESTRICTED_SUSPECTED
+    synthetic: false
+    permitted_purpose: [none_until_cleared]
+    missing_metadata: [permission, confidentiality_clearance]
+    decision: HOLD
+
+  - path: resources/basins/kinabalu/ (basin_profile.yaml, claims.json, tectonic_history.md)
+    hash: >-
+      basin_profile=cd75a603…294b · claims=0ccb5a23…429c · tectonic_history=38d35469…e2e
+    owner: untracked (pre-existing, not agent-created this run)
+    source: Kinabalu basin profile resources
+    license: internal
+    confidentiality_class: RESTRICTED_SUSPECTED
+    synthetic: false
+    permitted_purpose: [none_until_cleared]
+    missing_metadata: [provenance, permission]
+    decision: HOLD
+    note: "PRE-EXISTING untracked dir — DO NOT TOUCH. Not in agent's change set."
+
+components_needed_for_M1:
+  two_d_line: ABSENT
+  structure_map: ABSENT
+  well_tops_marker_ages: PARTIAL (LAS tops exist, no marker ages)
+  orientation_data: ABSENT
+  velocity_depth_conversion: ABSENT
+  strat_column_unit_ages: PARTIAL (basin_profile.yaml has stratigraphy; no explicit unit-age table for synthetic fixture)
+  compaction_parameters: ABSENT
+  datum_horizon: ABSENT

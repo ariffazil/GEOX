@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GEOX Seismic Viewer — X2D Cognition Shell</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/gui/assets/geox-mcp-bridge.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=JetBrains+Mono&display=swap');
         @import url('https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css');
@@ -227,28 +228,13 @@
         const cognitionResultsContent = document.getElementById('cognitionResultsContent');
 
         const bridge = {
-            nextId: 1,
             async emit(method, params = {}) {
-                if (window.parent === window) return;
-                const id = this.nextId++;
-                const event = { jsonrpc: "2.0", id, method, params, timestamp: new Date().toISOString() };
-                window.parent.postMessage(event, "*");
+                const event = { jsonrpc: "2.0", method, params, timestamp: new Date().toISOString() };
+                console.log(`[GEOX X2D] Emitting: ${method}`, event);
+                if (window.parent !== window) window.parent.postMessage(event, "*");
             },
             init() {
-                if (window.parent === window) return;
-                const id = this.nextId++;
-                window.parent.postMessage({
-                    jsonrpc: "2.0",
-                    id,
-                    method: "ui/initialize",
-                    params: {
-                        protocolVersion: "2026-01-26",
-                        clientInfo: { name: "geox-seismic-viewer", version: "1.0.0" },
-                        capabilities: {},
-                        appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] }
-                    }
-                }, "*");
-                window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, "*");
+                this.emit("app.initialize", { app_id: "geox.seismic.viewer.x2d", version: "1.0.0" });
             }
         };
 

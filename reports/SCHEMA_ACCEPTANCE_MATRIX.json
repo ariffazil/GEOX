@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1.0-draft",
+  "status": "DRAFT_CANDIDATE",
+  "forged_at": "2026-10-14",
+  "not_frozen": true,
+  "dimensions": {
+    "epistemic_class": {
+      "values": ["OBSERVED", "COMPUTED", "INTERPRETED_LOCAL", "HYPOTHESIS"],
+      "source": "mission_rule04",
+      "mapping_to_live": "lossy (FACT sense collision OQ-1)"
+    },
+    "lifecycle_state": {
+      "values": ["NO_VALID_EVIDENCE", "INGESTED", "QC_VERIFIED", "INTERPRETED", "DERIVED_CANDIDATE"],
+      "source": "locked_ClaimState (verdicts removed)",
+      "mapping_to_live": "lossy-by-design (verdicts moved to constitutional_verdict)",
+      "open_question": "OQ-2 (processing ladder vs governance ladder)"
+    },
+    "explanation_class": {
+      "values": ["MEASURED", "MECHANISM", "PATTERN", "NARRATIVE", "UNCLASSIFIED"],
+      "source": "claim_kernel/v1 (LIVE, contracts/claim_state_machine.yaml)",
+      "active_consumers": ["claim_explanation_guard.py", "geox_claim_seal"],
+      "action_eligible": ["MEASURED", "MECHANISM", "PATTERN"],
+      "mapping_to_live": "lossless (preserved verbatim)"
+    },
+    "authority_ceiling": {
+      "value": "QUALIFIED_CANDIDATE",
+      "constant": true,
+      "mapping_to_live": "lossless"
+    },
+    "constitutional_verdict": {
+      "values": ["SEALED", "SABAR", "VOID", "HOLD"],
+      "default": null,
+      "owner": "arifOS",
+      "mapping_to_live": "lossless"
+    }
+  },
+  "forbidden_epistemic": ["CERTAIN", "PROVEN", "FINAL", "FACT"],
+  "open_questions": [
+    {"id": "OQ-1", "issue": "FACT forbidden vs valid truth_class — same or different sense?", "owner": "ARIF/888"},
+    {"id": "OQ-2", "issue": "processing ladder vs governance ladder for lifecycle_state", "owner": "888"},
+    {"id": "OQ-3", "issue": "claim_envelope.py fix/retire/leave (NO_STATIC_CONSUMER_FOUND + broken + IMMUTABLE)", "owner": "888"},
+    {"id": "OQ-4", "issue": "V1 epistemic_class vs V3 truth_class+epistemic_label — one axis or two?", "owner": "888"}
+  ],
+  "test_results": {
+    "script": "scripts/verify_bundle_schemas.py",
+    "pass": 10,
+    "total": 10,
+    "pydantic": "2.14.0"
+  }
+}
