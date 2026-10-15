@@ -376,9 +376,7 @@ async def test_no_silent_argument_drop():
     }
 
     missing_in_handler = schema_fields - handler_params
-    assert not missing_in_handler, (
-        f"schema fields not accepted by handler: {missing_in_handler}"
-    )
+    assert not missing_in_handler, f"schema fields not accepted by handler: {missing_in_handler}"
 
 
 # ──────────────────────────────────────────────────────────────────────
@@ -392,9 +390,7 @@ async def test_gate_receipt_envelope_required_fields():
     from geox_mcp.tools.structure_gates import run_all_structure_gates
 
     fw = {
-        "faults": [
-            {"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}
-        ],
+        "faults": [{"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}],
         "horizons": [
             {"horizon_id": "A", "order_index": 0, "points": [{"x": 0, "y": 100}, {"x": 10, "y": 105}]},
             {"horizon_id": "B", "order_index": 1, "points": [{"x": 0, "y": 200}, {"x": 10, "y": 205}]},
@@ -453,15 +449,9 @@ async def test_competing_hypotheses_always_three():
     """Interpretation_bundle must emit ≥3 hypotheses (as_proposed + relay + artifact)."""
     from geox_mcp.contracts.interpretation_bundle import build_interpretation_bundle
 
-    fw = {
-        "faults": [
-            {"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}
-        ]
-    }
+    fw = {"faults": [{"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}]}
     bundle = build_interpretation_bundle(frameworks_or_primary=fw)
-    assert len(bundle["hypotheses"]) >= 3, (
-        f"need ≥3 hypotheses, got {len(bundle['hypotheses'])}"
-    )
+    assert len(bundle["hypotheses"]) >= 3, f"need ≥3 hypotheses, got {len(bundle['hypotheses'])}"
 
 
 @pytest.mark.asyncio
@@ -469,11 +459,7 @@ async def test_preferred_hypothesis_always_none_from_geox():
     """GEOX MUST NOT auto-promote a preferred hypothesis. Human only."""
     from geox_mcp.contracts.interpretation_bundle import build_interpretation_bundle
 
-    fw = {
-        "faults": [
-            {"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}
-        ]
-    }
+    fw = {"faults": [{"fault_id": "F1", "regime_prior": "normal", "dip_deg_image": 60.0, "dip_calibrated": True}]}
     bundle = build_interpretation_bundle(frameworks_or_primary=fw)
     assert bundle["preferred_hypothesis"] is None
     assert bundle["seal_eligibility"] is False
@@ -574,10 +560,12 @@ def test_human_corrections_emit_receipts():
 
 
 def test_artifact_ingest_emits_hash_and_chain():
+    from pathlib import Path
+
     from geox_mcp.tools.artifact_ingest import ingest_artifact
 
     art = ingest_artifact(
-        "/root/GEOX/pyproject.toml",
+        str(Path(__file__).resolve().parents[1] / "pyproject.toml"),
         artifact_type="framework_json",
         note="contract test",
     )
