@@ -100,14 +100,13 @@ jobs:
           python-version: "3.12"
       - name: Install
         run: pip install -e ".[dev]" 2>/dev/null || pip install -e .
-      - name: "Full Suite — 31-tool canonical surface"
+      - name: "Full Suite — canonical surface"
         run: |
           set -o pipefail
           PYTHONPATH=src python -m pytest tests/ \
             -q --tb=short \
             -o cache_dir=/tmp/.pytest_cache \
-            --ignore=tests/benchmarks \
-            2>&1 | tail -20
+            --ignore=tests/benchmarks
       - name: "Readiness Gate — W0 ship checks"
         run: |
           set -o pipefail
