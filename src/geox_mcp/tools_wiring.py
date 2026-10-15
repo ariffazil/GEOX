@@ -7534,11 +7534,18 @@ def register_tools_on(mcp):
                 return None
 
         _tool_names = await _live_tool_names()
+        _public_names = sorted({n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS})
         live_counts = {
-            "tools": len([n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS]) if _tool_names is not None else None,
+            "tools": len(_public_names) if _tool_names is not None else None,
             "tools_total": len(_tool_names) if _tool_names is not None else None,
             "resources": await _live_count("list_resources"),
             "prompts": await _live_count("list_prompts"),
+            # OBS instrument (2026-10-15): the live name list settles count
+            # disputes with direct evidence instead of inference.
+            "tools_public_names": _public_names if _tool_names is not None else None,
+            "tools_nonpublic_names": sorted({n for n in (_tool_names or []) if n not in CANONICAL_PUBLIC_TOOLS})
+            if _tool_names is not None
+            else None,
         }
 
         return {
