@@ -1,3 +1,8 @@
+<!-- SOT-MANIFEST
+mcp_tools_live: dynamic_from_tools_list
+truth_rule: live :18081/health + tools/list beat any static count in prose
+-->
+
 <p align="center">
   <img src="docs/assets/geox-hero.png" alt="GEOX — subsurface uncertainty in, physics-grounded labelled evidence out, governed handoff to the judge (compute only)" width="100%">
 </p>
