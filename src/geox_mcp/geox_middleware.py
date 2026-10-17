@@ -157,55 +157,110 @@ GOVERNED_ERROR_CODES: dict[str, dict] = {
 }
 
 
-def _extract_recovery_from_error(exc: Exception, tool_name: str) -> dict | None:
+def _extract_recovery_from_error(
+    exc: Exception,
+    tool_name: str,
+    tool_schema: dict | None = None,
+) -> dict | None:
     """Extract self-healing recovery hints from a validation error.
 
     P0 — Faucet-inspired: when a schema rejection occurs, introspect the
     exception to discover what fields/values ARE available, so the agent
     can self-correct instead of guessing blindly.
 
-    Returns a recovery dict with available_fields/closest_match/retryable,
+    Layer 1.5 enhancement: when tool_schema (inputSchema) is provided,
+    extract ALL valid field names and use fuzzy matching (difflib) to
+    suggest corrections for rejected fields.
+
+    Returns a recovery dict compatible with arifOS RecoveryContext shape:
+        {level, rejected_fields, available, closest_match, retryable}
     or None if no recovery information can be extracted.
     """
+    import difflib
+    import re
+
     available: list[str] = []
-    closest_match: str | None = None
-    MAX_RECOVERY_FIELDS = 10
+    rejected_fields: list[str] = []
+    closest_match: dict[str, list[str]] = {}
+    MAX_RECOVERY_FIELDS = 20
+
+    # ── Extract available fields from tool schema (Layer 1.5) ────────
+    schema_available: list[str] = []
+    if isinstance(tool_schema, dict):
+        props = tool_schema.get("properties", {})
+        if isinstance(props, dict):
+            schema_available = sorted(k for k in props.keys() if k not in ("session_id", "actor_id", "trace_id", "_envelope"))
 
     try:
-        # Pydantic ValidationError — extract field names from errors()
+        # Pydantic ValidationError — extract rejected field names from errors()
         if hasattr(exc, "errors"):
             for err in exc.errors():
                 loc = err.get("loc", ())
                 if loc and isinstance(loc[0], str):
                     field_name = loc[0]
-                    if field_name not in available and field_name not in ("session_id", "actor_id", "trace_id"):
-                        available.append(field_name)
+                    if field_name not in ("session_id", "actor_id", "trace_id", "_envelope"):
+                        if field_name not in rejected_fields:
+                            rejected_fields.append(field_name)
+                        # Also collect from error context if available
+                        ctx = err.get("ctx", {})
+                        if "expected" in ctx and isinstance(ctx["expected"], (list, set)):
+                            for f in ctx["expected"]:
+                                if isinstance(f, str) and f not in available:
+                                    available.append(f)
 
         # TypeError from missing/extra args — extract from message
         elif isinstance(exc, TypeError):
             msg = str(exc)
             # Pattern: "unexpected keyword argument 'field_name'"
-            if "unexpected keyword argument" in msg:
-                import re
-
-                m = re.search(r"'(\w+)'", msg)
-                if m:
-                    closest_match = m.group(1)
+            m = re.search(r"unexpected keyword argument '(\w+)'", msg)
+            if m:
+                rejected_fields.append(m.group(1))
+            # Pattern: "missing a required argument: 'field_name'"
+            m2 = re.search(r"missing a required argument: '(\w+)'", msg)
+            if m2:
+                rejected_fields.append(m2.group(1))
 
         # KeyError — the missing key IS the field name
         elif isinstance(exc, KeyError):
             key = str(exc).strip("'\"")
-            closest_match = key
+            rejected_fields.append(key)
+
+        # ValueError with field-like messages
+        elif isinstance(exc, ValueError):
+            msg = str(exc)
+            m = re.search(r"['\"]?(\w+)['\"]?\s+(?:is not|not in|invalid|unknown)", msg, re.I)
+            if m:
+                rejected_fields.append(m.group(1))
 
     except Exception:
         pass  # Recovery extraction is best-effort, never blocks the error
 
-    if not available and not closest_match:
+    # ── Merge: schema fields > error-extracted fields ────────────────
+    if schema_available:
+        available = schema_available
+    # Deduplicate
+    rejected_fields = list(dict.fromkeys(rejected_fields))
+
+    # ── Fuzzy match: rejected → closest valid fields ────────────────
+    if rejected_fields and (available or schema_available):
+        target_list = available or schema_available
+        for bad in rejected_fields:
+            # Fuzzy ratio + substring overlap
+            fuzzy = difflib.get_close_matches(bad, target_list, n=3, cutoff=0.4)
+            substr = [k for k in target_list if bad.lower() in k.lower() or k.lower() in bad.lower()]
+            merged = list(dict.fromkeys(substr + fuzzy))[:4]
+            if merged:
+                closest_match[bad] = merged
+
+    # ── Build recovery block ────────────────────────────────────────
+    if not rejected_fields and not available and not closest_match:
         return None
 
     return {
-        "available_fields": sorted(available)[:MAX_RECOVERY_FIELDS],
-        "closest_match": closest_match,
+        "level": "field" if (available or schema_available) else "tool",
+        "rejected_fields": rejected_fields[:MAX_RECOVERY_FIELDS],
+        "available": (available or schema_available)[:MAX_RECOVERY_FIELDS],
+        "closest_match": closest_match if closest_match else None,
         "discovery_tool": f"{tool_name.split('_')[0]}_describe" if "_" in tool_name else None,
         "retryable": True,
     }
@@ -251,6 +306,29 @@ def build_governed_error_envelope(
     # P0: Attach recovery hints when available (self-healing envelope)
     if recovery:
         data["recovery"] = recovery
+
+    # ── Layer 2: WAL append (arifOS failure_wal.py) ──────────────────
+    # Synchronous, non-blocking. WAL failure never blocks the error response.
+    try:
+        from arifosmcp.runtime.failure_wal import wal_append
+
+        wal_append(
+            code=error_class,
+            message=str(detail)[:200],
+            organ="geox",
+            tool=tool_name,
+            parameter=recovery.get("rejected_fields", [None])[0] if recovery else None,
+            received=None,
+            available=recovery.get("available") if recovery else None,
+            discovery_tool=recovery.get("discovery_tool") if recovery else None,
+            context={
+                "trace_id": _trace,
+                "session_id": session_id,
+                "recovery_level": recovery.get("level") if recovery else None,
+            },
+        )
+    except Exception:
+        pass  # WAL failure MUST NEVER block the error response
 
     return {
         "jsonrpc": "2.0",
@@ -465,6 +543,13 @@ class GeoxGovernanceMiddleware(Middleware):
         result = await call_next(context)
         if result is None:
             return result
+
+        # Layer 1.5: Cache tool inputSchemas for field-level recovery on SCHEMA_REJECTION.
+        for _t in result:
+            _tname = getattr(_t, "name", None)
+            _tschema = getattr(_t, "inputSchema", None)
+            if _tname and isinstance(_tschema, dict) and _tname not in self._tool_schemas:
+                self._tool_schemas[_tname] = _tschema
 
         # Lazy import to avoid circular dependency at module load.
         from geox_mcp.canonical_surface_gate import (
@@ -1093,8 +1178,10 @@ class GeoxGovernanceMiddleware(Middleware):
             raise  # Already governed — let FastMCP handle normally
         except (ValueError, TypeError, KeyError, LookupError) as e:
             # Schema/argument validation errors that bypassed FastMCP's handler
-            # P0: Extract recovery hints so agents can self-correct
-            _recovery = _extract_recovery_from_error(e, tool_name)
+            # Layer 1.5: Extract recovery hints with full tool schema introspection
+            # so agents can self-correct with field-level available/closest_match.
+            _tool_schema = self._tool_schemas.get(tool_name)
+            _recovery = _extract_recovery_from_error(e, tool_name, tool_schema=_tool_schema)
             raise ToolError(
                 json.dumps(
                     build_governed_error_envelope(
