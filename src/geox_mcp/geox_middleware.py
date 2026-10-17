@@ -157,19 +157,100 @@ GOVERNED_ERROR_CODES: dict[str, dict] = {
 }
 
 
+def _extract_recovery_from_error(exc: Exception, tool_name: str) -> dict | None:
+    """Extract self-healing recovery hints from a validation error.
+
+    P0 — Faucet-inspired: when a schema rejection occurs, introspect the
+    exception to discover what fields/values ARE available, so the agent
+    can self-correct instead of guessing blindly.
+
+    Returns a recovery dict with available_fields/closest_match/retryable,
+    or None if no recovery information can be extracted.
+    """
+    available: list[str] = []
+    closest_match: str | None = None
+    MAX_RECOVERY_FIELDS = 10
+
+    try:
+        # Pydantic ValidationError — extract field names from errors()
+        if hasattr(exc, "errors"):
+            for err in exc.errors():
+                loc = err.get("loc", ())
+                if loc and isinstance(loc[0], str):
+                    field_name = loc[0]
+                    if field_name not in available and field_name not in ("session_id", "actor_id", "trace_id"):
+                        available.append(field_name)
+
+        # TypeError from missing/extra args — extract from message
+        elif isinstance(exc, TypeError):
+            msg = str(exc)
+            # Pattern: "unexpected keyword argument 'field_name'"
+            if "unexpected keyword argument" in msg:
+                import re
+
+                m = re.search(r"'(\w+)'", msg)
+                if m:
+                    closest_match = m.group(1)
+
+        # KeyError — the missing key IS the field name
+        elif isinstance(exc, KeyError):
+            key = str(exc).strip("'\"")
+            closest_match = key
+
+    except Exception:
+        pass  # Recovery extraction is best-effort, never blocks the error
+
+    if not available and not closest_match:
+        return None
+
+    return {
+        "available_fields": sorted(available)[:MAX_RECOVERY_FIELDS],
+        "closest_match": closest_match,
+        "discovery_tool": f"{tool_name.split('_')[0]}_describe" if "_" in tool_name else None,
+        "retryable": True,
+    }
+
+
 def build_governed_error_envelope(
     tool_name: str,
     error_class: str,
     detail: str,
     session_id: str | None = None,
     trace_id: str | None = None,
+    recovery: dict | None = None,
 ) -> dict:
     """Build a governed rejection envelope for any error path.
 
     Guarantees: status, error_code, trace_id, session_id, evidence_refs, _epistemic
     Non-null on every path. Never returns bare string.
+
+    P0: Optional recovery hints for self-healing (Faucet-inspired).
+    When error_class is SCHEMA_REJECTION, callers should pass recovery
+    extracted from _extract_recovery_from_error() so agents can self-correct.
     """
     error_spec = GOVERNED_ERROR_CODES.get(error_class, GOVERNED_ERROR_CODES["INTERNAL_ERROR"])
+
+    data: dict = {
+        "guard": error_class,
+        "verdict": "HOLD" if error_class != "INTERNAL_ERROR" else "ERROR",
+        "tool": tool_name,
+        "error_class": error_class,
+        "trace_id": trace_id or str(uuid.uuid4()),
+        "session_id": session_id or "anonymous",
+        "evidence_refs": [error_class],
+        "_epistemic": {
+            "output_class": "ERROR",
+            "ai_involvement": "NONE",
+            "authority_claim": "GOVERNED",
+            "evidence_source": "COMPUTED",
+            "tagged_at": datetime.now(UTC).isoformat(),
+            "schema_version": "1.0.0",
+        },
+    }
+
+    # P0: Attach recovery hints when available (self-healing envelope)
+    if recovery:
+        data["recovery"] = recovery
 
     return {
         "jsonrpc": "2.0",
@@ -180,23 +261,7 @@ def build_governed_error_envelope(
                 tool=tool_name,
                 detail=str(detail)[:200],
             ),
-            "data": {
-                "guard": error_class,
-                "verdict": "HOLD" if error_class != "INTERNAL_ERROR" else "ERROR",
-                "tool": tool_name,
-                "error_class": error_class,
-                "trace_id": trace_id or str(uuid.uuid4()),
-                "session_id": session_id or "anonymous",
-                "evidence_refs": [error_class],
-                "_epistemic": {
-                    "output_class": "ERROR",
-                    "ai_involvement": "NONE",
-                    "authority_claim": "GOVERNED",
-                    "evidence_source": "COMPUTED",
-                    "tagged_at": datetime.now(UTC).isoformat(),
-                    "schema_version": "1.0.0",
-                },
-            },
+            "data": data,
         },
     }
 
@@ -1028,6 +1093,8 @@ class GeoxGovernanceMiddleware(Middleware):
             raise  # Already governed — let FastMCP handle normally
         except (ValueError, TypeError, KeyError, LookupError) as e:
             # Schema/argument validation errors that bypassed FastMCP's handler
+            # P0: Extract recovery hints so agents can self-correct
+            _recovery = _extract_recovery_from_error(e, tool_name)
             raise ToolError(
                 json.dumps(
                     build_governed_error_envelope(
@@ -1035,6 +1102,7 @@ class GeoxGovernanceMiddleware(Middleware):
                         error_class="SCHEMA_REJECTION",
                         detail=f"{type(e).__name__}: {e}",
                         session_id=arguments.get("session_id") if isinstance(arguments, dict) else None,
+                        recovery=_recovery,
                     )
                 )
             )
