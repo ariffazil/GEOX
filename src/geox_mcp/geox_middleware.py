@@ -322,7 +322,7 @@ def build_governed_error_envelope(
             available=recovery.get("available") if recovery else None,
             discovery_tool=recovery.get("discovery_tool") if recovery else None,
             context={
-                "trace_id": _trace,
+                "trace_id": data["trace_id"],
                 "session_id": session_id,
                 "recovery_level": recovery.get("level") if recovery else None,
             },
