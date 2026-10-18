@@ -9,6 +9,10 @@ floor_scope: [F1, F2, F7, F11]
 autonomy_tier: T1
 organ_domain: geox
 forged: 2026-09-04
+relationships:
+  - target: geox-well-log-qc
+    type: composes_with
+    confidence: 0.7
 ---
 
 # GEOX Seismic Interpretation Lane
