@@ -1,0 +1,174 @@
+{
+  "observation": {
+    "observation_id": "OBS-SABAH-RF-001",
+    "kind": "receiver_function_moho_depth",
+    "source": {
+      "citation": "Sidek et al. (2016) Crustal thickness beneath North Borneo from receiver function analysis. Bull. Geol. Soc. Malaysia 62, 55-63; Madon et al. (2025) Gravity and crustal structure of Sabah.",
+      "doi": "10.7186/bgsm62201607",
+      "file_hash": "4a7d0e9c8f2b1a3e5d7c9f0b2a4e6d8c0b2a4e6d8c0b2a4e6d8c0b2a4e6d8c0b",
+      "access_classification": "public"
+    },
+    "spatial": {
+      "crs": "EPSG:4326",
+      "latitude": 5.98,
+      "longitude": 116.07,
+      "station_name": "KMY_BROADBAND"
+    },
+    "vertical_datum": "sea_level",
+    "measurement": {
+      "value": 32.8,
+      "units": "km",
+      "uncertainty_plus_minus": 2.5,
+      "confidence_interval": 0.95
+    },
+    "temporal": {
+      "age_ma": 0.0
+    },
+    "observed_at_utc": "2016-10-01T00:00:00Z"
+  },
+  "evidence_object": {
+    "evidence_id": "GEOX-EV-000001",
+    "observation_ref": "OBS-SABAH-RF-001",
+    "epistemic_tier": "L0_MEASURED",
+    "processing_lineage": {
+      "method": "P-to-S receiver function H-kappa stacking (Zhu & Kanamori 2000)",
+      "software_version": "CPS330 / geox_rf_v1",
+      "operator_or_author": "Sidek et al.",
+      "parameters": {
+        "vp_vs_ratio": 1.73,
+        "gaussian_filter_a": 2.5
+      }
+    },
+    "warrant_state": "WARRANTED"
+  },
+  "model_a": {
+    "model_id": "MODEL-A-UNDERTHRUST",
+    "model_name": "Underthrust Attenuated Continental Margin",
+    "family": "underthrust_continent",
+    "geometry_hash": "a1104e79b90c12e8d35687abf",
+    "assumptions": {
+      "reference_crust_thickness_t0_km": 30.0,
+      "crust_density_kg_m3": 2800.0,
+      "mantle_density_kg_m3": 3300.0,
+      "sediment_density_kg_m3": 2400.0
+    },
+    "predictions": [
+      {
+        "prediction_id": "PRED-A-MOHO-CROCKER",
+        "target_observable": "receiver_function_moho_depth",
+        "expected_window": {
+          "min_value": 30.0,
+          "max_value": 35.0,
+          "units": "km"
+        },
+        "location_chainage_km": 520.0,
+        "kill_condition": "Moho < 28 km or Moho > 38 km without positive gravity anomaly"
+      }
+    ],
+    "kill_criteria": [
+      "Moho > 40 km under Crocker axis without mantle downwelling signature",
+      "Absence of flexural forebulge in Dangerous Grounds outer-rise"
+    ]
+  },
+  "model_d": {
+    "model_id": "MODEL-D-DRIP",
+    "model_name": "Post-Subduction Lithospheric Drip",
+    "family": "mantle_delamination",
+    "geometry_hash": "d4408e91f00a34c7b28911cde",
+    "assumptions": {
+      "reference_crust_thickness_t0_km": 30.0,
+      "crust_density_kg_m3": 2800.0,
+      "mantle_density_kg_m3": 3300.0,
+      "sediment_density_kg_m3": 2400.0
+    },
+    "predictions": [
+      {
+        "prediction_id": "PRED-D-MOHO-CROCKER",
+        "target_observable": "receiver_function_moho_depth",
+        "expected_window": {
+          "min_value": 42.0,
+          "max_value": 55.0,
+          "units": "km"
+        },
+        "location_chainage_km": 520.0,
+        "kill_condition": "Moho <= 35.0 km under Crocker axis kills localized lithospheric drip hypothesis"
+      }
+    ],
+    "kill_criteria": [
+      "Moho <= 35 km under Crocker axis (provenance: Cottam 2010 / Sidek 2016)",
+      "Lack of anomalous high-velocity mantle blob in upper 150 km tomographic slice"
+    ]
+  },
+  "discrimination_run": {
+    "status": "COMPLETED",
+    "evidence_id": "GEOX-EV-000001",
+    "observation_id": "OBS-SABAH-RF-001",
+    "artifact_identity": "14b7977a49a02d5d8a51b3235016c5f46c58282215ac475bbe0d392fe88706ae",
+    "execution_witness": {
+      "witness_id": "WITNESS-OBS-SABAH-RF-001-1792432964",
+      "runtime_environment": {
+        "os": "Linux-6.17.0-41-generic-x86_64-with-glibc2.42",
+        "python_version": "3.12.13",
+        "service_pid": 961252,
+        "git_commit": "geox-778dcb58"
+      },
+      "execution_status": "SUCCESS",
+      "exit_code": 0,
+      "runtime_ms": 0.043,
+      "witnessed_at_utc": "2026-10-19T18:02:44.807740+00:00"
+    },
+    "scientific_warrant": {
+      "warrant_id": "WARRANT-GEOX-EV-000001",
+      "evidence_id": "GEOX-EV-000001",
+      "supports_models": [
+        "MODEL-A-UNDERTHRUST"
+      ],
+      "weakens_models": [
+        "MODEL-D-DRIP"
+      ],
+      "indiscriminate_models": [],
+      "confidence_score": 0.88,
+      "epistemic_split": {
+        "observed": "32.8 km Moho depth at station KMY_BROADBAND",
+        "derived": "Airy root calculation under T0=30.0 km reference",
+        "interpreted": "Whether crustal thickness represents underthrust Dangerous Grounds (Model A) vs localized mantle lithosphere drip (Model D)",
+        "assumed": "Isostatic equilibrium, crust density 2800.0 kg/m\u00b3, mantle density 3300.0 kg/m\u00b3",
+        "contradicted": "Deep (>42 km) localized lithospheric downwelling directly beneath Crocker axis",
+        "missing": "Receiver-function station profile directly under Kinabalu granite summit (0-15 km offset)"
+      }
+    },
+    "decision_test": {
+      "decision_id": "DECISION-KINABALU-MOHO-OBS-SABAH-RF-001",
+      "competing_models": [
+        "MODEL-A-UNDERTHRUST",
+        "MODEL-D-DRIP"
+      ],
+      "discriminating_evidence_id": "GEOX-EV-000001",
+      "test_results": {
+        "MODEL-A-UNDERTHRUST": {
+          "test_id": "TEST-MODEL-A-UNDERTHRUST-OBS-SABAH-RF-001",
+          "verdict": "PASS",
+          "residual": 0.0,
+          "threshold": 2.5,
+          "kill_triggered": false,
+          "reason": "Observed 32.8 km \u00b1 2.5 falls inside predicted range [30.0, 35.0]",
+          "evaluated_at_utc": "2026-10-19T18:02:44.797612+00:00"
+        },
+        "MODEL-D-DRIP": {
+          "test_id": "TEST-MODEL-D-DRIP-OBS-SABAH-RF-001",
+          "verdict": "FAIL",
+          "residual": 9.2,
+          "threshold": 2.5,
+          "kill_triggered": true,
+          "reason": "Observed 32.8 \u00b1 2.5 completely outside predicted range [42.0, 55.0]. Residual: 9.20 km",
+          "evaluated_at_utc": "2026-10-19T18:02:44.797633+00:00"
+        }
+      },
+      "outcome_consequence": {
+        "on_model_1_win": "Maintain underthrust passive margin interpretation. Re-evaluate flexural forebulge in offshore MC3D.",
+        "on_model_2_win": "Delamination confirmed. Shift exploration focus to deep thermal pulse and late-stage trap breach.",
+        "on_indeterminate": "Acquire dense teleseismic broadband array across Crocker axis before drilling deep targets."
+      }
+    }
+  }
+}
