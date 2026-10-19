@@ -2,74 +2,1066 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GEOX MCP Apps Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEOX — MCP Apps, Interactive GUIs & Earth Observatories</title>
+  <meta name="description" content="Unified directory of GEOX interactive MCP Apps (SEP-1865), visual operator consoles, and federated Earth observatories for the arifOS federation." />
+  <link rel="icon" type="image/svg+xml" href="/logo-strata.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; background: #0a0a12; color: #e6edf3; padding: 24px; }
-    h1 { font-size: 1.4rem; color: #0f0; }
-    .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border: 1px solid #345; border-radius: 3px; margin-left: 8px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 16px; }
-    a.card { display: block; background: #12121c; border: 1px solid #2a2a3a; border-radius: 8px; padding: 14px; color: inherit; text-decoration: none; }
-    a.card:hover { border-color: #0f0; }
-    .k { font-size: 11px; opacity: 0.6; text-transform: uppercase; }
-    .t { font-size: 1.05rem; margin: 4px 0 6px; }
-    .d { font-size: 12px; opacity: 0.75; line-height: 1.35; }
-    footer { margin-top: 28px; font-size: 11px; opacity: 0.55; }
+    :root {
+      --bg: #070a0e;
+      --card-bg: #0c121c;
+      --card-border: #1a2536;
+      --card-hover: #26354d;
+      --accent-cyan: #38bdf8;
+      --accent-blue: #2563eb;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-violet: #8b5cf6;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+      --display: 'Sora', var(--sans);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--sans);
+      line-height: 1.5;
+      padding-bottom: 4rem;
+      min-height: 100vh;
+    }
+    /* Top Navigation */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(7, 10, 14, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: #fff;
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+    .nav-brand span.organ-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      font-weight: 500;
+    }
+    .nav-link:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link.active {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.08);
+      font-weight: 600;
+    }
+    .nav-link.highlight {
+      background: var(--accent-blue);
+      color: #fff;
+      font-weight: 600;
+    }
+    .nav-link.highlight:hover {
+      background: #1d4ed8;
+    }
+
+    /* Hero / Status section */
+    .hero {
+      max-width: 1200px;
+      margin: 2rem auto 1.5rem;
+      padding: 0 1.5rem;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .hero h1 span.gradient {
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 780px;
+      line-height: 1.6;
+    }
+
+    /* Live Telemetry Bar */
+    .telemetry-bar {
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+      padding: 0 1.5rem;
+    }
+    .telemetry-card {
+      background: rgba(12, 18, 28, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+    }
+    .telemetry-items {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .telemetry-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .telemetry-item .label {
+      color: var(--text-muted);
+    }
+    .telemetry-item .val {
+      color: #fff;
+      font-weight: 600;
+    }
+    .telemetry-item .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+
+    /* Filter Controls */
+    .filters {
+      max-width: 1200px;
+      margin: 0 auto 1.5rem;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .filter-btn.active {
+      background: var(--accent-cyan);
+      color: #070a0e;
+      border-color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    /* Apps Grid */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      letter-spacing: -0.01em;
+    }
+    .section-title span.count {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+      color: var(--text-muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover {
+      border-color: var(--card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .card-badge-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .badge-kind {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+    .badge-kind.mcp-app {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+    }
+    .badge-kind.observatory {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-emerald);
+    }
+    .badge-kind.console {
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--accent-violet);
+    }
+    .badge-kind.endpoint {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent-amber);
+    }
+    .uri-tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      user-select: all;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.45rem;
+      line-height: 1.3;
+    }
+    .card-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+      flex-grow: 1;
+    }
+    .card-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.1rem;
+    }
+    .tool-chip {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      padding: 0.12rem 0.38rem;
+      border-radius: 4px;
+    }
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .btn-launch {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+    }
+    .btn-launch:hover {
+      background: var(--accent-blue);
+      border-color: var(--accent-blue);
+    }
+    .btn-launch.featured {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      border-color: #38bdf8;
+    }
+    .btn-launch.featured:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+    }
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.5rem 0.6rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-copy:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Footer */
+    footer {
+      max-width: 1200px;
+      margin: 4rem auto 0;
+      padding: 2rem 1.5rem 0;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.7rem; }
+    }
   </style>
 </head>
 <body>
-  <h1>GEOX MCP Apps <span class="badge">S4 surface · 2026-07-24</span></h1>
-  <p style="opacity:0.75;font-size:13px;max-width:720px;">
-    Live cockpits for the GEOX organ. MCP hosts open <code>ui://geox/*</code> resources;
-    browser links below serve the public Caddy tree. DEMO data is never earth truth.
-  </p>
-  <div class="grid">
-    <a class="card" href="/apps/well-desk/">
-      <div class="k">ui://geox/well-desk</div>
-      <div class="t">WellDesk</div>
-      <div class="d">1D tracks · petro · SYNTHETIC badge · p0-viz host shell</div>
+
+  <!-- Top Navigation Bar -->
+  <header class="nav">
+    <a href="/" class="nav-brand">
+      <img src="/logo-strata.svg" alt="GEOX" width="22" height="22" />
+      <span>GEOX</span>
+      <span class="organ-tag">555_COMPUTE</span>
     </a>
-    <a class="card" href="/apps/well-desk/p0-viz.html">
-      <div class="k">Host shell</div>
-      <div class="t">WellDesk p0-viz</div>
-      <div class="d">SEP-1865 iframe shell (ChatGPT / MCP Apps)</div>
-    </a>
-    <a class="card" href="/apps/prospect-ui/">
-      <div class="k">ui://geox/prospect-studio</div>
-      <div class="t">Prospect Studio</div>
-      <div class="d">Prospect evaluation shell</div>
-    </a>
-    <a class="card" href="/apps/judge-console/">
-      <div class="k">ui://geox/judge-console</div>
-      <div class="t">Judge Console</div>
-      <div class="d">Falsify / evidence / risk</div>
-    </a>
-    <a class="card" href="/apps/earth-volume/">
-      <div class="k">ui://geox/earth-volume</div>
-      <div class="t">Earth Volume</div>
-      <div class="d">Subsurface volume browser</div>
-    </a>
-    <a class="card" href="/apps/geox-mcp-visual/">
-      <div class="k">ui://geox/visual-hub</div>
-      <div class="t">Visual Hub</div>
-      <div class="d">Multi-panel visual dashboard</div>
-    </a>
-    <a class="card" href="/apps/workbench-v1.html">
-      <div class="k">ui://geox/earth-map</div>
-      <div class="t">Workbench / Earth Map</div>
-      <div class="d">Map workbench shell</div>
-    </a>
-    <a class="card" href="/apps/site/catalog.html">
-      <div class="k">ui://geox/catalog</div>
-      <div class="t">Skills Catalog</div>
-      <div class="d">Surface status + skills index</div>
-    </a>
+    <nav class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/observe/" class="nav-link">🪨 Earth Witness</a>
+      <a href="/apps/" class="nav-link active">Apps &amp; GUIs</a>
+      <a href="https://arif-fazil.com/earth/sabah-observatory/" class="nav-link highlight" target="_blank" rel="noopener">Sabah Observatory ↗</a>
+      <a href="https://arif-fazil.com/earth/kinabalu-basin/" class="nav-link" target="_blank" rel="noopener">Kinabalu Dossier ↗</a>
+      <a href="/gui/" class="nav-link">Operator Cockpit</a>
+      <a href="/tools" class="nav-link">Tools API</a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span>●</span> <span>FEDERATED GEOSCIENCE SUITE · SEP-1865 READY</span>
+    </div>
+    <h1>GEOX <span class="gradient">Interactive Apps &amp; GUIs</span></h1>
+    <p class="hero-sub">
+      Live human-in-the-loop cockpits, sandboxed MCP Apps (<code>text/html+mcp</code> via <code>ui://</code> resources), and peer-reviewed Earth observatories. Computes labelled geological evidence — never adjudicates.
+    </p>
+  </section>
+
+  <!-- Live Telemetry Banner -->
+  <section class="telemetry-bar">
+    <div class="telemetry-card">
+      <div class="telemetry-items">
+        <div class="telemetry-item">
+          <div class="pulse"></div>
+          <span class="label">Organ:</span>
+          <span class="val" id="tel-organ">geox-unified</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">Status:</span>
+          <span class="val" id="tel-status" style="color:var(--accent-emerald);">HEALTHY</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">Tools Loaded:</span>
+          <span class="val" id="tel-tools">27 Canonical (0 drift)</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="label">Git Identity:</span>
+          <span class="val" id="tel-identity" style="color:var(--accent-cyan);">geox-a93747b1</span>
+        </div>
+      </div>
+      <div>
+        <a href="/health" target="_blank" style="color:var(--accent-cyan);text-decoration:none;font-weight:600;">/health ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Buttons -->
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">All Surfaces (17)</button>
+    <button class="filter-btn" data-filter="mcp-app">MCP Apps (SEP-1865)</button>
+    <button class="filter-btn" data-filter="observatory">Observatories &amp; Evidence</button>
+    <button class="filter-btn" data-filter="console">Operator Consoles</button>
+    <button class="filter-btn" data-filter="endpoint">Machine Endpoints</button>
   </div>
+
+  <main class="container">
+
+    <!-- Section 1: Observatories & Living Evidence -->
+    <h2 class="section-title">
+      <span>Living Observatories &amp; Grounding Evidence</span>
+      <span class="count">3 Surfaces</span>
+    </h2>
+    <div class="grid">
+
+      <!-- Sabah Observatory -->
+      <div class="card" data-category="observatory">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind observatory">OBSERVATORY</span>
+            <span class="uri-tag">arif-fazil.com/earth/sabah-observatory/</span>
+          </div>
+          <div class="card-title">Sabah Multi-Model Observatory</div>
+          <div class="card-desc">
+            Living NW Sabah transect carrying four rival crustal models (A Underthrust, B Mud Canopy, C Thrust Wedge, D Lithospheric Drip). Features 6-box reality boundaries and live Airy isostasy calculator ($5.6 \times h$).
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">6-Box Reality</span>
+            <span class="tool-chip">Airy Isostasy</span>
+            <span class="tool-chip">Sidek 2016</span>
+            <span class="tool-chip">Madon 2025</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="https://arif-fazil.com/earth/sabah-observatory/" target="_blank" class="btn-launch featured">Launch Observatory ↗</a>
+          <button class="btn-copy" onclick="copyText('https://arif-fazil.com/earth/sabah-observatory/')">Copy</button>
+        </div>
+      </div>
+
+      <!-- Evidence Chain JSON Ledger -->
+      <div class="card" data-category="observatory">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind observatory">DETERMINISTIC EVIDENCE</span>
+            <span class="uri-tag">evidence_chain.json</span>
+          </div>
+          <div class="card-title">Kinabalu Moho Evidence Chain</div>
+          <div class="card-desc">
+            Machine-readable JSON schema defining explicit $\pm \sigma$ uncertainty envelopes ($32.8 \pm 2.5\text{ km}$). Deterministically discriminates models: Model A PASS vs Model D KILLED, verified by tri-witness hash ledger.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">Tri-Witness Hash</span>
+            <span class="tool-chip">Kill Test</span>
+            <span class="tool-chip">Schema Validated</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="https://arif-fazil.com/earth/sabah-observatory/evidence_chain.json" target="_blank" class="btn-launch">View Evidence JSON ↗</a>
+          <button class="btn-copy" onclick="copyText('https://arif-fazil.com/earth/sabah-observatory/evidence_chain.json')">Copy</button>
+        </div>
+      </div>
+
+      <!-- Kinabalu Basin Dossier -->
+      <div class="card" data-category="observatory">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind observatory">GEOLOGICAL DOSSIER</span>
+            <span class="uri-tag">arif-fazil.com/earth/kinabalu-basin/</span>
+          </div>
+          <div class="card-title">NW Sabah Kinabalu Basin Dossier</div>
+          <div class="card-desc">
+            Comprehensive regional dossier (~830 km section) from Dangerous Grounds to East Sabah. 4 competing tectonic drivers, deep-charge mechanisms, and open scientific questions with PDF download.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">Regional Transect</span>
+            <span class="tool-chip">Petroleum Systems</span>
+            <span class="tool-chip">PDF Export</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="https://arif-fazil.com/earth/kinabalu-basin/" target="_blank" class="btn-launch">Open Dossier ↗</a>
+          <button class="btn-copy" onclick="copyText('https://arif-fazil.com/earth/kinabalu-basin/')">Copy</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section 2: Interactive MCP Apps (SEP-1865) -->
+    <h2 class="section-title">
+      <span>Interactive MCP Apps (SEP-1865 / ui:// Resources)</span>
+      <span class="count">8 Apps</span>
+    </h2>
+    <div class="grid">
+
+      <!-- WellDesk / Well Witness -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/well-desk</span>
+          </div>
+          <div class="card-title">WellDesk / Well Witness</div>
+          <div class="card-desc">
+            1D/2D well log analysis with depth monotonicity QC, shale volume, porosity, water saturation, and ToAC audit. Includes synthetic &amp; measured log curves.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_well_ingest</span>
+            <span class="tool-chip">geox_well_qc</span>
+            <span class="tool-chip">geox_petrophysics</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/well-desk/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/well-desk')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Seismic Vision Review -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/seismic-vision-review</span>
+          </div>
+          <div class="card-title">Seismic Vision Review</div>
+          <div class="card-desc">
+            Visual inspection cockpit for seismic inline/crossline sections. Amplitude attribute analysis, contrast metabolism, wavelet verification, and visual hypothesis generation.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_seismic_ingest</span>
+            <span class="tool-chip">geox_seismic_compute</span>
+            <span class="tool-chip">geox_seismic_interpret</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/seismic-vision-review/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/seismic-vision-review')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Judge Console -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/judge-console</span>
+          </div>
+          <div class="card-title">Judge Console &amp; AC Risk</div>
+          <div class="card-desc">
+            Claim-tag evidence referee and contradiction audit. Enforces Chamberlin multiple working hypotheses and gates outputs before federation adjudication.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_claim</span>
+            <span class="tool-chip">geox_surface_status</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/judge-console/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/judge-console')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Prospect Forge -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/prospect-ui</span>
+          </div>
+          <div class="card-title">Prospect Forge &amp; Studio</div>
+          <div class="card-desc">
+            Prospect evaluation with volumetrics, chance of success (POS), expected value of information (EVOI), and cognitive bias refereeing.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_prospect</span>
+            <span class="tool-chip">geox_spatial</span>
+            <span class="tool-chip">geox_map</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/prospect-ui/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/prospect-ui')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Earth Volume 3D -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/earth-volume</span>
+          </div>
+          <div class="card-title">Earth Volume 3D</div>
+          <div class="card-desc">
+            3D geological volume navigator, sediment routing simulation, deep time paleogeography, and regional basin subsidence modeling.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_basin</span>
+            <span class="tool-chip">geox_deep_time</span>
+            <span class="tool-chip">geox_model</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/earth-volume/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/earth-volume')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- GEOX MCP Visual Hub -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/geox-mcp-visual</span>
+          </div>
+          <div class="card-title">GEOX Visual Hub &amp; CubeProbe</div>
+          <div class="card-desc">
+            Multi-panel telemetry visualizer for 3D subsurface probe data, physics manifest hashes, and SeisVis volume slice exploration.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_seismic_compute</span>
+            <span class="tool-chip">geox_extract_native_trace</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/geox-mcp-visual/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/geox-mcp-visual')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Calibration Witness -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/calibration-witness</span>
+          </div>
+          <div class="card-title">Calibration Witness Register</div>
+          <div class="card-desc">
+            Registration and attestation interface for geophysical calibration ties, well synthetic ties, and display proxy provenance tracking.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_calibration_register_witness</span>
+            <span class="tool-chip">geox_register_native_source</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/calibration-witness/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/calibration-witness')">Copy URI</button>
+        </div>
+      </div>
+
+      <!-- Analog Digitizer -->
+      <div class="card" data-category="mcp-app">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind mcp-app">MCP APP</span>
+            <span class="uri-tag">ui://geox/analog-digitizer</span>
+          </div>
+          <div class="card-title">Analog Digitizer</div>
+          <div class="card-desc">
+            Raster well log curve extraction, baseline rectification, and digital LAS transformation tool with optical error envelopes.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_extract_display_proxy</span>
+            <span class="tool-chip">geox_well_ingest</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/analog-digitizer/" target="_blank" class="btn-launch">Launch App ↗</a>
+          <button class="btn-copy" onclick="copyText('ui://geox/analog-digitizer')">Copy URI</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section 3: Specialized Operator Cockpits & Consoles -->
+    <h2 class="section-title">
+      <span>Operator Cockpits &amp; Consoles</span>
+      <span class="count">6 Surfaces</span>
+    </h2>
+    <div class="grid">
+
+      <!-- Earth Witness VLM -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">VLM MULTIMODAL</span>
+            <span class="uri-tag">/observe/</span>
+          </div>
+          <div class="card-title">Earth Witness — Tanya Bumi</div>
+          <div class="card-desc">
+            Multimodal conversational agent for rock, outcrop, core, and fossil identification. Returns competing hypotheses with required falsification tests.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_observe</span>
+            <span class="tool-chip">VLM Vision Engine</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/observe/" class="btn-launch featured">Open Earth Witness ↗</a>
+        </div>
+      </div>
+
+      <!-- Operator Cockpit -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">WORKSTATION</span>
+            <span class="uri-tag">/gui/</span>
+          </div>
+          <div class="card-title">GEOX Operator Cockpit</div>
+          <div class="card-desc">
+            Central operational console aggregating Cesium 3D globes, active basin projects, live telemetry, and tool execution history.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">Full Organ Control</span>
+            <span class="tool-chip">Cesium Integration</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/gui/" target="_blank" class="btn-launch">Open Cockpit ↗</a>
+        </div>
+      </div>
+
+      <!-- Basin Explorer Console -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">BASIN DESK</span>
+            <span class="uri-tag">/gui/basin_explorer/</span>
+          </div>
+          <div class="card-title">Basin Explorer Console</div>
+          <div class="card-desc">
+            Dedicated workstation for basin geometry, stratigraphic column inspection, Macrostrat integration, and paleobiodb queries.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_basin</span>
+            <span class="tool-chip">geox_paleobiodb_query</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/gui/basin_explorer/" target="_blank" class="btn-launch">Open Console ↗</a>
+        </div>
+      </div>
+
+      <!-- Seismic Viewer Console -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">SEISMIC DESK</span>
+            <span class="uri-tag">/gui/seismic_viewer/</span>
+          </div>
+          <div class="card-title">Seismic Viewer Console</div>
+          <div class="card-desc">
+            High-performance canvas profile renderer for 2D/3D seismic reflection data with interactive gain and colormap controls.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_seismic_compute</span>
+            <span class="tool-chip">Canvas2D</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/gui/seismic_viewer/" target="_blank" class="btn-launch">Open Console ↗</a>
+        </div>
+      </div>
+
+      <!-- Well Context Desk -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">WELL DESK</span>
+            <span class="uri-tag">/gui/well_context_desk/</span>
+          </div>
+          <div class="card-title">Well Context Desk</div>
+          <div class="card-desc">
+            Multi-well cross-correlation workspace for structural datuming, formation tops, and sand-shale ratio mapping.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_well</span>
+            <span class="tool-chip">Cross-correlation</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/gui/well_context_desk/" target="_blank" class="btn-launch">Open Console ↗</a>
+        </div>
+      </div>
+
+      <!-- GLOF Substrate -->
+      <div class="card" data-category="console">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind console">GEOHAZARD</span>
+            <span class="uri-tag">/apps/glof_substrate/</span>
+          </div>
+          <div class="card-title">GLOF Geohazard Substrate</div>
+          <div class="card-desc">
+            Glacial lake outburst flood simulation, slope stability mechanics, moraine dam failure models, and downstream breach risk.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">geox_glof</span>
+            <span class="tool-chip">geox_geomechanics</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/apps/glof_substrate/" target="_blank" class="btn-launch">Open Simulator ↗</a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Section 4: Machine & Federation Endpoints -->
+    <h2 class="section-title">
+      <span>Protocol &amp; Machine Discovery Endpoints</span>
+      <span class="count">4 Endpoints</span>
+    </h2>
+    <div class="grid">
+
+      <!-- MCP Wire -->
+      <div class="card" data-category="endpoint">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind endpoint">JSON-RPC 2.0</span>
+            <span class="uri-tag">POST /mcp</span>
+          </div>
+          <div class="card-title">MCP Protocol Door</div>
+          <div class="card-desc">
+            Streamable HTTP MCP endpoint. Authenticated via P3_AUTH_LITE (OAuth 2.1 + DPoP or X-MCP-Client-Id). Serves 27 canonical tools and 24 UI resources.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">Streamable HTTP</span>
+            <span class="tool-chip">SEP-1865</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/mcp" target="_blank" class="btn-launch">View Discovery Card ↗</a>
+          <button class="btn-copy" onclick="copyText('https://geox.arif-fazil.com/mcp')">Copy URL</button>
+        </div>
+      </div>
+
+      <!-- Canonical Tools Surface -->
+      <div class="card" data-category="endpoint">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind endpoint">SOT REGISTRY</span>
+            <span class="uri-tag">GET /tools.json</span>
+          </div>
+          <div class="card-title">Tools Inventory &amp; SOT</div>
+          <div class="card-desc">
+            Machine-readable JSON schema defining all 27 canonical tools, parameter schemas, and epistemic authority boundaries generated from registry.py.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">27 Tools</span>
+            <span class="tool-chip">Zero Drift Gate</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/tools.json" target="_blank" class="btn-launch">View tools.json ↗</a>
+          <button class="btn-copy" onclick="copyText('https://geox.arif-fazil.com/tools.json')">Copy URL</button>
+        </div>
+      </div>
+
+      <!-- LLMs.txt -->
+      <div class="card" data-category="endpoint">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind endpoint">AI DISCOVERY</span>
+            <span class="uri-tag">GET /llms.txt</span>
+          </div>
+          <div class="card-title">LLMs Context Specification</div>
+          <div class="card-desc">
+            Standard llms.txt context document optimized for AI crawler reasoning, agentic RAG ingestion, and prompt injection safety.
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">llms.txt</span>
+            <span class="tool-chip">llms-full.txt</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/llms.txt" target="_blank" class="btn-launch">View llms.txt ↗</a>
+          <button class="btn-copy" onclick="copyText('https://geox.arif-fazil.com/llms.txt')">Copy URL</button>
+        </div>
+      </div>
+
+      <!-- Health Probe -->
+      <div class="card" data-category="endpoint">
+        <div>
+          <div class="card-badge-row">
+            <span class="badge-kind endpoint">TELEMETRY</span>
+            <span class="uri-tag">GET /health</span>
+          </div>
+          <div class="card-title">Live Organ Health &amp; Geometry</div>
+          <div class="card-desc">
+            Real-time telemetry showing git identity sha256, verified state, canonical tool count, freshness metrics, and APEX scalars ($G, C_{dark}, W3, h, QDF$).
+          </div>
+          <div class="card-tools">
+            <span class="tool-chip">APEX Scalars</span>
+            <span class="tool-chip">Freshness</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <a href="/health" target="_blank" class="btn-launch">Probe /health ↗</a>
+          <button class="btn-copy" onclick="copyText('https://geox.arif-fazil.com/health')">Copy URL</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
   <footer>
-    DITEMPA BUKAN DIBERI · F2: demo wells are fixtures · Runbook:
-    <code>docs/MCP_APPS_READINESS.md</code> ·
-    Petro: <code>docs/GEOX_PETRO_RUNBOOK_F2.md</code>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+      <div>
+        <strong>GEOX</strong> · Earth Intelligence Organ of the <a href="https://arif-fazil.com" target="_blank">arifOS Federation</a>
+      </div>
+      <div>
+        Constitutional Posture: <code>555_COMPUTE_ONLY</code> · Domain Law: <code>NATURAL_LAW</code>
+      </div>
+    </div>
+    <div style="font-size:0.7rem;opacity:0.75;margin-top:0.5rem;">
+      "Ditempa bukan diberi — Forged, not given." Evidence before narrative. Physics before authority.
+    </div>
   </footer>
+
+  <script>
+    // Live Telemetry Fetch
+    async function updateTelemetry() {
+      try {
+        const res = await fetch('/health');
+        if (!res.ok) throw new Error('health probe non-200');
+        const data = await res.json();
+        if (data.service) document.getElementById('tel-organ').textContent = data.service;
+        if (data.status) {
+          const stEl = document.getElementById('tel-status');
+          stEl.textContent = data.status.toUpperCase();
+          stEl.style.color = (data.status === 'healthy' || data.status === 'fresh') ? 'var(--accent-emerald)' : 'var(--accent-amber)';
+        }
+        if (data.surface_drift && data.surface_drift.canonical_count) {
+          document.getElementById('tel-tools').textContent = `${data.surface_drift.canonical_count} Canonical (${data.surface_drift.drift_count} drift)`;
+        }
+        if (data.identity && data.identity.value) {
+          document.getElementById('tel-identity').textContent = data.identity.value;
+        }
+      } catch (e) {
+        console.warn('Telemetry probe failed:', e);
+      }
+    }
+    updateTelemetry();
+
+    // Filter Buttons logic
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+
+        cards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Copy helper
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard: ' + text);
+      }).catch(err => {
+        prompt('Copy this URI:', text);
+      });
+    }
+  </script>
 </body>
 </html>
