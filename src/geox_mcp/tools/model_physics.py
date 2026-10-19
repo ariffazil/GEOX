@@ -270,8 +270,25 @@ def render_physics_section(
             "status": "ERROR",
             "error": f"Renderer script not found: {_SECTION_SCRIPT}",
         }
-    default_out = "/tmp/geox"
-    out = out_dir or default_out
+    default_out = os.environ.get("GEOX_OUTPUT_DIR", "/tmp/geox")
+    # F1b (2026-10-20): out_dir comes from the MCP client and is handed to the renderer,
+    # which writes PNG/SVG/PDF there. Confine it to the output root (no traversal, no
+    # absolute escape); reject before creating anything.
+    root = Path(default_out).resolve()
+    if out_dir:
+        cand = Path(out_dir) if os.path.isabs(out_dir) else root / out_dir
+        cand = cand.resolve()
+        if cand != root and root not in cand.parents:
+            return {
+                "mode": "physics_section",
+                "tool": "geox_model",
+                "status": "ERROR",
+                "error_class": "SCHEMA_REJECTION",
+                "error": "out_dir must resolve inside the server output root; request rejected, nothing written.",
+            }
+        out = str(cand)
+    else:
+        out = str(root)
     os.makedirs(out, exist_ok=True)
     env = os.environ.copy()
     env["GEOX_OUTPUT_DIR"] = str(out)
@@ -284,11 +301,14 @@ def render_physics_section(
         env=env,
     )
     if proc.returncode != 0:
+        # Raw stderr carries interpreter/source paths (seen live 2026-10-19). Last line only, masked.
+        _last = next((ln for ln in reversed(proc.stderr.strip().splitlines()) if ln.strip()), "")
+        _last = _last.replace(str(_SECTION_SCRIPT.parent), "<section>").replace(out, "<output_root>")
         return {
             "mode": "physics_section",
             "tool": "geox_model",
             "status": "ERROR",
-            "error": f"Renderer exited {proc.returncode}: {proc.stderr[-500:]}",
+            "error": f"Renderer exited {proc.returncode}: {_last[:300]}",
         }
     png = Path(out) / f"asas_malam_xs_{theme}.png"
     svg = Path(out) / "asas_malam_xs.svg"
