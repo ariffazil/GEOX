@@ -40,20 +40,24 @@ receipt = {"generated_from": f"registry truth ({N} tools)", "synced": [], "patch
 # ── LIVE APPS publish (2026-10-03: webroot /apps/ was EMPTY — MCP Apps cards landed on SPA theater) ──
 import shutil
 
-APPS_SRC = Path("/opt/geox/apps")
+APPS_SRC = Path("/opt/geox/apps") if Path("/opt/geox/apps").exists() else REPO / "apps"
 APPS_DST = DOCROOT / "apps"
 if APPS_SRC.exists():
     APPS_DST.mkdir(parents=True, exist_ok=True)
     published = []
-    for d in sorted(APPS_SRC.iterdir()):
-        if d.is_dir() and (d / "index.html").exists():
-            dst = APPS_DST / d.name
+    for item in sorted(APPS_SRC.iterdir()):
+        dst = APPS_DST / item.name
+        if item.is_dir() and (item / "index.html").exists():
             if not DRY:
                 if dst.exists():
                     shutil.rmtree(dst)
-                shutil.copytree(d, dst)
-            published.append(d.name)
-    receipt["synced"].append(f"apps/ ({len(published)}: {', '.join(published)})")
+                shutil.copytree(item, dst)
+            published.append(item.name)
+        elif item.is_file() and item.suffix in (".html", ".json", ".svg"):
+            if not DRY:
+                shutil.copy2(item, dst)
+            published.append(item.name)
+    receipt["synced"].append(f"apps/ ({len(published)} items)")
 
 # ── Landing truth patch (minified bundle carries pre-consolidation counts) ──
 # Verified live truth only; unverified numbers are left untouched.
@@ -117,12 +121,11 @@ BANNER = BANNER_OPEN + """
 </style>
 <div id="ew-cta-bar">
   <a class="ew-cta-main" href="/observe/">🪨 Earth Witness — Tanya Bumi</a>
-  <span class="ew-cta-sub">Chat langsung dengan organ geoscience &middot; <a href="/mcp-apps/" style="color:#8fb3ff">semua apps</a><span class="ew-hide-sm"> &middot; <a href="/gui/" style="color:#8fb3ff">WellDesk GUI</a></span></span>
+  <span class="ew-cta-sub"><a href="/apps/" style="color:#8fb3ff;font-weight:600">Apps &amp; GUIs (17)</a> &middot; <a href="https://arif-fazil.com/earth/sabah-observatory/" style="color:#34d399;font-weight:600" target="_blank">Sabah Observatory ↗</a><span class="ew-hide-sm"> &middot; <a href="/gui/" style="color:#8fb3ff">Operator Cockpit</a></span></span>
 </div>
 <script>
 (function(){
-  var VERSION='v3-20261005';
-  var OLDre=/<!-- EARTH-WITNESS-CTA:v[12]:START[\\s\\S]*?EARTH-WITNESS-CTA:END-->/;
+  var VERSION='v4-20261020';
   function ensureNav(){
     var navs=document.querySelectorAll('nav');
     for(var i=0;i<navs.length;i++){
@@ -130,6 +133,24 @@ BANNER = BANNER_OPEN + """
       var sib=nav.querySelector('a[href="/platform"]');
       if(!sib) continue;
       if(nav.querySelector('a[data-ew-nav]')) continue;
+      
+      var obsLink=document.createElement('a');
+      obsLink.setAttribute('data-ew-nav','1');
+      obsLink.href='https://arif-fazil.com/earth/sabah-observatory/';
+      obsLink.target='_blank';
+      obsLink.className=sib.className.replace('text-bone-400','text-emerald-400');
+      obsLink.style.fontWeight='700';
+      obsLink.textContent='\\u25C9 Sabah Observatory';
+      sib.parentNode.insertBefore(obsLink,sib);
+
+      var appsLink=document.createElement('a');
+      appsLink.setAttribute('data-ew-nav','1');
+      appsLink.href='/apps/';
+      appsLink.className=sib.className.replace('text-bone-400','text-sky-400');
+      appsLink.style.fontWeight='700';
+      appsLink.textContent='\\u25C9 Apps & GUIs';
+      sib.parentNode.insertBefore(appsLink,sib);
+
       var a=document.createElement('a');
       a.setAttribute('data-ew-nav','1');
       a.setAttribute('data-ew-version',VERSION);
@@ -161,7 +182,7 @@ def inject_banner(text: str) -> tuple[str, bool]:
         _re.S,
     )
     if pattern.search(text):
-        new_text = pattern.sub(BANNER.rstrip(), text, count=1)
+        new_text = pattern.sub(lambda _: BANNER.rstrip(), text, count=1)
         return new_text, new_text != text
     for anchor in ("<body>", "<body ", "<body>"):
         idx = text.find(anchor)
