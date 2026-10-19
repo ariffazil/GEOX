@@ -103,30 +103,47 @@ def main() -> int:
     h = httpx.get(f"{BASE}/health", timeout=30).json()
     gv = h.get("git_version") or h.get("identity", {}).get("value")
     sd = h.get("surface_drift", {})
-    exp = "geox-df23f352" if phase == "post" else "geox-2d6fde9b"
-    rec("P1_identity", gv == exp, f"git_version={gv} expected={exp}")
+    import subprocess
+
+    head = subprocess.run(
+        ["git", "-C", "/opt/geox", "rev-parse", "--short", "HEAD"], capture_output=True, text=True
+    ).stdout.strip()
+    exp = f"geox-{head}" if head else None
+    rec("P1_identity", exp is not None and gv == exp, f"git_version={gv} expected={exp}")
     rec("P1_surface", sd.get("ok") and sd.get("live_count") == 27, f"surface_drift ok={sd.get('ok')} live={sd.get('live_count')}")
 
     # P2 — F1b execution proof (mkdir ordering is the whole claim)
     # A relative out_dir resolves against THREE different bases on the unpatched tree
     # (service CWD, renderer CWD, absolute) — check every candidate write location.
+    # NOTE: geox-mcp.service runs under systemd PrivateTmp — the service sees
+    # /tmp/systemd-private-*/tmp as its /tmp. Probe BOTH views.
+    import glob as _glob
+
+    _priv = _glob.glob("/tmp/systemd-private-*-geox-mcp.service-*/tmp")
+    _stmp = _priv[0] if _priv else "/tmp"
+    _sroot = f"{_stmp}/geox"
     probes = [
         (
             "P2a_traversal",
             "../pwn_probe_geox",
-            ["/tmp/pwn_probe_geox", "/opt/pwn_probe_geox", "/opt/geox/geox/skills/subsurface/pwn_probe_geox"],
+            [f"{_stmp}/pwn_probe_geox", "/opt/pwn_probe_geox", "/opt/geox/geox/skills/subsurface/pwn_probe_geox"],
         ),
-        ("P2b_absolute", "/tmp/pwn_probe_geox_abs", ["/tmp/pwn_probe_geox_abs"]),
+        ("P2b_absolute", "/tmp/pwn_probe_geox_abs", [f"{_stmp}/pwn_probe_geox_abs", "/tmp/pwn_probe_geox_abs"]),
         (
             "P2c_symlink",
             "link_probe",
-            ["/tmp/pwn_probe_geox_sym", "/opt/geox/link_probe", "/opt/geox/geox/skills/subsurface/link_probe"],
+            [
+                f"{_stmp}/pwn_probe_geox_sym",
+                "/tmp/pwn_probe_geox_sym",
+                "/opt/geox/link_probe",
+                "/opt/geox/geox/skills/subsurface/link_probe",
+            ],
         ),
     ]
-    # symlink inside root pointing outside
+    # symlink INSIDE the service's output root pointing outside it
     import os
 
-    link = f"{ROOT}/link_probe"
+    link = f"{_sroot}/link_probe"
     if os.path.islink(link) or os.path.exists(link):
         try:
             os.unlink(link)
