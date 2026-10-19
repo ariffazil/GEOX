@@ -35,7 +35,7 @@
 # /opt/geox/.venv  : 5 incompatibilities (323 packages). THIS IS THE LIVE ORGAN
 #                    (geox-mcp.service :8081, earth-witness-chat.service :8765,
 #                     both WorkingDirectory=/opt/geox):
-#   - arifos-geox requires fastmcp[apps,tasks]==3.4.6, but 3.4.7 is installed
+#   - arifos-geox requires fastmcp[apps,tasks]==4.1.0, but 3.4.7 is installed
 #   - fastmcp-tasks requires fastmcp-slim[server]==4.0.5, but 3.4.7 is installed
 #   - arifos-geox requires pygimli>=1.6.0, but 1.5.4 is installed
 #   - arifos-geox requires loopstructural>=1.7.0, but 1.6.27 is installed
@@ -52,8 +52,8 @@
 # SIXTH LANE (outside this repo, not reconciled here — different machine
 # target): /root/scripts/windows-geox-setup.ps1:68 pins fastmcp==3.3.1.
 mcp==1.30.0
-fastmcp==3.4.6
-fastmcp-slim==3.4.6
+fastmcp==4.1.0
+fastmcp-slim==4.1.0
 pydantic==2.14.0
 uvicorn==0.54.0
 starlette==1.7.0
