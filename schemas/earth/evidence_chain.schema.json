@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geox.arif-fazil.com/schemas/earth/evidence_chain.schema.json",
+  "title": "GEOX Evidence-to-Decision Chain Schema",
+  "description": "Constitutional schema governing observations, evidence objects, model hypotheses, deterministic falsification, tri-witness hashes, and decision tests in the arifOS federation.",
+  "type": "object",
+  "definitions": {
+    "Observation": {
+      "type": "object",
+      "required": [
+        "observation_id",
+        "kind",
+        "source",
+        "spatial",
+        "vertical_datum",
+        "measurement",
+        "observed_at_utc"
+      ],
+      "properties": {
+        "observation_id": { "type": "string" },
+        "kind": { "type": "string" },
+        "source": {
+          "type": "object",
+          "required": ["citation", "file_hash", "access_classification"],
+          "properties": {
+            "citation": { "type": "string" },
+            "doi": { "type": "string" },
+            "file_hash": { "type": "string", "pattern": "^(sha256:)?[0-9a-f]{64}$" },
+            "access_classification": { "type": "string", "enum": ["public", "restricted", "confidential"] }
+          }
+        },
+        "spatial": {
+          "type": "object",
+          "required": ["crs", "latitude", "longitude"],
+          "properties": {
+            "crs": { "type": "string" },
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" },
+            "station_name": { "type": "string" }
+          }
+        },
+        "vertical_datum": {
+          "type": "string",
+          "enum": ["sea_level", "seabed", "KB", "TWT_ms", "TVDSS_m"]
+        },
+        "measurement": {
+          "type": "object",
+          "required": ["value", "units", "uncertainty_plus_minus"],
+          "properties": {
+            "value": { "type": "number" },
+            "units": { "type": "string" },
+            "uncertainty_plus_minus": { "type": "number" },
+            "confidence_interval": { "type": "number", "default": 0.95 }
+          }
+        },
+        "temporal": {
+          "type": "object",
+          "properties": {
+            "age_ma": { "type": "number" },
+            "age_uncertainty_ma": { "type": "number" }
+          }
+        },
+        "observed_at_utc": { "type": "string" }
+      }
+    },
+    "EvidenceObject": {
+      "type": "object",
+      "required": [
+        "evidence_id",
+        "observation_ref",
+        "epistemic_tier",
+        "processing_lineage",
+        "warrant_state"
+      ],
+      "properties": {
+        "evidence_id": { "type": "string", "pattern": "^GEOX-EV-[0-9]{6}$" },
+        "observation_ref": { "type": "string" },
+        "epistemic_tier": { "type": "string", "enum": ["L0_MEASURED", "L1_CALCULATED", "L2_INTERPRETED"] },
+        "processing_lineage": {
+          "type": "object",
+          "required": ["method", "software_version", "operator_or_author"],
+          "properties": {
+            "method": { "type": "string" },
+            "software_version": { "type": "string" },
+            "operator_or_author": { "type": "string" },
+            "parameters": { "type": "object" }
+          }
+        },
+        "warrant_state": {
+          "type": "string",
+          "enum": ["PENDING", "WARRANTED", "CHALLENGED", "SUPERSEDED"]
+        }
+      }
+    },
+    "ModelHypothesis": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "model_name",
+        "family",
+        "geometry_hash",
+        "assumptions",
+        "predictions",
+        "kill_criteria"
+      ],
+      "properties": {
+        "model_id": { "type": "string" },
+        "model_name": { "type": "string" },
+        "family": { "type": "string" },
+        "geometry_hash": { "type": "string", "pattern": "^[0-9a-f]{8,64}$" },
+        "assumptions": {
+          "type": "object",
+          "required": ["reference_crust_thickness_t0_km", "crust_density_kg_m3", "mantle_density_kg_m3"],
+          "properties": {
+            "reference_crust_thickness_t0_km": { "type": "number" },
+            "crust_density_kg_m3": { "type": "number" },
+            "mantle_density_kg_m3": { "type": "number" },
+            "sediment_density_kg_m3": { "type": "number" }
+          }
+        },
+        "predictions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Prediction" }
+        },
+        "kill_criteria": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "Prediction": {
+      "type": "object",
+      "required": [
+        "prediction_id",
+        "target_observable",
+        "expected_window",
+        "location_chainage_km",
+        "kill_condition"
+      ],
+      "properties": {
+        "prediction_id": { "type": "string" },
+        "target_observable": { "type": "string" },
+        "expected_window": {
+          "type": "object",
+          "required": ["min_value", "max_value", "units"],
+          "properties": {
+            "min_value": { "type": "number" },
+            "max_value": { "type": "number" },
+            "units": { "type": "string" }
+          }
+        },
+        "location_chainage_km": { "type": "number" },
+        "kill_condition": { "type": "string" }
+      }
+    },
+    "TestResult": {
+      "type": "object",
+      "required": [
+        "test_id",
+        "verdict",
+        "residual",
+        "threshold",
+        "kill_triggered",
+        "evaluated_at_utc"
+      ],
+      "properties": {
+        "test_id": { "type": "string" },
+        "verdict": { "type": "string", "enum": ["PASS", "FAIL", "INDETERMINATE"] },
+        "residual": { "type": "number" },
+        "threshold": { "type": "number" },
+        "kill_triggered": { "type": "boolean" },
+        "evaluated_at_utc": { "type": "string" }
+      }
+    },
+    "ExecutionWitness": {
+      "type": "object",
+      "required": [
+        "witness_id",
+        "runtime_environment",
+        "execution_status",
+        "exit_code",
+        "runtime_ms",
+        "witnessed_at_utc"
+      ],
+      "properties": {
+        "witness_id": { "type": "string" },
+        "runtime_environment": {
+          "type": "object",
+          "required": ["os", "python_version", "git_commit"],
+          "properties": {
+            "os": { "type": "string" },
+            "python_version": { "type": "string" },
+            "service_pid": { "type": "integer" },
+            "git_commit": { "type": "string" }
+          }
+        },
+        "execution_status": { "type": "string", "enum": ["SUCCESS", "FAILED"] },
+        "exit_code": { "type": "integer" },
+        "runtime_ms": { "type": "number" },
+        "witnessed_at_utc": { "type": "string" }
+      }
+    },
+    "ScientificWarrant": {
+      "type": "object",
+      "required": [
+        "warrant_id",
+        "evidence_id",
+        "supports_models",
+        "weakens_models",
+        "indiscriminate_models",
+        "confidence_score",
+        "epistemic_split"
+      ],
+      "properties": {
+        "warrant_id": { "type": "string" },
+        "evidence_id": { "type": "string" },
+        "supports_models": { "type": "array", "items": { "type": "string" } },
+        "weakens_models": { "type": "array", "items": { "type": "string" } },
+        "indiscriminate_models": { "type": "array", "items": { "type": "string" } },
+        "confidence_score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "epistemic_split": {
+          "type": "object",
+          "required": ["observed", "derived", "interpreted", "assumed", "contradicted", "missing"],
+          "properties": {
+            "observed": { "type": "string" },
+            "derived": { "type": "string" },
+            "interpreted": { "type": "string" },
+            "assumed": { "type": "string" },
+            "contradicted": { "type": "string" },
+            "missing": { "type": "string" }
+          }
+        }
+      }
+    },
+    "DecisionTest": {
+      "type": "object",
+      "required": [
+        "decision_id",
+        "competing_models",
+        "discriminating_evidence_id",
+        "outcome_consequence"
+      ],
+      "properties": {
+        "decision_id": { "type": "string" },
+        "competing_models": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "string" }
+        },
+        "discriminating_evidence_id": { "type": "string" },
+        "outcome_consequence": {
+          "type": "object",
+          "required": ["on_model_1_win", "on_model_2_win", "on_indeterminate"],
+          "properties": {
+            "on_model_1_win": { "type": "string" },
+            "on_model_2_win": { "type": "string" },
+            "on_indeterminate": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

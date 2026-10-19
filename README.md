@@ -39,6 +39,7 @@ truth_rule: live :18081/health + tools/list beat any static count in prose
 - **Earth Witness v1 — image evidence (`geox_observe`).** Rock / core / outcrop / fossil / seismic-display image → governed `EarthObservationPacket`: competing hypotheses **with their falsifiers**, and `INPUT_REQUIRED` when diagnostics (scale, acid test, polarity) are missing — never a guess. EarthBench 7/7, forbidden-claim rate 0 ([report](./reports/earth_witness/04_earthbench.md)).
 - **Surface honesty is gated, not hoped.** CI regenerates every published surface from `registry.py` and compares on each push ([surface-drift-gate.yml](./.github/workflows/surface-drift-gate.yml)); the live organ's `/drift` measured canonical == live at the probe below.
 - **Refusals are real outputs.** Oversized map bboxes, Macrostrat 500s, and empty basin envelopes come back as refusals — empty `ok: true` is not permitted.
+- **Deterministic Evidence-to-Decision Chain (`geox_core.evidence_chain`).** Schema-governed evidence objects (`schemas/earth/evidence_chain.schema.json`) with spatial CRS, vertical datum, and explicit $\pm \sigma$ uncertainty envelopes. Performs mathematical model discrimination and kill tests (PASS/FAIL/INDETERMINATE) with tri-witness hash ledger (`ARTIFACT_IDENTITY`, `EXECUTION_WITNESS`, `SCIENTIFIC_WARRANT`). Known-answer tested against North Borneo Moho constraint (Sidek et al. 2016; Madon 2025).
 
 ## What is not yet proven
 

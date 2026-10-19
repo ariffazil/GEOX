@@ -27,8 +27,13 @@ G_GRAVITY = 9.81  # m/s²
 RHO_SEDIMENT_INFILL = 2400.0  # kg/m³ (assumed)
 RHO_WATER_INFILL = 1030.0  # kg/m³ (assumed)
 
-_SECTION_SCRIPT = Path("/root/GEOX/geox/skills/subsurface/section/asas_malam_xs.py")
-_SPINE_YAML = Path("/root/GEOX/okf/sabah-basin/kinabalu_event_spine.yaml")
+_OPT_SECTION = Path("/opt/geox/geox/skills/subsurface/section/asas_malam_xs.py")
+_ROOT_SECTION = Path("/root/GEOX/geox/skills/subsurface/section/asas_malam_xs.py")
+_SECTION_SCRIPT = _OPT_SECTION if _OPT_SECTION.exists() else _ROOT_SECTION
+
+_OPT_SPINE = Path("/opt/geox/okf/sabah-basin/kinabalu_event_spine.yaml")
+_ROOT_SPINE = Path("/root/GEOX/okf/sabah-basin/kinabalu_event_spine.yaml")
+_SPINE_YAML = _OPT_SPINE if _OPT_SPINE.exists() else _ROOT_SPINE
 _FORBIDDEN_STRINGS = ["Pekaka", "LL-1", "Megah", "Zoisit", "Nuri", "Rotan"]
 # 2026-10-06 (auditor fix #3): pattern-level gate — reserve figures + well-name shapes
 _FORBIDDEN_PATTERNS = [
@@ -265,15 +270,18 @@ def render_physics_section(
             "status": "ERROR",
             "error": f"Renderer script not found: {_SECTION_SCRIPT}",
         }
-    default_out = str(_SECTION_SCRIPT.parent / "output")
+    default_out = "/tmp/geox"
     out = out_dir or default_out
     os.makedirs(out, exist_ok=True)
+    env = os.environ.copy()
+    env["GEOX_OUTPUT_DIR"] = str(out)
     proc = subprocess.run(
-        [sys.executable, str(_SECTION_SCRIPT), theme],
+        [sys.executable, str(_SECTION_SCRIPT), theme, str(out)],
         capture_output=True,
         text=True,
         timeout=120,
         cwd=str(_SECTION_SCRIPT.parent),
+        env=env,
     )
     if proc.returncode != 0:
         return {

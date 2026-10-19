@@ -23,7 +23,7 @@ from matplotlib.lines import Line2D
 from scipy.ndimage import gaussian_filter1d
 
 THEME = sys.argv[1] if len(sys.argv) > 1 else "dark"
-OUT = "/root/GEOX/geox/skills/subsurface/section/output"
+OUT = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("GEOX_OUTPUT_DIR", "/tmp/geox")
 os.makedirs(OUT, exist_ok=True)
 if THEME == "dark":
     BG = "#0b1220"
