@@ -42,6 +42,15 @@ from typing import TYPE_CHECKING, Any
 _validated_sct_context = threading.local()
 
 from fastmcp.exceptions import ToolError
+
+try:  # FastMCP wraps pydantic arg errors in its own ValidationError (not a ValueError)
+    from fastmcp.exceptions import ValidationError as _FastMCPValidationError
+except ImportError:  # pragma: no cover — older/newer fastmcp without this class
+
+    class _FastMCPValidationError(Exception):  # type: ignore[no-redef]
+        pass
+
+
 from fastmcp.server.middleware import Middleware
 from mcp.types import ListToolsResult
 
@@ -435,6 +444,9 @@ class GeoxGovernanceMiddleware(Middleware):
         )
         # on_list_tools exposes ONLY canonical tools to clients (single truth)
         self._PUBLIC_SURFACE: set[str] = set(canonical_public_tools)
+        # Layer 1.5 schema cache (filled by on_list_tools). Was never initialised →
+        # AttributeError on every SCHEMA_REJECTION path (found 2026-10-20 e2e).
+        self._tool_schemas: dict[str, dict] = {}
         self._arifos_route_query_enabled = arifos_route_query_enabled
         self._check_governance = check_governance_fn
         logger.info(
@@ -1176,7 +1188,7 @@ class GeoxGovernanceMiddleware(Middleware):
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
-        except (ValueError, TypeError, KeyError, LookupError) as e:
+        except (ValueError, TypeError, KeyError, LookupError, _FastMCPValidationError) as e:
             # Schema/argument validation errors that bypassed FastMCP's handler
             # Layer 1.5: Extract recovery hints with full tool schema introspection
             # so agents can self-correct with field-level available/closest_match.
@@ -1281,7 +1293,10 @@ class GeoxGovernanceMiddleware(Middleware):
             except Exception:
                 pass
 
-            _transport = "ERROR" if _is_error else "OK"
+            # 2026-10-20: a tool-level failure is an EXECUTION failure, not a transport one.
+            # This code only runs after the call arrived and the tool returned, so transport
+            # succeeded. (Was: "ERROR" whenever _is_error — conflated the two layers.)
+            _transport = "OK"
             _execution = "FAILED" if _is_error else "COMPLETED"
             _artifact = "REJECTED" if _is_error else ("CREATED" if gov_envelope.get("artifact_id") else "NONE")
             _gov_verdict = gov_envelope.get("gate_verdict", "VOID" if _is_error else "ADVISORY")
