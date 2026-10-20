@@ -3152,19 +3152,50 @@ async def health_handler(request: Request) -> JSONResponse:
             except Exception:
                 pass
 
-            # 3. Compare short shas (audit's exact invariant).
-            source_short = source_sha[:7] if source_sha != "unknown" else "unknown"
-            running_short = running_sha[:7] if running_sha != "unknown" else "unknown"
-            drift = source_short != "unknown" and running_short != "unknown" and source_short != running_short
+            # 3. Deployment identity = arifOS's own release manifest (build-time
+            #    identity). Its _field_semantics explicitly state source_commit is the
+            #    build-time sha and NOT the live repo HEAD — comparing live HEAD against
+            #    a build sha reports drift on every commit of an active repo (false-always).
+            kernel_rel: dict[str, Any] = {}
+            try:
+                async with httpx.AsyncClient(timeout=2.0) as _kclient:
+                    _kresp = await _kclient.get("http://127.0.0.1:8088/health")
+                    if _kresp.status_code == 200:
+                        kernel_rel = _kresp.json().get("software_release") or {}
+            except Exception:
+                pass
+
+            k_source = str(kernel_rel.get("source_commit") or "unknown")
+            k_built = str(kernel_rel.get("built_commit") or "unknown")
+            k_deployed = str(kernel_rel.get("deployed_commit") or "unknown")
+            k_drift = kernel_rel.get("drift")
+
+            head_moved = (
+                source_sha != "unknown"
+                and k_source != "unknown"
+                and source_sha[:7] != k_source[:7]
+            )
+
+            if k_source == "unknown" or k_built == "unknown" or k_drift is None:
+                # Kernel manifest unavailable — fall back to the legacy comparison.
+                source_short = source_sha[:7] if source_sha != "unknown" else "unknown"
+                running_short = running_sha[:7] if running_sha != "unknown" else "unknown"
+                drift = source_short != "unknown" and running_short != "unknown" and source_short != running_short
+                k_source, k_built, k_deployed = source_sha, running_sha, running_sha
+            else:
+                drift = bool(k_drift)
 
             return {
-                "source_commit": source_sha,
-                "built_commit": running_sha,
-                "deployed_commit": running_sha,  # built == deployed for the federation case
+                "source_commit": k_source,
+                "built_commit": k_built,
+                "deployed_commit": k_deployed,
                 "drift": drift,
                 "status": "degraded" if drift else "aligned",
-                "source": ("arifOS:/api/build-info + /root/arifOS/.git HEAD (P0-5 GEOX-side probe)"),
-                "rule": "source_commit == built_commit == deployed_commit",
+                "repo_head_moved_since_build": head_moved,
+                "build_info_sha": running_sha,
+                "source": ("arifOS:/health software_release (build-time identity) + /root/arifOS/.git HEAD (informational only)"),
+                "rule": ("source_commit == built_commit == deployed_commit at build time (arifOS _field_semantics); "
+                         "live repo HEAD is a separate observation, never drift by itself"),
             }
         except Exception as _de:
             return {

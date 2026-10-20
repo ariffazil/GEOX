@@ -612,6 +612,29 @@ async def geox_literature_index() -> str:
             "journal": "Bulletin of the Geological Society of Malaysia, Volume 72, 2021",
         }
     ]
+    # F2 TRUTH (2026-10-20): also list what the parametric template actually serves.
+    # The paper store is empty, so geox://literature/{basin}/{paper_id} returns STUB
+    # bodies only — stubs are not citable evidence and must not be counted as papers.
+    from pathlib import Path as _Path
+
+    _store = _Path("/var/arifos/geox-resources/literature")
+    if _store.is_dir():
+        for _p in sorted(_store.rglob("*.md")):
+            _rel = _p.relative_to(_store).with_suffix("")
+            literature_list.append(
+                {"uri": f"geox://literature/{_rel.as_posix()}", "source": "paper_store", "status": "AVAILABLE"}
+            )
+    literature_list.append(
+        {
+            "uri": "geox://literature/{basin}/{paper_id}",
+            "status": "STUB_ONLY",
+            "note": (
+                "Parametric template serves stub bodies only — paper store "
+                "/var/arifos/geox-resources/literature/ is empty. Do not cite stubs "
+                "as evidence (F2 TRUTH)."
+            ),
+        }
+    )
     return json.dumps(literature_list, indent=2)
 
 
@@ -768,8 +791,13 @@ async def geox_basins_index() -> str:
     if basins_dir.exists():
         for d in basins_dir.iterdir():
             if d.is_dir():
+                has_profile = (d / "basin_profile.yaml").is_file()
                 basins.append(
-                    {"name": d.name.replace("_", " ").title(), "uri": f"geox://basins/{d.name.replace('_', '-')}/profile"}
+                    {
+                        "name": d.name.replace("_", " ").title(),
+                        "uri": f"geox://basins/{d.name.replace('_', '-')}/profile",
+                        "status": "AVAILABLE" if has_profile else "PROFILE_PENDING",
+                    }
                 )
     return json.dumps(basins, indent=2)
 
@@ -956,6 +984,38 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         description="Fetch geological profile for Malay Basin.",
         mime_type="application/json",
     )(geox_basin_malay_profile)
+
+    async def geox_basin_profile_parametric(basin_id: str) -> dict[str, Any]:
+        """Basin profile URI parametric resolver — the URI family that
+        geox://basins/index advertises (all basins under resources/basins/).
+
+        F2 TRUTH: unknown basin_id raises LookupError (RESOURCE_NOT_FOUND).
+        Never a stub body.
+        """
+        rid = basin_id.replace("-", "_")
+        prof_path = RESOURCES_DIR / "basins" / rid / "basin_profile.yaml"
+        if not prof_path.is_file():
+            raise LookupError(f"no basin_profile.yaml for basin_id={basin_id}")
+        import yaml as _yaml
+
+        return {
+            "uri": f"geox://basins/{basin_id}/profile",
+            "basin_id": basin_id,
+            "source_file": str(prof_path),
+            "profile": _yaml.safe_load(prof_path.read_text(encoding="utf-8")),
+        }
+
+    mcp.resource(
+        "geox://basins/{basin_id}/profile",
+        name="geox-basin-profile",
+        title="Basin Profile (parametric)",
+        description=(
+            "Geological basin profile for any basin under resources/basins/ — the URI "
+            "family advertised by geox://basins/index. Unknown basin_id returns "
+            "RESOURCE_NOT_FOUND, never a stub."
+        ),
+        mime_type="application/json",
+    )(geox_basin_profile_parametric)
     mcp.resource(
         "geox://literature/index",
         description="Index of all literature resources.",
