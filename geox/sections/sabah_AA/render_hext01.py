@@ -152,45 +152,38 @@ def p1(ax, title, sub):
 
 def p2(ax, title, sub):
     frame(
-        ax, "2 · H-EXT-01 · EXTENSION OVERPRINT (SPEC)", "post-subduction extension across NORTH-CENTRAL Sabah — the missing link"
+        ax, "2 \u00b7 H-EXT-01 \u00b7 EXTENSION OVERPRINT (SPEC)", "post-subduction extension across NORTH-CENTRAL Sabah \u2014 the missing link"
     )
     draw_inherited(ax, alpha=0.45)
-    zone = [[430, 2], [650, 2], [650, 38], [430, 38]]
-    poly(ax, zone, "#c9a227", alpha=0.10, ec=GOLD, lw=2.2, z=7)
-    ax.text(
-        540,
-        20,
-        "H-EXT-01 · EXTENSION CORRIDOR\nCONCEPTUAL — continuity is the hypothesis",
-        color=GOLD,
-        fontsize=9,
-        ha="center",
-        va="center",
-        fontweight="bold",
-        zorder=9,
-    )
+    z1 = [[430, 2], [560, 2], [560, 38], [430, 38]]
+    z2 = [[560, 2], [700, 2], [700, 38], [560, 38]]
+    poly(ax, z1, "#c9a227", alpha=0.16, ec=GOLD, lw=2.0, z=7)
+    poly(ax, z2, "#c9a227", alpha=0.06, ec="none", z=7)
+    ax.plot([430, 430, 560, 560, 430], [2, 38, 38, 2, 2], color=GOLD, lw=2.0, ls=(0, (6, 3)), zorder=8)
+    ax.plot([560, 560, 700, 700, 560], [2, 38, 38, 2, 2], color=GOLD, lw=1.4, ls=(0, (2, 3)), alpha=0.65, zorder=8)
+    ax.text(495, 4, "SOURCE-CONSTRAINED\nthinning / extension\n(Crocker-Ranau)", color=GOLD, fontsize=7, ha="center", va="top", zorder=9)
+    ax.text(648, 4, "H-EXT-01 POSSIBLE\nCONTINUATION\nTEST REQUIRED ?", color=GOLD, fontsize=7, ha="center", va="top", alpha=0.85, zorder=9)
+    ax.text(290, 4, "MORLEY 2023: shallow\nmobile-shale - NOT deep\nextension evidence", color="#94a3b8", fontsize=6.8, ha="center", va="top", zorder=9)
+    ax.text(555, 27, "H-EXT-01 \u00b7 EXTENSION STRAIN FIELD (hypothesized)\ncontinuity = TESTABLE, not observed", color=GOLD, fontsize=8, ha="center", va="center", fontweight="bold", zorder=9)
+    ax.text(505, 19, "granite + exhumation\n(melting consequence)", color=INK, fontsize=7, ha="left")
     arrow(ax, (455, -1), (415, -1), GOLD, 2.4)
     arrow(ax, (625, -1), (665, -1), GOLD, 2.4)
-    ax.text(
-        540,
-        44,
-        "continental thinning (β ~1.2–1.3 relayed)\noceanic breakup = UNMEASURED",
-        color=GOLD,
-        fontsize=8,
-        ha="center",
-    )
-    arrow(ax, (500, 33), (500, 27), "#fca5a5", 2.0)
-    arrow(ax, (590, 33), (590, 27), "#fca5a5", 2.0)
-    ax.text(540, 31.5, "thinning / Moho pull-up?", color="#fca5a5", fontsize=7, ha="center")
-    ax.text(487, 12, "granite + exhumation\n(melting consequence)", color=INK, fontsize=7, ha="center")
+    ax.text(540, 47, "continental thinning (\u03b2 ~1.2\u20131.3, Greenfield 2022)\noceanic breakup = UNMEASURED \u00b7 strain field \u2260 fault geometry", color=GOLD, fontsize=7.5, ha="center")
+    arrow(ax, (500, 33), (500, 29), "#fca5a5", 2.0)
+    arrow(ax, (590, 33), (590, 29), "#fca5a5", 2.0)
+    ax.text(545, 33.5, "thinning / Moho pull-up?", color="#fca5a5", fontsize=7, ha="center")
+    arrow(ax, (780, 52), (640, 42), "#a78bfa", 1.6, ls=(0, (4, 3)))
+    ax.text(782, 55, "SE mantle context: lithospheric thinning / drip (Bacon 2022)\ncausal link? - dashed hypothesis, NOT an imaged conduit", color="#a78bfa", fontsize=6.8, ha="right")
     ledger(
         ax,
         [
-            ("OBS", "granite 7.85–7.22 Ma · rapid exhumation · Moho variations", "#7ee787"),
+            ("OBS", "granite 7.85\u20137.22 Ma \u00b7 rapid exhumation \u00b7 Moho variations", "#7ee787"),
             ("INT", "regional extension phase (Hall 2013)", "#79c0ff"),
-            ("SPEC", "corridor continuity · dip/width", "#d2a8ff"),
+            ("SPEC", "corridor continuity \u00b7 dip/width", "#d2a8ff"),
             ("UNKNOWN", "oceanic vs continental (thinning < breakup)", "#ffa657"),
         ],
     )
+
 
 
 def p3(ax, title, sub):
@@ -211,7 +204,13 @@ def p3(ax, title, sub):
     arrow(ax, (300, 17), (360, 17), GOLD, 1.6)
     arrow(ax, (530, 17), (470, 17), GOLD, 1.6)
     ax.text(30, 17, "H-EXT-01B  LITHOSPHERIC DRIP", color="#f0abfc", fontsize=9, fontweight="bold")
-    ax.text(30, 20.5, "drip drives extension + melting + exhumation (Pilia 2023)", color=DIM, fontsize=7)
+    ax.text(
+        30,
+        20.5,
+        "drip drives extension + melting + exhumation (Pilia 2023) \u00b7 drip interpreted SE of Kinabalu (Bacon 2022)",
+        color=DIM,
+        fontsize=7,
+    )
     # C collapse (z 30..45)
     poly(ax, [[330, 42], [420, 33], [510, 42], [510, 45], [330, 45]], "#4c3d63", alpha=0.85, z=5)
     arrow(ax, (355, 39), (315, 39), "#86efac", 1.8)
