@@ -1,0 +1,41 @@
+{
+ "checks": [
+  {
+   "check": "topo checkpoint: Mt Kinabalu elevation ~ -4.095 km",
+   "result": "PASS",
+   "detail": "min z = -4.095 km (negative = elevation)"
+  },
+  {
+   "check": "bathy checkpoint: Sabah Trough ~2.9 km",
+   "result": "PASS",
+   "detail": "trough z = 2.9"
+  },
+  {
+   "check": "Moho at KMY 32.8\u00b12.5 km (Sidek 2016)",
+   "result": "UNMEASURED",
+   "detail": "Moho geometry lives in the page's lower-panel drawing + model bodies; KMY station not on the station list \u2014 band constraint carried in annotations, not asserted here"
+  },
+  {
+   "check": "polygons closed",
+   "result": "PASS",
+   "detail": "20 shared + per-model bodies auto-closed at render; no gap/overlap solver run (shapely not required for flat fills)"
+  },
+  {
+   "check": "VE declared",
+   "result": "PASS",
+   "detail": "upper panel ~17x (0\u201315 km), lower ~3x (15\u201360 km); true dip 5\u00b0 draws near 56\u00b0 upper panel"
+  },
+  {
+   "check": "Airy isostasy residual",
+   "result": "UNMEASURED",
+   "detail": "not computed in this pass \u2014 flagged, not silently fixed (spec rule 5)"
+  },
+  {
+   "check": "stratigraphic order solver",
+   "result": "UNMEASURED",
+   "detail": "polygon order taken as drawn on the page (hand-plotted section); no auto-ordering solver run"
+  }
+ ],
+ "verdict": "PASS_WITH_UNMEASURED",
+ "source": "_geometry_raw.json (extracted verbatim from arif-fazil.com/earth/kinabalu-cross-section.html in-page data; public sources only)"
+}

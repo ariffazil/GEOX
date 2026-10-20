@@ -1,0 +1,47 @@
+{
+ "qc_id": "QC-SABAH-AA-D",
+ "date_utc": "2026-10-20T05:50:29.663427+00:00",
+ "reference": "base_D.png",
+ "candidates": {
+  "styl_D_c1.png": {
+   "boundary_recall": 0.993,
+   "witness_verdict": "FAIL",
+   "reject_reasons": [
+    "slab recolored (blue slab band lost)",
+    "5 cone bodies + thin lines deleted",
+    "36 axis numerals retained (OCR text)",
+    "6/14 fills recolored \u2014 not texture-only"
+   ]
+  },
+  "styl_D_c2.png": {
+   "boundary_recall": 0.947,
+   "witness_verdict": "PASS_WITH_NOTES",
+   "notes": [
+    "sky painted blue (sky/water conflation \u2014 stylistic wash)",
+    "annotation lines MMU/detachment + dashed fault dropped \u2014 RESTORED BY CODE in annotate.py",
+    "added tan surface band + grey dome-crossing band (texture-level, disclosed)",
+    "3/14 fills changed (water, basement, mantle)",
+    "axis numerals removed (required by zero-text rule)"
+   ]
+  }
+ },
+ "selected": "styl_D_c2.png",
+ "delivery_mode": "DISCLOSED",
+ "adherence_band_declared": ">=0.90 clean / 0.75-0.90 disclosed / <0.75 reject",
+ "adherence_score": 0.947,
+ "geometry_restoration": "MMU (teal), detachment-class lines and dashed detachment re-drawn from _geometry_raw.json by code (geometry is computed, not generated)",
+ "volumetric_checks": {
+  "bodies_preserved": "21/21",
+  "granite_single_body_x470-500": true,
+  "slab_band_45_55km": true,
+  "two_panels": true,
+  "text_glyphs_in_stylised": 0,
+  "topo_max_deviation_km": 0.12
+ },
+ "texture_semantics_flags": [
+  "crosses landed on basement not granite (both candidates)",
+  "brick on non-carbonate bodies in c1",
+  "granite carries small-v (volcanic convention)"
+ ],
+ "verdict": "PASS_WITH_NOTES"
+}

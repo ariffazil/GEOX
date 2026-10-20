@@ -1,0 +1,12 @@
+{
+ "model": "gemini-3-pro-image",
+ "generated_at_utc": "2026-10-20T04:28:57.016335+00:00",
+ "prompt_sha": "8a8f1de7676d48b3",
+ "prompt": "Restyle this geological cross-section as a publication-quality textbook illustration. STRICT: keep every boundary, polygon shape, layer thickness, surface line, and the topography/bathymetry profile EXACTLY where they are in the reference image. Do not add, remove, move, or reshape any body. Do not add faults, volcanoes, wells, arrows, or features. Only apply lithology textures within each existing region: stippled sand, dashed shale, brick carbonate, crosses for granite, v-pattern for intrusive, smooth gradient for mantle, deep blue water. Muted geological colour palette. Two stacked panels exactly as shown, separated at mid-height. NEGATE: no text, no letters, no numbers, no labels, no legend, no title, no frame border, no scale bar, no cartoon style, no 3D isometric view, no glow, no extra bodies.",
+ "candidates": [
+  "styl_D_c1.png",
+  "styl_D_c2.png"
+ ],
+ "source_image": "base_D.png",
+ "adherence_band": ">=0.90 clean / 0.75-0.90 disclosed / <0.75 reject"
+}

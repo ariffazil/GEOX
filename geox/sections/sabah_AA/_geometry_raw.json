@@ -1,0 +1,2974 @@
+{
+ "XS": {
+  "stations": [
+   {
+    "km": 0,
+    "lat": 8.3,
+    "lng": 113,
+    "name": "A · Dangerous Grounds"
+   },
+   {
+    "km": 139,
+    "lat": 7.37,
+    "lng": 113.84,
+    "name": "Layang-Layang atoll"
+   },
+   {
+    "km": 262,
+    "lat": 6.8,
+    "lng": 114.8,
+    "name": "Sabah Trough axis"
+   },
+   {
+    "km": 325,
+    "lat": 6.45,
+    "lng": 115.25,
+    "name": "Toe-thrust belt"
+   },
+   {
+    "km": 373,
+    "lat": 6.2,
+    "lng": 115.6,
+    "name": "Shelf edge"
+   },
+   {
+    "km": 430,
+    "lat": 5.98,
+    "lng": 116.07,
+    "name": "Kota Kinabalu coast"
+   },
+   {
+    "km": 485,
+    "lat": 6.075,
+    "lng": 116.558,
+    "name": "Mt Kinabalu"
+   },
+   {
+    "km": 568,
+    "lat": 5.62,
+    "lng": 117.15,
+    "name": "Telupid"
+   },
+   {
+    "km": 652,
+    "lat": 5.55,
+    "lng": 117.9,
+    "name": "Kinabatangan"
+   },
+   {
+    "km": 716,
+    "lat": 5.85,
+    "lng": 118.4,
+    "name": "Sandakan Basin"
+   },
+   {
+    "km": 833,
+    "lat": 6.2,
+    "lng": 119.4,
+    "name": "A′ · Sulu Sea"
+   }
+  ],
+  "ridgeAxis": [
+   [
+    5.75,
+    113.95
+   ],
+   [
+    6.8,
+    114.8
+   ],
+   [
+    7.7,
+    115.75
+   ]
+  ],
+  "provinces": [
+   [
+    0,
+    230,
+    "DANGEROUS GROUNDS"
+   ],
+   [
+    230,
+    290,
+    "SABAH TROUGH"
+   ],
+   [
+    290,
+    373,
+    "OUTBOARD"
+   ],
+   [
+    373,
+    430,
+    "INBOARD SHELF"
+   ],
+   [
+    430,
+    540,
+    "CROCKER RANGE"
+   ],
+   [
+    540,
+    650,
+    "CENTRAL SABAH"
+   ],
+   [
+    650,
+    790,
+    "SANDAKAN BASIN"
+   ],
+   [
+    790,
+    833,
+    "SULU SEA"
+   ]
+  ],
+  "surface": [
+   [
+    0,
+    2
+   ],
+   [
+    30,
+    1.7
+   ],
+   [
+    60,
+    2.1
+   ],
+   [
+    90,
+    1.6
+   ],
+   [
+    120,
+    1.9
+   ],
+   [
+    133,
+    0.7
+   ],
+   [
+    137,
+    0.05
+   ],
+   [
+    141,
+    0.05
+   ],
+   [
+    146,
+    0.7
+   ],
+   [
+    160,
+    1.9
+   ],
+   [
+    190,
+    2.3
+   ],
+   [
+    220,
+    2.6
+   ],
+   [
+    245,
+    2.85
+   ],
+   [
+    262,
+    2.9
+   ],
+   [
+    280,
+    2.7
+   ],
+   [
+    300,
+    2.3
+   ],
+   [
+    325,
+    1.9
+   ],
+   [
+    345,
+    1.5
+   ],
+   [
+    360,
+    1.1
+   ],
+   [
+    368,
+    0.4
+   ],
+   [
+    373,
+    0.15
+   ],
+   [
+    400,
+    0.08
+   ],
+   [
+    430,
+    0
+   ],
+   [
+    440,
+    -0.1
+   ],
+   [
+    455,
+    -0.6
+   ],
+   [
+    470,
+    -1.2
+   ],
+   [
+    479,
+    -1.8
+   ],
+   [
+    485,
+    -4.095
+   ],
+   [
+    491,
+    -1.9
+   ],
+   [
+    505,
+    -1.4
+   ],
+   [
+    520,
+    -1
+   ],
+   [
+    540,
+    -0.7
+   ],
+   [
+    568,
+    -0.4
+   ],
+   [
+    600,
+    -0.6
+   ],
+   [
+    630,
+    -0.3
+   ],
+   [
+    652,
+    -0.05
+   ],
+   [
+    700,
+    0
+   ],
+   [
+    716,
+    0.05
+   ],
+   [
+    740,
+    0.15
+   ],
+   [
+    770,
+    0.6
+   ],
+   [
+    790,
+    1.5
+   ],
+   [
+    810,
+    2.8
+   ],
+   [
+    833,
+    3.6
+   ]
+  ],
+  "facies": {
+   "WATER": {
+    "name": "Sea water",
+    "fill": "#0c2a4a"
+   },
+   "DRAPE": {
+    "name": "Neogene marine mud / turbidites",
+    "fill": "#3f4a5c"
+   },
+   "STAGE4": {
+    "name": "Stage IV deltaic–shelf clastics (post-DRU)",
+    "fill": "#a16207"
+   },
+   "TOE": {
+    "name": "Deepwater fold-thrust belt fill",
+    "fill": "#6b5a2e"
+   },
+   "CARB": {
+    "name": "Oligo–Miocene carbonate platforms",
+    "fill": "#0369a1"
+   },
+   "SYNRIFT": {
+    "name": "Paleogene syn-rift fill",
+    "fill": "#7c5a3a"
+   },
+   "CCRUST": {
+    "name": "Continental crust (Dangerous Grounds)",
+    "fill": "#57534e"
+   },
+   "PRISM": {
+    "name": "Rajang–Crocker accretionary prism",
+    "fill": "#4c3d63"
+   },
+   "MELANGE": {
+    "name": "Mélange + ophiolite slivers",
+    "fill": "#3b4a3a"
+   },
+   "CIRC": {
+    "name": "Neogene 'circular basin' remnants",
+    "fill": "#8a6f3a"
+   },
+   "SANDK": {
+    "name": "Sandakan delta (Sebahat–Ganduman)",
+    "fill": "#b45309"
+   },
+   "GRANITE": {
+    "name": "Kinabalu granite (7.85–7.22 Ma)",
+    "fill": "#db2777"
+   },
+   "OCEAN": {
+    "name": "Oceanic crust (Sulu Sea)",
+    "fill": "#1f3d3a"
+   },
+   "SABCRUST": {
+    "name": "Sabah lower crust (composition uncertain)",
+    "fill": "#3a3330"
+   },
+   "MANTLE": {
+    "name": "Lithospheric mantle",
+    "fill": "#1a1416"
+   },
+   "ASTH": {
+    "name": "Asthenosphere / upwelling",
+    "fill": "#4a1d12"
+   },
+   "MOBSH": {
+    "name": "Overpressured mobile shale",
+    "fill": "#334155"
+   },
+   "CANOPY": {
+    "name": "Mud canopy / mud-volcano complex",
+    "fill": "#94a3b8"
+   },
+   "BASALT": {
+    "name": "Possible intrusions (sills/dykes) — untested",
+    "fill": "#dc2626"
+   },
+   "SLAB": {
+    "name": "Subducted slab remnant",
+    "fill": "#0e7490"
+   }
+  },
+  "common": [
+   {
+    "f": "CCRUST",
+    "pts": [
+     [
+      0,
+      4
+     ],
+     [
+      25,
+      3.2
+     ],
+     [
+      42,
+      5.5
+     ],
+     [
+      70,
+      3
+     ],
+     [
+      88,
+      5.8
+     ],
+     [
+      112,
+      3.6
+     ],
+     [
+      139,
+      3
+     ],
+     [
+      152,
+      5.6
+     ],
+     [
+      172,
+      3.4
+     ],
+     [
+      188,
+      6.2
+     ],
+     [
+      215,
+      4.2
+     ],
+     [
+      235,
+      7
+     ],
+     [
+      262,
+      8
+     ],
+     [
+      262,
+      15
+     ],
+     [
+      0,
+      15
+     ]
+    ],
+    "tip": "Dangerous Grounds: rifted continental crust of the South China Sea margin, cut into tilted fault blocks (Hinz & Schlüter 1985)"
+   },
+   {
+    "f": "SYNRIFT",
+    "pts": [
+     [
+      0,
+      4
+     ],
+     [
+      25,
+      3.2
+     ],
+     [
+      42,
+      5.5
+     ],
+     [
+      70,
+      3
+     ],
+     [
+      88,
+      5.8
+     ],
+     [
+      112,
+      3.6
+     ],
+     [
+      139,
+      3
+     ],
+     [
+      152,
+      5.6
+     ],
+     [
+      172,
+      3.4
+     ],
+     [
+      188,
+      6.2
+     ],
+     [
+      215,
+      4.2
+     ],
+     [
+      235,
+      7
+     ],
+     [
+      262,
+      8
+     ],
+     [
+      262,
+      4.4
+     ],
+     [
+      235,
+      4.4
+     ],
+     [
+      215,
+      3.9
+     ],
+     [
+      188,
+      3.7
+     ],
+     [
+      172,
+      3.4
+     ],
+     [
+      152,
+      3.5
+     ],
+     [
+      139,
+      3
+     ],
+     [
+      112,
+      3.4
+     ],
+     [
+      88,
+      3.5
+     ],
+     [
+      70,
+      3
+     ],
+     [
+      42,
+      3.5
+     ],
+     [
+      25,
+      3.2
+     ]
+    ],
+    "tip": "Paleogene syn-rift half-graben fill"
+   },
+   {
+    "f": "DRAPE",
+    "pts": [
+     [
+      0,
+      2
+     ],
+     [
+      30,
+      1.7
+     ],
+     [
+      60,
+      2.1
+     ],
+     [
+      90,
+      1.6
+     ],
+     [
+      120,
+      1.9
+     ],
+     [
+      133,
+      0.7
+     ],
+     [
+      146,
+      0.7
+     ],
+     [
+      160,
+      1.9
+     ],
+     [
+      190,
+      2.3
+     ],
+     [
+      220,
+      2.6
+     ],
+     [
+      245,
+      2.85
+     ],
+     [
+      262,
+      2.9
+     ],
+     [
+      262,
+      4.4
+     ],
+     [
+      235,
+      4.4
+     ],
+     [
+      215,
+      3.9
+     ],
+     [
+      188,
+      3.7
+     ],
+     [
+      172,
+      3.4
+     ],
+     [
+      152,
+      3.5
+     ],
+     [
+      139,
+      3
+     ],
+     [
+      112,
+      3.4
+     ],
+     [
+      88,
+      3.5
+     ],
+     [
+      70,
+      3
+     ],
+     [
+      42,
+      3.5
+     ],
+     [
+      25,
+      3.2
+     ],
+     [
+      0,
+      4
+     ]
+    ],
+    "tip": "Post-breakup marine section and post-MMU hemipelagic drape over the Dangerous Grounds"
+   },
+   {
+    "f": "CARB",
+    "pts": [
+     [
+      18,
+      3.3
+     ],
+     [
+      33,
+      3.2
+     ],
+     [
+      30,
+      2.4
+     ],
+     [
+      21,
+      2.4
+     ]
+    ],
+    "tip": "Oligo–Miocene carbonate platform on a block crest; drowned at ~16 Ma (MMU)"
+   },
+   {
+    "f": "CARB",
+    "pts": [
+     [
+      62,
+      3.1
+     ],
+     [
+      78,
+      3.2
+     ],
+     [
+      75,
+      2.2
+     ],
+     [
+      66,
+      2.2
+     ]
+    ],
+    "tip": "Carbonate platform on a block crest"
+   },
+   {
+    "f": "CARB",
+    "pts": [
+     [
+      128,
+      3.25
+     ],
+     [
+      150,
+      3.45
+     ],
+     [
+      141,
+      0.05
+     ],
+     [
+      137,
+      0.05
+     ]
+    ],
+    "tip": "Layang-Layang atoll: a platform that kept pace with subsidence and still reaches sea level"
+   },
+   {
+    "f": "CARB",
+    "pts": [
+     [
+      165,
+      3.45
+     ],
+     [
+      180,
+      3.55
+     ],
+     [
+      176,
+      2.6
+     ],
+     [
+      168,
+      2.6
+     ]
+    ],
+    "tip": "Carbonate platform on a block crest"
+   },
+   {
+    "f": "CARB",
+    "pts": [
+     [
+      238,
+      4.5
+     ],
+     [
+      256,
+      4.6
+     ],
+     [
+      252,
+      3.6
+     ],
+     [
+      242,
+      3.6
+     ]
+    ],
+    "tip": "Tepat-type Oligo–Miocene carbonate buildup on the trough's NW flank (Tepat-1, public: TGS/EAGE 2026)"
+   },
+   {
+    "f": "DRAPE",
+    "pts": [
+     [
+      262,
+      2.9
+     ],
+     [
+      280,
+      2.7
+     ],
+     [
+      290,
+      2.55
+     ],
+     [
+      290,
+      5
+     ],
+     [
+      262,
+      4.4
+     ]
+    ],
+    "tip": "Sabah Trough fill: Neogene hemipelagic mud and distal turbidites"
+   },
+   {
+    "f": "TOE",
+    "pts": [
+     [
+      290,
+      2.55
+     ],
+     [
+      300,
+      2.3
+     ],
+     [
+      325,
+      1.9
+     ],
+     [
+      345,
+      1.5
+     ],
+     [
+      360,
+      1.1
+     ],
+     [
+      373,
+      0.15
+     ],
+     [
+      373,
+      6
+     ],
+     [
+      340,
+      5
+     ],
+     [
+      310,
+      4.9
+     ],
+     [
+      290,
+      5
+     ]
+    ],
+    "tip": "Outboard deepwater fold-thrust belt: post-DRU turbidites and mud folded above a shale décollement"
+   },
+   {
+    "f": "STAGE4",
+    "pts": [
+     [
+      373,
+      0.15
+     ],
+     [
+      400,
+      0.08
+     ],
+     [
+      430,
+      0
+     ],
+     [
+      432,
+      3
+     ],
+     [
+      415,
+      5.5
+     ],
+     [
+      390,
+      6.6
+     ],
+     [
+      373,
+      6
+     ]
+    ],
+    "tip": "Stage IV deltaic–shelf clastics: the producing reservoirs of the Kinabalu Basin, thickening into growth faults"
+   },
+   {
+    "f": "PRISM",
+    "pts": [
+     [
+      430,
+      0
+     ],
+     [
+      440,
+      -0.1
+     ],
+     [
+      455,
+      -0.6
+     ],
+     [
+      470,
+      -1.2
+     ],
+     [
+      479,
+      -1.8
+     ],
+     [
+      491,
+      -1.9
+     ],
+     [
+      505,
+      -1.4
+     ],
+     [
+      520,
+      -1
+     ],
+     [
+      540,
+      -0.7
+     ],
+     [
+      548,
+      3
+     ],
+     [
+      540,
+      15
+     ],
+     [
+      420,
+      15
+     ],
+     [
+      415,
+      8
+     ],
+     [
+      432,
+      3
+     ]
+    ],
+    "tip": "Rajang–Crocker accretionary prism: Eocene–Oligocene deep-marine turbidites, folded and thrust (Crocker Range)"
+   },
+   {
+    "f": "GRANITE",
+    "pts": [
+     [
+      475,
+      -1.5
+     ],
+     [
+      479,
+      -1.8
+     ],
+     [
+      485,
+      -4.095
+     ],
+     [
+      491,
+      -1.9
+     ],
+     [
+      496,
+      -1
+     ],
+     [
+      500,
+      3
+     ],
+     [
+      497,
+      8
+     ],
+     [
+      486,
+      9.5
+     ],
+     [
+      473,
+      8
+     ],
+     [
+      470,
+      3
+     ]
+    ],
+    "tip": "Kinabalu granite: emplaced 7.85–7.22 Ma (U-Pb zircon, Cottam et al. 2010); exhumed rapidly (Cottam et al. 2013)"
+   },
+   {
+    "f": "MELANGE",
+    "pts": [
+     [
+      540,
+      -0.7
+     ],
+     [
+      568,
+      -0.4
+     ],
+     [
+      600,
+      -0.6
+     ],
+     [
+      630,
+      -0.3
+     ],
+     [
+      652,
+      -0.05
+     ],
+     [
+      660,
+      0
+     ],
+     [
+      668,
+      2
+     ],
+     [
+      668,
+      4
+     ],
+     [
+      660,
+      15
+     ],
+     [
+      540,
+      15
+     ],
+     [
+      548,
+      3
+     ]
+    ],
+    "tip": "Central Sabah: Kuamut/Garinono mélange with ophiolite slivers (Telupid)"
+   },
+   {
+    "f": "CIRC",
+    "pts": [
+     [
+      575,
+      -0.45
+     ],
+     [
+      598,
+      -0.58
+     ],
+     [
+      594,
+      1.8
+     ],
+     [
+      580,
+      1.8
+     ]
+    ],
+    "tip": "Circular-basin remnant (Tanjong/Kapilit deltaics), preserved in a syncline (Balaguru et al. 2003)"
+   },
+   {
+    "f": "SANDK",
+    "pts": [
+     [
+      652,
+      -0.05
+     ],
+     [
+      700,
+      0
+     ],
+     [
+      716,
+      0.05
+     ],
+     [
+      740,
+      0.15
+     ],
+     [
+      770,
+      0.6
+     ],
+     [
+      790,
+      1.5
+     ],
+     [
+      790,
+      7
+     ],
+     [
+      740,
+      6.5
+     ],
+     [
+      700,
+      4.5
+     ],
+     [
+      668,
+      2
+     ],
+     [
+      660,
+      0
+     ]
+    ],
+    "tip": "Sandakan Basin: Middle–Late Miocene to Recent deltaic clinoforms prograding NE into the Sulu Sea (Madon & Jong 2022)"
+   },
+   {
+    "f": "MELANGE",
+    "pts": [
+     [
+      668,
+      2
+     ],
+     [
+      700,
+      4.5
+     ],
+     [
+      740,
+      6.5
+     ],
+     [
+      790,
+      7
+     ],
+     [
+      790,
+      15
+     ],
+     [
+      660,
+      15
+     ],
+     [
+      668,
+      4
+     ]
+    ],
+    "tip": "Basement under the Sandakan Basin: mélange / ophiolite (uncertain)"
+   },
+   {
+    "f": "DRAPE",
+    "pts": [
+     [
+      790,
+      1.5
+     ],
+     [
+      810,
+      2.8
+     ],
+     [
+      833,
+      3.6
+     ],
+     [
+      833,
+      5.2
+     ],
+     [
+      790,
+      4
+     ]
+    ],
+    "tip": "Sulu Sea sediment cover"
+   },
+   {
+    "f": "OCEAN",
+    "pts": [
+     [
+      790,
+      4
+     ],
+     [
+      833,
+      5.2
+     ],
+     [
+      833,
+      11.5
+     ],
+     [
+      790,
+      10.5
+     ]
+    ],
+    "tip": "Sulu Sea oceanic crust: back-arc basin opened in the Early–Middle Miocene (Rangin & Silver 1991)"
+   },
+   {
+    "f": "MELANGE",
+    "pts": [
+     [
+      790,
+      7
+     ],
+     [
+      790,
+      15
+     ],
+     [
+      833,
+      15
+     ],
+     [
+      833,
+      11.5
+     ],
+     [
+      790,
+      10.5
+     ]
+    ],
+    "tip": "Continent–ocean transition (schematic)"
+   }
+  ],
+  "lines": [
+   {
+    "id": "MMU",
+    "c": "#2dd4bf",
+    "w": 1.6,
+    "wavy": true,
+    "pts": [
+     [
+      0,
+      2.7
+     ],
+     [
+      60,
+      2.75
+     ],
+     [
+      120,
+      2.6
+     ],
+     [
+      200,
+      3
+     ],
+     [
+      240,
+      3.8
+     ],
+     [
+      262,
+      4.4
+     ]
+    ],
+    "lab": "RU/MMU ~16 Ma",
+    "tip": "End of South China Sea spreading; drowning of Dangerous Grounds platforms"
+   },
+   {
+    "id": "DRU",
+    "c": "#fbbf24",
+    "w": 1.8,
+    "wavy": true,
+    "pts": [
+     [
+      262,
+      4.4
+     ],
+     [
+      290,
+      5
+     ],
+     [
+      340,
+      5
+     ],
+     [
+      373,
+      6
+     ],
+     [
+      390,
+      6.6
+     ],
+     [
+      415,
+      5.5
+     ],
+     [
+      432,
+      3
+     ]
+    ],
+    "lab": "DRU ~15.5 Ma",
+    "tip": "Deep Regional Unconformity (Middle Miocene). Published charts ~15.5 Ma (Hazebroek & Tan 1993); GEOX surface calibration ~14.2 Ma (NN5 biostrat; see event strip). Firm: the separation from the BMU. Not firm: the absolute pick"
+   },
+   {
+    "id": "SRU",
+    "c": "#f87171",
+    "w": 1.8,
+    "wavy": true,
+    "pts": [
+     [
+      345,
+      3
+     ],
+     [
+      373,
+      2.6
+     ],
+     [
+      400,
+      2.2
+     ],
+     [
+      430,
+      1
+     ]
+    ],
+    "lab": "SRU ~8–9.5 Ma",
+    "tip": "Shallow Regional Unconformity (Late Miocene inversion). Published ages range ~8.5–9.5 Ma depending on calibration; GEOX matches it to Haq & Ogg 2024 NgSB13 @8.5 Ma"
+   },
+   {
+    "id": "MOHO",
+    "c": "#e2e8f0",
+    "w": 1.2,
+    "dash": "6 4",
+    "pts": [
+     [
+      0,
+      25
+     ],
+     [
+      150,
+      22
+     ],
+     [
+      230,
+      18
+     ]
+    ],
+    "lab": "Moho",
+    "tip": "Moho under thinned continental crust (approximate)"
+   },
+   {
+    "id": "MOHO2",
+    "c": "#e2e8f0",
+    "w": 1.2,
+    "dash": "6 4",
+    "pts": [
+     [
+      540,
+      32
+     ],
+     [
+      650,
+      28
+     ],
+     [
+      740,
+      24
+     ],
+     [
+      790,
+      16
+     ],
+     [
+      833,
+      11.5
+     ]
+    ],
+    "lab": "",
+    "tip": "Moho beneath Central and East Sabah (approximate), shallowing to Sulu Sea oceanic crust"
+   }
+  ],
+  "faults": [
+   {
+    "pts": [
+     [
+      300,
+      2.3
+     ],
+     [
+      318,
+      4.9
+     ]
+    ],
+    "k": "thrust"
+   },
+   {
+    "pts": [
+     [
+      322,
+      1.95
+     ],
+     [
+      340,
+      5
+     ]
+    ],
+    "k": "thrust"
+   },
+   {
+    "pts": [
+     [
+      345,
+      1.5
+     ],
+     [
+      362,
+      5.1
+     ]
+    ],
+    "k": "thrust"
+   },
+   {
+    "pts": [
+     [
+      392,
+      0.07
+     ],
+     [
+      386,
+      3.5
+     ],
+     [
+      381,
+      6.2
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      415,
+      0.03
+     ],
+     [
+      409,
+      3
+     ],
+     [
+      404,
+      6.2
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      42,
+      3.5
+     ],
+     [
+      43,
+      9
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      88,
+      3.5
+     ],
+     [
+      89,
+      9
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      152,
+      3.5
+     ],
+     [
+      153,
+      9
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      188,
+      3.7
+     ],
+     [
+      189,
+      9.5
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      235,
+      4.4
+     ],
+     [
+      236,
+      10
+     ]
+    ],
+    "k": "normal"
+   },
+   {
+    "pts": [
+     [
+      548,
+      3
+     ],
+     [
+      555,
+      10
+     ]
+    ],
+    "k": "thrust"
+   },
+   {
+    "pts": [
+     [
+      668,
+      4
+     ],
+     [
+      675,
+      11
+     ]
+    ],
+    "k": "strike"
+   }
+  ]
+ },
+ "SUBDRU": [
+  [
+   262,
+   4.4
+  ],
+  [
+   290,
+   5
+  ],
+  [
+   340,
+   5
+  ],
+  [
+   373,
+   6
+  ],
+  [
+   390,
+   6.6
+  ],
+  [
+   415,
+   5.5
+  ],
+  [
+   432,
+   3
+  ],
+  [
+   415,
+   8
+  ],
+  [
+   420,
+   15
+  ],
+  [
+   262,
+   15
+  ],
+  [
+   262,
+   8
+  ]
+ ],
+ "SHARED_EVENTS": [
+  {
+   "a": 32,
+   "b": 16,
+   "lab": "South China Sea spreading",
+   "tip": "~32–16 Ma (Briais et al. 1993; Li et al. 2014)"
+  },
+  {
+   "a": 23,
+   "b": 20,
+   "lab": "BMU · Sabah deformation",
+   "tip": "Early Miocene uplift and erosion (Balaguru & Hall 2009). GEOX: matches global sequence boundary NgSB1 @23.0 Ma (Haq & Ogg 2024)"
+  },
+  {
+   "a": 20,
+   "b": 15,
+   "lab": "Sulu Sea back-arc opening",
+   "tip": "Early–Middle Miocene (Rangin & Silver 1991)"
+  },
+  {
+   "a": 15.5,
+   "b": 15.5,
+   "lab": "DRU",
+   "tip": "Deep Regional Unconformity. Published charts ~15.5 Ma (Hazebroek & Tan 1993); GEOX surface calibration ~14.2 Ma (NN5 biostrat). The slab-breakoff uplift event ~13–12 Ma (Morley 2024) is younger than the surface. Firm: the separation from the BMU. Not firm: the absolute pick"
+  },
+  {
+   "a": 10.5,
+   "b": 10.5,
+   "lab": "UIU",
+   "tip": "Upper intra-Miocene Unconformity ~10.5 Ma — end of the pocket-basin phase (GEOX correlation; Haq & Ogg 2024 NgSB11)"
+  },
+  {
+   "a": 9.5,
+   "b": 8.5,
+   "lab": "SRU",
+   "tip": "Shallow Regional Unconformity, ~9.5–8.5 Ma depending on calibration; GEOX matches it to Haq & Ogg 2024 NgSB13 @8.5 Ma"
+  },
+  {
+   "a": 7.85,
+   "b": 7.22,
+   "lab": "Kinabalu granite",
+   "tip": "U-Pb zircon 7.85–7.22 Ma (Cottam et al. 2010)"
+  },
+  {
+   "a": 0,
+   "b": 0,
+   "lab": "Ranau 2015 · normal faulting",
+   "tip": "Mw 6.0 shallow normal (oblique) fault near Ranau — a local present-day extension constraint, not a whole-margin verdict"
+  }
+ ],
+ "MODELS": [
+  {
+   "id": "A",
+   "color": "#f43f5e",
+   "key": "A · rift-axis intrusions?",
+   "title": "Failed-rift axis + possible transtensional intrusions",
+   "short": "Sparse intrusions may exploit an inherited thinned axis — no push claimed",
+   "who": "Working hypothesis · Arif Fazil · 2026",
+   "status": "UNTESTED WORKING HYPOTHESIS",
+   "thesis": "An inherited zone of thinned crust runs along the Sabah Trough; potential-field work suggests crustal thinning beneath the trough axis predating basin fill. If that axis carried any magmatism, it would most plausibly be sparse sills and dykes fed by transtensional reactivation of inherited faults — not a spreading ridge. Whether such intrusions exist is untested; the deep oil-beneath-gas maturation question is the practical reason to look.",
+   "mechanism": "No plate-driving push is claimed. Candidate mechanism: localised melting or fluid migration along reactivated rift faults and transfer zones; slab-window or flexural-hinge sources remain possible but unproven.",
+   "timing": "Not yet constrained. Two windows to test: (1) Oligocene–Early Miocene, at the end of rifting; (2) Middle–Late Miocene, coeval with DRU–SRU deformation.",
+   "strengths": "Would provide a local heat source relevant to the deep oil beneath gas; would tie any dated intrusions along the trough into one testable body class. It is not offered as an explanation of the regional deformation budget.",
+   "problems": "No published magnetic lineation (a weak test at this latitude — low-latitude magnetics need analytic-signal / RTE treatment), no dated basalt, and no published heat-flow high on the trough axis (present-day heat flow is the wrong clock anyway — see the matrix). Published potential-field work reports a gravity low along the axis with inferred crustal thinning; any intrusion configuration must fit that field with a proper forward model, not a slab approximation. High-velocity bodies offshore are non-unique (carbonate or older Crocker blocks are alternatives). Detectability of small sills at regional-grid resolution has not yet been assessed. Tepat-1 proves the carbonate alternative class exists in the region (Oligo–Miocene carbonate, Layang-Layang province; Atlas 2024) — a different province, so not standalone proof about Kinabalu bodies, but a high-velocity body is not proof of intrusion.",
+   "kill": "Reject only a parameterised intrusion configuration whose required bodies are excluded by adequately resolved seismic and potential-field coverage; insufficient coverage yields INCONCLUSIVE. A configuration that fits the potential field is PERMITTED, not proven — potential-field solutions are non-unique; call it real only with a second independent line (local Ro/Tmax spikes, or sills imaged in 3D seismic). Finding no intrusions would not by itself prove burial-only maturation; finding intrusions would not by itself prove a slab-window origin.",
+   "refs": [
+    "TS02"
+   ],
+   "bodies": [
+    {
+     "f": "MOBSH",
+     "pts": [
+      [
+       262,
+       4.4
+      ],
+      [
+       290,
+       5
+      ],
+      [
+       340,
+       5
+      ],
+      [
+       373,
+       6
+      ],
+      [
+       390,
+       6.6
+      ],
+      [
+       415,
+       5.5
+      ],
+      [
+       432,
+       3
+      ],
+      [
+       415,
+       8
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       262,
+       15
+      ],
+      [
+       262,
+       8
+      ]
+     ],
+     "tip": "Stage II–III wedge (North Sabah–Pagasa Wedge) beneath the DRU"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       0,
+       15
+      ],
+      [
+       251,
+       15
+      ],
+      [
+       249,
+       17.5
+      ],
+      [
+       230,
+       18
+      ],
+      [
+       150,
+       22
+      ],
+      [
+       0,
+       25
+      ]
+     ],
+     "tip": "Thinned continental crust (possible inherited rift axis — untested)"
+    },
+    {
+     "f": "SABCRUST",
+     "pts": [
+      [
+       274,
+       15
+      ],
+      [
+       790,
+       15
+      ],
+      [
+       790,
+       16
+      ],
+      [
+       740,
+       24
+      ],
+      [
+       650,
+       28
+      ],
+      [
+       540,
+       32
+      ],
+      [
+       430,
+       30
+      ],
+      [
+       300,
+       22
+      ],
+      [
+       277,
+       21
+      ]
+     ],
+     "tip": "Sabah crust"
+    },
+    {
+     "f": "BASALT",
+     "pts": [
+      [
+       252,
+       7.9
+      ],
+      [
+       272,
+       8
+      ],
+      [
+       271,
+       8.3
+      ],
+      [
+       252,
+       8.25
+      ]
+     ],
+     "tip": "Possible sill (untested) — size, depth and existence unconstrained"
+    },
+    {
+     "f": "BASALT",
+     "pts": [
+      [
+       262,
+       9.2
+      ],
+      [
+       276,
+       9.3
+      ],
+      [
+       275,
+       9.55
+      ],
+      [
+       262,
+       9.5
+      ]
+     ],
+     "tip": "Possible sill (untested) — size, depth and existence unconstrained"
+    },
+    {
+     "f": "BASALT",
+     "pts": [
+      [
+       263,
+       8.3
+      ],
+      [
+       265,
+       8.3
+      ],
+      [
+       265,
+       12.5
+      ],
+      [
+       263,
+       12.5
+      ]
+     ],
+     "tip": "Possible melt pathway along reactivated fault (untested)"
+    }
+   ],
+   "arrows": [
+    {
+     "from": [
+      264,
+      12.2
+     ],
+     "to": [
+      264,
+      8.6
+     ],
+     "lab": "possible melt pathway",
+     "c": "#fb923c"
+    }
+   ],
+   "labels": [
+    {
+     "x": 262,
+     "y": 11.6,
+     "t": "possible intrusions (untested)?",
+     "c": "#fecaca"
+    }
+   ],
+   "events": [
+    {
+     "a": 30,
+     "b": 20,
+     "lab": "Intrusions? · window 1 (test)",
+     "dash": true,
+     "tip": "Oligocene–Early Miocene magmatism along the trough axis"
+    },
+    {
+     "a": 16,
+     "b": 8,
+     "lab": "Intrusions? · window 2 (test)",
+     "dash": true,
+     "tip": "Middle–Late Miocene intrusions? coeval with DRU–SRU deformation"
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "color": "#a78bfa",
+   "key": "Model B · Morley et al. 2023",
+   "title": "Miocene mud canopy (NSPW)",
+   "short": "The wedge is mobile shale, loaded and vented",
+   "who": "Morley et al. (2023) · Geosphere 19(1): 291 · 3D seismic + wells",
+   "status": "PUBLISHED",
+   "thesis": "The North Sabah–Pagasa Wedge is not mainly an accretionary wedge. After collision it was a body of overpressured shale, loaded by up to ~4 km of clastics in mini-basins. A short burst of mud volcanism then built a submarine mud canopy: about 50 mud-volcano centres, each 4–80 km², with ~1,900 km² of dense canopy — the largest and most complex such system described.",
+   "mechanism": "Differential sedimentary loading of overpressured shale → shale mobility, mud pipes, chambers and volcanoes.",
+   "timing": "Middle Miocene, after collision.",
+   "strengths": "Built on 3D seismic and wells. Explains chaotic seismic facies, mini-basins and vent complexes in the outboard without invoking stacked thrust sheets.",
+   "problems": "Explains the wedge's internal structure, not the plate-scale driver: it still needs one of A, C or D underneath. Canopy level must be reconciled with the DRU age.",
+   "kill": "Wells through 'canopy' facies that prove in-situ accreted strata rather than extruded mud → reject for that area.",
+   "refs": [
+    "MOR23"
+   ],
+   "bodies": [
+    {
+     "f": "MOBSH",
+     "pts": [
+      [
+       262,
+       4.4
+      ],
+      [
+       290,
+       5
+      ],
+      [
+       340,
+       5
+      ],
+      [
+       373,
+       6
+      ],
+      [
+       390,
+       6.6
+      ],
+      [
+       415,
+       5.5
+      ],
+      [
+       432,
+       3
+      ],
+      [
+       415,
+       8
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       262,
+       15
+      ],
+      [
+       262,
+       8
+      ]
+     ],
+     "tip": "Overpressured post-collisional shale (North Sabah–Pagasa Wedge)"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       262,
+       8
+      ],
+      [
+       330,
+       12.5
+      ],
+      [
+       345,
+       15
+      ],
+      [
+       262,
+       15
+      ]
+     ],
+     "tip": "Dangerous Grounds crust beneath the wedge"
+    },
+    {
+     "f": "TOE",
+     "pts": [
+      [
+       292,
+       5
+      ],
+      [
+       312,
+       5
+      ],
+      [
+       303,
+       9.2
+      ]
+     ],
+     "tip": "Mini-basin: up to ~4 km of clastics loading the shale"
+    },
+    {
+     "f": "TOE",
+     "pts": [
+      [
+       330,
+       5
+      ],
+      [
+       358,
+       5.6
+      ],
+      [
+       344,
+       9.6
+      ]
+     ],
+     "tip": "Mini-basin: up to ~4 km of clastics loading the shale"
+    },
+    {
+     "f": "CANOPY",
+     "pts": [
+      [
+       316,
+       10.5
+      ],
+      [
+       320,
+       10.5
+      ],
+      [
+       320.5,
+       5
+      ],
+      [
+       315.5,
+       5
+      ]
+     ],
+     "tip": "Mud pipe feeding the canopy"
+    },
+    {
+     "f": "CANOPY",
+     "pts": [
+      [
+       362,
+       11
+      ],
+      [
+       366,
+       11
+      ],
+      [
+       366.5,
+       6
+      ],
+      [
+       361.5,
+       6
+      ]
+     ],
+     "tip": "Mud pipe feeding the canopy"
+    },
+    {
+     "f": "CANOPY",
+     "pts": [
+      [
+       298,
+       4.75
+      ],
+      [
+       340,
+       4.75
+      ],
+      [
+       338,
+       5.05
+      ],
+      [
+       300,
+       5.1
+      ]
+     ],
+     "tip": "Mud canopy: ~50 vent centres, ~1,900 km² (Morley et al. 2023)"
+    },
+    {
+     "f": "CANOPY",
+     "pts": [
+      [
+       348,
+       5.45
+      ],
+      [
+       384,
+       6.25
+      ],
+      [
+       381,
+       6.55
+      ],
+      [
+       350,
+       5.8
+      ]
+     ],
+     "tip": "Mud canopy sheet"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       0,
+       15
+      ],
+      [
+       345,
+       15
+      ],
+      [
+       420,
+       22
+      ],
+      [
+       420,
+       26
+      ],
+      [
+       300,
+       22
+      ],
+      [
+       230,
+       18
+      ],
+      [
+       150,
+       22
+      ],
+      [
+       0,
+       25
+      ]
+     ],
+     "tip": "Continental crust"
+    },
+    {
+     "f": "SABCRUST",
+     "pts": [
+      [
+       345,
+       15
+      ],
+      [
+       790,
+       15
+      ],
+      [
+       790,
+       16
+      ],
+      [
+       740,
+       24
+      ],
+      [
+       650,
+       28
+      ],
+      [
+       540,
+       32
+      ],
+      [
+       430,
+       30
+      ],
+      [
+       420,
+       26
+      ],
+      [
+       420,
+       22
+      ]
+     ],
+     "tip": "Sabah crust"
+    }
+   ],
+   "arrows": [
+    {
+     "from": [
+      318,
+      10
+     ],
+     "to": [
+      318,
+      6
+     ],
+     "lab": "mud rises",
+     "c": "#c4b5fd"
+    },
+    {
+     "from": [
+      344,
+      3.6
+     ],
+     "to": [
+      344,
+      6.4
+     ],
+     "lab": "load",
+     "c": "#fbbf24"
+    }
+   ],
+   "labels": [
+    {
+     "x": 330,
+     "y": 12.6,
+     "t": "overpressured shale",
+     "c": "#cbd5e1"
+    }
+   ],
+   "events": [
+    {
+     "a": 16,
+     "b": 12,
+     "lab": "Mini-basin loading",
+     "tip": "Up to ~4 km of clastics on overpressured shale"
+    },
+    {
+     "a": 14,
+     "b": 12,
+     "lab": "Mud-volcano burst · canopy",
+     "tip": "Short Middle Miocene burst (Morley et al. 2023)"
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "color": "#38bdf8",
+   "key": "Model C · classic",
+   "title": "Continental underthrusting",
+   "short": "Dangerous Grounds crust dives under Sabah",
+   "who": "Hinz et al. (1989); Hazebroek & Tan (1993); Hutchison (2005)",
+   "status": "CLASSIC",
+   "thesis": "As the proto-South China Sea closed, Dangerous Grounds continental crust was carried south-east beneath NW Borneo. The Sabah Trough is the flexural foredeep, or remnant trench, on the down-going plate; the North Sabah–Pagasa Wedge is an accretionary thrust wedge; the DRU records the collision.",
+   "mechanism": "Plate convergence and crustal underthrusting; flexural loading of the lower plate.",
+   "timing": "Early to Middle Miocene collision; flexural loading continues.",
+   "strengths": "Explains the deep, narrow trough, its flexural normal faults, the imbricate thrusts on older 2D seismic and the regional DRU.",
+   "problems": "Spreading ended ~16 Ma, yet shortening continues to the present; much young shortening is linked to delta loading. 3D seismic shows mobile shale where this model draws thrust sheets (B). GEOX note: the DRU surface (~14.2 Ma, NN5) matches the MMCT global lowstand NgSB8 (14.0 Ma, Haq & Ogg 2024); the Morley (2024) slab-breakoff event (~13–12 Ma) is younger than the surface. A surface carrying a eustatic signal is not by itself a collision surface.",
+   "kill": "Deep seismic or receiver functions show no Dangerous Grounds crust beneath the shelf → reject.",
+   "refs": [
+    "HIN89",
+    "HT93",
+    "HUT05"
+   ],
+   "bodies": [
+    {
+     "f": "PRISM",
+     "pts": [
+      [
+       262,
+       4.4
+      ],
+      [
+       290,
+       5
+      ],
+      [
+       340,
+       5
+      ],
+      [
+       373,
+       6
+      ],
+      [
+       390,
+       6.6
+      ],
+      [
+       415,
+       5.5
+      ],
+      [
+       432,
+       3
+      ],
+      [
+       415,
+       8
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       262,
+       15
+      ],
+      [
+       262,
+       8
+      ]
+     ],
+     "tip": "North Sabah–Pagasa Wedge as an accretionary thrust wedge (Stage II–III)"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       262,
+       8
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       262,
+       15
+      ]
+     ],
+     "tip": "Dangerous Grounds crust underthrust beneath the wedge"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       0,
+       15
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       520,
+       22
+      ],
+      [
+       600,
+       30
+      ],
+      [
+       600,
+       36
+      ],
+      [
+       430,
+       32
+      ],
+      [
+       300,
+       24
+      ],
+      [
+       230,
+       18
+      ],
+      [
+       150,
+       22
+      ],
+      [
+       0,
+       25
+      ]
+     ],
+     "tip": "Underthrust continental crust"
+    },
+    {
+     "f": "SABCRUST",
+     "pts": [
+      [
+       420,
+       15
+      ],
+      [
+       790,
+       15
+      ],
+      [
+       790,
+       16
+      ],
+      [
+       740,
+       24
+      ],
+      [
+       650,
+       28
+      ],
+      [
+       600,
+       30
+      ],
+      [
+       520,
+       22
+      ]
+     ],
+     "tip": "Sabah crust (upper plate)"
+    }
+   ],
+   "faultsExtra": [
+    {
+     "pts": [
+      [
+       290,
+       5
+      ],
+      [
+       320,
+       9.8
+      ]
+     ],
+     "k": "thrust"
+    },
+    {
+     "pts": [
+      [
+       330,
+       5
+      ],
+      [
+       365,
+       11.5
+      ]
+     ],
+     "k": "thrust"
+    },
+    {
+     "pts": [
+      [
+       372,
+       6
+      ],
+      [
+       405,
+       13.5
+      ]
+     ],
+     "k": "thrust"
+    },
+    {
+     "pts": [
+      [
+       262,
+       8
+      ],
+      [
+       420,
+       15
+      ]
+     ],
+     "k": "detach"
+    }
+   ],
+   "arrows": [
+    {
+     "from": [
+      80,
+      21
+     ],
+     "to": [
+      190,
+      20
+     ],
+     "lab": "underthrusting",
+     "c": "#38bdf8"
+    },
+    {
+     "from": [
+      520,
+      24
+     ],
+     "to": [
+      560,
+      28
+     ],
+     "lab": "",
+     "c": "#38bdf8"
+    }
+   ],
+   "labels": [
+    {
+     "x": 345,
+     "y": 13.4,
+     "t": "thrust wedge",
+     "c": "#bae6fd"
+    }
+   ],
+   "events": [
+    {
+     "a": 22,
+     "b": 15,
+     "lab": "DG crust underthrusts Sabah",
+     "tip": "Collision and underthrusting"
+    },
+    {
+     "a": 15,
+     "b": 0,
+     "lab": "Flexural foredeep loading",
+     "tip": "Sabah Trough loaded by the advancing wedge"
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "color": "#34d399",
+   "key": "Model D · post-subduction",
+   "title": "Slab remnant + gravity tectonics",
+   "short": "Mantle lifts the mountains, gravity moves the delta",
+   "who": "Hall (2013); Cottam et al. (2010, 2013); King et al. (2010); Cornwell et al. (2025)",
+   "status": "PUBLISHED",
+   "thesis": "Subduction stopped in the Early Miocene, but a detached slab remnant still sits 45–55 km beneath Sabah. Post-subduction mantle flow and rollback of the Celebes Sea slab to the south-east drive uplift (Crocker Range, Kinabalu granite) and extension. The eroding mountains feed deltas whose weight drives shelf extension linked, through a shale detachment, to outboard toe-thrusts.",
+   "mechanism": "Vertical mantle forces + rollback-driven extension + gravitational collapse of the delta wedge.",
+   "timing": "Early Miocene end of subduction; Late Miocene to present uplift, granite and gravity tectonics.",
+   "strengths": "Explains the slab image at 45–55 km, granite timing and fast exhumation, and the kinematic link between growth faults and toe-thrusts.",
+   "problems": "Gravity alone may not balance all outboard shortening (King et al. 2010 separate plate-scale and gravitational parts); the timing of Celebes Sea rollback is debated.",
+   "kill": "Outboard shortening far exceeds shelf extension with no detachment linkage → a plate-scale push (A or C) is needed.",
+   "refs": [
+    "HALL13",
+    "COT10",
+    "COT13",
+    "KING10",
+    "COR25"
+   ],
+   "bodies": [
+    {
+     "f": "MOBSH",
+     "pts": [
+      [
+       262,
+       4.4
+      ],
+      [
+       290,
+       5
+      ],
+      [
+       340,
+       5
+      ],
+      [
+       373,
+       6
+      ],
+      [
+       390,
+       6.6
+      ],
+      [
+       415,
+       5.5
+      ],
+      [
+       432,
+       3
+      ],
+      [
+       415,
+       8
+      ],
+      [
+       420,
+       15
+      ],
+      [
+       262,
+       15
+      ],
+      [
+       262,
+       8
+      ]
+     ],
+     "tip": "Overpressured shale: the detachment level linking shelf extension to toe-thrusts"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       262,
+       8
+      ],
+      [
+       300,
+       10.5
+      ],
+      [
+       380,
+       15
+      ],
+      [
+       262,
+       15
+      ]
+     ],
+     "tip": "Dangerous Grounds crust (former lower plate)"
+    },
+    {
+     "f": "CCRUST",
+     "pts": [
+      [
+       0,
+       15
+      ],
+      [
+       380,
+       15
+      ],
+      [
+       380,
+       24
+      ],
+      [
+       300,
+       22
+      ],
+      [
+       230,
+       18
+      ],
+      [
+       150,
+       22
+      ],
+      [
+       0,
+       25
+      ]
+     ],
+     "tip": "Continental crust"
+    },
+    {
+     "f": "SABCRUST",
+     "pts": [
+      [
+       380,
+       15
+      ],
+      [
+       790,
+       15
+      ],
+      [
+       790,
+       16
+      ],
+      [
+       740,
+       24
+      ],
+      [
+       650,
+       28
+      ],
+      [
+       540,
+       33
+      ],
+      [
+       430,
+       31
+      ],
+      [
+       380,
+       24
+      ]
+     ],
+     "tip": "Sabah crust"
+    },
+    {
+     "f": "SLAB",
+     "pts": [
+      [
+       430,
+       45
+      ],
+      [
+       520,
+       47
+      ],
+      [
+       575,
+       52
+      ],
+      [
+       600,
+       57
+      ],
+      [
+       588,
+       59
+      ],
+      [
+       560,
+       55
+      ],
+      [
+       510,
+       51
+      ],
+      [
+       428,
+       49
+      ]
+     ],
+     "tip": "Gently west-dipping discontinuity at 45–55 km, interpreted as a detached slab remnant and associated there with Celebes Sea subduction (Cornwell et al. 2025) — interpretation, not a measured slab"
+    },
+    {
+     "f": "ASTH",
+     "pts": [
+      [
+       425,
+       60
+      ],
+      [
+       450,
+       44
+      ],
+      [
+       470,
+       38
+      ],
+      [
+       485,
+       35
+      ],
+      [
+       500,
+       38
+      ],
+      [
+       520,
+       44
+      ],
+      [
+       545,
+       60
+      ]
+     ],
+     "tip": "Post-subduction mantle upwelling beneath the Crocker Range"
+    }
+   ],
+   "faultsExtra": [
+    {
+     "pts": [
+      [
+       292,
+       5.1
+      ],
+      [
+       330,
+       5.5
+      ],
+      [
+       373,
+       6.2
+      ],
+      [
+       404,
+       6.2
+      ]
+     ],
+     "k": "detach"
+    },
+    {
+     "pts": [
+      [
+       700,
+       0
+      ],
+      [
+       706,
+       4.5
+      ]
+     ],
+     "k": "normal"
+    },
+    {
+     "pts": [
+      [
+       745,
+       0.18
+      ],
+      [
+       752,
+       6.4
+      ]
+     ],
+     "k": "normal"
+    }
+   ],
+   "arrows": [
+    {
+     "from": [
+      485,
+      36
+     ],
+     "to": [
+      485,
+      24
+     ],
+     "lab": "uplift",
+     "c": "#34d399"
+    },
+    {
+     "from": [
+      412,
+      1.6
+     ],
+     "to": [
+      430,
+      1.6
+     ],
+     "lab": "",
+     "c": "#fbbf24"
+    },
+    {
+     "from": [
+      398,
+      1.6
+     ],
+     "to": [
+      380,
+      1.6
+     ],
+     "lab": "extension",
+     "c": "#fbbf24"
+    },
+    {
+     "from": [
+      300,
+      3.2
+     ],
+     "to": [
+      318,
+      3.2
+     ],
+     "lab": "",
+     "c": "#fbbf24"
+    },
+    {
+     "from": [
+      338,
+      3.2
+     ],
+     "to": [
+      320,
+      3.2
+     ],
+     "lab": "shortening",
+     "c": "#fbbf24"
+    },
+    {
+     "from": [
+      690,
+      42
+     ],
+     "to": [
+      780,
+      42
+     ],
+     "lab": "Celebes slab rollback →",
+     "c": "#34d399"
+    }
+   ],
+   "labels": [
+    {
+     "x": 515,
+     "y": 53,
+     "t": "slab remnant",
+     "c": "#a5f3fc"
+    }
+   ],
+   "events": [
+    {
+     "a": 21,
+     "b": 18,
+     "lab": "Subduction ends · slab detachment timing unresolved",
+     "tip": "End of subduction Early Miocene (Hall 2013); when any slab detached is not constrained by the cited imaging"
+    },
+    {
+     "a": 15,
+     "b": 0,
+     "lab": "Rollback-driven extension (debated)",
+     "dash": true,
+     "tip": "Hall (2013)"
+    },
+    {
+     "a": 9,
+     "b": 0,
+     "lab": "Delta loading → toe-thrusts",
+     "tip": "Gravity-driven, linked by shale detachment"
+    }
+   ]
+  }
+ ],
+ "MATRIX": [
+  {
+   "q": "Corrected magnetic signature (analytic signal / reduction-to-the-equator) + gravity high along the trough axis (Tepat-1 strike line) — raw TMI highs are the wrong criterion at this latitude",
+   "p": {
+    "A": "y",
+    "B": "u",
+    "C": "n",
+    "D": "u"
+   },
+   "obs": "open"
+  },
+  {
+   "q": "Dated basalt / dolerite in trough-flank wells",
+   "p": {
+    "A": "y",
+    "B": "u",
+    "C": "u",
+    "D": "u"
+   },
+   "obs": "open"
+  },
+  {
+   "q": "Sills, saucer intrusions, hydrothermal vents in trough fill (3D seismic)",
+   "p": {
+    "A": "y",
+    "B": "u",
+    "C": "n",
+    "D": "u"
+   },
+   "obs": "open"
+  },
+  {
+   "q": "Local paleo-thermal spikes (Ro / Tmax) on or below the trough axis — present-day heat flow is a weak test: an old intrusion leaves a maturity anomaly after its heat anomaly is gone",
+   "p": {
+    "A": "y",
+    "B": "u",
+    "C": "n",
+    "D": "u"
+   },
+   "obs": "open"
+  },
+  {
+   "q": "3D-seismic pipes/chambers/mini-basins at Middle Miocene level (interpreted as mobile shale)",
+   "p": {
+    "A": "u",
+    "B": "y",
+    "C": "n",
+    "D": "u"
+   },
+   "obs": "done",
+   "src": "Morley et al. 2023"
+  },
+  {
+   "q": "Outboard shortening exceeds shelf extension",
+   "p": {
+    "A": "y",
+    "B": "u",
+    "C": "y",
+    "D": "n"
+   },
+   "obs": "open",
+   "src": "contested; King et al. 2010"
+  },
+  {
+   "q": "West-dipping discontinuity at 45–55 km (interpreted as detached slab remnant)",
+   "p": {
+    "A": "u",
+    "B": "u",
+    "C": "y",
+    "D": "y"
+   },
+   "obs": "done",
+   "src": "Cornwell et al. 2025"
+  },
+  {
+   "q": "Granite 7.85–7.22 Ma with rapid exhumation",
+   "p": {
+    "A": "u",
+    "B": "u",
+    "C": "u",
+    "D": "y"
+   },
+   "obs": "done",
+   "src": "Cottam et al. 2010, 2013"
+  }
+ ]
+}
