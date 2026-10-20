@@ -916,6 +916,7 @@ def register_prompts(mcp: Any) -> None:
                 "- PSCS model = HYPOTHESIS until direct tomography/magnetic evidence cited\n"
                 "- DRU ≠ collision onset without structural evidence\n"
                 "- BMU/DRU age separation = FACT (~23.13 Ma vs ~14.2 Ma)\n"
+                "- DRU ~14.2 Ma = the SURFACE (NN5); Morley 2024 slab-breakoff ~13-12 Ma = a younger EVENT — do not date the surface from the event\n"
                 "- Any KILL verdict → 888_HOLD\n\n"
                 "OUTPUT: Kill matrix results (K001-K007) + epistemic labels + recommendation."
             ),
@@ -973,6 +974,7 @@ def register_prompts(mcp: Any) -> None:
                 "KINABALU CONTEXT:\n"
                 "- 86 key wells, 50+ biostrat extraction wells (Phase I)\n"
                 "- BMU (~23.13 Ma / NP25) and DRU (~14.2 Ma / NN5) = FACT\n"
+                "- DRU ~14.2 Ma = the SURFACE; Morley 2024 slab-breakoff ~13-12 Ma = a younger EVENT, not the surface age\n"
                 "- Goal: consistent Miocene+ marker picking across Kinabalu–Brunei\n"
                 "- Use NN-based biostratigraphic control for age ties\n\n"
                 "OUTPUT: correlation panel with sequence surfaces, systems tracts, age calls, epistemic labels."
