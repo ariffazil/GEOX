@@ -3,7 +3,37 @@ Status: **TESTABLE · GEOX/Arif source-constrained synthesis · NOT a published 
 Registry: `sabah_model_provenance.json` · Lineage: `SABAH_MODEL_LINEAGE.md` · Guard: `provenance_guard.py`
 Author: Muhammad Arif bin Fazil (theory) · forged into falsifiable form 2026-10-20 · preferred_hypothesis = **null**
 
-## Claim
+## Claim (official wording, 2026-10-20 scope patch)
+> **H-EXT-01 proposes that post-subduction extension and lithospheric/crustal thinning affected
+> parts of north and central Sabah, potentially linking the Crocker–Kinabalu–Ranau–Telupid region
+> to a broader post-subduction deformation system. Its continuity, timing, kinematics, eastward
+> reach, and deep driver remain untested; it does not claim oceanic breakup or a new plate.**
+
+Mandatory figure wording: *"H-EXT-01 proposes regional to localized post-subduction
+extension/thinning. Continuity across the full transect is a testable hypothesis, not an observed
+structure."*
+
+### Supported core vs testable reach
+| Statement | Status |
+|---|---|
+| Northern Borneo underwent post-subduction deformation + localized extension/thinning | **Supported synthesis** (GRL 2021 post-subduction tectonics; Hall 2013) |
+| Kinabalu/Ranau underlain by relatively thin crust (~35 km), thinning ~30% | **Source-constrained interpretation** (Greenfield et al. 2022 family / RS preprint — primary read pending) |
+| Telupid crust thinner than 30 km | **Source-constrained interpretation** (same synthesis) |
+| Lithospheric drip (Sulu Arc root remnant) linked to extension/thinning SE of Kinabalu | **Published mantle interpretation + numerical mechanism** (Bacon et al. 2022 anisotropy; Pilia et al. 2023 modelling) — not direct proof |
+| A continuous extension corridor spans all of north-central Sabah | **H-EXT-01 hypothesis** — not directly demonstrated continuously |
+| Extension reached oceanic breakup / new plate / oceanic strip | **UNMEASURED — do not draw** |
+
+**Spatial confidence segmentation (figure law):**
+- **Crocker–Kinabalu–Ranau** → `SOURCE-CONSTRAINED POST-SUBDUCTION THINNING / EXTENSION`
+- **Telupid / interior eastward** → `H-EXT-01 POSSIBLE CONTINUATION — TEST REQUIRED`
+- **NW / NSPW** → `MORLEY 2023: SHALLOW MOBILE-SHALE SYSTEM — NOT EVIDENCE OF DEEP EXTENSION` (disconnected from the deep corridor unless a separate evidence object links them)
+- **SE toward Semporna/Tawau (if shown)** → `PUBLISHED MANTLE INTERPRETATION: LITHOSPHERIC THINNING / DRIP CONTEXT` — dashed off-panel causal arrow only, never an imaged conduit.
+
+**Grammar rules:** corridor = dashed, fading, segmented band (three confidence states) — never a solid
+envelope; mantle link = dashed causal arrow, never a physical pipe; **extension strain field ≠ extension
+fault geometry** (strain may be hypothesized; fault geometry requires mapped kinematics + dated structures).
+
+## Claim (original formulation)
 After Proto–South China Sea subduction terminated and Dangerous Grounds underthrusting built the
 inherited architecture, **extension propagated across north and central Sabah** (Crocker–Kinabalu–Telupid
 sector), overprinting the collisional architecture. Its crustal/lithospheric expression contributes to
@@ -21,6 +51,7 @@ delamination, or a lithospheric drip.
 - NOT oceanic spreading · NOT new oceanic crust · NOT a third plate · NOT "three plates beneath Sabah Basin".
 - NOT a measured continuous fault corridor (its continuity is the hypothesis).
 - NOT attributed to Morley et al. (2023) — their scope is the shallow mobile-shale system only.
+- No continuous mapped rift fault · no "confirmed corridor" · no "through all Sabah" phrasing without an OBS/DER evidence object · no direct mantle conduit.
 - No preferred driver. Any panel showing one driver as chosen without a sealed human decision = build failure.
 
 ## Alternative drivers (all live)
@@ -50,6 +81,14 @@ delamination, or a lithospheric drip.
 5. **A discrete alternative fits all observations** while H-EXT-01 fails (e.g. purely gravity-driven with zero deep signature).
 6. **Oceanic crust proven** — would not falsify extension, but would falsify the *continental* scope as stated → fork to H-EXT-02 (oceanic variant) rather than mutate this ID.
 
+## Build-fail additions (figure/registry gate)
+- a solid line represents the full corridor as observed → FAIL
+- "continuous" / "through all Sabah" / "confirmed corridor" without an OBS/DER evidence object → FAIL
+- Morley used to support deep extension → FAIL
+- oceanic breakup visually implied → FAIL
+- confidence categories omitted from the corridor graphic → FAIL
+- a driver visually privileged without a sealed human-gate decision → FAIL
+
 ## Driver-discriminating surveys (what kills A vs B vs C vs D)
 | Survey | A rollback | B drip | C gravity | D reactivation |
 |---|---|---|---|---|
@@ -57,6 +96,23 @@ delamination, or a lithospheric drip.
 | RF Moho + tomography | hinge-migrated thinning | Moho + drip column above anomaly | thinning under load only | no coherent Moho signal |
 | Extensional fault maps | regional, trench-parallel | symmetric about drip | load-bounded, detachment-linked | localised on inherited faults |
 | Thermochronology | migration with hinge | focused above drip | load-progressive | patchy, fault-controlled |
+
+## Evidence-object registry (HEXT-EV)
+| ID | Object | Status | Decides |
+|---|---|---|---|
+| HEXT-EV-01 | Crustal thickness / thinning constraint, Crocker–Kinabalu–Ranau | OPEN | is thinning localized or continuous? |
+| HEXT-EV-02 | Telupid crustal thickness + structural timing | OPEN | does the corridor continue east? |
+| HEXT-EV-03 | Extensional vs contractional kinematic dataset | OPEN | strain field real? fault geometry? |
+| HEXT-EV-04 | Magmatic / thermochronologic timing | OPEN | extension after subduction termination? |
+| HEXT-EV-05 | Gravity + magnetics + heat-flow/BHT discrimination | OPEN | density vs intrusive vs architecture |
+| HEXT-EV-06 | Mantle anisotropy / tomography spatial registration | OPEN | drip vs rollback vs inherited fabric |
+
+## Source-boundary checks (attribution law, extended)
+- β ≈ 1.2–1.3 thinning → **Greenfield et al. (2022)** (ScienceDirect S1342937X2200243X) — cite via this
+  primary pointer; treat as *below crustal-breakup values*.
+- **Pilia et al. (2023)** → modelled lithospheric-drip MECHANISM only — never direct observation of crustal geometry.
+- **Bacon et al. (2022)** → anisotropy / lithospheric-thinning CONTEXT only — not proof of a continuous corridor.
+- **Morley et al. (2023)** → mobile shale / mud canopy ONLY (see lineage §0).
 
 ## Decision rule
 No driver may be shown as preferred on any figure or page until a **sealed human-gate decision**

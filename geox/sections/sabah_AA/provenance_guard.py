@@ -72,6 +72,19 @@ for e in prov["entries"]:
             except Exception:
                 pass
 
+
+# 7. H-EXT-01 scope-patch rules (figure grammar)
+rscript = (HERE / "render_hext01.py").read_text()
+for req in ("SOURCE-CONSTRAINED", "POSSIBLE", "STRAIN FIELD", "preferred_hypothesis = null",
+            "NOT deep", "NOT an imaged conduit", "Greenfield"):
+    if req not in rscript:
+        fails.append(f"H01-GRAMMAR: missing '{req}' in figure script")
+for bad in ("confirmed corridor", "through all Sabah"):
+    if bad in rscript.lower():
+        fails.append(f"H01-GRAMMAR: banned phrase '{bad}'")
+if "ls=(0, (6, 3))" not in rscript or "ls=(0, (2, 3))" not in rscript:
+    fails.append("H01-GRAMMAR: corridor segments must both be dashed")
+
 print(f"provenance_guard: {len(prov['entries'])} entries checked")
 if fails:
     print(f"VERDICT: FAIL ({len(fails)})")

@@ -128,6 +128,23 @@ Nature Geoscience 2023 (s41561-023-01201-7)  [first-author attribution per relay
 ### M-CHOI26 — Choi, T. (2026), TGS/EAGE workshop — Layang-Layang Oligocene play
 - Claim: frontier play context. Evidence: workshop abstract. **Does NOT claim:** Sabah crustal architecture.
 
+### M-GRL21 — "Post-Subduction Tectonics of Sabah, Northern Borneo, Inferred from…" (GRL 2021, doi:10.1029/2021GL096117)  [RELAYED]
+- Claim: northern Borneo post-subduction deformation incl. localized extension/thinning.
+- **Does NOT claim:** a continuous corridor geometry.
+
+### M-GRN22 — Greenfield et al. (2022), "Continental rifting in the South China Sea through extension…" (S1342937X2200243X)
+- Claim: **β ≈ 1.2–1.3 crustal thinning — below crustal-breakup values** → continental extension favoured.
+- Section geometry? No. **Does NOT claim:** oceanic breakup in Sabah. [primary-source read pending]
+
+### M-BAC22 — Bacon et al. (2022), "The Signature of Lithospheric Anisotropy at Post-Subduction…" (doi family 2022GC010564)
+- Claim: anisotropy — marked lithospheric thinning around **Tawau/Semporna (SE Sabah)**; fast anomaly
+  trending toward Kinabalu, linked to a possible drip. Mantle-scale context.
+- **Does NOT claim:** a continuous extension corridor · an imaged mantle conduit.
+
+### M-RS861968 — "Effects of post-subduction processes on continental lithosphere" (ResearchSquare rs-861968 preprint)  [RELAYED]
+- Claim: Kinabalu/Ranau crust **~35 km** with thinning **~30%**; **Telupid crust <30 km**.
+- Limitation: preprint — source-constrained interpretation, not final publication.
+
 ## 2. GEOX / Arif models (versioned registry)
 
 | ID | Type | Basis | Status | Does NOT claim |
