@@ -1,0 +1,22 @@
+{
+  "amendment_id": "AMD-SABAH-AA-001",
+  "date_utc": "2026-10-20",
+  "before": "Four competing models presented in one undifferentiated 'what sits below 15 km' menu; deep coloured polygons readable as measured bodies; no per-object provenance; review misread the schematic as 'three plates per Morley'.",
+  "after": {
+    "artifacts_added": ["MODEL_PROVENANCE_MATRIX.md", "model_provenance.json", "sabah_model_provenance.json",
+                        "SABAH_MODEL_LINEAGE.md", "H-EXT-01.md", "provenance_guard.py",
+                        "provenance_amendment.json", "tri_panel_hext01.png", "tri_panel_hext01_mobile.png"],
+    "visual_changes": [
+      "three-panel redesign: (1) inherited architecture (2) H-EXT-01 extension overprint CONCEPTUAL (3) competing drivers A-D, no preferred",
+      "H-EXT-01 corridor drawn as semi-transparent dashed SPEC zone in north-central Sabah (Crocker-Kinabalu-Telupid), NOT at the DG margin",
+      "PSCS slab remnant moved to off-panel mantle annotation",
+      "mobile shale kept in shallow NSPW domain with deep continuation labelled UNKNOWN"
+    ],
+    "retained": "all prior visuals (base_*, styl_*, final_D.png) versioned in place; page history in git; no model deleted",
+    "relabelled": ["Model A: 'magmatic ridge' retired -> 'rift-axis intrusions?' (2026-10 rename, TS02 records it)",
+                    "Model B: citation scope frozen to shallow mobile-shale system; deep tail UNKNOWN",
+                    "Model D slab: 'published constraint, not fitted'"]
+  },
+  "reason": "Literature-to-model traceability: separate (1) what each cited author proposed from (2) GEOX synthesis and (3) author-generated hypotheses. Prevents the 'three plates per Morley' class of misreading permanently.",
+  "guard": "provenance_guard.py PASS at commit"
+}

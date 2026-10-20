@@ -1,0 +1,71 @@
+{
+ "receipt_id": "RECEIPT-SABAH-AA-002",
+ "spec_ref": "_geometry_raw.json (extracted from arif-fazil.com/earth/kinabalu-cross-section.html in-page data; public sources only)",
+ "generation": {
+  "engine": "gemini-3-pro-image (Nano Banana Pro, models_list 2026-10-20)",
+  "attempts": 2,
+  "rejected": [
+   "styl_D_c1: FAIL \u2014 slab recolored, 5 bodies deleted, axis numerals retained (OCR), 6/14 fills recolored"
+  ]
+ },
+ "prompt_density": 1.0,
+ "f2_adherence": 0.947,
+ "adherence_band": ">=0.90 clean / 0.75-0.90 disclosed / <0.75 reject",
+ "delivery_mode": "disclosed",
+ "checks": [
+  {
+   "target": "one granite body x470-500 km, surface->~10 km",
+   "result": "1 body (witness-confirmed)",
+   "pass": "yes"
+  },
+  {
+   "target": "slab band 45-55 km, x420-620",
+   "result": "present, 84-89% of ref area, lighter cyan",
+   "pass": "yes"
+  },
+  {
+   "target": "two panels split mid-height",
+   "result": "2 panels identical split",
+   "pass": "yes"
+  },
+  {
+   "target": "21 reference bodies preserved",
+   "result": "21/21",
+   "pass": "yes"
+  },
+  {
+   "target": "zero text glyphs in stylised image",
+   "result": "0 (axis numerals removed vs reference)",
+   "pass": "yes"
+  },
+  {
+   "target": "topography preserved",
+   "result": "max |dz| 0.12 km",
+   "pass": "yes"
+  },
+  {
+   "target": "texture-only contract",
+   "result": "3/14 fills changed + 2 texture bands added",
+   "pass": "partial"
+  },
+  {
+   "target": "MMU/detachment lines survive",
+   "result": "dropped by image model \u2014 RESTORED BY CODE (geometry is computed)",
+   "pass": "restored"
+  }
+ ],
+ "hallucinated_elements": [
+  "sky painted blue (sky/water conflation \u2014 stylistic wash)",
+  "tan surface band added",
+  "grey dome-crossing band added",
+  "texture-semantics: crosses on basement not granite; granite carries small-v"
+ ],
+ "witness": "image-analyzer subagent (independent VLM, 3 passes incl. OCR + connected components)",
+ "deny_list": "1 hit ('internal' word inside a geometry tip string from the public page \u2014 generic word, no corporate data). Zero project names, zero well values, zero block IDs.",
+ "delivery": {
+  "channel": "Telegram @arifOS_bot -> 267378578",
+  "message_id": 5917,
+  "artifact": "final_D.png (3116x2108)"
+ },
+ "verdict": "PASS_WITH_NOTES"
+}
