@@ -134,10 +134,10 @@ a3 = fig.add_axes((0.06, 0.055, 0.52, 0.38), facecolor=BG)
 a3.axis("off")
 a3.set_title("3 · STATION PROVENANCE — never promote a guess to a measurement", fontsize=9.5, color=FG, loc="left")
 rows = [["Station", "Along-track", "Class", "Source"]]
-rows += [["B (NW, Dangerous Grounds)", "0.0 km", "L0 MEASURED", "chosen on-line, 7.78N 113.00E"],
-         ["Layang-Layang / Swallow Reef", f"{along_track(ANCHORS[0][1:])[0]:.1f} km", "L0 MEASURED", "7.372N 113.847E (published)"],
-         ["Mt Kinabalu 4,095 m", f"{along_track(ANCHORS[1][1:])[0]:.1f} km", "L0 MEASURED", "6.075N 116.558E (published)"],
-         ["B′ (SE, Sulu Sea)", f"{DIST[-1]:.1f} km", "L0 MEASURED", "chosen on-line, 5.10N 118.60E"]]
+rows += [["B (NW, Dangerous Grounds)", "0.0 km", "L0 CHOSEN", "chosen on-line, 7.78N 113.00E — operator pick, not a published position"],
+         ["Layang-Layang / Swallow Reef", f"{along_track(ANCHORS[0][1:])[0]:.1f} km", "L0 PUBLISHED", "7.372N 113.847E (published position)"],
+         ["Mt Kinabalu 4,095 m", f"{along_track(ANCHORS[1][1:])[0]:.1f} km", "L0 PUBLISHED", "6.075N 116.558E (published summit position)"],
+         ["B′ (SE, Sulu Sea)", f"{DIST[-1]:.1f} km", "L0 CHOSEN", "chosen on-line, 5.10N 118.60E — operator pick, not a published position"]]
 for nm, km in SCHEM:
     rows.append([nm, f"~{km} km", "SCHEMATIC", "no coordinates in GEOX SOT"])
 rows.append(["Sandakan", f"~{along_track(OFFTRACK[0][1:])[0]:.0f} km", "OFF_TRANSECT", f"{along_track(OFFTRACK[0][1:])[1]:.0f} km off-line — remove or relabel"])
@@ -162,8 +162,8 @@ a4 = fig.add_axes((0.62, 0.055, 0.34, 0.38), facecolor=BG)
 a4.axis("off")
 a4.set_title("4 · DATA MODE — what is measured vs UNMEASURED", fontsize=9.5, color=FG, loc="left")
 lines = [
-    ("Transect geometry", "MEASURED (L0)", MEAS, "haversine from published coordinates"),
-    ("Bathymetry along B–B′", "MEASURED (L0)", MEAS, "GEBCO_2019 via Rutgers THREDDS dodsC — live subset 708×1404"),
+    ("Transect geometry", "DERIVED (L0 inputs)", SCH, "haversine computed FROM the published coordinates — derived, not measured"),
+    ("Bathymetry along B–B′", "MEASURED (L0)", MEAS, "GEBCO_2019 via Rutgers THREDDS dodsC — live subset 708×1404"),  # genuine measurement — keep
 ]
 if bathy is not None:
     _jd = int(np.nanargmin(bathy[:400]))

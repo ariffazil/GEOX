@@ -460,18 +460,40 @@ _AUTHORITY_RANK = {
 }
 
 
+# ─── SINGLE SOURCE OF TRUTH for required authority (2026-10-20) ──────────
+# Failure class: TWO_GATES_ONE_QUESTION — one tool, two gate answers.
+# Every gate must resolve through this function. It returns the STRICTEST
+# requirement across all sources, so no path can be looser than another.
+def required_authority_for(
+    tool_name: str,
+    risk_tier_str: str,
+    caller_request: str | None = None,
+) -> str:
+    """One question, one answer.
+
+    Sources considered:
+      1. tier-based minimum (MIN_AUTHORITY_FOR_TIER)
+      2. MUTATION_TOOLS floor (OPERATOR)
+      3. what the calling tool asked for (caller_request)
+    Returns the highest-ranked requirement among them.
+    """
+    candidates = [
+        MIN_AUTHORITY_FOR_TIER.get(risk_tier_str, "OBSERVE_ONLY"),
+    ]
+    if tool_name in MUTATION_TOOLS:
+        candidates.append("OPERATOR")
+    if caller_request:
+        candidates.append(caller_request)
+    return max(candidates, key=lambda a: _AUTHORITY_RANK.get(a, -1))
+
+
 def _effective_min_authority(tool_name: str, risk_tier_str: str) -> str:
     """Determine the minimum authority level for a tool call.
 
     Returns the higher of: the tier-based minimum, or OPERATOR if the tool
     is in MUTATION_TOOLS and explicitly writes state.
     """
-    tier_auth = MIN_AUTHORITY_FOR_TIER.get(risk_tier_str, "OBSERVE_ONLY")
-    if tool_name in MUTATION_TOOLS:
-        mutation_auth = "OPERATOR"
-        if _AUTHORITY_RANK.get(mutation_auth, 0) > _AUTHORITY_RANK.get(tier_auth, 0):
-            return mutation_auth
-    return tier_auth
+    return required_authority_for(tool_name, risk_tier_str, caller_request=None)
 
 
 def _check_authority_gate(
@@ -493,7 +515,9 @@ def _check_authority_gate(
         # No authority claim — treat as OBSERVE_ONLY (safest default)
         session_authority = "OBSERVE_ONLY"
 
-    required = _effective_min_authority(tool_name, risk_tier_str)
+    required = required_authority_for(tool_name, risk_tier_str, caller_request=None)
+    # one answer, surfaced — so a caller cannot see OPERATOR where the gate
+    # enforced LIMITED_MUTATE (the two-answers defect).
     session_rank = _AUTHORITY_RANK.get(session_authority, -1)
     required_rank = _AUTHORITY_RANK.get(required, 0)
 

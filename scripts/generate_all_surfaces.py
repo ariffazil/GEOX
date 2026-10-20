@@ -140,8 +140,12 @@ def regenerate_tools_sot_yaml(dry_run: bool) -> None:
     diff_label("tools_sot.yaml", before, after)
 
     if not dry_run:
-        path.write_text(after)
-        print(f"  ✓ Wrote tools_sot.yaml ({TRUTH_COUNT} tools)")
+        if content_sha256(before) == content_sha256(after):  # clock churn != drift
+            print("  = tools_sot.yaml unchanged \u2014 skipped write")
+        else:
+            path.write_text(after)
+            print(f"  ✓ Wrote tools_sot.yaml ({TRUTH_COUNT} tools)")
+
     else:
         print(f"  → Would write tools_sot.yaml ({TRUTH_COUNT} tools)")
 
@@ -205,8 +209,11 @@ def regenerate_canonical_public_surface_json(dry_run: bool) -> None:
 
     if not dry_run:
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(after)
-        print(f"  ✓ Wrote CANONICAL_PUBLIC_SURFACE.json ({TRUTH_COUNT} tools)")
+        if content_sha256(before) == content_sha256(after):  # clock churn != drift
+            print("  = CANONICAL_PUBLIC_SURFACE.json unchanged — skipped write")
+        else:
+            path.write_text(after)
+            print(f"  ✓ Wrote CANONICAL_PUBLIC_SURFACE.json ({TRUTH_COUNT} tools)")
     else:
         print(f"  → Would write CANONICAL_PUBLIC_SURFACE.json ({TRUTH_COUNT} tools)")
 
@@ -237,8 +244,11 @@ def regenerate_tools_json(dry_run: bool) -> None:
     diff_label("tools.json", before, after)
 
     if not dry_run:
-        path.write_text(after)
-        print(f"  ✓ Wrote tools.json ({TRUTH_COUNT} tools)")
+        if content_sha256(before) == content_sha256(after):  # clock churn != drift
+            print(f"  = tools.json unchanged ({TRUTH_COUNT} tools) — skipped write")
+        else:
+            path.write_text(after)
+            print(f"  ✓ Wrote tools.json ({TRUTH_COUNT} tools)")
     else:
         print(f"  → Would write tools.json ({TRUTH_COUNT} tools)")
 
@@ -355,8 +365,12 @@ def regenerate_llms_txt(dry_run: bool) -> None:
     diff_label("llms.txt", before, after)
 
     if not dry_run:
-        path.write_text(after)
-        print(f"  ✓ Wrote llms.txt ({TRUTH_COUNT} tools)")
+        if content_sha256(before) == content_sha256(after):  # clock churn != drift
+            print("  = llms.txt unchanged \u2014 skipped write")
+        else:
+            path.write_text(after)
+            print(f"  ✓ Wrote llms.txt ({TRUTH_COUNT} tools)")
+
     else:
         print(f"  → Would write llms.txt ({TRUTH_COUNT} tools)")
 
@@ -414,8 +428,11 @@ def regenerate_contracts_tools_yaml(dry_run: bool) -> None:
 
     if not dry_run:
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(after)
-        print(f"  ✓ Wrote contracts/tools.yaml ({TRUTH_COUNT} tools)")
+        if content_sha256(before) == content_sha256(after):  # clock churn != drift
+            print("  = contracts/tools.yaml unchanged — skipped write")
+        else:
+            path.write_text(after)
+            print(f"  ✓ Wrote contracts/tools.yaml ({TRUTH_COUNT} tools)")
     else:
         print(f"  → Would write contracts/tools.yaml ({TRUTH_COUNT} tools)")
 
@@ -493,8 +510,11 @@ def regenerate_readme_badge(dry_run: bool) -> None:
     diff_label("README.md", original, text)
 
     if not dry_run:
-        path.write_text(text)
-        print(f"  ✓ Updated README.md (badge={TRUTH_COUNT})")
+        if content_sha256(original) == content_sha256(text):  # clock churn != drift
+            print("  = README.md unchanged — skipped write")
+        else:
+            path.write_text(text)
+            print(f"  ✓ Updated README.md (badge={TRUTH_COUNT})")
     else:
         print(f"  → Would update README.md (badge={TRUTH_COUNT})")
 

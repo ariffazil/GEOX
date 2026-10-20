@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "geox://schemas/visual_extraction.schema.json",
+  "title": "VisualExtraction (GEOX-VIS v1)",
+  "description": "Governed object for vision->evidence extraction. See docs/VISION_TO_EVIDENCE_PROTOCOL.md. Consumer: geox_extract_display_proxy / geox_extract_native_trace. Failure class: BEKANTAN-1.",
+  "type": "object",
+  "required": ["extraction_id", "source", "visual_context", "calibration", "claim", "constraints", "seal_eligibility"],
+  "properties": {
+    "extraction_id": {"type": "string", "pattern": "^GEOX-VIS-[0-9]{6,}$"},
+    "source": {
+      "type": "object",
+      "required": ["artifact_uri", "artifact_sha256", "source_type"],
+      "properties": {
+        "artifact_uri": {"type": "string", "minLength": 1},
+        "artifact_sha256": {"type": "string", "pattern": "^(sha256:)?[0-9a-f]{64}$"},
+        "source_type": {"enum": ["seismic_section", "well_log", "map", "chart", "photograph", "screenshot"]},
+        "source_owner": {"enum": ["public", "licensed", "restricted"]},
+        "source_citation": {"type": "string"}
+      }
+    },
+    "visual_context": {
+      "type": "object",
+      "required": ["pixel_bounds", "native_or_display", "extraction_method", "operator"],
+      "properties": {
+        "pixel_bounds": {"type": "array", "items": {"type": "integer"}, "minItems": 4, "maxItems": 4},
+        "native_or_display": {"enum": ["native", "display_proxy"]},
+        "resolution_px": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2},
+        "display_transform": {"enum": ["crop", "resize", "perspective", "unknown"]},
+        "annotation_layer_present": {"type": "boolean"},
+        "extraction_method": {"enum": ["manual", "OCR", "CV", "hybrid", "column_luminance_r_minus_b"]},
+        "operator": {"type": "string", "minLength": 1}
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "required": ["horizontal_axis", "vertical_axis", "calibration_points", "uncertainty_model"],
+      "properties": {
+        "horizontal_axis": {"enum": ["distance_km", "time_ms", "longitude", "unknown"]},
+        "vertical_axis": {"enum": ["depth_m", "TWT_ms", "TVDSS_m", "elevation_m", "unknown"]},
+        "coordinate_reference_system": {"type": "string"},
+        "calibration_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["pixel", "world"],
+            "properties": {
+              "pixel": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2},
+              "world": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}
+            }
+          }
+        },
+        "rms_error": {"type": ["number", "null"]},
+        "uncertainty_model": {"type": "string", "minLength": 1}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": ["assertion_id", "proposition", "epistemic_class", "claim_scope", "extracted_geometry"],
+      "properties": {
+        "assertion_id": {"type": "string", "pattern": "^GEOX-ASSERT-[0-9]{6,}$"},
+        "proposition": {"type": "string", "minLength": 1},
+        "epistemic_class": {"enum": ["OBS", "DER", "INT", "SPEC"]},
+        "claim_scope": {"enum": ["local", "line_section", "regional"]},
+        "extracted_geometry": {"enum": ["point", "polyline", "polygon", "raster", "text"]},
+        "confidence": {"enum": ["low", "medium", "high"]},
+        "preferred_hypothesis": {"type": "null", "description": "MUST be null. Non-null requires human-gate receipt."}
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "required": ["required_independent_checks", "status"],
+      "properties": {
+        "required_independent_checks": {
+          "type": "array", "items": {"enum": ["spatial", "temporal", "physics", "source-provenance"]}
+        },
+        "status": {"enum": ["UNMEASURED", "WARN", "PASS", "KILL"]}
+      }
+    },
+    "seal_eligibility": {
+      "type": "object",
+      "required": ["eligible_for_scientific_warrant", "missing"],
+      "properties": {
+        "eligible_for_scientific_warrant": {"type": "boolean"},
+        "missing": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Rule 1+3: uncalibrated display extraction can never be OBS/DER",
+      "if": {
+        "properties": {"visual_context": {"properties": {"native_or_display": {"const": "display_proxy"}}}}
+      },
+      "then": {
+        "properties": {"claim": {"properties": {"epistemic_class": {"enum": ["INT", "SPEC"]}}}}
+      }
+    },
+    {
+      "$comment": "Rule 3: >=2 calibration anchors per measured axis before any PASS-class measurable claim",
+      "if": {
+        "properties": {"constraints": {"properties": {"status": {"enum": ["PASS"]}}}}
+      },
+      "then": {
+        "properties": {"calibration": {"properties": {"calibration_points": {"minItems": 2}}}}
+      }
+    },
+    {
+      "$comment": "Rule 5: SPEC/UNMEASURED is never seal-eligible",
+      "if": {
+        "properties": {
+          "claim": {"properties": {"epistemic_class": {"const": "SPEC"}}}
+        }
+      },
+      "then": {
+        "properties": {"seal_eligibility": {"properties": {"eligible_for_scientific_warrant": {"const": false}}}}
+      }
+    }
+  ]
+}
