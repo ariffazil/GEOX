@@ -327,6 +327,8 @@ def validate_session(
     session_id: str | None,
     actor_id: str | None,
     required_authority: str = "OBSERVE_ONLY",
+    tool_name: str | None = None,
+    risk_tier: str | None = None,
 ) -> ValidationResult:
     """Validate a session_id + actor_id pair.
 
@@ -343,6 +345,18 @@ def validate_session(
     Returns:
         ValidationResult with .ok=True if all checks pass.
     """
+    # ── ONE ANSWER (2026-10-20): when tool context is present, the required
+    # authority is resolved through the shared resolver so the session path and
+    # the enforcement gate cannot disagree. Failure class TWO_GATES_ONE_QUESTION.
+    if tool_name:
+        try:
+            from geox_mcp.organ_governance import required_authority_for as _raf
+
+            required_authority = _raf(
+                tool_name, risk_tier or "readonly", required_authority
+            )
+        except Exception:
+            pass  # keep the caller's value — never loosen on resolver failure
     # ── Auto-mint ANON-xxx for empty/None session_id ────────────────────
     # GEOX generates its own session for callers with no token.
     # Zero config. Works on every platform. No cross-server dependency.

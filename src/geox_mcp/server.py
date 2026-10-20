@@ -3089,6 +3089,18 @@ async def health_handler(request: Request) -> JSONResponse:
         "witness_oracle": "active",
         "note": fed_geometry_note or "local presence fallback",
     }
+    # p2-geometry-runtime-empty (2026-10-20): "enabled" was advertised while
+    # subjects=0 and ledger_events=0. An unfed capability must not read as a
+    # working one. The capability is NOT removed (delete = F13) — it is labelled.
+    try:
+        _geom_empty = not (_fed_geom.get("subjects") or _fed_geom.get("ledger_events"))
+        if _geom_empty and str(_fed_geom.get("status", "")).startswith("enabled"):
+            _fed_geom["status"] = "enabled_empty"
+            _fed_geom["advertised_as_working"] = False
+        else:
+            _fed_geom.setdefault("advertised_as_working", not _geom_empty)
+    except Exception:
+        pass
     _public_count = len(CANONICAL_PUBLIC_TOOLS)
 
     # ── P0-5 deployment invariant (2026-07-25 · FI-008) ─────────────
