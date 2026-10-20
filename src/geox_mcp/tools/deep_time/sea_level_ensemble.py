@@ -243,8 +243,12 @@ def load_sequence_boundaries(
 # ── Sabah-specific boundary registry ─────────────────────────────────────────
 
 SABAH_BOUNDARIES = {
-    "BMU/TCU": {"age_ma": 23.0, "description": "Onset of Dangerous Grounds collision"},
-    "DRU": {"age_ma": 13.0, "description": "Uplift + slab breakoff (Morley 2024)"},
+    # Calibration canon (GEOX org FACT, UPDATED 2026-07-27): BMU ~23.13 Ma / NP25, DRU ~14.2 Ma / NN5.
+    # The slab-breakoff uplift EVENT (Morley 2024, ~13-12 Ma) is YOUNGER than the DRU surface —
+    # never date the surface from the event. Published field charts place DRU ~15.5 Ma (older calibrations).
+    # Reconciled 2026-10-20 (was 23.0 / 13.0 — predated the FACT declaration and conflated event with surface).
+    "BMU/TCU": {"age_ma": 23.13, "description": "Onset of Dangerous Grounds collision (NP25 biostrat calibration)"},
+    "DRU": {"age_ma": 14.2, "description": "Deep Regional Unconformity surface (NN5 biostrat calibration). Slab-breakoff uplift event ~13-12 Ma (Morley 2024) is younger than the surface"},
     "UIU": {"age_ma": 10.5, "description": "End of pocket basin phase"},
     "SRU": {"age_ma": 8.5, "description": "End of mud canopy phase"},
 }

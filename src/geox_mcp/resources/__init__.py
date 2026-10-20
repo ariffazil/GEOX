@@ -1561,7 +1561,7 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
         "geox://earth-system/sabah-correlation",
         description=(
             "Sabah unconformity correlation with Haq & Ogg 2024 global sequence boundaries. "
-            "BMU/TCU, DRU, UIU, SRU matched to NgSB1, NgSB9, NgSB11, NgSB13. "
+            "BMU/TCU, DRU, UIU, SRU matched to NgSB1, NgSB8, NgSB11, NgSB13 (Δ ≤ 0.2 Ma). "
             "UPDATED 2026-07-27: BMU (~23.13 Ma / NP25) and DRU (~14.2 Ma / NN5) = FACT. "
             "DRU ≠ collision onset marker without structural evidence."
         ),
@@ -2017,7 +2017,7 @@ async def geox_earth_physics_flow():
             },
             "consistency_gate": True,
             "cross_validation": "Miller vs Haq ensemble with agreement flag",
-            "sabah_correlation": "BMU/TCU/DRU/UIU/SRU ↔ Haq SBs (Δ=0.0 Ma)",
+            "sabah_correlation": "BMU/TCU/DRU/UIU/SRU ↔ Haq SBs NgSB1/8/11/13 (Δ ≤ 0.2 Ma; DRU→NgSB8@14.0 MMCT)",
             "calibration_date": "2026-07-16",
             "verdict": "UNIFIED — time is the dimension, physics is the constraint",
         },
@@ -2040,9 +2040,12 @@ async def geox_sabah_correlation():
             "correlations": corrs,
             "interpretation": (
                 "All four Sabah unconformities correlate STRONGLY with Haq & Ogg 2024 "
-                "global sequence boundaries. This means the Sabah surfaces are NOT purely "
-                "tectonic — they have a eustatic signal. The DRU is both a slab-breakoff "
-                "surface (Morley 2024) AND a global sequence boundary (Haq & Ogg 2024)."
+                "global sequence boundaries (Δ ≤ 0.2 Ma). This means the Sabah surfaces are "
+                "NOT purely tectonic — they carry a eustatic signal. The DRU surface (NN5 "
+                "calibration, ~14.2 Ma) matches NgSB8 (14.0 Ma, MMCT major lowstand); the "
+                "slab-breakoff uplift event (Morley 2024, ~13–12 Ma) is younger than the "
+                "surface and must not be used to date it. Published field charts place the "
+                "DRU at ~15.5 Ma — treat the surface age as a calibration bracket, not a point."
             ),
             "sources": {
                 "tectonic": "Morley 2024 — atypical syn-collisional wedges",

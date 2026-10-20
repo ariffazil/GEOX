@@ -116,6 +116,11 @@ class TestSabahCorrelation:
         corrs = load_sabah_boundary_correlation()
         dru = next(c for c in corrs if c["sabah_surface"] == "DRU")
         assert dru["correlation"] in ("STRONG", "MODERATE"), f"DRU correlation: {dru['correlation']} (Δ={dru['delta_ma']} Ma)"
+        # Test name is load-bearing: DRU surface (~14.2 Ma / NN5, org FACT 2026-07-27) matches the
+        # MMCT lowstand (NgSB8 @ 14.0 Ma) — NOT NgSB9 (13.0 Ma = younger slab-breakoff event window).
+        # Regression guard for the 2026-10-20 calibration reconciliation.
+        assert dru["nearest_haq_sb"] == "NgSB8", f"DRU should match NgSB8 (MMCT), got {dru['nearest_haq_sb']}"
+        assert abs(dru["delta_ma"]) <= 0.25, f"DRU Δage too large: {dru['delta_ma']} Ma"
 
 
 class TestPhysicsConsistency:
