@@ -1091,6 +1091,10 @@ def compact_structured_for_ui(
         "derived",
         "interpreted",
         "process_hypotheses",
+        # 2026-10-20: prior-art lane. A novelty claim that is dropped at the
+        # 4 KB compact boundary is indistinguishable from no claim at all —
+        # the projection must carry it or the lane is decorative.
+        "prior_art_claims",
         "play_fairways",
         "unit_count",
         "coverage",
