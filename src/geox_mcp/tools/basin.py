@@ -544,6 +544,7 @@ async def geox_basin_profile(
         derived = {}
         interpreted = {}
         process_hypotheses = []
+        prior_art_claims = []
         forbidden_claims = []
 
         # Sort claims from claims.json
@@ -567,6 +568,23 @@ async def geox_basin_profile(
                         "mechanism": c.get("source"),
                         "confidence": c.get("confidence").lower(),
                         "evidence_for": c_refs,
+                    }
+                )
+            elif c_type == "novelty":
+                # PRIOR-ART LANE (see /root/AAA/instructions/prior-art-claim-lane.md).
+                # A novelty claim is a claim about the state of the literature, not
+                # about the rock. It never upgrades a truth class, and it is exposed
+                # separately so a "first ever" assertion cannot hide in prose.
+                _pa = c.get("prior_art") or {}
+                prior_art_claims.append(
+                    {
+                        "claim": c_text,
+                        "prior_art_status": _pa.get("status", "UNSEARCHED"),
+                        "searched_sources": _pa.get("searched_sources", []),
+                        "exhaustive": bool(_pa.get("exhaustive", False)),
+                        "confidence": c.get("confidence", "UNKNOWN"),
+                        "forbidden_uses": forbid,
+                        "falsifier": c.get("falsifier"),
                     }
                 )
 
@@ -811,6 +829,7 @@ async def geox_basin_profile(
             "derived": derived,
             "interpreted": {**interpreted, **mode_data},
             "process_hypotheses": process_hypotheses,
+            "prior_art_claims": prior_art_claims,
             "play_fairways": mode_data.get("plays", []) if mode == "play_fairway" else [],
             "risk_register": mode_data.get("uncertainties", []) if mode == "risk" else [],
             "contradictions": [],

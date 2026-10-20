@@ -256,5 +256,29 @@
     "forbidden_uses": [
       "bare_7.85_7.22_in_public_artifacts"
     ]
+  },
+  {
+    "claim_id": "kin_clm_17",
+    "claim_type": "novelty",
+    "claim": "NOVELTY CLAIM (PRIOR_ART_UNSEARCHED): the defensible formulation is not 'igneous exists in NW Sabah' (not novel; Regional Igneous project, bedding-parallel/stacked sills, Nuri/Layang-Layang volcanic-intrusive observations are on internal record) nor 'intrusions may exist in the Kinabalu deep section' (too broad to claim priority), but a PARAMETERISED, FALSIFIABLE trough-axis intrusion hypothesis tested specifically against magnetics + gravity + seismic + thermal/maturity observations on this transect. No exhaustive prior-art search has been run. Until then: no 'first ever' / 'nobody proposed this' in any artifact, public or internal.",
+    "evidence_refs": [
+      "public page /earth/kinabalu-cross-section.html (Model A labelled UNTESTED WORKING HYPOTHESIS)",
+      "sys_clm_6 (intrusion age UNVERIFIED)",
+      "kin_clm_16 (granite age tension)"
+    ],
+    "source": "F13 relayed external audit 2026-10-20, claim-by-claim verified against live page + claim registry",
+    "confidence": "UNKNOWN",
+    "valid_until": "2027-06-30",
+    "prior_art": {
+      "status": "UNSEARCHED",
+      "searched_sources": [],
+      "exhaustive": false
+    },
+    "forbidden_uses": [
+      "first_ever_assertion",
+      "methodological_novelty_claim",
+      "priority_claim_in_public_artifact"
+    ],
+    "falsifier": "A prior publication/technical report that states the same parameterised trough-axis intrusion test (magnetics+gravity+seismic+thermal joint constraint) for the Kinabalu/Sabah Trough transect."
   }
 ]
