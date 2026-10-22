@@ -30,25 +30,44 @@ jobs:
         run: |
           set -euo pipefail
 
+          # On `push` there is no pull_request context, so this expression is empty.
+          # Falling back to the repo name keeps the gate meaningful on both triggers;
+          # without the fallback an empty target rejects every commit.
           TARGET_REPO="${{ github.event.pull_request.base.repo.name }}"
+          if [ -z "$TARGET_REPO" ]; then
+            TARGET_REPO="${GITHUB_REPOSITORY##*/}"
+          fi
           echo "Target repo: $TARGET_REPO"
           echo "Target repo (lowercase): ${TARGET_REPO,,}"
 
-          COMMITS=$(git log --format='%H %B' origin/main..HEAD)
+          # Fail loudly if the range cannot be resolved. Otherwise rev-list errors,
+          # the loop body never runs, and the gate reports success having checked
+          # nothing — a silent pass is worse than a red build.
+          if ! git rev-parse --verify --quiet origin/main >/dev/null; then
+            echo "🛑 Cannot resolve origin/main — routing validation would pass vacuously."
+            exit 1
+          fi
+
           echo "Checking commits..."
 
           declare -a FAILED=()
-          echo "$COMMITS" | while IFS= read -r sha body; do
-            if ! echo "$body" | grep -qi "^REPO="; then
-              echo "❌ Commit $sha: Missing REPO= trailer"
-              FAILED+=("commit $sha: no REPO= trailer")
+          # Iterate SHAs directly. Piping a `%H %B` blob into `read` split
+          # multi-line commit bodies into bogus "commits"; and a piped while-loop
+          # runs in a subshell, so FAILED+=(...) never reached the check below.
+          for sha in $(git rev-list origin/main..HEAD); do
+            body=$(git log -1 --format=%B "$sha")
+            raw=$(printf '%s\n' "$body" | grep -i "^REPO=" | head -1 || true)
+            if [ -z "$raw" ]; then
+              echo "❌ Commit ${sha:0:7}: Missing REPO= trailer"
+              FAILED+=("commit ${sha:0:7}: no REPO= trailer")
             else
-              DECLARED=$(echo "$body" | grep -i "^REPO=" | sed 's/^REPO=//i' | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+              DECLARED=$(printf '%s\n' "${raw#*REPO=}" | tr -d '[:space:]' | tr '[:upper:]' '[:lower:]')
+              DECLARED="${DECLARED##*/}"
               if [ "$DECLARED" != "${TARGET_REPO,,}" ]; then
-                echo "❌ Commit $sha: REPO mismatch (got '$DECLARED', expected '$TARGET_REPO')"
-                FAILED+=("commit $sha: REPO=$DECLARED does not match target $TARGET_REPO")
+                echo "❌ Commit ${sha:0:7}: REPO mismatch (got '$DECLARED', expected '$TARGET_REPO')"
+                FAILED+=("commit ${sha:0:7}: REPO=$DECLARED does not match target $TARGET_REPO")
               else
-                echo "✅ Commit $sha: REPO=$DECLARED ✓"
+                echo "✅ Commit ${sha:0:7}: REPO=$DECLARED ✓"
               fi
             fi
           done
