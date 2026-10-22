@@ -280,3 +280,17 @@ PYTHONPATH=src pytest tests/ -q --tb=short
 Siblings: [arifOS](https://github.com/ariffazil/arifOS) (judge) · [A-FORGE](https://github.com/ariffazil/A-FORGE) (execution) · [WEALTH](https://github.com/ariffazil/WEALTH) (capital) · [WELL](https://github.com/ariffazil/WELL) (vitality) · [AAA](https://github.com/ariffazil/AAA) (attention) · [arifFlow](https://github.com/ariffazil/arifFlow) (receipts) · [HERMES](https://github.com/ariffazil/HERMES) (gateway) · [FRAME](https://github.com/ariffazil/FRAME) (observer). Contract: [FEDERATION_CONTRACT.md](./FEDERATION_CONTRACT.md).
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
+
+---
+
+## External Footprint & Discovery
+
+GEOX is the geoscience evidence organ of the arifOS federation.
+
+- **Discoverable:** YES (GitHub repository, public MCP door at `geox.arif-fazil.com/mcp`)
+- **Installable / Callable:** YES (Governed MCP endpoint, live health at :18081)
+- **Inspectable & Forkable:** YES
+- **Independent Validation:** NOT YET ESTABLISHED
+
+Canonical Witness Ledger: [EXTERNAL_WITNESS_LEDGER.md](https://github.com/ariffazil/arifOS/blob/main/docs/EXTERNAL_WITNESS_LEDGER.md)
+
