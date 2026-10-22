@@ -2706,6 +2706,62 @@ _LIFECYCLE_GATE_HTTP_ENABLED = os.getenv("GEOX_LIFECYCLE_GATE", "1").strip().low
 )
 
 
+class McpSessionGuardMiddleware(BaseHTTPMiddleware):
+    """F1.1 FIX (2026-10-22): complete-400 guard for session-less non-initialize POSTs.
+
+    Root cause: on POST /mcp without Mcp-Session-Id, FastMCP's session manager
+    writes the 400 status+headers then kills the connection before the body
+    flushes -> Caddy "aborting with incomplete response" -> cloudflared EOF ->
+    Cloudflare 502 on the public surface (deterministic, every session-less
+    POST). Fix: intercept BEFORE FastMCP and return a COMPLETE JSON-RPC 400.
+    Spec: MCP streamable-HTTP — clients MUST send Mcp-Session-Id after
+    initialize; server rejects invalid requests with a complete 4xx body.
+    Disable: GEOX_SESSION_GUARD=0.
+    """
+
+    async def dispatch(self, request: Request, call_next):
+        if os.environ.get("GEOX_SESSION_GUARD", "1") != "1":
+            return await call_next(request)
+        if request.method != "POST" or request.url.path not in ("/mcp", "/mcp/"):
+            return await call_next(request)
+
+        body = await request.body()
+
+        async def _receive():
+            return {"type": "http.request", "body": body, "more_body": False}
+
+        request = Request(request.scope, _receive)
+
+        try:
+            msg = json.loads(body.decode("utf-8") or "{}")
+        except Exception:
+            return await call_next(request)
+        if not isinstance(msg, dict):
+            return await call_next(request)
+
+        method = msg.get("method") or ""
+        sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
+        if method and method != "initialize" and not sid:
+            logger.warning("SESSION_GUARD: session-less %s rejected with complete 400", method)
+            return JSONResponse(
+                {
+                    "jsonrpc": "2.0",
+                    "id": msg.get("id"),
+                    "error": {
+                        "code": -32600,
+                        "message": (
+                            "Invalid Request: missing Mcp-Session-Id header. "
+                            "POST initialize first to obtain a session id, then include "
+                            "Mcp-Session-Id on every subsequent request (streamable HTTP)."
+                        ),
+                    },
+                },
+                status_code=400,
+                headers={"X-MCP-Session-Guard": "complete-400"},
+            )
+        return await call_next(request)
+
+
 class McpLifecycleMiddleware(BaseHTTPMiddleware):
     """Phase A1 (2026-07-12): enforce initialize → notifications/initialized → tools/call.
 
@@ -3170,11 +3226,7 @@ async def health_handler(request: Request) -> JSONResponse:
             k_deployed = str(kernel_rel.get("deployed_commit") or "unknown")
             k_drift = kernel_rel.get("drift")
 
-            head_moved = (
-                source_sha != "unknown"
-                and k_source != "unknown"
-                and source_sha[:7] != k_source[:7]
-            )
+            head_moved = source_sha != "unknown" and k_source != "unknown" and source_sha[:7] != k_source[:7]
 
             if k_source == "unknown" or k_built == "unknown" or k_drift is None:
                 # Kernel manifest unavailable — fall back to the legacy comparison.
@@ -3194,8 +3246,10 @@ async def health_handler(request: Request) -> JSONResponse:
                 "repo_head_moved_since_build": head_moved,
                 "build_info_sha": running_sha,
                 "source": ("arifOS:/health software_release (build-time identity) + /root/arifOS/.git HEAD (informational only)"),
-                "rule": ("source_commit == built_commit == deployed_commit at build time (arifOS _field_semantics); "
-                         "live repo HEAD is a separate observation, never drift by itself"),
+                "rule": (
+                    "source_commit == built_commit == deployed_commit at build time (arifOS _field_semantics); "
+                    "live repo HEAD is a separate observation, never drift by itself"
+                ),
             }
         except Exception as _de:
             return {
@@ -4177,6 +4231,9 @@ def create_app():
     # without SSE Accept, return graceful discovery JSON. Real MCP clients
     # (Accept: text/event-stream) pass through to FastMCP normally.
     app.add_middleware(_McpAcceptNegotiationMiddleware)
+    # F1.1 (2026-10-22): outermost session guard — complete 400 instead of
+    # FastMCP's mid-response connection kill (public CF-502 root cause).
+    app.add_middleware(McpSessionGuardMiddleware)
 
     # Dynamic FastMCP Tool & Resource Registration
     from geox_mcp.apps.workbench import register_workbench

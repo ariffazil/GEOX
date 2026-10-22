@@ -44,8 +44,8 @@ CANONICAL_TOOLS: dict[str, CanonicalTool] = {
         # in tools/list for 10 tools during the 2026-08-26 zen audit.
         use_when=(
             ""
-            if (tool.description or "").lstrip().lower().startswith("use when")
-            else f"Use when you need {tool.name.replace('geox_', '').replace('_', ' ')} evidence."
+            if "use when" in (tool.description or "").lower()
+            else f"you need {tool.name.replace('geox_', '').replace('_', ' ')} evidence."
         ),
         acrisk=_acrisk(tool.name, tool.lane),
         is_888_hold=tool.lane == "judgment",
