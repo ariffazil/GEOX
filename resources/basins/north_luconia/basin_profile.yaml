@@ -1,0 +1,60 @@
+# GEOX basin registry — North Luconia
+# Created 2026-10-23. Field defect: no Sarawak province existed in the registry, so a working
+# geologist asking about Sarawak hit a bare "Basin data not found".
+#
+# DISCIPLINE: qualitative characterisation only where it is standard published synthesis.
+# Any quantitative field that is not backed by a named public source is null with a data_gap note.
+# Nothing here is invented to look complete.
+
+basin_name: "North Luconia"
+basin_id: "NORTH_LUCONIA"
+location: "Deepwater offshore Sarawak, NW Borneo; north of the Central Luconia carbonate province"
+area_sq_km: null            # data_gap: no single citable per-province figure used
+tectonic_setting: >-
+  Deepwater province on extended continental crust at the junction of the East Natuna, West Luconia and North Luconia depositional systems; Oligocene rifting produced tilted fault blocks whose crests nucleated carbonate build-ups
+stratigraphic_framework: >-
+  Sarawak Cycles, with Oligo-Miocene carbonate build-ups and clastic intervals. Cycle V and Cycle VII intervals are the principal described reservoir targets
+status: >-
+  Frontier. Sparsely drilled relative to province area — on the order of a dozen exploration wells across more than 30,000 sq km of province (published figure, see bibliography)
+primary_hydrocarbon: >-
+  Gas-dominant. Carbonate build-up play with amplitude support and gas-cloud indications. Competent persons reporting on individual prospects assigns a high probability of a gas case
+parent_basin: "sarawak_basin"
+aliases:
+  - "north luconia"
+  - "north_luconia"
+  - "luconia north"
+  - "nl"
+stratigraphy:
+  framework: "Sarawak Cycles I to VIII"
+  note: >-
+    Cycle boundaries are regional unconformities. Maximum flooding surfaces are both the most
+    reliable correlation markers and the most organic-rich intervals — sample them deliberately.
+data_gaps:
+  - "area_sq_km: not published per province in a single citable source; left null"
+  - "reserves and resources by province: not stated here — use a competent persons report, not a registry"
+  - "well counts and discovery inventories: not maintained in GEOX"
+
+play_elements:
+  reservoir: >-
+    Oligo-Miocene carbonate build-ups (argillaceous to clean), with clastic intervals in Cycles
+    I to III where penetrated
+  source: >-
+    Syn-rift and post-rift shales below and adjacent to the build-ups; province-scale maturity
+    is not publicly calibrated at prospect locations
+  seal: >-
+    Regional clastic drape over drowned build-ups. Seal quality is not publicly quantified
+    anywhere in this province — this is the least evidenced play element
+  trap: >-
+    Four-way dip closures over build-up crests on tilted fault blocks
+  seal_is_least_evidenced: true
+
+published_claims:
+  - note: >-
+      Block 2A (operator INPEX Malaysia E&P 2A Limited at 42.5%, PETRONAS Carigali 40%, Seascape
+      Energy (2A) 10%, PSEP 7.5%) contains the Kertang prospect, a four-way closure over 200-220
+      sq km with gross unrisked mean prospective resources of 9.1 Tcf gas plus 146 million barrels
+      NGL, chance of success about 20%, at roughly 1,000 m water depth. Source: partner company
+      public releases and the published competent persons report summary. Recorded here as a
+      published claim, not as a GEOX estimate.
+    epistemic: "PUBLISHED_CLAIM — recorded from public reporting, not a GEOX computation"
+    forbidden_use: "Do not present as a GEOX estimate, reserve, or drilling recommendation."

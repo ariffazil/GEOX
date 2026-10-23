@@ -1,0 +1,57 @@
+# GEOX basin registry — Balingian
+# Created 2026-10-23. Field defect: no Sarawak province existed in the registry, so a working
+# geologist asking about Sarawak hit a bare "Basin data not found".
+#
+# DISCIPLINE: qualitative characterisation only where it is standard published synthesis.
+# Any quantitative field that is not backed by a named public source is null with a data_gap note.
+# Nothing here is invented to look complete.
+
+basin_name: "Balingian"
+basin_id: "BALINGIAN"
+location: "Shallow water offshore Sarawak, NW Borneo, roughly central Sarawak coast"
+area_sq_km: null            # data_gap: no single citable per-province figure used
+tectonic_setting: >-
+  Cenozoic basin with significant coaly and paralic section; clastic-dominated with structural and stratigraphic trapping
+stratigraphic_framework: >-
+  Sarawak Cycles I to III are the principal described reservoir intervals; coaly source rocks within the section
+status: >-
+  Mature to emerging; shallow water with active exploration and appraisal
+primary_hydrocarbon: >-
+  Oil and gas. Coaly source rocks give a mixed kerogen type, and gas-condensate is common
+parent_basin: "sarawak_basin"
+aliases:
+  - "balingian"
+  - "balingian province"
+  - "sk405b"
+  - "sk405"
+stratigraphy:
+  framework: "Sarawak Cycles I to VIII"
+  note: >-
+    Cycle boundaries are regional unconformities. Maximum flooding surfaces are both the most
+    reliable correlation markers and the most organic-rich intervals — sample them deliberately.
+data_gaps:
+  - "area_sq_km: not published per province in a single citable source; left null"
+  - "reserves and resources by province: not stated here — use a competent persons report, not a registry"
+  - "well counts and discovery inventories: not maintained in GEOX"
+
+play_elements:
+  reservoir: >-
+    Cycle I to III shallow marine and deltaic clastics; lateral continuity and net-to-gross are
+    the routine risks
+  source: >-
+    Coaly and carbonaceous shales within the Cycle I to III section; kerogen type II-III to III
+  seal: >-
+    Intra-formational shales; seal adequacy is usually better evidenced here than in the
+    carbonate provinces
+  trap: >-
+    Structural closures with a significant stratigraphic component; fault dependency common
+  seal_is_least_evidenced: false
+
+published_claims:
+  - note: >-
+      Block SK405B (PTTEP Sarawak Oil operator, with MOECO and PETRONAS Carigali) delivered the
+      Sirung-1 oil and gas discovery, announced by PETRONAS on 30 March 2021, drilled to 2,538 m
+      total depth with an oil and gas column exceeding 100 m in Oligocene to Middle Miocene
+      sandstones. Recorded as a published claim.
+    epistemic: "PUBLISHED_CLAIM — recorded from public reporting, not a GEOX computation"
+    forbidden_use: "Do not present as a GEOX estimate, reserve, or drilling recommendation."

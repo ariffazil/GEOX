@@ -1,0 +1,56 @@
+# GEOX basin registry — Central Luconia
+# Created 2026-10-23. Field defect: no Sarawak province existed in the registry, so a working
+# geologist asking about Sarawak hit a bare "Basin data not found".
+#
+# DISCIPLINE: qualitative characterisation only where it is standard published synthesis.
+# Any quantitative field that is not backed by a named public source is null with a data_gap note.
+# Nothing here is invented to look complete.
+
+basin_name: "Central Luconia"
+basin_id: "CENTRAL_LUCONIA"
+location: "Offshore Sarawak, NW Borneo; the classic carbonate build-up province"
+area_sq_km: null            # data_gap: no single citable per-province figure used
+tectonic_setting: >-
+  Late Oligocene to Miocene carbonate build-ups on horst blocks and structural highs, drowned and draped by clastic input as the Baram and Rajang systems prograded
+stratigraphic_framework: >-
+  Sarawak Cycles, principally Cycle IV and Cycle V carbonate build-ups
+status: >-
+  Mature carbonate province with many hundreds of build-up penetrations and several producing gas fields
+primary_hydrocarbon: >-
+  Gas-dominant in the build-ups; sour gas with variable CO2 is common and is a development cost driver
+parent_basin: "sarawak_basin"
+aliases:
+  - "central luconia"
+  - "central_luconia"
+  - "luconia"
+  - "luconia central"
+stratigraphy:
+  framework: "Sarawak Cycles I to VIII"
+  note: >-
+    Cycle boundaries are regional unconformities. Maximum flooding surfaces are both the most
+    reliable correlation markers and the most organic-rich intervals — sample them deliberately.
+data_gaps:
+  - "area_sq_km: not published per province in a single citable source; left null"
+  - "reserves and resources by province: not stated here — use a competent persons report, not a registry"
+  - "well counts and discovery inventories: not maintained in GEOX"
+
+play_elements:
+  reservoir: >-
+    Miocene carbonate build-ups. Reservoir quality is diagenetically controlled: karst and
+    dolomitisation improve it, tight argillaceous lime mudstone destroys it, within the same
+    build-up
+  source: >-
+    Intra-formational and adjacent shales; charge from below and laterally
+  seal: >-
+    Regional clastic drape; seal adequacy varies and is a routine development-phase question
+  trap: >-
+    Build-up geometry with four-way or fault-assisted closure; stratigraphic component common
+  seal_is_least_evidenced: false
+
+published_claims:
+  - note: >-
+      The province is the analogue set for deepwater carbonate prospectivity elsewhere in Sarawak.
+      Reservoir and seal behaviour are not transferable to North Luconia at 400 km basinward;
+      treat analogue use explicitly.
+    epistemic: "PUBLISHED_CLAIM — recorded from public reporting, not a GEOX computation"
+    forbidden_use: "Do not present as a GEOX estimate, reserve, or drilling recommendation."

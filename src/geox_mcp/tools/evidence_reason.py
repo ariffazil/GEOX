@@ -811,7 +811,7 @@ async def _phase_full(
 async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[str, Any]:
     import yaml
 
-    from geox_mcp.tools.basin import _normalize_name
+    from geox_mcp.tools.basin import _BASIN_COORDS, _find_alias_match, _normalize_name
 
     normalized = _normalize_name(basin_name)
     if normalized in ("basin_melayu", "malay_basin"):
@@ -821,9 +821,93 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
     _repo_root = Path(__file__).resolve().parents[3]
     _resources_dir = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_repo_root / "resources")))
     basin_dir = _resources_dir / "basins" / normalized
+
+    # COVERAGE FIX 2026-10-23 (field defect): this path used to hard-fail with a bare
+    # "Basin data not found" while tools/basin.py already resolved aliases and degraded to a
+    # Macrostrat-limited profile. Two code paths, one forgiving, one not — so a real user asking
+    # about Sarawak hit a dead end. Now: alias-resolve, then declare the gap honestly with the
+    # nearest registered analogue and the specific material that would close it. A scientific organ
+    # that cannot answer must still say what it can answer and name what is missing.
+    _requested = normalized
     if not basin_dir.exists():
+        _alias = _find_alias_match(normalized)
+        if _alias:
+            normalized = _alias
+            basin_dir = _resources_dir / "basins" / normalized
+
+    if not basin_dir.exists():
+        registered = sorted(
+            d.name for d in (_resources_dir / "basins").iterdir()
+            if d.is_dir() and (d / "basin_profile.yaml").exists()
+        ) if (_resources_dir / "basins").exists() else []
+        coords = _BASIN_COORDS.get(_requested)
+        if coords is None:
+            for _k, _c in _BASIN_COORDS.items():
+                if _k in _requested or _requested in _k:
+                    coords = _c
+                    break
+        _analogue = ""
+        _analogue_why = ""
+        # Honest analogue selection: prefer geographic proximity via known centroids, never a
+        # blanket default. An unrelated analogue is worse than none — it invites false transfer.
+        _CENTROIDS = {
+            "sarawak_basin": (3.0, 113.0), "north_luconia": (6.3, 113.5),
+            "central_luconia": (4.5, 112.5), "balingian": (3.3, 112.5), "baram": (4.4, 114.0),
+            "malay_basin": (5.5, 104.5), "sabah_basin": (5.5, 116.0),
+        }
+        if coords:
+            _best, _bestd = None, None
+            for _k, _c in _CENTROIDS.items():
+                if _k not in registered:
+                    continue
+                _d = ((_c[0] - coords[0]) ** 2 + (_c[1] - coords[1]) ** 2) ** 0.5
+                if _bestd is None or _d < _bestd:
+                    _best, _bestd = _k, _d
+            if _best and _bestd is not None and _bestd <= 8.0:
+                _analogue = _best
+                _analogue_why = f"nearest registered basin centroid, {_bestd:.1f} degrees away"
+            elif _best:
+                _analogue_why = (
+                    f"nearest registered basin is {_best} at {_bestd:.1f} degrees — too far to "
+                    "treat as an analogue, so none is offered"
+                )
+        else:
+            _analogue_why = "centroid unknown for this name, so no analogue can be selected"
         return get_standard_envelope(
-            {"tool": TOOL_NAME, "error": f"Basin data not found for: {basin_name}"},
+            {
+                "tool": TOOL_NAME,
+                "status": "COVERAGE_GAP",
+                "claim_state": "NO_VALID_EVIDENCE",
+                "requested_basin": basin_name,
+                "normalized": _requested,
+                "reason": "no_registry_entry",
+                "detail": (
+                    f"No basin_profile.yaml exists for '{_requested}'. This is a gap in the GEOX "
+                    "registry, not a finding that the basin lacks geology."
+                ),
+                "nearest_registered_analogue": _analogue or None,
+                "analogue_reason": _analogue_why or None,
+                "analogue_is_not_a_substitute": bool(_analogue),
+                "centroid_if_known": {"lat": coords[0], "lng": coords[1]} if coords else None,
+                "registered_basins": registered,
+                "still_available": [
+                    "geox_basin(mode='macrostrat_*') where a centroid is known — geological map units only",
+                    "geox_petrophysics / geox_well on supplied LAS",
+                    "geox_claim to record an INTERPRETATION about this basin without a registry entry",
+                ],
+                "to_close_gap": {
+                    "action": f"Add resources/basins/{_requested}/basin_profile.yaml",
+                    "minimum_fields": [
+                        "basin_name", "basin_id", "location", "tectonic_setting",
+                        "stratigraphic_framework", "primary_hydrocarbon",
+                    ],
+                    "sources_that_would_populate_it": [
+                        "PETRONAS MPM basin summaries",
+                        "Geological Society of Malaysia Bulletin stratigraphic syntheses",
+                        "Published operator or partner releases for the relevant province",
+                    ],
+                },
+            },
             tool_class="reason",
             execution_status=ExecutionStatus.ERROR,
             governance_status=GovernanceStatus.HOLD,
