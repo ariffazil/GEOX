@@ -1525,6 +1525,36 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
+    @mcp.tool(name="geox_measurement_programme", annotations=_geox_annotations("geox_measurement_programme"))
+    async def _measurement_programme(
+        well_type: str = "exploration",
+        basin: str | None = None,
+        lithology: str = "clastic",
+        play_type: str | None = None,
+        water_depth: float | None = None,
+        target_depth: float = 3000.0,
+        mud_system: str | None = None,
+        core_planned: bool = False,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Post-drill measurement / lab-scope programme (WP-B). COMPUTE_ONLY.
+
+        Given well type, basin, lithology, play type, water depth, target depth,
+        mud system and whether core is planned, return the standard analysis list
+        (grouped by discipline, with decision/method/sample/tier), per-line sample
+        arithmetic, a 20%-budget cut list, and the rarely-decisive flag. DERIVED,
+        never priced.
+        """
+        from geox_mcp.tools.measurement_programme import geox_measurement_programme as _impl
+
+        return _impl(
+            well_type=well_type, basin=basin, lithology=lithology, play_type=play_type,
+            water_depth=water_depth, target_depth=target_depth, mud_system=mud_system,
+            core_planned=core_planned,
+        )
+
     @mcp.tool(name="geox_cross_section", annotations=_geox_annotations("geox_cross_section"))
     async def _cross_section(
         line: str | None = None,
