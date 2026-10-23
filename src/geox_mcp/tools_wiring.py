@@ -1525,6 +1525,31 @@ def register_tools_on(mcp):
         )
         return await _impl(**args)
 
+    @mcp.tool(name="geox_cross_section", annotations=_geox_annotations("geox_cross_section"))
+    async def _cross_section(
+        line: str | None = None,
+        start: list[float] | None = None,
+        end: list[float] | None = None,
+        n: int = 701,
+        render: bool = False,
+        session_id: str | None = None,
+        actor_id: str | None = None,
+        trace_id: str | None = None,
+    ) -> dict[str, Any]:
+        """Sample (and optionally render) a real-data geological transect.
+
+        Named line ("BB_dip" | "AA_strike") or explicit start/end [lat, lon].
+        COMPUTE_ONLY — returns a great-circle profile (bathymetry + free-air
+        gravity); render=True adds a deterministic SVG. Nothing drawn by hand.
+        """
+        from geox_mcp.tools.cross_section import geox_cross_section as _impl
+        from geox_mcp.tools.cross_section import render_svg as _render
+
+        r = await _impl(line=line, start=start, end=end, n=n)
+        if render and r.get("status") == "OK":
+            r["svg"] = _render(r)
+        return r
+
     @mcp.tool(name="geox_basin", annotations=_geox_annotations("geox_basin"))
     async def _basin(
         mode: str = "profile",
