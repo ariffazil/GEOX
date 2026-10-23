@@ -1,0 +1,43 @@
+# GEOX basin registry — Sarawak Basin
+# Created 2026-10-23. Field defect: no Sarawak province existed in the registry, so a working
+# geologist asking about Sarawak hit a bare "Basin data not found".
+#
+# DISCIPLINE: qualitative characterisation only where it is standard published synthesis.
+# Any quantitative field that is not backed by a named public source is null with a data_gap note.
+# Nothing here is invented to look complete.
+
+basin_name: "Sarawak Basin"
+basin_id: "SARAWAK_BASIN"
+location: "Offshore and onshore Sarawak, NW Borneo, Malaysia; South China Sea margin"
+area_sq_km: null            # data_gap: no single citable per-province figure used
+tectonic_setting: >-
+  Cenozoic marginal basin system shaped by South China Sea opening, the West Baram Line, and the Rajang accretionary complex to the south; divided into provinces with distinct subsidence and sedimentary provenance histories
+stratigraphic_framework: >-
+  Sarawak Cycles I to VIII (transgressive-regressive packages bounded by regional unconformities)
+status: >-
+  Mature to frontier, depending on province. Baram and Balingian mature; Central Luconia a mature carbonate province; North and West Luconia largely frontier deepwater
+primary_hydrocarbon: >-
+  Gas-dominant, with significant oil in Baram and Balingian; Central Luconia carbonate build-ups are gas-bearing
+parent_basin: "sarawak_basin"
+aliases:
+  - "sarawak"
+  - "sarawak basin"
+  - "sk basin"
+  - "offshore sarawak"
+  - "sarawak offshore"
+stratigraphy:
+  framework: "Sarawak Cycles I to VIII"
+  note: >-
+    Cycle boundaries are regional unconformities. Maximum flooding surfaces are both the most
+    reliable correlation markers and the most organic-rich intervals — sample them deliberately.
+data_gaps:
+  - "area_sq_km: not published per province in a single citable source; left null"
+  - "reserves and resources by province: not stated here — use a competent persons report, not a registry"
+  - "well counts and discovery inventories: not maintained in GEOX"
+
+provinces:
+  - baram
+  - balingian
+  - central_luconia
+  - north_luconia
+  - west_luconia
