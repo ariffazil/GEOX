@@ -351,7 +351,7 @@ async def geox_map_scene_plan(
     width_deg = bbox[2] - bbox[0]
     height_deg = bbox[3] - bbox[1]
 
-    return {
+    scene = {
         "status": "OK",
         "scene_id": scene_id,
         "bbox": bbox,
@@ -372,6 +372,18 @@ async def geox_map_scene_plan(
             "sources": list(set(l["source"] for l in ordered_layers)),
         },
     }
+    # F5 — persist the scene so a later render_preview(scene_id=...) resolves it
+    # across separate tool calls. The scene_id was previously a promise the
+    # renderer could not keep (only the inline bbox path ever wrote the file).
+    try:
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        scene_file = _CACHE_DIR / f"{scene_id}_scene.json"
+        with open(scene_file, "w") as f:
+            json.dump(scene, f, indent=2)
+    except OSError:
+        # Best-effort: the deterministic scene dict is still returned inline.
+        logging.warning("geox_map_scene_plan: could not persist scene %s", scene_id)
+    return scene
 
 
 # ── TOOL 3: geox_map_render_preview ─────────────────────────────────────────
