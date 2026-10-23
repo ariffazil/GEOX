@@ -171,3 +171,57 @@ async def geox_cross_section(
             "authority": "555_COMPUTE_ONLY",
         },
     }
+
+
+def render_svg(profile: dict, width: int = 1240, height: int = 460) -> str:
+    """Render a profile (from geox_cross_section) as a 2-panel SVG: bathymetry + gravity.
+
+    The render half of the cross-section gap. Deterministic, dependency-free SVG
+    (pure string construction) - no matplotlib, no PIL. Data is MEASURED (elev/grav),
+    nothing drawn by hand.
+    """
+    dist = profile.get("dist_km") or []
+    elev = profile.get("elev_m") or []
+    grav = profile.get("grav_mgal") or []
+    if not dist or not elev:
+        return '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="80"><text x="10" y="30" font-family="sans-serif" font-size="12">INVALID - no profile data</text></svg>'
+    x0, x1 = dist[0], dist[-1]
+    dx = (x1 - x0) or 1.0
+    ev = [v for v in elev if v is not None]
+    gv = [v for v in grav if v is not None] if grav else []
+    e_lo, e_hi = (min(ev), max(ev)) if ev else (-3000, 2000)
+    g_lo, g_hi = (min(gv), max(gv)) if gv else (-40, 100)
+    pad_l, pad_r, pad_t, pad_b = 46, 12, 14, 30
+    pw = width - pad_l - pad_r
+    top_h = height * 0.52
+    bot_h = height * 0.30
+
+    def X(v):
+        return pad_l + (v - x0) / dx * pw
+
+    def Yz(z):
+        return pad_t + (e_hi - z) / (e_hi - e_lo) * (top_h - 20)
+
+    def Yg(g):
+        return pad_t + top_h + 26 + (g_hi - g) / (g_hi - g_lo) * (bot_h - 16)
+
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" font-family="sans-serif">',
+        f'<rect width="{width}" height="{height}" fill="#0d1117"/>',
+        f'<text x="{pad_l}" y="16" fill="#e6edf3" font-size="14" font-weight="bold">{profile.get("name","")} - {profile.get("label","")} ({profile.get("length_km","")} km, bearing {profile.get("bearing_deg","")} deg)</text>',
+        f'<text x="{pad_l}" y="30" fill="#8b949e" font-size="9">{profile.get("note","")} - MEASURED (NOAA bathymetry, Sandwell & Smith V34.1 gravity)</text>',
+    ]
+    pts = " ".join(f"{X(d):.1f},{Yz(z):.1f}" for d, z in zip(dist, elev) if z is not None)
+    if pts:
+        parts.append(f'<polyline points="{pts}" fill="none" stroke="#58a6ff" stroke-width="1.4"/>')
+        lastx = pts.split()[-1].split(",")[0]
+        parts.append(f'<path d="M {pts.split()[0]} L {pts} L {lastx},{Yz(e_lo)} Z" fill="#0d2b4566"/>')
+    parts.append(f'<text x="{pad_l}" y="{Yz(e_lo)+12}" fill="#58a6ff" font-size="9">bathymetry {e_lo:.0f} to {e_hi:.0f} m</text>')
+    if gv:
+        gpts = " ".join(f"{X(d):.1f},{Yg(g):.1f}" for d, g in zip(dist, grav) if g is not None)
+        parts.append(f'<polyline points="{gpts}" fill="none" stroke="#f0883e" stroke-width="1.2"/>')
+        parts.append(f'<text x="{pad_l}" y="{Yg(g_lo)+12}" fill="#f0883e" font-size="9">free-air gravity {g_lo:.0f} to {g_hi:.0f} mGal</text>')
+    for i in range(0, int(dx) + 1, 100):
+        parts.append(f'<text x="{X(i):.1f}" y="{height-8}" fill="#8b949e" font-size="8" text-anchor="middle">{i} km</text>')
+    parts.append('</svg>')
+    return "\n".join(parts)
