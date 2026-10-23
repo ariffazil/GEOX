@@ -22,6 +22,9 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
 
+# 2026-10-23 333-AGI: bound decoder memory on a user-facing upload endpoint.
+Image.MAX_IMAGE_PIXELS = 64_000_000
+
 from chat.forbidden_scan import scan_reply
 from chat.mcp_client import McpClient, McpError
 
@@ -80,6 +83,25 @@ def _session_id(request: Request, response: Response) -> str:
     _sessions[sid] = now
     response.set_cookie("ew_sid", sid, httponly=True, samesite="lax", secure=COOKIE_SECURE, max_age=SESSION_TTL)
     return sid
+
+
+def _sniff_upload_type(raw: bytes) -> str | None:
+    """Return the upload MIME from magic bytes, or None if not an allowed container.
+
+    2026-10-23 333-AGI: the previous code took Pillow's ``.format`` and defaulted
+    anything unrecognised to JPEG. That let EPS/PS, TIFF, GIF, FPX and other
+    Pillow-recognised containers reach ``_strip_exif`` — and EPS reaches the
+    Ghostscript delegate. Gate on the container before Pillow opens it.
+    """
+    if raw.startswith(b"%PDF-"):
+        return "application/pdf"
+    if raw.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "image/png"
+    if raw.startswith(b"\xff\xd8\xff"):
+        return "image/jpeg"
+    if len(raw) >= 12 and raw[:4] == b"RIFF" and raw[8:12] == b"WEBP":
+        return "image/webp"
+    return None
 
 
 def _strip_exif(raw: bytes, content_type: str) -> tuple[bytes, str]:
@@ -157,16 +179,11 @@ async def observe(
 
     data_uri: str | dict[str, Any]
     try:
-        if image[:5] == b"%PDF-":
-            cleaned, mime = _strip_exif(image, "application/pdf")
-            data_uri = "data:application/pdf;base64," + base64.b64encode(cleaned).decode()
-        else:
-            sniff = Image.open(io.BytesIO(image)).format or "JPEG"
-            content_type = {"PNG": "image/png", "WEBP": "image/webp"}.get(sniff, "image/jpeg")
-            if content_type not in ALLOWED_TYPES:
-                raise HTTPException(415, "only jpg, png, webp, pdf allowed")
-            cleaned, mime = _strip_exif(image, content_type)
-            data_uri = f"data:{mime};base64," + base64.b64encode(cleaned).decode()
+        content_type = _sniff_upload_type(image)
+        if content_type is None or content_type not in ALLOWED_TYPES:
+            raise HTTPException(415, "only jpg, png, webp, pdf allowed")
+        cleaned, mime = _strip_exif(image, content_type)
+        data_uri = f"data:{mime};base64," + base64.b64encode(cleaned).decode()
     except HTTPException:
         raise
     except Exception:
@@ -222,6 +239,7 @@ async def observe(
         # /health. Return the same envelope shape the OK path uses, so the
         # page can always render a card.
         import uuid as _uuid
+
         req_id = _uuid.uuid4().hex
         return JSONResponse(
             status_code=502,
