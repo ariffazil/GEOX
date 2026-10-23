@@ -137,10 +137,34 @@ async def geox_petrophysics(
         }
     _missing = [n for n in _required if locals().get(n) is None]
     if _missing:
+        _cure = None
+        if "curves" in _required or "curves" in _missing:
+            _cure = {
+                "minimal_curves": {
+                    "GR": "gamma ray (API)",
+                    "RT": "deep resistivity (ohm.m)",
+                    "RHOB": "bulk density (g/cm3)",
+                    "NPHI": "neutron porosity (v/v)",
+                    "DT": "compressional slowness (us/ft)",
+                },
+                "example_payload": {
+                    "well_id": "EXAMPLE-1",
+                    "depth_m": [1500.0, 1500.5, 1501.0],
+                    "curves": {
+                        "GR": [45.0, 48.0, 52.0],
+                        "RT": [2.1, 2.3, 2.5],
+                        "RHOB": [2.31, 2.28, 2.25],
+                        "NPHI": [0.21, 0.19, 0.18],
+                        "DT": [78.0, 80.0, 82.0],
+                    },
+                },
+                "note": "Provide these curves (or ingest a LAS file) to proceed; units above are the expected input.",
+            }
         return {
             "status": "INVALID",
             "mode": mode,
             "errors": [f"mode={mode!r} requires: {', '.join(_required)}. Missing: {', '.join(_missing)}"],
+            "cure": _cure,
             "_mode_requirements_satisfied": False,
         }
 

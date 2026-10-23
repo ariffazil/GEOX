@@ -199,3 +199,15 @@ async def test_guardrails_bbox_clamped():
     assert result["status"] == "OK"
     assert result["width_px"] <= 1600
     assert result["height_px"] <= 1600
+
+
+@pytest.mark.asyncio
+async def test_scene_persistence_across_calls():
+    """F5 — scene_plan must persist so render_preview(scene_id=...) resolves in a separate call."""
+    from geox_mcp.tools.earth_map import geox_map_scene_plan, geox_map_render_preview
+    scene = await geox_map_scene_plan(bbox=[110.0, 1.0, 115.0, 5.0], map_purpose="context")
+    assert scene.get("status") == "OK", scene
+    sid = scene["scene_id"]
+    r = await geox_map_render_preview(scene_id=sid)
+    assert r.get("status") == "OK", f"render failed: {r.get('error')}"
+    assert r.get("error") is None
