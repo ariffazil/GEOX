@@ -370,8 +370,9 @@ async def geox_basin(
 
     # Default: profile
     from geox_mcp.tools.basin import geox_basin_profile as _impl
+    from geox_mcp.epistemic.disclosure import is_public_session
 
-    return await _impl(
+    _res = await _impl(
         basin_name=kwargs.get("basin_name", ""),
         mode=kwargs.get("profile_mode", "overview"),
         claim_strictness=kwargs.get("claim_strictness", "screen"),
@@ -380,3 +381,29 @@ async def geox_basin(
         lat=kwargs.get("lat"),
         lng=kwargs.get("lng"),
     )
+
+    # Disclosure must survive response compaction (2026-10-28). The inner
+    # builder's `disclosure` key can be dropped by interpreted-compaction, and
+    # an empty `observed` with no explanation reads as "no evidence exists" —
+    # the same silent-gap failure the kernel's event window had. Stamp it at
+    # the outer boundary so a public reader always knows material was withheld.
+    if isinstance(_res, dict):
+        _public = is_public_session(
+            str(kwargs.get("session_id") or "") or None,
+            str(kwargs.get("actor_id") or "") or None,
+        )
+        _inner = _res.get("disclosure") if isinstance(_res.get("disclosure"), dict) else {}
+        _res.setdefault(
+            "_disclosure",
+            {
+                "projection": "PUBLIC" if _public else "ENTERPRISE",
+                "withheld_claims": _inner.get("withheld_claims", 0),
+                "rule": (
+                    "claims coupled to a confidential well file are withheld from "
+                    "anonymous sessions; framework, method, geometry, contradictions "
+                    "and falsifiers are published in full"
+                ),
+                "reason": "custody of a third-party well file is not the organ's to release",
+            },
+        )
+    return _res

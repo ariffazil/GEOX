@@ -547,6 +547,24 @@ async def geox_basin_profile(
         prior_art_claims = []
         forbidden_claims = []
 
+        # ── Public/enterprise separation + epistemic routing (2026-10-28) ──
+        # External grader finding: an anonymous session received absolute repo
+        # paths and a de-identified well's pay-zone attribution. Claims coupled
+        # to a confidential well are withheld from public sessions; framework,
+        # geometry, contradictions and falsifiers stay public. Custody decides
+        # disclosure, never credit — the reasoning is Arif's and stays public.
+        from geox_mcp.epistemic.disclosure import (
+            is_machine_observation,
+            is_public_session,
+            scrub_refs,
+            split_for_public,
+        )
+
+        _public = is_public_session(session_id, actor_id)
+        _withheld = 0
+        if _public:
+            claims, _withheld = split_for_public(claims)
+
         # Sort claims from claims.json
         for c in claims:
             c_text = c.get("claim", "")
@@ -555,8 +573,28 @@ async def geox_basin_profile(
             forbid = c.get("forbidden_uses", [])
             forbidden_claims.extend(forbid)
 
+            if _public:
+                c_refs = scrub_refs(c_refs)
+
             if c_type == "observed":
-                observed[c_text] = {"source": c.get("source"), "refs": c_refs, "confidence": c.get("confidence")}
+                if is_machine_observation(c):
+                    observed[c_text] = {
+                        "source": c.get("source"),
+                        "refs": c_refs,
+                        "confidence": c.get("confidence"),
+                    }
+                else:
+                    # `observed` promises the reader that the machine saw this.
+                    # A sovereign resolution, a relay, or an audit is an
+                    # authority statement, not an observation. Route it, never
+                    # drop it, and keep its provenance visible.
+                    interpreted[c_text] = {
+                        "source": c.get("source"),
+                        "refs": c_refs,
+                        "confidence": c.get("confidence"),
+                        "provenance_class": "RELAY_OR_ATTESTATION",
+                        "routed_from": "observed",
+                    }
             elif c_type == "derived":
                 derived[c_text] = {"source": c.get("source"), "refs": c_refs, "confidence": c.get("confidence")}
             elif c_type == "interpreted":
@@ -837,6 +875,27 @@ async def geox_basin_profile(
             "forbidden_claims": list(set(forbidden_claims)),
             "next_best_actions": next_best_actions,
         }
+
+        # Disclosure state must be visible, never silent. A public caller is
+        # told that material exists and is withheld, and why — an omission the
+        # reader cannot see is indistinguishable from a claim that failed.
+        if _public:
+            result["disclosure"] = {
+                "projection": "PUBLIC",
+                "withheld_claims": _withheld,
+                "rule": (
+                    "claims coupled to a confidential well file are withheld from "
+                    "anonymous sessions; framework, method, geometry, contradictions "
+                    "and falsifiers are published in full"
+                ),
+                "reason": "custody of a third-party well file is not the organ's to release",
+            }
+        else:
+            result["disclosure"] = {
+                "projection": "ENTERPRISE",
+                "withheld_claims": 0,
+                "rule": "authenticated session — full claim set",
+            }
 
         # Event registry lane (F2-compaction-safe).
         # compact_structured_for_ui keeps only first 15 scalar values from
