@@ -296,10 +296,21 @@ def test_schema_every_public_tool_exposes_nonempty_input_properties(live_tools):
     assert not empty, f"SCHEMA INTROSPECTION VIOLATION: empty properties on {sorted(empty)}"
 
 
+# Federation envelope params — carried by every GEOX tool, never domain signal.
+# (Federation contract: all tools accept session_id/actor_id/trace_id.)
+ENVELOPE_PARAMS = {"session_id", "actor_id", "trace_id"}
+
+
 @pytest.mark.xfail(strict=True, reason="S3 fix: flatten geox_contrast_metabolize; keep `arguments` as deprecated alias")
 def test_schema_contrast_metabolize_exposes_flat_params_with_arguments_deprecated_alias(live_tools):
-    """INVARIANT: mode-dispatched tools expose flat params; `arguments` only as deprecated alias."""
+    """INVARIANT: mode-dispatched tools expose flat DOMAIN params; `arguments` only as deprecated alias.
+
+    Envelope params (session_id/actor_id/trace_id) are transport plumbing, not domain signal —
+    counting them as 'flat' let this test pass against a tool that exposes zero domain params."""
     props = (live_tools["geox_contrast_metabolize"].get("inputSchema") or {}).get("properties") or {}
-    flat = [k for k in props if k != "arguments"]
-    assert flat, f"SCHEMA INTROSPECTION VIOLATION: only opaque props {sorted(props)}"
+    flat = [k for k in props if k != "arguments" and k not in ENVELOPE_PARAMS]
+    assert flat, (
+        f"SCHEMA INTROSPECTION VIOLATION: geox_contrast_metabolize exposes zero flat DOMAIN params "
+        f"(props={sorted(props)} after excluding arguments alias + envelope {sorted(ENVELOPE_PARAMS)})"
+    )
     assert "arguments" in props, "ALIAS REGRESSION: deprecated `arguments` alias removed"
