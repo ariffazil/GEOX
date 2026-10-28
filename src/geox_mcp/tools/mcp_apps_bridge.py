@@ -1116,6 +1116,13 @@ def compact_structured_for_ui(
         # event_registry_total so callers see whether the list was capped.
         "event_registry",
         "event_registry_total",
+        # 2026-10-28 (333-AGI): disclosure marks survive the compact boundary.
+        # Without them a public caller sees an emptied `interpreted` /
+        # empty `observed` with no statement that material was withheld —
+        # indistinguishable from "no evidence exists". `disclosure` is written
+        # by the basin builder, `_disclosure` by the unified outer boundary.
+        "disclosure",
+        "_disclosure",
     ]
     for k in prefer:
         if k not in source:
@@ -1133,6 +1140,15 @@ def compact_structured_for_ui(
             base[f"{k}_compacted"] = True
         else:
             base[k] = v
+
+    # 2026-10-28 (333-AGI): the unified outer boundary stamps `_disclosure` on
+    # the ENVELOPE top level, not inside primary_artifact — and `source` above
+    # is primary_artifact whenever it exists. Carry the envelope-level stamp
+    # across so a public caller sees the withheld-count on every path.
+    if "_disclosure" not in base and isinstance(result, dict):
+        _env_disclosure = result.get("_disclosure")
+        if isinstance(_env_disclosure, dict):
+            base["_disclosure"] = _env_disclosure
 
     # 2026-09-06 F2: never stamp ok:true on an error envelope. Previous code
     # only checked `ok is False`, so get_standard_envelope(ERROR) + error

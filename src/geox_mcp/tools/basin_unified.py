@@ -32,6 +32,104 @@ def _model_spread(results: dict[str, dict[str, Any]]) -> float:
     return round(math.sqrt(dlat**2 + dlon**2), 1)
 
 
+# ── Modes the surface advertises but the unified signature cannot execute ──
+# The engines exist and work; their required inputs are not exposed by
+# geox_basin's signature. Per the backstrip precedent (af-fix #1, 2026-09-09)
+# these refuse honestly and route to the dedicated tool instead of falling
+# through to the profile default.
+_UNEXPOSED_MODE_ROUTES: dict[str, dict[str, Any]] = {
+    "mass_balance": {
+        "required_tool": "geox_sediment_mass_balance",
+        "required_params": ["basin_name", "source_eroded_km3", "preserved_volumes"],
+        "engine_module": "geox_mcp.tools.basin_engines.mass_balance_tool",
+    },
+    "thermal": {
+        "required_tool": "geox_thermal_maturity_history",
+        "required_params": ["well_ref", "burial_history"],
+        "engine_module": "geox_mcp.tools.basin_engines.thermal_tool",
+    },
+    "thermal_maturity": {
+        "required_tool": "geox_thermal_maturity_history",
+        "required_params": ["well_ref", "burial_history"],
+        "engine_module": "geox_mcp.tools.basin_engines.thermal_tool",
+    },
+}
+
+# Modes this unified tool can actually execute. Anything outside this set must
+# refuse, never silently return a profile.
+_UNIFIED_EXECUTABLE_MODES: tuple[str, ...] = (
+    "profile",
+    "resolve",
+    "macrostrat",
+    "deep_time",
+    "emag2",
+    "icgem",
+    "intake",
+    "scene",
+    "sts",
+    "reconstruct",
+    "rift",
+)
+
+
+def _unexposed_mode_refusal(mode: str, kwargs: dict[str, Any]) -> dict[str, Any]:
+    """Honest refusal for a mode this tool cannot execute.
+
+    F2 TRUTH: a caller that asks for thermal maturity must not receive a basin
+    profile with ok:true. Return the failure shape (HOLD,
+    INVALID_MODE_FOR_THIS_TOOL) and name the tool that can do the work.
+    """
+    route = _UNEXPOSED_MODE_ROUTES.get(mode)
+    if route:
+        error = (
+            f"geox_basin(mode={mode!r}) cannot execute: the unified basin "
+            f"signature does not expose {mode}-specific inputs "
+            f"({', '.join(route['required_params'])}). Use the dedicated tool "
+            f"`{route['required_tool']}` directly, or extend the unified "
+            f"signature with the required parameters."
+        )
+        required_tool = route["required_tool"]
+        required_params = route["required_params"]
+    else:
+        error = (
+            f"geox_basin(mode={mode!r}) is not a recognised mode. Executable "
+            f"modes: {', '.join(_UNIFIED_EXECUTABLE_MODES)}. Analytical "
+            f"sub-modes of the profile (petroleum_system, stratigraphy, "
+            f"play_fairway, risk, contradiction_scan, macrostrat_units, ...) "
+            f"are selected with profile_mode=, not mode=."
+        )
+        required_tool = ""
+        required_params = []
+
+    refusal: dict[str, Any] = {
+        "tool": "geox_basin",
+        "mode": mode,
+        "mode_echo": mode,
+        "ok": False,
+        "isError": True,
+        "execution_status": "ERROR",
+        "governance_status": "HOLD",
+        "claim_tag": "HYPOTHESIS",
+        "claim_state": "INVALID_MODE_FOR_THIS_TOOL",
+        "valid_modes": list(_UNIFIED_EXECUTABLE_MODES),
+        "error": error,
+        "_evidence_postcondition": {
+            "applied": True,
+            "verdict": "DOWNGRADED",
+            "reason": (
+                f"mode {mode!r} requested but the unified signature cannot "
+                f"execute it; falling through to profile would be a silent F2 "
+                f"violation"
+            ),
+            "spec": "geox-evidence-postcondition-v1",
+        },
+    }
+    if required_tool:
+        refusal["required_tool"] = required_tool
+        refusal["required_params"] = required_params
+    return refusal
+
+
 async def geox_basin(
     mode: Literal[
         "profile", "resolve", "macrostrat", "deep_time", "emag2", "icgem", "intake", "scene", "sts", "reconstruct", "rift"
@@ -137,11 +235,25 @@ async def geox_basin(
         return await _impl(name=kwargs.get("name", kwargs.get("basin_name", "")))
 
     if mode == "macrostrat":
-        from geox_mcp.tools.compat import geox_query_macrostrat as _impl
+        # F2 TRUTH fix (2026-10-28, 333-AGI · receipt rg7-mode-dispatch).
+        # This branch used the DEPRECATED compat shim `geox_query_macrostrat`,
+        # which re-enters geox_basin with mode=<macrostrat_mode> (default
+        # "macrostrat_units"). No dispatch branch matches that string, so the
+        # re-entry fell through to the profile default and returned a basin
+        # profile with ok:true while the caller had asked for Macrostrat rock
+        # units. Measured live 2026-10-28: mode="macrostrat" and
+        # mode="macrostrat_units" both returned payload.mode="overview" with
+        # zero macrostrat units.
+        # The macrostrat_* modes are PROFILE MODES of geox_basin_profile —
+        # call it directly instead of round-tripping through the shim.
+        from geox_mcp.tools.basin import geox_basin_profile as _impl
 
         return await _impl(
             basin_name=kwargs.get("basin_name", ""),
             mode=kwargs.get("macrostrat_mode", "macrostrat_units"),
+            claim_strictness=kwargs.get("claim_strictness", "screen"),
+            evidence_refs=kwargs.get("evidence_refs"),
+            include_missing_evidence=kwargs.get("include_missing_evidence", True),
             lat=kwargs.get("lat"),
             lng=kwargs.get("lng"),
         )
@@ -368,6 +480,19 @@ async def geox_basin(
             "note": rk.note,
         }
 
+    # ── Unhandled mode → honest refusal (F2 TRUTH, 2026-10-28, 333-AGI) ───
+    # af-fix #1 (2026-09-09) hardened mode="backstrip" only. The remaining
+    # advertised modes (mass_balance, thermal maturity) and every unknown mode
+    # string still fell through to the profile default and returned ok:true
+    # with mode:"overview" — a silent lie, because the MCP schema exposes
+    # `mode` as a bare string (no enum), so a caller had no way to detect it.
+    # Measured live 2026-10-28: mode in {macrostrat, macrostrat_units,
+    # mass_balance, thermal, massbalance, mass_balance_mb} all returned the
+    # identical profile payload. Now: refuse, echo the requested mode, and
+    # name the dedicated tool that can actually do the work.
+    if mode not in ("profile",):
+        return _unexposed_mode_refusal(mode, kwargs)
+
     # Default: profile
     from geox_mcp.tools.basin import geox_basin_profile as _impl
     from geox_mcp.epistemic.disclosure import is_public_session
@@ -387,12 +512,21 @@ async def geox_basin(
     # an empty `observed` with no explanation reads as "no evidence exists" —
     # the same silent-gap failure the kernel's event window had. Stamp it at
     # the outer boundary so a public reader always knows material was withheld.
+    #
+    # F2 fix (2026-10-28, 333-AGI): the inner builder writes `disclosure` into
+    # the profile RESULT, which the standard envelope nests under
+    # `primary_artifact`. Reading it from the envelope top level therefore
+    # always missed it, so `withheld_claims` was structurally pinned to 0 —
+    # a zero-laundered count. Read both levels.
     if isinstance(_res, dict):
         _public = is_public_session(
             str(kwargs.get("session_id") or "") or None,
             str(kwargs.get("actor_id") or "") or None,
         )
         _inner = _res.get("disclosure") if isinstance(_res.get("disclosure"), dict) else {}
+        if not _inner and isinstance(_res.get("primary_artifact"), dict):
+            _pa = _res["primary_artifact"]
+            _inner = _pa.get("disclosure") if isinstance(_pa.get("disclosure"), dict) else {}
         _res.setdefault(
             "_disclosure",
             {
