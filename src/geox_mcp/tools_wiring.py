@@ -7534,10 +7534,20 @@ def register_tools_on(mcp):
                 return None
 
         _tool_names = await _live_tool_names()
+        from collections import Counter as _Counter
+
+        _counts = _Counter(_tool_names or [])
+        _dupes = sorted(n for n, c in _counts.items() if c > 1)
+        _unique = len(_counts)
         _public_names = sorted({n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS})
         live_counts = {
             "tools": len(_public_names) if _tool_names is not None else None,
-            "tools_total": len(_tool_names) if _tool_names is not None else None,
+            # S2 (2026-10-28): a count built as a set difference can never detect a
+            # duplicate. tools_total is now UNIQUE names; entries and the duplicate
+            # names are reported separately so the collision is visible, not absorbed.
+            "tools_total": _unique if _tool_names is not None else None,
+            "tools_entries": len(_tool_names) if _tool_names is not None else None,
+            "tools_duplicate_names": _dupes if _tool_names is not None else None,
             "resources": await _live_count("list_resources"),
             "prompts": await _live_count("list_prompts"),
             # OBS instrument (2026-10-15): the live name list settles count
@@ -7548,8 +7558,16 @@ def register_tools_on(mcp):
             else None,
         }
 
+        # S1 (2026-10-28): one probe feeds both this tool and /health. The status word is
+        # derived, never a literal. See geox_mcp/health_probe.py for the design laws.
+        from geox_mcp.health_probe import probe_health_fields
+
+        _health = await probe_health_fields(mcp)
+
         return {
-            "status": "healthy",
+            "status": _health["status"],
+            "cause": _health["cause"],
+            "status_source": _health["status_source"],
             "organ": "GEOX",
             "surface_version": GEOX_VERSION,
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
@@ -7558,7 +7576,15 @@ def register_tools_on(mcp):
             "deployed_git_sha": deployed_sha,
             "live_counts": live_counts,
             "canonical_counts": {"tools": len(CANONICAL_PUBLIC_TOOLS)},
-            "verdict": "REGISTRY_PASS",
+            "registry_state": _health["registry_state"],
+            "registry_source": _health["registry_source"],
+            "kernel_state": _health["kernel_state"],
+            "kernel_verdict": _health["kernel_verdict"],
+            "kernel_floors_failing": _health["kernel_floors_failing"],
+            "kernel_floors_unmeasured": _health["kernel_floors_unmeasured"],
+            "dependency_state": _health["dependency_state"],
+            "reasons": _health["reasons"],
+            "verdict": "REGISTRY_PASS" if _health["registry_state"] == "PASS" else "REGISTRY_FAIL",
             "session_id": session_id,
             "actor_id": actor_id,
             "trace_id": trace_id,

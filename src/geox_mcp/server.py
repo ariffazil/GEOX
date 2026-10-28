@@ -255,6 +255,20 @@ _GEOX_OPEN_WORLD_TOOLS = {
     "geox_surface_status",
     "geox_visual_understand",
     "geox_visual_generate_hypotheses",
+    # S4 (2026-10-28): canonical tools that read external/public sources but declared
+    # openWorldHint=false. PBDB (paleobiodb), STAC/LanceDB (spatial), Macrostrat (deep_time),
+    # layer catalogue + external tiles (map).
+    "geox_paleobiodb_query",
+    "geox_spatial",
+    "geox_deep_time",
+    "geox_map",
+}
+
+# S4 (2026-10-28): tools carrying IRREVERSIBLE modes (claim.seal, prospect.evaluate+verdict).
+# A client must be able to see that risk; destructiveHint=false hid it.
+_GEOX_DESTRUCTIVE_TOOLS = {
+    "geox_claim",
+    "geox_prospect",
 }
 
 
@@ -271,6 +285,8 @@ def _geox_annotations(tool_name: str) -> dict[str, bool]:
         base = dict(_GEOX_READONLY_ANNOTATIONS)
     if tool_name in _GEOX_OPEN_WORLD_TOOLS or tool_name.startswith("geox_map_"):
         base["openWorldHint"] = True
+    if tool_name in _GEOX_DESTRUCTIVE_TOOLS:
+        base["destructiveHint"] = True
     return base
 
 
@@ -3268,24 +3284,41 @@ async def health_handler(request: Request) -> JSONResponse:
     except Exception:
         pass
 
-    _geo_status = "healthy" if _kernel_ok else "degraded"
-    _owner_color = "GREEN" if _kernel_ok else "AMBER"
-    _owner_reasons = [
-        "identity_verified" if is_geox() else "identity_unverified",
-        f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
-        f"kernel_verdict={_kernel_verdict}",
-        "service_healthy" if _kernel_ok else "kernel_not_SEAL",
-    ]
+    # ── S1 (2026-10-28): ONE probe, named fields ───────────────────────
+    # /health and geox_surface_status both read probe_health_fields(). The top-level
+    # status word is DERIVED; every reason quotes the measured field. The old literal
+    # reason "kernel_not_SEAL" is gone — the kernel is reachable but degraded for named
+    # floors, and that is what is reported now. Exceptions fail closed (UNKNOWN, never green).
+    from geox_mcp.health_probe import probe_health_fields
+
+    _health = await probe_health_fields(mcp)
+    _kernel_verdict = _health["kernel_verdict"]
+    _geo_status = _health["status"]
+    _owner_color = "GREEN" if _geo_status == "healthy" else "AMBER"
+    _owner_reasons = [f"identity_verified" if is_geox() else "identity_unverified"] + list(_health["reason_strings"])
 
     # ── F2 TRUTH: surface drift gate (2026-07-25) ──────────────────────
-    # A healthy badge during drift = Floor-2 violation.
-    # Consume the middleware's filtered-surface drift report.
+    # Independent evidence about the same field the probe measures by enumeration.
+    # Disagreement = registry is not PASS, whatever the enumeration said.
     _surface_drift = _surface_drift_summary()
     if not _surface_drift.get("ok", True):
+        _health["registry_state"] = "FAIL"
+        _health["cause"] = "REGISTRY"
         _geo_status = "degraded"
         _owner_color = "AMBER"
         _owner_reasons.append(
             f"surface_drift: {_surface_drift.get('drift_count', 0)} drifted, {_surface_drift.get('gap_count', 0)} gaps"
+        )
+        _health["reasons"].append(
+            {
+                "field": "registry.surface_drift",
+                "value": {
+                    "drift_count": _surface_drift.get("drift_count", 0),
+                    "gap_count": _surface_drift.get("gap_count", 0),
+                },
+                "severity": "error",
+                "explanation": "middleware drift snapshot disagrees with a clean registry state",
+            }
         )
 
     # ── F2 TRUTH: registry truth gate (2026-07-25) ────────────────────
@@ -3297,6 +3330,8 @@ async def health_handler(request: Request) -> JSONResponse:
         _manifest = manifest_tool_map()
         _manifest_count = len([e for e in _manifest.values() if not (hasattr(e, "is_internal") and e.is_internal)])
         if _manifest_count != len(CANONICAL_PUBLIC_TOOLS):
+            _health["registry_state"] = "FAIL"
+            _health["cause"] = "REGISTRY"
             _geo_status = "degraded"
             _owner_color = "AMBER"
             _owner_reasons.append(f"registry_truth: manifest={_manifest_count} canonical={len(CANONICAL_PUBLIC_TOOLS)}")
@@ -3306,7 +3341,15 @@ async def health_handler(request: Request) -> JSONResponse:
     return JSONResponse(
         {
             "status": _geo_status,
-            "kernel_verdict": _kernel_verdict,
+            "cause": _health["cause"],
+            "status_source": _health["status_source"],
+            "registry_state": _health["registry_state"],
+            "kernel_state": _health["kernel_state"],
+            "kernel_verdict": _health["kernel_verdict"],
+            "kernel_floors_failing": _health["kernel_floors_failing"],
+            "kernel_floors_unmeasured": _health["kernel_floors_unmeasured"],
+            "dependency_state": _health["dependency_state"],
+            "reasons": _health["reasons"],
             "service": "geox-unified",
             "version": GEOX_VERSION,
             "federation_schema_version": "2.0.0",
