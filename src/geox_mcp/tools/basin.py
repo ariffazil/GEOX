@@ -3,8 +3,9 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import yaml
 
@@ -37,6 +38,87 @@ RESOURCES_DIR = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_REPO_ROOT / "reso
 
 def _normalize_name(name: str) -> str:
     return name.lower().replace(" ", "_").replace("-", "_")
+
+
+# ── Declared-contradiction detection (2026-10-28, 333-AGI) ───────────────
+# The claim store already knows where it contradicts itself. A claim that
+# says so — via metadata.defect_class, or by naming the inconsistency in its
+# own text — is evidence of a contradiction. A claim that does not is not.
+# This detector reads DECLARED contradictions only; it never infers one.
+#
+# Measured live 2026-10-28 on malay_basin: profile_mode=contradiction_scan
+# returned contradictions=[] while the SAME payload's interpreted set
+# contained CLM-MTJ-007 verbatim ("INTERNAL INCONSISTENCY ... 700 mmscf/d
+# ... 790 mmscf/d ... not reconcilable"). The scan was a stub that never
+# opened claims.json.
+_CONTRADICTION_TEXT_MARKERS: tuple[str, ...] = (
+    "internal inconsistency",
+    "inconsistency in",
+    "contradiction",
+    "inconsistent",
+    "not reconcilable",
+    "unarbitrated",
+    "contested",
+)
+
+# "tension" needs a word boundary: the corpus is full of "extension" and
+# "transtension" (a regional fact, not a contradiction), while the real
+# marker reads "granite age TENSION on record".
+_CONTRADICTION_TENSION_RE = re.compile(r"\btension\b", re.IGNORECASE)
+
+# A contradiction that has been closed says so; one that is still open must
+# not be filed as closed just because the word "resolved" appears somewhere
+# in a longer sentence.
+_CONTRADICTION_OPEN_MARKERS: tuple[str, ...] = (
+    " open",
+    "unresolved",
+    "still open",
+    "not resolved",
+    "unarbitrated",
+    "contested",
+    "not reconcilable",
+)
+
+
+def _declared_contradictions(claims: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Extract the contradictions the claim store already declares.
+
+    Scope: DECLARED only. A claim that names its own inconsistency is
+    evidence; the absence of a declared contradiction is NOT evidence that
+    none exists. Callers must state the scope alongside the count.
+    """
+    out: list[dict[str, Any]] = []
+    for c in claims:
+        if not isinstance(c, dict):
+            continue
+        text = str(c.get("claim", ""))
+        meta = c.get("metadata") if isinstance(c.get("metadata"), dict) else {}
+        defect_class = str(meta.get("defect_class") or "").strip()
+        low = text.lower()
+        if (
+            not defect_class
+            and not any(m in low for m in _CONTRADICTION_TEXT_MARKERS)
+            and not _CONTRADICTION_TENSION_RE.search(text)
+        ):
+            continue
+        resolved = "resolved" in low and not any(m in low for m in _CONTRADICTION_OPEN_MARKERS)
+        out.append(
+            {
+                "claim_id": c.get("claim_id"),
+                "status": "RESOLVED" if resolved else "OPEN",
+                "defect_class": defect_class or "declared_in_claim_text",
+                "claim": text,
+                "source": c.get("source"),
+                "confidence": c.get("confidence"),
+                "evidence_refs": c.get("evidence_refs") or [],
+                "forbidden_uses": c.get("forbidden_uses") or [],
+                "valid_until": c.get("valid_until"),
+                "location": meta.get("location"),
+                "resolution_note": meta.get("note"),
+                "scan_scope": "DECLARED_IN_CLAIM_STORE",
+            }
+        )
+    return out
 
 
 def _find_alias_match(query_normalized: str) -> str | None:
@@ -626,6 +708,11 @@ async def geox_basin_profile(
                     }
                 )
 
+        # ── Declared-contradiction scan (2026-10-28, 333-AGI) ─────────────
+        # Runs on the VISIBLE claim set only (after the public split), so a
+        # withheld claim never leaks through the scan.
+        contradictions = _declared_contradictions(claims)
+
         # Load specific mode details
         mode_data = {}
         evidence_loaded = []
@@ -837,8 +924,25 @@ async def geox_basin_profile(
                     evidence_loaded.append("macrostrat.org/api/v2/geologic_units/map")
 
         elif mode == "contradiction_scan":
-            mode_data = {"scan_status": "COMPLETE", "contradictions_found": []}
-            # Add regional contradictions if any
+            # Was a stub: it hardcoded contradictions_found=[] and never opened
+            # claims.json, while the result dict hardcoded "contradictions": []
+            # so nothing could ever surface. Measured live 2026-10-28 on
+            # malay_basin: profile_mode=contradiction_scan returned
+            # contradictions=[] while the SAME payload's interpreted set
+            # contained CLM-MTJ-007 verbatim ("INTERNAL INCONSISTENCY ...
+            # 700 mmscf/d ... 790 mmscf/d ... not reconcilable").
+            mode_data = {
+                "scan_status": "COMPLETE",
+                "scan_scope": "DECLARED_IN_CLAIM_STORE",
+                "scan_note": (
+                    "Reads contradictions the claim store already DECLARES "
+                    "(a claim that names its own inconsistency). It does not "
+                    "infer new ones — absence of a declared contradiction is "
+                    "not evidence that none exists."
+                ),
+                "claims_scanned": len(claims),
+                "contradictions_found": contradictions,
+            }
             evidence_loaded.append("claims.json")
 
         # Handle missing evidence and strictness gating
@@ -870,7 +974,10 @@ async def geox_basin_profile(
             "prior_art_claims": prior_art_claims,
             "play_fairways": mode_data.get("plays", []) if mode == "play_fairway" else [],
             "risk_register": mode_data.get("uncertainties", []) if mode == "risk" else [],
-            "contradictions": [],
+            # Real, not hardcoded []: the declared contradictions this basin
+            # actually carries. Empty means none are declared — it does not
+            # mean none exist.
+            "contradictions": contradictions,
             "missing_evidence": missing_evidence,
             "forbidden_claims": list(set(forbidden_claims)),
             "next_best_actions": next_best_actions,
