@@ -1123,6 +1123,15 @@ def compact_structured_for_ui(
         # by the basin builder, `_disclosure` by the unified outer boundary.
         "disclosure",
         "_disclosure",
+        # 2026-10-28 (333-AGI): honest-refusal routing must survive the compact
+        # boundary too. A refusal that keeps its error text but loses
+        # `required_tool` leaves the caller with a truth and no way to act on
+        # it. These keys are emitted only by refusal envelopes, so no other
+        # tool's payload changes.
+        "mode_echo",
+        "required_tool",
+        "required_params",
+        "valid_modes",
     ]
     for k in prefer:
         if k not in source:
