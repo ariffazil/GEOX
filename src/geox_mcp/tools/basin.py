@@ -70,7 +70,11 @@ _CONTRADICTION_TENSION_RE = re.compile(r"\btension\b", re.IGNORECASE)
 # not be filed as closed just because the word "resolved" appears somewhere
 # in a longer sentence.
 _CONTRADICTION_OPEN_MARKERS: tuple[str, ...] = (
-    " open",
+    # bare " open" removed 2026-10-28 (review P2): any later "open" in an
+    # unrelated context ("Contradiction resolved. Open for discussion") flipped
+    # a RESOLVED to OPEN. Scoped phrases below carry the open meaning;
+    # "reopened" covers resolve-then-reopen texts.
+    "reopened",
     "unresolved",
     "still open",
     "not resolved",
