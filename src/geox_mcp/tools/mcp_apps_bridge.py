@@ -1132,6 +1132,13 @@ def compact_structured_for_ui(
         "required_tool",
         "required_params",
         "valid_modes",
+        # 2026-10-28: a scan that says how far it looked. Without these a
+        # caller sees `contradictions: []` and cannot tell an empty store from
+        # an unscanned one.
+        "claims_scanned",
+        "scan_scope",
+        "scan_status",
+        "contradictions_found",
     ]
     for k in prefer:
         if k not in source:
