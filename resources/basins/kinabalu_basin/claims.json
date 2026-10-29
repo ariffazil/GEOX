@@ -1,7 +1,7 @@
 [
   {
     "claim_id": "kin_clm_1",
-    "claim": "Kinabalu Basin fill rests on the Borneo (Crocker) accretionary wedge and its seaward flank — upper plate of the collision system; it is a group of wedge-top/foreland depocentres.",
+    "claim": "Kinabalu Basin fill rests on the Borneo (Crocker) accretionary wedge and its seaward flank \u2014 upper plate of the collision system; it is a group of wedge-top/foreland depocentres.",
     "claim_type": "interpreted",
     "evidence_refs": [
       "basin_profile.yaml",
@@ -16,7 +16,7 @@
   },
   {
     "claim_id": "kin_clm_2",
-    "claim": "DRU (13.5–12.5 Ma) marks post-collision uplift, major erosion and onset of Stage IV progradation in this province; DRU is distinct from BMU/Top-Crocker (~base Miocene).",
+    "claim": "DRU (13.5\u201312.5 Ma) marks post-collision uplift, major erosion and onset of Stage IV progradation in this province; DRU is distinct from BMU/Top-Crocker (~base Miocene).",
     "claim_type": "interpreted",
     "evidence_refs": [
       "tectonic_history.md"
@@ -30,7 +30,7 @@
   },
   {
     "claim_id": "kin_clm_3",
-    "claim": "2026 Stage IV NN calibration (IVG NN19 → IVA mid-NN5, intra-IVE E1–E3 at NN11A/NN11B/NN15) is preliminary; NN zones do not equal surfaces — surfaces need seismic-stratal criteria plus age brackets.",
+    "claim": "2026 Stage IV NN calibration (IVG NN19 \u2192 IVA mid-NN5, intra-IVE E1\u2013E3 at NN11A/NN11B/NN15) is preliminary; NN zones do not equal surfaces \u2014 surfaces need seismic-stratal criteria plus age brackets.",
     "claim_type": "observed",
     "evidence_refs": [
       "basin_profile.yaml"
@@ -73,7 +73,7 @@
   },
   {
     "claim_id": "kin_clm_6",
-    "claim": "RESOLVED 2026-09-30 (was UNKNOWN): for the de-identified NSPW deepwater well DW-A (identity ledger held privately; well-file values PURGED from this public repo 2026-10-08 by F13 sovereign decision — synthesis retained, numbers removed), the well-completion-report header (TD, seabed, TVDSS — values withheld) resolves a roster contradiction: Hyp-B correct. The machine roster row was a DATA-LINEAGE FAULT (synthetic/modelled or another header), NOT the real well; superseded roster rows must not be used for depth targeting. The earlier Hyp-B line 'nothing tied below IVE' was itself wrong — it was scaled from derived picks; real picks tie NN11 and NN10 at DW-A (kin_clm_7).",
+    "claim": "RESOLVED 2026-09-30 (was UNKNOWN): for the de-identified NSPW deepwater well DW-A (identity ledger held privately; well-file values PURGED from this public repo 2026-10-08 by F13 sovereign decision \u2014 synthesis retained, numbers removed), the well-completion-report header (TD, seabed, TVDSS \u2014 values withheld) resolves a roster contradiction: Hyp-B correct. The machine roster row was a DATA-LINEAGE FAULT (synthetic/modelled or another header), NOT the real well; superseded roster rows must not be used for depth targeting. The earlier Hyp-B line 'nothing tied below IVE' was itself wrong \u2014 it was scaled from derived picks; real picks tie NN11 and NN10 at DW-A (kin_clm_7).",
     "claim_type": "observed",
     "evidence_refs": [
       "internal WCR header + formation tops relay (artifacts de-referenced 2026-10-08; originals in private store)",
@@ -89,7 +89,7 @@
   },
   {
     "claim_id": "kin_clm_7",
-    "claim": "DW-A carries REAL biostrat + seismic-tie picks (derived-model superseded): upper unit's source reads NN12 (flagged); an NN11 interval (HIGH confidence, coarsening-upward funnel); NN10 to TD (MEDIUM, blocky/aggrading); interpreter intra-IVD and intra-IVC tops present; top reservoir and a flat-event GWC lie within the NN10 interval (all MD/TVDSS depths withheld 2026-10-08 purge — private ledger). Depth-time link is REAL via VSP.",
+    "claim": "DW-A carries REAL biostrat + seismic-tie picks (derived-model superseded): upper unit's source reads NN12 (flagged); an NN11 interval (HIGH confidence, coarsening-upward funnel); NN10 to TD (MEDIUM, blocky/aggrading); interpreter intra-IVD and intra-IVC tops present; top reservoir and a flat-event GWC lie within the NN10 interval (all MD/TVDSS depths withheld 2026-10-08 purge \u2014 private ledger). Depth-time link is REAL via VSP.",
     "claim_type": "observed",
     "evidence_refs": [
       "enterprise bio-zone intervals (ACTIVE_SOURCE_OF_TRUTH relay; artifact names de-referenced 2026-10-08)",
@@ -104,7 +104,7 @@
   },
   {
     "claim_id": "kin_clm_8",
-    "claim": "The DW-A gas pay sits entirely within NN10 (~8.29–9.53 Ma): top reservoir, the intra-IVC top and the NN11/NN10 boundary coincide within a few metres. By operator label the pay is 'IVC Kinarut'; by the Borneo-2023 NN ladder NN10 = Stage IVD; Wheeler SRU (base NN10A ~8.6 Ma) lies inside NN10 at or below TD. INTERPRET: the zone-to-surface transfer error caught in a real well — 'IVC' here is a label, not an age. OPEN 888 QUESTION: is SRU/SENJA at DW-A the NN11/NN10 boundary (just above pay) or base NN10A (near TD)? The two candidates differ ~0.3–0.9 Myr and ~150 m of section; the answer decides whether Kinabalu SRU ties regionally to NN9 or NN10. LANGGAR-DRU and SABAR-UIU are below TD on this line — seismic-only under every hypothesis.",
+    "claim": "The DW-A gas pay sits entirely within NN10 (~8.29\u20139.53 Ma): top reservoir, the intra-IVC top and the NN11/NN10 boundary coincide within a few metres. By operator label the pay is 'IVC Kinarut'; by the Borneo-2023 NN ladder NN10 = Stage IVD; Wheeler SRU (base NN10A ~8.6 Ma) lies inside NN10 at or below TD. INTERPRET: the zone-to-surface transfer error caught in a real well \u2014 'IVC' here is a label, not an age. OPEN 888 QUESTION: is SRU/SENJA at DW-A the NN11/NN10 boundary (just above pay) or base NN10A (near TD)? The two candidates differ ~0.3\u20130.9 Myr and ~150 m of section; the answer decides whether Kinabalu SRU ties regionally to NN9 or NN10. LANGGAR-DRU and SABAR-UIU are below TD on this line \u2014 seismic-only under every hypothesis.",
     "claim_type": "interpreted",
     "evidence_refs": [
       "kin_clm_7",
@@ -120,7 +120,7 @@
   },
   {
     "claim_id": "kin_clm_9",
-    "claim": "KL2 scaffold v3 shipped 2026-09-30 (T4): local kl2 workbook + penetration chart under /root/GEOX/outputs/kl2_kinabalu/. DW-A = REAL header (WCR) + REAL picks; other 7 wells remain DER_SYNTHETIC unchanged; v2 files retained but SUPERSEDED (lineage fault). Penetration asserts recomputed honestly: NN9 8→7, NN8 5→4, NN7 5→4 — v1 pattern not preserved because it was built on the faulty row.",
+    "claim": "KL2 scaffold v3 shipped 2026-09-30 (T4): local kl2 workbook + penetration chart under /root/GEOX/outputs/kl2_kinabalu/. DW-A = REAL header (WCR) + REAL picks; other 7 wells remain DER_SYNTHETIC unchanged; v2 files retained but SUPERSEDED (lineage fault). Penetration asserts recomputed honestly: NN9 8\u21927, NN8 5\u21924, NN7 5\u21924 \u2014 v1 pattern not preserved because it was built on the faulty row.",
     "claim_type": "observed",
     "evidence_refs": [
       "/root/GEOX/outputs/kl2_kinabalu/kl2_kinabalu_penetration_v3.py",
@@ -136,7 +136,7 @@
   },
   {
     "claim_id": "kin_clm_10",
-    "claim": "SRU (Shallow Regional Unconformity; Levell 1987, named with DRU, LIU/UIU and Horizons III-I) is a KINABALU-ONLY upper-plate surface: strong Inboard Belt compression (fold+uplift+erosion) SIMULTANEOUS with transtension opening the Outboard Belt and East Baram depocentres. Character changes downdip: angular unconformity inboard (type; onshore Crocker/Klias removed or merged with younger erosion) -> onlap outboard -> correlative conformity (East Baram) -> local unconformities + conformable stretches in deepwater (DW-A/NSPW, diapir-deformed; candidate pick at the NN11/NN10 boundary a few metres below top pay — depth withheld) -> UNKNOWN in Sabah Trough (not imaged) -> none in Layang-Layang (drape continues). Age ~9-8.5 Ma HOLD (candidates: 9.53 top NN9 / ~8.6 base NN10A / an internal well-product value near 8.5 Ma — figure withheld 2026-10-08 purge); stage HOLD (top IVC vs base IVD).",
+    "claim": "SRU (Shallow Regional Unconformity; Levell 1987, named with DRU, LIU/UIU and Horizons III-I) is a KINABALU-ONLY upper-plate surface: strong Inboard Belt compression (fold+uplift+erosion) SIMULTANEOUS with transtension opening the Outboard Belt and East Baram depocentres. Character changes downdip: angular unconformity inboard (type; onshore Crocker/Klias removed or merged with younger erosion) -> onlap outboard -> correlative conformity (East Baram) -> local unconformities + conformable stretches in deepwater (DW-A/NSPW, diapir-deformed; candidate pick at the NN11/NN10 boundary a few metres below top pay \u2014 depth withheld) -> UNKNOWN in Sabah Trough (not imaged) -> none in Layang-Layang (drape continues). Age ~9-8.5 Ma HOLD (candidates: 9.53 top NN9 / ~8.6 base NN10A / an internal well-product value near 8.5 Ma \u2014 figure withheld 2026-10-08 purge); stage HOLD (top IVC vs base IVD).",
     "claim_type": "interpreted",
     "evidence_refs": [
       "tectonic_history.md#sru-settlement",
@@ -280,5 +280,22 @@
       "priority_claim_in_public_artifact"
     ],
     "falsifier": "A prior publication/technical report that states the same parameterised trough-axis intrusion test (magnetics+gravity+seismic+thermal joint constraint) for the Kinabalu/Sabah Trough transect."
+  },
+  {
+    "claim_id": "kin_clm_18",
+    "claim_type": "structural_cross_section_release_candidate",
+    "claim": "KL2 / A\u2013A\u2032 regional cross-section (T-KIN-XS-833, 832.8 km WGS84 Karney geodesic) updated to release candidate v4. Three-panel evidence-bounded architecture: Panel 1 (0\u201315 km) anchored to real GEBCO_2019 seabed (trough 3.02 km @ km 241.7, summit grid 3969 m vs geodetic 4095 m, DWFTB km 290\u2013373 envelope); Panel 2 (0\u2013105 km) constrained by receiver function stations (KINA 0.9 km off-line, SBC6 34.5 km, SBC5 47.4 km, KMY @ km 429.9; km 0\u2013425 unconstrained and non-bridged; Cornwell 2025 slab discontinuity 45\u201355 km depth, 75\u2013100 km width); Panel 3 domain-bounded working hypothesis spans (A km 230\u2013290, B km 200\u2013330, C km 290\u2013430, D km 455\u2013545). KL2 8-line 3D calibration corridor anchored at km 240\u2013372.4.",
+    "evidence_refs": [
+      "/earth/data/kinabalu_section_aa.json",
+      "/earth/data/kinabalu_aa_profile.json",
+      "/earth/data/kinabalu_aa_bodies.json",
+      "Gilligan et al. 2026 (eartharxiv 5899)",
+      "Cornwell et al. 2025 (doi:10.1029/2025JB031466)",
+      "Sidek et al. 2016 (doi:10.7186/bgsm62201607)",
+      "Morley et al. 2023 (Geosphere 19(1):291)"
+    ],
+    "source": "GEOX Release Candidate 2026-10-27 \u00b7 branch earth/kinabalu-anchored-v2",
+    "confidence": "HIGH (release candidate \u00b7 production deploy under 888 HOLD)",
+    "valid_until": "2027-12-31"
   }
 ]

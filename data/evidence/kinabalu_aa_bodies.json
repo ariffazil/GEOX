@@ -1,0 +1,1034 @@
+{
+ "schema": "aa_bodies/v1",
+ "generated": "2026-10-26T16:51:24Z",
+ "class": "DERIVED GEOMETRY — interpretive schematics; re-anchored to GEBCO_2019 profile 2026-10-27",
+ "reanchor_method": "v3 surface-pinned vertices (|Δ| ≤ 0.25 km vs old hand-drawn surface) re-pinned to the real profile; all other vertices unchanged; no body upgraded in evidence class",
+ "removed": [
+  "schematic Moho lines (MOHO/MOHO2/MOHOC)",
+  "DG internal half-graben relief (H&S 1985 route retired)",
+  "DWFTB internal thrust glyphs (envelope only)",
+  "full-transect crust/mantle model polygons"
+ ],
+ "shared": [
+  {
+   "id": "DG-ENV",
+   "kind": "envelope",
+   "span": [
+    0,
+    262
+   ],
+   "base_km": 12,
+   "fill": "#57534e",
+   "name": "Dangerous Grounds — rifted continental crust + post-breakup drape",
+   "tip": "Interpretive envelope. Internal half-graben block geometry PENDING: the Hinz & Schlüter 1985 route is retired (F13 2026-10-26); a future drawing needs a modern MCS dataset with numeric constraints. Thickness/base not constrained on this transect."
+  },
+  {
+   "id": "CARB-1",
+   "pts": [
+    [
+     18,
+     3.3
+    ],
+    [
+     33,
+     3.2
+    ],
+    [
+     30,
+     2.4
+    ],
+    [
+     21,
+     2.4
+    ]
+   ],
+   "fill": "#0369a1",
+   "name": "Oligo–Miocene carbonate platform (schematic extent)",
+   "tip": "Platform on a block crest; drowned at ~16 Ma (MMU). Extent schematic."
+  },
+  {
+   "id": "CARB-2",
+   "pts": [
+    [
+     62,
+     3.1
+    ],
+    [
+     78,
+     3.2
+    ],
+    [
+     75,
+     2.2
+    ],
+    [
+     66,
+     1.96
+    ]
+   ],
+   "fill": "#0369a1",
+   "name": "Carbonate platform (schematic extent)",
+   "tip": "Carbonate platform on a block crest. Extent schematic."
+  },
+  {
+   "id": "CARB-LL",
+   "pts": [
+    [
+     128,
+     3.25
+    ],
+    [
+     150,
+     3.45
+    ],
+    [
+     141,
+     0.96
+    ],
+    [
+     137,
+     0.05
+    ]
+   ],
+   "fill": "#0369a1",
+   "name": "Layang-Layang atoll",
+   "tip": "A platform that kept pace with subsidence and still reaches sea level."
+  },
+  {
+   "id": "CARB-3",
+   "pts": [
+    [
+     165,
+     3.45
+    ],
+    [
+     180,
+     3.55
+    ],
+    [
+     176,
+     2.6
+    ],
+    [
+     168,
+     2.6
+    ]
+   ],
+   "fill": "#0369a1",
+   "name": "Carbonate platform (schematic extent)",
+   "tip": "Carbonate platform on a block crest. Extent schematic."
+  },
+  {
+   "id": "CARB-TEPAT",
+   "pts": [
+    [
+     238,
+     4.5
+    ],
+    [
+     256,
+     4.6
+    ],
+    [
+     252,
+     3.6
+    ],
+    [
+     242,
+     3.6
+    ]
+   ],
+   "fill": "#0369a1",
+   "name": "Tepat-type carbonate buildup (schematic extent)",
+   "tip": "Oligo–Miocene carbonate on the trough's NW flank (Tepat-1, public: TGS/EAGE 2026). The carbonate alternative class exists for high-velocity bodies."
+  },
+  {
+   "id": "TROUGH-FILL",
+   "pts": [
+    [
+     262,
+     2.68
+    ],
+    [
+     280,
+     2.15
+    ],
+    [
+     290,
+     1.73
+    ],
+    [
+     290,
+     5.0
+    ],
+    [
+     262,
+     4.4
+    ]
+   ],
+   "fill": "#3f4a5c",
+   "name": "Sabah Trough fill (schematic)",
+   "tip": "Neogene hemipelagic mud and distal turbidites. Schematic."
+  },
+  {
+   "id": "DWFTB-ENV",
+   "kind": "envelope",
+   "span": [
+    290,
+    373
+   ],
+   "base_km": 8,
+   "fill": "#6b5a2e",
+   "hatch": "amber",
+   "name": "Deepwater fold–thrust belt — ENVELOPE ONLY (83 km)",
+   "tip": "Wu, McClay & de Vera 2020 (Geosphere 16(1):329–356, doi:10.1130/GES02106.1). Along-line envelope only; internal thrust geometry, dips, detachment and shortening are PENDING — figure geometry not yet digitised."
+  },
+  {
+   "id": "STAGE4",
+   "pts": [
+    [
+     373,
+     -0.01
+    ],
+    [
+     400,
+     0.05
+    ],
+    [
+     430,
+     -0.01
+    ],
+    [
+     432,
+     3.0
+    ],
+    [
+     415,
+     5.5
+    ],
+    [
+     390,
+     6.6
+    ],
+    [
+     373,
+     6.0
+    ]
+   ],
+   "fill": "#a16207",
+   "name": "Stage IV deltaic–shelf clastics (schematic)",
+   "tip": "Post-DRU deltaic–shelf clastics, the producing reservoirs of the Kinabalu Basin. Schematic."
+  },
+  {
+   "id": "PRISM",
+   "pts": [
+    [
+     430,
+     -0.01
+    ],
+    [
+     440,
+     -0.13
+    ],
+    [
+     455,
+     -0.43
+    ],
+    [
+     470,
+     -0.76
+    ],
+    [
+     479,
+     -1.1
+    ],
+    [
+     491,
+     -2.02
+    ],
+    [
+     505,
+     -0.55
+    ],
+    [
+     520,
+     -0.43
+    ],
+    [
+     540,
+     -1.35
+    ],
+    [
+     548,
+     3.0
+    ],
+    [
+     540,
+     12
+    ],
+    [
+     420,
+     12
+    ],
+    [
+     415,
+     8.0
+    ],
+    [
+     432,
+     3.0
+    ]
+   ],
+   "fill": "#4c3d63",
+   "base_open": true,
+   "name": "Rajang–Crocker accretionary prism (schematic)",
+   "tip": "Eocene–Oligocene deep-marine turbidites, folded and thrust (Crocker Range). Base unconstrained — schematic termination."
+  },
+  {
+   "id": "GRANITE",
+   "pts": [
+    [
+     475,
+     -0.52
+    ],
+    [
+     479,
+     -1.1
+    ],
+    [
+     485,
+     -3.96
+    ],
+    [
+     491,
+     -2.02
+    ],
+    [
+     496,
+     -1.0
+    ],
+    [
+     500,
+     3
+    ],
+    [
+     497,
+     8
+    ],
+    [
+     486,
+     9.5
+    ],
+    [
+     473,
+     8
+    ],
+    [
+     470,
+     3
+    ]
+   ],
+   "fill": "#db2777",
+   "name": "Kinabalu granite (7.85–7.22 Ma)",
+   "tip": "Dated pluton (U–Pb zircon, Cottam et al. 2010); rapid exhumation (Cottam et al. 2013). Subsurface extent schematic."
+  },
+  {
+   "id": "MELANGE-C",
+   "pts": [
+    [
+     540,
+     -1.35
+    ],
+    [
+     568,
+     -0.24
+    ],
+    [
+     600,
+     -0.06
+    ],
+    [
+     630,
+     -0.02
+    ],
+    [
+     652,
+     -0.01
+    ],
+    [
+     660,
+     -0.02
+    ],
+    [
+     668,
+     2.0
+    ],
+    [
+     668,
+     4
+    ],
+    [
+     660,
+     12
+    ],
+    [
+     540,
+     12
+    ],
+    [
+     548,
+     3.0
+    ]
+   ],
+   "fill": "#3b4a3a",
+   "base_open": true,
+   "name": "Central Sabah mélange + ophiolite slivers (schematic)",
+   "tip": "Kuamut/Garinono mélange with ophiolite slivers (Telupid). Base unconstrained."
+  },
+  {
+   "id": "CIRC",
+   "pts": [
+    [
+     575,
+     -0.11
+    ],
+    [
+     598,
+     -0.07
+    ],
+    [
+     594,
+     1.8
+    ],
+    [
+     580,
+     1.8
+    ]
+   ],
+   "fill": "#8a6f3a",
+   "name": "Circular-basin remnant (schematic)",
+   "tip": "Tanjong/Kapilit deltaics preserved in a syncline (Balaguru et al. 2003)."
+  },
+  {
+   "id": "SANDK",
+   "pts": [
+    [
+     652,
+     -0.01
+    ],
+    [
+     700,
+     -0.01
+    ],
+    [
+     716,
+     0.01
+    ],
+    [
+     740,
+     0.08
+    ],
+    [
+     770,
+     0.11
+    ],
+    [
+     790,
+     0.33
+    ],
+    [
+     790,
+     7.0
+    ],
+    [
+     740,
+     6.5
+    ],
+    [
+     700,
+     4.5
+    ],
+    [
+     668,
+     2.0
+    ],
+    [
+     660,
+     -0.02
+    ]
+   ],
+   "fill": "#b45309",
+   "name": "Sandakan delta (schematic)",
+   "tip": "Middle–Late Miocene to Recent deltaic clinoforms prograding NE into the Sulu Sea (Madon & Jong 2022)."
+  },
+  {
+   "id": "COT",
+   "pts": [
+    [
+     668,
+     2.0
+    ],
+    [
+     700,
+     4.5
+    ],
+    [
+     740,
+     6.5
+    ],
+    [
+     790,
+     7.0
+    ],
+    [
+     790,
+     12
+    ],
+    [
+     660,
+     12
+    ],
+    [
+     668,
+     4
+    ]
+   ],
+   "fill": "#3b4a3a",
+   "base_open": true,
+   "name": "Basement under the Sandakan Basin (uncertain)",
+   "tip": "Mélange / ophiolite — uncertain. Base unconstrained."
+  },
+  {
+   "id": "SULU-DRAPE",
+   "pts": [
+    [
+     790,
+     0.33
+    ],
+    [
+     810,
+     0.79
+    ],
+    [
+     833,
+     2.13
+    ],
+    [
+     833,
+     5.2
+    ],
+    [
+     790,
+     4.0
+    ]
+   ],
+   "fill": "#3f4a5c",
+   "name": "Sulu Sea sediment cover (schematic)",
+   "tip": "Schematic."
+  },
+  {
+   "id": "SULU-OCEAN",
+   "pts": [
+    [
+     790,
+     4.0
+    ],
+    [
+     833,
+     5.2
+    ],
+    [
+     833,
+     11.5
+    ],
+    [
+     790,
+     10.5
+    ]
+   ],
+   "fill": "#1f3d3a",
+   "name": "Sulu Sea oceanic crust (schematic)",
+   "tip": "Back-arc basin opened Early–Middle Miocene (Rangin & Silver 1991). Thickness schematic."
+  }
+ ],
+ "event_lines": [
+  {
+   "id": "MMU",
+   "c": "#2dd4bf",
+   "pts": [
+    [
+     0,
+     2.7
+    ],
+    [
+     60,
+     2.75
+    ],
+    [
+     120,
+     2.6
+    ],
+    [
+     200,
+     3.0
+    ],
+    [
+     240,
+     3.8
+    ],
+    [
+     262,
+     4.4
+    ]
+   ],
+   "lab": "RU/MMU ~16 Ma",
+   "tip": "End of South China Sea spreading; drowning of Dangerous Grounds platforms. Interpretive correlation line."
+  },
+  {
+   "id": "DRU",
+   "c": "#fbbf24",
+   "pts": [
+    [
+     262,
+     4.4
+    ],
+    [
+     290,
+     5.0
+    ],
+    [
+     340,
+     5.0
+    ],
+    [
+     373,
+     6.0
+    ],
+    [
+     390,
+     6.6
+    ],
+    [
+     415,
+     5.5
+    ],
+    [
+     432,
+     3.0
+    ]
+   ],
+   "lab": "DRU ~15.5 Ma",
+   "tip": "Deep Regional Unconformity (Middle Miocene). Published charts ~15.5 Ma (Hazebroek & Tan 1993); GEOX surface calibration ~14.2 Ma (NN5 biostrat; see event strip). Firm: the separation from the BMU. Not firm: the absolute pick. Interpretive correlation line."
+  },
+  {
+   "id": "SRU",
+   "c": "#f87171",
+   "pts": [
+    [
+     345,
+     3.0
+    ],
+    [
+     373,
+     2.6
+    ],
+    [
+     400,
+     2.2
+    ],
+    [
+     430,
+     1.0
+    ]
+   ],
+   "lab": "SRU ~8–9.5 Ma",
+   "tip": "Shallow Regional Unconformity (Late Miocene inversion). Published ages range ~8.5–9.5 Ma depending on calibration; GEOX matches Haq & Ogg 2024 NgSB13 @8.5 Ma. Interpretive correlation line."
+  }
+ ],
+ "overlays": {
+  "A": {
+   "window": [
+    230,
+    290
+   ],
+   "panel": 1,
+   "color": "#f43f5e",
+   "items": [
+    {
+     "kind": "band",
+     "span": [
+      230,
+      290
+     ],
+     "tip": "Model A window: inherited rift-axis / possible intrusions — UNTESTED"
+    },
+    {
+     "kind": "poly",
+     "pts": [
+      [
+       252,
+       7.9
+      ],
+      [
+       272,
+       8.0
+      ],
+      [
+       271,
+       8.3
+      ],
+      [
+       252,
+       8.25
+      ]
+     ],
+     "fill": "#dc2626",
+     "tip": "Possible sill (untested) — size, depth and existence unconstrained"
+    },
+    {
+     "kind": "poly",
+     "pts": [
+      [
+       262,
+       9.2
+      ],
+      [
+       276,
+       9.3
+      ],
+      [
+       275,
+       9.55
+      ],
+      [
+       262,
+       9.5
+      ]
+     ],
+     "fill": "#dc2626",
+     "tip": "Possible sill (untested) — size, depth and existence unconstrained"
+    },
+    {
+     "kind": "poly",
+     "pts": [
+      [
+       263,
+       8.3
+      ],
+      [
+       265,
+       8.3
+      ],
+      [
+       265,
+       12.5
+      ],
+      [
+       263,
+       12.5
+      ]
+     ],
+     "fill": "#dc2626",
+     "tip": "Possible melt pathway along reactivated fault (untested)"
+    },
+    {
+     "kind": "arrow",
+     "from": [
+      264,
+      12.2
+     ],
+     "to": [
+      264,
+      8.6
+     ],
+     "lab": "possible melt pathway",
+     "c": "#fb923c"
+    },
+    {
+     "kind": "label",
+     "at": [
+      256,
+      13.6
+     ],
+     "t": "possible intrusions (untested)?",
+     "c": "#fecaca"
+    }
+   ]
+  },
+  "B": {
+   "window": [
+    200,
+    330
+   ],
+   "panel": 1,
+   "color": "#a78bfa",
+   "items": [
+    {
+     "kind": "envelope",
+     "span": [
+      200,
+      330
+     ],
+     "top": "dru",
+     "base_km": 12,
+     "fill": "#334155",
+     "fade_end": true,
+     "tip": "Mobile-shale envelope (NSPW; Morley et al. 2023). 3D canopy geometry not digitised; envelope truncated at the northern-Sabah scope boundary, not a geological wall."
+    },
+    {
+     "kind": "poly",
+     "pts": [
+      [
+       292,
+       5.0
+      ],
+      [
+       312,
+       5.0
+      ],
+      [
+       303,
+       9.2
+      ]
+     ],
+     "fill": "#6b5a2e",
+     "tip": "Mini-basin: up to ~4 km of clastics loading the shale (Morley et al. 2023)"
+    },
+    {
+     "kind": "poly",
+     "pts": [
+      [
+       316,
+       10.5
+      ],
+      [
+       320,
+       10.5
+      ],
+      [
+       320.5,
+       5.0
+      ],
+      [
+       315.5,
+       5.0
+      ]
+     ],
+     "fill": "#94a3b8",
+     "tip": "Mud pipe feeding the canopy (schematic position)"
+    },
+    {
+     "kind": "arrow",
+     "from": [
+      320,
+      3.4
+     ],
+     "to": [
+      320,
+      6.2
+     ],
+     "lab": "load",
+     "c": "#fbbf24"
+    },
+    {
+     "kind": "label",
+     "at": [
+      265,
+      12.6
+     ],
+     "t": "overpressured shale (NSPW scope)",
+     "c": "#cbd5e1"
+    }
+   ]
+  },
+  "C": {
+   "window": [
+    290,
+    430
+   ],
+   "panel": 1,
+   "color": "#38bdf8",
+   "items": [
+    {
+     "kind": "envelope",
+     "span": [
+      290,
+      430
+     ],
+     "top": "surface",
+     "base_km": 12,
+     "fill": "#1e3a5f",
+     "fade_end": true,
+     "tip": "Model C window: Dangerous Grounds underthrusting — INTERPRETIVE geometry, not locally imaged on this line. Collision onset ≠ underthrusting onset ≠ DRU age."
+    },
+    {
+     "kind": "arrow",
+     "from": [
+      300,
+      10.5
+     ],
+     "to": [
+      400,
+      10.5
+     ],
+     "lab": "underthrusting (interpretive)",
+     "c": "#38bdf8"
+    },
+    {
+     "kind": "label",
+     "at": [
+      360,
+      13.6
+     ],
+     "t": "underthrust wedge (interpretive)",
+     "c": "#bae6fd"
+    }
+   ]
+  },
+  "Dm": {
+   "window": [
+    455,
+    545
+   ],
+   "panel": 2,
+   "color": "#34d399",
+   "items": [
+    {
+     "kind": "poly2",
+     "pts": [
+      [
+       425,
+       60
+      ],
+      [
+       450,
+       44
+      ],
+      [
+       470,
+       38
+      ],
+      [
+       485,
+       35
+      ],
+      [
+       500,
+       38
+      ],
+      [
+       520,
+       44
+      ],
+      [
+       545,
+       60
+      ]
+     ],
+     "fill": "#4a1d12",
+     "tip": "Post-subduction mantle upwelling beneath the Crocker Range — INFERRED, not imaged"
+    },
+    {
+     "kind": "arrow2",
+     "from": [
+      485,
+      60
+     ],
+     "to": [
+      485,
+      38
+     ],
+     "lab": "uplift (inferred)",
+     "c": "#34d399"
+    }
+   ]
+  },
+  "Dg": {
+   "window": [
+    373,
+    430
+   ],
+   "panel": 1,
+   "color": "#fbbf24",
+   "items": [
+    {
+     "kind": "fault",
+     "pts": [
+      [
+       392,
+       0.4
+      ],
+      [
+       386,
+       3.5
+      ],
+      [
+       381,
+       6.2
+      ]
+     ],
+     "tip": "Shelf growth fault (interpretive) — gravity subclaim"
+    },
+    {
+     "kind": "fault",
+     "pts": [
+      [
+       415,
+       0.3
+      ],
+      [
+       409,
+       3.0
+      ],
+      [
+       404,
+       6.2
+      ]
+     ],
+     "tip": "Shelf growth fault (interpretive) — gravity subclaim"
+    },
+    {
+     "kind": "dashed",
+     "pts": [
+      [
+       373,
+       6.2
+      ],
+      [
+       404,
+       6.2
+      ]
+     ],
+     "c": "#fb7185",
+     "tip": "Interpreted shale detachment (model D gravity link) — not imaged"
+    },
+    {
+     "kind": "arrow",
+     "from": [
+      398,
+      1.6
+     ],
+     "to": [
+      380,
+      1.6
+     ],
+     "lab": "",
+     "c": "#fbbf24"
+    },
+    {
+     "kind": "arrow",
+     "from": [
+      412,
+      1.6
+     ],
+     "to": [
+      428,
+      1.6
+     ],
+     "lab": "delta-load extension",
+     "c": "#fbbf24"
+    }
+   ]
+  }
+ }
+}

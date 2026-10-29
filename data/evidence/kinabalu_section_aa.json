@@ -1,0 +1,402 @@
+{
+ "schema": "geox.anchored-section/1.0",
+ "generated": "2026-10-26T16:51:24Z",
+ "release_candidate": "kinabalu-cross-section v4 (anchored, domain-bounded)",
+ "authority": "DERIVED — upstream SOT: GEBCO_2019 grid, published RF literature, transects.json registry",
+ "transect": {
+  "transect_id": "T-KIN-XS-833",
+  "crs": "EPSG:4326",
+  "control_points": [
+   {
+    "lat": 8.3,
+    "lon": 113.0,
+    "name": "A · Dangerous Grounds",
+    "km": 0.0
+   },
+   {
+    "lat": 7.37,
+    "lon": 113.84,
+    "name": "Layang-Layang atoll",
+    "km": 138.4
+   },
+   {
+    "lat": 6.8,
+    "lon": 114.8,
+    "name": "Sabah Trough axis",
+    "km": 261.8
+   },
+   {
+    "lat": 6.45,
+    "lon": 115.25,
+    "name": "Toe-thrust belt",
+    "km": 324.8
+   },
+   {
+    "lat": 6.2,
+    "lon": 115.6,
+    "name": "Shelf edge",
+    "km": 372.4
+   },
+   {
+    "lat": 5.98,
+    "lon": 116.07,
+    "name": "Kota Kinabalu coast",
+    "km": 429.9
+   },
+   {
+    "lat": 6.075,
+    "lon": 116.558,
+    "name": "Mt Kinabalu",
+    "km": 484.9
+   },
+   {
+    "lat": 5.62,
+    "lon": 117.15,
+    "name": "Telupid",
+    "km": 567.5
+   },
+   {
+    "lat": 5.55,
+    "lon": 117.9,
+    "name": "Kinabatangan",
+    "km": 651.0
+   },
+   {
+    "lat": 5.85,
+    "lon": 118.4,
+    "name": "Sandakan Basin",
+    "km": 715.6
+   },
+   {
+    "lat": 6.2,
+    "lon": 119.4,
+    "name": "A′ · Sulu Sea",
+    "km": 832.8
+   }
+  ],
+  "length_km": 832.8,
+  "distance_model": "WGS84 Karney geodesic (geographiclib), control-point polyline; rounding 0.1 km",
+  "vertical_datum": "mean sea level (GEBCO_2019 grid reference)",
+  "sign_convention": "elevation positive above datum; depth below datum positive-down in km panels",
+  "azimuth_note": "dog-leg — not a single azimuth; not latitude-monotonic"
+ },
+ "surface": {
+  "profile_ref": "earth/data/kinabalu_aa_profile.json",
+  "points": 834,
+  "source": {
+   "dataset": "GEBCO_2019",
+   "grid_step_arcsec": 15,
+   "access": "Rutgers THREDDS OPeNDAP server-side subset",
+   "retrieved": "2026-10-26T15:29:53Z",
+   "manifest_sha256_16": "fa784b2cd913bf22"
+  },
+  "sampling": "nearest-neighbour at ~1 km spacing along the polyline",
+  "class": "OBS (grid values) — NOT a surveyed seismic line"
+ },
+ "anchors": {
+  "trough": {
+   "m": -3015.7,
+   "km": 241.7,
+   "lat": 6.8927,
+   "lon": 114.6439,
+   "class": "OBS",
+   "note": "Sabah Trough floor; anchors topography only — does NOT establish a rift or intrusion"
+  },
+  "summit": {
+   "geodetic_m": 4095,
+   "grid_m": 3969.1,
+   "km": 484.9,
+   "gap_m": 125.9,
+   "class": "OBS",
+   "status": "OPEN — cause not established (grid sampling vs geodetic summit); profile is NOT forced through the summit"
+  }
+ },
+ "latitude_6N": {
+  "crossings_km": [
+   424.6,
+   441.4,
+   498.5,
+   765.8
+  ],
+  "method": "linear latitude interpolation between control points on Karney chainage",
+  "cornwell_claim": {
+   "text": "Cornwell et al. 2025 place a crust/mantle domain transition at ~6.0°N, with Mt Kinabalu on that boundary",
+   "class": "INT",
+   "verified": "NOT re-verified this pass — publisher full text blocked (403); as read by 333-AGI 2026-10-26",
+   "firewall": "geographic proximity of the 6.0°N line and the NSPW southern limit is NOT evidence of a causal link; the crossing does NOT fix Model B's km endpoints"
+  }
+ },
+ "moho": {
+  "picks": [
+   {
+    "station": "KMY",
+    "lat": 5.98,
+    "lon": 116.07,
+    "km_along": 429.9,
+    "xtrack_km": 0.0,
+    "depth_km": 32.8,
+    "depth_min_km": null,
+    "depth_max_km": null,
+    "projection_method": "station coincides with registered control point 5 (Kota Kinabalu coast)",
+    "whisker": {
+     "type": "PUBLISHED_STATION_UNCERTAINTY",
+     "range_km": [
+      30.3,
+      35.3
+     ],
+     "note": "H-kappa stacking ±2.5 km (95% CI), Sidek et al. 2016 — per-station published uncertainty"
+    },
+    "source": "Sidek et al. 2016 (doi:10.7186/bgsm62201607); Madon et al. 2025",
+    "note": "32.8 ± 2.5 km at the KK coast; ledger CL-MOHO-KMY-328; decides only the ~430 km domain (Fresnel ~20–30 km)"
+   },
+   {
+    "station": "KINA",
+    "lat": 6.05826,
+    "lon": 116.565933,
+    "km_along": 486.7,
+    "xtrack_km": 0.9,
+    "depth_km": null,
+    "depth_min_km": 30.0,
+    "depth_max_km": 35.0,
+    "projection_method": "closest point on control-point polyline (per-segment equirectangular); cross-track = WGS84 geodesic",
+    "whisker": {
+     "type": "METHOD_VERTICAL_RESOLUTION",
+     "range_km": [
+      1,
+      3
+     ],
+     "note": "published RF vertical resolution band, drawn ±2 km uniformly; NOT a per-station published uncertainty (not digitised)"
+    },
+    "source": "Gilligan et al. 2026 (GJI preprint, eartharxiv 5899)",
+    "note": "30–35 km beneath the Kinabalu stations"
+   },
+   {
+    "station": "SBC5",
+    "lat": 5.28637,
+    "lon": 116.88076,
+    "km_along": 566.6,
+    "xtrack_km": 47.4,
+    "depth_km": 25.0,
+    "depth_min_km": null,
+    "depth_max_km": null,
+    "projection_method": "closest point on control-point polyline (per-segment equirectangular); cross-track = WGS84 geodesic",
+    "whisker": {
+     "type": "METHOD_VERTICAL_RESOLUTION",
+     "range_km": [
+      1,
+      3
+     ],
+     "note": "published RF vertical resolution band, drawn ±2 km uniformly; NOT a per-station published uncertainty (not digitised)"
+    },
+    "source": "Gilligan et al. 2026 (GJI preprint, eartharxiv 5899)",
+    "note": "shallow band between Crocker and the circular basins"
+   },
+   {
+    "station": "SBC6",
+    "lat": 5.29518,
+    "lon": 117.271652,
+    "km_along": 584.3,
+    "xtrack_km": 34.5,
+    "depth_km": 24.0,
+    "depth_min_km": null,
+    "depth_max_km": null,
+    "projection_method": "closest point on control-point polyline (per-segment equirectangular); cross-track = WGS84 geodesic",
+    "whisker": {
+     "type": "METHOD_VERTICAL_RESOLUTION",
+     "range_km": [
+      1,
+      3
+     ],
+     "note": "published RF vertical resolution band, drawn ±2 km uniformly; NOT a per-station published uncertainty (not digitised)"
+    },
+    "source": "Gilligan et al. 2026 (GJI preprint, eartharxiv 5899)",
+    "note": "thinnest crust, with SBF4"
+   }
+  ],
+  "not_plotted": [
+   {
+    "station": "MTM",
+    "reason": "MetMalaysia station — no FDSN coordinates; the 60 km crustal maximum cannot be georeferenced onto this transect",
+    "depth_km": 60.0
+   },
+   {
+    "station": "SBF4",
+    "km_along": 612.2,
+    "xtrack_km": 87.7,
+    "reason": "88 km off-line; projecting would manufacture a constraint",
+    "depth_km": 24.0
+   },
+   {
+    "station": "MALB",
+    "km_along": 568.1,
+    "xtrack_km": 99.4,
+    "reason": "99 km off-line",
+    "depth_km": 42.0,
+    "note": "40–44 km beneath Maliau Basin"
+   },
+   {
+    "station": "SBC4",
+    "km_along": 536.0,
+    "xtrack_km": 73.3,
+    "reason": ">50 km off-line; 'Moho deepens >40 km beneath SBC4'",
+    "depth_km": null
+   },
+   {
+    "station": "SBE4",
+    "km_along": 552.2,
+    "xtrack_km": 49.1,
+    "reason": "ambiguous pick — two gradients (28 / 58 km)",
+    "depth_km": null
+   }
+  ],
+  "no_constraint_zones_km": [
+   {
+    "span": [
+     0,
+     425
+    ],
+    "reason": "no RF stations offshore this transect (Dangerous Grounds / trough / DWFTB); first on-line control is KMY at the coast (km 430.0)"
+   },
+   {
+    "span": [
+     600,
+     832.8
+    ],
+    "reason": "eastern Sabah stations lie >50 km off-line"
+   }
+  ],
+  "interpolation_policy": "NO interpolated or decorative Moho bridge across unconstrained intervals",
+  "contested": {
+   "span_km": [
+    536,
+    600
+   ],
+   "claim_1": "Gilligan et al. 2026: 24–25 km Moho (SBC6/SBC5) — central Sabah among thinnest crust",
+   "claim_2": "Cornwell et al. 2025: no typical Moho in central Sabah; the 23–24 km feature is a mid-crustal discontinuity above a WSW-dipping LVZ at 34–38 km",
+   "resolution": "both claims drawn side by side; neither picked"
+  }
+ },
+ "slab_remnant": {
+  "class": "OBS (discontinuity) + INT (slab identity)",
+  "depth_km": [
+   45,
+   55
+  ],
+  "width_km": [
+   75,
+   100
+  ],
+  "orientation_native": "gently westward-dipping",
+  "width_semantics": "published width of the imaged discontinuity (Cornwell et al. 2025 Key Points); NOT automatically the along-transect extent — the drawn 455–545 km window is an approximate along-line projection (mid-width)",
+  "apparent_dip": "not derived — dog-leg projection; true dip never read off the exaggerated graphic",
+  "source": "Cornwell et al. 2025, JGR Solid Earth 130(11) e2025JB031466 (open access; verified 2026-10-27)",
+  "window_km": [
+   455,
+   545
+  ]
+ },
+ "lab": {
+  "depth_km": 100,
+  "approximate": true,
+  "class": "CITED (secondary)",
+  "source": "Greenfield et al. 2022, via Cornwell et al. 2025",
+  "rendering": "dashed reference line with own evidence status — not a precisely measured uniform boundary"
+ },
+ "dwftb": {
+  "envelope_km": [
+   290,
+   373
+  ],
+  "length_km": 83,
+  "class": "ENVELOPE ONLY — internal geometry PENDING",
+  "source": "Wu, McClay & de Vera 2020, Geosphere 16(1):329–356 (open access; figure geometry not digitised)",
+  "forbidden": "no invented thrust dips, detachments, fault spacing, vergence, shortening magnitude or balanced geometry",
+  "accepts": "metadata will accept future verified numeric constraints (dips, spacing) without schema change"
+ },
+ "kl2_project_calibration": {
+  "entity": "KL2 Kinabalu Deepwater Project (8-Key-Line Grid & Well Calibration Sector)",
+  "type": "PROJECT_SECTOR_AND_KEYLINE_CALIBRATION_CORRIDOR",
+  "span_km": [
+   240.0,
+   372.4
+  ],
+  "subsurface_wells_calibrated": "Tepat-1, Pekaka, Limbayong, Wells A/B/D (internal lane T-KL2-INTERNAL)",
+  "note": "Deepwater NW Sabah fold-thrust belt & slope calibration sector (Sabah Trough to shelf edge). Wells and local seismic horizons are calibrated in internal project lane (T-KL2-INTERNAL); public transect T-KIN-XS-833 provides the regional boundary conditions."
+ },
+ "hinz_schluter_1985": {
+  "status": "RETIRED — acquisition/interpretation route stopped (F13 2026-10-26); citation retained as history; no geometry drawn from it"
+ },
+ "domains": [
+  {
+   "id": "A",
+   "family": "H4 thermal plumbing (inherited rift axis / possible intrusions)",
+   "window_km": [
+    230,
+    290
+   ],
+   "basis": "trough floor 3.02 km at km 242 (GEBCO, OBS) — the thinned axis the hypothesis needs",
+   "derivation": "model window centred on the trough segment; endpoints are modelling choices, NOT literature picks",
+   "status": "UNTESTED working hypothesis; no proven intrusion geometry; no ridge-push claim"
+  },
+  {
+   "id": "B",
+   "family": "H1 sedimentary mechanics (NSPW mobile-shale canopy)",
+   "window_km": [
+    200,
+    330
+   ],
+   "basis": "Morley et al. 2023 (Geosphere 19(1):291, verified 2026-10-27): 'The NSPW is a distinctive unit that is confined to northern Sabah. Passing into southern Sabah, the NSPW is absent.'",
+   "derivation": "northern-Sabah scope mapped onto the line's trough+outboard segment; endpoints NOT established by the 6.0°N crossing",
+   "status": "PUBLISHED (strongest empirical maturity); northern Sabah scope only"
+  },
+  {
+   "id": "C",
+   "family": "H2 crustal architecture (Dangerous Grounds underthrusting)",
+   "window_km": [
+    290,
+    430
+   ],
+   "basis": "DG collision → underthrusting; proto-SCS subduction terminated ~21 Ma (Gilligan et al. preprint abstract, eartharxiv 5899, verified 2026-10-27)",
+   "derivation": "outboard DWFTB + shelf segment; interpretive geometry — not locally imaged on this line",
+   "status": "CLASSIC interpretation; collision onset ≠ underthrusting onset ≠ DRU surface age (kept separate)"
+  },
+  {
+   "id": "D",
+   "family": "H3 mantle state (slab remnant) + separate H1 gravity subclaim",
+   "window_km": [
+    455,
+    545
+   ],
+   "basis": "Cornwell et al. 2025: 45–55 km discontinuity, 75–100 km wide, gently W-dipping",
+   "derivation": "approximate along-line projection of the imaged discontinuity",
+   "status": "PARTLY OBSERVED; the gravity-tectonics subclaim is a separate layer with its own shelf domain (km ~373–430) — the slab window does NOT bound shallow gravity deformation"
+  }
+ ],
+ "rendering_policy": {
+  "outside_support_domain": "not drawn; marked UNKNOWN/hatched where a gap must be visible",
+  "domain_endpoints": "no vertical geological walls at endpoints; fading/hatched truncation",
+  "overlap": "domain overlaps are allowed and drawn — they are not mutual exclusion claims",
+  "unknown_vs_missing": "UNKNOWN regions are hatched and labelled; missing rendering is a defect"
+ },
+ "claims_ledger_refs": [
+  "CL-MOHO-KMY-328",
+  "CL-SLAB-DISC-45-55",
+  "CL-INTRUSION-AXIS",
+  "CL-NSPW-SHALE",
+  "CL-DRU-142",
+  "CL-MOHO-SUMMIT-GAP"
+ ],
+ "unresolved": [
+  "MTM 60 km pick has no public coordinates (MetMalaysia) — cited, not plotted",
+  "Gilligan et al. 2026 is a preprint (eartharxiv 5899); station depths await peer-reviewed table",
+  "per-station published uncertainties not digitised — whiskers show method resolution only",
+  "Cornwell 6.0°N transition statement not re-verified (publisher 403)",
+  "Wu et al. 2020 DWFTB figure geometry not digitised (GSW scrape-blocked)",
+  "Morley et al. 2023 canopy 3D geometry not digitised (numbers known; figures needed)",
+  "summit/grid 126 m gap: cause not established"
+ ],
+ "lineage": {
+  "proposal": "forge_work/proposals/333-AGI/kinabalu-earth-anchor/v1 (333-AGI, 2026-10-26)",
+  "implementation": "FI-008 kimi-code, earth/kinabalu-anchored-v2 branch, 2026-10-27"
+ }
+}

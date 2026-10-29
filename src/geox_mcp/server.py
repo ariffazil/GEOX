@@ -2707,17 +2707,35 @@ _LIFECYCLE_GATE_HTTP_ENABLED = os.getenv("GEOX_LIFECYCLE_GATE", "1").strip().low
 
 
 class McpSessionGuardMiddleware(BaseHTTPMiddleware):
-    """F1.1 FIX (2026-10-22): complete-400 guard for session-less non-initialize POSTs.
+    """F1.1 FIX (2026-10-22 / 2026-10-26): Complete-400 guard for session-less requests.
 
     Root cause: on POST /mcp without Mcp-Session-Id, FastMCP's session manager
     writes the 400 status+headers then kills the connection before the body
     flushes -> Caddy "aborting with incomplete response" -> cloudflared EOF ->
-    Cloudflare 502 on the public surface (deterministic, every session-less
-    POST). Fix: intercept BEFORE FastMCP and return a COMPLETE JSON-RPC 400.
-    Spec: MCP streamable-HTTP — clients MUST send Mcp-Session-Id after
-    initialize; server rejects invalid requests with a complete 4xx body.
+    Cloudflare 502 on the public surface.
+
+    2026-10-26 Alignment: Allow session-less discovery, notification, ping, and
+    read-tier execution to pass through to McpStatelessEraMiddleware, which bridges
+    them safely without connection aborts or authority leaks. Only reject unrecognized
+    methods or invalid traffic with a complete 400 JSON-RPC response.
     Disable: GEOX_SESSION_GUARD=0.
     """
+
+    SESSIONLESS_METHODS: frozenset[str] = frozenset(
+        {
+            "initialize",
+            "notifications/initialized",
+            "initialized",
+            "notifications/cancelled",
+            "server/discover",
+            "ping",
+            "tools/list",
+            "resources/list",
+            "resources/templates/list",
+            "prompts/list",
+            "tools/call",
+        }
+    )
 
     async def dispatch(self, request: Request, call_next):
         if os.environ.get("GEOX_SESSION_GUARD", "1") != "1":
@@ -2741,7 +2759,7 @@ class McpSessionGuardMiddleware(BaseHTTPMiddleware):
 
         method = msg.get("method") or ""
         sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
-        if method and method != "initialize" and not sid:
+        if method and not sid and method not in self.SESSIONLESS_METHODS:
             logger.warning("SESSION_GUARD: session-less %s rejected with complete 400", method)
             return JSONResponse(
                 {
@@ -4078,6 +4096,25 @@ def create_app():
     # Adds meta.ttlMs + sha256 fingerprint to every tools/list response
     # per MCP SEP-2549. The fingerprint feeds the federation drift watcher.
     mcp.add_middleware(_build_geox_ttl_middleware())
+
+    # FastMCP 3.4.x StreamableHTTPServerTransport Accept header normalization
+    # Allows */* and application/* to pass without 406 Not Acceptable (Perplexity / undici fix)
+    try:
+        from mcp.server.streamable_http import StreamableHTTPServerTransport, CONTENT_TYPE_JSON, CONTENT_TYPE_SSE
+
+        def _geox_check_accept_headers(self, request: Request) -> tuple[bool, bool]:
+            accept_header = request.headers.get("accept", "")
+            if not accept_header:
+                return True, True
+            accept_types = [media_type.strip() for media_type in accept_header.split(",")]
+            has_wildcard = any(m == "*/*" or m.startswith("*/*") for m in accept_types)
+            has_json = has_wildcard or any(m.startswith(CONTENT_TYPE_JSON) or m.startswith("application/*") for m in accept_types)
+            has_sse = has_wildcard or any(m.startswith(CONTENT_TYPE_SSE) or m.startswith("text/*") for m in accept_types)
+            return has_json, has_sse
+
+        StreamableHTTPServerTransport._check_accept_headers = _geox_check_accept_headers
+    except Exception as _patch_err:
+        logger.warning("Failed to patch StreamableHTTPServerTransport._check_accept_headers: %s", _patch_err)
 
     # Native FastMCP transport. path="/" so the parent Starlette controls mount point.
     # 2026-08-04: allowed_hosts MUST include public Host (Caddy header_up Host geox...).
