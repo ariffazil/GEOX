@@ -349,30 +349,40 @@ class McpStatelessEraMiddleware:
 
         era_declared = bool(version or mcp_method or meta_version)
 
-        # Legacy handshake, session-bearing traffic, or undeclared requests
-        # (e.g. a client's plain initialize) → downstream untouched.
-        if not era_declared or session_id or method in ("initialize",):
+        # Native initialize creates a stateful session directly on FastMCP
+        if method == "initialize":
             await self.app(_scope_with_headers(scope, {}), _body_receive(body), send)
             return
 
-        # ── MODERN STATELESS ERA ────────────────────────────────────────
+        # ── STATELESS DISCOVERY / NOTIFICATIONS / BRIDGE ─────────────────
         if method == "server/discover":
             await self._serve_discover(send, message)
             return
 
         if method in ("notifications/initialized", "initialized", "notifications/cancelled"):
-            # Stateless notifications carry no session; acknowledge per spec.
+            # Stateless notifications carry no session; acknowledge per spec (202 Accepted).
             await send(
                 {
                     "type": "http.response.start",
                     "status": 202,
-                    "headers": [(b"content-length", b"0"), (b"x-mcp-era", b"stateless-2026-07-28")],
+                    "headers": [(b"content-length", b"0"), (b"x-mcp-era", b"stateless-bridge")],
                 }
             )
             await send({"type": "http.response.body", "body": b"", "more_body": False})
             return
 
-        # Any other stateless method → bridge onto one shared internal session.
+        if method == "ping" and not session_id:
+            msg_id = (message or {}).get("id")
+            await _send_json(send, {"jsonrpc": "2.0", "id": msg_id, "result": {}}, status=200)
+            return
+
+        # If a valid session_id is present, let FastMCP process it natively
+        if session_id:
+            await self.app(_scope_with_headers(scope, {}), _body_receive(body), send)
+            return
+
+        # Any other session-less method (tools/list, resources/*, prompts/*, tools/call)
+        # -> bridge onto shared internal session.
         await self._bridge_and_forward(scope, body, send, method)
 
     # ── server/discover (native, federation-consistent) ─────────────────
@@ -508,7 +518,11 @@ class McpStatelessEraMiddleware:
                 await self.app(_scope_with_headers(scope, {}), _body_receive(body), send)
                 return
 
-            forward_scope = _scope_with_headers(scope, {"mcp-session-id": sid})
+            overrides = {"mcp-session-id": sid}
+            acc = _header(scope, "accept")
+            if not acc or acc == "*/*" or "application/json" not in acc:
+                overrides["accept"] = "application/json, text/event-stream"
+            forward_scope = _scope_with_headers(scope, overrides)
             captured: list[dict[str, Any]] = []
 
             async def _capture(message, _captured=captured):
