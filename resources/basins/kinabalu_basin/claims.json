@@ -305,7 +305,8 @@
     "evidence_refs": [
       "kin_clm_18",
       "F13-relayed Copilot endpoint re-measurement 743.92 km (2026-10-30)",
-      "/root/forge_work/receipts/RECEIPT-geox-mcp-audit-2026-10-30.md sections 2/4"
+      "/root/forge_work/receipts/RECEIPT-geox-mcp-audit-2026-10-30.md sections 2/4",
+      "engine twin: clm_b0666b5f66064459 (earth_memory claim engine, registered live 2026-10-30) - same A-A' contradiction in the dynamic store; curated-register copy kept for deploy atomicity"
     ],
     "source": "FI-008 session SEAL-bbe2b47b087545bc \u00b7 audit mandate 2026-10-30",
     "confidence": "UNKNOWN (contradiction OPEN \u2014 vertex list unsettled)",
