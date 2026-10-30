@@ -383,5 +383,71 @@
     "source": "F13-relayed synthesis 2026-10-30 (Phase-1 + critique + chronostrat)",
     "confidence": "MED (ranking, not verdict)",
     "valid_until": "2027-06-30"
+  },
+  {
+    "claim_id": "kin_clm_25",
+    "claim_type": "geochronology_geochemistry_evidence",
+    "claim": "TROUGH VOLCANICS DATED + CHEMISTRY MEASURED (first arrival of the decisive data): LL-1 post-drill study (4,045-4,705 m) + Pekaka-1 petrography. K/Ar TWO CLUSTERS: ~21 Ma (22.9+/-2.4, 19.6+/-1.9) and ~7 Ma (7.3+/-1.3); one 13.6 Ma = likely mix. U/Pb FAILED (disturbed, modern ages). CONFIDENCE LOW: dated rock heavily altered (zeolite, smectite) - K/Ar on altered basalt loses Ar -> ages biased TOO YOUNG. Chemistry: alkali basalt / trachybasalt on TAS and Nb/Y-vs-Zr/TiO2, one consistent source melt (XRF semi-quant per report; verify which report carries the TAS pages, expected LL-1 FGL pp.38-42). Pekaka-1: dry; 100% volcanic from 12,285 ft; olivine+pyroxene+biotite; gas biogenic only. LL-1: carbonate over brecciated vesicular basalt + tuff from ~4,135 m to TD, base NOT reached (>570 m basalt). Ar-Ar on fresh plagioclase + ICP trace elements = the prescribed upgrade (report itself flags XRF semi-quant).",
+    "evidence_refs": [
+      "LL-1 Final Well Report Appendices + Notice of Operation (SharePoint)",
+      "LL-1 Report_FINAL (FGL post-drill)",
+      "Pekaka-1 WCR + Petrographic Analysis (39 samples)",
+      "AGES PENDING HASH: copies to work folder + sha256 queued by gravity agent"
+    ],
+    "source": "Copilot file-search ENTERPRISE session, F13-relayed 2026-10-30",
+    "confidence": "MED-HIGH facts / LOW on absolute ages (altered rock)",
+    "valid_until": "2027-12-31"
+  },
+  {
+    "claim_id": "kin_clm_26",
+    "claim_type": "rival_ranking_update_v2",
+    "claim": "RIVAL RE-RANKING v2 (SUPERSEDES the C-arm of kin_clm_24): A (MORB spreading axis) MUCH WEAKER - alkali basalt/trachybasalt is not MORB (intraplate/seamount-type small-degree melting, INT); ~21 Ma predates SCS spreading end (~16 Ma) context. C-as-framed (Palaeogene ~29 Ma) NOT SUPPORTED - no age near 29 Ma. NEW LEADING HYPOTHESIS (D): Early Miocene (~21 Ma) alkaline volcanism + second event ~7 Ma. The ~7 Ma cluster OVERLAPS Kinabalu granite (7.85-7.22) = DIRECT TEST of 'one magmatic family across Sabah' (kin_clm_17): real second eruption supports the family claim; thermal/alteration overprint dissolves it. BIAS DIRECTION: Ar-loss makes ages too YOUNG -> the 7.3 Ma overlap is the fragile leg (true age may be older, overlap dissolves) while the 21 Ma cluster biased young strengthens INHERITANCE (true age older, toward pre-BMU). Decision tool UPGRADED: Ar-Ar fresh plagioclase + ICP, not bulk K/Ar.",
+    "evidence_refs": [
+      "kin_clm_25",
+      "kin_clm_24 (superseded C-arm)",
+      "clm_f8533e7a70a44864 falsifier framework",
+      "kin_clm_17 (one-family test)"
+    ],
+    "source": "F13-relayed synthesis 2026-10-30; verdict PARTIAL by the searching agent",
+    "confidence": "MED on meaning; MED-HIGH on facts",
+    "valid_until": "2027-12-31"
+  },
+  {
+    "claim_id": "kin_clm_27",
+    "claim_type": "well_gravity_proximity_evidence",
+    "claim": "LL-1 SITS NEAR THE GRAVITY MINIMUM WITH DENSE ROCK: LL-1 at ~ch 218 km, ~11 km SW of B-B' (inside the 25 km limit; hand-computed, agent to recompute) - ~6 km from the free-air minimum (~224 km); drilled >570 m basalt (4,135 m-TD, base open). CONSEQUENCE: 'minimum = thickest light sediment' must now be tested against a well that drilled basalt there. CATCH: helium porosity in that basalt 9-35% -> density may be far below mafic assumption. RULE: use the LL-1 density LOG in all gravity models; assumed 2,900 kg/m3 FORBIDDEN. Coordinates: LL-1 06-49-57.844N 114-44-40.379E (WD 2,884 m, TD 4,707 m MDDF; geochem report 6.8328N 114.7446E matches); Pekaka-1 07-40-09.140N 115-25-06.459E (matches LAS header). JMG map available only as images -> DISPLAY_DERIVED_PROXY (never native-fed without CalibrationWitness).",
+    "evidence_refs": [
+      "kin_clm_21 (Bouguer-first rule)",
+      "LL-1 FWR + density log",
+      "LL-1 helium porosity 9-35%"
+    ],
+    "source": "Copilot file-search, F13-relayed 2026-10-30; ch/offset DERIVED hand-calc, recompute queued",
+    "confidence": "MED-HIGH",
+    "valid_until": "2027-06-30"
+  },
+  {
+    "claim_id": "kin_clm_28",
+    "claim_type": "hold_resolution",
+    "claim": "HOLD RESOLVED: Pekaka volcanics are IN-SITU subaqueous lava, not reworked debris. EVIDENCE: petrography (39 samples) - vesicular/amygdaloidal basaltic lava, glassy, palagonite, possible hyaloclastite zones; fissures filled by 'fumarole' debris with GEOPETAL (way-up) surfaces. Meaning (INT): lava erupted on the seafloor at the site. Supersedes the in-situ-vs-reworked uncertainty inside the Trough-volcanic claims (kin_clm_20/24/25 context).",
+    "evidence_refs": [
+      "Pekaka-1 Petrographic Analysis (39 samples)",
+      "Pekaka-1 WCR: 'volcanic extrusive with ~5 ft foraminifera wackestone drape'"
+    ],
+    "source": "Copilot file-search, F13-relayed 2026-10-30",
+    "confidence": "HIGH (petrographic)",
+    "valid_until": "2027-12-31"
+  },
+  {
+    "claim_id": "kin_clm_29",
+    "claim_type": "prior_art_update",
+    "claim": "PRIOR-ART UPDATE + institutional rival model EXISTS: a NW-SE 'schematic basins and plays across Sabah' whole-Sabah section is published institutionally - BPS Onboarding deck (Ahmad Hakim Rashidi, PCSB 2022; one version lists Arif as co-author). Content to argue AGAINST (not an empty map): decollement at the Moho; 'drifted accreted crust'; 'granite factory'; 'dominant push-down force toward Sabah Platform periphery'; 'drowned carbonate body due to rapid indentation'; indentation ('Dent') model. EFFECT: kin_clm_17 PRIOR_ART_UNSEARCHED status partially resolved - institution has a rival whole-Sabah frame; any novelty posture must be argued against the Dent/indentation model. Housekeeping: Atlas_Chapter 5 Sabah_v1_08012026 found - diff vs v1.1 queued; MOM ProF Kinabalu Basin (signed, SharePoint) = claim (g) source, copy pending.",
+    "evidence_refs": [
+      "BPS_Onboarding_Sabah Tectonic Sharing_2025_SHARE.pptx",
+      "kin_clm_17",
+      "Atlas Ch5 v1_08012026 (diff queued)"
+    ],
+    "source": "Copilot file-search, F13-relayed 2026-10-30",
+    "confidence": "MED-HIGH (existence); contents read from deck",
+    "valid_until": "2027-12-31"
   }
 ]
