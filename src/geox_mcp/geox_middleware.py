@@ -318,8 +318,24 @@ def build_governed_error_envelope(
 
     # ── Layer 2: WAL append (arifOS failure_wal.py) ──────────────────
     # Synchronous, non-blocking. WAL failure never blocks the error response.
+    # 2026-10-22 FIX: arifosmcp absent from /opt/geox/.venv made this import
+    # no-op silently (memory GAP-2026-10). Wire the LOCAL failure_wal first.
     try:
-        from arifosmcp.runtime.failure_wal import wal_append
+        try:
+            from arifosmcp.runtime.failure_wal import wal_append
+        except ImportError:
+            from .failure_wal import wal_append as _local_wal_append
+
+            def wal_append(**kw):
+                # Map middleware kwargs onto local failure_wal signature
+                return _local_wal_append(
+                    tool=kw.get("tool"),
+                    error_class=kw.get("code"),
+                    detail=kw.get("message", ""),
+                    session_id=(kw.get("context") or {}).get("session_id"),
+                    trace_id=(kw.get("context") or {}).get("trace_id"),
+                    recovery=kw.get("context"),
+                )
 
         wal_append(
             code=error_class,
@@ -1188,7 +1204,22 @@ class GeoxGovernanceMiddleware(Middleware):
             return result
         except ToolError:
             raise  # Already governed — let FastMCP handle normally
-        except (ValueError, TypeError, KeyError, LookupError, _FastMCPValidationError) as e:
+        except _FastMCPValidationError as fve:
+            # FastMCP schema validation happens BEFORE middleware — mirror it into the governed envelope + WAL (2026-10-22 fix)
+            _tool_schema = self._tool_schemas.get(tool_name)
+            _recovery = _extract_recovery_from_error(fve, tool_name, tool_schema=_tool_schema)
+            raise ToolError(
+                json.dumps(
+                    build_governed_error_envelope(
+                        tool_name=tool_name,
+                        error_class="SCHEMA_REJECTION",
+                        detail=f"{type(fve).__name__}: {fve}",
+                        session_id=arguments.get("session_id") if isinstance(arguments, dict) else None,
+                        recovery=_recovery,
+                    )
+                )
+            )
+        except (ValueError, TypeError, KeyError, LookupError) as e:
             # Schema/argument validation errors that bypassed FastMCP's handler
             # Layer 1.5: Extract recovery hints with full tool schema introspection
             # so agents can self-correct with field-level available/closest_match.
