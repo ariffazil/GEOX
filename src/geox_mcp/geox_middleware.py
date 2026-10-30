@@ -166,6 +166,47 @@ GOVERNED_ERROR_CODES: dict[str, dict] = {
 }
 
 
+def compose_gov_block_error_message(
+    *,
+    guard: str,
+    gov_verdict: str,
+    trace_id: str,
+    lane: str,
+    reason: str,
+    fix: str,
+    err: dict,
+    err_data: dict,
+) -> str:
+    """Compose the client-facing GOV_BLOCK message.
+
+    P2 2026-10-30 (p2-geox-governance-hold-reason-empty; lesson: "a HOLD
+    gate must name its reason — an empty reason is a blind gate"):
+    never compose a bare ``verdict=HOLD · trace=gov-…`` line. When the
+    upstream guard ships no reason, fall back to the error message/code
+    plus the data keys it DID send, and say plainly that the reason is
+    missing (named defect marker) — silence is never a reason.
+    """
+    if not reason:
+        reason = (
+            "REASON_EMPTY_GATE_DEFECT (p2-geox-governance-hold-reason-empty): "
+            f"guard '{guard or 'UNKNOWN_GUARD'}' returned no reason; "
+            f"error code={err.get('code')} message={str(err.get('message', ''))[:160]}; "
+            f"data keys={sorted(err_data.keys())}"
+        )
+    parts = [s for s in [guard or "UNKNOWN_GUARD", f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
+    if lane:
+        parts.append(f"lane={lane}")
+    # P3 2026-07-31 (FI-008 GEOX jam flow-restore): slice to 300 (was 120).
+    # 120 chars is enough to drop a 21-char session_id like SEAL-xxxxxxxx.
+    # Reason itself is rarely >300 chars; if it ever is, the fix is to
+    # format reason more compactly upstream.
+    parts.append(reason[:300])
+    if fix:
+        # P3 (FI-008): slice to 300 for symmetry with reason.
+        parts.append(f"fix: {fix[:300]}")
+    return " · ".join(parts)
+
+
 def _extract_recovery_from_error(
     exc: Exception,
     tool_name: str,
@@ -298,6 +339,10 @@ def build_governed_error_envelope(
         "guard": error_class,
         "verdict": "HOLD" if error_class != "INTERNAL_ERROR" else "ERROR",
         "tool": tool_name,
+        # P2 2026-10-30 (p2-geox-governance-hold-reason-empty): every
+        # governed envelope names its reason — downstream composers and
+        # agents must never meet an unnamed HOLD.
+        "reason": str(detail)[:300],
         "error_class": error_class,
         "trace_id": trace_id or str(uuid.uuid4()),
         "session_id": session_id or "anonymous",
@@ -1030,30 +1075,20 @@ class GeoxGovernanceMiddleware(Middleware):
 
                 # Compose a structured error message that preserves
                 # guard/verdict/lane/reason/fix for client-side parsing.
-                guard = err_data.get("guard", "")
-                lane = err_data.get("lane", "")
-                reason = err_data.get("reason", "")
-                fix = err_data.get("fix", "")
-                # DEBUG: log what we got
-                import sys as _dbg
-
-                print(f"DEBUG_PARTS: err_data={err_data}", file=open("/tmp/geox-debug-parts.log", "a"))
-                print(f"DEBUG_PARTS: reason={reason!r} len={len(reason)}", file=open("/tmp/geox-debug-parts.log", "a"))
-                parts = [s for s in [guard, f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
-                if lane:
-                    parts.append(f"lane={lane}")
-                if reason:
-                    # P3 2026-07-31 (FI-008 GEOX jam flow-restore): slice to 300
-                    # (was 120). 120 chars is enough to drop 4 chars from a
-                    # 21-char session_id like SEAL-xxxxxxxxxxxxxxxx. 300
-                    # preserves the full session_id in the error echo.
-                    # Reason itself is rarely >300 chars; if it ever is,
-                    # the fix is to format reason more compactly upstream.
-                    parts.append(reason[:300])
-                if fix:
-                    # P3 (FI-008): slice to 300 for symmetry with reason.
-                    parts.append(f"fix: {fix[:300]}")
-                err_msg = " · ".join(parts)
+                # P2 2026-10-30 (p2-geox-governance-hold-reason-empty):
+                # composition lives in compose_gov_block_error_message so a
+                # HOLD can NEVER ship a bare verdict+trace with an empty
+                # reason (blind gate). /tmp DEBUG cruft removed.
+                err_msg = compose_gov_block_error_message(
+                    guard=err_data.get("guard", ""),
+                    gov_verdict=gov_verdict,
+                    trace_id=trace_id,
+                    lane=err_data.get("lane", ""),
+                    reason=err_data.get("reason", ""),
+                    fix=err_data.get("fix", ""),
+                    err=err,
+                    err_data=err_data,
+                )
 
                 raise ToolError(err_msg)
 
