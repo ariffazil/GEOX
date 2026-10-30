@@ -373,7 +373,10 @@ class McpStatelessEraMiddleware:
 
         if method == "ping" and not session_id:
             msg_id = (message or {}).get("id")
-            await _send_json(send, {"jsonrpc": "2.0", "id": msg_id, "result": {}}, status=200)
+            # resultType contract: ping results are also RESULT obligations —
+            # route through the same choke point as every other family.
+            reply = augment_stateless_result({"jsonrpc": "2.0", "id": msg_id, "result": {}})
+            await _send_json(send, reply, status=200)
             return
 
         # If a valid session_id is present, let FastMCP process it natively
