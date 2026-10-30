@@ -297,5 +297,24 @@
     "source": "GEOX Release Candidate 2026-10-27 \u00b7 branch earth/kinabalu-anchored-v2",
     "confidence": "HIGH (release candidate \u00b7 production deploy under 888 HOLD)",
     "valid_until": "2027-12-31"
+  },
+  {
+    "claim_id": "kin_clm_19",
+    "claim_type": "transect_identity_contradiction",
+    "claim": "OPEN CONTRADICTION (registered, unresolved \u2014 both observations stand): T-KIN-XS-833 store length for KL2 / A\u2013A\u2032 = 832.8 km (kin_clm_18, WGS84 Karney geodesic on register vertices); independent endpoint-based re-measurement of the stated A\u2013A\u2032 endpoints = 743.92 km (Copilot, relayed F13 2026-10-30). Divergence 88.9 km (~10.7%). Transect identity = endpoints + anchor vertices, not length: neither value is canonical until the vertex list settles (task p1-geox-transect-identity-verifier).",
+    "evidence_refs": [
+      "kin_clm_18",
+      "F13-relayed Copilot endpoint re-measurement 743.92 km (2026-10-30)",
+      "/root/forge_work/receipts/RECEIPT-geox-mcp-audit-2026-10-30.md sections 2/4"
+    ],
+    "source": "FI-008 session SEAL-bbe2b47b087545bc \u00b7 audit mandate 2026-10-30",
+    "confidence": "UNKNOWN (contradiction OPEN \u2014 vertex list unsettled)",
+    "valid_until": "2026-12-31",
+    "falsifier": "Canonical A\u2013A\u2032 vertex list (endpoints + anchors) reconciling both measurements to one geodesic length within tolerance, or identified measurement defect in either value (wrong endpoint set, non-geodesic path, datum mismatch).",
+    "forbidden_uses": [
+      "quote_832.8_or_743.92_as_canonical_KL2_length",
+      "average_the_two_values",
+      "silent_resolution_without_vertex_settlement"
+    ]
   }
 ]
