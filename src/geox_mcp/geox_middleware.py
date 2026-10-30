@@ -174,36 +174,39 @@ def compose_gov_block_error_message(
     lane: str,
     reason: str,
     fix: str,
-    err: dict,
-    err_data: dict,
 ) -> str:
     """Compose the client-facing GOV_BLOCK message.
 
     P2 2026-10-30 (p2-geox-governance-hold-reason-empty; lesson: "a HOLD
     gate must name its reason — an empty reason is a blind gate"):
-    never compose a bare ``verdict=HOLD · trace=gov-…`` line. When the
-    upstream guard ships no reason, fall back to the error message/code
-    plus the data keys it DID send, and say plainly that the reason is
-    missing (named defect marker) — silence is never a reason.
+    never compose a bare ``verdict=HOLD · trace=gov-…`` line.
+
+    P3 2026-10-30 (Arif review): PUBLIC-EDGE ALLOWLIST — the message is
+    composed ONLY from the sanctioned fields (guard, verdict, trace,
+    lane, reason, fix). No internal key names, no raw error detail, no
+    err_data dumps. reason = missing | "" | whitespace-only | None |
+    non-string all normalize to a REASON_WITHHELD marker that names the
+    defect and points at the server-side trace. Raw detail stays in the
+    server log, correlated by trace id — never in the client message.
     """
+    if not isinstance(reason, str):
+        reason = ""
+    reason = reason.strip()
     if not reason:
         reason = (
-            "REASON_EMPTY_GATE_DEFECT (p2-geox-governance-hold-reason-empty): "
-            f"guard '{guard or 'UNKNOWN_GUARD'}' returned no reason; "
-            f"error code={err.get('code')} message={str(err.get('message', ''))[:160]}; "
-            f"data keys={sorted(err_data.keys())}"
+            "REASON_WITHHELD (p2-geox-governance-hold-reason-empty): "
+            f"guard '{guard or 'UNKNOWN_GUARD'}' did not name its reason; "
+            "correlate server logs with this trace"
         )
     parts = [s for s in [guard or "UNKNOWN_GUARD", f"verdict={gov_verdict}", f"trace={trace_id}"] if s]
     if lane:
         parts.append(f"lane={lane}")
     # P3 2026-07-31 (FI-008 GEOX jam flow-restore): slice to 300 (was 120).
     # 120 chars is enough to drop a 21-char session_id like SEAL-xxxxxxxx.
-    # Reason itself is rarely >300 chars; if it ever is, the fix is to
-    # format reason more compactly upstream.
     parts.append(reason[:300])
-    if fix:
+    if isinstance(fix, str) and fix.strip():
         # P3 (FI-008): slice to 300 for symmetry with reason.
-        parts.append(f"fix: {fix[:300]}")
+        parts.append(f"fix: {fix.strip()[:300]}")
     return " · ".join(parts)
 
 
@@ -1086,8 +1089,6 @@ class GeoxGovernanceMiddleware(Middleware):
                     lane=err_data.get("lane", ""),
                     reason=err_data.get("reason", ""),
                     fix=err_data.get("fix", ""),
-                    err=err,
-                    err_data=err_data,
                 )
 
                 raise ToolError(err_msg)
