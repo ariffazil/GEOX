@@ -317,5 +317,71 @@
       "average_the_two_values",
       "silent_resolution_without_vertex_settlement"
     ]
+  },
+  {
+    "claim_id": "kin_clm_20",
+    "claim_type": "gravity_profile_reading",
+    "claim": "GRAVITY B-B' PHASE-1 READINGS (free-air + depth, read off plots +/-5 mGal / +/-5 km, MED confidence - NOT a basement pick): deepest water -2,901 m @ 191.9 km; free-air minimum ~ -65 mGal @ ~225 km (offset ~33 km SE under slope toward Sabah); parallel-line minima form continuous NE-SW minimum track ~200 km (6.1N 113.9E -> Pekaka-1), whether ONE structure causes it = HOLD (minima-tracking artifact possible); low weakens NE (-65 -> -30/-45 near Pekaka); local +40 mGal high inside low @ ~220-225 km (dense-body candidate: volcanic edifice vs basement high - testable via seismic+magnetics); shoal @ ~100 km ~0 m aligns Layang-Layang atoll (INT); onshore free-air ~ +300 mGal over Kinabalu (source UNVERIFIED). Foredeep = HYPOTHESIS; no basement surface moved to any gravity minimum.",
+    "evidence_refs": [
+      "B-B' corridor figures Phase-1 (gravity agent)",
+      "free-air + GEBCO/SIO depth grids"
+    ],
+    "source": "Copilot Phase-1 ENTERPRISE reading, F13-relayed 2026-10-30",
+    "confidence": "MED (plot-read values +/-5 mGal / +/-5 km)",
+    "valid_until": "2027-06-30"
+  },
+  {
+    "claim_id": "kin_clm_21",
+    "claim_type": "interpretation_constraint",
+    "claim": "GRAVITY B-B' INTERPRETATION CONSTRAINTS (retraction register): WITHDRAWN - 'deepest basement ~225 km' (gravity minimum != basement pick; potential-field non-uniqueness); 'one continuous structure' (minima-tracking artifact possible); 'Pekaka link restored by trend alignment' (alignment != same block/age/origin); 'Kinabalu needs no root' (needs 3D terrain + granite density + crust model); '2D body at Pekaka' -> 2.5D/3D finite strike REQUIRED (Pekaka off-section; projection removes the controlling distance); 'magnetics the only quick test' -> necessary-not-sufficient (magnetisation direction, remanence, geometry, EMAG2v3 sea-level vs 4 km product; absent stripes != falsification). NEW CANDIDATE: free-air SLOPE EDGE EFFECT may explain part/all of the 33 km offset - Bouguer (rho_w 1030 / rho_crust 2670, density sensitivity reported) MUST precede interpretation; SIO grid resolves >=15-20 km only. RULE: all models within misfit tolerance reported as equally acceptable; foredeep plausible != underthrusting proven.",
+    "evidence_refs": [
+      "USGS non-uniqueness doctrine",
+      "EMAG2v3 NOAA metadata (sea-level / 4 km products)",
+      "independent critique accepted by Phase-1 author 2026-10-30"
+    ],
+    "source": "Independent geophysical critique + author retraction, F13-relayed 2026-10-30",
+    "confidence": "HIGH (as constraints)",
+    "valid_until": "2027-06-30"
+  },
+  {
+    "claim_id": "kin_clm_22",
+    "claim_type": "MEASUREMENT_CONFLICT",
+    "claim": "MEASUREMENT_CONFLICT (OPEN, both observations stand): Kinabalu summit elevation along B-B' = 3,597 m @ 435.46 km (new WGS84-geodesic profile) vs ~3,945 m in frozen npz (spherical great-circle sampling). Delta ~350 m. LIKELY CAUSE (INT): paths drift apart laterally by a few hundred metres; on a summit that steep this changes sampled elevation by ~350 m. RULE: 'elevation along the line' != 'height of Kinabalu'; +3,945 m anchor is PATH-DEPENDENT, no longer quotable as fixed anchor. Falsifier: one canonical path definition reconciling both, or demonstrated sampling error in either source.",
+    "evidence_refs": [
+      "new geodesic profile (gravity agent)",
+      "frozen npz (rendering agent environment, not on af-forge)",
+      "twin conflict: clm_b0666b5f66064459 (A-A' length)"
+    ],
+    "source": "Copilot Phase-1 data-conflict report, F13-relayed 2026-10-30",
+    "confidence": "UNKNOWN (both sides attributed, unprobed)",
+    "valid_until": "2027-06-30"
+  },
+  {
+    "claim_id": "kin_clm_23",
+    "claim_type": "causal_falsification_challenge",
+    "claim": "CAUSAL-FALSIFICATION (near-falsified, biostratigraphic - independent of gravity critique): 'SRU caused by / linked to Kinabalu granite intrusion' cannot hold - SRU ~9.4 Ma (3 wells inside NN10: 9.41/9.36/9.38; '8.6 Ma' = 1995 base-NN11 age only) vs granite 7.85-7.22 Ma U-Pb (Cottam 2010; older K-Ar contested): proposed CAUSE postdates EFFECT by ~1.5 Myr. ACTION: withdraw ProF attribution linking SRU to intrusion; reframe granite as POST-collision magmatism (breakoff/root removal, INT, HOLD until Pekaka dated). Chronology carried: DRU 14.2/14.91 (GTS2012; ~40% of old gap = timescale artefact; Lunt dropped as primary, HOLD narrowed); BMU 23.13 vs ~21 (possibly two surfaces, family C7). Outlier: Solisip-1 NN11 below SRU pick -> pick younger or SRU diachronous toward North Sabah (domain-confined surfaces signal).",
+    "evidence_refs": [
+      "Kinabalu_Chronostrat_v2 (8 Oct) well windows + contradiction register",
+      "kin_clm_16 (granite age tension)",
+      "kin_clm_17 (novelty framing)"
+    ],
+    "source": "Arif chronostrat chart, F13-relayed 2026-10-30",
+    "confidence": "HIGH (biostratigraphic)",
+    "valid_until": "2027-12-31"
+  },
+  {
+    "claim_id": "kin_clm_24",
+    "claim_type": "rival_ranking_update",
+    "claim": "RIVAL RE-RANKING for Trough-magmatic eureka (attaches to clm_f8533e7a70a44864 falsifier framework): C (inherited Palaeogene volcanism) > B (hinge/breakoff melting) > A (new spreading axis) - RANKING ONLY, not a verdict; Pekaka volcanic AGE decides. Against A: SCS spreading ended ~16 Ma (TTE chart; Li 2014) - a NEW ridge after 16 Ma inside a compressed foredeep needs special mechanism; NP23-level (~29 Ma) volcanics marked DATA on Sabah Platform (PETRONAS KL3) support C. DECISION TREE: Pekaka < 16 Ma + MORB -> A alive; ~29 Ma -> A ruled out, C confirmed. Gravity foredeep reading supports the FLEXURAL frame; underthrust-DG weight unchanged (gravity adds no independent proof). Boundary 2: ONE gravity candidate @ ~600 km (vs Segama/Kinabatangan sub-basin alternative; test = matching magnetic anomaly or JMG fault) - stays HOLD. Chart queue: TRO VOLC body at Pekaka-1 (age UNKNOWN, drawn as A/B/C range) + Layang-Layang-1 volcanogenic base (both DATA via WCR/ETRC); domains extended to Central Sabah / Boundary-2 / Darvel Bay; E11 post-collision magmatism event.",
+    "evidence_refs": [
+      "clm_f8533e7a70a44864",
+      "kin_clm_23",
+      "Li 2014 (TTE)",
+      "PETRONAS KL3 chart",
+      "kin_clm_21 constraints"
+    ],
+    "source": "F13-relayed synthesis 2026-10-30 (Phase-1 + critique + chronostrat)",
+    "confidence": "MED (ranking, not verdict)",
+    "valid_until": "2027-06-30"
   }
 ]
