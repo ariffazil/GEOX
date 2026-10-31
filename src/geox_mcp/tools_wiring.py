@@ -5662,7 +5662,7 @@ def register_tools_on(mcp):
             hydrogen_index: float | None = None,
             oxygen_index: float | None = None,
             tmax_c: float | None = None,
-            kerogen_type: str = "II",
+            kerogen_type: str | None = None,  # None = not supplied (no silent type assumption)
             depth_m: float | None = None,
             resistivity_ohm_m: float | None = None,
             sonic_us_ft: float | None = None,
@@ -5678,7 +5678,9 @@ def register_tools_on(mcp):
                 if mode in ("kerogen", "full") and hydrogen_index is not None:
                     results["kerogen"] = classify_kerogen(hydrogen_index, oxygen_index, tmax_c)
                 if mode in ("maturity", "full") and tmax_c is not None:
-                    results["maturity"] = classify_maturity(tmax_c, kerogen_type)
+                    results["maturity"] = classify_maturity(tmax_c, kerogen_type or "II")
+                    if kerogen_type is None:
+                        results["maturity"]["kerogen_type_assumption"] = "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
                     results["deltalogr"] = estimate_toc_deltalogr(
                         depth_m,
@@ -5689,6 +5691,15 @@ def register_tools_on(mcp):
                         baseline_resistivity,
                         baseline_sonic,
                     )
+                if "toc" in results:
+                    if "kerogen" in results:
+                        _pm = {"oil": "oil_prone", "oil_gas": "oil_gas", "gas": "gas_prone", "none": "none"}
+                        results["toc"]["generation_potential"] = _pm.get(str(results["kerogen"].get("expected_products", "")).strip(), "HOLD")
+                        results["toc"]["generation_potential_basis"] = "Rock-Eval hydrogen_index (measured)"
+                    elif kerogen_type:
+                        _dm = {"I": "oil_prone", "II": "oil_prone", "II/III": "oil_gas", "III": "gas_prone", "IV": "none"}
+                        results["toc"]["generation_potential"] = _dm.get(str(kerogen_type).strip().upper(), "HOLD")
+                        results["toc"]["generation_potential_basis"] = "declared kerogen_type (NOT measured - supply hydrogen_index to confirm)"
                 if len(results) == 1:
                     results["error"] = f"mode={mode} requires specific parameters (see description)"
                 return results
@@ -6124,7 +6135,7 @@ def register_tools_on(mcp):
         hydrogen_index: float | None = None,
         oxygen_index: float | None = None,
         tmax_c: float | None = None,
-        kerogen_type: str = "II",
+        kerogen_type: str | None = None,  # None = not supplied (no silent type assumption)
         depth_m: float | None = None,
         resistivity_ohm_m: float | None = None,
         sonic_us_ft: float | None = None,
@@ -6182,7 +6193,7 @@ def register_tools_on(mcp):
         hydrogen_index=None,
         oxygen_index=None,
         tmax_c=None,
-        kerogen_type="II",
+        kerogen_type=None,
         depth_m=None,
         resistivity_ohm_m=None,
         sonic_us_ft=None,
