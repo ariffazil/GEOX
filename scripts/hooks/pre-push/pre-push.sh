@@ -1,15 +1,15 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-REMOTE_NAME="${1:-origin}"
-REMOTE_URL="${2:-$(git remote get-url "${1:-origin}")}"
-
-REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-GUARD="$REPO_ROOT/scripts/hooks/pre-push/repo_guard.py"
-
-if [[ ! -x "$GUARD" ]]; then
-  echo "[WARN] repo_guard.py not executable or missing at $GUARD; allowing push."
-  exit 0
+#!/bin/sh
+# FAIL-CLOSED RAIL (FI-003 2026-10-30, corak CHRON) — blocks any push from THIS raw repo.
+# Box GEOX is raw; sanctioned remote history filtered in /root/geox-push-mirror.
+# If this hook errors, that is a STOP, not a warning.
+set -u
+REPO="$(git rev-parse --git-dir 2>/dev/null || true)"
+cd "$(dirname "$0")/.." || exit 1
+PATTERN='^\.archive/|^\.megamemory/|(^|/)(media|cache)/|\.db(-wal|-shm)?$'
+hits=$(git log --all --name-only --pretty=format: 2>/dev/null | grep -cE "$PATTERN")
+[ -z "${REPO:-}" ] && { echo "PRE-PUSH BLOCKED: no git dir"; exit 1; }
+if [ "${hits:-1}" -gt 0 ]; then
+  echo "PRE-PUSH BLOCKED: $hits sensitive path-occurrence(s) in raw history."
+  echo "Push from the filtered mirror instead: /root/geox-push-mirror (re-filter after new commits)"
+  exit 1
 fi
-
-python3 "$GUARD" --remote-name "$REMOTE_NAME" --remote-url "$REMOTE_URL"
