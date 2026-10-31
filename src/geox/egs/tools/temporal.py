@@ -47,10 +47,26 @@ async def temporal_decline(
             "recoverable": True,
         }
 
-    # Sort by year
-    sorted_data = sorted(production_data, key=lambda d: d.get("year", 0))
-    years = [d["year"] for d in sorted_data]
-    rates = [d["bpd"] for d in sorted_data]
+    # Sort by year (accept {year|t} for time and {bpd|production} for rate — agents may use either)
+    def _yr(d):
+        v = d.get("year", d.get("t"))
+        return float(v) if v is not None else None
+
+    def _rate(d):
+        v = d.get("bpd", d.get("production", d.get("rate")))
+        return float(v) if v is not None else None
+
+    _bad = [d for d in production_data if _yr(d) is None or _rate(d) is None]
+    if _bad:
+        return {
+            "success": False,
+            "error": "production_data rows need a time key ('year' or 't') and a rate key ('bpd' or 'production'), e.g. {year: 2020, bpd: 1000}",
+            "recoverable": True,
+            "received_example": str(_bad[0])[:200],
+        }
+    sorted_data = sorted(production_data, key=lambda d: _yr(d))
+    years = [_yr(d) for d in sorted_data]
+    rates = [_rate(d) for d in sorted_data]
 
     current_rate = rates[-1]
     dt = years[-1] - years[0]
