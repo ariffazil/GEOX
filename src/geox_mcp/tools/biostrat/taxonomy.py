@@ -26,6 +26,13 @@ PBDB_BASE = "https://paleobiodb.org/data1.2"
 PBDB_NANNOFOSSIL_CLASS = "Coccolithophyceae"
 
 
+
+def _coerce_float(v):
+    try:
+        return float(v) if v not in (None, "", "0", "0.0") else None
+    except (TypeError, ValueError):
+        return None
+
 class PBDBClient:
     """Async client for the Paleobiology Database (PBDB) REST API.
 
@@ -126,14 +133,21 @@ class PBDBClient:
         if rec is None:
             rec = records[0]
 
+        _RANK_OK = {"class", "order", "family", "genus", "species", "subspecies"}
+        _rk = _pbdb_rank(rec.get("rnk", "")) if _pbdb_rank(rec.get("rnk", "")) in _RANK_OK else "species"
+        def _f(v):
+            try:
+                return float(v) if v not in (None, "", "0", "0.0") else None
+            except (TypeError, ValueError):
+                return None
         return TaxonRecord(
             name=rec.get("nam", taxon_name),
             accepted_name=rec.get("nam", taxon_name),
-            rank=_pbdb_rank(rec.get("rnk", "")),
+            rank=_rk,
             parent=rec.get("par", None),
-            pbdb_oid=rec.get("oid", None),
-            first_occurrence_ma=rec.get("fea"),
-            last_occurrence_ma=rec.get("lea"),
+            pbdb_oid=str(rec.get("oid")) if rec.get("oid") is not None else None,
+            first_occurrence_ma=_f(rec.get("fea")),
+            last_occurrence_ma=_coerce_float(rec.get("lea")),
             n_occurrences=rec.get("noc"),
             extant=rec.get("ext") == "1",
             provenance="PBDB",
@@ -381,7 +395,7 @@ async def resolve_taxon(
                     rank=_pbdb_rank(rec.get("rnk", "")),
                     pbdb_oid=rec.get("oid"),
                     first_occurrence_ma=rec.get("fea"),
-                    last_occurrence_ma=rec.get("lea"),
+                    last_occurrence_ma=_coerce_float(rec.get("lea")),
                     n_occurrences=rec.get("noc"),
                     extant=rec.get("ext") == "1",
                     mikrotax_url=MikrotaxClient.build_url(name=taxon_name),
