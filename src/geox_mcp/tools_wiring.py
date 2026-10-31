@@ -5678,9 +5678,11 @@ def register_tools_on(mcp):
                 if mode in ("kerogen", "full") and hydrogen_index is not None:
                     results["kerogen"] = classify_kerogen(hydrogen_index, oxygen_index, tmax_c)
                 if mode in ("maturity", "full") and tmax_c is not None:
-                    results["maturity"] = classify_maturity(tmax_c, kerogen_type or "II")
+                    _mat_stage = classify_maturity(tmax_c, kerogen_type or "II")
+                    _mat = {"tmax_c": tmax_c, "kerogen_type": kerogen_type or "II", "stage": _mat_stage}
                     if kerogen_type is None:
-                        results["maturity"]["kerogen_type_assumption"] = "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                        _mat["kerogen_type_assumption"] = "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                    results["maturity"] = _mat
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
                     results["deltalogr"] = estimate_toc_deltalogr(
                         depth_m,
