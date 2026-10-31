@@ -169,7 +169,7 @@ Best leverage/cost ratio. Native primitive. Auditable. Familiar to ops. **Adopte
 
 ### Positive
 
-- **Mechanical refusal at substrate layer.** Cannot be bypassed by application bugs, prompt injection, or compromised API keys (except service_role, which is logged).
+- **Mechanical refusal at substrate layer — once the policies exist in the deployed schema.** Evidence status 2026-10-31: no `ENABLE ROW LEVEL SECURITY` / `CREATE POLICY` DDL exists in this repository (0 `.sql` files). This is a *design adopted*, not an *active control*. Do not cite it as enforcement until `pg_policy` in the target database shows the policies.
 - **Constitutional floors become DB invariants, not best-effort guidelines.** A doctrine shift.
 - **First production system with substrate-layer constitutional enforcement.** Industry leadership (per 2025-2026 survey: zero competitors do this).
 - **Defense-in-depth.** Application-layer checks remain as a first line; RLS is the last line.
