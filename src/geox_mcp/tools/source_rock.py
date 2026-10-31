@@ -26,7 +26,7 @@ async def geox_source_rock(
     hydrogen_index: float | None = None,
     oxygen_index: float | None = None,
     tmax_c: float | None = None,
-    kerogen_type: str = "II",
+    kerogen_type: str | None = None,  # explicit type or None = not supplied (no silent default)
     density_neutron_separation: float | None = None,
     baseline_resistivity: float | None = None,
     shale_resistivity: float | None = None,
@@ -73,7 +73,7 @@ async def geox_source_rock(
     def _run_maturity() -> str | None:
         if tmax_c is None:
             return None
-        return classify_maturity(tmax_c, kerogen_type)
+        return classify_maturity(tmax_c, kerogen_type or "II")
 
     def _run_delalogr() -> dict[str, Any] | None:
         # Map task-spec params → actual estimate_toc_deltalogr signature:
@@ -122,7 +122,7 @@ async def geox_source_rock(
         if r is None:
             errors.append("mode=maturity requires tmax_c")
         else:
-            result["maturity"] = {"tmax_c": tmax_c, "kerogen_type": kerogen_type, "stage": r}
+            result["maturity"] = {"tmax_c": tmax_c, "kerogen_type": kerogen_type or "II (ASSUMED — not supplied; Tmax windows are type-dependent)", "stage": r}
 
     elif mode == "delalogr":
         r = _run_delalogr()
@@ -139,6 +139,14 @@ async def geox_source_rock(
         r_ker = _run_kerogen()
         if r_ker is not None:
             result["kerogen"] = r_ker
+            _prod_map = {"oil": "oil_prone", "oil_gas": "oil_gas", "gas": "gas_prone", "none": "none"}
+            if "toc" in result:
+                result["toc"]["generation_potential"] = _prod_map.get(str(r_ker.get("expected_products", "")).strip(), "HOLD")
+                result["toc"]["generation_potential_basis"] = "Rock-Eval hydrogen_index (measured)"
+        elif kerogen_type is not None and "toc" in result:
+            _decl_map = {"I": "oil_prone", "II": "oil_prone", "II/III": "oil_gas", "III": "gas_prone", "IV": "none"}
+            result["toc"]["generation_potential"] = _decl_map.get(str(kerogen_type).strip().upper(), "HOLD")
+            result["toc"]["generation_potential_basis"] = "declared kerogen_type (NOT measured — supply hydrogen_index to confirm)"
 
         r_mat = _run_maturity()
         if r_mat is not None:

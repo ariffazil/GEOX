@@ -6,17 +6,25 @@ from typing import Any
 
 
 def classify_toc(toc_wt_pct: float) -> dict[str, Any]:
+    # TOC gives QUANTITY only (Peters & Cassa 1994). Hydrocarbon TYPE is a
+    # Rock-Eval (HI) property or a declared kerogen type — never implied by TOC.
     if toc_wt_pct < 0.5:
-        q, p = "poor", "negligible"
+        q = "poor"
     elif toc_wt_pct < 1.0:
-        q, p = "fair", "limited_gas"
+        q = "fair"
     elif toc_wt_pct < 2.0:
-        q, p = "good", "gas_oil"
+        q = "good"
     elif toc_wt_pct < 4.0:
-        q, p = "very_good", "oil_prone"
+        q = "very_good"
     else:
-        q, p = "excellent", "major_oil"
-    return {"toc_wt_pct": toc_wt_pct, "quality": q, "generation_potential": p, "reference": "Peters-Cassa-1994"}
+        q = "excellent"
+    return {
+        "toc_wt_pct": toc_wt_pct,
+        "quality": q,
+        "generation_potential": "HOLD",
+        "generation_potential_note": "TOC classifies source-rock QUANTITY only. Hydrocarbon TYPE requires Rock-Eval hydrogen_index or an explicitly supplied kerogen_type — supply either to obtain a type label.",
+        "reference": "Peters-Cassa-1994",
+    }
 
 
 def classify_kerogen(hydrogen_index: float, oxygen_index: float | None = None, tmax_c: float | None = None) -> dict[str, Any]:
