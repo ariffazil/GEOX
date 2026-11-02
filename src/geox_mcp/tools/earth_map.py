@@ -37,12 +37,18 @@ logger = logging.getLogger("geox.canonical.earth_map")
 _GEOX_ROOT = Path(__file__).parent.parent.parent.parent
 _ATLAS_DIR = _GEOX_ROOT / "data" / "atlas"
 _LAYERS_FILE = _ATLAS_DIR / "layers" / "earth_layers.json"
-_CACHE_DIR = Path(os.environ.get("GEOX_MAP_CACHE_DIR", "/tmp/geox/atlas/cache/renders"))
+_DEFAULT_CACHE_DIR = Path("/var/lib/geox/cache/atlas/renders")
+_FALLBACK_CACHE_DIR = Path("/tmp/geox/atlas/cache/renders")
+_CACHE_DIR = Path(os.environ.get("GEOX_MAP_CACHE_DIR", str(_DEFAULT_CACHE_DIR)))
 try:
     _CACHE_DIR.mkdir(parents=True, exist_ok=True)
 except OSError:
-    _CACHE_DIR = Path("/tmp/geox/atlas/cache/renders")
-    _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    try:
+        _CACHE_DIR = _DEFAULT_CACHE_DIR
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        _CACHE_DIR = _FALLBACK_CACHE_DIR
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── Layer registry cache ─────────────────────────────────────────────────────
 _registry_cache: dict | None = None

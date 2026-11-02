@@ -125,19 +125,39 @@ async def geox_h3_spatial_index(
                 "lat": lat,
                 "lng": lng,
                 "resolution": resolution,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
             }
 
         elif mode == "cell_center":
             if not h3_cell:
                 return {"ok": False, "error": "h3_cell required"}
             center = _h3_cell_center(h3_cell)
-            return {"ok": True, "h3_cell": h3_cell, "center": center}
+            return {
+                "ok": True,
+                "h3_cell": h3_cell,
+                "center": center,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+            }
 
         elif mode == "cell_boundary":
             if not h3_cell:
                 return {"ok": False, "error": "h3_cell required"}
             boundary = _h3_cell_boundary(h3_cell)
-            return {"ok": True, "h3_cell": h3_cell, "boundary": boundary}
+            return {
+                "ok": True,
+                "h3_cell": h3_cell,
+                "boundary": boundary,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+            }
 
         elif mode == "k_ring":
             if not h3_cell:
