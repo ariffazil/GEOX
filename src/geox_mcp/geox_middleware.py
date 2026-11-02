@@ -1344,15 +1344,17 @@ class GeoxGovernanceMiddleware(Middleware):
             _error_detail = ""
             try:
                 if isinstance(result, dict):
-                    if result.get("isError") is True:
+                    if result.get("isError") is True or result.get("ok") is False:
                         _is_error = True
                     elif result.get("status") in ("ERROR", "INVALID", "FAILED", "REJECTED"):
                         _is_error = True
                     _err = result.get("error")
                     if isinstance(_err, dict):
                         _error_detail = str(_err.get("message") or _err.get("detail") or _err)[:200]
-                    elif _err is not None and _err is not False:
+                    elif _err is not None and _err is not False and _err != "":
                         _error_detail = str(_err)[:200]
+                    elif not _error_detail and result.get("message") and _is_error:
+                        _error_detail = str(result.get("message"))[:200]
                 else:
                     _is_error = bool(getattr(result, "is_error", False))
                     if _is_error:

@@ -22,7 +22,7 @@
       "stratigraphy_groups.yaml"
     ],
     "source": "internal operator regional studies (de-referenced 2026-10-08 purge; values are our synthesis)",
-    "confidence": "HIGH",
+    "confidence": "SYNTHESIS_UNCALIBRATED",
     "valid_until": "2030-12-31",
     "forbidden_uses": [
       "direct_pos_calculation"
@@ -200,7 +200,7 @@
   {
     "claim_id": "clm_coverage_doctrine",
     "claim": "Component 36 - Unknown-Space Mapping. Coverage is not uncertainty, coverage is not confidence. Coverage measures observational density, not statistical spread. Every pore pressure prediction MUST report coverage_score alongside confidence. Confidence=0.81 with coverage_score=0.0 = INVALID (HYPOTHESIS, not DERIVED).",
-    "claim_type": "derived",
+    "claim_type": "governance_directive",
     "evidence_refs": [
       "pressure_states.yaml",
       "SCAR-6 Bekok Deep-1"
