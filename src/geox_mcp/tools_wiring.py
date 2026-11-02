@@ -4645,6 +4645,8 @@ def register_tools_on(mcp):
         mode: str = "full",
         context: dict[str, Any] | None = None,
         evidence: dict[str, Any] | None = None,
+        claims: list[dict[str, Any]] | None = None,
+        basin_name: str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -4652,20 +4654,33 @@ def register_tools_on(mcp):
         """Popperian falsification: scan claims for internal contradictions."""
         from geox_mcp.tools.contradiction_scan import geox_contradiction_scan as _impl
 
-        args = _safe_forward(
-            _impl,
-            {
-                "claim_text": claim_text,
-                "claim_type": claim_type,
-                "mode": mode,
-                "context": context,
-                "evidence": evidence,
-            },
+        if claims is None:
+            if claim_text:
+                claims = [{"text": claim_text, "type": claim_type, "tool": "geox_claim", "epistemic_rung": 4}]
+            elif basin_name:
+                try:
+                    from geox_mcp.tools.basin_unified import geox_basin
+                    b_res = await geox_basin(mode="profile", basin_name=basin_name)
+                    raw_claims = b_res.get("claims", [])
+                    if not raw_claims:
+                        for item in b_res.get("observed", []):
+                            raw_claims.append({"text": str(item), "type": "observation", "epistemic_rung": 2})
+                        for item in b_res.get("interpreted", []):
+                            raw_claims.append({"text": str(item), "type": "interpretation", "epistemic_rung": 5})
+                    claims = raw_claims
+                except Exception as _b_err:
+                    logger.warning("Failed to load claims for basin %s: %s", basin_name, _b_err)
+                    claims = []
+            else:
+                claims = []
+
+        scan_mode = "pairwise" if mode in ("full", "pairwise") else mode
+        result = await _impl(
+            claims=claims,
+            mode=scan_mode,
             session_id=session_id,
             actor_id=actor_id,
-            trace_id=trace_id,
         )
-        result = await _impl(**args)
         from geox_mcp.tools.mcp_apps_bridge import compact_structured_for_ui, wrap_as_ui_tool_result
 
         return wrap_as_ui_tool_result(
@@ -5329,6 +5344,7 @@ def register_tools_on(mcp):
             points: list | str | None = None,
             k: int = 1,
             polygon: list | str | None = None,
+            crs: str = "EPSG:4326",
             session_id: str | None = None,
             actor_id: str | None = None,
             trace_id: str | None = None,
@@ -5351,6 +5367,7 @@ def register_tools_on(mcp):
                 points=points,
                 k=k,
                 polygon=polygon,
+                crs=crs,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
@@ -6256,6 +6273,7 @@ def register_tools_on(mcp):
         points: list | str | None = None,
         k: int = 1,
         polygon: list | str | None = None,
+        crs: str = "EPSG:4326",
         # lancedb params
         table_name: str = "geo_embeddings",
         embeddings: list | str | None = None,
@@ -6297,6 +6315,7 @@ def register_tools_on(mcp):
                 points=points,
                 k=k,
                 polygon=polygon,
+                crs=crs,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
@@ -6347,6 +6366,7 @@ def register_tools_on(mcp):
         points=None,
         k=1,
         polygon=None,
+        crs="EPSG:4326",
         session_id=None,
         actor_id=None,
         trace_id=None,
@@ -6361,6 +6381,7 @@ def register_tools_on(mcp):
             points=points,
             k=k,
             polygon=polygon,
+            crs=crs,
             session_id=session_id,
             actor_id=actor_id,
             trace_id=trace_id,
@@ -6579,6 +6600,7 @@ def register_tools_on(mcp):
         # ── falsify/scan params ──
         context: dict[str, Any] | None = None,
         evidence: dict[str, Any] | None = None,
+        claims: list[dict[str, Any]] | None = None,
         # ── evidence_unified params ──
         query: str = "",
         scope: str = "all",
@@ -6683,6 +6705,8 @@ def register_tools_on(mcp):
                 mode="full",
                 context=context,
                 evidence=evidence,
+                claims=claims,
+                basin_name=basin_name,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
@@ -7616,8 +7640,39 @@ def register_tools_on(mcp):
             else None,
         }
 
+        # S3.1: Live module import-smoke test across core tool modules
+        import importlib
+        _TOOL_MODULE_MAP = {
+            'geox_map': 'geox_mcp.tools.earth_map',
+            'geox_spatial': 'geox_mcp.tools.h3_spatial_index',
+            'geox_basin': 'geox_mcp.tools.basin_unified',
+            'geox_claim': 'geox_mcp.tools.claim_unified',
+            'geox_deep_time': 'geox_mcp.tools.deep_time_state',
+            'geox_contrast_metabolize': 'geox_mcp.tools.contrast_metabolize',
+            'geox_observe': 'geox_mcp.tools.earth_observe',
+            'geox_well_qc': 'geox_mcp.tools.well_qc',
+            'geox_well': 'geox_mcp.tools.integration_well',
+            'geox_well_ingest': 'geox_mcp.tools.well_ingest',
+            'geox_seismic_ingest': 'geox_mcp.tools.seismic_ingest',
+            'geox_seismic_interpret': 'geox_mcp.tools.seismic_interpret',
+            'geox_seismic_compute': 'geox_mcp.tools.seismic_compute_unified',
+            'geox_petrophysics': 'geox_mcp.tools.petrophysics_unified',
+            'geox_prospect': 'geox_mcp.tools.prospect_unified',
+            'geox_paleobiodb_query': 'geox_mcp.tools.geox_paleobiodb_query',
+        }
+        _smoke_failures = {}
+        for _tool_k, _mod_path in _TOOL_MODULE_MAP.items():
+            try:
+                importlib.import_module(_mod_path)
+            except Exception as _exc:
+                _smoke_failures[_tool_k] = f"{_mod_path}: {_exc}"
+
+        _smoke_pass = len(_smoke_failures) == 0
+        _status = "healthy" if _smoke_pass else "degraded"
+        _verdict = "REGISTRY_PASS" if _smoke_pass else "SMOKE_FAIL"
+
         return {
-            "status": "healthy",
+            "status": _status,
             "organ": "GEOX",
             "surface_version": GEOX_VERSION,
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
@@ -7626,7 +7681,12 @@ def register_tools_on(mcp):
             "deployed_git_sha": deployed_sha,
             "live_counts": live_counts,
             "canonical_counts": {"tools": len(CANONICAL_PUBLIC_TOOLS)},
-            "verdict": "REGISTRY_PASS",
+            "smoke_test": {
+                "passed": _smoke_pass,
+                "modules_tested": len(_TOOL_MODULE_MAP),
+                "failures": _smoke_failures,
+            },
+            "verdict": _verdict,
             "session_id": session_id,
             "actor_id": actor_id,
             "trace_id": trace_id,
