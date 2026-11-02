@@ -6306,6 +6306,7 @@ def register_tools_on(mcp):
           stac_discover — STAC catalog query for COG/GeoParquet/Zarr datasets
         """
         if mode == "h3_index":
+            effective_k = h3_radius if (h3_radius is not None and h3_radius > 1 and (k is None or k == 1)) else (k or 1)
             return await _h3_spatial_index(
                 mode="latlng_to_cell",
                 lat=lat,
@@ -6313,7 +6314,7 @@ def register_tools_on(mcp):
                 resolution=resolution,
                 h3_cell=h3_cell,
                 points=points,
-                k=k,
+                k=effective_k,
                 polygon=polygon,
                 crs=crs,
                 session_id=session_id,
