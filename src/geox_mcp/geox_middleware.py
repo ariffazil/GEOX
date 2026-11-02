@@ -1234,6 +1234,22 @@ class GeoxGovernanceMiddleware(Middleware):
                     f"fix: evidence postcondition crashed — not a silent SUCCESS (G8)."
                 ) from _ev_exc
 
+            # S4.1 FIX: sync evidence envelope if postcondition downgraded or marked failure
+            if isinstance(result, dict) and "_evidence_envelope" in result:
+                _env = result["_evidence_envelope"].get("_envelope")
+                _rcpt = result["_evidence_envelope"].get("_receipt")
+                if isinstance(_env, dict) and isinstance(_rcpt, dict):
+                    if (
+                        result.get("_evidence_postcondition", {}).get("verdict") == "DOWNGRADED"
+                        or result.get("ok") is False
+                        or result.get("status") in ("INVALID", "ERROR", "FAILED")
+                    ):
+                        _env["execution_status"] = "FAILED"
+                        _env["artifact_status"] = "REJECTED"
+                        _rcpt["is_error"] = True
+                        if not _rcpt.get("error_detail"):
+                            _rcpt["error_detail"] = str(result.get("error") or "EVIDENCE_SCHEMA_VIOLATION")[:200]
+
             # ═══ W-01 FIX: re-wrap in ToolResult for FastMCP wire path ═══
             if _is_tool_result:
                 result = apply_domain_dict_to_result(_original, result)

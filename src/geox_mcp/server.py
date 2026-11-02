@@ -3983,6 +3983,11 @@ from geox_mcp.tools.geox_glof import geox_glof as _geox_glof_unified
 @mcp.tool(name="geox_glof", annotations=_geox_annotations("geox_glof"))
 async def _geox_glof_tool(
     mode: str = "run",
+    # target site / lake params
+    lake_id: str | None = None,
+    lat: float | None = None,
+    lng: float | None = None,
+    lake_name: str | None = None,
     # run mode
     domain_bounds_x_m: float = 4000.0,
     domain_bounds_z_m: float = 600.0,
@@ -4034,6 +4039,10 @@ async def _geox_glof_tool(
     """
     return await _geox_glof_unified(
         mode=mode,
+        lake_id=lake_id,
+        lat=lat,
+        lng=lng,
+        lake_name=lake_name,
         domain_bounds_x_m=domain_bounds_x_m,
         domain_bounds_z_m=domain_bounds_z_m,
         resolution_m=resolution_m,
