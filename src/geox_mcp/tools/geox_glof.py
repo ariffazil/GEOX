@@ -172,6 +172,34 @@ async def _run_full_cascade(
         receipt = met_r.result.get("receipt", {})
         g_score = receipt.get("G_score")
 
+    if breach_summary.get("Q_peak_m3s", 0.0) <= 0.0 and water_head_initial_m <= 0.0:
+        return {
+            "ok": False,
+            "tool": _TOOL,
+            "mode": "run",
+            "error": "EMPTY_SIMULATION",
+            "message": "Zero initial lake water head (water_head_initial_m=0.0) resulted in zero peak discharge (Q_peak=0.0). Provide positive water_head_initial_m or dam_height_m for physical cascade.",
+            "result": {
+                "breach_summary": breach_summary,
+                "G_score": None,
+            },
+            "execution_status": "FAILED",
+        }
+
+    if g_score is not None and isinstance(g_score, float) and math.isnan(g_score):
+        return {
+            "ok": False,
+            "tool": _TOOL,
+            "mode": "run",
+            "error": "NUMERICAL_INSTABILITY",
+            "message": "Cascade metabolizer produced NaN G_score — simulation numerically uncalibrated.",
+            "result": {
+                "breach_summary": breach_summary,
+                "G_score": None,
+            },
+            "execution_status": "FAILED",
+        }
+
     return {
         "ok": True,
         "tool": _TOOL,
@@ -192,6 +220,11 @@ async def _run_full_cascade(
 
 async def geox_glof(
     mode: Literal["run", "inverse", "mcmc", "propagate", "phase"] = "run",
+    # ── target site / location params ────────────────────────────────────────
+    lake_id: str | None = None,
+    lat: float | None = None,
+    lng: float | None = None,
+    lake_name: str | None = None,
     # ── run mode params ─────────────────────────────────────────────────────
     domain_bounds_x_m: float = 4000.0,
     domain_bounds_z_m: float = 600.0,
@@ -268,6 +301,23 @@ async def geox_glof(
     DITEMPA BUKAN DIBERI — the cascade is forged, not given.
     """
     try:
+        # ── Target lake / site validation ────────────────────────────────────
+        if lake_id or lake_name or (lat is not None and lng is not None):
+            target = (lake_id or lake_name or f"lat={lat},lng={lng}").strip()
+            valid_calibrated_lakes = ["bhotekoshi_dam_default", "generic_moraine_dam"]
+            if target not in valid_calibrated_lakes:
+                return {
+                    "ok": False,
+                    "tool": _TOOL,
+                    "error": "LAKE_MODEL_UNAVAILABLE",
+                    "message": (
+                        f"No calibrated bathymetry, dam geometry, or DEM profile in GEOX for '{target}'. "
+                        f"Supported calibrated models: {valid_calibrated_lakes}. "
+                        "For uncalibrated sites, provide explicit geometry (dam_height_m, water_head_initial_m, domain_bounds_x_m)."
+                    ),
+                    "execution_status": "FAILED",
+                }
+
         # ── mode='run' ───────────────────────────────────────────────────────
         if mode == "run":
             return await _run_full_cascade(

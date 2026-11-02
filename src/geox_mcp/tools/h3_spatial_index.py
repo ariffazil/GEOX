@@ -129,7 +129,7 @@ async def geox_h3_spatial_index(
             if lat is None or lng is None:
                 return {"ok": False, "error": "lat and lng required"}
             cell = _to_h3_cell(lat, lng, resolution)
-            return {
+            res = {
                 "ok": True,
                 "h3_cell": cell,
                 "lat": lat,
@@ -141,6 +141,12 @@ async def geox_h3_spatial_index(
                 "grid_system": "Uber-H3-v4",
                 "h3_version": h3_version,
             }
+            if k is not None and k > 0:
+                k_cells = _h3_k_ring(cell, k)
+                res["k"] = k
+                res["k_ring_count"] = len(k_cells)
+                res["k_ring_cells"] = k_cells
+            return res
 
         elif mode == "cell_center":
             if not h3_cell:
