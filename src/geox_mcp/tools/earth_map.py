@@ -37,12 +37,25 @@ logger = logging.getLogger("geox.canonical.earth_map")
 _GEOX_ROOT = Path(__file__).parent.parent.parent.parent
 _ATLAS_DIR = _GEOX_ROOT / "data" / "atlas"
 _LAYERS_FILE = _ATLAS_DIR / "layers" / "earth_layers.json"
-_CACHE_DIR = Path(os.environ.get("GEOX_MAP_CACHE_DIR", "/tmp/geox/atlas/cache/renders"))
-try:
-    _CACHE_DIR.mkdir(parents=True, exist_ok=True)
-except OSError:
-    _CACHE_DIR = Path("/tmp/geox/atlas/cache/renders")
-    _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+_PRIMARY_CACHE_DIR = Path("/var/cache/geox/atlas/renders")
+_SECONDARY_CACHE_DIR = Path("/var/lib/geox/cache/atlas/renders")
+_FALLBACK_CACHE_DIR = Path("/tmp/geox/atlas/cache/renders")
+_CACHE_DIR = Path(os.environ.get("GEOX_MAP_CACHE_DIR", str(_PRIMARY_CACHE_DIR)))
+
+def _ensure_cache_dir() -> Path:
+    """Lazy mkdir for cache directory across systemd cache, persistent lib, and tmp fallbacks."""
+    global _CACHE_DIR
+    for d in (_CACHE_DIR, _PRIMARY_CACHE_DIR, _SECONDARY_CACHE_DIR, _FALLBACK_CACHE_DIR):
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+            _CACHE_DIR = d
+            return d
+        except OSError:
+            continue
+    return _FALLBACK_CACHE_DIR
+
+# Non-throwing initial probe
+_ensure_cache_dir()
 
 # ── Layer registry cache ─────────────────────────────────────────────────────
 _registry_cache: dict | None = None

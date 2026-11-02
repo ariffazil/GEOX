@@ -75,6 +75,7 @@ async def geox_h3_spatial_index(
     points: list[dict] | str | None = None,
     k: int = 1,
     polygon: list[dict] | str | None = None,
+    crs: str = "EPSG:4326",
     session_id: str | None = None,
     actor_id: str | None = None,
     trace_id: str | None = None,
@@ -100,12 +101,20 @@ async def geox_h3_spatial_index(
         points: List of {lat, lng, ...} dicts for aggregation.
         k: k-ring radius (number of rings).
         polygon: List of {lat, lng} dicts forming a polygon.
+        crs: Coordinate Reference System (default EPSG:4326).
         session_id, actor_id, trace_id: Federation audit.
 
     Returns:
         dict with results.
     """
     _ = (session_id, actor_id, trace_id)
+
+    if crs and crs.upper() not in ("EPSG:4326", "WGS84", "4326", "OGC:CRS84"):
+        return {
+            "ok": False,
+            "error": f"Unsupported CRS: {crs}. Native spatial indexing operates on EPSG:4326 (WGS84).",
+            "supported_crs": ["EPSG:4326", "WGS84"],
+        }
 
     if isinstance(points, str):
         points = json.loads(points)
@@ -114,6 +123,7 @@ async def geox_h3_spatial_index(
 
     try:
         import h3
+        h3_version = getattr(h3, "__version__", "4.x")
 
         if mode == "latlng_to_cell":
             if lat is None or lng is None:
@@ -125,35 +135,79 @@ async def geox_h3_spatial_index(
                 "lat": lat,
                 "lng": lng,
                 "resolution": resolution,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+                "h3_version": h3_version,
             }
 
         elif mode == "cell_center":
             if not h3_cell:
                 return {"ok": False, "error": "h3_cell required"}
             center = _h3_cell_center(h3_cell)
-            return {"ok": True, "h3_cell": h3_cell, "center": center}
+            return {
+                "ok": True,
+                "h3_cell": h3_cell,
+                "center": center,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+                "h3_version": h3_version,
+            }
 
         elif mode == "cell_boundary":
             if not h3_cell:
                 return {"ok": False, "error": "h3_cell required"}
             boundary = _h3_cell_boundary(h3_cell)
-            return {"ok": True, "h3_cell": h3_cell, "boundary": boundary}
+            return {
+                "ok": True,
+                "h3_cell": h3_cell,
+                "boundary": boundary,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+                "h3_version": h3_version,
+            }
 
         elif mode == "k_ring":
             if not h3_cell:
                 return {"ok": False, "error": "h3_cell required"}
             cells = _h3_k_ring(h3_cell, k)
-            return {"ok": True, "h3_cell": h3_cell, "k": k, "cells": cells, "count": len(cells)}
+            return {
+                "ok": True,
+                "h3_cell": h3_cell,
+                "k": k,
+                "cells": cells,
+                "count": len(cells),
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+                "h3_version": h3_version,
+            }
 
         elif mode == "polygon_fill":
             if not polygon:
                 return {"ok": False, "error": "polygon required"}
             cells = _h3_polygon_fill(polygon, resolution)
-            return {"ok": True, "cells": cells, "count": len(cells), "resolution": resolution}
+            return {
+                "ok": True,
+                "cells": cells,
+                "count": len(cells),
+                "resolution": resolution,
+                "crs": "EPSG:4326",
+                "datum": "WGS84",
+                "unit": "degree",
+                "grid_system": "Uber-H3-v4",
+                "h3_version": h3_version,
+            }
 
         elif mode == "cell_info":
             info = _h3_resolution_info(resolution)
-            return {"ok": True, **info}
+            return {"ok": True, **info, "grid_system": "Uber-H3-v4", "h3_version": h3_version}
 
         elif mode == "aggregate":
             if not points:

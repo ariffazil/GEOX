@@ -480,7 +480,7 @@ def required_authority_for(
     candidates = [
         MIN_AUTHORITY_FOR_TIER.get(risk_tier_str, "OBSERVE_ONLY"),
     ]
-    if tool_name in MUTATION_TOOLS:
+    if tool_name in MUTATION_TOOLS and risk_tier_str.lower() != "readonly":
         candidates.append("OPERATOR")
     if caller_request:
         candidates.append(caller_request)
@@ -602,6 +602,7 @@ def _get_lane(tool_name: str) -> str:
 # judgment routing through arifOS.
 
 _MODE_LANE_OVERRIDES: dict[tuple[str, str], str] = {
+    ("geox_claim", "scan"): "evidence",
     ("geox_claim", "create"): "evidence",
     ("geox_claim", "validate"): "evidence",
     ("geox_claim", "challenge"): "evidence",
@@ -1129,8 +1130,8 @@ async def check_governance(
         if isinstance(arguments.get("arguments"), dict):
             effective = arguments["arguments"]
         mode = str(effective.get("mode") or effective.get("action") or "create").lower()
-        if mode in ("create", "validate", "challenge", "attach", "attach_evidence", "query", "list"):
-            risk_tier = RiskTier.C1_ADVISORY
+        if mode in ("scan", "create", "validate", "challenge", "attach", "attach_evidence", "query", "list"):
+            risk_tier = RiskTier.READONLY if mode in ("scan", "query", "list") else RiskTier.C1_ADVISORY
         elif mode == "seal":
             risk_tier = RiskTier.IRREVERSIBLE
 
