@@ -5329,6 +5329,7 @@ def register_tools_on(mcp):
             points: list | str | None = None,
             k: int = 1,
             polygon: list | str | None = None,
+            crs: str = "EPSG:4326",
             session_id: str | None = None,
             actor_id: str | None = None,
             trace_id: str | None = None,
@@ -5351,6 +5352,7 @@ def register_tools_on(mcp):
                 points=points,
                 k=k,
                 polygon=polygon,
+                crs=crs,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
@@ -6256,6 +6258,7 @@ def register_tools_on(mcp):
         points: list | str | None = None,
         k: int = 1,
         polygon: list | str | None = None,
+        crs: str = "EPSG:4326",
         # lancedb params
         table_name: str = "geo_embeddings",
         embeddings: list | str | None = None,
@@ -6297,6 +6300,7 @@ def register_tools_on(mcp):
                 points=points,
                 k=k,
                 polygon=polygon,
+                crs=crs,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,
@@ -6347,6 +6351,7 @@ def register_tools_on(mcp):
         points=None,
         k=1,
         polygon=None,
+        crs="EPSG:4326",
         session_id=None,
         actor_id=None,
         trace_id=None,
@@ -6361,6 +6366,7 @@ def register_tools_on(mcp):
             points=points,
             k=k,
             polygon=polygon,
+            crs=crs,
             session_id=session_id,
             actor_id=actor_id,
             trace_id=trace_id,
@@ -7616,8 +7622,39 @@ def register_tools_on(mcp):
             else None,
         }
 
+        # S3.1: Live module import-smoke test across core tool modules
+        import importlib
+        _TOOL_MODULE_MAP = {
+            'geox_map': 'geox_mcp.tools.earth_map',
+            'geox_spatial': 'geox_mcp.tools.h3_spatial_index',
+            'geox_basin': 'geox_mcp.tools.basin_unified',
+            'geox_claim': 'geox_mcp.tools.claim_unified',
+            'geox_deep_time': 'geox_mcp.tools.deep_time_state',
+            'geox_contrast_metabolize': 'geox_mcp.tools.contrast_metabolize',
+            'geox_observe': 'geox_mcp.tools.earth_observe',
+            'geox_well_qc': 'geox_mcp.tools.well_qc',
+            'geox_well': 'geox_mcp.tools.integration_well',
+            'geox_well_ingest': 'geox_mcp.tools.well_ingest',
+            'geox_seismic_ingest': 'geox_mcp.tools.seismic_ingest',
+            'geox_seismic_interpret': 'geox_mcp.tools.seismic_interpret',
+            'geox_seismic_compute': 'geox_mcp.tools.seismic_compute_unified',
+            'geox_petrophysics': 'geox_mcp.tools.petrophysics_unified',
+            'geox_prospect': 'geox_mcp.tools.prospect_unified',
+            'geox_paleobiodb_query': 'geox_mcp.tools.geox_paleobiodb_query',
+        }
+        _smoke_failures = {}
+        for _tool_k, _mod_path in _TOOL_MODULE_MAP.items():
+            try:
+                importlib.import_module(_mod_path)
+            except Exception as _exc:
+                _smoke_failures[_tool_k] = f"{_mod_path}: {_exc}"
+
+        _smoke_pass = len(_smoke_failures) == 0
+        _status = "healthy" if _smoke_pass else "degraded"
+        _verdict = "REGISTRY_PASS" if _smoke_pass else "SMOKE_FAIL"
+
         return {
-            "status": "healthy",
+            "status": _status,
             "organ": "GEOX",
             "surface_version": GEOX_VERSION,
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
@@ -7626,7 +7663,12 @@ def register_tools_on(mcp):
             "deployed_git_sha": deployed_sha,
             "live_counts": live_counts,
             "canonical_counts": {"tools": len(CANONICAL_PUBLIC_TOOLS)},
-            "verdict": "REGISTRY_PASS",
+            "smoke_test": {
+                "passed": _smoke_pass,
+                "modules_tested": len(_TOOL_MODULE_MAP),
+                "failures": _smoke_failures,
+            },
+            "verdict": _verdict,
             "session_id": session_id,
             "actor_id": actor_id,
             "trace_id": trace_id,
