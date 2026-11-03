@@ -353,10 +353,10 @@ async def geox_prospect_evaluate(
             except Exception as _pw_exc_sm:
                 artifact["_saf_power"] = {"embed_skipped": str(_pw_exc_sm)[:120]}
 
-        return get_standard_envelope(
+        envelope = get_standard_envelope(
             artifact,
             tool_class="compute",
-            claim_tag="HYPOTHESIS",
+            claim_tag="ASSUMPTION",
             claim_state="INTERPRETED",
             uncertainty="High",
             humility_score=0.5,
@@ -366,12 +366,16 @@ async def geox_prospect_evaluate(
                 "confidence_band": "qualitative",
                 "reason": "Screen mode — no quantitative evidence available",
                 "allowed_claims": ["qualitative screening", "relative ranking", "hypothesis framing"],
-                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "comercial decision"],
+                "disallowed_claims": ["POS", "STOIIP", "P10/P50/P90", "commercial decision"],
             },
             # Agentic: screen mode is the safe downgrade
             suggested_tool=None,
             can_auto_retry=True,
         )
+        envelope["claim_tag"] = "ASSUMPTION"
+        envelope["epistemic_label"] = "ASSUMPTION"
+        envelope["forbidden_use"] = "not a reserve or drilling recommendation"
+        return envelope
 
     # Compute AC risk score from evidence quality
     ac_risk_score = 0.22

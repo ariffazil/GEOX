@@ -86,6 +86,12 @@ async def geox_dde_reason(
 
     Returns:
         dict with stratigraphic data, inferences, or validation results.
+
+    Coverage Note:
+        Macrostrat v2 coverage for offshore Borneo (Central/North Luconia,
+        Baram Delta, Deepwater Sabah, South Luconia) is ~0 units (0% coverage
+        across tested offshore coordinates). Offshore queries will honestly
+        return 0 units or UNKNOWN without inventing synthetic units.
     """
     _ = (session_id, actor_id, trace_id)
 
@@ -139,15 +145,27 @@ async def geox_dde_reason(
                 params["lat"] = lat
             if formation:
                 params["strat_name"] = formation
-            # D3: ontology_term is a lithology-class DDE term (Carbonate,
-            # Siliciclastic, …) — Macrostrat /units accepts `lith` for this.
+            # Parameter mapping: classify chronostratigraphic age/interval vs lithology
             if ontology_term:
-                params["lith"] = ontology_term
+                term_clean = ontology_term.strip()
+                is_age_term = any(
+                    term_clean.lower().endswith(suffix)
+                    for suffix in ("cene", "zoic", "ferous", "ian", "period", "epoch", "era", "age")
+                ) or any(
+                    k in term_clean.lower()
+                    for k in (
+                        "miocene", "pliocene", "pleistocene", "oligocene", "eocene", "paleocene",
+                        "cretaceous", "jurassic", "triassic", "permian", "carboniferous",
+                        "devonian", "silurian", "ordovician", "cambrian", "precambrian",
+                        "holocene", "quaternary", "neogene", "paleogene", "mesozoic", "cenozoic"
+                    )
+                )
+                if is_age_term:
+                    params["interval_name"] = term_clean
+                else:
+                    params["lith"] = term_clean
 
             ck = _cache_key("strat", bbox, lat, lng, formation, ontology_term, limit)
-            cached = _cache_load(ck)
-            if cached:
-                return cached
 
             try:
                 resp = requests.get(f"{MACROSTRAT_BASE}/units", params=params, timeout=30)
@@ -173,6 +191,9 @@ async def geox_dde_reason(
 
                 result = {
                     "ok": True,
+                    "epistemic_label": "OBS" if units else "UNKNOWN",
+                    "claim_tag": "OBS" if units else "UNKNOWN",
+                    "source_status": "ONLINE",
                     "n_units": min(len(units), limit),
                     "n_units_total": len(units),
                     "limit_applied": limit if len(units) > limit else None,
@@ -190,12 +211,21 @@ async def geox_dde_reason(
                 _cache_save(ck, result)
                 return result
             except requests.RequestException as e:
+                # F2 Truth / Task 3: When Macrostrat is offline/fails, return UNKNOWN
+                # with source_status=OFFLINE. No cached or invented units presented as live.
                 return {
                     "ok": False,
+                    "isError": True,
+                    "execution_status": "FAILED",
+                    "governance_status": "HOLD",
+                    "epistemic_label": "UNKNOWN",
+                    "claim_tag": "UNKNOWN",
+                    "source_status": "OFFLINE",
                     "n_units": 0,
                     "error": f"Macrostrat API unavailable: {e}",
                     "units": [],
                     "source": "Macrostrat (offline)",
+                    "note": "Macrostrat service is offline. No cached or synthetic units returned as live.",
                 }
 
         # ── Infer Missing ────────────────────────────────────────────────
