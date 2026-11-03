@@ -39,7 +39,6 @@ from typing import Any, cast
 logger = logging.getLogger("geox.auto_mint")
 
 AUTO_MINT_VERSION = "auto-mint:v1"
-DEFAULT_DB_PATH = "/root/geox/earth_memory.db"
 
 # Tools that emit gate-passing verdicts. Extending = append here + 3-line wire.
 SUPPORTED_TOOLS = {
@@ -49,7 +48,12 @@ SUPPORTED_TOOLS = {
 
 
 def _db_path() -> Path:
-    return Path(os.environ.get("GEOX_EARTH_MEMORY_DB", DEFAULT_DB_PATH))
+    env_path = os.environ.get("GEOX_EARTH_MEMORY_DB")
+    if not env_path:
+        raise RuntimeError(
+            "GEOX_EARTH_MEMORY_DB environment variable is unset (fail-closed; /root/geox fallback removed)"
+        )
+    return Path(env_path)
 
 
 def _enabled() -> bool:
