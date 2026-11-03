@@ -71,19 +71,19 @@ def test_anomaly_displaced_reflector():
     print("test_anomaly_displaced_reflector: PASSED")
 
 
-def test_megah1_quantified_case():
-    """Reproduce Megah-1 numbers: significant mistie, stronger RC."""
-    depth = np.arange(4700, 4731, 1.0, dtype=float)
+def test_synthetic_reef_quantified_case():
+    """Synthetic reef case (generic depths, no real prospect data): significant mistie, stronger RC."""
+    depth = np.arange(4490, 4521, 1.0, dtype=float)
     ai = np.zeros_like(depth)
-    ai[depth < 4710] = 4_000_000.0
-    ai[(depth >= 4710) & (depth < 4720)] = 4_500_000.0
-    ai[depth >= 4720] = 6_500_000.0
+    ai[depth < 4500] = 4_000_000.0
+    ai[(depth >= 4500) & (depth < 4510)] = 4_500_000.0
+    ai[depth >= 4510] = 6_500_000.0
 
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=ai.tolist(),
             depth=depth.tolist(),
-            formation_tops={"Upper_Reef": 4710.0},
+            formation_tops={"Reef_Top_Synth": 4500.0},
             rc_threshold=0.05,
             geological_boundary_tolerance_m=15.0,
         )
@@ -95,7 +95,7 @@ def test_megah1_quantified_case():
     assert mistie > 5.0, f"Expected significant mistie, got {mistie}m"
     rc_ratio = anomalies[0]["rc_ratio"]
     assert rc_ratio > 1.2, f"Expected stronger seismic RC, ratio={rc_ratio}"
-    print("test_megah1_quantified_case: PASSED")
+    print("test_synthetic_reef_quantified_case: PASSED")
 
 
 def test_invalid_input_fail_closed():
@@ -370,17 +370,17 @@ def test_attention_residual_no_anomaly_still_present():
 
 def test_softmax_alpha_bounded():
     """Verify that softmax alpha_i is mathematically bounded and meaningful."""
-    depth = np.arange(4700, 4731, 1.0, dtype=float)
+    depth = np.arange(4490, 4521, 1.0, dtype=float)
     ai = np.zeros_like(depth)
-    ai[depth < 4710] = 4_000_000.0
-    ai[(depth >= 4710) & (depth < 4720)] = 4_500_000.0
-    ai[depth >= 4720] = 6_500_000.0
+    ai[depth < 4500] = 4_000_000.0
+    ai[(depth >= 4500) & (depth < 4510)] = 4_500_000.0
+    ai[depth >= 4510] = 6_500_000.0
 
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=ai.tolist(),
             depth=depth.tolist(),
-            formation_tops={"Upper_Reef": 4710.0},
+            formation_tops={"Reef_Top_Synth": 4500.0},
             rc_threshold=0.05,
             geological_boundary_tolerance_m=15.0,
         )
@@ -530,17 +530,17 @@ def test_essay13_approximation_tier():
 def test_essay13_boundary_condition_flags():
     """Essay #13, Section 5.3: Verify boundary condition flags fire correctly."""
     # Create a strong-contrast scenario that should trigger boundary flags
-    depth = np.arange(4700, 4731, 1.0, dtype=float)
+    depth = np.arange(4490, 4521, 1.0, dtype=float)
     ai = np.zeros_like(depth)
-    ai[depth < 4710] = 2_000_000.0  # Very low impedance
-    ai[(depth >= 4710) & (depth < 4720)] = 12_000_000.0  # Very high — huge contrast
-    ai[depth >= 4720] = 3_000_000.0
+    ai[depth < 4500] = 2_000_000.0  # Very low impedance
+    ai[(depth >= 4500) & (depth < 4510)] = 12_000_000.0  # Very high — huge contrast
+    ai[depth >= 4510] = 3_000_000.0
 
     result = asyncio.run(
         geox_anomalous_contrast_detector(
             ai_profile=ai.tolist(),
             depth=depth.tolist(),
-            formation_tops={"Upper_Reef": 4710.0, "Lower_Reef": 4720.0},
+            formation_tops={"Reef_Top_Synth": 4500.0, "Reef_Base_Synth": 4510.0},
             rc_threshold=0.05,
             geological_boundary_tolerance_m=15.0,
         )
@@ -613,7 +613,7 @@ def test_essay13_trilogy_reference_in_top_level():
 if __name__ == "__main__":
     test_no_anomaly_aligned_boundary()
     test_anomaly_displaced_reflector()
-    test_megah1_quantified_case()
+    test_synthetic_reef_quantified_case()
     test_invalid_input_fail_closed()
     test_plain_output_contract()
     # Eureka GeoX Theory: AVO-Attention Equivalence
