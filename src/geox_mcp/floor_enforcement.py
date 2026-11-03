@@ -72,8 +72,14 @@ class EpistemicTag(StrEnum):
     UNKNOWN = "UNKNOWN"  # VOID / UNKNOWN
 
 
-# F11 AUDIT — local append-only log path
-_DEFAULT_AUDIT_LOG = Path(os.environ.get("GEOX_AUDIT_LOG", "/root/geox/999_vault/audit.jsonl"))
+# F11 AUDIT — local append-only log path (fail-closed, no hardcoded /root/geox fallback)
+def _get_default_audit_log_path() -> Path:
+    env_path = os.environ.get("GEOX_AUDIT_LOG")
+    if not env_path:
+        raise RuntimeError(
+            "GEOX_AUDIT_LOG environment variable is unset (fail-closed; /root/geox fallback removed)"
+        )
+    return Path(env_path)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -228,7 +234,7 @@ class AuditLog:
     """
 
     def __init__(self, path: Path | None = None) -> None:
-        self.path = path or _DEFAULT_AUDIT_LOG
+        self.path = path if path is not None else _get_default_audit_log_path()
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
     def append(self, record: AuditRecord) -> None:

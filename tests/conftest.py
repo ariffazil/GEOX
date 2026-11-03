@@ -17,6 +17,15 @@ os.environ.setdefault("FASTMCP_ENV_FILE", "")
 # Disable P0-2 authority gate for test suites (GEOX tests run without live arifOS session).
 os.environ.setdefault("GEOX_REQUIRE_SESSION_FOR_MUTATE", "0")
 
+# Test-safe isolated storage paths (fail-closed guard defaults)
+import tempfile
+from pathlib import Path
+_TEST_STORAGE = Path(tempfile.gettempdir()) / "geox_test_suite_data"
+_TEST_STORAGE.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("GEOX_AUDIT_LOG", str(_TEST_STORAGE / "test_audit.jsonl"))
+os.environ.setdefault("GEOX_RESOURCE_REGISTRY_DB", str(_TEST_STORAGE / "test_resources.db"))
+os.environ.setdefault("GEOX_EARTH_MEMORY_DB", str(_TEST_STORAGE / "test_memory.db"))
+
 import sys
 from pathlib import Path
 

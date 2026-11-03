@@ -38,7 +38,16 @@ logger = logging.getLogger("geox.resource_registry")
 # Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
-REGISTRY_DB_PATH = os.getenv("GEOX_RESOURCE_REGISTRY_DB", "/root/geox/resource_registry.db")
+def _get_registry_db_path() -> str:
+    path = os.getenv("GEOX_RESOURCE_REGISTRY_DB")
+    if not path:
+        raise RuntimeError(
+            "GEOX_RESOURCE_REGISTRY_DB environment variable is unset (fail-closed; /root/geox fallback removed)"
+        )
+    return path
+
+
+REGISTRY_DB_PATH = os.getenv("GEOX_RESOURCE_REGISTRY_DB")
 
 ResourceType = Literal[
     "seismic_volume",
@@ -88,9 +97,11 @@ URI_SCHEME_MAP = {
 # ═══════════════════════════════════════════════════════════════════════════════
 
 
-def _get_connection() -> sqlite3.Connection:
+def _get_connection(skip_init: bool = False) -> sqlite3.Connection:
     """Get a connection to the resource registry database."""
-    conn = sqlite3.connect(REGISTRY_DB_PATH)
+    if not skip_init:
+        _ensure_db()
+    conn = sqlite3.connect(_get_registry_db_path())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
@@ -99,7 +110,7 @@ def _get_connection() -> sqlite3.Connection:
 
 def _init_db() -> None:
     """Initialize the resource registry schema."""
-    conn = _get_connection()
+    conn = _get_connection(skip_init=True)
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS resources (
             id              TEXT PRIMARY KEY,
@@ -151,11 +162,17 @@ def _init_db() -> None:
     """)
     conn.commit()
     conn.close()
-    logger.info(f"Resource registry initialized at {REGISTRY_DB_PATH}")
+    logger.info(f"Resource registry initialized at {_get_registry_db_path()}")
 
 
-# Initialize on module import
-_init_db()
+_db_initialized = False
+
+
+def _ensure_db() -> None:
+    global _db_initialized
+    if not _db_initialized:
+        _init_db()
+        _db_initialized = True
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -531,7 +548,7 @@ def registry_stats() -> dict[str, Any]:
         "total_resources": total,
         "by_type": {r[0]: r[1] for r in by_type_rows},
         "by_state": {r[0]: r[1] for r in by_state_rows},
-        "db_path": REGISTRY_DB_PATH,
+        "db_path": _get_registry_db_path(),
     }
 
 

@@ -87,7 +87,12 @@ def _get_memory_store() -> Any:
         try:
             from geox_core.services.asset_memory import EarthMemoryStore
 
-            _memory_store = EarthMemoryStore(db_path="/root/geox/earth_memory.db")
+            db_path = os.environ.get("GEOX_EARTH_MEMORY_DB")
+            if not db_path:
+                raise RuntimeError(
+                    "GEOX_EARTH_MEMORY_DB environment variable is unset (fail-closed; /root/geox fallback removed)"
+                )
+            _memory_store = EarthMemoryStore(db_path=db_path)
         except ImportError:
             logger.warning("EarthMemoryStore not available — claim persistence disabled")
             _memory_store = False  # sentinel: available but failed
