@@ -612,6 +612,10 @@ _MODE_LANE_OVERRIDES: dict[tuple[str, str], str] = {
     ("geox_prospect", "compute"): "evidence",
     ("geox_prospect", "screen"): "evidence",
     ("geox_prospect", "rank"): "evidence",
+    ("geox_prospect", "inverse_volumetrics"): "evidence",
+    ("geox_prospect", "decompose"): "evidence",
+    ("geox_prospect", "trajectory"): "evidence",
+    ("geox_prospect", "analogues"): "evidence",
 }
 
 
@@ -622,10 +626,14 @@ def _get_effective_lane(tool_name: str, arguments: dict[str, Any] | None = None)
         mode = arguments.get("mode") or arguments.get("action")
         if not mode and isinstance(arguments.get("arguments"), dict):
             mode = arguments["arguments"].get("mode") or arguments["arguments"].get("action")
+        if not mode and tool_name == "geox_prospect":
+            mode = "screen"
         if mode:
             override = _MODE_LANE_OVERRIDES.get((tool_name, str(mode)))
             if override:
                 return override
+    elif tool_name == "geox_prospect":
+        return "evidence"
     return _get_lane(tool_name)
 
 
@@ -1065,6 +1073,7 @@ async def check_governance(
     actor_id: str = "anonymous",
     fail_closed: bool = True,
     is_direct_call: bool = True,
+    session_authority: str | None = None,
 ) -> tuple[str, JSONResponse | None, str]:
     """
     Check governance for a GEOX tool call.
@@ -1147,6 +1156,21 @@ async def check_governance(
         if str(effective.get("mode") or "").lower() == "lancedb_store":
             risk_tier = RiskTier.C2_EXECUTE
 
+    # Task 2: geox_prospect mode split — screen (pure arithmetic) is READONLY (OBSERVE_ONLY allowed),
+    # seal is IRREVERSIBLE, evaluate/appraise/develop is C2_EXECUTE (requires OPERATOR).
+    if tool_name == "geox_prospect":
+        effective = arguments or {}
+        if isinstance(effective.get("arguments"), dict):
+            effective = effective["arguments"]
+        mode_val = str(effective.get("mode") or "screen").lower()
+        verdict_val = str(effective.get("verdict") or "compute").lower()
+        if mode_val in ("screen", "inverse_volumetrics", "decompose", "trajectory", "analogues") and verdict_val != "seal":
+            risk_tier = RiskTier.READONLY
+        elif verdict_val == "seal" or mode_val == "seal":
+            risk_tier = RiskTier.IRREVERSIBLE
+        elif mode_val in ("evaluate", "appraise", "develop"):
+            risk_tier = RiskTier.C2_EXECUTE
+
     # ═══ STEP 2: IDENTITY PROPAGATION (P0.1 — lane-aware) ══════════
     id_verdict, id_error = _check_identity_propagation(tool_name, session_id, actor_id, arguments)
     if id_verdict == "HOLD":
@@ -1156,8 +1180,9 @@ async def check_governance(
     # OBSERVE_ONLY sessions cannot mutate. Validate the session's
     # authority level against the tool's minimum required authority.
     risk_tier_str = risk_tier.value if isinstance(risk_tier, RiskTier) else str(risk_tier)
-    auth_validation = validate_session(session_id, actor_id, required_authority="OBSERVE_ONLY")
-    session_authority = auth_validation.authority if auth_validation.ok else "OBSERVE_ONLY"
+    if not session_authority:
+        auth_validation = validate_session(session_id, actor_id, required_authority="OBSERVE_ONLY")
+        session_authority = auth_validation.authority if auth_validation.ok else "OBSERVE_ONLY"
     auth_verdict, auth_error = _check_authority_gate(
         tool_name=tool_name,
         risk_tier_str=risk_tier_str,
