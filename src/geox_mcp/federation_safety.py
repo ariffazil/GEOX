@@ -281,6 +281,17 @@ def classify_error(error: Exception, source_tool: str = None, source_organ: str 
         severity = "RECOVERABLE"
         next_action = "Try different organ or retry later"
 
+    # Client-side bad request from a downstream provider (HTTP 400 / Bad Request).
+    # 2026-11-04: a vision provider rejecting a malformed request was classified
+    # INTERNAL_ERROR / "server bug" / escalate-888 — but it is an INPUT error, not
+    # an organ defect. Misclassifying it burns sovereign attention on a non-defect.
+    elif any(kw in msg_lower for kw in ["http error 400", "400 bad request", "badrequest"]):
+        error_class = ErrorClass.BAD_INPUT_VALUE
+        recoverability = Recoverability.AGENT_CAN_RETRY
+        layer = "input_validation"
+        severity = "RECOVERABLE"
+        next_action = "Fix the request payload and retry (downstream rejected it)"
+
     # Default: internal error
     else:
         error_class = ErrorClass.INTERNAL_ERROR

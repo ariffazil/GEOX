@@ -50,6 +50,9 @@ async def geox_seismic_compute(
     image_path: str | None = None,
     amplitude_grid: list[list[float]] | None = None,
     volume_inline: dict[str, Any] | None = None,
+    # attribute-mode controls
+    artifact_scan: bool = True,
+    provenance_tag: str | None = None,
     # anomalous_contrast
     ai_profile: list[float] | None = None,
     ac_depth: list[float] | None = None,
@@ -111,6 +114,8 @@ async def geox_seismic_compute(
             image_path=kwargs.get("image_path"),
             amplitude_grid=kwargs.get("amplitude_grid"),
             provenance=str(kwargs.get("provenance") or "fixture"),
+            artifact_scan=bool(kwargs.get("artifact_scan", True)),
+            provenance_tag=kwargs.get("provenance_tag"),
         )
 
     if mode == "inversion":
