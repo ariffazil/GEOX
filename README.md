@@ -6,7 +6,8 @@ organ: GEOX
 role: Earth — physics_grounded_earth_intelligence
 public_mcp: https://geox.arif-fazil.com/mcp
 federation_topology: "1 of 12 Public MCP Doors in the arifOS federation (Earth). arifFlow is the box-only metabolism engine."
-mcp_tools_live: 27
+canonical_tools_expected: 27
+observed_tools_live: 27 (observed 2026-11-04 via tools/list)
 truth_rule: live :8081/health + tools/list beat any static count in prose
 -->
 
