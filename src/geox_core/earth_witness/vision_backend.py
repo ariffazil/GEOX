@@ -36,6 +36,91 @@ class VisionBackendResponse(BaseModel):
     latency_ms: float = 0.0
 
 
+def _iter_json_objects(text: str):
+    """Yield balanced-brace JSON substrings from free-form model output.
+
+    2026-11-04 (333-AGI): the previous parser took everything from the first
+    "{" to the LAST "}". A vision model that emits two JSON blocks (or a JSON
+    block followed by prose containing braces) produced a merged substring that
+    fails json.loads with "Extra data" — and the tool reported a FATAL
+    "server bug" for what is a recoverable model-output shape.
+
+    This walks the braces with string/escape awareness and yields each complete
+    top-level object on its own, so a valid first object is never poisoned by
+    whatever follows it.
+    """
+    n = len(text)
+    i = 0
+    while i < n:
+        if text[i] != "{":
+            i += 1
+            continue
+        depth = 0
+        in_str = False
+        esc = False
+        closed = False
+        for j in range(i, n):
+            ch = text[j]
+            if in_str:
+                if esc:
+                    esc = False
+                elif ch == "\\":
+                    esc = True
+                elif ch == '"':
+                    in_str = False
+                continue
+            if ch == '"':
+                in_str = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    yield text[i : j + 1]
+                    i = j + 1
+                    closed = True
+                    break
+        if not closed:
+            return
+
+
+# Keys the Earth Observation contract asks for. When several JSON objects are
+# present, the one carrying these is the actual observation payload.
+_OBSERVATION_KEYS = (
+    "visible_features",
+    "modality",
+    "ocr_text",
+    "measurements",
+    "hypotheses",
+    "limitations",
+)
+
+
+def extract_observation_json(text: str) -> dict | None:
+    """Parse the observation payload out of free-form model output.
+
+    Tolerant by design: markdown fences, prose before/after, and multiple
+    concatenated JSON objects are all handled. The object carrying the
+    contract keys wins; otherwise the first parseable object is used.
+    """
+    if not text:
+        return None
+    candidates = []
+    for raw in _iter_json_objects(text):
+        try:
+            obj = json.loads(raw)
+        except Exception:
+            continue
+        if isinstance(obj, dict):
+            candidates.append(obj)
+    if not candidates:
+        return None
+    for obj in candidates:
+        if any(k in obj for k in _OBSERVATION_KEYS):
+            return obj
+    return candidates[0]
+
+
 class BaseVisionBackend(ABC):
     """Abstract interface for Earth multimodal inspection."""
 
@@ -625,19 +710,10 @@ class FederationVisionBackend(BaseVisionBackend):
                     raw_text = (cand or "").strip()
                     if not raw_text:
                         continue
-                    if not raw_text.startswith("{"):
-                        start = raw_text.find("{")
-                        end = raw_text.rfind("}")
-                        if start == -1 or end <= start:
-                            continue
-                        raw_text = raw_text[start : end + 1]
-                    try:
-                        cand_json = json.loads(raw_text)
-                        if isinstance(cand_json, dict):
-                            parsed_json = cand_json
-                            break
-                    except json.JSONDecodeError:
-                        continue
+                    cand_json = extract_observation_json(raw_text)
+                    if cand_json is not None:
+                        parsed_json = cand_json
+                        break
                 if parsed_json is not None:
                     break
                 last_err = ValueError(
