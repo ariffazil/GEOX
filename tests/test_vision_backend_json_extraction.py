@@ -104,3 +104,59 @@ def test_unparsable_model_output_is_not_reported_as_a_server_bug():
     assert r["severity"] == "RECOVERABLE"
     assert r["suspected_layer"] == "downstream_model"
     assert "server bug" not in r["next_action"]
+
+
+def test_truncated_response_triggers_a_cache_busting_retry():
+    """A provider reply cut mid-JSON (observed: 800 chars, finish=stop) must not be
+    replayed from cache forever - attempt 2 must carry a fresh nonce."""
+    import json as _json
+    import urllib.request
+
+    from geox_core.earth_witness import vision_backend as vb
+
+    truncated = _json.dumps(OBS)[:120]  # cut mid-structure
+    complete = _json.dumps(OBS)
+    seen_bodies = []
+
+    class _Resp:
+        def __init__(self, raw):
+            self._raw = raw
+
+        def read(self):
+            return self._raw.encode("utf-8")
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *a):
+            return False
+
+    def fake_urlopen(req, timeout=None):
+        body = req.data.decode()
+        seen_bodies.append(body)
+        payload = truncated if len(seen_bodies) == 1 else complete
+        raw = _json.dumps(
+            {"choices": [{"message": {"content": payload, "reasoning_content": ""}, "finish_reason": "stop"}]}
+        )
+        return _Resp(raw)
+
+    orig = urllib.request.urlopen
+    urllib.request.urlopen = fake_urlopen
+    try:
+        backend = vb.FederationVisionBackend(
+            model_id="fed/vision", base_url="http://127.0.0.1:4013", api_key="k"
+        )
+        out = backend.inspect_artifact(
+            image_bytes=b"\x89PNG\r\n\x1a\n" + b"0" * 64,
+            mime_type="image/png",
+            system_instruction="sys",
+            user_prompt="analyse",
+        )
+    finally:
+        urllib.request.urlopen = orig
+
+    assert out.raw_response["modality"] == "seismic_display"
+    assert len(seen_bodies) == 2, "expected a retry after the truncated reply"
+    assert seen_bodies[0] != seen_bodies[1], "retry must not repeat the cached request verbatim"
+    assert "[retry " in seen_bodies[1], "retry must carry the completion instruction"
+    assert "truncated" in seen_bodies[1]

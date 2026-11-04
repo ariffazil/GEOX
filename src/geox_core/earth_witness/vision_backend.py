@@ -14,6 +14,7 @@ Supports:
 from __future__ import annotations
 
 import base64
+import uuid
 import hashlib
 import json
 import time
@@ -658,33 +659,47 @@ class FederationVisionBackend(BaseVisionBackend):
             )
 
         b64_img = base64.b64encode(image_bytes).decode("utf-8")
-        req_body = {
-            "model": self.model_id,
-            "messages": [
-                {"role": "system", "content": system_instruction + schema_instruction},
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": user_prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64_img}"}},
-                    ],
-                },
-            ],
-            "temperature": 0.1,
-            "max_tokens": 4000,
-        }
-
-        req = urllib.request.Request(
-            f"{self.base_url}/chat/completions",
-            data=json.dumps(req_body).encode("utf-8"),
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
-            method="POST",
-        )
         resp_data = None
         parsed_json = None
         content = ""
         last_err: Exception | None = None
         for attempt in (1, 2):
+            # 2026-11-04 (333-AGI): the provider can return a TRUNCATED json
+            # (observed: exactly 800 chars, cut mid-string, finish_reason=stop).
+            # The gateway then replays that broken response from cache forever,
+            # so a plain retry re-asks the same cached question. Attempt 2
+            # therefore carries a nonce + an explicit instruction: a fresh cache
+            # key AND a real chance of a complete object.
+            if attempt == 1:
+                attempt_prompt = user_prompt
+            else:
+                attempt_prompt = (
+                    f"{user_prompt}\n\n[retry {uuid.uuid4().hex[:12]}] Your previous answer was "
+                    "truncated or unparsable. Return the COMPLETE JSON object only — no prose, "
+                    "no fences, every field closed."
+                )
+            req_body = {
+                "model": self.model_id,
+                "messages": [
+                    {"role": "system", "content": system_instruction + schema_instruction},
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": attempt_prompt},
+                            {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64_img}"}},
+                        ],
+                    },
+                ],
+                "temperature": 0.1,
+                "max_tokens": 4000,
+            }
+
+            req = urllib.request.Request(
+                f"{self.base_url}/chat/completions",
+                data=json.dumps(req_body).encode("utf-8"),
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
+                method="POST",
+            )
             t0 = time.time()
             try:
                 with urllib.request.urlopen(req, timeout=180) as resp:
