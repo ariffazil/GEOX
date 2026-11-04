@@ -54,6 +54,31 @@ from geox_core.earth_witness.specialists import (
 logger = logging.getLogger("geox.mcp.earth_observe")
 
 
+# Image magic numbers — used to reject non-image bytes before they reach a paid
+# vision provider (2026-11-04). See the artifact-resolution branch below.
+_IMAGE_MAGIC: tuple[bytes, ...] = (
+    b"\x89PNG\r\n\x1a\n",  # PNG
+    b"\xff\xd8\xff",  # JPEG
+    b"RIFF",  # WEBP (RIFF....WEBP)
+    b"GIF8",  # GIF
+    b"BM",  # BMP
+    b"II*\x00",  # TIFF (little endian)
+    b"MM\x00*",  # TIFF (big endian)
+)
+
+
+def _looks_like_image(data: bytes) -> bool:
+    """True when the bytes begin with a known image signature."""
+    if not data:
+        return False
+    head = data[:16]
+    if any(head.startswith(magic) for magic in _IMAGE_MAGIC):
+        return True
+    if head[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return True
+    return False
+
+
 def geox_observe(
     artifact_ref: str | dict[str, Any],
     modality_hint: str | None = None,
@@ -108,11 +133,48 @@ def geox_observe(
             else:
                 mime_type = "image/jpeg"
         else:
-            # Treat as raw string or base64
+            # Not a data URI, and not a path this process can read.
+            #
+            # 2026-11-04 (333-AGI): this branch used to fall back to
+            # `image_bytes = artifact_ref.encode("utf-8")` — i.e. send the PATH
+            # TEXT to the vision provider as if it were image bytes. The provider
+            # then rejected the message shape ("messages[1].content must be a
+            # string") and the organ surfaced a FATAL INTERNAL_ERROR "server bug".
+            # Two lies at once: a client input error reported as an organ bug, and
+            # a paid VLM call burnt on garbage bytes.
+            #
+            # Common trigger: the service runs with PrivateTmp=true, so a caller's
+            # /tmp path is INVISIBLE to the organ even though it exists on the host.
+            #
+            # Fail closed instead: resolve, or say exactly what is missing.
+            stripped = artifact_ref.strip()
             try:
-                image_bytes = base64.b64decode(artifact_ref)
+                decoded = base64.b64decode(stripped, validate=False)
             except Exception:
-                image_bytes = artifact_ref.encode("utf-8")
+                decoded = b""
+            if decoded and _looks_like_image(decoded):
+                image_bytes = decoded
+            else:
+                return {
+                    "isError": True,
+                    "status": "HOLD",
+                    "error_class": "ARTIFACT_NOT_READABLE",
+                    "recoverability": "AGENT_CAN_RETRY",
+                    "suspected_layer": "input_validation",
+                    "severity": "RECOVERABLE",
+                    "message": ("artifact_ref is neither a readable file, nor a data URI, nor a base64-encoded image."),
+                    "hint": (
+                        "If artifact_ref is a filesystem path, note that geox-mcp "
+                        "runs with PrivateTmp=true: /tmp paths of the caller are not "
+                        "visible to the organ. Pass a service-visible path, a data "
+                        "URI, or a registered artifact."
+                    ),
+                    "artifact_ref_preview": stripped[:200],
+                    "next_action": "Re-send with a readable path or a data URI",
+                    "epistemic_label": "OBS",
+                    "source_tool": "geox_observe",
+                    "source_organ": "geox",
+                }
 
     art_sha256 = hashlib.sha256(image_bytes).hexdigest()
 

@@ -1586,8 +1586,13 @@ def register_tools_on(mcp):
         from geox_mcp.tools.measurement_programme import geox_measurement_programme as _impl
 
         return _impl(
-            well_type=well_type, basin=basin, lithology=lithology, play_type=play_type,
-            water_depth=water_depth, target_depth=target_depth, mud_system=mud_system,
+            well_type=well_type,
+            basin=basin,
+            lithology=lithology,
+            play_type=play_type,
+            water_depth=water_depth,
+            target_depth=target_depth,
+            mud_system=mud_system,
             core_planned=core_planned,
         )
 
@@ -4728,6 +4733,7 @@ def register_tools_on(mcp):
             elif basin_name:
                 try:
                     from geox_mcp.tools.basin_unified import geox_basin
+
                     b_res = await geox_basin(mode="profile", basin_name=basin_name)
                     raw_claims = b_res.get("claims", [])
                     if not raw_claims:
@@ -5766,7 +5772,9 @@ def register_tools_on(mcp):
                     _mat_stage = classify_maturity(tmax_c, kerogen_type or "II")
                     _mat = {"tmax_c": tmax_c, "kerogen_type": kerogen_type or "II", "stage": _mat_stage}
                     if kerogen_type is None:
-                        _mat["kerogen_type_assumption"] = "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                        _mat["kerogen_type_assumption"] = (
+                            "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                        )
                     results["maturity"] = _mat
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
                     results["deltalogr"] = estimate_toc_deltalogr(
@@ -5781,12 +5789,16 @@ def register_tools_on(mcp):
                 if "toc" in results:
                     if "kerogen" in results:
                         _pm = {"oil": "oil_prone", "oil_gas": "oil_gas", "gas": "gas_prone", "none": "none"}
-                        results["toc"]["generation_potential"] = _pm.get(str(results["kerogen"].get("expected_products", "")).strip(), "HOLD")
+                        results["toc"]["generation_potential"] = _pm.get(
+                            str(results["kerogen"].get("expected_products", "")).strip(), "HOLD"
+                        )
                         results["toc"]["generation_potential_basis"] = "Rock-Eval hydrogen_index (measured)"
                     elif kerogen_type:
                         _dm = {"I": "oil_prone", "II": "oil_prone", "II/III": "oil_gas", "III": "gas_prone", "IV": "none"}
                         results["toc"]["generation_potential"] = _dm.get(str(kerogen_type).strip().upper(), "HOLD")
-                        results["toc"]["generation_potential_basis"] = "declared kerogen_type (NOT measured - supply hydrogen_index to confirm)"
+                        results["toc"]["generation_potential_basis"] = (
+                            "declared kerogen_type (NOT measured - supply hydrogen_index to confirm)"
+                        )
                 if len(results) == 1:
                     results["error"] = f"mode={mode} requires specific parameters (see description)"
                 return results
@@ -7492,7 +7504,13 @@ def register_tools_on(mcp):
     # (clients passed theta_max, impl required theta_deg for zoeppritz).
     @mcp.tool(
         name="geox_seismic_compute",
-        description="Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, LMR, Castagna).",
+        description=(
+            "Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, "
+            "LMR, Castagna) | attribute (2D section attribute stack: amplitude, envelope, "
+            "RMS, energy, variance, sweetness, instantaneous phase/frequency/bandwidth, "
+            "apparent polarity, dominant/centroid frequency, coherence, discontinuity, "
+            "semblance, dip, azimuth, curvature)."
+        ),
         annotations=_geox_annotations("geox_seismic_compute"),
     )
     async def _seismic_compute_unified(
@@ -7510,6 +7528,16 @@ def register_tools_on(mcp):
         rho: float = 2.3,
         fluid_zone: str = "brine",
         unit: str = "m/s",
+        # attribute params (2D section lane)
+        attribute: str = "coherence",
+        window_size: int = 11,
+        volume_ref: str | None = None,
+        volume_inline: dict[str, Any] | None = None,
+        image_path: str | None = None,
+        amplitude_grid: list[list[float]] | None = None,
+        provenance: str = "fixture",
+        artifact_scan: bool = True,
+        provenance_tag: str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -7520,7 +7548,16 @@ def register_tools_on(mcp):
           avo_forward — AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term,
                         Lambda-Mu-Rho (Goodway 1997), Castagna mudrock.
                         Requires: vp1, vs1, rho1, vp2, vs2, rho2, theta_deg.
+          attribute   — 2D section attribute stack (Sheriff 2002 / Chopra & Marfurt 2007
+                        families: amplitude, complex-trace, frequency, structure).
+                        Inputs: amplitude_grid | image_path | volume_inline | volume_ref.
+                        Raster input is scanned for annotation/artifact zones first
+                        (artifact_scan=True) and tagged DISPLAY_DERIVED_PROXY.
         """
+        from geox_mcp.tools.seismic_compute_unified import (
+            geox_seismic_compute as _scu_impl,
+        )
+
         if mode == "avo_forward":
             # af-fix #6b (2026-09-09): the previous direct _avo_forward call
             # bypassed the contract wrapper in tools/seismic_compute_unified.py
@@ -7528,10 +7565,6 @@ def register_tools_on(mcp):
             # the requested avo_forward and left synthetic_trace/reflectivity/
             # attributes null (outputSchema violation, F3). Route through the
             # wrapper (mode + mode_executed + field lift, gate-checked).
-            from geox_mcp.tools.seismic_compute_unified import (
-                geox_seismic_compute as _scu_impl,
-            )
-
             return await _scu_impl(
                 mode="avo_forward",
                 vp1=vp1,
@@ -7543,8 +7576,27 @@ def register_tools_on(mcp):
                 theta_deg=theta_deg,
                 fluid_zone=fluid_zone,
             )
-        else:
-            return {"error": f"Unknown mode: {mode}. Valid: avo_forward"}
+        if mode == "attribute":
+            # 2026-11-04 (333-AGI): mode=attribute was code-alive but client-dead —
+            # this wrapper only knew avo_forward, so the real multi-mode engine in
+            # tools/seismic_compute_unified.py was unreachable from MCP. The avo_forward
+            # branch above is left byte-identical (scar LOW 0.5).
+            return await _scu_impl(
+                mode="attribute",
+                attribute=attribute,
+                window_size=window_size,
+                volume_ref=volume_ref,
+                volume_inline=volume_inline,
+                image_path=image_path,
+                amplitude_grid=amplitude_grid,
+                provenance=provenance,
+                artifact_scan=artifact_scan,
+                provenance_tag=provenance_tag,
+            )
+        return {
+            "error": f"Unknown mode: {mode}. Valid: avo_forward, attribute",
+            "modes": ["avo_forward", "attribute"],
+        }
 
     @mcp.tool(name="geox_avo_forward", annotations=_geox_annotations("geox_avo_forward"))
     async def _shim_avo_forward(
@@ -7711,23 +7763,24 @@ def register_tools_on(mcp):
 
         # S3.1: Live module import-smoke test across core tool modules
         import importlib
+
         _TOOL_MODULE_MAP = {
-            'geox_map': 'geox_mcp.tools.earth_map',
-            'geox_spatial': 'geox_mcp.tools.h3_spatial_index',
-            'geox_basin': 'geox_mcp.tools.basin_unified',
-            'geox_claim': 'geox_mcp.tools.claim_unified',
-            'geox_deep_time': 'geox_mcp.tools.deep_time_state',
-            'geox_contrast_metabolize': 'geox_mcp.tools.contrast_metabolize',
-            'geox_observe': 'geox_mcp.tools.earth_observe',
-            'geox_well_qc': 'geox_mcp.tools.well_qc',
-            'geox_well': 'geox_mcp.tools.integration_well',
-            'geox_well_ingest': 'geox_mcp.tools.well_ingest',
-            'geox_seismic_ingest': 'geox_mcp.tools.seismic_ingest',
-            'geox_seismic_interpret': 'geox_mcp.tools.seismic_interpret',
-            'geox_seismic_compute': 'geox_mcp.tools.seismic_compute_unified',
-            'geox_petrophysics': 'geox_mcp.tools.petrophysics_unified',
-            'geox_prospect': 'geox_mcp.tools.prospect_unified',
-            'geox_paleobiodb_query': 'geox_mcp.tools.geox_paleobiodb_query',
+            "geox_map": "geox_mcp.tools.earth_map",
+            "geox_spatial": "geox_mcp.tools.h3_spatial_index",
+            "geox_basin": "geox_mcp.tools.basin_unified",
+            "geox_claim": "geox_mcp.tools.claim_unified",
+            "geox_deep_time": "geox_mcp.tools.deep_time_state",
+            "geox_contrast_metabolize": "geox_mcp.tools.contrast_metabolize",
+            "geox_observe": "geox_mcp.tools.earth_observe",
+            "geox_well_qc": "geox_mcp.tools.well_qc",
+            "geox_well": "geox_mcp.tools.integration_well",
+            "geox_well_ingest": "geox_mcp.tools.well_ingest",
+            "geox_seismic_ingest": "geox_mcp.tools.seismic_ingest",
+            "geox_seismic_interpret": "geox_mcp.tools.seismic_interpret",
+            "geox_seismic_compute": "geox_mcp.tools.seismic_compute_unified",
+            "geox_petrophysics": "geox_mcp.tools.petrophysics_unified",
+            "geox_prospect": "geox_mcp.tools.prospect_unified",
+            "geox_paleobiodb_query": "geox_mcp.tools.geox_paleobiodb_query",
         }
         _smoke_failures = {}
         for _tool_k, _mod_path in _TOOL_MODULE_MAP.items():

@@ -227,12 +227,26 @@ def compute_attributes_2d(
         "dip": dip,
         "dip_deg": np.degrees(dip),
     }
+
+    # Full taxonomy (Sheriff 2002 / Chopra & Marfurt 2007 families): amplitude,
+    # complex-trace, frequency and structure variants computed from the SAME section.
+    # One code, two provenances — the tag (DISPLAY_DERIVED_PROXY vs NATIVE_TRACE)
+    # differs, never the algorithm.
+    from geox_mcp.tools.seismic_attributes_2d import (
+        ATTRIBUTE_SPECS,
+        compute_new_attributes,
+    )
+
+    catalog.update(compute_new_attributes(amp, window=w))
+
     if attr not in catalog and attr not in ("all", "stack"):
+        live = sorted(catalog.keys())
         return {
             "ok": False,
             "error": "UNKNOWN_ATTRIBUTE",
-            "message": f"Unknown attribute '{attribute}'. Live: rms, coherence, discontinuity, dip, all",
-            "live_attributes": ["rms", "coherence", "discontinuity", "dip", "all"],
+            "message": f"Unknown attribute '{attribute}'. Live: {', '.join(live)}, all",
+            "live_attributes": live,
+            "attribute_families": sorted({v["family"] for v in ATTRIBUTE_SPECS.values()}),
         }
 
     def _summary(a: np.ndarray) -> dict[str, float]:
@@ -255,9 +269,19 @@ def compute_attributes_2d(
         primary_arr = catalog["dip_deg"] if attr == "dip" else catalog[attr]
         summaries = {primary: _summary(primary_arr)}
 
-    # Compact mid-row profile for handoff (not full volume)
+    # Compact mid-row profile for handoff (not full volume). Trace-wise attributes
+    # (frequency, polarity) are one row tall — take their only row.
     mid = hc // 2
-    profile = primary_arr[mid, :: max(1, wc // 64)].tolist()
+    row = min(mid, primary_arr.shape[0] - 1)
+    profile = primary_arr[row, :: max(1, wc // 64)].tolist()
+
+    from geox_mcp.tools.seismic_attributes_2d import (
+        OUT_OF_SCOPE,
+        catalog_manifest,
+    )
+
+    spec = ATTRIBUTE_SPECS.get(attr if attr not in ("all", "stack") else primary, {})
+    manifest = catalog_manifest()
 
     return {
         "ok": True,
@@ -269,10 +293,22 @@ def compute_attributes_2d(
         "window": w,
         "epistemic_class": _DER,
         "claim_tag": "HYPOTHESIS",
+        "units": spec.get("units", "mixed — see attribute_manifest"),
+        "attribute_manifest": {
+            "taxonomy_source": manifest["taxonomy_source"],
+            "families": manifest["families"],
+            "attribute_count": manifest["attribute_count"],
+            "live_attributes": sorted(catalog.keys()),
+            "out_of_scope": OUT_OF_SCOPE,
+        },
         "equations_used": [
             "rms = sqrt(mean(amp^2) in window)",
             "coherence ≈ lateral semblance proxy; discontinuity = 1 - coherence",
             "dip = 0.5 * atan2(2 Jxy, Jxx - Jyy) structure tensor",
+            "envelope = |hilbert(amp)| along time (rows=TIME, cols=TRACE)",
+            "instantaneous_frequency = d(unwrap(arg(hilbert(amp))))/dt  [rad/sample, never Hz]",
+            "semblance = (sum a)^2 / (N sum a^2) over an N-trace window",
+            "dominant_frequency = argmax |FFT(amp)| per trace  [cycles/sample, never Hz]",
         ],
         "note": "Section attributes only. Not a 3D volume product. Not geology.",
     }
@@ -499,6 +535,17 @@ def measure_throw_from_horizons(
 # ── public entry points (called by tool modes) ───────────────────────────────
 
 
+# ── provenance labelling (GEOX invariant 3: Display Proxy Isolation) ──────────
+
+DISPLAY_PROXY_PROHIBITED_USES = [
+    "AVO classification",
+    "amplitude preservation validation",
+    "phase certification",
+    "native seismic-to-well tie acceptance",
+    "quantitative prospect / fault-seal decisions",
+]
+
+
 async def zen_attribute(
     *,
     attribute: str = "coherence",
@@ -508,7 +555,27 @@ async def zen_attribute(
     volume_inline: dict[str, Any] | None = None,
     volume_ref: str | None = None,
     provenance: str = "fixture",
+    artifact_scan: bool = True,
+    provenance_tag: str | None = None,
 ) -> dict[str, Any]:
+    """2D section attribute stack with an annotation/artifact pre-pass.
+
+    Pass A (artifact): when the input is a RASTER, annotation zones (text, leader lines,
+    colour-conforming flat label blocks) are detected on the full RGB image and excluded
+    from the amplitude so they cannot be reported as signal.
+
+    Pass B (amplitude): the seismic-convention R-B proxy is used for colour displays
+    (polarity preserved); grayscale falls back to luminance and says so.
+
+    Provenance: a raster is DISPLAY_DERIVED_PROXY and carries prohibited uses. A caller
+    that holds a native trace must assert provenance_tag="NATIVE_TRACE" to lift them;
+    otherwise the conservative display-derived prohibitions apply (F2: fail closed).
+    """
+    from geox_mcp.tools.seismic_attributes_2d import (
+        detect_artifact_zones_rgb,
+        extract_seismic_convention,
+    )
+
     amp, meta = load_section_2d(
         image_path=image_path,
         amplitude_grid=amplitude_grid,
@@ -546,8 +613,49 @@ async def zen_attribute(
             "geox_seismic_compute",
         )
 
+    artifact_report: dict[str, Any] = {
+        "applied": False,
+        "reason": "input is not a raster (no RGB channel to scan) — artifact scan not applicable",
+    }
+    tag = provenance_tag
+    if image_path and artifact_scan:
+        try:
+            from PIL import Image
+
+            rgb = np.asarray(Image.open(image_path).convert("RGB"), dtype=float)
+        except Exception as exc:  # pragma: no cover - defensive
+            artifact_report = {"applied": False, "reason": f"raster load failed: {exc}"}
+        else:
+            art = detect_artifact_zones_rgb(rgb)
+            proxy, ex_meta = extract_seismic_convention(rgb)
+            if proxy.size == amp.size:
+                amp = proxy
+                meta.update(ex_meta)
+                meta["source"] = "image_path"
+                meta["image_path"] = str(image_path)
+                meta["shape"] = list(amp.shape)
+            artifact_report = {
+                "applied": True,
+                "artifact_pixels": int(art.sum()),
+                "artifact_fraction": float(art.sum() / max(art.size, 1)),
+                "detector": "non-conforming ink + per-channel uniform patch with geometry filter",
+            }
+            if tag is None:
+                tag = "DISPLAY_DERIVED_PROXY"
+            meta["epistemic_note"] = "Pixels are OBS_IMAGE; attributes DER; horizons INT — not geology."
+    elif image_path and not artifact_scan:
+        artifact_report = {"applied": False, "reason": "artifact_scan disabled by caller"}
+
+    if tag is None:
+        tag = "PROVENANCE_UNDECLARED"
+
     body = compute_attributes_2d(amp, attribute=attribute, window=window_size)
     body["section_meta"] = meta
+    body["artifact_scan"] = artifact_report
+    body["truth_class"] = tag
+    if tag != "NATIVE_TRACE":
+        body["prohibited_uses"] = DISPLAY_PROXY_PROHIBITED_USES
+        body["display_proxy_isolation"] = True
     body["governance_status"] = "HOLD"
     if not body.get("ok"):
         body["status"] = "HOLD"
