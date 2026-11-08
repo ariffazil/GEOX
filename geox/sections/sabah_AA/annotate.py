@@ -5,7 +5,8 @@ Pastes styl_D_c2.png into a larger dark canvas (real margins), redraws the
 spec geometry the image model dropped (computed, not generated), then labels.
 """
 
-import json, pathlib
+import json
+import pathlib
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 

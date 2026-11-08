@@ -13,7 +13,10 @@ through a declared two-panel vertical scale (upper 0-15 km @ ~17x, lower
 Usage: python3 render_base.py [--model A|B|C|D|all]
 """
 
-import json, math, sys, pathlib
+import json
+import math
+import sys
+import pathlib
 import matplotlib
 
 matplotlib.use("Agg")
@@ -106,7 +109,7 @@ def render(model_id, out_prefix, with_masks=False):
         for ax, band in ((ax_t, (-4.6, 15.0)), (ax_b, (15.0, 60.0))):
             seg = [(x, z) for x, z in pts if band[0] <= z <= band[1]]
             if len(seg) >= 2:
-                xs_, zs_ = zip(*seg)
+                xs_, zs_ = zip(*seg, strict=False)
                 ax.plot(xs_, zs_, color=ln.get("c", "#e2e8f0"), lw=ln.get("w", 1.4), solid_capstyle="round", zorder=5)
 
     # 5. faults
@@ -120,14 +123,14 @@ def render(model_id, out_prefix, with_masks=False):
         for ax, band in ((ax_t, (-4.6, 15.0)), (ax_b, (15.0, 60.0))):
             seg = [(x, z) for x, z in f["pts"] if band[0] <= z <= band[1]]
             if len(seg) >= 2:
-                xs_, zs_ = zip(*seg)
+                xs_, zs_ = zip(*seg, strict=False)
                 ax.plot(xs_, zs_, color=st[0], lw=st[1], ls=st[2] or "-", zorder=6)
 
     # 6. topography/bathymetry profile (bold)
     for ax, band in ((ax_t, (-4.6, 15.0)), (ax_b, (15.0, 60.0))):
         seg = [(x, z) for x, z in surf if band[0] <= z <= band[1]]
         if len(seg) >= 2:
-            xs_, zs_ = zip(*seg)
+            xs_, zs_ = zip(*seg, strict=False)
             ax.plot(xs_, zs_, color="#e8e6e1", lw=2.0, zorder=7)
 
     fig.savefig(f"{out_prefix}.png", facecolor=fig.get_facecolor())

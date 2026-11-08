@@ -10,7 +10,10 @@ Checks (from MODEL_PROVENANCE_MATRIX.md §4):
  6 'plate' only in allowed tectonic usages
 Usage: python3 provenance_guard.py  (exit 0 = PASS)
 """
-import json, re, sys, pathlib
+import json
+import re
+import sys
+import pathlib
 
 HERE = pathlib.Path(__file__).resolve().parent
 PAGE = pathlib.Path("/root/arif-fazil.com/sites/arif-fazil.com/public/earth/kinabalu-cross-section.html")

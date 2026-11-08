@@ -5,7 +5,8 @@ All geometry is code-drawn and CONCEPTUAL where marked. Nothing here is styled a
 seismic pick. Output: tri_panel_hext01.png (desktop) + tri_panel_hext01_mobile.png.
 """
 
-import json, pathlib
+import json
+import pathlib
 import matplotlib
 
 matplotlib.use("Agg")
@@ -96,7 +97,7 @@ def draw_inherited(ax, alpha=1.0):
         alpha=alpha,
     )
     for ln in XS["lines"]:
-        xs, zs = zip(*ln["pts"])
+        xs, zs = zip(*ln["pts"], strict=False)
         ax.plot(xs, zs, color=ln.get("c", "#ddd"), lw=1.3, alpha=alpha, zorder=6)
 
 
@@ -111,7 +112,7 @@ def build(rows_spec, figtitle, out, w, h):
         color=DIM,
         fontsize=8.5 if w > 14 else 7.5,
     )
-    n = len(rows_spec)
+    len(rows_spec)
     for i, (ax_kind, title, sub) in enumerate(rows_spec):
         if w > 14:
             ax = fig.add_axes([0.035 + i * 0.322, 0.09, 0.285, 0.77])

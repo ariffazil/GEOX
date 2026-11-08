@@ -347,7 +347,7 @@ class McpStatelessEraMiddleware:
             if isinstance(meta, dict):
                 meta_version = str(meta.get("io.modelcontextprotocol/protocolVersion") or "")
 
-        era_declared = bool(version or mcp_method or meta_version)
+        bool(version or mcp_method or meta_version)
 
         # Native initialize creates a stateful session directly on FastMCP
         if method == "initialize":

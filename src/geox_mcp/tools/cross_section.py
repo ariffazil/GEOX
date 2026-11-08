@@ -191,7 +191,7 @@ def render_svg(profile: dict, width: int = 1240, height: int = 460) -> str:
     gv = [v for v in grav if v is not None] if grav else []
     e_lo, e_hi = (min(ev), max(ev)) if ev else (-3000, 2000)
     g_lo, g_hi = (min(gv), max(gv)) if gv else (-40, 100)
-    pad_l, pad_r, pad_t, pad_b = 46, 12, 14, 30
+    pad_l, pad_r, pad_t, _pad_b = 46, 12, 14, 30
     pw = width - pad_l - pad_r
     top_h = height * 0.52
     bot_h = height * 0.30
@@ -211,14 +211,14 @@ def render_svg(profile: dict, width: int = 1240, height: int = 460) -> str:
         f'<text x="{pad_l}" y="16" fill="#e6edf3" font-size="14" font-weight="bold">{profile.get("name","")} - {profile.get("label","")} ({profile.get("length_km","")} km, bearing {profile.get("bearing_deg","")} deg)</text>',
         f'<text x="{pad_l}" y="30" fill="#8b949e" font-size="9">{profile.get("note","")} - MEASURED (NOAA bathymetry, Sandwell & Smith V34.1 gravity)</text>',
     ]
-    pts = " ".join(f"{X(d):.1f},{Yz(z):.1f}" for d, z in zip(dist, elev) if z is not None)
+    pts = " ".join(f"{X(d):.1f},{Yz(z):.1f}" for d, z in zip(dist, elev, strict=False) if z is not None)
     if pts:
         parts.append(f'<polyline points="{pts}" fill="none" stroke="#58a6ff" stroke-width="1.4"/>')
         lastx = pts.split()[-1].split(",")[0]
         parts.append(f'<path d="M {pts.split()[0]} L {pts} L {lastx},{Yz(e_lo)} Z" fill="#0d2b4566"/>')
     parts.append(f'<text x="{pad_l}" y="{Yz(e_lo)+12}" fill="#58a6ff" font-size="9">bathymetry {e_lo:.0f} to {e_hi:.0f} m</text>')
     if gv:
-        gpts = " ".join(f"{X(d):.1f},{Yg(g):.1f}" for d, g in zip(dist, grav) if g is not None)
+        gpts = " ".join(f"{X(d):.1f},{Yg(g):.1f}" for d, g in zip(dist, grav, strict=False) if g is not None)
         parts.append(f'<polyline points="{gpts}" fill="none" stroke="#f0883e" stroke-width="1.2"/>')
         parts.append(f'<text x="{pad_l}" y="{Yg(g_lo)+12}" fill="#f0883e" font-size="9">free-air gravity {g_lo:.0f} to {g_hi:.0f} mGal</text>')
     for i in range(0, int(dx) + 1, 100):

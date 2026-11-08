@@ -103,7 +103,7 @@ def wal_query_today(
 
     results: list[dict[str, Any]] = []
     try:
-        with open(wal_file, "r", encoding="utf-8") as f:
+        with open(wal_file, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
                 if not line:

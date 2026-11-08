@@ -18,7 +18,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 def compute_sha256(data: bytes | str) -> str:
@@ -32,9 +32,9 @@ class EvidenceChainEngine:
 
     @staticmethod
     def evaluate_model_prediction(
-        obs: Dict[str, Any],
-        model: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        obs: dict[str, Any],
+        model: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Evaluate an observation against a model's predictions deterministically.
         Returns a TestResult dict.
@@ -99,11 +99,11 @@ class EvidenceChainEngine:
     @classmethod
     def execute_two_model_discrimination(
         cls,
-        evidence_obj: Dict[str, Any],
-        obs: Dict[str, Any],
-        model_a: Dict[str, Any],
-        model_b: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        evidence_obj: dict[str, Any],
+        obs: dict[str, Any],
+        model_a: dict[str, Any],
+        model_b: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Executes a rigorous 2-model discrimination test.
         Returns complete discrimination record with tri-witness ledger.
@@ -178,9 +178,9 @@ class EvidenceChainEngine:
             "epistemic_split": {
                 "observed": f"{obs['measurement']['value']} {obs['measurement']['units']} Moho depth at station {obs['spatial'].get('station_name', 'KK')}",
                 "derived": f"Airy root calculation under T0={model_a['assumptions']['reference_crust_thickness_t0_km']} km reference",
-                "interpreted": f"Whether crustal thickness represents underthrust Dangerous Grounds (Model A) vs localized mantle lithosphere drip (Model D)",
+                "interpreted": "Whether crustal thickness represents underthrust Dangerous Grounds (Model A) vs localized mantle lithosphere drip (Model D)",
                 "assumed": f"Isostatic equilibrium, crust density {model_a['assumptions']['crust_density_kg_m3']} kg/m³, mantle density {model_a['assumptions']['mantle_density_kg_m3']} kg/m³",
-                "contradicted": f"Deep (>42 km) localized lithospheric downwelling directly beneath Crocker axis",
+                "contradicted": "Deep (>42 km) localized lithospheric downwelling directly beneath Crocker axis",
                 "missing": "Receiver-function station profile directly under Kinabalu granite summit (0-15 km offset)"
             }
         }

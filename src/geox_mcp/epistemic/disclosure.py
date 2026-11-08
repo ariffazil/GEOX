@@ -45,7 +45,8 @@ NOT A VERDICT
 from __future__ import annotations
 
 import re
-from typing import Any, Iterable
+from typing import Any
+from collections.abc import Iterable
 
 PUBLIC = "PUBLIC"
 ENTERPRISE = "ENTERPRISE"
