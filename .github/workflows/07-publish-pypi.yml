@@ -41,7 +41,26 @@ jobs:
       - name: Build package
         run: uv build
 
+      - name: Guard — skip if version already published
+        run: |
+          VERSION="$(python3 -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")"
+          # PEP 440 normalization: 2026.07.24 and 2026.7.24 are the same release.
+          if curl -fsSL "https://pypi.org/pypi/arifos-geox/json" 2>/dev/null | python3 -c "
+import json, sys
+want = sys.argv[1]
+norm = lambda s: tuple(int(p) for p in s.split('.'))
+data = json.load(sys.stdin)
+exists = any(norm(v) == norm(want) for v in data.get('releases', {}))
+sys.exit(0 if exists else 1)
+" "$VERSION"; then
+            echo "Version $VERSION already on PyPI — skipping upload (re-publish would 400)."
+            echo "SKIP_PUBLISH=true" >> "$GITHUB_ENV"
+          else
+            echo "Version $VERSION not on PyPI — proceeding."
+          fi
+
       - name: Publish to PyPI
+        if: env.SKIP_PUBLISH != 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
