@@ -836,10 +836,11 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
             basin_dir = _resources_dir / "basins" / normalized
 
     if not basin_dir.exists():
-        registered = sorted(
-            d.name for d in (_resources_dir / "basins").iterdir()
-            if d.is_dir() and (d / "basin_profile.yaml").exists()
-        ) if (_resources_dir / "basins").exists() else []
+        registered = (
+            sorted(d.name for d in (_resources_dir / "basins").iterdir() if d.is_dir() and (d / "basin_profile.yaml").exists())
+            if (_resources_dir / "basins").exists()
+            else []
+        )
         coords = _BASIN_COORDS.get(_requested)
         if coords is None:
             for _k, _c in _BASIN_COORDS.items():
@@ -851,9 +852,13 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
         # Honest analogue selection: prefer geographic proximity via known centroids, never a
         # blanket default. An unrelated analogue is worse than none — it invites false transfer.
         _CENTROIDS = {
-            "sarawak_basin": (3.0, 113.0), "north_luconia": (6.3, 113.5),
-            "central_luconia": (4.5, 112.5), "balingian": (3.3, 112.5), "baram": (4.4, 114.0),
-            "malay_basin": (5.5, 104.5), "sabah_basin": (5.5, 116.0),
+            "sarawak_basin": (3.0, 113.0),
+            "north_luconia": (6.3, 113.5),
+            "central_luconia": (4.5, 112.5),
+            "balingian": (3.3, 112.5),
+            "baram": (4.4, 114.0),
+            "malay_basin": (5.5, 104.5),
+            "sabah_basin": (5.5, 116.0),
         }
         if coords:
             _best, _bestd = None, None
@@ -898,8 +903,12 @@ async def _reason_basin_baseline(basin_name: str, reasoning_mode: str) -> dict[s
                 "to_close_gap": {
                     "action": f"Add resources/basins/{_requested}/basin_profile.yaml",
                     "minimum_fields": [
-                        "basin_name", "basin_id", "location", "tectonic_setting",
-                        "stratigraphic_framework", "primary_hydrocarbon",
+                        "basin_name",
+                        "basin_id",
+                        "location",
+                        "tectonic_setting",
+                        "stratigraphic_framework",
+                        "primary_hydrocarbon",
                     ],
                     "sources_that_would_populate_it": [
                         "PETRONAS MPM basin summaries",

@@ -352,9 +352,7 @@ def validate_session(
         try:
             from geox_mcp.organ_governance import required_authority_for as _raf
 
-            required_authority = _raf(
-                tool_name, risk_tier or "readonly", required_authority
-            )
+            required_authority = _raf(tool_name, risk_tier or "readonly", required_authority)
         except Exception:
             pass  # keep the caller's value — never loosen on resolver failure
     # ── Auto-mint ANON-xxx for empty/None session_id ────────────────────

@@ -26,12 +26,12 @@ PBDB_BASE = "https://paleobiodb.org/data1.2"
 PBDB_NANNOFOSSIL_CLASS = "Coccolithophyceae"
 
 
-
 def _coerce_float(v):
     try:
         return float(v) if v not in (None, "", "0", "0.0") else None
     except (TypeError, ValueError):
         return None
+
 
 class PBDBClient:
     """Async client for the Paleobiology Database (PBDB) REST API.
@@ -135,11 +135,13 @@ class PBDBClient:
 
         _RANK_OK = {"class", "order", "family", "genus", "species", "subspecies"}
         _rk = _pbdb_rank(rec.get("rnk", "")) if _pbdb_rank(rec.get("rnk", "")) in _RANK_OK else "species"
+
         def _f(v):
             try:
                 return float(v) if v not in (None, "", "0", "0.0") else None
             except (TypeError, ValueError):
                 return None
+
         return TaxonRecord(
             name=rec.get("nam", taxon_name),
             accepted_name=rec.get("nam", taxon_name),

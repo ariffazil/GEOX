@@ -50,9 +50,7 @@ SUPPORTED_TOOLS = {
 def _db_path() -> Path:
     env_path = os.environ.get("GEOX_EARTH_MEMORY_DB")
     if not env_path:
-        raise RuntimeError(
-            "GEOX_EARTH_MEMORY_DB environment variable is unset (fail-closed; /root/geox fallback removed)"
-        )
+        raise RuntimeError("GEOX_EARTH_MEMORY_DB environment variable is unset (fail-closed; /root/geox fallback removed)")
     return Path(env_path)
 
 

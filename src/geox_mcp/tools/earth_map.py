@@ -42,6 +42,7 @@ _SECONDARY_CACHE_DIR = Path("/var/lib/geox/cache/atlas/renders")
 _FALLBACK_CACHE_DIR = Path("/tmp/geox/atlas/cache/renders")
 _CACHE_DIR = Path(os.environ.get("GEOX_MAP_CACHE_DIR", str(_PRIMARY_CACHE_DIR)))
 
+
 def _ensure_cache_dir() -> Path:
     """Lazy mkdir for cache directory across systemd cache, persistent lib, and tmp fallbacks."""
     global _CACHE_DIR
@@ -53,6 +54,7 @@ def _ensure_cache_dir() -> Path:
         except OSError:
             continue
     return _FALLBACK_CACHE_DIR
+
 
 # Non-throwing initial probe
 _ensure_cache_dir()

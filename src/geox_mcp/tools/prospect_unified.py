@@ -14,7 +14,9 @@ from typing import Any, Literal
 
 async def geox_prospect(
     prospect_ref: str,
-    mode: Literal["screen", "appraise", "develop", "falsify", "cabar", "inverse_volumetrics", "decompose", "trajectory"] = "screen",
+    mode: Literal[
+        "screen", "appraise", "develop", "falsify", "cabar", "inverse_volumetrics", "decompose", "trajectory"
+    ] = "screen",
     evidence_refs: list[str] | None = None,
     verdict: Literal["compute", "preview", "seal"] = "compute",
     ack_irreversible: bool = False,
@@ -192,11 +194,7 @@ async def geox_prospect(
         }
 
     # ── Task 4: Inverse volumetric screening mode ─────────────────────
-    has_volumetric = (
-        claimed_giip_tcf is not None
-        or volumetric_params is not None
-        or (net_pay_m is not None and mode == "screen")
-    )
+    has_volumetric = claimed_giip_tcf is not None or volumetric_params is not None or (net_pay_m is not None and mode == "screen")
     if mode == "inverse_volumetrics" or (mode == "screen" and has_volumetric):
         from geox_mcp.tools.inverse_volumetrics import solve_inverse_volumetrics
         from geox_core.enums.statuses import (
@@ -212,14 +210,22 @@ async def geox_prospect(
             "net_pay_m": net_pay_m if net_pay_m is not None else vp.get("net_pay_m", 600.0),
             "porosity_range": porosity_range if porosity_range is not None else vp.get("porosity_range", (0.15, 0.30)),
             "sw_range": sw_range if sw_range is not None else vp.get("sw_range", (0.15, 0.35)),
-            "pressure_mpa_range": pressure_mpa_range if pressure_mpa_range is not None else vp.get("pressure_mpa_range", (50.0, 70.0)),
-            "temperature_c_range": temperature_c_range if temperature_c_range is not None else vp.get("temperature_c_range", (140.0, 170.0)),
+            "pressure_mpa_range": pressure_mpa_range
+            if pressure_mpa_range is not None
+            else vp.get("pressure_mpa_range", (50.0, 70.0)),
+            "temperature_c_range": temperature_c_range
+            if temperature_c_range is not None
+            else vp.get("temperature_c_range", (140.0, 170.0)),
             "z_range": z_range if z_range is not None else vp.get("z_range", (1.05, 1.25)),
-            "geometry_factor_range": geometry_factor_range if geometry_factor_range is not None else vp.get("geometry_factor_range", (0.3, 0.6)),
+            "geometry_factor_range": geometry_factor_range
+            if geometry_factor_range is not None
+            else vp.get("geometry_factor_range", (0.3, 0.6)),
             "co2_fraction": co2_fraction if co2_fraction is not None else vp.get("co2_fraction", 0.0),
             "recovery_factor": recovery_factor if recovery_factor is not None else vp.get("recovery_factor", 0.70),
             "recoverable_tcf": recoverable_tcf if recoverable_tcf is not None else vp.get("recoverable_tcf"),
-            "production_rate_bscfd": production_rate_bscfd if production_rate_bscfd is not None else vp.get("production_rate_bscfd"),
+            "production_rate_bscfd": production_rate_bscfd
+            if production_rate_bscfd is not None
+            else vp.get("production_rate_bscfd"),
             "samples": samples if samples is not None else vp.get("samples", 200_000),
             "seed": seed if seed is not None else vp.get("seed", 42),
             "input_provenance": input_provenance if input_provenance is not None else vp.get("input_provenance"),

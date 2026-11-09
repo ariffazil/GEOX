@@ -76,9 +76,7 @@ class EpistemicTag(StrEnum):
 def _get_default_audit_log_path() -> Path:
     env_path = os.environ.get("GEOX_AUDIT_LOG")
     if not env_path:
-        raise RuntimeError(
-            "GEOX_AUDIT_LOG environment variable is unset (fail-closed; /root/geox fallback removed)"
-        )
+        raise RuntimeError("GEOX_AUDIT_LOG environment variable is unset (fail-closed; /root/geox fallback removed)")
     return Path(env_path)
 
 

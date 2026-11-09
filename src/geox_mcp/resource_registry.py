@@ -38,12 +38,11 @@ logger = logging.getLogger("geox.resource_registry")
 # Configuration
 # ═══════════════════════════════════════════════════════════════════════════════
 
+
 def _get_registry_db_path() -> str:
     path = os.getenv("GEOX_RESOURCE_REGISTRY_DB")
     if not path:
-        raise RuntimeError(
-            "GEOX_RESOURCE_REGISTRY_DB environment variable is unset (fail-closed; /root/geox fallback removed)"
-        )
+        raise RuntimeError("GEOX_RESOURCE_REGISTRY_DB environment variable is unset (fail-closed; /root/geox fallback removed)")
     return path
 
 

@@ -31,10 +31,7 @@ class EvidenceChainEngine:
     """Executes deterministic model discrimination against verified Earth observations."""
 
     @staticmethod
-    def evaluate_model_prediction(
-        obs: dict[str, Any],
-        model: dict[str, Any]
-    ) -> dict[str, Any]:
+    def evaluate_model_prediction(obs: dict[str, Any], model: dict[str, Any]) -> dict[str, Any]:
         """
         Evaluate an observation against a model's predictions deterministically.
         Returns a TestResult dict.
@@ -46,10 +43,7 @@ class EvidenceChainEngine:
         obs_max = val + sigma
 
         target_obs = obs["kind"]
-        matched_predictions = [
-            p for p in model.get("predictions", [])
-            if p.get("target_observable") == target_obs
-        ]
+        matched_predictions = [p for p in model.get("predictions", []) if p.get("target_observable") == target_obs]
 
         if not matched_predictions:
             return {
@@ -59,7 +53,7 @@ class EvidenceChainEngine:
                 "threshold": sigma,
                 "kill_triggered": False,
                 "reason": f"No prediction in {model['model_id']} targets {target_obs}",
-                "evaluated_at_utc": datetime.now(timezone.utc).isoformat()
+                "evaluated_at_utc": datetime.now(timezone.utc).isoformat(),
             }
 
         pred = matched_predictions[0]
@@ -93,16 +87,12 @@ class EvidenceChainEngine:
             "threshold": sigma,
             "kill_triggered": kill_triggered,
             "reason": reason,
-            "evaluated_at_utc": datetime.now(timezone.utc).isoformat()
+            "evaluated_at_utc": datetime.now(timezone.utc).isoformat(),
         }
 
     @classmethod
     def execute_two_model_discrimination(
-        cls,
-        evidence_obj: dict[str, Any],
-        obs: dict[str, Any],
-        model_a: dict[str, Any],
-        model_b: dict[str, Any]
+        cls, evidence_obj: dict[str, Any], obs: dict[str, Any], model_a: dict[str, Any], model_b: dict[str, Any]
     ) -> dict[str, Any]:
         """
         Executes a rigorous 2-model discrimination test.
@@ -145,11 +135,7 @@ class EvidenceChainEngine:
 
         # Tri-Witness Hash Ledger
         # 1. ARTIFACT_IDENTITY
-        payload_to_hash = json.dumps({
-            "observation": obs,
-            "model_a": model_a,
-            "model_b": model_b
-        }, sort_keys=True)
+        payload_to_hash = json.dumps({"observation": obs, "model_a": model_a, "model_b": model_b}, sort_keys=True)
         artifact_identity = compute_sha256(payload_to_hash)
 
         # 2. EXECUTION_WITNESS
@@ -159,12 +145,12 @@ class EvidenceChainEngine:
                 "os": platform.platform(),
                 "python_version": platform.python_version(),
                 "service_pid": os.getpid(),
-                "git_commit": "geox-778dcb58"
+                "git_commit": "geox-778dcb58",
             },
             "execution_status": "SUCCESS",
             "exit_code": 0,
             "runtime_ms": round(elapsed_ms, 3),
-            "witnessed_at_utc": datetime.now(timezone.utc).isoformat()
+            "witnessed_at_utc": datetime.now(timezone.utc).isoformat(),
         }
 
         # 3. SCIENTIFIC_WARRANT
@@ -181,8 +167,8 @@ class EvidenceChainEngine:
                 "interpreted": "Whether crustal thickness represents underthrust Dangerous Grounds (Model A) vs localized mantle lithosphere drip (Model D)",
                 "assumed": f"Isostatic equilibrium, crust density {model_a['assumptions']['crust_density_kg_m3']} kg/m³, mantle density {model_a['assumptions']['mantle_density_kg_m3']} kg/m³",
                 "contradicted": "Deep (>42 km) localized lithospheric downwelling directly beneath Crocker axis",
-                "missing": "Receiver-function station profile directly under Kinabalu granite summit (0-15 km offset)"
-            }
+                "missing": "Receiver-function station profile directly under Kinabalu granite summit (0-15 km offset)",
+            },
         }
 
         # Decision Test output
@@ -194,15 +180,8 @@ class EvidenceChainEngine:
             "decision_id": f"DECISION-KINABALU-MOHO-{obs['observation_id']}",
             "competing_models": [model_a["model_id"], model_b["model_id"]],
             "discriminating_evidence_id": evidence_obj["evidence_id"],
-            "test_results": {
-                model_a["model_id"]: test_a,
-                model_b["model_id"]: test_b
-            },
-            "outcome_consequence": {
-                "on_model_1_win": on_a,
-                "on_model_2_win": on_b,
-                "on_indeterminate": on_ind
-            }
+            "test_results": {model_a["model_id"]: test_a, model_b["model_id"]: test_b},
+            "outcome_consequence": {"on_model_1_win": on_a, "on_model_2_win": on_b, "on_indeterminate": on_ind},
         }
 
         return {
@@ -212,5 +191,5 @@ class EvidenceChainEngine:
             "artifact_identity": artifact_identity,
             "execution_witness": execution_witness,
             "scientific_warrant": scientific_warrant,
-            "decision_test": decision_test
+            "decision_test": decision_test,
         }

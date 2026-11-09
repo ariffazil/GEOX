@@ -154,10 +154,28 @@ async def geox_dde_reason(
                 ) or any(
                     k in term_clean.lower()
                     for k in (
-                        "miocene", "pliocene", "pleistocene", "oligocene", "eocene", "paleocene",
-                        "cretaceous", "jurassic", "triassic", "permian", "carboniferous",
-                        "devonian", "silurian", "ordovician", "cambrian", "precambrian",
-                        "holocene", "quaternary", "neogene", "paleogene", "mesozoic", "cenozoic"
+                        "miocene",
+                        "pliocene",
+                        "pleistocene",
+                        "oligocene",
+                        "eocene",
+                        "paleocene",
+                        "cretaceous",
+                        "jurassic",
+                        "triassic",
+                        "permian",
+                        "carboniferous",
+                        "devonian",
+                        "silurian",
+                        "ordovician",
+                        "cambrian",
+                        "precambrian",
+                        "holocene",
+                        "quaternary",
+                        "neogene",
+                        "paleogene",
+                        "mesozoic",
+                        "cenozoic",
                     )
                 )
                 if is_age_term:

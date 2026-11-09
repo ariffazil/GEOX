@@ -208,20 +208,24 @@ def render_svg(profile: dict, width: int = 1240, height: int = 460) -> str:
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" font-family="sans-serif">',
         f'<rect width="{width}" height="{height}" fill="#0d1117"/>',
-        f'<text x="{pad_l}" y="16" fill="#e6edf3" font-size="14" font-weight="bold">{profile.get("name","")} - {profile.get("label","")} ({profile.get("length_km","")} km, bearing {profile.get("bearing_deg","")} deg)</text>',
-        f'<text x="{pad_l}" y="30" fill="#8b949e" font-size="9">{profile.get("note","")} - MEASURED (NOAA bathymetry, Sandwell & Smith V34.1 gravity)</text>',
+        f'<text x="{pad_l}" y="16" fill="#e6edf3" font-size="14" font-weight="bold">{profile.get("name", "")} - {profile.get("label", "")} ({profile.get("length_km", "")} km, bearing {profile.get("bearing_deg", "")} deg)</text>',
+        f'<text x="{pad_l}" y="30" fill="#8b949e" font-size="9">{profile.get("note", "")} - MEASURED (NOAA bathymetry, Sandwell & Smith V34.1 gravity)</text>',
     ]
     pts = " ".join(f"{X(d):.1f},{Yz(z):.1f}" for d, z in zip(dist, elev, strict=False) if z is not None)
     if pts:
         parts.append(f'<polyline points="{pts}" fill="none" stroke="#58a6ff" stroke-width="1.4"/>')
         lastx = pts.split()[-1].split(",")[0]
         parts.append(f'<path d="M {pts.split()[0]} L {pts} L {lastx},{Yz(e_lo)} Z" fill="#0d2b4566"/>')
-    parts.append(f'<text x="{pad_l}" y="{Yz(e_lo)+12}" fill="#58a6ff" font-size="9">bathymetry {e_lo:.0f} to {e_hi:.0f} m</text>')
+    parts.append(
+        f'<text x="{pad_l}" y="{Yz(e_lo) + 12}" fill="#58a6ff" font-size="9">bathymetry {e_lo:.0f} to {e_hi:.0f} m</text>'
+    )
     if gv:
         gpts = " ".join(f"{X(d):.1f},{Yg(g):.1f}" for d, g in zip(dist, grav, strict=False) if g is not None)
         parts.append(f'<polyline points="{gpts}" fill="none" stroke="#f0883e" stroke-width="1.2"/>')
-        parts.append(f'<text x="{pad_l}" y="{Yg(g_lo)+12}" fill="#f0883e" font-size="9">free-air gravity {g_lo:.0f} to {g_hi:.0f} mGal</text>')
+        parts.append(
+            f'<text x="{pad_l}" y="{Yg(g_lo) + 12}" fill="#f0883e" font-size="9">free-air gravity {g_lo:.0f} to {g_hi:.0f} mGal</text>'
+        )
     for i in range(0, int(dx) + 1, 100):
-        parts.append(f'<text x="{X(i):.1f}" y="{height-8}" fill="#8b949e" font-size="8" text-anchor="middle">{i} km</text>')
-    parts.append('</svg>')
+        parts.append(f'<text x="{X(i):.1f}" y="{height - 8}" fill="#8b949e" font-size="8" text-anchor="middle">{i} km</text>')
+    parts.append("</svg>")
     return "\n".join(parts)

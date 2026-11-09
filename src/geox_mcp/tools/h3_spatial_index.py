@@ -123,6 +123,7 @@ async def geox_h3_spatial_index(
 
     try:
         import h3
+
         h3_version = getattr(h3, "__version__", "4.x")
 
         if mode == "latlng_to_cell":

@@ -81,7 +81,7 @@ def solve_inverse_volumetrics(
     geom_samples = np.random.uniform(geom_min, geom_max, n)
 
     p_std = 0.101325  # MPa
-    t_std = 288.15    # K
+    t_std = 288.15  # K
     m3_to_rcf = 35.3146667
 
     # Gas expansion factor E (scf/rcf)
@@ -127,13 +127,15 @@ def solve_inverse_volumetrics(
         # Sales gas = Raw GIIP * (1 - co2) * RF
         # -> Raw GIIP = Sales gas / ((1 - co2) * RF)
         implied_raw = base_rec / ((1.0 - co2_f) * rf)
-        co2_sensitivity.append({
-            "co2_fraction": round(co2_f, 2),
-            "co2_percent": f"{int(round(co2_f * 100))}%",
-            "implied_raw_giip_tcf": round(implied_raw, 2),
-            "sales_gas_recoverable_tcf": round(base_rec, 2),
-            "recovery_factor": rf,
-        })
+        co2_sensitivity.append(
+            {
+                "co2_fraction": round(co2_f, 2),
+                "co2_percent": f"{int(round(co2_f * 100))}%",
+                "implied_raw_giip_tcf": round(implied_raw, 2),
+                "sales_gas_recoverable_tcf": round(base_rec, 2),
+                "recovery_factor": rf,
+            }
+        )
 
     # Plateau years at given rate
     plateau_years = None

@@ -1550,8 +1550,13 @@ def register_tools_on(mcp):
         from geox_mcp.tools.measurement_programme import geox_measurement_programme as _impl
 
         return _impl(
-            well_type=well_type, basin=basin, lithology=lithology, play_type=play_type,
-            water_depth=water_depth, target_depth=target_depth, mud_system=mud_system,
+            well_type=well_type,
+            basin=basin,
+            lithology=lithology,
+            play_type=play_type,
+            water_depth=water_depth,
+            target_depth=target_depth,
+            mud_system=mud_system,
             core_planned=core_planned,
         )
 
@@ -4692,6 +4697,7 @@ def register_tools_on(mcp):
             elif basin_name:
                 try:
                     from geox_mcp.tools.basin_unified import geox_basin
+
                     b_res = await geox_basin(mode="profile", basin_name=basin_name)
                     raw_claims = b_res.get("claims", [])
                     if not raw_claims:
@@ -5730,7 +5736,9 @@ def register_tools_on(mcp):
                     _mat_stage = classify_maturity(tmax_c, kerogen_type or "II")
                     _mat = {"tmax_c": tmax_c, "kerogen_type": kerogen_type or "II", "stage": _mat_stage}
                     if kerogen_type is None:
-                        _mat["kerogen_type_assumption"] = "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                        _mat["kerogen_type_assumption"] = (
+                            "II assumed - Tmax windows are type-dependent; supply kerogen_type to confirm"
+                        )
                     results["maturity"] = _mat
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
                     results["deltalogr"] = estimate_toc_deltalogr(
@@ -5745,12 +5753,16 @@ def register_tools_on(mcp):
                 if "toc" in results:
                     if "kerogen" in results:
                         _pm = {"oil": "oil_prone", "oil_gas": "oil_gas", "gas": "gas_prone", "none": "none"}
-                        results["toc"]["generation_potential"] = _pm.get(str(results["kerogen"].get("expected_products", "")).strip(), "HOLD")
+                        results["toc"]["generation_potential"] = _pm.get(
+                            str(results["kerogen"].get("expected_products", "")).strip(), "HOLD"
+                        )
                         results["toc"]["generation_potential_basis"] = "Rock-Eval hydrogen_index (measured)"
                     elif kerogen_type:
                         _dm = {"I": "oil_prone", "II": "oil_prone", "II/III": "oil_gas", "III": "gas_prone", "IV": "none"}
                         results["toc"]["generation_potential"] = _dm.get(str(kerogen_type).strip().upper(), "HOLD")
-                        results["toc"]["generation_potential_basis"] = "declared kerogen_type (NOT measured - supply hydrogen_index to confirm)"
+                        results["toc"]["generation_potential_basis"] = (
+                            "declared kerogen_type (NOT measured - supply hydrogen_index to confirm)"
+                        )
                 if len(results) == 1:
                     results["error"] = f"mode={mode} requires specific parameters (see description)"
                 return results
@@ -7675,23 +7687,24 @@ def register_tools_on(mcp):
 
         # S3.1: Live module import-smoke test across core tool modules
         import importlib
+
         _TOOL_MODULE_MAP = {
-            'geox_map': 'geox_mcp.tools.earth_map',
-            'geox_spatial': 'geox_mcp.tools.h3_spatial_index',
-            'geox_basin': 'geox_mcp.tools.basin_unified',
-            'geox_claim': 'geox_mcp.tools.claim_unified',
-            'geox_deep_time': 'geox_mcp.tools.deep_time_state',
-            'geox_contrast_metabolize': 'geox_mcp.tools.contrast_metabolize',
-            'geox_observe': 'geox_mcp.tools.earth_observe',
-            'geox_well_qc': 'geox_mcp.tools.well_qc',
-            'geox_well': 'geox_mcp.tools.integration_well',
-            'geox_well_ingest': 'geox_mcp.tools.well_ingest',
-            'geox_seismic_ingest': 'geox_mcp.tools.seismic_ingest',
-            'geox_seismic_interpret': 'geox_mcp.tools.seismic_interpret',
-            'geox_seismic_compute': 'geox_mcp.tools.seismic_compute_unified',
-            'geox_petrophysics': 'geox_mcp.tools.petrophysics_unified',
-            'geox_prospect': 'geox_mcp.tools.prospect_unified',
-            'geox_paleobiodb_query': 'geox_mcp.tools.geox_paleobiodb_query',
+            "geox_map": "geox_mcp.tools.earth_map",
+            "geox_spatial": "geox_mcp.tools.h3_spatial_index",
+            "geox_basin": "geox_mcp.tools.basin_unified",
+            "geox_claim": "geox_mcp.tools.claim_unified",
+            "geox_deep_time": "geox_mcp.tools.deep_time_state",
+            "geox_contrast_metabolize": "geox_mcp.tools.contrast_metabolize",
+            "geox_observe": "geox_mcp.tools.earth_observe",
+            "geox_well_qc": "geox_mcp.tools.well_qc",
+            "geox_well": "geox_mcp.tools.integration_well",
+            "geox_well_ingest": "geox_mcp.tools.well_ingest",
+            "geox_seismic_ingest": "geox_mcp.tools.seismic_ingest",
+            "geox_seismic_interpret": "geox_mcp.tools.seismic_interpret",
+            "geox_seismic_compute": "geox_mcp.tools.seismic_compute_unified",
+            "geox_petrophysics": "geox_mcp.tools.petrophysics_unified",
+            "geox_prospect": "geox_mcp.tools.prospect_unified",
+            "geox_paleobiodb_query": "geox_mcp.tools.geox_paleobiodb_query",
         }
         _smoke_failures = {}
         for _tool_k, _mod_path in _TOOL_MODULE_MAP.items():
