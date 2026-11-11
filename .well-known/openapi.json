@@ -2,7 +2,7 @@
   "info": {
     "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
     "title": "GEOX Earth Intelligence API",
-    "version": "2026.11.01"
+    "version": "2026.11.04"
   },
   "openapi": "3.0.0",
   "paths": {
@@ -126,7 +126,7 @@
           },
           {
             "axis": "compute",
-            "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
+            "description": "Seismic computation: AVO forward modeling (Zoeppritz, Shuey, LMR, Castagna) and 2D section attribute stack (amplitude, complex-trace, frequency and structure families).",
             "domain": "earth.seismic",
             "lane": "reasoning",
             "name": "geox_seismic_compute",
