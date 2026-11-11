@@ -225,7 +225,9 @@ def test_no_mutating_tool_can_falsely_succeed() -> None:
     cases = [
         ("geox_well_ingest", {"overwrite": True}),
         ("geox_prospect", {"verdict": "seal"}),
+        ("geox_prospect", {"verdict": "commit_ledger"}),
         ("geox_claim", {"mode": "seal"}),
+        ("geox_claim", {"mode": "commit_ledger"}),
         ("geox_evidence", {"forbidden_uses": ["x"]}),
     ]
     for tool, args in cases:

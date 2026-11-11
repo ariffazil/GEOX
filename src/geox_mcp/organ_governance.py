@@ -74,10 +74,10 @@ GEOX_RISK_MAP: dict[str, RiskTier] = {
     "geox_basin": RiskTier.READONLY,
     "geox_deep_time_state": RiskTier.READONLY,
     # ── GOVERNANCE DOMAIN (2) ──
-    "geox_claim": RiskTier.C2_EXECUTE,  # mode="seal" → requires arifOS SEAL
+    "geox_claim": RiskTier.C2_EXECUTE,  # mode=commit_ledger (alias seal) → organ ledger, IRREVERSIBLE
     "geox_evidence": RiskTier.READONLY,
     # ── EVALUATION DOMAIN (1) ──
-    "geox_prospect": RiskTier.C1_ADVISORY,  # mode="seal" → C2
+    "geox_prospect": RiskTier.C1_ADVISORY,  # verdict=commit_ledger (alias seal) → IRREVERSIBLE
     # ── DOCTRINE DOMAIN (1) ──
     "geox_doctrine": RiskTier.READONLY,
     # ── VISUAL/DESK DOMAIN ──
@@ -1133,15 +1133,18 @@ async def check_governance(
         return lane_verdict, lane_error, ""
 
     risk_tier = GEOX_RISK_MAP.get(tool_name, RiskTier.C1_ADVISORY)
-    # D5: geox_claim is mode-dispatched — only seal is C2/judgment; create is evidence
+    # D5: geox_claim is mode-dispatched. commit_ledger (alias seal) is the
+    # organ-ledger write: IRREVERSIBLE, not an arif_judge or VAULT999 verdict.
     if tool_name == "geox_claim" and arguments:
+        from geox_mcp.registry import is_organ_ledger_commit
+
         effective = arguments
         if isinstance(arguments.get("arguments"), dict):
             effective = arguments["arguments"]
         mode = str(effective.get("mode") or effective.get("action") or "create").lower()
         if mode in ("scan", "create", "validate", "challenge", "attach", "attach_evidence", "query", "list"):
             risk_tier = RiskTier.READONLY if mode in ("scan", "query", "list") else RiskTier.C1_ADVISORY
-        elif mode == "seal":
+        elif is_organ_ledger_commit(mode):
             risk_tier = RiskTier.IRREVERSIBLE
 
     # D6 (2026-10-05 FI-008 red-team): geox_spatial is mode-dispatched —
@@ -1156,17 +1159,21 @@ async def check_governance(
         if str(effective.get("mode") or "").lower() == "lancedb_store":
             risk_tier = RiskTier.C2_EXECUTE
 
-    # Task 2: geox_prospect mode split — screen (pure arithmetic) is READONLY (OBSERVE_ONLY allowed),
-    # seal is IRREVERSIBLE, evaluate/appraise/develop is C2_EXECUTE (requires OPERATOR).
+    # Task 2: geox_prospect mode split — screen (pure arithmetic) is READONLY.
+    # commit_ledger (alias seal) is the organ-ledger write: IRREVERSIBLE.
+    # evaluate/appraise/develop is C2_EXECUTE (requires OPERATOR).
     if tool_name == "geox_prospect":
+        from geox_mcp.registry import is_organ_ledger_commit
+
         effective = arguments or {}
         if isinstance(effective.get("arguments"), dict):
             effective = effective["arguments"]
         mode_val = str(effective.get("mode") or "screen").lower()
         verdict_val = str(effective.get("verdict") or "compute").lower()
-        if mode_val in ("screen", "inverse_volumetrics", "decompose", "trajectory", "analogues") and verdict_val != "seal":
+        screenish = mode_val in ("screen", "inverse_volumetrics", "decompose", "trajectory", "analogues")
+        if screenish and not is_organ_ledger_commit(verdict_val):
             risk_tier = RiskTier.READONLY
-        elif verdict_val == "seal" or mode_val == "seal":
+        elif is_organ_ledger_commit(verdict_val) or is_organ_ledger_commit(mode_val):
             risk_tier = RiskTier.IRREVERSIBLE
         elif mode_val in ("evaluate", "appraise", "develop"):
             risk_tier = RiskTier.C2_EXECUTE

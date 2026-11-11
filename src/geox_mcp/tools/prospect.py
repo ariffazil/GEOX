@@ -31,7 +31,7 @@ async def geox_prospect_evaluate(
     # For test=f, also set df_num (k-1).
     power_params: dict[str, Any] | None = None,
 ) -> dict:
-    """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview/seal.
+    """Integrated prospect evaluation (Volumetrics, POS, EVOI) with optional preview.
 
     Replaces: geox_prospect_evaluate + geox_prospect_judge_preview + geox_prospect_judge_seal.
 
@@ -42,9 +42,11 @@ async def geox_prospect_evaluate(
             - "appraise": Requires QC_VERIFIED evidence_refs (DST, PVT, seismic, etc.).
             - "develop": Requires full evidence package + prior appraisal.
         evidence_refs: List of artifact refs that have passed QC. Required for appraise/develop.
-        verdict: "compute" (default) | "preview" (reversible advisory) | "seal" (irreversible).
-        ack_irreversible: Required when verdict="seal". F1 Amanah gate.
-        judge_pin: Optional constant-time PIN for seal authorization.
+        verdict: "compute" (default) | "preview" (reversible) | "commit_ledger".
+            commit_ledger writes this organ's ledger. "seal" is a gated alias.
+            Neither is an arif_judge or VAULT999 verdict.
+        ack_irreversible: Required for commit_ledger. F1 Amanah gate.
+        judge_pin: Optional constant-time PIN for the organ-ledger write.
         structural_map_inline: E8 — optional inline StructuralMap (output of
                                bootstrap_structure). When provided, the prospect
                                evaluation carries the structural position as
@@ -402,7 +404,11 @@ async def geox_prospect_evaluate(
             "stoiip_p50_default_heuristic": True,
             "preview_verdict": preview_verdict,
             "reversible": True,
-            "note": "This is a preview only. Call verdict='seal' with ack_irreversible=True to make irreversible.",
+            "note": (
+                "Preview only. verdict='commit_ledger' (alias 'seal') writes this organ's "
+                "ledger and still requires ack_irreversible=True. It is not an arif_judge "
+                "or VAULT999 verdict."
+            ),
             "f13_compliance": {
                 "Recommendation": "Proceed" if preview_verdict == GovernanceStatus.SEAL else "Hold / Rework",
                 "Uncertainty": f"AC_Risk Score: {ac_risk_score}",
@@ -419,16 +425,14 @@ async def geox_prospect_evaluate(
             claim_state="JUDGE_PREVIEW",
         )
 
-    # ── SEAL PATH (2026-09-17 jurisdiction fix — 333-AGI / JURISDICTION-001) ──
-    # BEFORE: GEOX minted constitutional verdicts locally
-    #   (GovernanceStatus.SEAL if ac_risk_score < 0.5) — domain competence
-    #   impersonating sovereign authority. VIOLATES:
-    #   Expertise(D) ⇏ Authority(D).
-    # AFTER: the PIN + ack_irreversible gates remain (defense in depth), but
-    #   the verdict itself is delegated to arifOS 888 via the existing
-    #   arifos_governance integration. GEOX outputs a DOMAIN verdict with
-    #   recommended_handoff; only arifOS can produce AUTHORIZED_TO_ACT.
-    if verdict == "seal":
+    # ── ORGAN LEDGER COMMIT (public name commit_ledger; alias seal) ──
+    # The argument writes this organ's ledger. It is not an F13 or VAULT999
+    # verdict. PIN + ack stay. call_judge still runs, and the payload key
+    # geox_prospect_evaluate[seal] stays so the judge keeps matching it.
+    # JURISDICTION-001: GEOX must not mint AUTHORIZED_TO_ACT locally.
+    from geox_mcp.registry import is_organ_ledger_commit
+
+    if is_organ_ledger_commit(verdict):
         import hmac
         import os
 
@@ -454,9 +458,9 @@ async def geox_prospect_evaluate(
                     "tool": "geox_prospect_evaluate",
                     "error_code": "RT3_GUARD_F1_AMANAH",
                     "message": (
-                        "verdict='seal' is a constitutional adjudication (irreversible). "
-                        "F1 Amanah requires ack_irreversible=True. "
-                        "Provide ack_irreversible=True in the tool call to proceed."
+                        "verdict='commit_ledger' writes this organ's ledger and forwards a "
+                        "judge request. It is not itself an arif_judge or VAULT999 verdict. "
+                        "F1 Amanah requires ack_irreversible=True."
                     ),
                     "guard": "RT3",
                     "floor": "F1_AMANAH",
@@ -547,7 +551,12 @@ async def geox_prospect_evaluate(
         "stoiip_p50_default_heuristic": True,
         "score_type": "heuristic_screening" if mode == "screen" else "appraisal",
         "verdict_available": True,
-        "note": "Use verdict='preview' for reversible advisory or verdict='seal' with ack_irreversible for constitucional seal. For real POS use mode='decompose' with chance factors.",
+        "note": (
+            "Use verdict='preview' for reversible advisory, or verdict='commit_ledger' "
+            "(alias 'seal') with ack_irreversible to write this organ's ledger. "
+            "That write is not an arif_judge or VAULT999 verdict. "
+            "For real POS use mode='decompose' with chance factors."
+        ),
     }
 
     # ── EUREKA 2026-06-05 (Burlamaque Step 4): stratum-confidence ribbon ──
