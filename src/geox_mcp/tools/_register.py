@@ -289,6 +289,9 @@ def _make_receipt_wrapper(func: Any, name: str) -> Any:
             pre_call=pre_call,
             duration_ms=duration_ms,
         )
+        # Missing audit log is a HOLD envelope, not a success and not a crash.
+        if post_call.held_result is not None:
+            res = post_call.held_result
         for w in post_call.warnings:
             logger.info(f"[{name}] {w}")
         # MCP logging POC — F7 cap / envelope flags → warning

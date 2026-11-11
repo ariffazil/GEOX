@@ -250,10 +250,36 @@ _audit_log: AuditLog | None = None
 
 
 def _get_audit_log() -> AuditLog:
+    """Return the append-only audit log.
+
+    AuditLog() still raises when GEOX_AUDIT_LOG is unset. This function does
+    not cache that failure. enforce_floor_post_call catches it and returns a
+    HOLD envelope: fail-closed means an honest HOLD, not an uncaught crash.
+    """
     global _audit_log
     if _audit_log is None:
         _audit_log = AuditLog()
     return _audit_log
+
+
+def _audit_log_is_unset(exc: BaseException) -> bool:
+    return isinstance(exc, RuntimeError) and "GEOX_AUDIT_LOG" in str(exc)
+
+
+def _hold_envelope_for_unset_audit(tool_name: str, detail: str) -> dict[str, Any]:
+    """Client-visible HOLD. The call was not recorded, so it is not a success."""
+    return {
+        "ok": False,
+        "status": "HOLD",
+        "governance_status": "HOLD",
+        "error_code": "AUDIT_LOG_UNSET",
+        "tool_name": tool_name,
+        "reason": (
+            "GEOX_AUDIT_LOG is unset. The call was not recorded, so it is not a success. "
+            + detail
+        ),
+        "audit_recorded": False,
+    }
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -279,6 +305,8 @@ class PostCallVerdict:
     envelope_valid: bool
     capped_quality: float | None = None
     warnings: list[str] = field(default_factory=list)
+    audit_recorded: bool = True
+    held_result: dict[str, Any] | None = None
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -429,9 +457,26 @@ def enforce_floor_post_call(
         call_hash=pre_call.call_hash,
         outcome=pre_call.outcome,
     )
-    _get_audit_log().append(audit)
+    audit_recorded = True
+    held_result: dict[str, Any] | None = None
+    try:
+        _get_audit_log().append(audit)
+    except RuntimeError as exc:
+        if not _audit_log_is_unset(exc):
+            raise
+        # Do not cache a failed singleton. AuditLog() raised before assignment.
+        audit_recorded = False
+        failed.append("F11")
+        audit.floor_gates_failed = list(failed)
+        audit.floor_gates_passed = list(passed)
+        audit.outcome = "HOLD"
+        held_result = _hold_envelope_for_unset_audit(tool_name, str(exc))
+        warnings.append(held_result["reason"])
+        if isinstance(result, dict):
+            result.clear()
+            result.update(held_result)
 
-    if failed:
+    if failed and audit_recorded:
         # Any failed floor → mark as F11 fail-soft
         warnings.append(f"F11: {len(failed)} floor(s) flagged: {failed}")
 
@@ -440,6 +485,8 @@ def enforce_floor_post_call(
         envelope_valid=envelope_valid,
         capped_quality=capped_quality,
         warnings=warnings,
+        audit_recorded=audit_recorded,
+        held_result=held_result,
     )
 
 
