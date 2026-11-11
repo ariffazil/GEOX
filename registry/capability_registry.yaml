@@ -7,10 +7,10 @@ manifest_version: 2026.09.15-discovery-governance
 # Principle: Capability Exists ≠ Capability Visible ≠ Capability Activated
 #
 # Profiles:
-#   default    → earth_core only
-#   specialist → earth_core + earth_specialist
-#   research   → all packs
-#   full       → all packs (alias for research)
+#   default       → earth_core only
+#   specialist    → earth_core + earth_specialist
+#   research/full → those plus earth_research (not earth_witness)
+#   earth_witness → operator-gated; the five witness-spine tools only
 # Counts are measured by tools_for_profile — see docs/canonical_public_tools.json
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
@@ -21,7 +21,7 @@ discovery_profiles:
     description: "Core Earth tools only. Basin context, data validation, interpretation, prospects."
     visible_packs:
       - earth_core
-    tool_count: 13
+    tool_count: 15
 
   specialist:
     label: "Specialist Discovery"
@@ -29,25 +29,32 @@ discovery_profiles:
     visible_packs:
       - earth_core
       - earth_specialist
-    tool_count: 19
+    tool_count: 21
 
   research:
     label: "Research Discovery"
-    description: "All packs. Includes GLOF cascade simulation and Bayesian inversion."
+    description: "earth_core + earth_specialist + earth_research. Does not include earth_witness."
     visible_packs:
       - earth_core
       - earth_specialist
       - earth_research
-    tool_count: 26
+    tool_count: 22
 
   full:
     label: "Full Discovery"
-    description: "Alias for research. All 26 public tools."
+    description: "Alias for research. earth_witness stays out."
     visible_packs:
       - earth_core
       - earth_specialist
       - earth_research
-    tool_count: 26
+    tool_count: 22
+
+  earth_witness:
+    label: "Earth Witness (operator)"
+    description: "The five witness-spine tools only. Not included in default, specialist, or research."
+    visible_packs:
+      - earth_witness
+    tool_count: 5
 
 pack_visibility:
   earth_core:
@@ -66,6 +73,12 @@ pack_visibility:
     escalation_required: true
     escalation_trigger: "Task explicitly requests cascade simulation, Bayesian inversion, or experimental Earth science."
     description: "Advanced/research only. GLOF cascade, Bayesian inversion."
+
+  earth_witness:
+    default_visible: false
+    escalation_required: true
+    escalation_trigger: "Operator selects the earth_witness profile. Not part of default, specialist, or research."
+    description: "Operator-gated witness spine. Unlisted from default discovery by design."
 
 # GUI mapping — maps capability packs to MCP App tab groups
 # Used by GEOX MCP Apps and webmcp_categories()

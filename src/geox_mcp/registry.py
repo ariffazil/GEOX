@@ -246,10 +246,11 @@ def tools_for_profile(profile: str = "default") -> list[str]:
     """Return tool names visible under the given discovery profile.
 
     Profiles:
-      default    → earth_core only (13 tools)
-      specialist → earth_core + earth_specialist (19 tools)
-      research   → all packs (26 tools)
-      full       → alias for research
+      default       → earth_core only
+      specialist    → earth_core + earth_specialist
+      research/full → those two plus earth_research
+      earth_witness → the five witness-spine tools only
+    earth_witness is operator-gated. It is not in default, specialist, or research.
     """
     profiles = _get_discovery_profiles()
     prof = profiles.get(profile, profiles.get("default", {}))
