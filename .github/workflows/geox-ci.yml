@@ -127,6 +127,7 @@ jobs:
             tests/test_visual_image_publish.py \
             tests/test_evidence_contract_parity.py \
             tests/test_earth_witness_pack.py \
+            tests/test_geox_source_drift.py \
             tests/alignment/
 
   organ-boundary:

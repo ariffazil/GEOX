@@ -200,7 +200,7 @@ Known, held, not papered over.
 |---|---|---|
 | Internal well-evaluation data once committed (Kinabalu pack, 2026-10-01) | **PURGED 2026-10-08 (F13 sovereign decision)** — values removed from tree and git history; wells de-identified (DW-A, INB-1..n); synthesis retained | Residual: GitHub may serve dangling pre-rewrite commit SHAs until a support-side cache purge — **follow-up open**; originals + identity ledger in a private VPS store outside all repos |
 | 5 witness-spine tools | In pack `earth_witness`, profile `earth_witness` | Operator-gated. Not in default, specialist, or research. Unlisted there by design |
-| `/health.deployment_drift` measures the arifOS tree, not GEOX | HELD (observed 2026-10-08) | It cannot corroborate a GEOX source↔runtime claim — use the runtime-commit line in [Current verified state](#current-verified-state) instead |
+| `/health.arifos_deployment_drift` | arifOS tree only | Renamed 2026-11-11. `/health.geox_source_drift` compares `/opt/geox` HEAD with that repo's origin/main |
 | Runtime vs source currency | See the generated runtime-commit line above | Operational, not a code defect — redeploy from `main` closes it |
 | `geox_temporal` (decline/RRR) vs WEALTH ownership | HELD decision | Which organ owns production-analytics is a federation-policy call, not a code fix |
 | `capability_registry.yaml` prose drift (stale profile counts in comments) | Observed 2026-10-08 | Read by no Python; trivial fix living next to canonical logic |
