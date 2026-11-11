@@ -1,9 +1,9 @@
 organ: GEOX
-version: 2026.10.19
+version: 2026.11.04
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
 public_count: 27
-regenerated: '2026-10-19T19:38:23.787622+00:00'
+regenerated: '2026-11-04T11:19:09.471475+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
@@ -253,8 +253,9 @@ tools:
   family: interpret
   tier: B
   access: public
-  description: 'Seismic computation: forward model, well tie, attributes, wavelet
-    extraction, inversion.'
+  description: 'Seismic computation: AVO forward modeling (Zoeppritz, Shuey, LMR,
+    Castagna) and 2D section attribute stack (amplitude, complex-trace, frequency
+    and structure families).'
   annotations:
     read_only: true
     destructive: false

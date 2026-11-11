@@ -7468,7 +7468,13 @@ def register_tools_on(mcp):
     # (clients passed theta_max, impl required theta_deg for zoeppritz).
     @mcp.tool(
         name="geox_seismic_compute",
-        description="Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, LMR, Castagna).",
+        description=(
+            "Seismic computation. Modes: avo_forward (AVO forward modeling: Zoeppritz, Shuey, "
+            "LMR, Castagna) | attribute (2D section attribute stack: amplitude, envelope, "
+            "RMS, energy, variance, sweetness, instantaneous phase/frequency/bandwidth, "
+            "apparent polarity, dominant/centroid frequency, coherence, discontinuity, "
+            "semblance, dip, azimuth, curvature)."
+        ),
         annotations=_geox_annotations("geox_seismic_compute"),
     )
     async def _seismic_compute_unified(
@@ -7486,6 +7492,16 @@ def register_tools_on(mcp):
         rho: float = 2.3,
         fluid_zone: str = "brine",
         unit: str = "m/s",
+        # attribute params (2D section lane)
+        attribute: str = "coherence",
+        window_size: int = 11,
+        volume_ref: str | None = None,
+        volume_inline: dict[str, Any] | None = None,
+        image_path: str | None = None,
+        amplitude_grid: list[list[float]] | None = None,
+        provenance: str = "fixture",
+        artifact_scan: bool = True,
+        provenance_tag: str | None = None,
         session_id: str | None = None,
         actor_id: str | None = None,
         trace_id: str | None = None,
@@ -7496,7 +7512,16 @@ def register_tools_on(mcp):
           avo_forward — AVO forward modeling: Zoeppritz exact Rpp, Shuey 2-term,
                         Lambda-Mu-Rho (Goodway 1997), Castagna mudrock.
                         Requires: vp1, vs1, rho1, vp2, vs2, rho2, theta_deg.
+          attribute   — 2D section attribute stack (Sheriff 2002 / Chopra & Marfurt 2007
+                        families: amplitude, complex-trace, frequency, structure).
+                        Inputs: amplitude_grid | image_path | volume_inline | volume_ref.
+                        Raster input is scanned for annotation/artifact zones first
+                        (artifact_scan=True) and tagged DISPLAY_DERIVED_PROXY.
         """
+        from geox_mcp.tools.seismic_compute_unified import (
+            geox_seismic_compute as _scu_impl,
+        )
+
         if mode == "avo_forward":
             # af-fix #6b (2026-09-09): the previous direct _avo_forward call
             # bypassed the contract wrapper in tools/seismic_compute_unified.py
@@ -7504,10 +7529,6 @@ def register_tools_on(mcp):
             # the requested avo_forward and left synthetic_trace/reflectivity/
             # attributes null (outputSchema violation, F3). Route through the
             # wrapper (mode + mode_executed + field lift, gate-checked).
-            from geox_mcp.tools.seismic_compute_unified import (
-                geox_seismic_compute as _scu_impl,
-            )
-
             return await _scu_impl(
                 mode="avo_forward",
                 vp1=vp1,
@@ -7519,8 +7540,27 @@ def register_tools_on(mcp):
                 theta_deg=theta_deg,
                 fluid_zone=fluid_zone,
             )
-        else:
-            return {"error": f"Unknown mode: {mode}. Valid: avo_forward"}
+        if mode == "attribute":
+            # 2026-11-04 (333-AGI): mode=attribute was code-alive but client-dead —
+            # this wrapper only knew avo_forward, so the real multi-mode engine in
+            # tools/seismic_compute_unified.py was unreachable from MCP. The avo_forward
+            # branch above is left byte-identical (scar LOW 0.5).
+            return await _scu_impl(
+                mode="attribute",
+                attribute=attribute,
+                window_size=window_size,
+                volume_ref=volume_ref,
+                volume_inline=volume_inline,
+                image_path=image_path,
+                amplitude_grid=amplitude_grid,
+                provenance=provenance,
+                artifact_scan=artifact_scan,
+                provenance_tag=provenance_tag,
+            )
+        return {
+            "error": f"Unknown mode: {mode}. Valid: avo_forward, attribute",
+            "modes": ["avo_forward", "attribute"],
+        }
 
     @mcp.tool(name="geox_avo_forward", annotations=_geox_annotations("geox_avo_forward"))
     async def _shim_avo_forward(

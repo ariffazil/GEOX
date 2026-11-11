@@ -14,6 +14,7 @@ Supports:
 from __future__ import annotations
 
 import base64
+import uuid
 import hashlib
 import json
 import time
@@ -34,6 +35,91 @@ class VisionBackendResponse(BaseModel):
     raw_response: dict[str, Any]
     response_hash: str
     latency_ms: float = 0.0
+
+
+def _iter_json_objects(text: str):
+    """Yield balanced-brace JSON substrings from free-form model output.
+
+    2026-11-04 (333-AGI): the previous parser took everything from the first
+    "{" to the LAST "}". A vision model that emits two JSON blocks (or a JSON
+    block followed by prose containing braces) produced a merged substring that
+    fails json.loads with "Extra data" — and the tool reported a FATAL
+    "server bug" for what is a recoverable model-output shape.
+
+    This walks the braces with string/escape awareness and yields each complete
+    top-level object on its own, so a valid first object is never poisoned by
+    whatever follows it.
+    """
+    n = len(text)
+    i = 0
+    while i < n:
+        if text[i] != "{":
+            i += 1
+            continue
+        depth = 0
+        in_str = False
+        esc = False
+        closed = False
+        for j in range(i, n):
+            ch = text[j]
+            if in_str:
+                if esc:
+                    esc = False
+                elif ch == "\\":
+                    esc = True
+                elif ch == '"':
+                    in_str = False
+                continue
+            if ch == '"':
+                in_str = True
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    yield text[i : j + 1]
+                    i = j + 1
+                    closed = True
+                    break
+        if not closed:
+            return
+
+
+# Keys the Earth Observation contract asks for. When several JSON objects are
+# present, the one carrying these is the actual observation payload.
+_OBSERVATION_KEYS = (
+    "visible_features",
+    "modality",
+    "ocr_text",
+    "measurements",
+    "hypotheses",
+    "limitations",
+)
+
+
+def extract_observation_json(text: str) -> dict | None:
+    """Parse the observation payload out of free-form model output.
+
+    Tolerant by design: markdown fences, prose before/after, and multiple
+    concatenated JSON objects are all handled. The object carrying the
+    contract keys wins; otherwise the first parseable object is used.
+    """
+    if not text:
+        return None
+    candidates = []
+    for raw in _iter_json_objects(text):
+        try:
+            obj = json.loads(raw)
+        except Exception:
+            continue
+        if isinstance(obj, dict):
+            candidates.append(obj)
+    if not candidates:
+        return None
+    for obj in candidates:
+        if any(k in obj for k in _OBSERVATION_KEYS):
+            return obj
+    return candidates[0]
 
 
 class BaseVisionBackend(ABC):
@@ -573,33 +659,47 @@ class FederationVisionBackend(BaseVisionBackend):
             )
 
         b64_img = base64.b64encode(image_bytes).decode("utf-8")
-        req_body = {
-            "model": self.model_id,
-            "messages": [
-                {"role": "system", "content": system_instruction + schema_instruction},
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": user_prompt},
-                        {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64_img}"}},
-                    ],
-                },
-            ],
-            "temperature": 0.1,
-            "max_tokens": 4000,
-        }
-
-        req = urllib.request.Request(
-            f"{self.base_url}/chat/completions",
-            data=json.dumps(req_body).encode("utf-8"),
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
-            method="POST",
-        )
         resp_data = None
         parsed_json = None
         content = ""
         last_err: Exception | None = None
         for attempt in (1, 2):
+            # 2026-11-04 (333-AGI): the provider can return a TRUNCATED json
+            # (observed: exactly 800 chars, cut mid-string, finish_reason=stop).
+            # The gateway then replays that broken response from cache forever,
+            # so a plain retry re-asks the same cached question. Attempt 2
+            # therefore carries a nonce + an explicit instruction: a fresh cache
+            # key AND a real chance of a complete object.
+            if attempt == 1:
+                attempt_prompt = user_prompt
+            else:
+                attempt_prompt = (
+                    f"{user_prompt}\n\n[retry {uuid.uuid4().hex[:12]}] Your previous answer was "
+                    "truncated or unparsable. Return the COMPLETE JSON object only — no prose, "
+                    "no fences, every field closed."
+                )
+            req_body = {
+                "model": self.model_id,
+                "messages": [
+                    {"role": "system", "content": system_instruction + schema_instruction},
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": attempt_prompt},
+                            {"type": "image_url", "image_url": {"url": f"data:{mime_type};base64,{b64_img}"}},
+                        ],
+                    },
+                ],
+                "temperature": 0.1,
+                "max_tokens": 4000,
+            }
+
+            req = urllib.request.Request(
+                f"{self.base_url}/chat/completions",
+                data=json.dumps(req_body).encode("utf-8"),
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
+                method="POST",
+            )
             t0 = time.time()
             try:
                 with urllib.request.urlopen(req, timeout=180) as resp:
@@ -625,19 +725,10 @@ class FederationVisionBackend(BaseVisionBackend):
                     raw_text = (cand or "").strip()
                     if not raw_text:
                         continue
-                    if not raw_text.startswith("{"):
-                        start = raw_text.find("{")
-                        end = raw_text.rfind("}")
-                        if start == -1 or end <= start:
-                            continue
-                        raw_text = raw_text[start : end + 1]
-                    try:
-                        cand_json = json.loads(raw_text)
-                        if isinstance(cand_json, dict):
-                            parsed_json = cand_json
-                            break
-                    except json.JSONDecodeError:
-                        continue
+                    cand_json = extract_observation_json(raw_text)
+                    if cand_json is not None:
+                        parsed_json = cand_json
+                        break
                 if parsed_json is not None:
                     break
                 last_err = ValueError(

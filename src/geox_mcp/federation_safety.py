@@ -281,6 +281,29 @@ def classify_error(error: Exception, source_tool: str = None, source_organ: str 
         severity = "RECOVERABLE"
         next_action = "Try different organ or retry later"
 
+    # Vision model returned output we could not parse (not an organ defect).
+    # 2026-11-04: a model emitting two JSON blocks used to reach the parser as a
+    # merged string, fail json.loads, and surface as FATAL "server bug". The
+    # parser is now tolerant; when it still fails, this is a downstream model
+    # shape issue and the honest answer is RETRY, not escalate-888.
+    elif "no parsable json" in msg_lower or "returned no parsable" in msg_lower:
+        error_class = ErrorClass.DOWNSTREAM_PARSER_FAIL
+        recoverability = Recoverability.AGENT_CAN_RETRY
+        layer = "downstream_model"
+        severity = "RECOVERABLE"
+        next_action = "Vision model returned non-JSON output — retry (or tighten the response schema)"
+
+    # Client-side bad request from a downstream provider (HTTP 400 / Bad Request).
+    # 2026-11-04: a vision provider rejecting a malformed request was classified
+    # INTERNAL_ERROR / "server bug" / escalate-888 — but it is an INPUT error, not
+    # an organ defect. Misclassifying it burns sovereign attention on a non-defect.
+    elif any(kw in msg_lower for kw in ["http error 400", "400 bad request", "badrequest"]):
+        error_class = ErrorClass.BAD_INPUT_VALUE
+        recoverability = Recoverability.AGENT_CAN_RETRY
+        layer = "input_validation"
+        severity = "RECOVERABLE"
+        next_action = "Fix the request payload and retry (downstream rejected it)"
+
     # Default: internal error
     else:
         error_class = ErrorClass.INTERNAL_ERROR

@@ -99,7 +99,7 @@ tools:
   lane: reasoning
   face: surface
   visibility: public
-  description: 'Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.'
+  description: 'Seismic computation: AVO forward modeling (Zoeppritz, Shuey, LMR, Castagna) and 2D section attribute stack (amplitude, complex-trace, frequency and structure families).'
   input_schema_source: callable
   annotations:
     read_only: true

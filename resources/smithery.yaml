@@ -80,7 +80,7 @@ tools:
 
   - id: geox_seismic_compute
     name: geox_seismic_compute
-    description: "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion."
+    description: "Seismic computation: AVO forward modeling (Zoeppritz, Shuey, LMR, Castagna) and 2D section attribute stack (amplitude, complex-trace, frequency and structure families)."
     domain: "earth.seismic"
     lane: "reasoning"
     input_schema:
