@@ -1921,6 +1921,21 @@ capability_packs:
         tools: []
     tools:
     - geox_glof
+  earth_witness:
+    tier: operator
+    label: Earth Witness
+    description: >-
+      Operator-gated. These five tools are callable on the public surface
+      and are unlisted from default, specialist, and research discovery
+      by design. This pack is the decision; it is not a missing pack.
+    intent: Register native sources, list them, extract a display proxy or a native trace, and write a calibration witness.
+    discovery: unlisted_by_design
+    tools:
+    - geox_calibration_register_witness
+    - geox_extract_display_proxy
+    - geox_register_native_source
+    - geox_extract_native_trace
+    - geox_list_registered_sources
 workflow_packs:
   well_to_correlation:
     label: Well → Correlation
