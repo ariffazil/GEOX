@@ -115,6 +115,41 @@ EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     "geox_geological_model_generate": ["image_path", "description", "parameters_used"],
 }
 
+# Public tools with no measured evidence-key list. None means the tool is
+# keyed and check_evidence_postcondition does not enforce. Do not replace
+# None with an empty list or with invented keys: an empty list false-fails
+# a live SUCCESS (geox_evidence, 2026-08-06).
+_PUBLIC_EVIDENCE_GAPS: dict[str, None] = {
+    "geox_calibration_register_witness": None,
+    "geox_contrast_metabolize": None,
+    "geox_deep_time": None,
+    "geox_extract_display_proxy": None,
+    "geox_extract_native_trace": None,
+    "geox_glof": None,
+    "geox_list_registered_sources": None,
+    "geox_map": None,
+    "geox_model": None,
+    "geox_observe": None,
+    "geox_paleobiodb_query": None,
+    "geox_register_native_source": None,
+    "geox_source": None,
+    "geox_spatial": None,
+    "geox_temporal": None,
+    "geox_well": None,
+}
+
+_MISSING = object()
+for _gap_name, _gap_keys in _PUBLIC_EVIDENCE_GAPS.items():
+    _existing = EVIDENCE_CONTRACTS.get(_gap_name, _MISSING)
+    if _existing is _MISSING:
+        EVIDENCE_CONTRACTS[_gap_name] = _gap_keys
+    elif _existing is not None:
+        raise RuntimeError(f"{_gap_name} is both an enforced evidence contract and a public gap")
+
+# public | public_gap | internal. A contract whose name is not on the
+# public surface is internal. Internal contracts stay enforced.
+EVIDENCE_CONTRACT_SCOPE: dict[str, str] = {}
+
 # Tools without an evidence contract yet (NON-COMPLIANT).
 # These will pass through without post-condition checking.
 NON_COMPLIANT: set[str] = set()
@@ -123,32 +158,73 @@ NON_COMPLIANT: set[str] = set()
 
 
 def _build_compliance_matrix() -> None:
-    """Populate NON_COMPLIANT from CANONICAL_PUBLIC_TOOLS minus EVIDENCE_CONTRACTS."""
+    """Tag every contract public, public_gap, or internal.
+
+    NON_COMPLIANT is the public gap set: keyed, not enforced. A public tool
+    that is absent from EVIDENCE_CONTRACTS is also a gap. It is not coverage.
+    """
     global NON_COMPLIANT
+    EVIDENCE_CONTRACT_SCOPE.clear()
     try:
         from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 
-        contracted = set(EVIDENCE_CONTRACTS.keys())
-        all_canonical = set(CANONICAL_PUBLIC_TOOLS)
-        NON_COMPLIANT = all_canonical - contracted
+        public = set(CANONICAL_PUBLIC_TOOLS)
     except Exception:
         NON_COMPLIANT = set()
+        return
+    gaps: set[str] = set()
+    for name, keys in EVIDENCE_CONTRACTS.items():
+        if name in public:
+            if keys is None:
+                EVIDENCE_CONTRACT_SCOPE[name] = "public_gap"
+                gaps.add(name)
+            else:
+                EVIDENCE_CONTRACT_SCOPE[name] = "public"
+        else:
+            EVIDENCE_CONTRACT_SCOPE[name] = "internal"
+    gaps.update(public - set(EVIDENCE_CONTRACTS))
+    NON_COMPLIANT = gaps
 
 
 _build_compliance_matrix()
 
 
 def compliance_matrix() -> dict[str, Any]:
-    """Return the compliance matrix: which tools have evidence contracts."""
-    contracted = set(EVIDENCE_CONTRACTS.keys())
-    all_tools = contracted | NON_COMPLIANT
+    """Return coverage of the public surface, not of every contract key.
+
+    compliance_pct is public enforced key-lists / CANONICAL_PUBLIC_TOOLS.
+    Gap contracts and internal contracts are not coverage. The old figure
+    counted internal names in the numerator (34/50 = 68) and hid the public gaps.
+    """
+    try:
+        from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
+
+        public = list(CANONICAL_PUBLIC_TOOLS)
+    except Exception:
+        public = []
+    public_set = set(public)
+    enforced = sorted(
+        name
+        for name in public
+        if EVIDENCE_CONTRACTS.get(name) not in (None,) and name in EVIDENCE_CONTRACTS and EVIDENCE_CONTRACTS[name]
+    )
+    gaps = sorted(name for name in public if EVIDENCE_CONTRACT_SCOPE.get(name) == "public_gap" or name in NON_COMPLIANT)
+    internal = sorted(name for name, scope in EVIDENCE_CONTRACT_SCOPE.items() if scope == "internal")
     return {
-        "total_tools": len(all_tools),
-        "compliant": sorted(contracted),
-        "compliant_count": len(contracted),
-        "non_compliant": sorted(NON_COMPLIANT),
-        "non_compliant_count": len(NON_COMPLIANT),
-        "compliance_pct": round(len(contracted) / max(1, len(all_tools)) * 100),
+        "public_tools": len(public_set),
+        "total_tools": len(public_set),
+        "enforced": enforced,
+        "enforced_count": len(enforced),
+        "compliant": enforced,
+        "compliant_count": len(enforced),
+        "gaps": gaps,
+        "gap_count": len(gaps),
+        "non_compliant": gaps,
+        "non_compliant_count": len(gaps),
+        "internal": internal,
+        "internal_count": len(internal),
+        "compliance_pct": round(len(enforced) / max(1, len(public_set)) * 100),
+        "compliance_pct_basis": "public enforced key-lists / CANONICAL_PUBLIC_TOOLS",
         "spec": "geox-evidence-postcondition-v1",
         "rule": "SUCCESS with null evidence → FAILURE (isError:true, confidence:0.10)",
     }
@@ -314,9 +390,11 @@ def check_evidence_postcondition(
     domain = coerce_tool_result_to_dict(result)
 
     if required_keys is None:
-        if tool_name in NON_COMPLIANT:
+        # Gap contract, or a name with no record. Pass the payload through.
+        # Do not downgrade: there is no measured key list to fail against.
+        if EVIDENCE_CONTRACT_SCOPE.get(tool_name) == "public_gap" or tool_name in NON_COMPLIANT:
             logger.debug(
-                "EVIDENCE_POST: tool=%s NON_COMPLIANT (no contract defined)",
+                "EVIDENCE_POST: tool=%s public_gap (keyed, not enforced)",
                 tool_name,
             )
         return original
