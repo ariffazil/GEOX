@@ -3177,18 +3177,10 @@ async def health_handler(request: Request) -> JSONResponse:
         pass
     _public_count = len(CANONICAL_PUBLIC_TOOLS)
 
-    # ── P0-5 deployment invariant (2026-07-25 · FI-008) ─────────────
-    # Surface the arifOS deployment drift to GEOX clients. The audit found
-    # that arifOS reports source/built/deployed commits with drift=true
-    # while its /health still returns "healthy" — a direct invariant
-    # breach (F1 AMANAH). Until arifOS's own health endpoint is fixed
-    # to surface drift, GEOX exposes the truth here so operators can
-    # detect the breach from any organ's health probe.
-    #
-    # This is the GEOX-side half of the deployment invariant: detect
-    # drift in arifOS and refuse healthy on this side too. arifOS-side
-    # fix (Phase E.2) is tracked separately — this fix is GEOX-local,
-    # reversible, and observable.
+    # ── P0-5 arifOS deployment invariant (2026-07-25 · FI-008) ──────
+    # arifos_deployment_drift reports the arifOS tree. It does not
+    # certify GEOX. geox_source_drift, below, compares this repo's HEAD
+    # with its own origin/main.
     async def _probe_arifos_deployment_drift() -> dict[str, Any]:
         """P0-5 deployment invariant — GEOX-side observability for arifOS drift.
 
@@ -3418,6 +3410,10 @@ async def health_handler(request: Request) -> JSONResponse:
     except Exception:
         pass  # registry truth probe is advisory; degrade gracefully
 
+    from geox_mcp.source_drift import probe_geox_source_drift
+
+    _geox_source_drift = probe_geox_source_drift()
+
     return JSONResponse(
         {
             "status": _geo_status,
@@ -3452,10 +3448,9 @@ async def health_handler(request: Request) -> JSONResponse:
             # single GET tells the operator whether the connector is in
             # canonical-surface parity.
             "surface_drift": _surface_drift_summary(),
-            # ── P0-5 deployment invariant (2026-07-25 · FI-008) ───
-            # arifOS deployment drift surfaces here. Until arifOS-side
-            # E.2 lands, GEOX makes the breach visible to operators.
-            "deployment_drift": await _probe_arifos_deployment_drift(),
+            # arifOS and GEOX are separate certificates.
+            "arifos_deployment_drift": await _probe_arifos_deployment_drift(),
+            "geox_source_drift": _geox_source_drift,
             "apex_scalars": _apex_scalars,
             "freshness": {
                 "status": "fresh",
