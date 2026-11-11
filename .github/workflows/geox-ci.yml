@@ -126,6 +126,7 @@ jobs:
             tests/test_demo_well_hydrate.py \
             tests/test_visual_image_publish.py \
             tests/test_evidence_contract_parity.py \
+            tests/test_earth_witness_pack.py \
             tests/alignment/
 
   organ-boundary:
