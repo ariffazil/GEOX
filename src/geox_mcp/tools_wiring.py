@@ -1738,7 +1738,7 @@ def register_tools_on(mcp):
         actor_id: str | None = None,
         trace_id: str | None = None,
     ) -> dict[str, Any]:
-        """Create, validate, challenge, seal, attach."""
+        """Create, validate, challenge, commit_ledger (alias seal), attach."""
         from geox_mcp.tools.claim_unified import geox_claim as _impl
 
         args = _safe_forward(
@@ -1925,7 +1925,11 @@ def register_tools_on(mcp):
         trace_id: str | None = None,
         ack_irreversible: bool = False,
     ) -> dict[str, Any]:
-        """Volumetrics, POS, EVOI, risk assessment. Pattern A wrapper."""
+        """Volumetrics, POS, EVOI, risk assessment.
+
+        verdict=commit_ledger (alias seal) writes this organ's ledger.
+        It is not an arif_judge or VAULT999 verdict. Pattern A wrapper.
+        """
         # H2 P1: Auto-inject workspace context for empty prospect_ref
         if not prospect_ref:
             try:
@@ -6607,7 +6611,13 @@ def register_tools_on(mcp):
     # ── GROUP 6: geox_claim — absorbs evidence/evidence_synthesize/falsify/contradiction_scan ──
     @mcp.tool(
         name="geox_claim",
-        description="Unified claim engine. Modes: create/validate/challenge/seal/attach (claim lifecycle), falsify (Popperian falsification), discover/synthesize/abduct/contradict/spatial_block/ingest_literature (evidence), scan (contradiction scan).",
+        description=(
+            "Unified claim engine. Modes: create/validate/challenge/commit_ledger/attach "
+            "(claim lifecycle; commit_ledger, alias seal, writes this organ's ledger and is "
+            "not an arif_judge or VAULT999 verdict), falsify (Popperian falsification), "
+            "discover/synthesize/abduct/contradict/spatial_block/ingest_literature (evidence), "
+            "scan (contradiction scan)."
+        ),
         annotations=_geox_annotations("geox_claim"),
     )
     async def _claim_unified(
@@ -6671,12 +6681,12 @@ def register_tools_on(mcp):
         """Unified claim engine — lifecycle, falsification, evidence, contradiction scanning.
 
         Modes:
-          claim lifecycle: create, validate, challenge, seal, attach
+          claim lifecycle: create, validate, challenge, commit_ledger (alias seal), attach
           falsification:   falsify (Popperian falsification engine)
           evidence:        discover, synthesize, abduct, contradict, spatial_block, ingest_literature
           scanning:        scan (contradiction scan)
         """
-        if mode in ("create", "validate", "challenge", "seal", "attach"):
+        if mode in ("create", "validate", "challenge", "commit_ledger", "seal", "attach"):
             return await _claim(
                 mode=mode,
                 claim_id=claim_id,
@@ -6758,7 +6768,11 @@ def register_tools_on(mcp):
             )
         else:
             return {
-                "error": f"Unknown mode: {mode}. Valid: create, validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan, spatial_block, ingest_literature"
+                "error": (
+                    f"Unknown mode: {mode}. Valid: create, validate, challenge, "
+                    "commit_ledger (alias seal), attach, falsify, discover, synthesize, "
+                    "abduct, contradict, scan, spatial_block, ingest_literature"
+                )
             }
 
     # GROUP 6 shims

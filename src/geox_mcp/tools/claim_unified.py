@@ -4,7 +4,7 @@ geox_claim — Unified Claim Lifecycle (Phase 2)
 Absorbs: geox_claim_create, geox_claim_validate, geox_claim_challenge,
          geox_claim_seal, geox_evidence_attach
 
-Modes: create, validate, challenge, seal, attach_evidence
+Modes: create, validate, challenge, commit_ledger (alias seal), attach_evidence
 
 DITEMPA BUKAN DIBERI — Forged, Not Given.
 """
@@ -15,7 +15,7 @@ from typing import Any, Literal
 
 
 async def geox_claim(
-    mode: Literal["create", "validate", "challenge", "seal", "attach_evidence", "falsify"] = "create",
+    mode: Literal["create", "validate", "challenge", "commit_ledger", "seal", "attach_evidence", "falsify"] = "create",
     claim_id: str = "",
     challenge_text: str = "",
     alternative_claim_text: str = "",
@@ -47,11 +47,18 @@ async def geox_claim(
       create          - Create a structured interpretation claim
       validate        - Validate claim against 16-field earth_memory_envelope
       challenge       - Challenge existing claim with alternative interpretation
-      seal            - Submit validated claim to arifOS for VAULT999 sealing
+      commit_ledger   - Write the validated claim onto this organ's ledger.
+                       Not an arif_judge or VAULT999 verdict. "seal" is an
+                       accepted alias and uses the same gate.
                        (H3 fix: requires voxel_state for well_constrained check)
       attach_evidence - Attach evidence artifact to existing claim
     """
     kwargs = locals().copy()
+    from geox_mcp.registry import is_organ_ledger_commit
+
+    if is_organ_ledger_commit(mode):
+        mode = "commit_ledger"
+        kwargs["mode"] = mode
     if mode == "validate":
         from geox_mcp.tools.claims import geox_claim_validate as _impl
 
@@ -70,7 +77,7 @@ async def geox_claim(
             challenger_provenance=kwargs.get("challenger_provenance", "GEOX Claim Engine"),
         )
 
-    if mode == "seal":
+    if mode == "commit_ledger":
         # ── H3 fix (2026-06-22): F2 TRUTH at system level ────────────────────
         # Per ADR-008, well_constrained check (obs_count >= 3 AND residual < 0.3)
         # is the system-level gate before any seal. Caller must pass `voxel_state`
@@ -90,7 +97,10 @@ async def geox_claim(
                 "floor": "F2_TRUTH",
                 "guard": "RT3",
                 "claim_id": kwargs.get("claim_id", ""),
-                "required_action": "Pass voxel_state={observation_count: int, forward_model_residual: float, ...} to geox_claim(mode='seal').",
+                "required_action": (
+                    "Pass voxel_state={observation_count: int, forward_model_residual: float, ...} "
+                    "to geox_claim(mode='commit_ledger')."
+                ),
             }
 
         obs_count = int(voxel_state.get("observation_count", 0))
@@ -118,7 +128,7 @@ async def geox_claim(
                 "required_action": (
                     "Either (a) gather more observations to bring obs_count >= 3, "
                     "or (b) improve forward-model fit to bring residual < 0.3, "
-                    "then retry seal."
+                    "then retry mode='commit_ledger'."
                 ),
             }
 
@@ -181,8 +191,18 @@ async def geox_claim(
         "ok": False,
         "isError": True,
         "error_code": "UNSUPPORTED_CLAIM_MODE",
-        "message": f"Mode '{mode}' is not implemented on geox_claim. Supported modes: create, validate, challenge, seal, attach_evidence, falsify.",
-        "supported_modes": ["create", "validate", "challenge", "seal", "attach_evidence", "falsify"],
+        "message": (
+            f"Mode '{mode}' is not implemented on geox_claim. Supported modes: "
+            "create, validate, challenge, commit_ledger (alias seal), attach_evidence, falsify."
+        ),
+        "supported_modes": [
+            "create",
+            "validate",
+            "challenge",
+            "commit_ledger",
+            "attach_evidence",
+            "falsify",
+        ],
     }
 
 

@@ -290,7 +290,11 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
     "geox_claim": ToolDiscovery(
         name="geox_claim",
         domain_verb="govern.claim",
-        description="[INTERNAL] Geological claim lifecycle: create, validate, challenge, seal, attach evidence. Structured interpretation claims.",
+        description=(
+            "[INTERNAL] Geological claim lifecycle: create, validate, challenge, "
+            "commit_ledger, attach evidence. commit_ledger (alias seal) writes this "
+            "organ's ledger. It is not an arif_judge or VAULT999 verdict."
+        ),
         use_when="Internal federation use only. For creating or managing geological claim records with full epistemic lineage.",
         do_not_use_when="User wants to gather evidence (use geox_evidence) or evaluate prospects (use geox_prospect).",
         keywords=["claim", "interpretation", "validate", "challenge", "seal", "evidence", "attach"],
@@ -301,7 +305,7 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
             "Attach well log evidence to this claim",
         ],
         domain="governance",
-        modes=["create", "validate", "challenge", "seal", "attach_evidence"],
+        modes=["create", "validate", "challenge", "commit_ledger", "attach_evidence"],
         acrisk="HOLD",
         is_888_hold=True,
     ),
@@ -327,7 +331,11 @@ TOOL_DISCOVERY: dict[str, ToolDiscovery] = {
     "geox_prospect": ToolDiscovery(
         name="geox_prospect",
         domain_verb="govern.prospect",
-        description="[INTERNAL] Prospect evaluation: volumetrics, probability of success (POS), expected value of information (EVOI), risk assessment.",
+        description=(
+            "[INTERNAL] Prospect evaluation: volumetrics, POS, EVOI, risk. "
+            "verdict=commit_ledger (alias seal) writes this organ's ledger. "
+            "It is not an arif_judge or VAULT999 verdict."
+        ),
         use_when="Internal federation use only. For prospect screening, volumetric estimation, and EVOI computation.",
         do_not_use_when="User wants to gather evidence (use geox_evidence) or make interpretation claims (use geox_claim).",
         keywords=["prospect", "volumetrics", "pos", "evoi", "risk", "stoiip", "hcpv", "evaluate"],

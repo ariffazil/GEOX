@@ -436,8 +436,8 @@ class GeoxGovernanceMiddleware(Middleware):
     # F1 AMANAH: no irreversible action without explicit human consent.
     _IRREVERSIBLE_TOOLS: frozenset[str] = frozenset(
         {
-            "geox_claim",  # mode="seal" requires ack_irreversible=True
-            "geox_prospect",  # mode="seal" requires ack_irreversible=True
+            "geox_claim",  # commit_ledger (alias seal) requires ack_irreversible=True
+            "geox_prospect",  # commit_ledger (alias seal) requires ack_irreversible=True
         }
     )
 
@@ -1003,34 +1003,37 @@ class GeoxGovernanceMiddleware(Middleware):
                 f"Scheduled removal: 2026-07-30."
             )
 
-        # ── RT3: irreversible tools require explicit ack_irreversible=True ──
-        # The check is MODE-aware, not just tool-name. Read-only / screen / compute
-        # / preview modes do NOT require ack_irreversible. Only the SEAL mode of
-        # geox_claim and geox_prospect does.
+        # ── RT3: organ-ledger writes require explicit ack_irreversible=True ──
+        # Read-only / screen / compute / preview do not. commit_ledger does,
+        # and the seal alias does too. Dropping the alias would be a hole.
+        # The write is this organ's ledger, not an arif_judge or VAULT999 verdict.
         if tool_name in self._IRREVERSIBLE_TOOLS:
+            from geox_mcp.registry import is_organ_ledger_commit
+
             # Extract effective args — handle wrapper pattern (arguments.arguments)
             effective_args = arguments
             if tool_name in self._WRAPPER_TOOLS and isinstance(arguments.get("arguments"), dict):
                 effective_args = arguments["arguments"]
             needs_ack = False
             if tool_name == "geox_claim":
-                # mode=seal is the irreversible path
-                needs_ack = (effective_args.get("mode") == "seal") or (effective_args.get("action") == "seal")
+                needs_ack = is_organ_ledger_commit(effective_args.get("mode")) or is_organ_ledger_commit(
+                    effective_args.get("action")
+                )
             elif tool_name == "geox_prospect":
-                # verdict=seal is the irreversible path
-                needs_ack = effective_args.get("verdict") == "seal"
+                needs_ack = is_organ_ledger_commit(effective_args.get("verdict")) or is_organ_ledger_commit(
+                    effective_args.get("mode")
+                )
             if needs_ack:
                 ack = effective_args.get("ack_irreversible", False)
                 if not ack:
                     logger.warning(
-                        f"RT3_BLOCK: {tool_name} in seal mode requires ack_irreversible=True. "
-                        f"F1 Amanah: irreversible operations require explicit human consent."
+                        f"RT3_BLOCK: {tool_name} commit_ledger requires ack_irreversible=True. "
+                        f"F1 Amanah: the organ-ledger write requires explicit human consent."
                     )
                     raise ToolError(
-                        f"RT3_GUARD: Tool '{tool_name}' in seal mode performs an irreversible "
-                        f"state change. F1 Amanah requires explicit human consent via "
-                        f"ack_irreversible=True. Provide ack_irreversible=True in the tool "
-                        f"call arguments to proceed."
+                        f"RT3_GUARD: Tool '{tool_name}' commit_ledger (alias seal) writes this "
+                        f"organ's ledger. It is not an arif_judge or VAULT999 verdict. "
+                        f"F1 Amanah requires ack_irreversible=True."
                     )
 
         # ── Organ governance: route C2+/IRREVERSIBLE through arifOS kernel ──

@@ -327,10 +327,10 @@ async def geox_claim_challenge(*args: Any, **kwargs: Any) -> dict:
 
 
 async def geox_claim_seal(*args: Any, **kwargs: Any) -> dict:
-    """[DEPRECATED] Use geox_claim(mode='seal') instead."""
+    """[DEPRECATED] Use geox_claim(mode='commit_ledger'). 'seal' remains a gated alias."""
     from geox_mcp.tools.claim_unified import geox_claim
 
-    kwargs.setdefault("mode", "seal")
+    kwargs.setdefault("mode", "commit_ledger")
     return await geox_claim(*args, **kwargs)
 
 

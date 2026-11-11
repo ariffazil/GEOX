@@ -18,7 +18,7 @@ async def geox_prospect(
         "screen", "appraise", "develop", "falsify", "cabar", "inverse_volumetrics", "decompose", "trajectory"
     ] = "screen",
     evidence_refs: list[str] | None = None,
-    verdict: Literal["compute", "preview", "seal"] = "compute",
+    verdict: Literal["compute", "preview", "commit_ledger", "seal"] = "compute",
     ack_irreversible: bool = False,
     judge_pin: str | None = None,
     structural_map_inline: dict[str, Any] | None = None,

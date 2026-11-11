@@ -137,8 +137,13 @@ _ACTION_CLASS_AUTH: dict[str, str] = {
 #
 # Both lists feed ``required_authority_for`` and are evaluated before the
 # manifest's action_class is consulted. The audit-reproducible cases live
-# here: the SEAL modes of geox_claim / geox_prospect MUST require
-# LIMITED_MUTATE even though the manifest declares action_class: OBSERVE.
+# here: geox_claim mode and geox_prospect verdict MUST require
+# LIMITED_MUTATE on the organ-ledger write even though the manifest
+# declares action_class: OBSERVE. "seal" remains an alias so the old
+# spelling cannot skip the gate. Neither value is an arif_judge or
+# VAULT999 verdict.
+ORGAN_LEDGER_COMMIT_VALUES = frozenset({"commit_ledger", "seal"})
+
 _MUTATING_ARG_OVERRIDES: dict[str, tuple[str, ...]] = {
     # tool_name: tuple of arg_names; any-true → LIMITED_MUTATE
     "geox_well_ingest": ("overwrite",),
@@ -146,10 +151,20 @@ _MUTATING_ARG_OVERRIDES: dict[str, tuple[str, ...]] = {
 }
 
 _MUTATING_VALUE_OVERRIDES: dict[str, dict[str, Any]] = {
-    # tool_name: {arg_name: matching_value}; match → LIMITED_MUTATE
-    "geox_claim": {"mode": "seal"},  # mode=seal is the irreversible path
-    "geox_prospect": {"verdict": "seal"},  # verdict=seal is the irreversible path
+    # tool_name: {arg_name: matching_value}; a set matches any member
+    "geox_claim": {"mode": ORGAN_LEDGER_COMMIT_VALUES},
+    "geox_prospect": {"verdict": ORGAN_LEDGER_COMMIT_VALUES},
 }
+
+
+def is_organ_ledger_commit(value: Any) -> bool:
+    """True for commit_ledger and the seal alias.
+
+    The alias stays gated. Dropping it would let mode=seal or
+    verdict=seal skip LIMITED_MUTATE, RT3, and IRREVERSIBLE.
+    """
+    return str(value or "").strip().lower() in ORGAN_LEDGER_COMMIT_VALUES
+
 
 # Env flag: when false, session enforcement is bypassed for OBSERVE-only
 # tools (backward-compat). When true (default for production), every call
@@ -192,7 +207,11 @@ def required_authority_for(tool_name: str, arguments: dict[str, Any] | None = No
     value_override = _MUTATING_VALUE_OVERRIDES.get(tool_name)
     if value_override:
         for arg_name, expected in value_override.items():
-            if arguments.get(arg_name) == expected:
+            actual = arguments.get(arg_name)
+            if isinstance(expected, (set, frozenset, tuple)):
+                if str(actual or "").strip().lower() in {str(item).lower() for item in expected}:
+                    return "LIMITED_MUTATE"
+            elif actual == expected:
                 return "LIMITED_MUTATE"
 
     # 2. manifest action_class

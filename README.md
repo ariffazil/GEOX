@@ -184,7 +184,7 @@ Non-uniqueness (returns the candidate set with falsifiers, never "the" answer) �
 
 ### Boundaries
 
-No publish to federation databases · no field control (no actuator surfaces) · no authority above `555_COMPUTE_ONLY` · no silent escalation — every call carries provenance. **Writes, precisely:** two tools mutate *local* state only — `geox_well_ingest(overwrite=true)` writes the local ingest workspace, and `geox_claim(mode='seal')` records an organ-local claim-ledger transition (bookkeeping, not judgment — constitutional SEAL belongs to `arif_judge` alone). Full write policy: [pre-doctrine archive](./docs/archive/README-2026-10-16-pre-doctrine.md#authority-floor).
+No publish to federation databases · no field control (no actuator surfaces) · no authority above `555_COMPUTE_ONLY` · no silent escalation — every call carries provenance. **Writes, precisely:** two tools mutate *local* state only — `geox_well_ingest(overwrite=true)` writes the local ingest workspace, and `geox_claim(mode='commit_ledger')` records an organ-local claim-ledger transition (`mode='seal'` remains a gated alias). Bookkeeping, not an `arif_judge` or VAULT999 verdict. Full write policy: [pre-doctrine archive](./docs/archive/README-2026-10-16-pre-doctrine.md#authority-floor).
 
 ### Images & multimodal
 
