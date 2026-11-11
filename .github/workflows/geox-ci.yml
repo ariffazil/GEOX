@@ -125,6 +125,7 @@ jobs:
             tests/test_mcp_apps_readiness.py \
             tests/test_demo_well_hydrate.py \
             tests/test_visual_image_publish.py \
+            tests/test_evidence_contract_parity.py \
             tests/alignment/
 
   organ-boundary:
