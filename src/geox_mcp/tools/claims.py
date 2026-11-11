@@ -572,16 +572,17 @@ async def geox_claim_seal(
     **kwargs: Any,
 ) -> dict[str, Any]:
     """
-    Submit a validated claim to arifOS for Vault999 sealing.
+    Write a validated claim onto this organ's ledger.
 
-    Routes to the arifOS kernel which performs final constitutional checks
-    (F1 AMANAH gate, F13 SOVEREIGN veto) before writing to VAULT999.
-    GEOX does not perform constitutional adjudication — it merely forwards
-    the claim for arifOS to judge.
+    The public argument is geox_claim(mode='commit_ledger'). "seal" is an
+    accepted alias and stays behind the same ack gate. This write is not
+    an arif_judge verdict and it does not append VAULT999. When arifOS is
+    reachable the function still forwards a request; a local receipt is
+    not a constitutional seal.
 
-    SEAL: Claim is constitutionally approved, irreversibly sealed.
-    SABAR: Claim is held — needs more evidence or human review.
-    VOID: Claim is rejected or self-contradictory.
+    seal_verdict stays the internal recommendation string (SEAL/SABAR/VOID).
+    SABAR: held — needs more evidence or human review.
+    VOID: rejected or self-contradictory.
 
     Args:
         claim_id: ID of the validated claim to seal.
@@ -596,14 +597,14 @@ async def geox_claim_seal(
             "status": "HOLD",
             "error_code": "RT3_GUARD_F1_AMANAH",
             "message": (
-                "SEAL verdict is a constitutional adjudication (irreversible). "
-                "F1 AMANAH requires ack_irreversible=True. "
-                "Provide ack_irreversible=True in the tool call to proceed."
+                "mode=commit_ledger writes this organ's claim ledger. "
+                "It is not an arif_judge or VAULT999 verdict. "
+                "F1 AMANAH requires ack_irreversible=True."
             ),
             "guard": "RT3",
             "floor": "F1_AMANAH",
             "claim_id": claim_id,
-            "required_action": "Set ack_irreversible=True to confirm irreversible seal.",
+            "required_action": "Set ack_irreversible=True to confirm the organ-ledger write.",
         }
 
     # Fetch claim from store

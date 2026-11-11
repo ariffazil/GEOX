@@ -82,6 +82,16 @@ async def test_geox_prospect_governance_lane_split():
         )
         assert verdict == "HOLD", f"verdict=seal must be blocked for OBSERVE_ONLY, got {verdict}"
 
+        # 6. verdict=commit_ledger is the same gate under the public name
+        verdict, err, _ = await check_governance(
+            tool_name="geox_prospect",
+            arguments={"mode": "screen", "verdict": "commit_ledger"},
+            session_authority="OBSERVE_ONLY",
+            actor_id="test_agent",
+            session_id="SEAL-123456789012",
+        )
+        assert verdict == "HOLD", f"verdict=commit_ledger must be blocked for OBSERVE_ONLY, got {verdict}"
+
 
 @pytest.mark.asyncio
 async def test_geox_prospect_screen_labels_and_forbidden_use():
