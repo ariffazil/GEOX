@@ -1943,6 +1943,11 @@ capability_packs:
     - geox_register_native_source
     - geox_extract_native_trace
     - geox_list_registered_sources
+    # RT1: the recovery tool (geox_surface_status) must be reachable through
+    # EVERY discovery profile — an operator holding an evidence package needs
+    # the surface truth to verify what the package claims. The pack stays
+    # operator-gated and unlisted from default/specialist/research.
+    - geox_surface_status
 workflow_packs:
   well_to_correlation:
     label: Well → Correlation

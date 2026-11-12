@@ -15,16 +15,28 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _llms_tools() -> list[str]:
+    """Parse the public tool list out of llms.txt.
+
+    Two formats are accepted because two generators have written this file
+    over time: the canonical family-grouped form ("## 1. Capability Graph —
+    Tool Surface", bullets "- **tool** [Tier ...]") and the earlier flat form
+    ("## 1. Canonical Tool Surface", numbered "1. **tool**: ..."). The check
+    that matters is that llms.txt NAMES every public tool; the layout it uses
+    to do so is the generator's business, not this parser's.
+    """
     tools: list[str] = []
     capture = False
     for line in (ROOT / "llms.txt").read_text(encoding="utf-8").splitlines():
-        if line.strip() == "## 1. Canonical Tool Surface":
+        stripped = line.strip()
+        if stripped.startswith("## 1."):
             capture = True
             continue
-        if capture and line.startswith("## 2."):
+        if capture and stripped.startswith("## 2."):
             break
-        if capture and ". **geox_" in line:
-            tools.append(line.split("**", 2)[1])
+        if capture and "**geox_" in line:
+            name = line.split("**", 2)[1].strip()
+            if name.startswith("geox_"):
+                tools.append(name)
     return tools
 
 
