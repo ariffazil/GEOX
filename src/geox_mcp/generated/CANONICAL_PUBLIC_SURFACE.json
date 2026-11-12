@@ -1,6 +1,6 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-11-12T10:09:34.515332+00:00",
+  "generated_at": "2026-11-12T10:25:12.147847+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
   "public_count": 27,
   "internal_count": 22,
@@ -573,7 +573,8 @@
         "geox_extract_display_proxy",
         "geox_register_native_source",
         "geox_extract_native_trace",
-        "geox_list_registered_sources"
+        "geox_list_registered_sources",
+        "geox_surface_status"
       ]
     }
   },
@@ -684,9 +685,10 @@
         "geox_extract_display_proxy",
         "geox_register_native_source",
         "geox_extract_native_trace",
-        "geox_list_registered_sources"
+        "geox_list_registered_sources",
+        "geox_surface_status"
       ],
-      "count": 5
+      "count": 6
     }
   },
   "workflow_packs": {
