@@ -21,8 +21,8 @@ unit, ada poligon peta umum".
 | Live organ | :8081, 27/27 public tools, surface_drift ok (gap 0) | OBS |
 | /health status | `degraded`, kernel_verdict HOLD | OBS |
 | Degraded cause | `geox_source_drift.drift=true` — deployed HEAD `7b480f90f` ≠ origin/main `ad150e7a`, 28 files apart | OBS |
-| Repo topology | THREE trees on THREE history lines: origin/main (ad150e7a) · /root/GEOX feat branch (00583d3f) · /opt/geox deployed (7b480f90f). None is an ancestor of the others. | OBS |
-| /root/GEOX dirty? | Clean on branch `feat/federation-flow-chron-frame` | OBS |
+| Repo topology | THREE trees on THREE history lines: origin/main (ad150e7a) · `<review-tree>` feat branch (00583d3f) · `<deploy-tree>` deployed (7b480f90f). None is an ancestor of the others. | OBS |
+| `<review-tree>` dirty? | Clean on branch `feat/federation-flow-chron-frame` | OBS |
 
 **What I landed (committed, tested, NOT deployed):**
 commit `a616818b` on feat branch — coverage class + upstream build stamp in the macrostrat lane.
@@ -44,12 +44,12 @@ change applies with **zero collateral** — but see §5 before deploying.
 | Preflight gate | PASS (split-root, orphan-assets, phantom-200) |
 | Upstream build stamp | **DEPLOYED + LIVE** — stat-meta and click panel now name `api-v2 2.6.0`; omitted honestly if the probe fails |
 | Committed | `9e68f5e` on branch `feat/earth-upstream-build-stamp` (only the earth file; the repo's other 28 dirty files are another lane's parked work, untouched) |
-| Rollback | `/var/www/html/earth/index.html.bak-20261112T161617` · `/var/www/html/arif/earth/index.html.bak-20261112T161646` |
+| Rollback | `<deployment-root>/earth/index.html.bak-20261112T161617` · `<deployment-root>/arif/earth/index.html.bak-20261112T161646` |
 
-**New defect found and filed (`p2-earth-split-root-homepage-served-from-arif-copy`):**
-`/earth/` (homepage) is served from `/var/www/html/arif/earth/` via `handle @static_dirs`
+**New defect found and filed (internal tracker):**
+`/earth/` (homepage) is served from `<deployment-root>/arif/earth/` via `handle @static_dirs`
 (literal `/earth` paths outrank `handle /earth*`), while `/earth/*` subpages come from
-`/var/www/html/earth/` via `handle /earth*`. My first rsync went to the wrong copy and the
+`<deployment-root>/earth/` via `handle /earth*`. My first rsync went to the wrong copy and the
 live page did not change; site-preflight PASSed anyway because it reads the vhost text and
 does not model Caddy matcher precedence. Deploy now goes to BOTH roots; verify by comparing
 the live body, not the status code.
@@ -84,7 +84,7 @@ Caddy proxy also adds `Cache-Control: immutable` and measured faster than direct
 
 ---
 
-## 5. MENUNGGU ARIF (perintah tepat, jangan laksana dari lane ini)
+## 5. PENDING MAINTAINER DECISION (exact commands — do not execute from the agent lane)
 
 **Why not me:** GATE HOLD (G 0.55/0.80, W3 0.61/0.75) + /health degraded (source drift) + a restart
 of a production organ under HOLD. Also: the only reconciliation target for the deployed tree is
@@ -93,17 +93,17 @@ origin/main, and that swap is 28 files wide including `session_enforcement.py` a
 
 **(a) Setelah P0 reconcile selesai — satu laluan ke hadapan:**
 ```
-cd /root/GEOX && git checkout main && git cherry-pick a616818b   # my 2-file change onto origin/main
-cd /opt/geox && git pull && systemctl restart geox-mcp
+cd <review-tree> && git checkout main && git cherry-pick a616818b   # 2-file change onto origin/main
+cd <deploy-tree> && git pull && systemctl restart geox-mcp
 make deploy-gate
 # verify: geox_basin(mode='macrostrat_units', lat=6.0814, lng=116.7241) → coverage_class=map_polygon
 ```
-Recommendation: reconcile /opt/geox onto origin/main first (28-file swap, needs its own gate),
+Recommendation: reconcile the deploy tree onto origin/main first (28-file swap, needs its own gate),
 THEN apply my commit. Do not swap origin/main onto the live organ blind.
 
 **(b) Site push (publish):**
 ```
-cd /root/arif-fazil.com && git push -u origin feat/earth-upstream-build-stamp
+# publish the branch through the configured release remote
 ```
 The change is already live and verified on the wire; push only syncs the public repo.
 
@@ -111,9 +111,9 @@ The change is already live and verified on the wire; push only syncs the public 
 
 ## 6. Receipts
 
-- GEOX commit: `a616818b` (signed, claude lane key) — /root/GEOX feat/federation-flow-chron-frame
-- Site commit: `9e68f5e` (signed) — /root/arif-fazil.com feat/earth-upstream-build-stamp
-- Queue: `p2-geox-macrostrat-coverage-class` updated · `p2-earth-split-root-homepage-served-from-arif-copy` appended (tasks.json 626→627, backup `tasks.json.bak-20261112T082139Z`)
+- GEOX commit: `a616818b` (signed) — branch `feat/federation-flow-chron-frame`
+- Site commit: `9e68f5e` (signed) — site repo, branch `feat/earth-upstream-build-stamp`
+- Queue rows: maintained in the internal task registry (identifiers withheld from public docs)
 - Live verification: /earth/ serves `msBuild` x4 + `api/v2/version` x1, `cf-cache-status: DYNAMIC`
 - Receipt dir: this file
 
@@ -121,7 +121,7 @@ The change is already live and verified on the wire; push only syncs the public 
 
 ## 7. FEDERATION + MCP ERA (added 2026-11-12, after the observatory probe)
 
-`/root/GEOX/scripts/federation_conformance.py` (commit 4d2d15cc) measures four axes. Results:
+`scripts/federation_conformance.py` (commit 4d2d15cc) measures four axes. Results:
 
 | Axis | Verdict | Owner | Measured |
 |---|---|---|---|
@@ -130,14 +130,12 @@ The change is already live and verified on the wire; push only syncs the public 
 | GEOX own surface | PARTIAL | GEOX deploy lane | `/federation` and `/flow` are 404 live — the routes exist only on the undeployed branch |
 | MCP era | **NOT_ALIGNED** | GEOX deploy lane | a 2026-07-28 client is downgraded to 2025-11-25; installed fastmcp 3.4.7 (knows eras ≤ 2025-06-18) vs pyproject pin `fastmcp[apps,tasks]==4.1.4`; fastmcp-slim 4.1.4 carries the 2026-07-28 era |
 
-**The pin is already correct — the venvs are stale.** No source change is required for the era; the fix is a venv sync inside the deploy, sequenced after the P0 /opt/geox reconciliation, with the suite run against 4.1.4 before the restart.
+**The pin is already correct — the venvs are stale.** No source change is required for the era; the fix is a venv sync inside the deploy, sequenced after the P0 deploy-tree reconciliation, with the suite run against 4.1.4 before the restart.
 
 **Fixed on the site side (commit 842c614, live-verified):** the Observatory edge panel claimed
 `3 directed · 0 observed · 3 declared overlays` while the kernel declares and probes 11 with
 11/11 transport-reachable. It now reads the published aggregate:
 `11 declared · 11 transport-reachable · 0 semantically proven · TRANSPORT_ALIGNED · 3 declared overlays · per-edge detail not published in public-state`.
 
-Queue rows added: `p1-geox-mcp-era-2026-07-28-not-negotiated` ·
-`p2-geox-federation-flow-routes-only-on-branch` ·
-`p2-arifos-edge-list-not-published-and-0-of-11-semantically-proven` ·
-`p2-observatory-live-renderer-ahead-of-repo`.
+Queue rows added: four rows tracked in the internal task registry (identifiers withheld from
+public docs).
