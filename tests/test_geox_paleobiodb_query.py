@@ -190,7 +190,8 @@ async def test_live_age_intervals_returns_ics() -> None:
 @pytest.mark.network
 @pytest.mark.asyncio
 async def test_live_zone_nannofossil() -> None:
-    """Live PBDB scale=5 returns calcareous nannoplankton zones (NN/NP)."""
+    """Live PBDB nanno timescale name returns NN zones. Ids 5 and 24 are retired."""
     result = await geox_paleobiodb_query(mode="zone", fossil_group="calcareous_nannofossil")
-    assert result["status"] in ("ok", "partial")
-    assert result["data"]["pbdb_scale"] == 5
+    assert result["status"] == "ok"
+    assert result["data"]["pbdb_scale"] == "Calcareous Nannoplankton Zones"
+    assert result["data"]["count"] > 0
