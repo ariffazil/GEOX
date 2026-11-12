@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-11-04T11:19:09.471475+00:00
+# Regenerated: 2026-11-12T10:09:34.515332+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.11.04
+schema_version: 2026.11.12
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -18,7 +18,7 @@ mcp_endpoints:
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
 canonical_tool_count: 27
-contract_epoch: 2026-11-04-GEOX-27TOOLS-ZEN
+contract_epoch: 2026-11-12-GEOX-27TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -30,7 +30,10 @@ tools:
     capability_tier: A
     risk_tier: readonly
     description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
-      mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+      mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
+      Macrostrat-backed modes name the coverage class (unit_polygon / map_polygon
+      / none) and the upstream build that answered, so a zero count is never read
+      as "no bedrock".'
   geox_calibration_register_witness:
     category: earth.structural
     lane: compute
@@ -48,7 +51,9 @@ tools:
     risk_tier: readonly
     description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
       synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
-      discover, synthesize, abduct, contradict, scan.'
+      discover, synthesize, abduct, contradict, scan. Every claim edge carries an
+      epistemic label, a coverage score and a falsifier state (FALSIFIABLE / UNFALSIFIABLE_AS_STATED
+      / UNVERIFIED) — a claim with no falsifier is flagged, never hidden.'
   geox_contrast_metabolize:
     category: earth.seismic
     lane: reasoning
@@ -66,8 +71,10 @@ tools:
     family: evidence
     capability_tier: A
     risk_tier: readonly
-    description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes:
-      dde_reason.'
+    description: 'Deep time: Earth state, dynamical systems, DDE reasoning over the
+      Macrostrat lexicon (columns, units, intervals). Modes: dde_reason. It reasons
+      over the published lexicon, NOT over the literature knowledge graph — that graph
+      is not a public route.'
   geox_extract_display_proxy:
     category: earth.seismic
     lane: compute
@@ -226,7 +233,9 @@ tools:
     capability_tier: A
     risk_tier: readonly
     description: 'Canonical registry probe: public surface truth (count, canonical_tools,
-      verdict). Self-witness for surface SOT.'
+      verdict, live_counts, deployed build). Self-witness for surface SOT; the same
+      surface reports the federation edge aggregate and the inherited constitutional
+      verdict, so a degraded sibling is visible instead of silent.'
   geox_temporal:
     category: earth.temporal
     lane: compute

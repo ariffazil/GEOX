@@ -145,7 +145,8 @@ tools:
   face: surface
   visibility: public
   description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context,
-    deep time, tectonic reconstruction.'
+    deep time, tectonic reconstruction. Macrostrat-backed modes name the coverage class (unit_polygon / map_polygon /
+    none) and the upstream build that answered, so a zero count is never read as "no bedrock".'
   input_schema_source: callable
   annotations:
     read_only: true
@@ -1461,7 +1462,9 @@ tools:
   lane: compute
   face: surface
   visibility: public
-  description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.'
+  description: 'Deep time: Earth state, dynamical systems, DDE reasoning over the Macrostrat lexicon (columns, units,
+    intervals). Modes: dde_reason. It reasons over the published lexicon, NOT over the literature knowledge graph —
+    that graph is not a public route.'
   annotations:
     read_only: true
     destructive: false
@@ -1478,7 +1481,9 @@ tools:
   face: surface
   visibility: public
   description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify, synthesize, contradict. Modes: create,
-    validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan.'
+    validate, challenge, seal, attach, falsify, discover, synthesize, abduct, contradict, scan. Every claim edge
+    carries an epistemic label, a coverage score and a falsifier state (FALSIFIABLE / UNFALSIFIABLE_AS_STATED /
+    UNVERIFIED) — a claim with no falsifier is flagged, never hidden.'
   annotations:
     read_only: false
     destructive: false
@@ -1587,7 +1592,9 @@ tools:
   lane: compute
   face: surface
   visibility: public
-  description: 'Canonical registry probe: public surface truth (count, canonical_tools, verdict). Self-witness for surface SOT.'
+  description: 'Canonical registry probe: public surface truth (count, canonical_tools, verdict, live_counts, deployed
+    build). Self-witness for surface SOT; the same surface reports the federation edge aggregate and the inherited
+    constitutional verdict, so a degraded sibling is visible instead of silent.'
   annotations:
     read_only: true
     destructive: false
