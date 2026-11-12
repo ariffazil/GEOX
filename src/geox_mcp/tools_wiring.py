@@ -3826,7 +3826,7 @@ def register_tools_on(mcp):
     ) -> dict[str, Any]:
         """Look up canonical zone metadata: scheme, age range, source.
 
-        Uses PBDB intervals for nanno (scale=5) and foram (scale=24) zones.
+        Uses PBDB intervals by timescale name (numeric ids 5 and 24 are retired).
         SE Asia-specific schemes (Lunt 2016 LBF, SSB 1995/2013, Morley 1991) are
         NOT in PBDB — returns SCHEME_NOT_IN_PBDB; use Mikrotax or local reference.
 
@@ -3853,21 +3853,26 @@ def register_tools_on(mcp):
                 "error": "Required argument 'zone_code' not provided.",
             }
 
-        # Scheme → PBDB scale mapping. ROUTING ONLY — no new zonation schemes.
-        # nanno scales: NN/NP/CC/CN/CP/CNP/CNE/CNO → 5; foram scales: N/P/Wade → 24.
+        # Scheme → PBDB timescale name. ROUTING ONLY — no new zonation schemes.
+        # Numeric ids 5 and 24 were retired on data1.2 (timescale not found).
         # SE Asia schemes (LBF/SSB/Morley) intentionally absent → SCHEME_NOT_IN_PBDB.
+        from geox_mcp.tools.biostrat.taxonomy import (
+            PBDB_SCALE_FORAM,
+            PBDB_SCALE_NANNO,
+        )
+
         scheme_to_scale = {
-            "Martini_1971_NN": 5,
-            "Martini_1971_NP": 5,
-            "Sissingh_1977_CC": 5,
-            "Bukry_1973_CN": 5,
-            "Okada_Bukry_1980_CP": 5,
-            "Agnini_2014_CNP": 5,
-            "Agnini_2014_CNE": 5,
-            "Agnini_2014_CNO": 5,
-            "Blow_1969_N": 24,
-            "Blow_1969_P": 24,
-            "Wade_2011": 24,
+            "Martini_1971_NN": PBDB_SCALE_NANNO,
+            "Martini_1971_NP": PBDB_SCALE_NANNO,
+            "Sissingh_1977_CC": PBDB_SCALE_NANNO,
+            "Bukry_1973_CN": PBDB_SCALE_NANNO,
+            "Okada_Bukry_1980_CP": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNP": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNE": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNO": PBDB_SCALE_NANNO,
+            "Blow_1969_N": PBDB_SCALE_FORAM,
+            "Blow_1969_P": PBDB_SCALE_FORAM,
+            "Wade_2011": PBDB_SCALE_FORAM,
         }
         if scheme not in scheme_to_scale:
             return {
@@ -3886,7 +3891,11 @@ def register_tools_on(mcp):
 
         client = PBDBClient()
         try:
-            intervals = await client.intervals_list(scale=scale, limit=200)
+            intervals = await client.intervals_list(scale=scale, limit=500)
+            # Captured before close(): if the timescale name itself stopped
+            # resolving upstream, ZONE_NOT_FOUND must say so (same failure class
+            # as the retired numeric ids 5/24), not hide behind available_count=0.
+            upstream_warnings = list(client.last_warnings)
         finally:
             await client.close()
 
@@ -3904,7 +3913,11 @@ def register_tools_on(mcp):
                 "tool": "geox_biostrat_lookup_zone",
                 "reason_code": "ZONE_NOT_FOUND",
                 "error": f"Zone '{zone_code}' not found in PBDB scale={scale} (scheme={scheme}).",
-                "data": {"scale": scale, "available_count": len(intervals)},
+                "data": {
+                    "scale": scale,
+                    "available_count": len(intervals),
+                    "upstream_warnings": upstream_warnings,
+                },
             }
         return {
             "ok": True,
@@ -3913,8 +3926,8 @@ def register_tools_on(mcp):
                 "zone_code": zone_code,
                 "scheme": scheme,
                 "name": match.get("nam"),
-                "age_top_ma": match.get("ea"),
-                "age_bottom_ma": match.get("la"),
+                "age_top_ma": match.get("eag", match.get("ea")),
+                "age_bottom_ma": match.get("lag", match.get("la")),
                 "pbdb_oid": match.get("oid"),
             },
             "source": "PBDB",
