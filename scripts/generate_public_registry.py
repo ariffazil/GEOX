@@ -147,7 +147,18 @@ def main() -> int:
     write_json(ROOT / ".well-known" / "tools.json", build_tools_snapshot())
     write_json(ROOT / ".well-known" / "openapi.json", build_openapi_snapshot())
     write_json(ROOT / "tools.json", build_root_tools_manifest())
-    (ROOT / "llms.txt").write_text(build_llms_txt(), encoding="utf-8")
+    # llms.txt is owned by scripts/generate_all_surfaces.py — it carries the
+    # family/tier grouped catalog and the canonical metadata the parity gate
+    # checks. The local build_llms_txt() here was a STALE second writer: when
+    # tests/test_transport_manifest.py ran this script it overwrote the
+    # canonical llms.txt with a flat 38-line list, losing the tool catalog and
+    # failing test_llms_txt_has_canonical_metadata. One owner, one writer.
+    try:
+        from generate_all_surfaces import regenerate_llms_txt
+
+        regenerate_llms_txt(dry_run=False)
+    except Exception as exc:  # noqa: BLE001 - never let a surface block the build
+        print(f"WARNING: llms.txt regeneration delegated to generate_all_surfaces failed: {exc}")
     print("generated: .well-known/tools.json .well-known/openapi.json tools.json llms.txt")
     return 0
 

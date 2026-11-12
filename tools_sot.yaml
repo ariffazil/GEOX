@@ -1,9 +1,9 @@
 organ: GEOX
-version: 2026.11.04
+version: 2026.11.12
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
 public_count: 27
-regenerated: '2026-11-04T11:19:09.471475+00:00'
+regenerated: '2026-11-12T10:09:34.515332+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
@@ -19,7 +19,10 @@ tools:
   tier: A
   access: public
   description: 'Unified basin intelligence: profile, resolve, macrostrat, backstrip,
-    mass balance, thermal maturity, map context, deep time, tectonic reconstruction.'
+    mass balance, thermal maturity, map context, deep time, tectonic reconstruction.
+    Macrostrat-backed modes name the coverage class (unit_polygon / map_polygon /
+    none) and the upstream build that answered, so a zero count is never read as "no
+    bedrock".'
   annotations:
     read_only: true
     destructive: false
@@ -47,7 +50,9 @@ tools:
   access: public
   description: 'Claim lifecycle: create, validate, challenge, seal, evidence, falsify,
     synthesize, contradict. Modes: create, validate, challenge, seal, attach, falsify,
-    discover, synthesize, abduct, contradict, scan.'
+    discover, synthesize, abduct, contradict, scan. Every claim edge carries an epistemic
+    label, a coverage score and a falsifier state (FALSIFIABLE / UNFALSIFIABLE_AS_STATED
+    / UNVERIFIED) — a claim with no falsifier is flagged, never hidden.'
   annotations:
     read_only: true
     destructive: false
@@ -74,7 +79,10 @@ tools:
   family: evidence
   tier: A
   access: public
-  description: 'Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.'
+  description: 'Deep time: Earth state, dynamical systems, DDE reasoning over the
+    Macrostrat lexicon (columns, units, intervals). Modes: dde_reason. It reasons
+    over the published lexicon, NOT over the literature knowledge graph — that graph
+    is not a public route.'
   annotations:
     read_only: true
     destructive: false
@@ -323,7 +331,9 @@ tools:
   tier: A
   access: public
   description: 'Canonical registry probe: public surface truth (count, canonical_tools,
-    verdict). Self-witness for surface SOT.'
+    verdict, live_counts, deployed build). Self-witness for surface SOT; the same
+    surface reports the federation edge aggregate and the inherited constitutional
+    verdict, so a degraded sibling is visible instead of silent.'
   annotations:
     read_only: true
     destructive: false

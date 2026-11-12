@@ -90,10 +90,39 @@ import threading
 
 _ARIFOS_BASE = os.getenv("ARIFOS_BASE_URL", "http://localhost:8088")
 _ARIFOS_TIMEOUT_S = float(os.getenv("ARIFOS_SESSION_TIMEOUT_S", "3.0"))
+# TOTAL wall-clock budget for the whole constitutional probe, not per HTTP call.
+# The probe is a LADDER: session-init + notifications + verify + (on 400/404) a
+# fresh session-init + notifications + verify again. With a 3 s cap PER CALL
+# that is up to six sequential calls — 18-20 s of blocking. Measured on
+# 2026-11-12: arifOS /mcp tools/call took 12.3-19.1 s while its plain HTTP
+# /health took 0.008 s, and GEOX tools/call inherited 20-24 s. GEOX must not
+# turn "arifOS is slow" into "GEOX is slow"; it must bound the dependency and
+# answer HOLD/UNKNOWN promptly (F2 TRUTH, F4 CLARITY).
+_ARIFOS_TOTAL_BUDGET_S = float(os.getenv("ARIFOS_TOTAL_BUDGET_S", "3.0"))
 _KERNEL_VERIFY_TTL_S = 60.0  # cache TTL
 
 # Three-state sentinel: arifOS unreachable is NOT the same as "valid".
 _TRANSPORT_DEGRADED = object()
+
+
+class _ProbeBudgetExhausted(Exception):
+    """The total constitutional-probe budget is spent — stop, do not start another call."""
+
+
+def _probe_deadline() -> float:
+    """Monotonic deadline for one whole constitutional probe."""
+    return time.monotonic() + _ARIFOS_TOTAL_BUDGET_S
+
+
+def _probe_timeout(deadline: float | None) -> float:
+    """Per-call timeout clamped to whatever remains of the total budget."""
+    if deadline is None:
+        return _ARIFOS_TIMEOUT_S
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise _ProbeBudgetExhausted("constitutional probe budget exhausted")
+    return max(0.2, min(_ARIFOS_TIMEOUT_S, remaining))
+
 
 # P3 2026-07-31 (FI-008 GEOX jam flow-restore): sync Mcp-Session-Id manager.
 # arifOS MCP requires a valid Mcp-Session-Id for all post-initialize calls.
@@ -103,10 +132,10 @@ _arifos_mcp_session_id: str | None = None
 _arifos_mcp_session_lock = threading.Lock()
 
 
-def _ensure_arifos_mcp_session() -> str | None:
+def _ensure_arifos_mcp_session(deadline: float | None = None) -> str | None:
     """Get a valid arifOS MCP session ID. Initializes on first call or after
     expiry. Returns the session ID (to use in Mcp-Session-Id header) or None
-    if arifOS is unreachable.
+    if arifOS is unreachable or the probe budget is spent.
     """
     global _arifos_mcp_session_id
     with _arifos_mcp_session_lock:
@@ -132,7 +161,7 @@ def _ensure_arifos_mcp_session() -> str | None:
                 "Content-Type": "application/json",
                 "Accept": "application/json, text/event-stream",
             },
-            timeout=_ARIFOS_TIMEOUT_S,
+            timeout=_probe_timeout(deadline),
         )
         sid = r.headers.get("mcp-session-id") or r.headers.get("Mcp-Session-Id")
         if sid:
@@ -149,11 +178,16 @@ def _ensure_arifos_mcp_session() -> str | None:
                         "Accept": "application/json, text/event-stream",
                         "Mcp-Session-Id": sid,
                     },
-                    timeout=_ARIFOS_TIMEOUT_S,
+                    timeout=_probe_timeout(deadline),
                 )
+            except _ProbeBudgetExhausted:
+                raise
             except Exception:
                 pass  # non-blocking
             return sid
+    except _ProbeBudgetExhausted:
+        logger.warning("arifOS MCP initialize skipped — constitutional probe budget exhausted")
+        raise
     except Exception as exc:
         logger.warning("arifOS MCP initialize failed: %s", exc)
     return None
@@ -206,7 +240,10 @@ def _cached_kernel_verify(
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
-        arifos_sid = _ensure_arifos_mcp_session()
+        # ONE budget for the whole constitutional probe (F2 TRUTH: GEOX must
+        # not inherit arifOS's latency as its own answer latency).
+        deadline = _probe_deadline()
+        arifos_sid = _ensure_arifos_mcp_session(deadline)
         if arifos_sid:
             headers["Mcp-Session-Id"] = arifos_sid
 
@@ -222,14 +259,15 @@ def _cached_kernel_verify(
                 },
             },
             headers=headers,
-            timeout=_ARIFOS_TIMEOUT_S,
+            timeout=_probe_timeout(deadline),
         )
-        # Session expired: invalidate cache, retry once with fresh session
+        # Session expired: invalidate cache, retry once with fresh session —
+        # but only if the probe budget still allows it.
         if r.status_code in (400, 404) and "session" in r.text.lower():
             global _arifos_mcp_session_id
             with _arifos_mcp_session_lock:
                 _arifos_mcp_session_id = None
-            arifos_sid = _ensure_arifos_mcp_session()
+            arifos_sid = _ensure_arifos_mcp_session(deadline)
             if arifos_sid:
                 headers["Mcp-Session-Id"] = arifos_sid
             r = httpx.post(
@@ -244,7 +282,7 @@ def _cached_kernel_verify(
                     },
                 },
                 headers=headers,
-                timeout=_ARIFOS_TIMEOUT_S,
+                timeout=_probe_timeout(deadline),
             )
         if r.status_code == 200:
             data = r.json()
