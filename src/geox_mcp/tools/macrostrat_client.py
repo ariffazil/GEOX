@@ -340,6 +340,73 @@ class MacrostratClient:
         params.update(extra)
         return await self._request("geologic_units/map", params)
 
+    # ── Coverage ─────────────────────────────────────────────────────────
+
+    async def get_coverage_class(
+        self,
+        lat: float,
+        lng: float,
+        radius_km: float | None = None,
+        units: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        """Classify what Macrostrat actually carries at a point.
+
+        F2 TRUTH: a zero from /units is not "no bedrock here". It can mean
+        "no unit-level polygons, only a generalized map polygon" — the
+        distinction the earth page already states in prose but the macrostrat
+        lane used to leave implicit. This probe asks both layers and names the
+        class, so a caller never has to infer it from a bare count.
+
+        `units` may be passed in when the caller already fetched them, to avoid
+        a second round-trip.
+        """
+        if units is None:
+            units_raw = await self.get_units(lat=lat, lng=lng, radius_km=radius_km)
+            units = self.get_units_summary(units_raw)
+
+        map_raw = await self.get_geologic_units_map(lat=lat, lng=lng, radius_km=radius_km)
+        map_data = map_raw.get("success", {}).get("data", [])
+        if isinstance(map_data, dict):
+            map_data = map_data.get("features", [])
+        if not isinstance(map_data, list):
+            map_data = []
+
+        if units:
+            coverage_class = "unit_polygon"
+            explanation = (
+                "Unit-level polygons present — formation names, lithology and age "
+                "resolve from a measured stratigraphic column."
+            )
+        elif map_data:
+            coverage_class = "map_polygon"
+            explanation = (
+                "No unit-level polygons here; a generalized map polygon exists. "
+                "The rock package is known, the formation-level detail is not."
+            )
+        else:
+            coverage_class = "none"
+            explanation = (
+                "No mapped bedrock at this point. Over ocean or outside every "
+                "mapped area — not a coverage failure of the query."
+            )
+
+        map_unit: dict[str, Any] | None = None
+        if map_data and isinstance(map_data[0], dict):
+            first = map_data[0]
+            map_unit = {
+                k: first.get(k)
+                for k in ("name", "lith", "t_age", "b_age", "best_int_name", "color", "source_id")
+                if k in first
+            }
+
+        return {
+            "coverage_class": coverage_class,
+            "coverage_explanation": explanation,
+            "unit_polygon_count": len(units),
+            "map_polygon_count": len(map_data),
+            "map_unit": map_unit,
+        }
+
     # ── Definitions ──────────────────────────────────────────────────────
 
     async def get_lithologies(self, all_: bool = True) -> dict[str, Any]:
@@ -414,6 +481,28 @@ class MacrostratClient:
     async def get_stats(self) -> dict[str, Any]:
         """Get database statistics."""
         return await self._request("stats", {"all": True})
+
+    # ── API Build ────────────────────────────────────────────────────────
+
+    async def get_api_version(self) -> dict[str, Any]:
+        """Get the running Macrostrat API build (version, commit, build date).
+
+        Upstream moved API v2 into UW-Macrostrat/macrostrat (services/api-v2)
+        on 2026-10-20 and ships releases as api-v2-vX.Y.Z. This build stamp is
+        how GEOX answers "which upstream am I talking to" at runtime instead of
+        guessing from a file or from memory.
+        """
+        raw = await self._request("version")
+        if not isinstance(raw, dict) or "error" in raw:
+            return {"available": False, "error": raw.get("error") if isinstance(raw, dict) else "bad_payload"}
+        return {
+            "available": True,
+            "service": raw.get("service"),
+            "version": raw.get("version"),
+            "commit": raw.get("commit"),
+            "build_date": raw.get("build_date"),
+            "repository": raw.get("repository"),
+        }
 
     # ── Utility ──────────────────────────────────────────────────────────
 

@@ -804,9 +804,19 @@ async def geox_basin_profile(
                 if mode == "macrostrat_units":
                     raw = await client.get_units(lat=lat, lng=lng, radius_km=100)
                     items = client.get_units_summary(raw)
+                    # F2 TRUTH: name the coverage class beside the count. A bare
+                    # unit_count:0 over Malaysia read as "no bedrock here" when
+                    # the truth is "no unit polygons; a generalized map polygon
+                    # exists". Also stamp the upstream build the answer came from.
+                    coverage = await client.get_coverage_class(lat=lat, lng=lng, radius_km=100, units=items)
                     mode_data = {
                         "units": items,
                         "unit_count": len(items),
+                        "coverage_class": coverage["coverage_class"],
+                        "coverage_explanation": coverage["coverage_explanation"],
+                        "map_polygon_count": coverage["map_polygon_count"],
+                        "map_unit": coverage["map_unit"],
+                        "upstream_api": await client.get_api_version(),
                         "source": "macrostrat.org/api/v2/units",
                         "license": "CC-BY-4.0",
                         "attribution": client.attribution_markdown(),
@@ -920,7 +930,16 @@ async def geox_basin_profile(
                         lith_summary[key] = lith_summary.get(key, 0) + 1
                     mode_data = {
                         "map_polygon_count": len(data),
+                        "coverage_class": "map_polygon" if data else "none",
+                        "coverage_explanation": (
+                            "Generalized map polygons present — rock package and age "
+                            "are known; formation-level unit polygons are not."
+                            if data
+                            else "No mapped bedrock at this point — over ocean or "
+                            "outside every mapped area."
+                        ),
                         "lithology_summary": dict(sorted(lith_summary.items(), key=lambda x: -x[1])[:15]),
+                        "upstream_api": await client.get_api_version(),
                         "source": "macrostrat.org/api/v2/geologic_units/map",
                         "license": "CC-BY-4.0",
                         "attribution": client.attribution_markdown(),
