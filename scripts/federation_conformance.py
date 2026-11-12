@@ -114,25 +114,45 @@ def axis_aaa() -> dict:
     out["checks"]["organs_yaml_entry"] = declared
 
     code, text = _get(f"{AAA}/health")
-    named = "geox" in text.lower()
     out["checks"]["aaa_health_code"] = code
-    out["checks"]["aaa_health_names_geox"] = named
-
+    out["checks"]["aaa_health_names_geox"] = "geox" in text.lower()
     geo = None
     if code == 200:
         d = _json(text) or {}
         geo = d.get("federation_geometry") or {}
     out["checks"]["aaa_federation_geometry"] = geo
 
-    if declared and named:
-        out["verdict"] = "FUSED"
-        out["note"] = "GEOX is in AAA's canonical registry and AAA's live view names it."
+    # AAA's organ registry is /federation/organs — /health does NOT enumerate
+    # organs, so reading /health for GEOX is a false negative.
+    code, text = _get(f"{AAA}/federation/organs")
+    reg = None
+    if code == 200:
+        d = _json(text) or {}
+        for o in d.get("organs", []) or []:
+            if str(o.get("organId", "")).lower() == "geox":
+                reg = o
+                break
+        out["checks"]["aaa_registry_code"] = code
+        out["checks"]["aaa_registry_count"] = d.get("count")
+    out["checks"]["aaa_registry_geox"] = reg
+
+    if declared and reg:
+        state = str(reg.get("state") or "").lower()
+        out["verdict"] = "FUSED" if state == "active" else "PARTIAL"
+        out["note"] = (
+            "GEOX is in AAA's canonical machine registry (organs.yaml) AND in AAA's live "
+            "organ registry with state="
+            + str(reg.get("state"))
+            + ", trustGrade="
+            + str(reg.get("trustGrade"))
+            + "."
+        )
     elif declared:
         out["verdict"] = "PARTIAL"
         out["note"] = (
-            "GEOX is in AAA's canonical machine registry (organs.yaml) but AAA's live "
-            "health does not name it. The registry entry is the declaration; the live "
-            "view is the proof, and they disagree."
+            "GEOX is in AAA's canonical machine registry (organs.yaml) but is ABSENT from "
+            "AAA's live organ registry (/federation/organs). The registry entry is the "
+            "declaration; the live registry is the proof, and they disagree."
         )
     else:
         out["note"] = "GEOX is absent from AAA's canonical machine registry."
@@ -167,19 +187,36 @@ def axis_kernel() -> dict:
     code, text = _get(f"{ARIFOS}/api/public-state")
     d = _json(text) or {}
     published = d.get("federation_edges")
+    aggregate = d.get("federation")
     out["checks"]["public_state_code"] = code
     out["checks"]["public_state_publishes_federation_edges"] = published is not None
     out["checks"]["public_state_federation_edges_type"] = type(published).__name__ if published is not None else "ABSENT"
+    out["checks"]["public_state_edge_aggregate"] = aggregate
 
     if in_manifest and out["checks"]["geox_both_directions"]:
-        out["verdict"] = "PARTIAL" if published is None else "FUSED"
+        agg = aggregate if isinstance(aggregate, dict) else {}
+        declared_n = agg.get("declared")
+        reachable_n = agg.get("reachable")
+        semantic_n = agg.get("semantic_proven")
+        out["verdict"] = "FUSED" if published is not None else "PARTIAL"
         out["note"] = (
             "arifOS declares GEOX in the federation manifest and probes BOTH edge "
             "directions ("
             + ", ".join(geox_edges)
-            + "), but the public-state payload publishes no federation_edges key, so "
-            "the Observatory edge panel cannot show them. A declared edge that is "
-            "never published is PARTIAL, not FUSED."
+            + "). The published aggregate reports declared="
+            + str(declared_n)
+            + " reachable="
+            + str(reachable_n)
+            + " semantically_proven="
+            + str(semantic_n)
+            + " state="
+            + str(agg.get("aggregate_state"))
+            + ". The per-edge LIST is not published in the sanitized projection, so the "
+            "Observatory can show the aggregate but not the individual edges — and "
+            "semantically_proven="
+            + str(semantic_n)
+            + " means the edges are transport-reachable, not yet proven to carry "
+            "session/actor/trace/receipt."
             if published is None
             else "GEOX is in the manifest, both edge directions are declared, and the edges are published."
         )
