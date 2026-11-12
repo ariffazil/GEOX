@@ -1,7 +1,13 @@
 """geox_dde_reason — DDE Neuro-Symbolic Reasoner.
 
-Deep-time Digital Earth ontology + Macrostrat knowledge graph reasoning.
-Neuro-symbolic: NLP query -> structured KG -> physics validation.
+Deep-time Digital Earth ontology + Macrostrat lexicon reasoning.
+Neuro-symbolic: NLP query -> structured lexicon -> physics validation.
+
+F2 TRUTH: this queries the Macrostrat API v2 LEXICON (columns, units,
+intervals) — NOT the literature knowledge graph. Upstream's
+`macrostrat_kg` schema (xDD extraction + human review) is not a public
+route and is not reachable from here. Do not describe this tool as
+knowledge-graph reasoning.
 
 DITEMPA BUKAN DIBERI.
 """
