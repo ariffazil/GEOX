@@ -3,7 +3,7 @@
 v0.2 (2026-11-12) adds the SPINE DECISION (§4a), the two missing edge fields
 valid_time + geometry_context (§4), and the FALSIFIER soft requirement (§4b).
 
-Arif's correction applied (2026-11-12, ENTERPRISE PARTIAL→SEAL architecture):
+Maintainer correction applied (2026-11-12, ENTERPRISE PARTIAL→SEAL architecture):
 *xDD KG, H3, claims, topology and plate rotation are NOT five competitors for
 "GEOX Knowledge Graph" — they are five layers of different reality.*
 
@@ -43,7 +43,7 @@ Each layer is a graph with its own edges. Cross-layer edges are the only edges t
 
 ## 2. THE PROOF THAT DECIDED THE PATH (measured, not assumed)
 
-Arif asked: *prove whether the existing EarthGraph is actually instantiated and mutated anywhere
+Maintainer directive: *prove whether the existing EarthGraph is actually instantiated and mutated anywhere
 in live GEOX.* Measured 2026-11-12:
 
 | Check | Result | Instrument |
@@ -56,7 +56,7 @@ in live GEOX.* Measured 2026-11-12:
 
 **Verdict: the EarthGraph skeleton exists, is empty, and nothing can ever fill it.**
 Therefore: do not build another graph. **Promote this dormant skeleton into the canonical
-Physical Reality Graph.** (Arif's instruction, now measured and confirmed.)
+Physical Reality Graph.** (maintainer instruction, now measured and confirmed.)
 
 Semantic renames (conceptual contract first; code renames only when the layer is wired):
 ```
@@ -186,7 +186,7 @@ answers "what is known about X" and silently returns 78 untestable statements am
 9 testable ones is lying by omission.
 
 **Target:** Slice 2 ships the `falsifier_state` field and the label propagation.
-Raising 9/87 is content work (Arif's judgement, not an agent's) and is tracked
+Raising 9/87 is content work (maintainer judgement, not an agent's) and is tracked
 separately — the instrument comes first.
 
 ## 5. IDENTITY (one node, many sources)
@@ -196,7 +196,7 @@ Node key = `(entity_type, external_ref)`.
   `macrostrat:strat_name:<id>`, `macrostrat:source:<id>` — the canonical lexicon keys.
 - Local half: `local:well:<well_id>`, `local:survey:<id>`, `local:obs:<sha256-prefix>`.
 
-One `Formation X` node receives the Macrostrat unit polygon, Arif's basin-profile stratigraphy,
+One `Formation X` node receives the Macrostrat unit polygon, the basin-profile stratigraphy,
 and the log interval from a LAS — as three edges, not three nodes.
 
 ---
@@ -218,7 +218,7 @@ invented unit where coverage says none exists.
 
 ---
 
-## 7. BUILD PATH (Arif's phases; revised by the census + proof)
+## 7. BUILD PATH (maintainer's phases; revised by the census + proof)
 
 | Phase | Content | Prereq | Size |
 |---|---|---|---|
@@ -230,7 +230,7 @@ invented unit where coverage says none exists.
 | 5 | **Literature witness**: xDD/KG as an *evidence provider* — `passage → asserts → Claim → about → node`. It supports claims; it never writes reality edges | Phase 2 | medium |
 | 6 | **Topology** (face/edge/node adjacency) only if geological use-cases prove it necessary | use-case | large |
 
-**Do not** build xDD, topology-manager, Corelle and map ingestion simultaneously (Arif).
+**Do not** build xDD, topology-manager, Corelle and map ingestion simultaneously (maintainer directive).
 **Do not** start Phase 3 before Phase 2 has bindings (census logic: observations with nothing to
 bind to are a dashboard with a database behind it).
 
@@ -250,9 +250,9 @@ import infrastructure because the upstream project happens to use it.
 
 ## 9. RECEIPTS
 
-- Census: `/root/GEOX` commit `4259d9ac`, `scripts/earth_graph_census.py` (runnable)
+- Census: repo commit `4259d9ac`, `scripts/earth_graph_census.py` (runnable)
 - Runtime proof: `journalctl -u geox-mcp` — `EGS state initialized: graph v1, claims=0, provenance_chains=0` at every start incl. PID 1421087 (2026-11-11T16:06:09Z, still running)
 - Dead-surface proof: `server.py:399` `# register_egs_tools(mcp)` (commented out) · `basin.py` zero EGS references · live tools/list = 27, no egs_*
-- Deploy-gate invariant (Arif's finding, built): `/root/arif-fazil.com` commit `96d1025` — `scripts/verify-served-state.py` + self-test 7/7 + `make verify-served`
+- Deploy-gate invariant (maintainer's finding, built): site repo commit `96d1025` — `scripts/verify-served-state.py` + self-test 7/7 + `make verify-served`
 - Macrostrat architecture: macrostrat.org/docs/platform/system-architecture · UW-Macrostrat/corelle · Mapboard/topology-manager · UW-Macrostrat/macrostrat-xdd
 - Supersedes: EARTH-REALITY-GRAPH.md §5 build path (kept for the census numbers and gap table)
