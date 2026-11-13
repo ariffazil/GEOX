@@ -7774,10 +7774,20 @@ def register_tools_on(mcp):
                 return None
 
         _tool_names = await _live_tool_names()
+        from collections import Counter as _Counter
+
+        _counts = _Counter(_tool_names or [])
+        _dupes = sorted(n for n, c in _counts.items() if c > 1)
+        _unique = len(_counts)
         _public_names = sorted({n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS})
         live_counts = {
             "tools": len(_public_names) if _tool_names is not None else None,
-            "tools_total": len(_tool_names) if _tool_names is not None else None,
+            # S2 (2026-10-28): a count built as a set difference can never detect a
+            # duplicate. tools_total is now UNIQUE names; entries and the duplicate
+            # names are reported separately so the collision is visible, not absorbed.
+            "tools_total": _unique if _tool_names is not None else None,
+            "tools_entries": len(_tool_names) if _tool_names is not None else None,
+            "tools_duplicate_names": _dupes if _tool_names is not None else None,
             "resources": await _live_count("list_resources"),
             "prompts": await _live_count("list_prompts"),
             # OBS instrument (2026-10-15): the live name list settles count
