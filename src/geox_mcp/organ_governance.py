@@ -1164,7 +1164,6 @@ async def check_governance(
     # evaluate/appraise/develop is C2_EXECUTE (requires OPERATOR).
     if tool_name == "geox_prospect":
         from geox_mcp.registry import is_organ_ledger_commit
-
         effective = arguments or {}
         if isinstance(effective.get("arguments"), dict):
             effective = effective["arguments"]

@@ -92,7 +92,6 @@ async def test_geox_prospect_governance_lane_split():
         )
         assert verdict == "HOLD", f"verdict=commit_ledger must be blocked for OBSERVE_ONLY, got {verdict}"
 
-
 @pytest.mark.asyncio
 async def test_geox_prospect_screen_labels_and_forbidden_use():
     """mode=screen outputs must carry ASSUMPTION label and forbidden_use disclaimer."""

@@ -38,6 +38,13 @@ def _coerce_float(v):
         return None
 
 
+
+def _coerce_float(v):
+    try:
+        return float(v) if v not in (None, "", "0", "0.0") else None
+    except (TypeError, ValueError):
+        return None
+
 class PBDBClient:
     """Async client for the Paleobiology Database (PBDB) REST API.
 
