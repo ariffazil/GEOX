@@ -39,7 +39,7 @@ def _public_tool_row(tool) -> dict:
 
 
 def build_tools_snapshot() -> dict:
-    app_export = set(plugin_export_tool_names())
+    app_export = sorted(set(plugin_export_tool_names()))  # sorted: PYTHONHASHSEED set-order broke reproducibility (test_generated_artifacts_are_reproducible)
     tools = []
     for tool in manifest_tools():
         tools.append(
@@ -71,7 +71,7 @@ def build_tools_snapshot() -> dict:
 
 
 def build_openapi_snapshot() -> dict:
-    app_export = set(plugin_export_tool_names())
+    app_export = sorted(set(plugin_export_tool_names()))  # sorted: PYTHONHASHSEED set-order broke reproducibility (test_generated_artifacts_are_reproducible)
     public_rows = [_public_tool_row(tool) for tool in public_tools() if tool.name in app_export]
     return {
         "openapi": "3.0.0",
@@ -101,7 +101,7 @@ def build_openapi_snapshot() -> dict:
 
 
 def build_root_tools_manifest() -> dict:
-    app_export = set(plugin_export_tool_names())
+    app_export = sorted(set(plugin_export_tool_names()))  # sorted: PYTHONHASHSEED set-order broke reproducibility (test_generated_artifacts_are_reproducible)
     public_list = list(public_tools())
     return {
         "version": datetime.now(UTC).strftime("%Y.%m.%d"),
