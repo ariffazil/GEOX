@@ -325,6 +325,5 @@ Macrostrat answers what is *mapped*; GEOX answers what is *measured*. The two ar
 duplicates: Macrostrat's geology is regional surface geology at map scale, and GEOX says so out loud —
 every Macrostrat-backed answer carries a `coverage_class` (`unit_polygon` / `map_polygon` / `none`)
 and the upstream build that produced it, so a zero is never read as "no bedrock here".
-
 Canonical Witness Ledger: [EXTERNAL_WITNESS_LEDGER.md](https://github.com/ariffazil/arifOS/blob/main/docs/EXTERNAL_WITNESS_LEDGER.md)
 
