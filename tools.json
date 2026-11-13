@@ -91,8 +91,7 @@
     "geox_glof_cascade_mcmc_inverse",
     "geox_glof_cascade_propagate"
   ],
-  "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026.11.12 \u2014 app_export \u2282 public (27 of 27 tools plugin-exposed)",
+  "manifest_path": "src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS",
   "public": [
     "geox_basin",
     "geox_calibration_register_witness",
@@ -122,5 +121,6 @@
     "geox_well_ingest",
     "geox_well_qc"
   ],
-  "version": "2026.11.12"
+  "version": "2026.11.13",
+  "policy": "Generated 2026-11-13T05:08:19.920552+00:00 — public = registry.py::CANONICAL_PUBLIC_TOOLS (27 tools)"
 }

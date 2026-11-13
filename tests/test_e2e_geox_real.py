@@ -283,6 +283,18 @@ def test_actual_registered_tool_count():
         "velocity_structural_qc.py": 1,
         "geox_interpolate_grid.py": 1,
         "_register.py": 1,  # one imperative register_tools_on_server call
+        # forge/amplitude-gates family (merged 2026-11-13, zen/unified-main) —
+        # 10 decorator-based seismic tools, pending F13 before surface publication.
+        "seismic_polarity_register.py": 1,
+        "seismic_artifact_get.py": 1,
+        "seismic_attribute_compute.py": 1,
+        "seismic_display_trace.py": 1,
+        "seismic_age_assign.py": 1,
+        "seismic_render_publication.py": 1,
+        "seismic_alternative_interpret.py": 1,
+        "seismic_volume_register.py": 1,
+        "seismic_horizon_track.py": 1,
+        "seismic_display_spectral_character.py": 1,
     }
     expected = sum(expected_decorator_files.values())
 
