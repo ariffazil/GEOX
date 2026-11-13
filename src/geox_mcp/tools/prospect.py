@@ -66,6 +66,23 @@ async def geox_prospect_evaluate(
         return _err
     refs = evidence_refs or []
 
+    # ── P0_PROMOTION INVARIANT (Phase B2 - ARIF): Reject unaccepted CandidateGeometry ──
+    if structural_map_inline and isinstance(structural_map_inline, dict):
+        epistemic = structural_map_inline.get("epistemic_status")
+        promo = structural_map_inline.get("promotion_state")
+        if epistemic == "HYPOTHESIS" or (promo is not None and promo != "HUMAN_ACCEPTED"):
+            return {
+                "ok": False,
+                "error": "REJECTED_UNACCEPTED_CANDIDATE",
+                "message": (
+                    f"Volumetric consumption requires HUMAN_ACCEPTED promotion state (found promotion_state='{promo}'). "
+                    "CandidateGeometry under HYPOTHESIS/GENERATED/SURVIVES_TEST cannot be used for volumetric evaluation."
+                ),
+                "epistemic_status": "HYPOTHESIS",
+                "p0_governance": "P0_PROMOTION_HOLD",
+                "local_verdict": "QUALIFIED_CANDIDATE",
+            }
+
     # ── NEW MODES (F13-ratified 2026-09-20): chance-factor decomposition + maturation curve
     # These modes do NOT require evidence_refs — they are pure POS mathematics.
     # Inserted before the existing mode dispatch so they short-circuit cleanly.

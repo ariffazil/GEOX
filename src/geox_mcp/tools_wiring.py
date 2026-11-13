@@ -165,7 +165,43 @@ def register_tools_on(mcp):
     @mcp.tool(
         name="geox_observe",
         annotations=_geox_annotations("geox_observe"),
-        meta={"ui": {"resourceUri": "ui://geox/earth-volume"}},
+        meta={
+            "ui": {
+                "resourceUri": "ui://geox/earth-volume",
+                "title": "GEOX Earth Volume",
+                "renderMode": "panel",
+                "mimeType": "text/html;profile=mcp-app",
+                "domain": "https://geox.arif-fazil.com",
+                "csp": {
+                    "connectDomains": ["geox.arif-fazil.com", "macrostrat.org"],
+                    "resourceDomains": [
+                        "geox.arif-fazil.com",
+                        "unpkg.com",
+                        "tile.openstreetmap.org",
+                        "cdn.jsdelivr.net",
+                        "cdn.plot.ly",
+                        "cdn.tailwindcss.com",
+                        "fonts.googleapis.com",
+                        "fonts.gstatic.com",
+                    ],
+                },
+            },
+            "openai/outputTemplate": "ui://geox/earth-volume",
+            "openai/widgetCSP": {
+                "connect_domains": ["geox.arif-fazil.com", "macrostrat.org"],
+                "resource_domains": [
+                    "geox.arif-fazil.com",
+                    "unpkg.com",
+                    "tile.openstreetmap.org",
+                    "cdn.jsdelivr.net",
+                    "cdn.plot.ly",
+                    "cdn.tailwindcss.com",
+                    "fonts.googleapis.com",
+                    "fonts.gstatic.com",
+                ],
+                "redirect_domains": ["geox.arif-fazil.com"],
+            },
+        },
     )
     async def _earth_observe(
         artifact_ref: str | dict[str, Any],

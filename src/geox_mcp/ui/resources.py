@@ -35,6 +35,9 @@ GEOX_RESOURCE_CSP = ResourceCSP(
         "tile.openstreetmap.org",
         "cdn.jsdelivr.net",
         "cdn.plot.ly",
+        "cdn.tailwindcss.com",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com",
     ],
 )
 
