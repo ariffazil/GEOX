@@ -1,0 +1,5 @@
+{"ts": "2026-09-24T08:43:01.299142+00:00", "trace_id": "VR-TEST-ROTA", "model": "fun-asr", "seconds_burned": 5.0, "pool_total_s": 36000, "lane": "PAYG_free_quota"}
+{"ts": "2026-09-24T08:43:15.806520+00:00", "trace_id": "VR-MANUAL-CHECK", "model": "fun-asr", "seconds_burned": 5, "pool_total_s": 36000, "lane": "PAYG_free_quota"}
+{"ts": "2026-09-24T08:44:51.838397+00:00", "trace_id": "VR-20260924T084445-12219ef966544b51", "model": "fun-asr", "seconds_burned": 64.0, "pool_total_s": 36000, "lane": "PAYG_free_quota"}
+{"ts": "2026-09-24T08:44:58.236262+00:00", "trace_id": "VR-20260924T084451-322a44eb8b4e601a", "model": "fun-asr", "seconds_burned": 87.0, "pool_total_s": 36000, "lane": "PAYG_free_quota"}
+{"ts": "2026-09-24T08:45:28.376799+00:00", "trace_id": "VR-20260924T084521-5835f6bb925c7427", "model": "fun-asr", "seconds_burned": 71.0, "pool_total_s": 36000, "lane": "PAYG_free_quota"}
