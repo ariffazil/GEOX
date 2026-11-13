@@ -19,6 +19,7 @@ on the artifact), not the responsibility of this reader.
 
 DITEMPA BUKAN DIBEI — Forged, not given.
 """
+
 from __future__ import annotations
 
 import json
@@ -64,9 +65,11 @@ def _validate_against_schema(payload: dict, kind: str) -> tuple[bool, str | None
     try:
         if kind == "volume_manifest":
             from geox.seismic.contracts import VolumeManifest
+
             VolumeManifest.model_validate(payload)
         elif kind == "derived_volume_manifest":
             from geox.seismic.contracts import DerivedVolumeManifest
+
             DerivedVolumeManifest.model_validate(payload)
         elif kind == "qc_receipt":
             QCReceipt.model_validate(payload)
@@ -128,11 +131,13 @@ class FileBackend(ArtifactBackend):
 async def geox_seismic_artifact_get(
     artifact_id: str = "",
     include_qc: bool = True,
-    backend: ArtifactBackend | None = None,
+    # Annotated Any: an ArtifactBackend instance is injected by direct callers
+    # (tests), never sent over the wire — a concrete ABC breaks pydantic schema
+    # generation at tool registration.
+    backend: Any = None,
     session_id: str | None = None,
     actor_id: str | None = None,
     trace_id: str | None = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Retrieve a seismic artifact by ID, validated against its contract schema.
 

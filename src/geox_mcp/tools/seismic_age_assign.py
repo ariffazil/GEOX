@@ -13,6 +13,7 @@ evidence_class=OBSERVATION, claim_ceiling=HYPOTHESIS.
 
 DITEMPA BUKAN DIBEI — Forged, not given.
 """
+
 from __future__ import annotations
 
 import json
@@ -27,9 +28,7 @@ logger = logging.getLogger("geox.seismic_age_assign")
 
 TOOL_NAME = "geox_seismic_age_assign"
 
-DEFAULT_STRATIGRAPHY_PATH = os.path.join(
-    os.path.dirname(__file__), "..", "resources", "nw_sabah_surfaces.json"
-)
+DEFAULT_STRATIGRAPHY_PATH = os.path.join(os.path.dirname(__file__), "..", "resources", "nw_sabah_surfaces.json")
 
 
 def _load_stratigraphy(path: str | None = None) -> dict:
@@ -38,9 +37,7 @@ def _load_stratigraphy(path: str | None = None) -> dict:
         return json.load(f)
 
 
-def _interp_pixels_to_twt_ms(
-    p1: Polyline, p2: Polyline, twt_ms_per_pixel: float = 1.0
-) -> float:
+def _interp_pixels_to_twt_ms(p1: Polyline, p2: Polyline, twt_ms_per_pixel: float = 1.0) -> float:
     """Median vertical separation between two Polylines in TWT ms.
 
     Both Polylines are pixel-coordinates (uncalibrated by default).
@@ -71,14 +68,17 @@ async def geox_seismic_age_assign(
     session_id: str | None = None,
     trace_id: str | None = None,
     ctx: Any = None,
-    **extra_kwargs: Any,
+    pair_horizon_payload: Any = None,
 ) -> dict[str, Any]:
     """Assign canonical age range to a horizon.
 
     For this slice, age assignment uses the published age band of the
     REFERENCE_SURFACE as a HINT, not an authority. To estimate age from
-    thickness (e.g., interval between two horizons), pass two horizons
-    via `extra_kwargs={'pair_horizon_payload': <other_polyline>}`.
+    thickness (e.g., interval between two horizons), pass the other
+    horizon as `pair_horizon_payload=<other_polyline>`.
+
+    (Was **extra_kwargs — fastmcp rejects var-keyword tool signatures;
+    explicit param keeps the same call shape.)
     """
     strat = _load_stratigraphy(stratigraphy_path)
     surfaces = strat["surfaces"]
@@ -87,13 +87,15 @@ async def geox_seismic_age_assign(
         return _envelope(
             status="HOLD",
             error=f"unknown reference_surface={reference_surface!r}; valid: {list(surfaces)}",
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         )
 
     ref = surfaces[reference_surface]
 
     # If a pair horizon is provided, apply plausibility gate
-    pair_payload = extra_kwargs.get("pair_horizon_payload")
+    pair_payload = pair_horizon_payload
     plausibility = {"checked": False}
     if pair_payload is not None:
         try:
@@ -103,14 +105,18 @@ async def geox_seismic_age_assign(
             return _envelope(
                 status="HOLD",
                 error=f"polyline validation failed: {type(e).__name__}: {e}",
-                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
             )
 
         if horizon_poly is None:
             return _envelope(
                 status="HOLD",
                 error="pair_horizon_payload provided but no horizon_payload",
-                session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+                session_id=session_id,
+                actor_id=actor_id,
+                trace_id=trace_id,
             )
 
         thickness_ms = _interp_pixels_to_twt_ms(horizon_poly, pair_poly, twt_ms_per_pixel)
@@ -126,7 +132,9 @@ async def geox_seismic_age_assign(
             return {
                 **_envelope(
                     status="HOLD",
-                    session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+                    session_id=session_id,
+                    actor_id=actor_id,
+                    trace_id=trace_id,
                 ),
                 "data": {
                     "reference_surface": reference_surface,
@@ -145,7 +153,9 @@ async def geox_seismic_age_assign(
     return {
         **_envelope(
             status="OK",
-            session_id=session_id, actor_id=actor_id, trace_id=trace_id,
+            session_id=session_id,
+            actor_id=actor_id,
+            trace_id=trace_id,
         ),
         "data": {
             "horizon_artifact_id": horizon_artifact_id,

@@ -89,7 +89,6 @@ async def geox_seismic_horizon_track(
     session_id: str | None = None,
     trace_id: str | None = None,
     ctx: Any = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Auto-track a horizon through a 3D seismic volume.
 

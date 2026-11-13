@@ -73,7 +73,6 @@ async def geox_seismic_volume_register(
     session_id: str | None = None,
     trace_id: str | None = None,
     ctx: Any = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Register a SEG-Y Rev 2 file as a VolumeManifest.
 

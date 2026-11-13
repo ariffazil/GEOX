@@ -134,7 +134,6 @@ async def geox_seismic_render_publication(
     trace_id: str | None = None,
     conventions_path: str | None = None,
     ctx: Any = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Render a deterministic publication-quality image.
 

@@ -92,7 +92,6 @@ async def geox_seismic_attribute_compute(
     session_id: str | None = None,
     trace_id: str | None = None,
     ctx: Context | None = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Compute a seismic attribute volume.
 
