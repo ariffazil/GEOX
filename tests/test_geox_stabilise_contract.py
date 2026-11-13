@@ -56,7 +56,7 @@ def _post(payload: dict, session_id: str | None = None) -> tuple[dict | None, st
     req = urllib.request.Request(GEOX_MCP, data=json.dumps(payload).encode(), headers=HDRS, method="POST")
     if session_id:
         req.add_header("Mcp-Session-Id", session_id)
-    with urllib.request.urlopen(req, timeout=15) as resp:
+    with urllib.request.urlopen(req, timeout=45) as resp:  # slow-200 organs (sovereign-home §2: 2s probe = false DOWN)
         sid = resp.headers.get("Mcp-Session-Id") or session_id
         raw = resp.read().decode()
         ctype = resp.headers.get("Content-Type", "")
@@ -107,7 +107,7 @@ def _tool_call(sid: str, name: str, args: dict | None = None) -> dict:
 
 
 def _get_json(url: str) -> dict:
-    with urllib.request.urlopen(urllib.request.Request(url, headers={"Accept": "application/json"}), timeout=10) as r:
+    with urllib.request.urlopen(urllib.request.Request(url, headers={"Accept": "application/json"}), timeout=45) as r:  # slow-200 organs
         return json.loads(r.read().decode())
 
 
