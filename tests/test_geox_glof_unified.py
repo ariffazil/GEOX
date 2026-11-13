@@ -51,11 +51,13 @@ async def test_glof_run_mode():
         domain_bounds_z_m=300.0,
         resolution_m=20.0,
         dam_height_m=80.0,
-        # Positive lake head — EMPTY_SIMULATION guard (77c06808) correctly
-        # fails a cascade with no water in the lake (Q_peak=0, head=0).
-        water_head_initial_m=25.0,
-        n_steps=10,
-        dt_sec=1.0,
+        # Breach-scale simulation: guards (EMPTY_SIMULATION / NUMERICAL_
+        # INSTABILITY, 77c06808) correctly fail short runs — no breach in
+        # 10x1s, Q_peak=0, G=NaN. 120x60s with a real lake head breaches
+        # at ~81 min: Q=7750, G=0.7368 (measured 2026-11-13).
+        water_head_initial_m=50.0,
+        n_steps=120,
+        dt_sec=60.0,
     )
     assert result["ok"] is True, f"run mode failed: {result}"
     assert result["tool"] == "geox_glof"
@@ -64,7 +66,7 @@ async def test_glof_run_mode():
     assert "breach_summary" in res, "breach_summary key missing"
     bs = res["breach_summary"]
     assert "state_id" in bs
-    assert bs["n_steps"] == 10
+    assert bs["n_steps"] == 120  # matches the breach-scale fixture above
     # G_score present (may be None if metabolize couldn't compute, but key exists)
     assert "G_score" in res
 
