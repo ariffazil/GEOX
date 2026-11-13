@@ -108,3 +108,7 @@ sessions/
 *.bak-*
 *.bak
 voice/quarantine/
+
+# SOVEREIGN-HOME hygiene (2026-11-13): never re-add — vault artifacts + logs
+999_vault/
+voice/out/
