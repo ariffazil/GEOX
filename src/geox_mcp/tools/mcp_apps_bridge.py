@@ -729,6 +729,9 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
                         "tile.openstreetmap.org",
                         "cdn.jsdelivr.net",
                         "cdn.plot.ly",
+                        "cdn.tailwindcss.com",
+                        "fonts.googleapis.com",
+                        "fonts.gstatic.com",
                     ],
                 },
                 # SEP-973: Additional tool metadata
@@ -748,6 +751,9 @@ def mcp_apps_resource(app_id: str, params: dict[str, Any] | None = None) -> dict
                     "tile.openstreetmap.org",
                     "cdn.jsdelivr.net",
                     "cdn.plot.ly",
+                    "cdn.tailwindcss.com",
+                    "fonts.googleapis.com",
+                    "fonts.gstatic.com",
                 ],
                 "redirect_domains": ["geox.arif-fazil.com"],
             },
@@ -1418,6 +1424,18 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
                 for k, v in sub_comps.items():
                     all_components[k].append(v)
 
+    csp_connect = ["geox.arif-fazil.com", "macrostrat.org"]
+    csp_resource = [
+        "geox.arif-fazil.com",
+        "unpkg.com",
+        "tile.openstreetmap.org",
+        "cdn.jsdelivr.net",
+        "cdn.plot.ly",
+        "cdn.tailwindcss.com",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com",
+    ]
+
     def _inject_widget_meta(comp: Any, app_info: dict[str, Any], uri: str) -> None:
         """Inject ChatGPT widget metadata into a tool component's meta dict."""
         if not hasattr(comp, "meta") or comp.meta is None:
@@ -1428,19 +1446,17 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
             "renderMode": app_info["render_mode"],
             "mimeType": app_info["mime_type"],
             "domain": "https://geox.arif-fazil.com",
+            "csp": {
+                "connectDomains": csp_connect,
+                "resourceDomains": csp_resource,
+            },
         }
         comp.meta["openai/outputTemplate"] = uri
         comp.meta["openai/toolInvocation/invoking"] = f"Rendering {app_info['title']}..."
         comp.meta["openai/toolInvocation/invoked"] = f"{app_info['title']} ready"
         comp.meta["openai/widgetCSP"] = {
-            "connect_domains": ["geox.arif-fazil.com", "macrostrat.org"],
-            "resource_domains": [
-                "geox.arif-fazil.com",
-                "unpkg.com",
-                "tile.openstreetmap.org",
-                "cdn.jsdelivr.net",
-                "cdn.plot.ly",
-            ],
+            "connect_domains": csp_connect,
+            "resource_domains": csp_resource,
             "redirect_domains": ["geox.arif-fazil.com"],
         }
         wd = app_info.get("widget_description")
@@ -1492,10 +1508,21 @@ def enrich_mcp_tools_with_apps(mcp: Any) -> None:
                 if ui_uri:
                     if not hasattr(comp, "meta") or comp.meta is None:
                         comp.meta = {}
-                    if "ui" not in comp.meta:
+                    if "ui" not in comp.meta or not isinstance(comp.meta["ui"], dict):
                         comp.meta["ui"] = {"resourceUri": ui_uri}
+                    if "csp" not in comp.meta["ui"]:
+                        comp.meta["ui"]["csp"] = {
+                            "connectDomains": csp_connect,
+                            "resourceDomains": csp_resource,
+                        }
                     comp.meta["openai/outputTemplate"] = ui_uri
                     comp.meta.setdefault("openai/toolInvocation/invoking", "Rendering interactive UI...")
                     comp.meta.setdefault("openai/toolInvocation/invoked", "UI ready")
+                    if "openai/widgetCSP" not in comp.meta:
+                        comp.meta["openai/widgetCSP"] = {
+                            "connect_domains": csp_connect,
+                            "resource_domains": csp_resource,
+                            "redirect_domains": ["geox.arif-fazil.com"],
+                        }
 
     logger.info("Enriched %d tools with MCP Apps UI metadata", count)

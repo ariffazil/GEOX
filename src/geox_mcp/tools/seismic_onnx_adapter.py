@@ -61,9 +61,16 @@ class ModelManifest:
         return True
 
 
+from geox_core.schemas.candidate_geometry import CandidateGeometry
+
+
 @dataclass
-class CandidateGeometry:
-    """Generic candidate geometry output — never an Earth-verdict field."""
+class LegacyOnnxCandidateGeometry:
+    """Legacy unstructured candidate geometry container — adapter internal only.
+
+    Canonical governed CandidateGeometry schema lives in geox_core.schemas.candidate_geometry.
+    Use .to_canonical() to convert this legacy bundle into strictly typed CandidateGeometry instances.
+    """
 
     horizons: list[dict[str, Any]] = field(default_factory=list)
     faults: list[dict[str, Any]] = field(default_factory=list)
@@ -85,6 +92,66 @@ class CandidateGeometry:
             },
         }
 
+    def to_canonical(
+        self,
+        crs: str = "LOCAL",
+        domain: Literal["time_ms", "depth_m"] = "time_ms",
+    ) -> list[CandidateGeometry]:
+        """Convert legacy unstructured adapter payload into canonical CandidateGeometry instances."""
+        import hashlib
+        import uuid
+
+        canonical_items: list[CandidateGeometry] = []
+        src_id = str(self.provenance.get("source") or "legacy_onnx_adapter")
+        src_hash = hashlib.sha256(str(self.provenance).encode()).hexdigest()
+        param_hash = hashlib.sha256(b"legacy_onnx_adapter_migration").hexdigest()
+
+        # Convert faults
+        for idx, f in enumerate(self.faults):
+            pts = f.get("points") or f.get("pts") or []
+            tuple_pts = tuple(tuple(float(v) for v in p) for p in pts if isinstance(p, (list, tuple)))
+            if tuple_pts:
+                canonical_items.append(
+                    CandidateGeometry(
+                        candidate_id=str(f.get("id") or f"cand_flt_legacy_{uuid.uuid4().hex[:8]}"),
+                        source_data_ids=(src_id,),
+                        source_sha256s=(src_hash,),
+                        generator_name="seismic_onnx_adapter.legacy",
+                        generator_version="legacy-v1",
+                        parameters_hash=param_hash,
+                        geometry_type="fault_segment",
+                        coordinate_reference_system=crs,
+                        domain=domain,
+                        coordinates=tuple_pts,
+                        epistemic_status="HYPOTHESIS",
+                        promotion_state="GENERATED",
+                    )
+                )
+
+        # Convert horizons
+        for idx, h in enumerate(self.horizons):
+            pts = h.get("points") or h.get("pts") or []
+            tuple_pts = tuple(tuple(float(v) for v in p) for p in pts if isinstance(p, (list, tuple)))
+            if tuple_pts:
+                canonical_items.append(
+                    CandidateGeometry(
+                        candidate_id=str(h.get("id") or f"cand_hrz_legacy_{uuid.uuid4().hex[:8]}"),
+                        source_data_ids=(src_id,),
+                        source_sha256s=(src_hash,),
+                        generator_name="seismic_onnx_adapter.legacy",
+                        generator_version="legacy-v1",
+                        parameters_hash=param_hash,
+                        geometry_type="horizon_fragment",
+                        coordinate_reference_system=crs,
+                        domain=domain,
+                        coordinates=tuple_pts,
+                        epistemic_status="HYPOTHESIS",
+                        promotion_state="GENERATED",
+                    )
+                )
+
+        return canonical_items
+
 
 class OnnxModelAdapter:
     """Abstract base for any ONNX proposer."""
@@ -102,8 +169,12 @@ class OnnxModelAdapter:
     def load(self) -> None:
         self._loaded = True
 
-    def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> CandidateGeometry:
+    def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> LegacyOnnxCandidateGeometry:
         raise NotImplementedError("subclass must implement propose()")
+
+    def propose_canonical(self, image: Any, calibration: dict[str, Any] | None = None) -> list[CandidateGeometry]:
+        legacy = self.propose(image, calibration)
+        return legacy.to_canonical()
 
     def refuse_to_seal(self) -> dict[str, Any]:
         return {
@@ -140,11 +211,11 @@ class ClassicalBaselineAdapter(OnnxModelAdapter):
             weights_path=weights_path,
         )
 
-    def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> CandidateGeometry:
+    def propose(self, image: Any, calibration: dict[str, Any] | None = None) -> LegacyOnnxCandidateGeometry:
         from geox_mcp.tools.seismic_classical import classical_baseline
 
         out = classical_baseline(image)
-        return CandidateGeometry(
+        return LegacyOnnxCandidateGeometry(
             horizons=out["candidate_horizons"],
             faults=out["candidate_faults"],
             image_quality_flags=[],
@@ -155,6 +226,7 @@ class ClassicalBaselineAdapter(OnnxModelAdapter):
 
 __all__ = [
     "CandidateGeometry",
+    "LegacyOnnxCandidateGeometry",
     "ClassicalBaselineAdapter",
     "License",
     "ModelManifest",

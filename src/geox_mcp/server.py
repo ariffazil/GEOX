@@ -3525,7 +3525,46 @@ async def ready_handler(request: Request) -> JSONResponse:
     )
 
 
+async def geox_federation_handler(request: Request) -> JSONResponse:
+    """GET /federation — Expose live 11-organ federation topology and GEOX domain mapping."""
+    from geox_mcp.federation_flow import get_federation_topology
+    return JSONResponse(get_federation_topology())
+
+
+async def geox_flow_handler(request: Request) -> JSONResponse:
+    """GET /flow — Expose arifFlow, FRAME and CHRON integration telemetry."""
+    from geox_mcp.federation_flow import ARIFLOW_URL, CHRON_EPISODES_PATH, FRAME_URL
+    import httpx
+    flow_status = "UNKNOWN"
+    try:
+        async with httpx.AsyncClient(timeout=1.0) as client:
+            r = await client.get(f"{ARIFLOW_URL}/health")
+            if r.status_code == 200:
+                flow_status = r.json().get("status", "HEALTHY")
+    except Exception:
+        flow_status = "UNREACHABLE"
+
+    frame_status = "UNKNOWN"
+    try:
+        async with httpx.AsyncClient(timeout=1.0) as client:
+            r = await client.get(f"{FRAME_URL}/health")
+            if r.status_code == 200:
+                frame_status = r.json().get("status", "HEALTHY")
+    except Exception:
+        frame_status = "UNREACHABLE"
+
+    return JSONResponse({
+        "organ": "GEOX",
+        "flow_engine": {"url": ARIFLOW_URL, "status": flow_status},
+        "frame_witness": {"url": FRAME_URL, "status": frame_status},
+        "chron_store": {"episodes_path": str(CHRON_EPISODES_PATH), "active": CHRON_EPISODES_PATH.exists()},
+        "timestamp": datetime.now(UTC).isoformat(),
+    })
+
+
 async def status_handler(request: Request) -> JSONResponse:
+    from geox_mcp.federation_flow import get_federation_topology
+
     enforcement = _enforce_geox()
     return JSONResponse(
         {
@@ -3535,6 +3574,7 @@ async def status_handler(request: Request) -> JSONResponse:
             "profile": GEOX_PROFILE,
             "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
             "internal_tools": len(INTERNAL_TOOLS),
+            "federation": get_federation_topology(),
         }
     )
 
@@ -4206,6 +4246,8 @@ def create_app():
             Route("/api/build-info", build_info_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
+            Route("/federation", geox_federation_handler, methods=["GET"]),
+            Route("/flow", geox_flow_handler, methods=["GET"]),
             Route("/contract", contract_handler, methods=["GET"]),
             Route("/schemas", schemas_handler, methods=["GET"]),
             Route("/adapters", adapters_handler, methods=["GET"]),
