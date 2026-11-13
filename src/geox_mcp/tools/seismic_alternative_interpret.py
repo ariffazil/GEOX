@@ -51,7 +51,6 @@ async def geox_seismic_alternative_interpret(
     trace_id: str | None = None,
     discriminator_path: str | None = None,
     ctx: Any = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Generate ≥3 alternative interpretations of a horizon set.
 

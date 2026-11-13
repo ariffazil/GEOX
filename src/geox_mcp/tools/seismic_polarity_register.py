@@ -140,7 +140,6 @@ async def geox_seismic_polarity_register(
     actor_id: str | None = None,
     trace_id: str | None = None,
     ctx: Context | None = None,
-    **extra_kwargs: Any,
 ) -> dict[str, Any]:
     """Register polarity/phase for a seismic volume or trace.
 
