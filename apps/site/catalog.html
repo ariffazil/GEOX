@@ -3,78 +3,512 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GEOX Skills — Earth Intelligence Catalog</title>
-  <meta name="description" content="44 Earth intelligence skills across 11 domains. Searchable skill registry for geospatial operations.">
-  <link rel="stylesheet" href="styles.css">
+  <title>GEOX Earth Intelligence Skills Catalog</title>
+  <meta name="description" content="27 Canonical Earth Intelligence tools across 11 domains. DITEMPA BUKAN DIBERI.">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --card: #12121a;
+      --card-hover: #1a1a26;
+      --border: #222233;
+      --border-accent: #33334d;
+      --text: #e8e8f0;
+      --text-muted: #8c8c9e;
+      --gold: #d4af37;
+      --cyan: #00d4aa;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --green: #2ed573;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.5;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header.site-header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .header-brand span.logo-highlight {
+      background: linear-gradient(135deg, var(--gold), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge-omega {
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      color: var(--gold);
+      font-family: monospace;
+    }
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11px;
+    }
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #101918;
+      border: 1px solid #1a3832;
+      color: var(--cyan);
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+    .dot.pulse { animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    main.container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px;
+      flex: 1;
+    }
+    .hero {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff, #a0aec0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 12px;
+    }
+    .seal-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-family: monospace;
+      color: var(--cyan);
+      background: #0d1e1c;
+      border: 1px solid #1a423d;
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--cyan);
+      font-family: monospace;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .search-panel {
+      margin-bottom: 20px;
+    }
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--cyan);
+    }
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 11px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s;
+    }
+    .chip:hover {
+      border-color: var(--border-accent);
+      color: var(--text);
+    }
+    .chip.active {
+      background: #0d2822;
+      border-color: var(--cyan);
+      color: var(--cyan);
+      font-weight: 600;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .tool-card:hover {
+      background: var(--card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+    .tool-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .tool-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cyan);
+      font-family: monospace;
+      word-break: break-all;
+    }
+    .tool-cat {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: #1a1a2e;
+      color: #9f9fe6;
+      border: 1px solid #2e2e54;
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .tool-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .tool-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 10px;
+      border-top: 1px dashed var(--border);
+      padding-top: 8px;
+      color: #666;
+    }
+    .tool-app-link {
+      color: var(--gold);
+      text-decoration: none;
+      font-family: monospace;
+    }
+    .telemetry-drawer {
+      display: none;
+      background: #0d1117;
+      border: 1px solid #1f242c;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 24px;
+    }
+    .telemetry-drawer.visible {
+      display: block;
+    }
+    .telemetry-title {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    pre.telemetry-body {
+      background: #05070a;
+      border: 1px solid #14171d;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 11px;
+      color: #79c0ff;
+      font-family: monospace;
+      max-height: 180px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    footer.site-footer {
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 12px 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
-    <div class="container">
-      <a href="index.html" class="logo">
-        <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        GEOX
-      </a>
-      <nav class="nav-links">
-        <a href="catalog.html" class="active">Skills</a>
-        <a href="wiki.html">Wiki</a>
-        <a href="network.html">Network</a>
-        <a href="https://geox.arif-fazil.com" target="_blank">Cockpit →</a>
-      </nav>
+    <div class="header-brand">
+      <span class="logo-highlight">GEOX</span>
+      <span>Skills Catalog</span>
+      <span class="badge-omega">Ω v1.3</span>
+    </div>
+    <div class="header-status">
+      <div class="status-indicator">
+        <span class="dot pulse"></span>
+        <span id="mcp-status-text">MCP HOST STANDALONE</span>
+      </div>
     </div>
   </header>
 
-  <main>
-    <!-- Hero -->
+  <main class="container">
     <section class="hero">
-      <div class="container">
-        <h1>Earth Intelligence Skills</h1>
-        <p>44 operational skills across 11 domains. For humans, machines, and the spaces between.</p>
-        <div class="seal">DITEMPA BUKAN DIBERI — Forged, Not Given</div>
-      </div>
+      <h1>Earth Intelligence Capabilities</h1>
+      <p>Canonical tools catalog for subsurface exploration, seismic interpretation, and sovereign governance.</p>
+      <div class="seal-pill">SEP-1865 MCP Apps · DITEMPA BUKAN DIBERI</div>
     </section>
 
-    <!-- Stats -->
-    <div class="stats-bar">
-      <div><strong id="stats-count">44 skills</strong> total</div>
-      <div><strong>11</strong> domains</div>
-      <div><strong>6</strong> substrates</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val" id="count-tools">27</div>
+        <div class="stat-lbl">Canonical Tools</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="count-domains">11</div>
+        <div class="stat-lbl">Domains</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">F1-F13</div>
+        <div class="stat-lbl">Sovereign Floors</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" style="color:var(--gold);">SEAL</div>
+        <div class="stat-lbl">Evidence Gate</div>
+      </div>
     </div>
 
-    <!-- Search & Filters -->
-    <section class="search-section">
-      <div class="container">
-        <div class="search-box">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-          </svg>
-          <input type="text" id="skill-search" placeholder="Search skills, inputs, outputs..." autocomplete="off">
-        </div>
-        
-        <div class="filter-chips" id="domain-filters">
-          <!-- Populated by JS -->
-        </div>
-        
-        <div class="filter-chips" id="substrate-filters" style="margin-top: 0.75rem;">
-          <!-- Populated by JS -->
-        </div>
+    <!-- Live Telemetry Drawer -->
+    <div class="telemetry-drawer" id="telemetry-drawer">
+      <div class="telemetry-title" id="telemetry-title">Tool Result Stream</div>
+      <pre class="telemetry-body" id="telemetry-body"></pre>
+    </div>
+
+    <section class="search-panel">
+      <div class="search-input-wrap">
+        <input type="text" id="search-input" class="search-input" placeholder="Search 27 tools by name, domain, or capability (e.g. well, seismic, basin, fault)..." autocomplete="off" />
+      </div>
+      <div class="filter-chips" id="filter-chips">
+        <span class="chip active" data-cat="all">ALL (27)</span>
       </div>
     </section>
 
-    <!-- Skills Grid -->
-    <section class="skills-section">
-      <div class="container" id="skills-container">
-        <!-- Populated by JS -->
-      </div>
+    <section class="tools-grid" id="tools-grid">
+      <!-- Populated dynamically via JS -->
     </section>
   </main>
 
   <footer class="site-footer">
-    <div class="footer-seal">ΔΩΨ — SOUL · MIND · VOID</div>
-    <div class="footer-copy">GEOX Earth Intelligence Core · 2026</div>
+    <div>GEOX Earth Intelligence Core · FastMCP 3.2+ · Starlette Streamable HTTP</div>
+    <div>arif-fazil.com // geox.arif-fazil.com</div>
   </footer>
 
-  <script src="app.js"></script>
+  <script>
+  (function () {
+    const TOOLS = [
+      { name: "geox_basin", cat: "Basin", desc: "Basin analysis, stratigraphy, subsidence, thermal maturity, and deep-time reconstructions.", app: "basin-explorer" },
+      { name: "geox_claim", cat: "Governance", desc: "Epistemic claim audit, Gödel lock verification, and evidence ledger alignment.", app: "judge-console" },
+      { name: "geox_glof", cat: "Hazard", desc: "Glacial lake outburst flood hazard detection, breach modelling, and geomorphology.", app: "earth-volume" },
+      { name: "geox_model", cat: "Model", desc: "Subsurface 3D geological and geophysical multi-property earth model synthesis.", app: "earth-volume" },
+      { name: "geox_observe", cat: "Multimodal", desc: "Multimodal Earth observation, remote sensing, and cross-domain spatial reasoning.", app: "earth-volume" },
+      { name: "geox_paleobiodb_query", cat: "Paleobiology", desc: "Paleobiology Database fossil, stratigraphy, and evolutionary taxa query.", app: "basin-explorer" },
+      { name: "geox_petrophysics", cat: "Petrophysics", desc: "Well log petrophysics: Vsh, Porosity (Phi_e), Archie Sw, and net-pay zone detection.", app: "well-desk" },
+      { name: "geox_prospect", cat: "Prospect", desc: "Prospect evaluation, geological risk matrix (POS), trap integrity, and volumetric STOIIP.", app: "prospect-ui" },
+      { name: "geox_surface_status", cat: "Registry", desc: "Live surface status, canonical tool inventory, and constitutional health telemetry.", app: "catalog" },
+      { name: "geox_contrast_metabolize", cat: "Seismic", desc: "Seismic attribute contrast extraction, anomaly enhancement, and feature metabolism.", app: "judge-console" },
+      { name: "geox_extract_display_proxy", cat: "Seismic", desc: "Extract downsampled 2D/3D seismic preview proxy for fast web visualization.", app: "visual-hub" },
+      { name: "geox_extract_native_trace", cat: "Seismic", desc: "Extract raw seismic trace amplitude vectors and wavelet parameters.", app: "seismic-vision" },
+      { name: "geox_list_registered_sources", cat: "Seismic", desc: "List registered seismic volumes, 2D lines, and SEG-Y survey assets.", app: "catalog" },
+      { name: "geox_register_native_source", cat: "Seismic", desc: "Register native SEG-Y / Zarr seismic volume with spatial and temporal headers.", app: "catalog" },
+      { name: "geox_seismic_compute", cat: "Seismic", desc: "High-performance seismic computation: spectral decomposition, coherency, and curvature.", app: "seismic-vision" },
+      { name: "geox_seismic_ingest", cat: "Seismic", desc: "SEG-Y parsing, trace header QC, coordinate reference extraction, and volume staging.", app: "seismic-vision" },
+      { name: "geox_seismic_interpret", cat: "Seismic", desc: "Fault extraction, horizon tracking, structure gates, and candidate geometry shadow lane.", app: "seismic-vision" },
+      { name: "geox_source", cat: "Source", desc: "Petroleum source rock geochemistry, TOC, vitrinite reflectance, and expulsion timing.", app: "basin-explorer" },
+      { name: "geox_map", cat: "Spatial", desc: "Geospatial layers, boundary polygons, GIS mapping, and cartographic overlays.", app: "workbench-v1" },
+      { name: "geox_spatial", cat: "Spatial", desc: "Spatial coordinate transforms, EPSG CRS projections, and bounding envelope calculations.", app: "earth-map" },
+      { name: "geox_calibration_register_witness", cat: "Structural", desc: "Structural calibration register, witness verification, and audit trace anchoring.", app: "well-witness" },
+      { name: "geox_geomechanics", cat: "Structure", desc: "Geomechanical stress field, pore pressure prediction, wellbore stability, and fault slip risk.", app: "geoprobe" },
+      { name: "geox_temporal", cat: "Temporal", desc: "Geological time correlation, chronostratigraphic markers, and event sequence bounds.", app: "earth-volume" },
+      { name: "geox_deep_time", cat: "Time", desc: "Deep-time plate tectonic reconstructions, paleogeography, and continental drift modeling.", app: "earth-volume" },
+      { name: "geox_well", cat: "Well", desc: "Wellbore trajectory, deviation survey, formation tops, and casing geometry.", app: "well-desk" },
+      { name: "geox_well_ingest", cat: "Well", desc: "LAS, DLIS, and ASCII well log file parsing, curve validation, and header indexing.", app: "analog-digitizer" },
+      { name: "geox_well_qc", cat: "Well", desc: "Curve null check, caliper QC, unit normalization, and petrophysical validity gates.", app: "well-desk" }
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    let activeCategory = "all";
+    let searchQuery = "";
+
+    // Render Filter Chips
+    const categories = ["all", ...new Set(TOOLS.map(t => t.cat))].sort();
+    const chipsContainer = $("filter-chips");
+    chipsContainer.innerHTML = "";
+    categories.forEach(cat => {
+      const chip = document.createElement("span");
+      chip.className = "chip" + (cat === "all" ? " active" : "");
+      chip.dataset.cat = cat;
+      const count = cat === "all" ? TOOLS.length : TOOLS.filter(t => t.cat === cat).length;
+      chip.textContent = cat === "all" ? `ALL (${count})` : `${cat} (${count})`;
+      chip.addEventListener("click", () => {
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        activeCategory = cat;
+        renderTools();
+      });
+      chipsContainer.appendChild(chip);
+    });
+
+    // Render Tools Grid
+    function renderTools() {
+      const grid = $("tools-grid");
+      const filtered = TOOLS.filter(t => {
+        const matchCat = (activeCategory === "all" || t.cat === activeCategory);
+        const q = searchQuery.toLowerCase();
+        const matchQuery = !q || t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q);
+        return matchCat && matchQuery;
+      });
+
+      grid.innerHTML = "";
+      if (filtered.length === 0) {
+        grid.innerHTML = "<div style='grid-column: 1/-1; text-align:center; padding: 40px; color:#888;'>No tools matching query.</div>";
+        return;
+      }
+
+      filtered.forEach(t => {
+        const card = document.createElement("div");
+        card.className = "tool-card";
+        card.innerHTML = `
+          <div>
+            <div class="tool-card-head">
+              <span class="tool-name">${t.name}</span>
+              <span class="tool-cat">${t.cat}</span>
+            </div>
+            <div class="tool-desc">${t.desc}</div>
+          </div>
+          <div class="tool-footer">
+            <span>SEP-1865 UI</span>
+            <span class="tool-app-link">ui://geox/${t.app}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    $("search-input").addEventListener("input", (e) => {
+      searchQuery = e.target.value.trim();
+      renderTools();
+    });
+
+    renderTools();
+
+    // ── MCP Apps postMessage Transport Bridge ──────────────────────────────
+    function notifyHostReady() {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          jsonrpc: "2.0",
+          method: "ui/ready",
+          params: { version: "1.3.0", app: "geox-catalog" }
+        }, "*");
+        $("mcp-status-text").textContent = "MCP HOST CONNECTED";
+      }
+    }
+
+    window.addEventListener("message", (event) => {
+      if (!event.data) return;
+      let msg = event.data;
+      if (typeof msg === "string") {
+        try { msg = JSON.parse(msg); } catch (e) { return; }
+      }
+      if (typeof msg !== "object") return;
+
+      const m = msg.method || msg.type;
+      if (m === "ui/notifications/tool-result" || m === "notifications/tools/result" || m === "tool_result") {
+        const res = msg.params ? (msg.params.result || msg.params) : msg.result;
+        const drawer = $("telemetry-drawer");
+        const body = $("telemetry-body");
+        drawer.classList.add("visible");
+        body.textContent = JSON.stringify(res, null, 2);
+      }
+      if (m === "ui/notifications/tool-input") {
+        const args = msg.params ? msg.params.arguments : msg.arguments;
+        const drawer = $("telemetry-drawer");
+        const body = $("telemetry-body");
+        drawer.classList.add("visible");
+        $("telemetry-title").textContent = "Incoming Tool Input";
+        body.textContent = JSON.stringify(args, null, 2);
+      }
+    });
+
+    notifyHostReady();
+  })();
+  </script>
 </body>
 </html>

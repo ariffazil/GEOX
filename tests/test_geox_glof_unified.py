@@ -9,6 +9,7 @@ Import path: PYTHONPATH=src  (run from /root/GEOX)
 
 DITEMPA BUKAN DIBERI — forged, not given.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -20,6 +21,7 @@ from geox_mcp.tools.geox_glof import geox_glof
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
+
 
 def _run(coro):
     """Run async function synchronously (test runner may not provide event loop)."""
@@ -39,6 +41,7 @@ _VALID_OBS = {
 
 # ── test_glof_run_mode ────────────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_glof_run_mode():
     """mode='run' — full cascade: init→step→metabolize. breach_summary must be present."""
@@ -48,8 +51,13 @@ async def test_glof_run_mode():
         domain_bounds_z_m=300.0,
         resolution_m=20.0,
         dam_height_m=80.0,
-        n_steps=10,
-        dt_sec=1.0,
+        # Breach-scale simulation: guards (EMPTY_SIMULATION / NUMERICAL_
+        # INSTABILITY, 77c06808) correctly fail short runs — no breach in
+        # 10x1s, Q_peak=0, G=NaN. 120x60s with a real lake head breaches
+        # at ~81 min: Q=7750, G=0.7368 (measured 2026-11-13).
+        water_head_initial_m=50.0,
+        n_steps=120,
+        dt_sec=60.0,
     )
     assert result["ok"] is True, f"run mode failed: {result}"
     assert result["tool"] == "geox_glof"
@@ -58,12 +66,13 @@ async def test_glof_run_mode():
     assert "breach_summary" in res, "breach_summary key missing"
     bs = res["breach_summary"]
     assert "state_id" in bs
-    assert bs["n_steps"] == 10
+    assert bs["n_steps"] == 120  # matches the breach-scale fixture above
     # G_score present (may be None if metabolize couldn't compute, but key exists)
     assert "G_score" in res
 
 
 # ── test_glof_inverse_mode ────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_glof_inverse_mode():
@@ -87,15 +96,16 @@ async def test_glof_inverse_mode():
 
 # ── test_glof_propagate_mode ──────────────────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_glof_propagate_mode():
     """mode='propagate' — Saint-Venant 1D downstream flood propagation."""
     result = await geox_glof(
         mode="propagate",
         breach_Q_profile="costa1985",
-        length_m=10_000.0,   # shorter reach for fast test
-        nx=20,               # coarser grid for fast test
-        duration_s=600.0,    # 10 min
+        length_m=10_000.0,  # shorter reach for fast test
+        nx=20,  # coarser grid for fast test
+        duration_s=600.0,  # 10 min
         output_interval_s=120.0,
     )
     assert result["ok"] is True, f"propagate mode failed: {result}"
@@ -107,6 +117,7 @@ async def test_glof_propagate_mode():
 
 
 # ── test_glof_unknown_mode ────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_glof_unknown_mode():
@@ -120,6 +131,7 @@ async def test_glof_unknown_mode():
 
 # ── test_glof_inverse_missing_observation ────────────────────────────────────
 
+
 @pytest.mark.asyncio
 async def test_glof_inverse_missing_observation():
     """inverse mode without observation returns MISSING_OBSERVATION error."""
@@ -129,6 +141,7 @@ async def test_glof_inverse_missing_observation():
 
 
 # ── test_glof_mcmc_mode (smoke) ───────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_glof_mcmc_mode_smoke():

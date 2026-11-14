@@ -344,6 +344,48 @@ class TestSEAsiaCacheWarming:
         )
 
 
+class TestMacrostratCoverageClassAndBuild:
+    """Coverage class + upstream build stamp, against the live API.
+
+    The Malaysia case is the one that used to read as "no bedrock here":
+    /units is empty over the Malay/Sabah shelf, but /geologic_units/map
+    carries the generalized Chorlton world polygon. The classifier must name
+    the difference instead of leaving a bare zero.
+    """
+
+    @pytest.mark.asyncio
+    async def test_api_version_is_live(self, client):
+        result = await client.get_api_version()
+        assert result["available"] is True, result
+        assert result["service"] == "api-v2"
+        assert result["version"], "upstream must report a version"
+        assert result["commit"], "upstream must report a build commit"
+        assert result["repository"], "upstream must name its repository"
+
+    @pytest.mark.asyncio
+    async def test_malaysia_is_map_polygon_not_empty(self, client):
+        """Sabah shelf: no unit polygons, one generalized map polygon."""
+        out = await client.get_coverage_class(lat=6.0814, lng=116.7241)
+        assert out["coverage_class"] in ("unit_polygon", "map_polygon"), out
+        assert out["unit_polygon_count"] == 0
+        assert out["map_polygon_count"] >= 1
+        assert out["map_unit"] is not None
+        assert "name" in out["map_unit"]
+
+    @pytest.mark.asyncio
+    async def test_control_point_has_unit_polygons(self, client):
+        """Madison, WI carries measured columns — the unit layer must resolve."""
+        out = await client.get_coverage_class(lat=43.07, lng=-89.40)
+        assert out["coverage_class"] == "unit_polygon", out
+        assert out["unit_polygon_count"] > 0
+
+    @pytest.mark.asyncio
+    async def test_classifier_never_returns_unknown_value(self, client):
+        out = await client.get_coverage_class(lat=4.60, lng=104.20)
+        assert out["coverage_class"] in ("unit_polygon", "map_polygon", "none")
+        assert out["coverage_explanation"]
+
+
 class TestMacrostratClientErrorHandling:
     """Client should handle errors gracefully."""
 

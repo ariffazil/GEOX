@@ -1,0 +1,26 @@
+{
+  "ts": "2026-09-24T08:45:28.385892+00:00",
+  "trace_id": "VR-20260924T084521-5835f6bb925c7427",
+  "source_file": "/root/.hermes/workspace/ronaldo-syed.ogg",
+  "source_sha256": "324f4ad2e8a053e7",
+  "category": "PERSONAL",
+  "guard": {
+    "category": "PERSONAL",
+    "sink": "QUARANTINE",
+    "confidence": 0.85,
+    "reasons": [
+      "OVERRIDE_personal=['ronaldo', 'syed']",
+      "F5_private_bukan_geox"
+    ],
+    "named_persons": [
+      "arif",
+      "ronaldo",
+      "syed"
+    ],
+    "proprietary_flag": false
+  },
+  "extract": {},
+  "truth_ceiling": "REPORTED",
+  "state": "INGESTED_UNSUPERSEDED",
+  "expected_next": "CROSS_VALIDATE dgn bukti bebas utk naik DER/OBS"
+}

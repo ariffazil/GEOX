@@ -27,7 +27,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-from geox_mcp.tools.biostrat.taxonomy import PBDBClient, MikrotaxClient, resolve_taxon  # noqa: E402
+from geox_mcp.tools.biostrat.taxonomy import (  # noqa: E402
+    PBDB_SCALE_NANNO,
+    PBDBClient,
+    MikrotaxClient,
+    resolve_taxon,
+)
 from geox_mcp.tools.biostrat_falsify import geox_biostrat_falsify  # noqa: E402
 
 
@@ -113,19 +118,20 @@ async def test_t1_1_resolve_taxon_returns_taxon_record():
 @SKIP_PBDB
 @pytest.mark.asyncio
 async def test_t1_2_pbdb_intervals_nannoplankton_scale_5():
-    """T1.5: PBDB intervals scale=5 (nannoplankton) endpoint contract.
+    """T1.5: nanno zones resolve by timescale name.
 
-    NOTE: As of 2026-07-21, PBDB returns 0 records for scale=5 (nannoplankton).
-    Only scale=1 (ICS) is populated. The wrapper endpoint contract still works
-    — it returns a list (possibly empty). Real data for nanno zones must come
-    from Mikrotax (Nannotax3) or local reference stack. This is a real
-    upstream gap, not a wiring bug.
+    Numeric id 5 was retired (2026-11-12: timescale not found, records []).
+    The getter now passes "Calcareous Nannoplankton Zones".
     """
     client = PBDBClient()
     try:
         zones = await client.get_nannoplankton_zones()
-        assert isinstance(zones, list), "Must return list (possibly empty)"
-        # Don't assert len > 0 — PBDB scale=5 currently returns 0 (real upstream gap)
+        assert isinstance(zones, list)
+        assert len(zones) > 0, "named nanno timescale returned no zones"
+        # Any unrelated upstream notice (deprecation, rate-limit) must not fail
+        # this test — only a broken timescale reference is a defect here.
+        upstream_bad = [w for w in client.last_warnings if "not found" in str(w)]
+        assert not upstream_bad, upstream_bad
     finally:
         await client.close()
 
@@ -133,16 +139,20 @@ async def test_t1_2_pbdb_intervals_nannoplankton_scale_5():
 @SKIP_PBDB
 @pytest.mark.asyncio
 async def test_t1_2_pbdb_intervals_foram_scale_24():
-    """T1.5: PBDB intervals scale=24 (foram primary biozones) endpoint contract.
+    """T1.5: foram zones resolve by timescale name.
 
-    NOTE: As of 2026-07-21, PBDB returns 0 records for scale=24 (foram primary).
-    Same upstream gap as scale=5. Wrapper contract preserved.
+    Numeric id 24 was retired (2026-11-12: timescale not found, records []).
+    The getter now passes "Planktic Foraminiferal Zones".
     """
     client = PBDBClient()
     try:
         zones = await client.get_foram_zones()
-        assert isinstance(zones, list), "Must return list (possibly empty)"
-        # Don't assert len > 0 — PBDB scale=24 currently returns 0 (real upstream gap)
+        assert isinstance(zones, list)
+        assert len(zones) > 0, "named foram timescale returned no zones"
+        # Any unrelated upstream notice (deprecation, rate-limit) must not fail
+        # this test — only a broken timescale reference is a defect here.
+        upstream_bad = [w for w in client.last_warnings if "not found" in str(w)]
+        assert not upstream_bad, upstream_bad
     finally:
         await client.close()
 
@@ -184,8 +194,9 @@ async def test_t1_2_pbdb_intervals_list_with_limit_param():
     """T1.5: PBDB intervals/list.json requires scale param (was the 400 we saw)."""
     client = PBDBClient()
     try:
-        intervals = await client.intervals_list(scale=5, limit=50)
+        intervals = await client.intervals_list(scale=PBDB_SCALE_NANNO, limit=50)
         assert isinstance(intervals, list)
+        assert 0 < len(intervals) <= 50
     finally:
         await client.close()
 
@@ -225,9 +236,16 @@ async def test_t1_3_falsify_runs_all_8_gates_positive_case():
         )
         assert "gates" in payload
         # All 8 gates must have run
-        expected_gates = {"G1_FACIES", "G2_STRAT_ORDER", "G3_TAXONOMY",
-                         "G4_REWORKING", "G5_DIACHRONEITY", "G6_SEISMIC",
-                         "G7_SEQUENCE", "G8_TECTONIC"}
+        expected_gates = {
+            "G1_FACIES",
+            "G2_STRAT_ORDER",
+            "G3_TAXONOMY",
+            "G4_REWORKING",
+            "G5_DIACHRONEITY",
+            "G6_SEISMIC",
+            "G7_SEQUENCE",
+            "G8_TECTONIC",
+        }
         assert expected_gates.issubset(set(payload["gates"].keys())), (
             f"Missing gates: {expected_gates - set(payload['gates'].keys())}"
         )
@@ -287,7 +305,6 @@ def test_wiring_biostrat_tools_registered():
     source = wiring_path.read_text(encoding="utf-8")
     tree = ast.parse(source)
 
-
     registered_tools: set[str] = set()
     for node in ast.walk(tree):
         # @mcp.tool(...) is always on async functions in this codebase
@@ -316,12 +333,7 @@ def test_reference_stack_yaml_loads():
     """biostrat_reference_stack.yaml must parse (no mutation, just load)."""
     import yaml  # type: ignore
 
-    yaml_path = (
-        Path(__file__).resolve().parents[2]
-        / "resources"
-        / "ontology"
-        / "biostrat_reference_stack.yaml"
-    )
+    yaml_path = Path(__file__).resolve().parents[2] / "resources" / "ontology" / "biostrat_reference_stack.yaml"
     if not yaml_path.exists():
         pytest.skip(f"Reference stack YAML not found at {yaml_path}")
     with yaml_path.open() as f:

@@ -50,24 +50,31 @@ Contract: https://arifos.arif-fazil.com · `/root/FEDERATION_CONTRACT.md`
 
 ---
 
-## Public MCP Tools (32)
+## Public MCP Tools (27)
+
+Generated from the live `tools/list` (commit aa980ce9). Every name here is served; every name
+removed from this block was a legacy alias that no client can call. Phase 6 replaces this
+section with per-tool modes, gates and epistemic tiers.
 
 ### Well / petrophysics
-- `geox_well_ingest` · `geox_well_desk` · `geox_well_qc` · `geox_petrophysics` · `geox_lem_predict`
+- `geox_well_ingest` · `geox_well_qc` · `geox_well` · `geox_petrophysics` · `geox_geomechanics`
 
-### Seismic / subsurface
-- `geox_seismic_ingest` · `geox_seismic_compute` · `geox_seismic_interpret` · `geox_subsurface_model` · `geox_geomechanics` · `geox_gravmag_studio`
+### Seismic / evidence spine
+- `geox_seismic_ingest` · `geox_seismic_interpret` · `geox_seismic_compute` · `geox_contrast_metabolize`
+- `geox_extract_display_proxy` · `geox_register_native_source` · `geox_extract_native_trace`
+- `geox_list_registered_sources` · `geox_calibration_register_witness`
 
-### Basin / sequence / deep time
-- `geox_basin` · `geox_basin_backstrip` · `geox_sediment_mass_balance` · `geox_thermal_maturity_history` · `geox_sequence` · `geox_deep_time_state`
+### Basin / source / deep time / temporal
+- `geox_basin` · `geox_source` · `geox_deep_time` · `geox_temporal` · `geox_paleobiodb_query`
 
-### Claims / evidence / falsify
-- `geox_claim` · `geox_claim_graph_evaluate` · `geox_evidence` · `geox_falsify` · `geox_contradiction_scan` · `geox_prospect`
+### Model / map / spatial / observation
+- `geox_model` · `geox_map` · `geox_spatial` · `geox_observe` · `geox_glof`
 
-### Map / visual / workspace
-- `geox_map_layers_list` · `geox_map_scene_plan` · `geox_map_render_preview` · `geox_map_export_package`
-- `geox_visual_understand` · `geox_visual_generate_hypotheses` · `geox_workspace` · `geox_surface_status`
-- `geox_to_wealth_bridge`
+### Claims / prospect
+- `geox_claim` · `geox_prospect`
+
+### Registry
+- `geox_surface_status`
 
 ### MCP Apps (host iframes)
 Primary: `ui://geox/well-desk` (p0-viz host shell). Also basin-explorer, judge-console, seismic-vision, visual-hub, earth-map, prospect-studio, catalog.
@@ -109,7 +116,7 @@ curl -s http://127.0.0.1:8081/health
 
 1. Read this file + `/health`  
 2. Connect MCP: `https://geox.arif-fazil.com/mcp`  
-3. Open wells via `geox_well_desk` mode=open; bind UI `ui://geox/well-desk`  
+3. Open wells via `geox_well` mode=desk; bind UI `ui://geox/well-desk`  
 4. Route SEAL-grade claims through arifOS  
 5. Crawl federation: https://arifos.arif-fazil.com/llms.txt  
 

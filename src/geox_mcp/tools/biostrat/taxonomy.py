@@ -24,6 +24,18 @@ logger = logging.getLogger(__name__)
 
 PBDB_BASE = "https://paleobiodb.org/data1.2"
 PBDB_NANNOFOSSIL_CLASS = "Coccolithophyceae"
+# data1.2 `scale` accepts a timescale name. Numeric ids 5 and 24 were
+# retired (PBDB: "timescale was not found"). Names stay valid if the
+# numbers move. Live on 2026-11-12: nanno tsc:220, foram tsc:221, ICS id 1.
+PBDB_SCALE_NANNO = "Calcareous Nannoplankton Zones"
+PBDB_SCALE_FORAM = "Planktic Foraminiferal Zones"
+
+
+def _coerce_float(v):
+    try:
+        return float(v) if v not in (None, "", "0", "0.0") else None
+    except (TypeError, ValueError):
+        return None
 
 
 def _coerce_float(v):
@@ -42,6 +54,7 @@ class PBDBClient:
     def __init__(self, timeout: float = 30.0) -> None:
         self._timeout = timeout
         self._client: httpx.AsyncClient | None = None
+        self.last_warnings: list[str] = []
 
     async def _get_client(self) -> httpx.AsyncClient:
         if self._client is None:
@@ -191,36 +204,30 @@ class PBDBClient:
 
     # ── Intervals (Geologic Time) ─────────────────────────────────────────
 
-    async def intervals_list(self, scale: int = 1, limit: int = 200) -> list[dict[str, Any]]:
+    async def intervals_list(self, scale: int | str = 1, limit: int = 200) -> list[dict[str, Any]]:
         """List geochronologic intervals.
 
         Args:
-            scale: Timescale ID (1=international ages, 5=calcareous nannoplankton zones,
-                   24=planktic foram primary biozones)
+            scale: Timescale id or name. Prefer PBDB_SCALE_* names. ICS is
+                still id 1. Nanno and foram numeric ids 5 and 24 are retired.
             limit: Max results
 
         Returns:
-            List of interval records with name, type, age range
+            List of interval records with name, type, age range.
+            Upstream warnings land on self.last_warnings.
         """
         params: dict[str, Any] = {"scale": scale, "limit": limit}
         data = await self._get("intervals/list.json", params)
+        self.last_warnings = [str(w) for w in (data.get("warnings") or [])]
         return data.get("records", [])  # type: ignore[no-any-return]
 
     async def get_nannoplankton_zones(self) -> list[dict[str, Any]]:
-        """Get all calcareous nannoplankton zones from PBDB (scale=5).
-
-        Returns:
-            List of zone records with name, age range, OID
-        """
-        return await self.intervals_list(scale=5, limit=200)
+        """Calcareous nannoplankton zones, resolved by timescale name."""
+        return await self.intervals_list(scale=PBDB_SCALE_NANNO, limit=500)
 
     async def get_foram_zones(self) -> list[dict[str, Any]]:
-        """Get planktic foram primary biozones from PBDB (scale=24).
-
-        Returns:
-            List of zone records
-        """
-        return await self.intervals_list(scale=24, limit=100)
+        """Planktic foraminiferal zones, resolved by timescale name."""
+        return await self.intervals_list(scale=PBDB_SCALE_FORAM, limit=500)
 
     async def get_ics_intervals(self) -> list[dict[str, Any]]:
         """Get ICS international ages from PBDB (scale=1).

@@ -76,7 +76,6 @@ def test_post_call_records_when_audit_log_set(monkeypatch, tmp_path):
     assert "geox_list_registered_sources" in target.read_text()
     fe._audit_log = None
 
-
 def test_audit_log_passes_with_env_set(monkeypatch, tmp_path):
     from geox_mcp.floor_enforcement import AuditLog, AuditRecord
 

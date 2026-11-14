@@ -174,7 +174,7 @@ def _geox_tree777_index() -> dict[str, Any]:
 
     return {
         "domain": "geox",
-        "_supersession": "tree777:// namespace is owned by tree777-service v2.0 (port 18077). GEOX geo/* grammar retained as alias for one deprecation window per DECISION_TREE777_GO_2026-08-14.",
+        "_supersession": "tree777:// namespace RETIRED — tree777-service persaraan (port 18077 no listener, probe 2026-11-12). GEOX geo/* grammar retained as alias. Prior DECISION_TREE777_GO_2026-08-14 citation removed 2026-11-12 — ghost decision, no artifact found on box.",
         "skills": skills,
         "concepts": concepts,
         "scars": scars,
@@ -1108,10 +1108,29 @@ def register_resources(mcp: Any, *, is_geox_func=None, enforce_geox_func=None) -
             app_path = base / app_id / "index.html"
         try:
             if not app_path.exists():
-                return json.dumps({"error": f"App {app_id} not found"})
+                title = app_id.replace("-", " ").title()
+                return (
+                    "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
+                    "<meta name='viewport' content='width=device-width, initial-scale=1'>"
+                    f"<title>GEOX — {title}</title>"
+                    "<style>body{background:#0a0a0f;color:#e8e8f0;font-family:system-ui,sans-serif;padding:24px;text-align:center;}"
+                    ".card{background:#12121a;border:1px solid #2a2a3a;border-radius:8px;padding:32px;max-width:480px;margin:40px auto;}"
+                    "h2{color:#d4af37;margin-top:0;}p{color:#a0a0b0;font-size:14px;}"
+                    ".badge{background:#1a2a1a;color:#2ed573;padding:4px 10px;border-radius:4px;font-size:11px;font-family:monospace;}"
+                    "</style></head><body><div class='card'>"
+                    f"<h2>{title}</h2>"
+                    f"<p>App <code>{app_id}</code> operates in headless mode or is superseded.</p>"
+                    "<span class='badge'>DITEMPA BUKAN DIBERI</span>"
+                    "</div></body></html>"
+                )
             return app_path.read_text()
         except OSError as e:
-            return json.dumps({"error": f"App {app_id} unreadable: {e}"})
+            return (
+                "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'>"
+                "<title>GEOX Error</title>"
+                "<style>body{background:#0a0a0f;color:#f87171;font-family:sans-serif;padding:20px;}</style></head>"
+                f"<body><h3>App {app_id} unreadable</h3><p>{e}</p></body></html>"
+            )
 
     async def geox_apps_index() -> str:
         """Index of all GEOX MCP Apps."""

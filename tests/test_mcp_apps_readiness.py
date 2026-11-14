@@ -437,3 +437,63 @@ async def test_11_phase_01_truth_floor_and_csp_parity():
     uris = {str(r.uri) for r in resources}
     assert "ui://geox/workspace-v1" in uris
     assert "ui://geox/gravmag-studio" in uris
+
+
+@pytest.mark.asyncio
+async def test_12_tools_list_csp_declared_and_domains_complete():
+    """Verify all UI-bound tools declare SEP-1865 _meta.ui.csp and ChatGPT openai/widgetCSP."""
+    tools = await mcp.list_tools()
+    for t in tools:
+        meta = getattr(t, "meta", {}) or {}
+        if "ui" in meta and "resourceUri" in meta["ui"]:
+            ui = meta["ui"]
+            assert "csp" in ui, f"Tool {t.name} missing _meta.ui.csp"
+            csp = ui["csp"]
+            assert "connectDomains" in csp, f"Tool {t.name} missing connectDomains in _meta.ui.csp"
+            assert "resourceDomains" in csp, f"Tool {t.name} missing resourceDomains in _meta.ui.csp"
+            assert "geox.arif-fazil.com" in csp["resourceDomains"]
+            assert "cdn.tailwindcss.com" in csp["resourceDomains"]
+            assert "fonts.googleapis.com" in csp["resourceDomains"]
+
+            # Dual-binding: ChatGPT alias
+            assert "openai/widgetCSP" in meta, f"Tool {t.name} missing openai/widgetCSP"
+            w_csp = meta["openai/widgetCSP"]
+            assert "connect_domains" in w_csp
+            assert "resource_domains" in w_csp
+
+
+@pytest.mark.asyncio
+async def test_13_all_ui_resources_return_valid_html_no_json_errors():
+    """Verify EVERY registered ui:// resource returns valid HTML without raw JSON error payloads."""
+    resources = await mcp.list_resources()
+    ui_resources = [r for r in resources if str(getattr(r, "uri", "")).startswith("ui://")]
+    assert len(ui_resources) >= 20, f"Expected >= 20 UI resources, found {len(ui_resources)}"
+
+    for r in ui_resources:
+        uri = str(r.uri)
+        res = await mcp.read_resource(uri)
+        assert res is not None and res.contents, f"Empty response for {uri}"
+        c = res.contents[0]
+        text = c.content.strip()
+        lower_text = text.lower()
+        assert c.mime_type == "text/html;profile=mcp-app", f"Wrong MIME for {uri}: {c.mime_type}"
+        assert lower_text.startswith("<!doctype") or lower_text.startswith("<html") or lower_text.startswith("<div"), (
+            f"Resource {uri} does not start with HTML markup: {text[:80]!r}"
+        )
+        assert not text.startswith('{"error":'), f"Resource {uri} returned raw JSON error: {text[:100]}"
+
+
+def test_14_singlefile_bundle_integrity():
+    """Verify that catalog and seismic-vision-review are self-contained without broken relative imports."""
+    import re
+    for rel_path in ["apps/site/catalog.html", "apps/seismic-vision-review/index.html"]:
+        full_path = GEOX_ROOT / rel_path
+        assert full_path.exists(), f"File {rel_path} missing"
+        html = full_path.read_text(encoding="utf-8")
+        assert len(html) >= _MIN_HOST_HTML_BYTES, f"Bundle {rel_path} too small ({len(html)}B)"
+        # Must not have relative external script or css links
+        rel_scripts = re.findall(r'<script[^>]*src=[\'"](\.[^\'"]+|app\.js)[\'"]', html)
+        rel_styles = re.findall(r'<link[^>]*href=[\'"](\.[^\'"]+|styles\.css)[\'"]', html)
+        assert not rel_scripts, f"Found unresolved relative scripts in {rel_path}: {rel_scripts}"
+        assert not rel_styles, f"Found unresolved relative styles in {rel_path}: {rel_styles}"
+
