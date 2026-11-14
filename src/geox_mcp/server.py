@@ -255,6 +255,20 @@ _GEOX_OPEN_WORLD_TOOLS = {
     "geox_surface_status",
     "geox_visual_understand",
     "geox_visual_generate_hypotheses",
+    # S4 (2026-10-28): canonical tools that read external/public sources but declared
+    # openWorldHint=false. PBDB (paleobiodb), STAC/LanceDB (spatial), Macrostrat (deep_time),
+    # layer catalogue + external tiles (map).
+    "geox_paleobiodb_query",
+    "geox_spatial",
+    "geox_deep_time",
+    "geox_map",
+}
+
+# S4 (2026-10-28): tools carrying IRREVERSIBLE modes (claim.seal, prospect.evaluate+verdict).
+# A client must be able to see that risk; destructiveHint=false hid it.
+_GEOX_DESTRUCTIVE_TOOLS = {
+    "geox_claim",
+    "geox_prospect",
 }
 
 
@@ -271,6 +285,8 @@ def _geox_annotations(tool_name: str) -> dict[str, bool]:
         base = dict(_GEOX_READONLY_ANNOTATIONS)
     if tool_name in _GEOX_OPEN_WORLD_TOOLS or tool_name.startswith("geox_map_"):
         base["openWorldHint"] = True
+    if tool_name in _GEOX_DESTRUCTIVE_TOOLS:
+        base["destructiveHint"] = True
     return base
 
 
@@ -384,6 +400,52 @@ else:
     well_app = None
 
 mcp = FastMCP(**_mcp_kwargs)
+
+# ── Forge 2026-09-29 — Section-Image Slice + Bridge tools (kimi-code/FI-008) ──
+# Capability contracts + display_proxy tools + SEG-Y bridge.
+# Per APEX-ZEN: govern capabilities, not implementations.
+from geox_mcp.tools.seismic_polarity_register import register_with_mcp as _register_polarity
+from geox_mcp.tools.seismic_artifact_get import register_with_mcp as _register_artifact_get
+from geox_mcp.tools.seismic_attribute_compute import register_with_mcp as _register_attribute_compute
+from geox_mcp.tools.seismic_display_trace import register_with_mcp as _register_display_trace
+from geox_mcp.tools.seismic_age_assign import register_with_mcp as _register_age_assign
+from geox_mcp.tools.seismic_render_publication import register_with_mcp as _register_render_publication
+from geox_mcp.tools.seismic_alternative_interpret import register_with_mcp as _register_alternative_interpret
+from geox_mcp.tools.seismic_volume_register import register_with_mcp as _register_volume_register
+from geox_mcp.tools.seismic_horizon_track import register_with_mcp as _register_horizon_track
+
+# Register new tools (idempotent)
+_register_polarity(mcp)
+_register_artifact_get(mcp)
+_register_attribute_compute(mcp)
+_register_display_trace(mcp)
+_register_age_assign(mcp)
+_register_render_publication(mcp)
+_register_alternative_interpret(mcp)
+_register_volume_register(mcp)
+_register_horizon_track(mcp)
+
+# Register section-image resources (knowledge base; public Morley 2023 stratigraphy)
+import json
+from pathlib import Path as _Path
+_RESOURCES_DIR = _Path(__file__).parent / "resources"
+
+@mcp.resource("geox://conventions/seismic_display", description="Seismic display conventions (palettes, dash/line rules, label conventions). Claim ceiling = GEOMETRY.", mime_type="application/json")
+async def _resource_seismic_display() -> dict:
+    """Seismic display conventions for section-image slice."""
+    return json.loads((_RESOURCES_DIR / "section_slice_conventions.json").read_text(encoding="utf-8"))
+
+@mcp.resource("geox://stratigraphy/nw_sabah/surfaces", description="NW Sabah published surface ages (Morley 2023). DRU/LIU/UIU/SRU/H-III/TOP_IVC with age ranges and citations.", mime_type="application/json")
+async def _resource_nw_sabah_surfaces() -> dict:
+    """NW Sabah stratigraphy — Morley 2023 published ages."""
+    return json.loads((_RESOURCES_DIR / "nw_sabah_surfaces.json").read_text(encoding="utf-8"))
+
+@mcp.resource("geox://discriminators/north_sabah/diapir_thrust_miiec", description="Discriminator set: NW Sabah diapir vs thrust-cored anticline vs MIEC feeder. ≥3 hypotheses with required observations, falsifiers, best tests.", mime_type="application/json")
+async def _resource_north_sabah_discriminators() -> dict:
+    """NW Sabah three-way discriminator set."""
+    return json.loads((_RESOURCES_DIR / "discriminators_north_sabah.json").read_text(encoding="utf-8"))
+
+logger.info("Registered 9 forge tools + 3 section-image resources")
 
 # Completions CANCELLED 2026-07-09 — agent surface uses full tool JSON.
 
@@ -3375,24 +3437,41 @@ async def health_handler(request: Request) -> JSONResponse:
     except Exception:
         pass
 
-    _geo_status = "healthy" if _kernel_ok else "degraded"
-    _owner_color = "GREEN" if _kernel_ok else "AMBER"
-    _owner_reasons = [
-        "identity_verified" if is_geox() else "identity_unverified",
-        f"public_tools={len(CANONICAL_PUBLIC_TOOLS)}",
-        f"kernel_verdict={_kernel_verdict}",
-        "service_healthy" if _kernel_ok else "kernel_not_SEAL",
-    ]
+    # ── S1 (2026-10-28): ONE probe, named fields ───────────────────────
+    # /health and geox_surface_status both read probe_health_fields(). The top-level
+    # status word is DERIVED; every reason quotes the measured field. The old literal
+    # reason "kernel_not_SEAL" is gone — the kernel is reachable but degraded for named
+    # floors, and that is what is reported now. Exceptions fail closed (UNKNOWN, never green).
+    from geox_mcp.health_probe import probe_health_fields
+
+    _health = await probe_health_fields(mcp)
+    _kernel_verdict = _health["kernel_verdict"]
+    _geo_status = _health["status"]
+    _owner_color = "GREEN" if _geo_status == "healthy" else "AMBER"
+    _owner_reasons = [f"identity_verified" if is_geox() else "identity_unverified"] + list(_health["reason_strings"])
 
     # ── F2 TRUTH: surface drift gate (2026-07-25) ──────────────────────
-    # A healthy badge during drift = Floor-2 violation.
-    # Consume the middleware's filtered-surface drift report.
+    # Independent evidence about the same field the probe measures by enumeration.
+    # Disagreement = registry is not PASS, whatever the enumeration said.
     _surface_drift = _surface_drift_summary()
     if not _surface_drift.get("ok", True):
+        _health["registry_state"] = "FAIL"
+        _health["cause"] = "REGISTRY"
         _geo_status = "degraded"
         _owner_color = "AMBER"
         _owner_reasons.append(
             f"surface_drift: {_surface_drift.get('drift_count', 0)} drifted, {_surface_drift.get('gap_count', 0)} gaps"
+        )
+        _health["reasons"].append(
+            {
+                "field": "registry.surface_drift",
+                "value": {
+                    "drift_count": _surface_drift.get("drift_count", 0),
+                    "gap_count": _surface_drift.get("gap_count", 0),
+                },
+                "severity": "error",
+                "explanation": "middleware drift snapshot disagrees with a clean registry state",
+            }
         )
 
     # ── F2 TRUTH: registry truth gate (2026-07-25) ────────────────────
@@ -3404,6 +3483,8 @@ async def health_handler(request: Request) -> JSONResponse:
         _manifest = manifest_tool_map()
         _manifest_count = len([e for e in _manifest.values() if not (hasattr(e, "is_internal") and e.is_internal)])
         if _manifest_count != len(CANONICAL_PUBLIC_TOOLS):
+            _health["registry_state"] = "FAIL"
+            _health["cause"] = "REGISTRY"
             _geo_status = "degraded"
             _owner_color = "AMBER"
             _owner_reasons.append(f"registry_truth: manifest={_manifest_count} canonical={len(CANONICAL_PUBLIC_TOOLS)}")
@@ -3417,7 +3498,15 @@ async def health_handler(request: Request) -> JSONResponse:
     return JSONResponse(
         {
             "status": _geo_status,
-            "kernel_verdict": _kernel_verdict,
+            "cause": _health["cause"],
+            "status_source": _health["status_source"],
+            "registry_state": _health["registry_state"],
+            "kernel_state": _health["kernel_state"],
+            "kernel_verdict": _health["kernel_verdict"],
+            "kernel_floors_failing": _health["kernel_floors_failing"],
+            "kernel_floors_unmeasured": _health["kernel_floors_unmeasured"],
+            "dependency_state": _health["dependency_state"],
+            "reasons": _health["reasons"],
             "service": "geox-unified",
             "version": GEOX_VERSION,
             "federation_schema_version": "2.0.0",
@@ -3525,7 +3614,46 @@ async def ready_handler(request: Request) -> JSONResponse:
     )
 
 
+async def geox_federation_handler(request: Request) -> JSONResponse:
+    """GET /federation — Expose live 11-organ federation topology and GEOX domain mapping."""
+    from geox_mcp.federation_flow import get_federation_topology
+    return JSONResponse(get_federation_topology())
+
+
+async def geox_flow_handler(request: Request) -> JSONResponse:
+    """GET /flow — Expose arifFlow, FRAME and CHRON integration telemetry."""
+    from geox_mcp.federation_flow import ARIFLOW_URL, CHRON_EPISODES_PATH, FRAME_URL
+    import httpx
+    flow_status = "UNKNOWN"
+    try:
+        async with httpx.AsyncClient(timeout=1.0) as client:
+            r = await client.get(f"{ARIFLOW_URL}/health")
+            if r.status_code == 200:
+                flow_status = r.json().get("status", "HEALTHY")
+    except Exception:
+        flow_status = "UNREACHABLE"
+
+    frame_status = "UNKNOWN"
+    try:
+        async with httpx.AsyncClient(timeout=1.0) as client:
+            r = await client.get(f"{FRAME_URL}/health")
+            if r.status_code == 200:
+                frame_status = r.json().get("status", "HEALTHY")
+    except Exception:
+        frame_status = "UNREACHABLE"
+
+    return JSONResponse({
+        "organ": "GEOX",
+        "flow_engine": {"url": ARIFLOW_URL, "status": flow_status},
+        "frame_witness": {"url": FRAME_URL, "status": frame_status},
+        "chron_store": {"episodes_path": str(CHRON_EPISODES_PATH), "active": CHRON_EPISODES_PATH.exists()},
+        "timestamp": datetime.now(UTC).isoformat(),
+    })
+
+
 async def status_handler(request: Request) -> JSONResponse:
+    from geox_mcp.federation_flow import get_federation_topology
+
     enforcement = _enforce_geox()
     return JSONResponse(
         {
@@ -3535,6 +3663,7 @@ async def status_handler(request: Request) -> JSONResponse:
             "profile": GEOX_PROFILE,
             "canonical_tools": len(CANONICAL_PUBLIC_TOOLS),
             "internal_tools": len(INTERNAL_TOOLS),
+            "federation": get_federation_topology(),
         }
     )
 
@@ -4206,6 +4335,8 @@ def create_app():
             Route("/api/build-info", build_info_handler, methods=["GET"]),
             Route("/ready", ready_handler, methods=["GET"]),
             Route("/status", status_handler, methods=["GET"]),
+            Route("/federation", geox_federation_handler, methods=["GET"]),
+            Route("/flow", geox_flow_handler, methods=["GET"]),
             Route("/contract", contract_handler, methods=["GET"]),
             Route("/schemas", schemas_handler, methods=["GET"]),
             Route("/adapters", adapters_handler, methods=["GET"]),

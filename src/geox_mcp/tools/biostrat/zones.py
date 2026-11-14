@@ -40,8 +40,8 @@ Handles zone parsing, age lookup, and cross-scheme mapping for:
 - Blow (1969) P zones (Paleogene planktonic foram)
 - Lunt (2016) LBF zones (SE Asia larger benthic foram)
 
-Age data sourced from PBDB timescale scale=5 (calcareous nannoplankton zones)
-and scale=24 (planktic foraminiferal primary biozones).
+Age tables below are local and static. They do not call PBDB.
+Live PBDB lookup uses timescale names; numeric ids 5 and 24 were retired.
 """
 
 from __future__ import annotations

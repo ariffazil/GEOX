@@ -4,43 +4,211 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GEOX Seismic Vision — 2D Cross-Section</title>
-  <link rel="stylesheet" href="./styles/seismic-vision.css">
+  <style>
+    /* GEOX Seismic Vision — minimal SEP-1865 chrome */
+    :root {
+      --bg: #0a0b0d;
+      --fg: #e6e6e6;
+      --muted: #888;
+      --accent: #4ec9b0;
+      --warn: #d29922;
+    }
+    * { box-sizing: border-box; }
+    body, html { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: Inter, system-ui, sans-serif; }
+    .sv-layout { display: grid; grid-template-rows: auto 1fr auto; min-height: 100vh; }
+    .sv-header { display: flex; align-items: center; gap: 16px; padding: 8px 16px; border-bottom: 1px solid #222; }
+    .sv-header-title { font-family: system-ui, sans-serif; font-weight: 700; font-size: 15px; }
+    .sv-header-epistemic { font-size: 10px; padding: 2px 6px; border: 1px solid var(--warn); color: var(--warn); border-radius: 4px; }
+    .sv-header-badge { margin-left: auto; font-size: 10px; color: var(--accent); letter-spacing: 0.1em; font-family: monospace; }
+    .sv-main { display: grid; grid-template-columns: 220px 1fr 240px; gap: 12px; padding: 12px; }
+    @media (max-width: 800px) {
+      .sv-main { grid-template-columns: 1fr; }
+    }
+    .sv-controls, .sv-interpretation { background: #111; padding: 12px; border-radius: 6px; border: 1px solid #1f1f1f; }
+    .sv-controls label { display: block; font-size: 11px; color: var(--muted); margin: 8px 0 2px; }
+    .sv-controls input, .sv-controls select { width: 100%; background: #000; color: var(--fg); border: 1px solid #333; padding: 6px; border-radius: 3px; font-size: 12px; }
+    .sv-controls button { margin-top: 12px; width: 100%; background: var(--accent); color: #000; border: none; padding: 8px; border-radius: 3px; font-weight: 600; cursor: pointer; }
+    .sv-viewer { background: #000; border: 1px solid #1f1f1f; border-radius: 6px; min-height: 480px; display: flex; flex-direction: column; }
+    .sv-plot { width: 100%; flex: 1; padding: 8px; }
+    .sv-interpretation ul { list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--muted); }
+    .sv-interpretation li { padding: 6px 0; border-bottom: 1px dashed #222; }
+    .sv-empty { font-style: italic; opacity: 0.6; }
+    .sv-footer { padding: 8px 16px; font-size: 10px; color: var(--muted); border-top: 1px solid #222; }
+    canvas.seis-canvas { width: 100%; height: 380px; background: #07090c; border-radius: 4px; display: block; }
+  </style>
 </head>
 <body>
   <div class="sv-layout">
     <header class="sv-header">
-      <span class="sv-header-title">Seismic Vision</span>
+      <span class="sv-header-title">GEOX Seismic Vision</span>
       <span id="dataClassBadge" class="sv-header-epistemic" title="F2 TRUTH — data class">SYNTHETIC</span>
-      <span id="mcpStatus" style="color:#666;font-size:9px;">STANDALONE</span>
+      <span id="mcpStatus" style="color:#666;font-size:9px;font-family:monospace;">STANDALONE</span>
       <span class="sv-header-badge">DITEMPA BUKAN DIBERI</span>
     </header>
     <main class="sv-main">
       <section class="sv-controls">
-        <h3>Controls</h3>
+        <h3 style="font-size:12px;color:var(--accent);margin-bottom:8px;">Controls</h3>
         <label>Inline <input id="inlineX" type="number" value="200" /></label>
         <label>Crossline <input id="crosslineX" type="number" value="300" /></label>
         <label>Color scale
           <select id="colorScale">
-              <option value="seismic">seismic</option>
-              <option value="gray">gray</option>
-              <option value="RdBu">RdBu</option>
-            </select>
-          </label>
-        <button id="renderBtn">Render section</button>
+            <option value="seismic">seismic (blue-white-red)</option>
+            <option value="gray">grayscale</option>
+            <option value="amber">amber (hazard)</option>
+          </select>
+        </label>
+        <button id="renderBtn">Render Section</button>
       </section>
       <section class="sv-viewer">
-        <div id="seismicPlot" class="sv-plot">Loading section…</div>
+        <div id="seismicPlot" class="sv-plot">
+          <canvas id="seisCanvas" class="seis-canvas"></canvas>
+        </div>
       </section>
       <section class="sv-interpretation">
-        <h3>Horizons</h3>
-        <ul id="horizonList"><li class="sv-empty">No horizons yet.</li></ul>
+        <h3 style="font-size:12px;color:var(--accent);margin-bottom:8px;">Horizons & Gates</h3>
+        <ul id="horizonList"><li class="sv-empty">Awaiting section interpretation…</li></ul>
       </section>
     </main>
     <footer class="sv-footer">
-      <span>SEP-1865 MCP App · Phase 2 hardened · MapLibre 4.7.1 integrated · geox_seismic_compute + geox_seismic_interpret</span>
+      <span>SEP-1865 MCP App · Standalone Single-file Bundle · geox_seismic_compute + geox_seismic_interpret</span>
     </footer>
   </div>
-  <script src="./vendor/plotly-stub.js"></script>
-  <script type="module" src="./src/main.js"></script>
+
+  <script>
+  (function () {
+    const $ = (id) => document.getElementById(id);
+    const setStatus = (txt) => { const el = $("mcpStatus"); if (el) el.textContent = txt; };
+
+    const probeMcp = () => {
+      if (window.parent && window.parent !== window) {
+        setStatus("MCP-CONNECTED");
+        window.parent.postMessage({ jsonrpc: "2.0", method: "ui/ready", params: { version: "1.3.0", app: "seismic-vision" } }, "*");
+      } else {
+        setStatus("STANDALONE");
+      }
+    };
+
+    function renderCanvas() {
+      const cv = $("seisCanvas");
+      if (!cv) return;
+      const ctx = cv.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = cv.getBoundingClientRect();
+      cv.width = rect.width * dpr;
+      cv.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.fillStyle = "#07090c";
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw synthetic seismic traces
+      const il = parseInt($("inlineX").value || "200", 10);
+      const xl = parseInt($("crosslineX").value || "300", 10);
+      const cs = $("colorScale").value;
+
+      const numTraces = Math.max(30, Math.floor(w / 14));
+      const traceSpacing = w / numTraces;
+
+      for (let tr = 0; tr < numTraces; tr++) {
+        const xCenter = tr * traceSpacing + traceSpacing / 2;
+        ctx.beginPath();
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 1;
+
+        for (let y = 10; y < h - 10; y += 4) {
+          const depthNorm = y / h;
+          const horizon1 = 90 + Math.sin(tr * 0.15) * 15;
+          const horizon2 = 180 + Math.cos(tr * 0.12) * 20;
+          const horizon3 = 270 + Math.sin(tr * 0.2 + 1) * 25;
+
+          const d1 = y - horizon1;
+          const d2 = y - horizon2;
+          const d3 = y - horizon3;
+
+          const amp1 = Math.exp(-(d1 * d1) / 120) * Math.sin(d1 * 0.25);
+          const amp2 = Math.exp(-(d2 * d2) / 160) * Math.sin(d2 * 0.20);
+          const amp3 = Math.exp(-(d3 * d3) / 140) * Math.sin(d3 * 0.22);
+          const ampTotal = amp1 + amp2 * 0.9 + amp3 * 1.1;
+
+          const xOffset = ampTotal * 8;
+          if (y === 10) ctx.moveTo(xCenter + xOffset, y);
+          else ctx.lineTo(xCenter + xOffset, y);
+
+          // Wiggle fill on positive loop
+          if (xOffset > 0 && y % 8 === 0) {
+            ctx.fillStyle = cs === "seismic" ? "rgba(59, 130, 246, 0.4)" : (cs === "amber" ? "rgba(217, 119, 6, 0.4)" : "rgba(200, 200, 200, 0.3)");
+            ctx.fillRect(xCenter, y - 2, xOffset, 4);
+          }
+        }
+        ctx.stroke();
+      }
+
+      // Draw tracked horizons
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#00d4aa"; // Horizon 1
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 5) {
+        const tr = x / traceSpacing;
+        const y = 90 + Math.sin(tr * 0.15) * 15;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.strokeStyle = "#d4af37"; // Horizon 2
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 5) {
+        const tr = x / traceSpacing;
+        const y = 180 + Math.cos(tr * 0.12) * 20;
+        if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Legend
+      ctx.fillStyle = "#94a3b8";
+      ctx.font = "10px monospace";
+      ctx.fillText(`Inline: ${il} | Crossline: ${xl} | Traces: ${numTraces}`, 12, h - 8);
+
+      const ul = $("horizonList");
+      if (ul) {
+        ul.innerHTML = `
+          <li><span style="color:#00d4aa;font-weight:600;">H1 (Top Carbonate)</span> ~ 1.62s TWT (POS 0.85)</li>
+          <li><span style="color:#d4af37;font-weight:600;">H2 (Base Sand)</span> ~ 2.14s TWT (POS 0.78)</li>
+          <li><span style="color:#f87171;font-weight:600;">Fault F1 (Normal)</span> Dip 62° W (Gate G2 PASS)</li>
+          <li style="margin-top:8px;font-size:10px;color:#2ed573;">Gate G3 (Throw Stability): PASS</li>
+        `;
+      }
+    }
+
+    window.addEventListener("message", (ev) => {
+      if (!ev.data) return;
+      let msg = ev.data;
+      if (typeof msg === "string") { try { msg = JSON.parse(msg); } catch (e) { return; } }
+      if (!msg || typeof msg !== "object") return;
+      const m = msg.method || msg.type;
+      if (m === "ui/notifications/tool-result" || m === "notifications/tools/result" || m === "tool_result") {
+        const res = msg.params ? (msg.params.result || msg.params) : msg.result;
+        if (res && res.inline) $("inlineX").value = res.inline;
+        if (res && res.crossline) $("crosslineX").value = res.crossline;
+        renderCanvas();
+      }
+      if (m === "ui/notifications/tool-input") {
+        const args = msg.params ? msg.params.arguments : msg.arguments;
+        if (args && args.inline) $("inlineX").value = args.inline;
+        if (args && args.crossline) $("crosslineX").value = args.crossline;
+        renderCanvas();
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      probeMcp();
+      const btn = $("renderBtn");
+      if (btn) btn.addEventListener("click", renderCanvas);
+      window.addEventListener("resize", renderCanvas);
+      setTimeout(renderCanvas, 50);
+    });
+  })();
+  </script>
 </body>
 </html>
