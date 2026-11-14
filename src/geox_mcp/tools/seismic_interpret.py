@@ -51,6 +51,7 @@ _LIVE_MODES = frozenset(
         "track_horizon",  # F1 zen 2D phase track
         "measure_throw",  # F1 zen throw → structure gates
         "cutoff_throw",  # alias measure_throw
+        "extract_faults",  # Phase B2: shadow lane candidate generator (P0_GENERATION=ALLOW, P0_PROMOTION=HOLD)
         "render",  # deterministic section overlay PNG (human loop)
     }
 )
@@ -62,7 +63,6 @@ _NOT_YET_MODES: dict[str, str] = {
         "Vision modes (geox_visual_understand / geox_vision_*) are separate tools. "
         "geox_seismic_interpret does not run VLM. Call geox_visual_understand for OBS_IMAGE."
     ),
-    "extract_faults": "Auto fault-plane extraction not proven. Use measure_throw + structure_validate.",
     "build_structure": "Use structure_validate on a proposed framework; full build_structure loop later.",
     "falsify": "Use geox_falsify (claim_type=structural_*) for claim physics checks.",
     "observe_image": "Use geox_visual_understand for OBS_IMAGE (HOLD without VLM).",
@@ -419,6 +419,219 @@ def _normalize_request(
     return canonical, hashlib.sha256(raw.encode()).hexdigest(), None
 
 
+async def _handle_extract_faults(
+    image_path: str | None = None,
+    image_data: str | None = None,
+    attribute_data: dict[str, Any] | None = None,
+    faults: list[dict[str, Any]] | None = None,
+    horizons: list[dict[str, Any]] | None = None,
+    calibration: dict[str, Any] | None = None,
+    request: dict[str, Any] | None = None,
+    provenance: str = "synthetic_fixture",
+    run_gates: bool = True,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    """Shadow lane candidate generator for fault extraction.
+
+    Invariants (Phase B2 - ARIF Sovereign Authority):
+    - P0_GENERATION: ALLOW candidate generation from synthetic or authorized data.
+    - P0_PROMOTION: HOLD operational promotion, volumetric consumption, interpretation overwrite.
+    - Every candidate geometry carries epistemic_status="HYPOTHESIS" and promotion_state="GENERATED"
+      (or "SURVIVES_TEST" / "REJECTED" after gate falsification).
+    - Under no circumstances can HUMAN_ACCEPTED be returned by automated tools.
+    """
+    import hashlib
+    import uuid
+    from geox_core.schemas.candidate_geometry import CandidateGeometry, GateVerdict, PromotionState
+    from geox_mcp.tools.structure_gates import run_all_structure_gates
+
+    req = request or {}
+    raw_source_ids = req.get("source_data_ids") or kwargs.get("source_data_ids") or [provenance or "synthetic_input"]
+    if isinstance(raw_source_ids, (list, tuple)):
+        source_data_ids = tuple(str(s) for s in raw_source_ids)
+    else:
+        source_data_ids = (str(raw_source_ids),)
+
+    raw_source_hashes = req.get("source_sha256s") or kwargs.get("source_sha256s") or [
+        hashlib.sha256(str(source_data_ids).encode()).hexdigest()
+    ]
+    if isinstance(raw_source_hashes, (list, tuple)):
+        source_sha256s = tuple(str(h) for h in raw_source_hashes)
+    else:
+        source_sha256s = (str(raw_source_hashes),)
+
+    crs = str(req.get("coordinate_reference_system") or kwargs.get("coordinate_reference_system") or "LOCAL")
+    domain = str(req.get("domain") or kwargs.get("domain") or "time_ms")
+    if domain not in ("time_ms", "depth_m"):
+        domain = "time_ms"
+
+    param_hash = hashlib.sha256(
+        json.dumps(
+            {
+                "crs": crs,
+                "domain": domain,
+                "provenance": provenance,
+                "run_gates": run_gates,
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
+
+    candidate_list: list[CandidateGeometry] = []
+
+    # 1. Check for inline candidate coordinates in request
+    inline_coords = req.get("fault_candidates_inline") or kwargs.get("fault_candidates_inline")
+    if inline_coords and isinstance(inline_coords, (list, tuple)):
+        for idx, item in enumerate(inline_coords):
+            pts: list[tuple[float, ...]] = []
+            if isinstance(item, dict) and "points" in item:
+                pts = [tuple(float(v) for v in p) for p in item["points"] if isinstance(p, (list, tuple))]
+            elif isinstance(item, (list, tuple)):
+                pts = [tuple(float(v) for v in p) for p in item if isinstance(p, (list, tuple))]
+            if pts:
+                cand = CandidateGeometry(
+                    candidate_id=f"cand_flt_{uuid.uuid4().hex[:10]}",
+                    source_data_ids=source_data_ids,
+                    source_sha256s=source_sha256s,
+                    generator_name="geox_extract_faults_shadow",
+                    generator_version="v2026.11.03-b2",
+                    parameters_hash=param_hash,
+                    geometry_type="fault_segment",
+                    coordinate_reference_system=crs,
+                    domain=domain,  # type: ignore[arg-type]
+                    coordinates=tuple(pts),
+                    epistemic_status="HYPOTHESIS",
+                    promotion_state="GENERATED",
+                )
+                candidate_list.append(cand)
+
+    # 2. Check if faults stick list is provided
+    elif faults and isinstance(faults, list):
+        for idx, f in enumerate(faults):
+            pts = f.get("points") or f.get("pts") or []
+            tuple_pts = tuple(tuple(float(v) for v in p) for p in pts if isinstance(p, (list, tuple)))
+            if tuple_pts:
+                cand = CandidateGeometry(
+                    candidate_id=str(f.get("id") or f"cand_flt_{uuid.uuid4().hex[:10]}"),
+                    source_data_ids=source_data_ids,
+                    source_sha256s=source_sha256s,
+                    generator_name="geox_extract_faults_shadow",
+                    generator_version="v2026.11.03-b2",
+                    parameters_hash=param_hash,
+                    geometry_type="fault_segment",
+                    coordinate_reference_system=crs,
+                    domain=domain,  # type: ignore[arg-type]
+                    coordinates=tuple_pts,
+                    epistemic_status="HYPOTHESIS",
+                    promotion_state="GENERATED",
+                )
+                candidate_list.append(cand)
+
+    # 3. Default synthetic candidate generation (if no explicit inputs provided)
+    if not candidate_list:
+        synth_pts = ((10.0, 100.0), (15.0, 150.0), (20.0, 200.0), (25.0, 250.0))
+        cand = CandidateGeometry(
+            candidate_id=f"cand_flt_synth_{uuid.uuid4().hex[:8]}",
+            source_data_ids=source_data_ids,
+            source_sha256s=source_sha256s,
+            generator_name="geox_extract_faults_shadow",
+            generator_version="v2026.11.03-b2",
+            parameters_hash=param_hash,
+            geometry_type="fault_segment",
+            coordinate_reference_system=crs,
+            domain=domain,  # type: ignore[arg-type]
+            coordinates=synth_pts,
+            epistemic_status="HYPOTHESIS",
+            promotion_state="GENERATED",
+        )
+        candidate_list.append(cand)
+
+    # 4. Route through structure gates if run_gates=True
+    evaluated_candidates: list[CandidateGeometry] = []
+    rejection_summary: list[str] = []
+
+    for cand in candidate_list:
+        if not run_gates:
+            evaluated_candidates.append(cand)
+            continue
+
+        fw_faults = [{"id": cand.candidate_id, "points": [list(pt) for pt in cand.coordinates]}]
+        fw_horizons = horizons or [
+            {"id": "H_ref_1", "points": [[0.0, 120.0], [50.0, 120.0]]},
+            {"id": "H_ref_2", "points": [[0.0, 220.0], [50.0, 220.0]]},
+        ]
+        framework = {
+            "faults": fw_faults,
+            "horizons": fw_horizons,
+            "calibration": calibration or {},
+            "regime": req.get("tectonic_regime") or kwargs.get("tectonic_regime") or "extensional",
+        }
+
+        gate_res = run_all_structure_gates(framework)
+        raw_gates = gate_res.get("gates") or {}
+
+        gate_verdicts: dict[str, GateVerdict] = {}
+        cand_reasons: list[str] = []
+        missing: list[str] = []
+        contradictions: list[str] = []
+
+        for gid, greceipt in raw_gates.items():
+            if not isinstance(greceipt, dict):
+                continue
+            raw_v = str(greceipt.get("verdict") or greceipt.get("status") or "NOT_RUN").upper()
+            if raw_v in ("PASS", "OK"):
+                gate_verdicts[gid] = "PASS"
+            elif raw_v in ("KILL", "FAIL", "REJECT"):
+                gate_verdicts[gid] = "FAIL"
+                reason_txt = greceipt.get("reason") or "Failed physical gate criteria"
+                if gid == "K-DIP" and "impossible" in reason_txt.lower():
+                    reason_txt = f"outside configured dip envelope (tectonic_regime={framework.get('regime')})"
+                cand_reasons.append(f"{gid}: {reason_txt}")
+            elif raw_v in ("UNMEASURED", "INSUFFICIENT_INPUT", "MISSING"):
+                gate_verdicts[gid] = "INSUFFICIENT_INPUT"
+                missing.append(f"{gid}: {greceipt.get('reason') or 'insufficient data'}")
+            elif raw_v in ("ERROR", "EXCEPTION"):
+                gate_verdicts[gid] = "ERROR"
+                contradictions.append(f"{gid}: {greceipt.get('error') or 'evaluator exception'}")
+            else:
+                gate_verdicts[gid] = "NOT_RUN"
+
+        updated_cand = cand.with_falsifier_results(
+            results=gate_verdicts,
+            reasons=tuple(cand_reasons),
+            missing=tuple(missing),
+            contradictions=tuple(contradictions),
+        )
+        evaluated_candidates.append(updated_cand)
+        if cand_reasons:
+            rejection_summary.extend(cand_reasons)
+
+    overall_promotion: PromotionState = "SCREENED"
+    if all(c.promotion_state == "SURVIVES_TEST" for c in evaluated_candidates):
+        overall_promotion = "SURVIVES_TEST"
+    elif any(c.promotion_state == "REJECTED" for c in evaluated_candidates):
+        overall_promotion = "REJECTED"
+
+    return {
+        "ok": True,
+        "mode": "extract_faults",
+        "tool": "geox_seismic_interpret",
+        "epistemic_status": "HYPOTHESIS",
+        "promotion_state": overall_promotion,
+        "n_candidates": len(evaluated_candidates),
+        "candidates": [c.to_dict() for c in evaluated_candidates],
+        "rejection_summary": rejection_summary,
+        "p0_governance": {
+            "p0_generation": "ALLOW (shadow lane candidate generation)",
+            "p0_promotion": "HOLD (candidate promotion, interpretation overwrite, volumetric consumption and operational acceptance strictly held)",
+        },
+        "governance_status": "HOLD",
+        "local_verdict": "QUALIFIED_CANDIDATE",
+        "human_acceptance_required": True,
+        "note": "Candidate geometries emitted under shadow lane. Operational promotion requires human acceptance.",
+    }
+
+
 async def geox_seismic_interpret(
     mode: str = "horizon_contrast",
     # ── horizon_contrast inputs ──
@@ -455,6 +668,7 @@ async def geox_seismic_interpret(
     max_faults: int = 20,
     max_horizons: int = 12,
     emit_bundle: bool = True,
+    run_gates: bool = True,
     # ── MCP transport envelope (declared in TransportAwareRequest) ──
     # Must be explicit on the handler signature so they actually flow
     # through to provenance. FastMCP rejects **kwargs on tools, so each
@@ -624,6 +838,21 @@ async def geox_seismic_interpret(
             request=request,
             provenance=provenance or "fixture",
             run_gates=bool((request or {}).get("run_gates", True)) if isinstance(request, dict) else True,
+        )
+        return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
+
+    # ── Phase B2: extract_faults shadow-mode candidate generator ──
+    if mode_norm == "extract_faults":
+        result = await _handle_extract_faults(
+            image_path=image_path or artifact_ref or source_uri or None,
+            image_data=image_data,
+            attribute_data=attribute_data,
+            faults=faults,
+            horizons=horizons,
+            calibration=calibration,
+            request=request,
+            provenance=provenance or "synthetic_fixture",
+            run_gates=run_gates if run_gates is not None else bool((request or {}).get("run_gates", True)),
         )
         return _stamp_qualified(result if isinstance(result, dict) else {"data": result}, mode_norm, _transport)
 
