@@ -42,7 +42,7 @@
     {
       "name": "intervals/list",
       "path": "intervals/list.json?scale=N",
-      "purpose": "Get biozone / chronostratigraphic intervals. scale=1 (ICS ages), scale=5 (nanno zones), scale=24 (foram zones)",
+      "purpose": "Get biozone / chronostratigraphic intervals. scale=1 is ICS. Nanno and foram numeric ids 5 and 24 are retired; pass the timescale name (see scale_resolution_2026-11-12).",
       "consumed_by": ["geox_paleobiodb_query(mode='zone', 'age_intervals')"]
     },
     {
@@ -53,9 +53,9 @@
     }
   ],
   "supported_scales": {
-    "1": "ICS chronostratigraphic stages (international standard)",
-    "5": "Calcareous nannoplankton zones (NN/NP)",
-    "24": "Planktic foraminifera primary biozones (Blow/Wade)"
+    "1": "ICS chronostratigraphic stages (international standard). Numeric id still valid on data1.2.",
+    "Calcareous Nannoplankton Zones": "Calcareous nannoplankton zones (NN/NP). Numeric id 5 retired; name resolves.",
+    "Planktic Foraminiferal Zones": "Planktic foraminifera biozones. Numeric id 24 retired; name resolves."
   },
   "supported_fossil_groups": ["calcareous_nannofossil", "planktonic_foram", "(benthic_foram, radiolaria, diatom — partial coverage)"],
   "geo_relevance": {
@@ -71,6 +71,19 @@
     "cc_by_license": "verified — PBDB terms page confirms CC-BY 4.0 for compiled data",
     "rate_limit_observed": "approximately 10 req/s sustained for anonymous tier (PBDB docs); no explicit hard cap documented, but 429 responses appear above ~30 req/s in informal testing",
     "unverified": "exact throttle threshold; long-term cache effectiveness across GEOX restarts"
+  },
+  "scale_resolution_2026-11-12": {
+    "measured": "https://paleobiodb.org/data1.2/intervals/list.json",
+    "retired_ids": {
+      "5": "timescale '5' was not found; old client dropped the warning and returned status ok, count 0",
+      "24": "timescale '24' was not found; old client dropped the warning and returned status ok, count 0"
+    },
+    "resolution": "GEOX passes the timescale name. ICS stays numeric id 1. Empty zone answers are status partial and are not cached.",
+    "live_counts": {
+      "Calcareous Nannoplankton Zones": {"tsc": 220, "n": 107},
+      "Planktic Foraminiferal Zones": {"tsc": 221, "n": 93},
+      "ICS": {"id": 1, "n": 171}
+    }
   },
   "consuming_tools": [
     "geox_paleobiodb_query",

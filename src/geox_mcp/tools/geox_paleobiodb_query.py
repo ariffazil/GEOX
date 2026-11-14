@@ -21,7 +21,11 @@ import logging
 import time
 from typing import Any, Literal
 
-from geox_mcp.tools.biostrat.taxonomy import PBDBClient
+from geox_mcp.tools.biostrat.taxonomy import (
+    PBDB_SCALE_FORAM,
+    PBDB_SCALE_NANNO,
+    PBDBClient,
+)
 from geox_mcp.tools.biostrat.schemas import BiostratEnvelope
 
 logger = logging.getLogger(__name__)
@@ -32,28 +36,29 @@ logger = logging.getLogger(__name__)
 # Cache lives in-process only — restart wipes it. That's acceptable; PBDB results
 # are stable and idempotent.
 
-_CACHE_TTL_SECONDS = 86_400  # 24h
+_CACHE_TTL_SECONDS = 86_400  # 24h — clean answers, including a stable empty set
+_CACHE_TTL_UPSTREAM_WARN = 3_600  # 1h — upstream answered, but WITH warnings
 _CACHE_MAX_ENTRIES = 512
 
-_cache: dict[str, tuple[float, Any]] = {}
+_cache: dict[str, tuple[float, Any, float]] = {}  # key -> (stored_at, value, ttl)
 
 
 def _cache_get(key: str) -> Any | None:
     if key not in _cache:
         return None
-    ts, val = _cache[key]
-    if time.time() - ts > _CACHE_TTL_SECONDS:
+    ts, val, ttl = _cache[key]
+    if time.time() - ts > ttl:
         del _cache[key]
         return None
     return val
 
 
-def _cache_set(key: str, val: Any) -> None:
+def _cache_set(key: str, val: Any, ttl: float = _CACHE_TTL_SECONDS) -> None:
     if len(_cache) >= _CACHE_MAX_ENTRIES:
         # evict oldest
         oldest = min(_cache.items(), key=lambda kv: kv[1][0])
         _cache.pop(oldest[0], None)
-    _cache[key] = (time.time(), val)
+    _cache[key] = (time.time(), val, ttl)
 
 
 def _cache_key(mode: str, params: dict[str, Any]) -> str:
@@ -135,16 +140,16 @@ async def _mode_zone(
 ) -> dict[str, Any]:
     """Get biozone catalogue for a fossil group.
 
-    fossil_group ∈ {calcareous_nannofossil, planktonic_foram}
-      calcareous_nannofossil → PBDB scale=5 (NN/NP zones)
-      planktonic_foram       → PBDB scale=24 (Blow/Wade foram zones)
+    fossil_group in {calcareous_nannofossil, planktonic_foram}.
+    data1.2 `scale` is the timescale name. Numeric ids 5 and 24 were
+    retired (PBDB: "timescale was not found"). Names measured 2026-11-12.
     """
     if fossil_group == "calcareous_nannofossil":
         rows = await client.get_nannoplankton_zones()
-        scale_used = 5
+        scale_used = PBDB_SCALE_NANNO
     elif fossil_group == "planktonic_foram":
         rows = await client.get_foram_zones()
-        scale_used = 24
+        scale_used = PBDB_SCALE_FORAM
     else:
         return {
             "error": f"unsupported fossil_group: {fossil_group}",
@@ -156,6 +161,7 @@ async def _mode_zone(
         "pbdb_scale": scale_used,
         "count": len(rows),
         "zones": rows,
+        "upstream_warnings": list(getattr(client, "last_warnings", []) or []),
     }
 
 
@@ -233,6 +239,7 @@ async def geox_paleobiodb_query(
     client = PBDBClient()
     try:
         warnings: list[str] = []
+        upstream_warnings: list[str] = []
 
         if mode == "taxa":
             if not name:
@@ -265,6 +272,11 @@ async def geox_paleobiodb_query(
             data = await _mode_zone(client, fossil_group=fossil_group)
             if "error" in data:
                 warnings.append(data["error"])
+            else:
+                upstream_warnings = list(data.get("upstream_warnings") or [])
+                warnings.extend(upstream_warnings)
+                if data.get("count", 0) == 0:
+                    warnings.append(f"no zones returned for fossil_group={fossil_group} scale={data.get('pbdb_scale')}")
 
         else:  # age_intervals
             data = await _mode_age_intervals(client)
@@ -282,7 +294,12 @@ async def geox_paleobiodb_query(
             provenance="GEOX · PBDB substrate",
         )
         result = envelope.model_dump()
-        _cache_set(key, result)
+        # A stable "no records" answer is still an answer: cache it full-TTL so a
+        # polling caller cannot bypass the rate-limit cache with an empty result.
+        # Answers where UPSTREAM warned get the short TTL — a degraded period
+        # self-heals in 1h instead of serving a miss for 24h.
+        ttl = _CACHE_TTL_UPSTREAM_WARN if upstream_warnings else _CACHE_TTL_SECONDS
+        _cache_set(key, result, ttl)
         return result
     except Exception as e:
         logger.warning("PBDB query failed: mode=%s err=%s", mode, e)

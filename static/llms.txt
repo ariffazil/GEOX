@@ -15,6 +15,8 @@
 - Agent profile: https://geox.arif-fazil.com/profile
 - Scenarios: https://geox.arif-fazil.com/scenarios
 - Agent discovery: https://geox.arif-fazil.com/.well-known/mcp.json · /well-known/mcp/server.json · /ai-catalog.json
+- Agent card: https://geox.arif-fazil.com/.well-known/agent-card.json — GEOX Earth Intelligence,
+  the organ's machine-readable identity card (name, canonical url, capabilities, provenance).
 
 ## Connectors (edge behaviour verified 2026-10-26, any model/platform)
 

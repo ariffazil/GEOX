@@ -165,7 +165,43 @@ def register_tools_on(mcp):
     @mcp.tool(
         name="geox_observe",
         annotations=_geox_annotations("geox_observe"),
-        meta={"ui": {"resourceUri": "ui://geox/earth-volume"}},
+        meta={
+            "ui": {
+                "resourceUri": "ui://geox/earth-volume",
+                "title": "GEOX Earth Volume",
+                "renderMode": "panel",
+                "mimeType": "text/html;profile=mcp-app",
+                "domain": "https://geox.arif-fazil.com",
+                "csp": {
+                    "connectDomains": ["geox.arif-fazil.com", "macrostrat.org"],
+                    "resourceDomains": [
+                        "geox.arif-fazil.com",
+                        "unpkg.com",
+                        "tile.openstreetmap.org",
+                        "cdn.jsdelivr.net",
+                        "cdn.plot.ly",
+                        "cdn.tailwindcss.com",
+                        "fonts.googleapis.com",
+                        "fonts.gstatic.com",
+                    ],
+                },
+            },
+            "openai/outputTemplate": "ui://geox/earth-volume",
+            "openai/widgetCSP": {
+                "connect_domains": ["geox.arif-fazil.com", "macrostrat.org"],
+                "resource_domains": [
+                    "geox.arif-fazil.com",
+                    "unpkg.com",
+                    "tile.openstreetmap.org",
+                    "cdn.jsdelivr.net",
+                    "cdn.plot.ly",
+                    "cdn.tailwindcss.com",
+                    "fonts.googleapis.com",
+                    "fonts.gstatic.com",
+                ],
+                "redirect_domains": ["geox.arif-fazil.com"],
+            },
+        },
     )
     async def _earth_observe(
         artifact_ref: str | dict[str, Any],
@@ -3826,7 +3862,7 @@ def register_tools_on(mcp):
     ) -> dict[str, Any]:
         """Look up canonical zone metadata: scheme, age range, source.
 
-        Uses PBDB intervals for nanno (scale=5) and foram (scale=24) zones.
+        Uses PBDB intervals by timescale name (numeric ids 5 and 24 are retired).
         SE Asia-specific schemes (Lunt 2016 LBF, SSB 1995/2013, Morley 1991) are
         NOT in PBDB — returns SCHEME_NOT_IN_PBDB; use Mikrotax or local reference.
 
@@ -3853,21 +3889,26 @@ def register_tools_on(mcp):
                 "error": "Required argument 'zone_code' not provided.",
             }
 
-        # Scheme → PBDB scale mapping. ROUTING ONLY — no new zonation schemes.
-        # nanno scales: NN/NP/CC/CN/CP/CNP/CNE/CNO → 5; foram scales: N/P/Wade → 24.
+        # Scheme → PBDB timescale name. ROUTING ONLY — no new zonation schemes.
+        # Numeric ids 5 and 24 were retired on data1.2 (timescale not found).
         # SE Asia schemes (LBF/SSB/Morley) intentionally absent → SCHEME_NOT_IN_PBDB.
+        from geox_mcp.tools.biostrat.taxonomy import (
+            PBDB_SCALE_FORAM,
+            PBDB_SCALE_NANNO,
+        )
+
         scheme_to_scale = {
-            "Martini_1971_NN": 5,
-            "Martini_1971_NP": 5,
-            "Sissingh_1977_CC": 5,
-            "Bukry_1973_CN": 5,
-            "Okada_Bukry_1980_CP": 5,
-            "Agnini_2014_CNP": 5,
-            "Agnini_2014_CNE": 5,
-            "Agnini_2014_CNO": 5,
-            "Blow_1969_N": 24,
-            "Blow_1969_P": 24,
-            "Wade_2011": 24,
+            "Martini_1971_NN": PBDB_SCALE_NANNO,
+            "Martini_1971_NP": PBDB_SCALE_NANNO,
+            "Sissingh_1977_CC": PBDB_SCALE_NANNO,
+            "Bukry_1973_CN": PBDB_SCALE_NANNO,
+            "Okada_Bukry_1980_CP": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNP": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNE": PBDB_SCALE_NANNO,
+            "Agnini_2014_CNO": PBDB_SCALE_NANNO,
+            "Blow_1969_N": PBDB_SCALE_FORAM,
+            "Blow_1969_P": PBDB_SCALE_FORAM,
+            "Wade_2011": PBDB_SCALE_FORAM,
         }
         if scheme not in scheme_to_scale:
             return {
@@ -3886,7 +3927,11 @@ def register_tools_on(mcp):
 
         client = PBDBClient()
         try:
-            intervals = await client.intervals_list(scale=scale, limit=200)
+            intervals = await client.intervals_list(scale=scale, limit=500)
+            # Captured before close(): if the timescale name itself stopped
+            # resolving upstream, ZONE_NOT_FOUND must say so (same failure class
+            # as the retired numeric ids 5/24), not hide behind available_count=0.
+            upstream_warnings = list(client.last_warnings)
         finally:
             await client.close()
 
@@ -3904,7 +3949,11 @@ def register_tools_on(mcp):
                 "tool": "geox_biostrat_lookup_zone",
                 "reason_code": "ZONE_NOT_FOUND",
                 "error": f"Zone '{zone_code}' not found in PBDB scale={scale} (scheme={scheme}).",
-                "data": {"scale": scale, "available_count": len(intervals)},
+                "data": {
+                    "scale": scale,
+                    "available_count": len(intervals),
+                    "upstream_warnings": upstream_warnings,
+                },
             }
         return {
             "ok": True,
@@ -3913,8 +3962,8 @@ def register_tools_on(mcp):
                 "zone_code": zone_code,
                 "scheme": scheme,
                 "name": match.get("nam"),
-                "age_top_ma": match.get("ea"),
-                "age_bottom_ma": match.get("la"),
+                "age_top_ma": match.get("eag", match.get("ea")),
+                "age_bottom_ma": match.get("lag", match.get("la")),
                 "pbdb_oid": match.get("oid"),
             },
             "source": "PBDB",
@@ -7725,10 +7774,20 @@ def register_tools_on(mcp):
                 return None
 
         _tool_names = await _live_tool_names()
+        from collections import Counter as _Counter
+
+        _counts = _Counter(_tool_names or [])
+        _dupes = sorted(n for n, c in _counts.items() if c > 1)
+        _unique = len(_counts)
         _public_names = sorted({n for n in (_tool_names or []) if n in CANONICAL_PUBLIC_TOOLS})
         live_counts = {
             "tools": len(_public_names) if _tool_names is not None else None,
-            "tools_total": len(_tool_names) if _tool_names is not None else None,
+            # S2 (2026-10-28): a count built as a set difference can never detect a
+            # duplicate. tools_total is now UNIQUE names; entries and the duplicate
+            # names are reported separately so the collision is visible, not absorbed.
+            "tools_total": _unique if _tool_names is not None else None,
+            "tools_entries": len(_tool_names) if _tool_names is not None else None,
+            "tools_duplicate_names": _dupes if _tool_names is not None else None,
             "resources": await _live_count("list_resources"),
             "prompts": await _live_count("list_prompts"),
             # OBS instrument (2026-10-15): the live name list settles count

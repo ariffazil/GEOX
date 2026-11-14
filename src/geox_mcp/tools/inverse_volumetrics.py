@@ -63,6 +63,22 @@ def solve_inverse_volumetrics(
     np.random.seed(seed)
     n = int(samples)
 
+    # ── P0_PROMOTION INVARIANT (Phase B2 - ARIF): Reject unaccepted CandidateGeometry ──
+    if input_provenance and isinstance(input_provenance, dict):
+        epistemic = input_provenance.get("epistemic_status")
+        promo = input_provenance.get("promotion_state")
+        if epistemic == "HYPOTHESIS" or (promo is not None and promo != "HUMAN_ACCEPTED"):
+            return {
+                "ok": False,
+                "error": "REJECTED_UNACCEPTED_CANDIDATE",
+                "message": (
+                    f"Inverse volumetrics requires HUMAN_ACCEPTED inputs (found promotion_state='{promo}'). "
+                    "CandidateGeometry under HYPOTHESIS/GENERATED/SURVIVES_TEST cannot enter volumetrics under P0_PROMOTION."
+                ),
+                "epistemic_status": "HYPOTHESIS",
+                "p0_governance": "P0_PROMOTION_HOLD",
+            }
+
     # Resolve ranges
     p_min, p_max = float(pressure_mpa_range[0]), float(pressure_mpa_range[1])
     t_min, t_max = float(temperature_c_range[0]), float(temperature_c_range[1])
