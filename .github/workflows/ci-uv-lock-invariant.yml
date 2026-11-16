@@ -70,7 +70,9 @@ jobs:
         run: |
           set -euo pipefail
           echo "═══ F13 invariant: frozen sync resolves cleanly ═══"
-          uv sync --frozen
+          # Pin the interpreter: ubuntu-latest defaults to Python 3.14 and
+          # pygplates 1.0.0 has no cp314 wheel → unpinned sync builds the sdist.
+          uv sync --frozen --python 3.12
           echo "✅ uv sync --frozen resolved cleanly"
 
       - name: Record lockfile SHA-256

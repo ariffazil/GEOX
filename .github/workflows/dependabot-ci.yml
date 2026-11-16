@@ -100,7 +100,10 @@ jobs:
           set -euo pipefail
           # dev extra carries ruff + fastmcp[apps,tasks]; without it `uv run ruff`
           # cannot spawn and lint silently degrades to a no-op.
-          uv sync --frozen --extra dev
+          # Pin the interpreter: ubuntu-latest now defaults to Python 3.14,
+          # and pygplates 1.0.0 has no cp314 wheel (cp310–cp313 only), so an
+          # unpinned sync silently falls back to the sdist and compiles it.
+          uv sync --frozen --extra dev --python 3.12
           echo "✅ Frozen sync OK (+dev extra) — lockfile is the resolver authority"
 
       - name: Record lockfile SHA-256
