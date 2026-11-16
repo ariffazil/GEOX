@@ -80,6 +80,15 @@ jobs:
           enable-cache: false
           version: "0.7.x"
 
+      # pygplates 1.0.0 has no cp312 wheel: uv builds it from source and CMake
+      # needs the OpenGL headers/libs that the bare runner lacks
+      # (observed: "Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY
+      #  OPENGL_glx_LIBRARY OPENGL_INCLUDE_DIR)").
+      - name: System libs — pygplates build (OpenGL)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libgl1-mesa-dev libglvnd-dev libglu1-mesa-dev
+
       - name: Hard invariant — uv lock consistency
         run: |
           set -euo pipefail
@@ -89,8 +98,10 @@ jobs:
       - name: Hard invariant — uv sync frozen
         run: |
           set -euo pipefail
-          uv sync --frozen
-          echo "✅ Frozen sync OK — lockfile is the resolver authority"
+          # dev extra carries ruff + fastmcp[apps,tasks]; without it `uv run ruff`
+          # cannot spawn and lint silently degrades to a no-op.
+          uv sync --frozen --extra dev
+          echo "✅ Frozen sync OK (+dev extra) — lockfile is the resolver authority"
 
       - name: Record lockfile SHA-256
         id: lockhash
