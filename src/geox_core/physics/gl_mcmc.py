@@ -122,8 +122,11 @@ def metropolis_hastings(
         chains: list of (n_iter,) arrays of accepted samples per chain.
         diag: MCMCDiagnostics with posterior summary.
     """
-    if seed is not None:
-        np.random.seed(seed)
+    base_seed = 42 if seed is None else seed
+    chain_rngs = [
+        np.random.default_rng(np.random.SeedSequence([base_seed, c_idx]))
+        for c_idx in range(n_chains)
+    ]
 
     # Initial parameter vector + covariance
     x0 = _pack_theta(theta0)
@@ -132,29 +135,28 @@ def metropolis_hastings(
     proposal_cov = np.eye(n_params) * 0.1
     proposal_chol = np.linalg.cholesky(proposal_cov)
 
-    # Initialize chains from slightly perturbed starts
+    # Initialize chains from slightly perturbed starts (isolated RNG per chain)
     chains_x = []
     chains_ll = []
     for c_idx in range(n_chains):
-        np.random.seed((seed or 42) + c_idx)
-        perturb = np.random.normal(0, 0.05, n_params)
+        perturb = chain_rngs[c_idx].normal(0, 0.05, n_params)
         x_init = x0 + perturb
         theta_init = _unpack_theta(theta0, x_init)
         ll_init = _log_posterior(theta_init, obs)
         chains_x.append([x_init.copy()])
         chains_ll.append([ll_init])
 
-    # Adaptive Metropolis warm-up
+    # Adaptive Metropolis warm-up (per chain: n_warmup warm-up + n_iter production)
     adapt_scale = 2.38**2 / n_params
     eps = 1e-6
     chain_cov = proposal_cov.copy()
+    prod_accepts = 0
+    prod_proposals = 0
 
-    for it in range(n_warmup + n_iter):
-        chain_idx = it % n_chains
-        x_curr = np.array(chains_x[chain_idx][-1])
-
-        # Adapt covariance from history if sufficient samples
-        if it >= 50 and it % 20 == 0:
+    for step in range(n_warmup + n_iter):
+        is_prod = step >= n_warmup
+        # Adapt proposal covariance only during warm-up to preserve stationarity
+        if not is_prod and step >= 25 and step % 10 == 0:
             all_samples = []
             for c in chains_x:
                 all_samples.extend(c[-100:])
@@ -166,78 +168,154 @@ def metropolis_hastings(
                 except np.linalg.LinAlgError:
                     pass  # fall back to previous cholesky
 
-        # Propose
-        try:
-            x_prop = x_curr + proposal_chol @ np.random.normal(0, 1, n_params)
-        except ValueError:
-            x_prop = x_curr + np.random.normal(0, 0.05, n_params)
+        for chain_idx in range(n_chains):
+            rng_c = chain_rngs[chain_idx]
+            x_curr = np.array(chains_x[chain_idx][-1])
 
-        theta_prop = _unpack_theta(theta0, x_prop)
-        ll_prop = _log_posterior(theta_prop, obs)
-        ll_curr = chains_ll[chain_idx][-1]
+            try:
+                x_prop = x_curr + proposal_chol @ rng_c.normal(0, 1, n_params)
+            except ValueError:
+                x_prop = x_curr + rng_c.normal(0, 0.05, n_params)
 
-        # Metropolis accept/reject
-        log_alpha = ll_prop - ll_curr
-        if math.log(np.random.random()) < log_alpha:
-            chains_x[chain_idx].append(x_prop.copy())
-            chains_ll[chain_idx].append(ll_prop)
-        else:
-            chains_x[chain_idx].append(x_curr.copy())
-            chains_ll[chain_idx].append(ll_curr)
+            theta_prop = _unpack_theta(theta0, x_prop)
+            ll_prop = _log_posterior(theta_prop, obs)
+            ll_curr = chains_ll[chain_idx][-1]
 
-    # Diagnostics
-    diag = _diagnose(chains_x, chains_ll, n_warmup)
+            # Metropolis accept/reject
+            log_alpha = ll_prop - ll_curr
+            if is_prod:
+                prod_proposals += 1
+            if math.log(max(float(rng_c.random()), 1e-300)) < log_alpha:
+                chains_x[chain_idx].append(x_prop.copy())
+                chains_ll[chain_idx].append(ll_prop)
+                if is_prod:
+                    prod_accepts += 1
+            else:
+                chains_x[chain_idx].append(x_curr.copy())
+                chains_ll[chain_idx].append(ll_curr)
+
+    # Diagnostics (skip initial seed state + n_warmup warm-up draws)
+    prod_chains = [np.array(c[n_warmup + 1 :]) for c in chains_x]
+    diag = diagnose_chains(prod_chains, n_accept=prod_accepts, n_proposals=prod_proposals)
     return chains_x, diag
 
 
-def _diagnose(chains_x: list, chains_ll: list, n_warmup: int) -> MCMCDiagnostics:
-    """Compute Gelman-Rubin R-hat, ESS, posterior summary."""
-    # Drop warm-up
-    prod_chains = [np.array(c[n_warmup:]) for c in chains_x]
-    n_iter = prod_chains[0].shape[0]
-    n_params = prod_chains[0].shape[1]
+def _chain_ess(x: np.ndarray) -> float:
+    """Estimate effective sample size of a 1D chain via Geyer's positive sequence."""
+    n = len(x)
+    if n < 4:
+        return 0.0
+    xc = x - float(np.mean(x))
+    var = float(np.dot(xc, xc) / n)
+    if not math.isfinite(var) or var <= 1e-18:
+        return 0.0  # frozen chain has zero effective information
 
-    # Per-parameter Gelman-Rubin R-hat
-    r_hats = []
-    ess_vals = []
+    acov = np.correlate(xc, xc, mode="full")[n - 1 :] / (var * n)
+    # Geyer's initial positive sequence on lag pairs
+    tau = 1.0
+    if n > 2:
+        p0 = 1.0 + float(acov[1])
+        pair_sum = max(0.0, p0)
+        k = 2
+        while k + 1 < n:
+            pk = float(acov[k] + acov[k + 1])
+            if pk <= 0.0:
+                break
+            pair_sum += pk
+            k += 2
+        tau = max(1.0, -1.0 + 2.0 * pair_sum)
+    return float(min(float(n), n / tau))
+
+
+def diagnose_chains(
+    prod_chains: list[np.ndarray],
+    n_accept: int | None = None,
+    n_proposals: int | None = None,
+    labels: list[str] | None = None,
+) -> MCMCDiagnostics:
+    """Compute Gelman-Rubin R-hat, autocorrelation ESS, and convergence gate."""
+    n_chains = len(prod_chains)
+    n_iter = prod_chains[0].shape[0] if n_chains else 0
+    n_params = prod_chains[0].shape[1] if n_chains and n_iter else 0
+    if labels is None:
+        labels = ["E", "c", "phi", "tau_0", "sigma_t", "phi_p"]
+
+    if n_chains == 0 or n_iter == 0 or n_params == 0:
+        return MCMCDiagnostics(n_iter=0, n_accept=0, accept_rate=0.0, r_hat=float("inf"), ess=0.0, converged=False)
+
+    r_hats: list[float] = []
+    ess_vals: list[float] = []
     for p_idx in range(n_params):
-        chain_means = np.array([c[:, p_idx].mean() for c in prod_chains])
-        chain_vars = np.array([c[:, p_idx].var(ddof=1) for c in prod_chains])
-        B = n_iter * np.var(chain_means, ddof=1)  # between-chain var
-        W = chain_vars.mean()  # within-chain var
-        var_plus = (n_iter - 1) / n_iter * W + B / n_iter
-        r_hat = float(np.sqrt(var_plus / W)) if W > 0 else float("inf")
+        if n_chains >= 2 and n_iter >= 2:
+            chain_means = np.array([c[:, p_idx].mean() for c in prod_chains])
+            chain_vars = np.array([c[:, p_idx].var(ddof=1) for c in prod_chains])
+            B = n_iter * float(np.var(chain_means, ddof=1))
+            W = float(chain_vars.mean())
+            if W <= 1e-18:
+                r_hat = float("inf")
+            else:
+                var_plus = ((n_iter - 1) / n_iter) * W + B / n_iter
+                r_hat = float(np.sqrt(var_plus / W))
+        else:
+            r_hat = float("inf")
         r_hats.append(r_hat)
-        # Effective sample size (rough): n_iter / (1 + 2 * sum_autocorr)
-        ess = n_iter  # crude upper bound
-        ess_vals.append(ess)
 
-    # Flatten for posterior summary
-    all_samples = np.vstack(prod_chains)  # (n_chains*n_iter, n_params)
+        param_ess = sum(_chain_ess(c[:, p_idx]) for c in prod_chains)
+        ess_vals.append(param_ess)
+
+    all_samples = np.vstack(prod_chains)
     summary_mean = all_samples.mean(axis=0)
     summary_std = all_samples.std(axis=0)
     summary_p05 = np.percentile(all_samples, 5, axis=0)
     summary_p50 = np.percentile(all_samples, 50, axis=0)
     summary_p95 = np.percentile(all_samples, 95, axis=0)
 
-    # Find best sample (highest log-likelihood)
-    all_ll = np.array([l for ll_list in chains_ll for l in ll_list[n_warmup:]])
+    if n_accept is not None and n_proposals is not None and n_proposals > 0:
+        actual_accept = int(n_accept)
+        accept_rate = float(n_accept / n_proposals)
+    else:
+        # Infer transitions from adjacent distinct rows if proposal counts not supplied
+        transitions = 0
+        proposals = 0
+        for c in prod_chains:
+            if len(c) > 1:
+                diffs = np.any(np.diff(c, axis=0) != 0, axis=1)
+                transitions += int(np.sum(diffs))
+                proposals += len(c) - 1
+        actual_accept = transitions
+        accept_rate = float(transitions / proposals) if proposals > 0 else 0.0
 
-    labels = ["E", "c", "phi", "tau_0", "sigma_t", "phi_p"]
+    worst_r_hat = float(max(r_hats))
+    min_ess = float(min(ess_vals))
+    converged = bool(
+        n_chains >= 2
+        and n_iter >= 10
+        and math.isfinite(worst_r_hat)
+        and worst_r_hat < 1.1
+        and min_ess >= 10.0
+        and accept_rate > 0.0
+    )
 
+    param_names = [labels[i] if i < len(labels) else f"p{i}" for i in range(n_params)]
     return MCMCDiagnostics(
         n_iter=n_iter,
-        n_accept=int(np.sum(all_ll > -1e9)),
-        accept_rate=float(np.mean(all_ll > -1e9)),
-        r_hat=float(np.mean(r_hats)),
-        ess=float(np.mean(ess_vals)),
-        mean={labels[i]: float(summary_mean[i]) for i in range(n_params)},
-        std={labels[i]: float(summary_std[i]) for i in range(n_params)},
-        p05={labels[i]: float(summary_p05[i]) for i in range(n_params)},
-        p50={labels[i]: float(summary_p50[i]) for i in range(n_params)},
-        p95={labels[i]: float(summary_p95[i]) for i in range(n_params)},
-        converged=(float(np.mean(r_hats)) < 1.1),
+        n_accept=actual_accept,
+        accept_rate=accept_rate,
+        r_hat=worst_r_hat,
+        ess=min_ess,
+        mean={param_names[i]: float(summary_mean[i]) for i in range(n_params)},
+        std={param_names[i]: float(summary_std[i]) for i in range(n_params)},
+        p05={param_names[i]: float(summary_p05[i]) for i in range(n_params)},
+        p50={param_names[i]: float(summary_p50[i]) for i in range(n_params)},
+        p95={param_names[i]: float(summary_p95[i]) for i in range(n_params)},
+        converged=converged,
     )
+
+
+def _diagnose(chains_x: list, chains_ll: list, n_warmup: int) -> MCMCDiagnostics:
+    """Backward-compatible wrapper over diagnose_chains."""
+    prod_chains = [np.array(c[n_warmup:]) for c in chains_x]
+    return diagnose_chains(prod_chains)
 
 
 if __name__ == "__main__":

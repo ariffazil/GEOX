@@ -172,7 +172,50 @@ class PhysicsGuard:
             )
         return violations
 
-    # ─── Posterior Breadth ──────────────────────────────────────────────────
+    # ─── Posterior Breadth & MC Receipts ───────────────────────────────────
+
+    VALID_PERCENTILE_CONVENTIONS = frozenset(
+        {"statistical_ascending", "petroleum_descending"}
+    )
+
+    def validate_mc_receipt(self, receipt: dict[str, Any] | None) -> ValidationResult:
+        """Fail closed if an MC output lacks reproducible audit fields."""
+        if not isinstance(receipt, dict):
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason="Missing mc_receipt: MC output cannot enter report without receipt",
+            )
+        required = ("seed", "n_sims", "standard_error", "percentile_convention")
+        missing = [k for k in required if k not in receipt or receipt[k] is None]
+        if missing:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason=f"Incomplete mc_receipt (missing: {', '.join(missing)})",
+            )
+        n_sims = receipt["n_sims"]
+        if isinstance(n_sims, bool) or not isinstance(n_sims, int) or n_sims < 1:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason=f"Invalid mc_receipt n_sims={n_sims!r}",
+            )
+        se = receipt["standard_error"]
+        if isinstance(se, bool) or not isinstance(se, (int, float)) or not np.isfinite(se) or se < 0:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason=f"Invalid mc_receipt standard_error={se!r}",
+            )
+        conv = receipt["percentile_convention"]
+        if conv not in self.VALID_PERCENTILE_CONVENTIONS:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason=f"Invalid mc_receipt percentile_convention={conv!r}",
+            )
+        return ValidationResult(status="PASS")
 
     def check_posterior_breadth(
         self,
@@ -180,23 +223,55 @@ class PhysicsGuard:
         p50: float,
         p90: float,
         max_ratio: float | None = None,
+        percentile_convention: str | None = None,
     ) -> ValidationResult:
         if max_ratio is None:
             max_ratio = self.max_posterior_ratio
-        if p10 <= 0:
+        if percentile_convention is not None and percentile_convention not in self.VALID_PERCENTILE_CONVENTIONS:
             return ValidationResult(
                 status="INVALID",
                 hold=True,
-                reason="P10 must be > 0 for ratio calculation",
+                reason=f"Unknown percentile_convention={percentile_convention!r}",
             )
-        ratio = p90 / p10
+        if percentile_convention == "petroleum_descending":
+            if p90 <= 0:
+                return ValidationResult(
+                    status="INVALID",
+                    hold=True,
+                    reason="P90 (low case) must be > 0 for petroleum_descending ratio calculation",
+                )
+            if p10 < p90 or p10 < p50 or p50 < p90:
+                return ValidationResult(
+                    status="INVALID",
+                    hold=True,
+                    reason=f"Percentile ordering violation for petroleum_descending: p10={p10}, p50={p50}, p90={p90}",
+                )
+            low, high = p90, p10
+        else:
+            if p10 <= 0:
+                return ValidationResult(
+                    status="INVALID",
+                    hold=True,
+                    reason="P10 must be > 0 for ratio calculation",
+                )
+            if p10 > p90:
+                return ValidationResult(
+                    status="INVALID",
+                    hold=True,
+                    reason=(
+                        f"Percentile polarity mismatch: p10={p10} > p90={p90} "
+                        "(declare percentile_convention='petroleum_descending' if high-to-low)"
+                    ),
+                )
+            low, high = p10, p90
+        ratio = high / low
         if ratio > max_ratio:
             return ValidationResult(
                 status="POSTERIOR_TOO_BROAD",
                 hold=True,
                 posterior_breadth_violation=True,
                 posterior_breadth_ratio=ratio,
-                reason=f"POSTERIOR_TOO_BROAD: P90/P10 = {ratio:.2f} > {max_ratio}",
+                reason=f"POSTERIOR_TOO_BROAD: high/low = {ratio:.2f} > {max_ratio}",
             )
         return ValidationResult(status="PASS", posterior_breadth_ratio=ratio)
 
@@ -207,12 +282,39 @@ class PhysicsGuard:
                 hold=True,
                 reason="Volumetric output requires p10, p50, p90",
             )
+        if "mc_receipt" in stoiip:
+            receipt_res = self.validate_mc_receipt(stoiip.get("mc_receipt"))
+            if receipt_res.hold:
+                return receipt_res
         return self.check_posterior_breadth(
             p10=stoiip["p10"],
             p50=stoiip["p50"],
             p90=stoiip["p90"],
             max_ratio=max_ratio,
+            percentile_convention=stoiip.get("percentile_convention"),
         )
+
+    def check_mc_output_strict(self, output: dict[str, Any], max_ratio: float | None = None) -> ValidationResult:
+        """Fail-closed MC report gate: requires explicit percentile_convention and valid mc_receipt."""
+        if not isinstance(output, dict):
+            return ValidationResult(status="INVALID", hold=True, reason="MC output must be a dict")
+        conv = output.get("percentile_convention")
+        if conv not in self.VALID_PERCENTILE_CONVENTIONS:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason="Missing or invalid percentile_convention (silent default forbidden)",
+            )
+        receipt_res = self.validate_mc_receipt(output.get("mc_receipt"))
+        if receipt_res.hold:
+            return receipt_res
+        if receipt_res.status == "PASS" and output["mc_receipt"]["percentile_convention"] != conv:
+            return ValidationResult(
+                status="INVALID",
+                hold=True,
+                reason="percentile_convention mismatch between output and mc_receipt",
+            )
+        return self.check_volumetric_output(output, max_ratio=max_ratio)
 
     # ─── Net Pay ────────────────────────────────────────────────────────────
 

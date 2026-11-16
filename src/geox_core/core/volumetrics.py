@@ -46,6 +46,15 @@ class VolumeDistribution:
     tornado: dict[str, float]
     vault_receipt: dict[str, Any]
     physics_validation: dict[str, Any]
+    percentile_convention: str
+    standard_error: float
+    mc_receipt: dict[str, Any]
+
+    def __post_init__(self) -> None:
+        if self.percentile_convention not in ("statistical_ascending", "petroleum_descending"):
+            raise ValueError(f"Invalid percentile_convention={self.percentile_convention!r}")
+        if not isinstance(self.mc_receipt, dict) or not self.mc_receipt:
+            raise ValueError("mc_receipt is required on VolumeDistribution")
 
     @property
     def n_valid(self) -> int:
@@ -71,6 +80,8 @@ class VolumeDistribution:
             "p90": round(self.p90, 4),
             "mean": round(self.mean, 4),
             "stdev": round(self.stdev, 4),
+            "standard_error": round(self.standard_error, 6),
+            "percentile_convention": self.percentile_convention,
             "valid_draws": self.valid_draws,
             "rejected_draws": self.rejected_draws,
             "n_valid": self.n_valid,
@@ -80,6 +91,7 @@ class VolumeDistribution:
             "claim_tag": self.claim_tag,
             "tornado": {key: round(value, 4) for key, value in self.tornado.items()},
             "tornado_data": self.tornado_data,
+            "mc_receipt": self.mc_receipt,
             "vault_receipt": self.vault_receipt,
             "physics_validation": self.physics_validation,
         }
@@ -97,6 +109,7 @@ class ProbabilisticVolumetrics:
     ) -> None:
         self.guard = guard or PhysicsGuard()
         self.draws = n_draws if n_draws is not None else draws
+        self.seed = seed
         self.rng = np.random.default_rng(seed)
 
     def _sample_distribution(self, spec: float | dict[str, float]) -> np.ndarray:
@@ -148,7 +161,25 @@ class ProbabilisticVolumetrics:
 
         samples = np.array(hcpv_samples, dtype=float)
         p10, p50, p90 = np.percentile(samples, [10, 50, 90])
-        posterior = self.guard.check_volumetric_output({"p10": float(p10), "p50": float(p50), "p90": float(p90)})
+        stdev = float(samples.std())
+        standard_error = float(stdev / np.sqrt(len(samples)))
+        mc_receipt = {
+            "seed": self.seed,
+            "n_sims": len(hcpv_samples),
+            "n_draws_total": self.draws,
+            "standard_error": round(standard_error, 6),
+            "percentile_convention": "statistical_ascending",
+            "rng_stream": "np.random.default_rng",
+        }
+        posterior = self.guard.check_volumetric_output(
+            {
+                "p10": float(p10),
+                "p50": float(p50),
+                "p90": float(p90),
+                "percentile_convention": "statistical_ascending",
+                "mc_receipt": mc_receipt,
+            }
+        )
         hold_enforced = posterior.hold
         tornado = {
             "grv": float(np.std(grv) / max(np.mean(grv), 1e-6)),
@@ -164,13 +195,14 @@ class ProbabilisticVolumetrics:
             "p90": float(p90),
             "mean": float(samples.mean()),
             "ratio": float(p90 / max(p10, 1e-6)),
+            "mc_receipt": mc_receipt,
         }
         return VolumeDistribution(
             p10=float(p10),
             p50=float(p50),
             p90=float(p90),
             mean=float(samples.mean()),
-            stdev=float(samples.std()),
+            stdev=stdev,
             valid_draws=len(hcpv_samples),
             rejected_draws=rejected_draws,
             hold_enforced=hold_enforced,
@@ -185,4 +217,7 @@ class ProbabilisticVolumetrics:
                 "posterior": posterior.to_dict(),
                 "first_violation": first_violation,
             },
+            percentile_convention="statistical_ascending",
+            standard_error=standard_error,
+            mc_receipt=mc_receipt,
         )

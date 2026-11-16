@@ -60,7 +60,7 @@ def solve_inverse_volumetrics(
         seed: Random seed for repeatability (default 42).
         input_provenance: Dict mapping parameter names to 'OBS' or 'ASSUMPTION'.
     """
-    np.random.seed(seed)
+    rng = np.random.default_rng(seed)
     n = int(samples)
 
     # ── P0_PROMOTION INVARIANT (Phase B2 - ARIF): Reject unaccepted CandidateGeometry ──
@@ -87,14 +87,14 @@ def solve_inverse_volumetrics(
     sw_min, sw_max = float(sw_range[0]), float(sw_range[1])
     geom_min, geom_max = float(geometry_factor_range[0]), float(geometry_factor_range[1])
 
-    # Sample uniform distributions
-    p_samples = np.random.uniform(p_min, p_max, n)
-    t_c_samples = np.random.uniform(t_min, t_max, n)
+    # Sample uniform distributions via isolated Generator stream
+    p_samples = rng.uniform(p_min, p_max, n)
+    t_c_samples = rng.uniform(t_min, t_max, n)
     t_k_samples = t_c_samples + 273.15
-    z_samples = np.random.uniform(z_min, z_max, n)
-    phi_samples = np.random.uniform(phi_min, phi_max, n)
-    sw_samples = np.random.uniform(sw_min, sw_max, n)
-    geom_samples = np.random.uniform(geom_min, geom_max, n)
+    z_samples = rng.uniform(z_min, z_max, n)
+    phi_samples = rng.uniform(phi_min, phi_max, n)
+    sw_samples = rng.uniform(sw_min, sw_max, n)
+    geom_samples = rng.uniform(geom_min, geom_max, n)
 
     p_std = 0.101325  # MPa
     t_std = 288.15  # K
@@ -111,6 +111,7 @@ def solve_inverse_volumetrics(
     # A (km2) = A (m2) / 1e6
     area_results: dict[str, Any] = {}
     giip_targets = [claimed_giip_tcf] if isinstance(claimed_giip_tcf, (int, float)) else claimed_giip_tcf
+    primary_area_se: float | None = None
 
     for g_tcf in giip_targets:
         giip_val = float(g_tcf)
@@ -121,12 +122,16 @@ def solve_inverse_volumetrics(
         p10_area = float(np.percentile(area_km2_samples, 10))
         p50_area = float(np.percentile(area_km2_samples, 50))
         p90_area = float(np.percentile(area_km2_samples, 90))
+        area_se = float(np.std(area_km2_samples) / np.sqrt(n))
+        if primary_area_se is None:
+            primary_area_se = area_se
 
         area_results[f"{giip_val}_tcf"] = {
             "p10_km2": round(p10_area, 2),
             "p50_km2": round(p50_area, 2),
             "p90_km2": round(p90_area, 2),
             "mean_km2": round(float(np.mean(area_km2_samples)), 2),
+            "standard_error_km2": round(area_se, 4),
         }
 
     # Primary area (for the first or scalar target)
@@ -206,6 +211,14 @@ def solve_inverse_volumetrics(
             "recovery_factor": rf,
             "samples": n,
             "seed": seed,
+        },
+        "percentile_convention": "statistical_ascending",
+        "mc_receipt": {
+            "seed": seed,
+            "n_sims": n,
+            "standard_error": round(primary_area_se if primary_area_se is not None else 0.0, 6),
+            "percentile_convention": "statistical_ascending",
+            "rng_stream": "np.random.default_rng",
         },
         "input_provenance": default_provenance,
     }
