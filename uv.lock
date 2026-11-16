@@ -3121,7 +3121,7 @@ wheels = [
 
 [[package]]
 name = "loop-common"
-version = "0.0.2"
+version = "0.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "numpy" },
@@ -3132,14 +3132,14 @@ dependencies = [
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/07/0c/df63262764bae53471c688dff40d2eeb698fc6f97429563290a299e68edc/loop_common-0.0.2.tar.gz", hash = "sha256:a0ce3f9d12b625b19e2630fde1b6ef00e68b6d5804c9e12a5680b8df6727e8eb", size = 83533, upload-time = "2026-08-14T06:02:40.391Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/02/165b1ece2b5e6b74d471206230f6026a516587e6af0d5e83f9214cd005f3/loop_common-0.1.0.tar.gz", hash = "sha256:b227142822ed6437c763cd7e70862b3ccc743555954b6bb9d2e3baf8334a02c5", size = 85143, upload-time = "2026-10-20T05:22:31.256Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/66/240bb312870109097b36c7b01b4295dfdf50263bbafef9c9e65dcc44ed42/loop_common-0.0.2-py3-none-any.whl", hash = "sha256:9ec74fa5aacf53d28553db296f31077f8a354199c8278c031022b4e2bcd3e8cd", size = 91622, upload-time = "2026-08-14T06:02:38.426Z" },
+    { url = "https://files.pythonhosted.org/packages/98/8b/dcf907b88770259548975617a68ffe1968e4ba3a33826a05f0cac1d45a2f/loop_common-0.1.0-py3-none-any.whl", hash = "sha256:4b857bb12f32d8fb0310a22dbe461679237c94e56442170da602d1926f742a2a", size = 92784, upload-time = "2026-10-20T05:22:30.1Z" },
 ]
 
 [[package]]
 name = "loop-interpolation"
-version = "0.0.2"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "loop-common" },
@@ -3148,14 +3148,14 @@ dependencies = [
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/41/9b/81afa9a1b06c6d2ceaa68b744b2553c7d03c5e44be5d1e225602c8ac4c1a/loop_interpolation-0.0.2.tar.gz", hash = "sha256:04506411ccf00b98b064b0c6c862b37f696bdff6914ae5739fbe16b9e99e7eaa", size = 104984, upload-time = "2026-08-14T11:20:15.744Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/6c/6dd570edb617ef5c83affaef338ecfbc89afd4ba9ed24dc6078c7849c5f3/loop_interpolation-0.2.0.tar.gz", hash = "sha256:6692c28d6edd25c22ad570ddbd66c1de189909c5004dfc20c0e2533e510c613b", size = 135503, upload-time = "2026-10-28T11:03:02.734Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/ea/e439443d5844d2e1635a1f7290c05ca0e521440bba39d5351209db0714b5/loop_interpolation-0.0.2-py3-none-any.whl", hash = "sha256:efd9f2e408e4d8bac15a1e568b6aca5a12b43acf06988e51ed086dcc89c8ac80", size = 91817, upload-time = "2026-08-14T11:20:14.565Z" },
+    { url = "https://files.pythonhosted.org/packages/0f/c3/e33dc165ba7bb4b16a4b7611bb2a5b9fafae68fc69e554a907f60240f095/loop_interpolation-0.2.0-py3-none-any.whl", hash = "sha256:c885fadc32c6fc87ec73e40071d32b3de1c836b1b1fbfbf56a12f0f28bb32b71", size = 106238, upload-time = "2026-10-28T11:03:01.506Z" },
 ]
 
 [[package]]
 name = "loopstructural"
-version = "1.8.2"
+version = "1.11.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "loop-common" },
@@ -3167,9 +3167,9 @@ dependencies = [
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f3/4a/2f93d4905dcf1dbf33f12ddc8ec927ec08355a2955a8aad969d59e7061c2/loopstructural-1.8.2.tar.gz", hash = "sha256:f4486d584e0cbedab5f3261c66008bcb09d96539d119f303bdaec9c48c19fd71", size = 493947, upload-time = "2026-09-27T10:39:16.074Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/88/53/f2ded2d933491daec59a214b91b5d3e405b41a1e9529c5fa81631caff69b/loopstructural-1.11.0.tar.gz", hash = "sha256:cff27a949f4ff0e04ad828bb3a0698fb52d99c6b2ea81cca2a8c4363b7728570", size = 494813, upload-time = "2026-11-01T04:33:28.412Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c9/d7/113a37254463d71ab99d2a7ccfc3b9510de9d5dd95b36d3289877040d546/loopstructural-1.8.2-py3-none-any.whl", hash = "sha256:a82b7007fe376c0786f4cdc4d98281be21faeb371a5b512b5da621a4ce80eef3", size = 538420, upload-time = "2026-09-27T10:39:14.85Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/35/ed898f1e053b9ff74e0fefaa2b84acd9c38ff2bda4a09c51ed0f30074009/loopstructural-1.11.0-py3-none-any.whl", hash = "sha256:72fe4a7e5d04363da4c140e84387eaff0be20232579d9a3238fd1d406e1c437b", size = 539089, upload-time = "2026-11-01T04:33:26.808Z" },
 ]
 
 [[package]]
