@@ -87,7 +87,11 @@ jobs:
       - name: System libs — pygplates build (OpenGL)
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libgl1-mesa-dev libglvnd-dev libglu1-mesa-dev
+          # Full pygplates source-build set: OpenGL (first failure), GLEW
+          # (second failure), GDAL + Boost + zlib headers for its CMake probe.
+          sudo apt-get install -y -qq \
+            libgl1-mesa-dev libglvnd-dev libglu1-mesa-dev \
+            libglew-dev libgdal-dev libboost-python-dev libboost-dev zlib1g-dev
 
       - name: Hard invariant — uv lock consistency
         run: |
