@@ -58,7 +58,7 @@ _WITNESS_TOOLS: list[tuple[str, Any]] = [
     ("geox_report_to_workflow", geox_report_to_workflow),
     ("geox_subsurface_generate_candidates", geox_subsurface_generate_candidates),
     ("geox_subsurface_verify_integrity", geox_subsurface_verify_integrity),
-    ("geox_seismic_compute", geox_seismic_compute),
+    # ("geox_seismic_compute", geox_seismic_compute),  # REMOVED 2026-11-14: registered on main server via tools_wiring.py (F2/2026-11-04 unified wrapper)
     ("geox_sequence_interpret", geox_sequence_interpret),
     ("geox_evidence_reason", geox_evidence_reason),
     ("geox_prospect_evaluate", geox_prospect_evaluate),

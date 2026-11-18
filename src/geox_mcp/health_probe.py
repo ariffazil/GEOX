@@ -136,10 +136,20 @@ async def _probe_kernel(url: str, timeout: float) -> dict[str, Any]:
 
     if status is None:
         state = "unknown"
-    elif status == "healthy" and verdict not in ("HOLD", "VOID"):
-        state = "healthy"
-    else:
+    elif status != "healthy":
         state = "degraded"
+    elif verdict == "VOID":
+        # Kernel self-reports VOID (qdf < 0.5) — real dependency trouble.
+        state = "degraded"
+    else:
+        # status=healthy with governance verdict HOLD/SEAL/SABAR is a
+        # constitutional POSTURE (qdf fail-closed on structural baselines),
+        # not dependency liveness. GEOX is COMPUTE_ONLY — a HOLD never blocks
+        # it. Quote the verdict verbatim (kernel_verdict below), never
+        # summarise, but do not degrade the dependency on posture alone.
+        # Fix 2026-11-17 333-AGI: chronic false DEGRADED + misleading
+        # "no floor detail published" while failing/unmeasured were [].
+        state = "healthy"
 
     reasons: list[dict[str, Any]] = []
     if state != "healthy":
@@ -150,6 +160,7 @@ async def _probe_kernel(url: str, timeout: float) -> dict[str, Any]:
             parts.append(f"floors_unmeasured={','.join(unmeasured)}")
         if status is None:
             parts.append("kernel status field absent")
+        parts.append(f"verdict={verdict} quoted from thermodynamic block")
         detail = "; ".join(parts) or "no floor detail published"
         reasons.append(
             _reason(
