@@ -266,7 +266,7 @@ evidence_note: L4 strategic assessment; public press claims not fully verified t
 | Acronym | Meaning in *this* doc | Do not confuse with |
 |---------|----------------------|---------------------|
 | **DSG / DS365** | Halliburton DecisionSpace Geoscience / DecisionSpace 365 | arifOS “Digital Sovereign Governance” (internal essay term) |
-| **GEOX** | arifOS federation earth organ | SLB commercial “GeoX” opportunity assessor on DELFI |
+| **GEOX** | arifOS federation earth organ. The name stays GEOX (human order 2026-11-20: naming is the first act of creation). Do not rename it to avoid the SLB product. | SLB commercial “GeoX” opportunity assessor on DELFI |
 
 ---
 
