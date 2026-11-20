@@ -358,6 +358,19 @@
         "geox_glof_cascade_inverse",
         "geox_glof_cascade_metabolize"
       ]
+    },
+    {
+      "app_id": "evidence_v1",
+      "uri": "ui://geox/evidence-v1",
+      "title": "GEOX Evidence Surfaces (geox.evidence.v1 A2UI catalog viewer)",
+      "description": "Self-demonstrating viewer of the geox.evidence.v1 A2UI catalog: 4 honesty components (EpistemicTagBadge, HumilityMarginBar, CoverageClassBanner, SourceFreshnessBadge), 3 renderer-only formatters, fail-closed UI tool policy. Zero MCP tools in shell.",
+      "external_url": "https://geox.arif-fazil.com/apps/evidence-v1/",
+      "resource_type": "externalUrl",
+      "mime_type": "text/html;profile=mcp-app",
+      "outputSchema": {
+        "type": "object",
+        "properties": {}
+      }
     }
   ],
   "tool_to_app": {

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src 'none'; connect-src 'none'; script-src 'none'; frame-ancestors *">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOX Evidence Surfaces — geox.evidence.v1</title>
+<style>
+:root { --bg:#0a0a0f; --bg2:#12121a; --bg3:#1a1a25; --gold:#d4af37; --cyan:#00d4aa;
+        --red:#ff4757; --green:#2ed573; --txt:#e8e8f0; --dim:#9090a0; --bord:#2a2a3a; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--txt); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+       padding:2rem; max-width:980px; margin:0 auto; }
+h1 { font-size:1.5rem; color:var(--gold); margin-bottom:.25rem; }
+h2 { font-size:1.1rem; color:var(--cyan); margin:2rem 0 .75rem; border-bottom:1px solid var(--bord); padding-bottom:.35rem; }
+.mono { font-family:'JetBrains Mono','Fira Code',monospace; }
+.dim { color:var(--dim); }
+.meta { color:var(--dim); font-size:.82rem; margin-bottom:1.5rem; }
+.card { background:var(--bg2); border:1px solid var(--bord); border-radius:8px; padding:1rem 1.15rem; margin:.6rem 0; }
+.card h3 { font-size:.95rem; color:var(--gold); margin-bottom:.3rem; }
+.badge { display:inline-block; font-family:monospace; font-size:.75rem; padding:.15rem .55rem;
+         border-radius:4px; border:1px solid; margin-right:.4rem; }
+.b-obs  { color:var(--green); border-color:var(--green); }
+.b-der  { color:var(--cyan); border-color:var(--cyan); }
+.b-int  { color:var(--gold); border-color:var(--gold); }
+.b-hyp  { color:var(--orange,#ffa502); border-color:#ffa502; }
+.marginbar { position:relative; height:10px; background:var(--bg3); border-radius:5px; margin:.5rem 0; }
+.marginbar .fill { position:absolute; left:0; top:0; bottom:0; background:var(--cyan); border-radius:5px; }
+.marginbar .band { position:absolute; top:-3px; bottom:-3px; background:rgba(255,255,255,.14); border-radius:3px; }
+.banner { display:flex; align-items:center; gap:.6rem; padding:.5rem .8rem; border-radius:6px;
+          font-family:monospace; font-size:.8rem; border:1px solid; margin:.4rem 0; }
+.ban-none { color:var(--red); border-color:var(--red); background:rgba(255,71,87,.08); }
+.ban-map  { color:var(--cyan); border-color:var(--cyan); background:rgba(0,212,170,.06); }
+.fresh { font-family:monospace; font-size:.75rem; padding:.2rem .5rem; border-radius:4px; border:1px solid var(--bord); margin-right:.35rem; }
+.f-live { color:var(--green); } .f-stale { color:#ffa502; } .f-unk { color:var(--dim); }
+table { border-collapse:collapse; width:100%; font-size:.82rem; margin:.4rem 0; }
+td,th { border:1px solid var(--bord); padding:.35rem .6rem; text-align:left; }
+th { color:var(--dim); font-weight:600; }
+code { background:var(--bg3); padding:.1rem .35rem; border-radius:3px; font-size:.8em; }
+.rules li { margin:.45rem 0; font-size:.9rem; }
+.foot { margin-top:2.5rem; padding-top:1rem; border-top:1px solid var(--bord); color:var(--dim); font-size:.78rem; }
+.demo-num { font-size:1.05rem; }
+</style>
+</head>
+<body>
+<h1>GEOX Evidence Surfaces</h1>
+<div class="meta mono">A2UI catalog <strong>geox.evidence.v1</strong> · protocol 1.0 · pinned schema: a2ui-v1 · catalog sha256:a5dcd59ae1fb · generated 2026-11-20T20:03Z</div>
+<h2>Design rules (instructions — verbatim)</h2>
+<div class="card"><ul class="rules">
+<li>Design rules for agents generating surfaces with this catalog: (1) Always pair quantitative claims with an EpistemicTagBadge carrying the evidence class; an untagged number must not render. (2) HumilityMarginBar is mandatory whenever confidence is shown; never display confidence without its margin. (3) CoverageClassBanner is mandatory on any map-, basin- or unit-backed card; render &#x27;none&#x27; coverage honestly as NO COVERAGE - never as zero or empty. (4) SourceFreshnessBadge is mandatory on any data-backed card; STALE and UNKNOWN must render with the same visual weight as LIVE. (5) Do not invent components outside this catalog plus the official basicCatalog; do not request functions beyond the rendererOnly formatters declared here. (6) This catalog never expresses state mutation: there is no button, action or function that writes to any organ.</li>
+</ul></div>
+<h2>Components (4) — each demonstrating itself</h2>
+<div class="card"><h3>EpistemicTagBadge</h3>
+<p class="dim" style="font-size:.85rem">Evidence-class badge. Every quantitative claim on a GEOX surface must carry one.</p>
+<div style="margin-top:.5rem"><span class="demo-num">7.42 <span class="dim">MMboe</span></span> <span class="badge b-obs">OBS · MEASURED</span><span class="badge b-der">DER · CALIBRATED</span><span class="badge b-hyp">HYP · coverage 0.12</span></div>
+<p class="dim" style="font-size:.8rem;margin-top:.35rem">Every quantitative claim carries its class; untagged numbers do not render.</p>
+</div>
+<div class="card"><h3>HumilityMarginBar</h3>
+<p class="dim" style="font-size:.85rem">Visual margin-of-ignorance bar paired to any displayed confidence value.</p>
+<div style="margin-top:.5rem"><span class="demo-num">confidence 0.81</span> <span class="badge b-der">DER</span></div><div class="marginbar"><div class="fill" style="width:81%"></div><div class="band" style="left:64%;width:34%"></div></div><p class="dim" style="font-size:.8rem">Confidence never renders without its margin band (F7 HUMILITY).</p>
+</div>
+<div class="card"><h3>CoverageClassBanner</h3>
+<p class="dim" style="font-size:.85rem">Macrostrat-style coverage honesty strip. &#x27;none&#x27; must render as NO COVERAGE, never as zero.</p>
+<div class="banner ban-map"><span>COVERAGE 0.62 · macrostrat_units</span></div><div class="banner ban-none"><span>NO COVERAGE — unit_polygon absent</span></div><p class="dim" style="font-size:.8rem;margin-top:.35rem">"none" renders as NO COVERAGE — never as zero, never as empty.</p>
+</div>
+<div class="card"><h3>SourceFreshnessBadge</h3>
+<p class="dim" style="font-size:.85rem">Freshness witness for data-backed cards. STALE and UNKNOWN carry equal visual weight to LIVE.</p>
+<div style="margin-top:.5rem"><span class="fresh f-live">LIVE · 12s</span><span class="fresh f-stale">STALE · 9d</span><span class="fresh f-unk">UNKNOWN</span></div><p class="dim" style="font-size:.8rem;margin-top:.35rem">STALE and UNKNOWN carry equal visual weight to LIVE.</p>
+</div>
+<h2>Renderer-only formatters (3)</h2>
+<div class="card">
+<p style='margin:.5rem 0'><strong class='mono'>formatConfidence</strong> — Local renderer formatter: renders confidence with evidence class and F7 cap note. Never calls MCP.<br><span class="mono">formatConfidence(0.81, "DER")</span> → <strong>0.81 DER</strong> <span class="dim">(F7 cap 0.90 noted)</span></p>
+<p style='margin:.5rem 0'><strong class='mono'>formatMa</strong> — Local renderer formatter: millions-of-years display with model attribution string.<br><span class="mono">formatMa(12.5, "Merdith2021")</span> → <strong>12.5 Ma</strong> <span class="dim">· model Merdith2021</span></p>
+<p style='margin:.5rem 0'><strong class='mono'>formatDepth</strong> — Local renderer formatter: depth display with datum label (TVD/MD/TVDSS).<br><span class="mono">formatDepth(2345, "TVD")</span> → <strong>2,345 m TVD</strong></p>
+</div>
+<h2>UI tool policy (fail-closed)</h2>
+<div class="card"><p style="font-size:.88rem">Surfaces generated with this catalog may call only the <strong>21</strong> OBSERVE-class tools allowlisted in <code>geox-readonly-tools.json</code> (with <strong>5</strong> always-deny entries). Ingest / register / write-named tools stay excluded even where the organ manifest labels them observe — the name declares the data write. Host shell posture: this page itself calls zero MCP tools.</p></div>
+<div class="foot">Generated by <span class="mono">scripts/generate_evidence_catalog_app.py</span> from <span class="mono">catalog.json</span> (sha256:a5dcd59ae1fb) · A2UI v1.0 · SEP-1865 mime <span class='mono'>text/html;profile=mcp-app</span> · UI checks are UX hardening; arifOS kernel floors remain the sole integrity authority.</div>
+</body>
+</html>

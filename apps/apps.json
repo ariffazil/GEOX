@@ -123,10 +123,20 @@
         "geox_well_ingest"
       ],
       "tools": [],
-      "note": "2026-07-16: geox_vision DEREGISTERED. Planned — will use well_ingest + future digitization pipeline."
+      "note": "2026-07-16: geox_vision DEREGISTERED. Planned \u2014 will use well_ingest + future digitization pipeline."
+    },
+    {
+      "id": "evidence-v1",
+      "name": "EvidenceV1",
+      "title": "GEOX Evidence Surfaces \u2014 geox.evidence.v1 A2UI catalog viewer",
+      "uri": "ui://geox/evidence-v1",
+      "path": "apps/evidence-v1/index.html",
+      "status": "active",
+      "visual_tools": [],
+      "tools": []
     }
   ],
-  "generated_at": "2026-07-16T09:55:00.000000+00:00",
+  "generated_at": "2026-11-21T04:00:00Z",
   "registry_note": "tools[] must be subset of CANONICAL_PUBLIC_SURFACE.json public_tools (ZEN-15). 2026-07-16: cleaned ghost tool references.",
   "cleanup_log": "2026-07-16: Replaced 10 DEREGISTERED tool references with live ZEN-15 equivalents. 3 apps deprecated (seismic-vision-review, attribute-audit, georeference-map)."
 }
