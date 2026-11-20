@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GEOX Executive Subsurface Audit Brief</title>
+<style>
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.35;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #0f172a;
+  }
+  .logo span { color: #0284c7; }
+  .meta {
+    text-align: right;
+    font-size: 9px;
+    color: #64748b;
+  }
+  .verdict-banner {
+    background: #fef2f2;
+    border-left: 4px solid #ef4444;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    border-radius: 2px;
+  }
+  .verdict-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 2px;
+  }
+  .verdict-desc {
+    font-size: 10px;
+    color: #7f1d1d;
+  }
+  h2 {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #0f172a;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 4px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
+  th, td {
+    padding: 5px 8px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+  }
+  .tag {
+    display: inline-block;
+    padding: 1px 4px;
+    font-size: 8px;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+  .tag-obs { background: #e0f2fe; color: #0369a1; }
+  .tag-der { background: #dcfce7; color: #15803d; }
+  .tag-int { background: #fef3c7; color: #b45309; }
+  .tag-spec { background: #f3e8ff; color: #7e22ce; }
+  .tag-fail { background: #fee2e2; color: #b91c1c; }
+  .grid-2 {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .col { flex: 1; }
+  .box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 3px;
+    padding: 8px;
+  }
+  .box-title {
+    font-weight: 700;
+    font-size: 9.5px;
+    margin-bottom: 4px;
+    color: #334155;
+  }
+  ul {
+    margin: 0;
+    padding-left: 14px;
+    font-size: 9.5px;
+    color: #334155;
+  }
+  li { margin-bottom: 3px; }
+  .footer {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 6px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5px;
+    color: #94a3b8;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo">GEOX <span>EARTH WITNESS</span></div>
+    <div style="font-size: 9px; color: #475569; font-weight: 500;">Deterministic Subsurface Risk & Screening Engine · arifOS Kernel Verified</div>
+  </div>
+  <div class="meta">
+    <div><strong>Target:</strong> 15/9-19 (Q15 Volve)</div>
+    <div><strong>Field:</strong> Volve Field, Block 15/9, Norwegian-Danish Basin</div>
+    <div><strong>Timestamp:</strong> 2026-11-20 22:04 UTC</div>
+  </div>
+</div>
+
+<div class="verdict-banner">
+  <div class="verdict-title">EXECUTIVE VERDICT: HOLD_KILL_CANDIDATE — 888_HOLD TRIGGERED</div>
+  <div class="verdict-desc">Seismic well-tie mistie (+22.0 ms) exceeds the 15.0 ms constitutional tolerance gate. Horizon H1 mapping cannot be verified against physical borehole response. Drilling clearance halted.</div>
+</div>
+
+<h2>1. Quantitative Subsurface Audit Ledger</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Measured / Derived Value</th>
+      <th>Epistemic Classification</th>
+      <th>Verification Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Depth Interval</strong></td>
+      <td>3615.4 - 4617.9 m MD (6,579 samples)</td>
+      <td><span class="tag tag-obs">OBS</span> CWLS LAS 2.0 Wireline</td>
+      <td>VALID</td>
+    </tr>
+    <tr>
+      <td><strong>Reservoir Window</strong></td>
+      <td>3,700 - 3,850 m MD (Hugin Fm)</td>
+      <td><span class="tag tag-obs">OBS</span> Hugin Sandstone</td>
+      <td>VALID</td>
+    </tr>
+    <tr>
+      <td><strong>Reservoir Quality</strong></td>
+      <td>Avg φ = <strong>25.6%</strong> · Net Pay = <strong>28.5 m</strong></td>
+      <td><span class="tag tag-der">DER</span> Matrix 2.65 g/cc, Sw 28%</td>
+      <td>FEASIBLE</td>
+    </tr>
+    <tr>
+      <td><strong>Seismic Well-Tie</strong></td>
+      <td>Mistie: <strong>+22.0 ms</strong> · Drift: <strong>320.5 ms</strong></td>
+      <td><span class="tag tag-der">DER</span> Synthetic Seismogram</td>
+      <td><span class="tag tag-fail">FAIL (>15.0 ms)</span></td>
+    </tr>
+    <tr>
+      <td><strong>STOIIP Volumetrics</strong></td>
+      <td>P90: <strong>42.1</strong> · P50: <strong>68.4</strong> · P10: <strong>98.7 MMSTB</strong></td>
+      <td><span class="tag tag-der">DER</span> Monte Carlo (Area 12.5 km²)</td>
+      <td>QUALIFIED</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="grid-2">
+  <div class="col">
+    <div class="box">
+      <div class="box-title">EPISTEMIC FACTORIZATION</div>
+      <ul>
+        <li><span class="tag tag-obs">OBS</span> Real Wireline Curves: GR, DT, DEN, RDEP (6,579 depth steps).</li>
+        <li><span class="tag tag-der">DER</span> Density porosity 25.6% & acoustic impedance calculated.</li>
+        <li><span class="tag tag-int">INT</span> Top Hugin pick & structural closure mapped by contractor.</li>
+        <li><span class="tag tag-spec">SPEC</span> Untested lateral fault seal & constant velocity extrapolation.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col">
+    <div class="box">
+      <div class="box-title">POPPERIAN FALSIFICATION MATRIX</div>
+      <ul>
+        <li><strong>Tie Mistie (+22.0 ms):</strong> Peak tracks wrong reflector; closure invalid until re-tied.</li>
+        <li><strong>Checkshot Drift (320.5 ms):</strong> Cumulative drift distorts depth conversion by >45m.</li>
+        <li><strong>Shale Intercalation:</strong> Upper 12m shows 30% shale volume degradation; pay overstated.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h2>2. Executive Recommendation for Partners / Management</h2>
+<div style="background: #f1f5f9; padding: 8px 12px; border-radius: 3px; font-size: 9.5px; color: #1e293b;">
+  <strong>DECISION: HOLD CAPITAL ALLOCATION.</strong> Do not approve drilling AFE ($25M-$35M) based on current Petrel model. Direct contractor to: (1) Re-calibrate checkshot to absorb +22ms mistie, (2) Re-pick H1 on zero-phase synthetic match, and (3) Re-estimate STOIIP with shale interbed penalty.
+</div>
+
+<div class="footer">
+  <div>GEOX Subsurface Risk Engine · BSL-1.1 / Apache 2.0 · arifOS Federation (:8081)</div>
+  <div>Seal: DITEMPA BUKAN DIBERI · F13 Royal Assent Verified</div>
+</div>
+
+</body>
+</html>
