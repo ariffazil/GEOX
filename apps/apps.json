@@ -142,5 +142,79 @@
   "generated_at": "2026-11-21T04:00:00Z",
   "registry_note": "tools[] must be subset of CANONICAL_PUBLIC_SURFACE.json public_tools (ZEN-15). 2026-07-16: cleaned ghost tool references. | 2026-11-21 (FI-003 S8): host_binding documents the federation host door (aaa.arif-fazil.com/mcp-apps/*, SEP-1865) per app — one truth, two doors (organ /mcp + host).",
   "cleanup_log": "2026-07-16: Replaced 10 DEREGISTERED tool references with live ZEN-15 equivalents. 3 apps deprecated (seismic-vision-review, attribute-audit, georeference-map).",
-  "updated": "2026-11-21"
+  "updated": "2026-11-21",
+  "workbench_domains": {
+    "description": "ArtCraft domain map (S9a 2026-11-21): the geologist workbench view of the GEOX governed surface — Petrel-analog domains built on existing live tools.",
+    "seismic": {
+      "apps": [
+        "earth-volume"
+      ],
+      "tools": [
+        "geox_seismic_ingest",
+        "geox_seismic_compute",
+        "geox_seismic_interpret",
+        "geox_extract_native_trace",
+        "geox_extract_display_proxy"
+      ]
+    },
+    "wells_petrophysics": {
+      "apps": [
+        "well-desk"
+      ],
+      "tools": [
+        "geox_well_ingest",
+        "geox_well_qc",
+        "geox_well",
+        "geox_petrophysics"
+      ]
+    },
+    "volumetrics_prospect": {
+      "apps": [
+        "prospect-ui"
+      ],
+      "tools": [
+        "geox_prospect",
+        "geox_claim"
+      ]
+    },
+    "basin_temporal": {
+      "apps": [
+        "prospect-ui"
+      ],
+      "tools": [
+        "geox_basin",
+        "geox_deep_time",
+        "geox_temporal",
+        "geox_paleobiodb",
+        "geox_source"
+      ]
+    },
+    "map_spatial": {
+      "apps": [
+        "geox-mcp-visual"
+      ],
+      "tools": [
+        "geox_map",
+        "geox_spatial"
+      ]
+    },
+    "structure_geomech": {
+      "apps": [
+        "judge-console"
+      ],
+      "tools": [
+        "geox_model",
+        "geox_geomechanics",
+        "geox_glof"
+      ]
+    },
+    "planned_s9b": {
+      "tools": [
+        "geox_resqml_io (resqpy, MIT)",
+        "geox_grid (xtgeo, LGPL)",
+        "geox_structural_3d (gempy, EUPL)"
+      ],
+      "note": "Petrel-interchange + corner-point grids + implicit 3D — staged behind trio pattern + falsification gates."
+    }
+  }
 }
