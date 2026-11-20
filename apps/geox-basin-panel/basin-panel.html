@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEOX Basin Panel</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f1117;
+      color: #e1e4e8;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid #30363d;
+    }
+    .header h1 {
+      font-size: 18px; font-weight: 600;
+      color: #58a6ff;
+    }
+    .header .status {
+      font-size: 12px; padding: 4px 10px;
+      border-radius: 12px; background: #1c2128;
+    }
+    .status.loaded { color: #3fb950; border: 1px solid #3fb950; }
+    .status.pending { color: #d29922; border: 1px solid #d29922; }
+    .status.error { color: #f85149; border: 1px solid #f85149; }
+    
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px; margin-bottom: 12px;
+    }
+    .card {
+      background: #161b22; border: 1px solid #30363d;
+      border-radius: 8px; padding: 14px;
+    }
+    .card h3 {
+      font-size: 13px; font-weight: 500; color: #8b949e;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .card.full { grid-column: 1 / -1; }
+    
+    .value-row {
+      display: flex; justify-content: space-between; padding: 4px 0;
+      font-size: 13px;
+    }
+    .value-row .label { color: #8b949e; }
+    .value-row .value { color: #e1e4e8; font-weight: 500; }
+
+    .risk-item, .fairway-item, .contradiction-item {
+      padding: 8px; margin: 4px 0;
+      border-radius: 6px; font-size: 13px;
+      background: #1c2128; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .risk-item:hover, .fairway-item:hover, .contradiction-item:hover {
+      background: #21262d;
+    }
+    .risk-score { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .risk-high { background: #f8514940; color: #f85149; }
+    .risk-medium { background: #d2992240; color: #d29922; }
+    .risk-low { background: #3fb95040; color: #3fb950; }
+
+    .action-btn {
+      background: #238636; color: #fff; border: none;
+      padding: 8px 16px; border-radius: 6px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .action-btn:hover { background: #2ea043; }
+    .action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .empty-state {
+      color: #484f58; font-size: 13px; text-align: center;
+      padding: 20px; font-style: italic;
+    }
+
+    .toast {
+      position: fixed; bottom: 16px; right: 16px;
+      background: #1c2128; border: 1px solid #30363d;
+      padding: 10px 16px; border-radius: 8px;
+      font-size: 12px; opacity: 0; transition: opacity 0.3s;
+    }
+    .toast.show { opacity: 1; }
+
+    .loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 60vh; color: #484f58;
+    }
+    .loading::after {
+      content: ''; width: 20px; height: 20px;
+      border: 2px solid #30363d; border-top-color: #58a6ff;
+      border-radius: 50%; margin-left: 8px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .score-bar {
+      height: 4px; border-radius: 2px; background: #30363d;
+      margin-top: 4px; overflow: hidden;
+    }
+    .score-bar .fill {
+      height: 100%; border-radius: 2px; transition: width 0.5s;
+    }
+    .fill.green { background: #3fb950; }
+    .fill.yellow { background: #d29922; }
+    .fill.red { background: #f85149; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; color: #8b949e; font-weight: 500; padding: 6px 4px; border-bottom: 1px solid #30363d; }
+    td { padding: 6px 4px; border-bottom: 1px solid #1c2128; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🌍 GEOX Basin Panel</h1>
+    <span id="status-badge" class="status pending">Pending</span>
+  </div>
+
+  <div id="loading-state" class="loading">Loading basin data</div>
+
+  <div id="basin-content" style="display:none">
+    <div class="grid">
+      <div class="card">
+        <h3>Basin Overview</h3>
+        <div id="basin-overview"></div>
+      </div>
+      <div class="card">
+        <h3>Governance</h3>
+        <div id="governance-info"></div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Play Fairways</h3>
+        <div id="fairways-list"></div>
+      </div>
+      <div class="card">
+        <h3>Risk Register</h3>
+        <div id="risks-list"></div>
+      </div>
+    </div>
+
+    <div class="card full">
+      <h3>Contradictions &amp; Missing Evidence</h3>
+      <div id="contradictions-list"></div>
+    </div>
+
+    <div class="card full">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 style="margin:0">Next Best Actions</h3>
+        <button id="refresh-btn" class="action-btn">🔄 Refresh Data</button>
+      </div>
+      <div id="actions-list"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
