@@ -283,6 +283,9 @@ _GEOX_TOOL_UI_MAP: dict[str, str] = {
     "geox_prospect": "ui://geox/risk-console",
     "geox_claim": "ui://geox/risk-console",
     "geox_calibration_register_witness": "ui://geox/calibration-witness",
+    # ArtCraft S9b (2026-11-21): compute tools bind to the existing volume/seismic viewer widget
+    "geox_grid": "ui://geox/earth-volume",
+    "geox_resqml_io": "ui://geox/earth-volume",
 }
 
 
@@ -436,6 +439,8 @@ from geox_mcp.tools.seismic_render_publication import register_with_mcp as _regi
 from geox_mcp.tools.seismic_alternative_interpret import register_with_mcp as _register_alternative_interpret
 from geox_mcp.tools.seismic_volume_register import register_with_mcp as _register_volume_register
 from geox_mcp.tools.seismic_horizon_track import register_with_mcp as _register_horizon_track
+from geox_mcp.tools.artcraft_grid import register_with_mcp as _register_artcraft_grid
+from geox_mcp.tools.artcraft_resqml_io import register_with_mcp as _register_artcraft_resqml_io
 
 # Register new tools (idempotent)
 _register_polarity(mcp)
@@ -447,6 +452,8 @@ _register_render_publication(mcp)
 _register_alternative_interpret(mcp)
 _register_volume_register(mcp)
 _register_horizon_track(mcp)
+_register_artcraft_grid(mcp, annotations=_geox_annotations("geox_grid"))
+_register_artcraft_resqml_io(mcp, annotations=_geox_annotations("geox_resqml_io"))
 
 # Register section-image resources (knowledge base; public Morley 2023 stratigraphy)
 import json

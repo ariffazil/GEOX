@@ -1058,7 +1058,10 @@ _tool_app_fallback: dict[str, str] = {
     # Batch F: gravmag owns dedicated studio, workspace
     "geox_gravmag_studio": "gravmag_studio",
     "geox_workspace": "workspace_v1",
-}
+
+    # ArtCraft S9b (2026-11-21): grid compute + RESQML interchange → Earth Volume
+    "geox_grid": "earth_volume",
+    "geox_resqml_io": "earth_volume",}
 
 
 def compact_structured_for_ui(
