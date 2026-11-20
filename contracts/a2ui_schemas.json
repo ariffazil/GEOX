@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GEOX A2UI Declarative Component Catalog",
+  "description": "Declarative JSON card schemas rendered by AAA :3001. Purely data-driven with zero raw HTML injection.",
+  "version": "1.0.0",
+  "definitions": {
+    "EpistemicBand": {
+      "type": "string",
+      "enum": ["OBS", "DER", "INT", "SPEC", "UNKNOWN"],
+      "description": "Constitutional F2 Truth epistemic tag"
+    },
+    "ClaimCard": {
+      "type": "object",
+      "required": ["claim_id", "statement", "epistemic_band", "confidence", "falsifiers"],
+      "properties": {
+        "component": { "type": "string", "const": "ClaimCard" },
+        "claim_id": { "type": "string" },
+        "statement": { "type": "string" },
+        "epistemic_band": { "$ref": "#/definitions/EpistemicBand" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 0.90 },
+        "falsifiers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "witness_source": { "type": "string" }
+      }
+    },
+    "FalsificationMatrix": {
+      "type": "object",
+      "required": ["hypothesis_set", "rival_hypotheses", "preferred_hypothesis"],
+      "properties": {
+        "component": { "type": "string", "const": "FalsificationMatrix" },
+        "hypothesis_set": { "type": "string" },
+        "rival_hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "status", "test_criteria"],
+            "properties": {
+              "id": { "type": "string" },
+              "description": { "type": "string" },
+              "status": { "type": "string", "enum": ["ACTIVE", "FALSIFIED", "HOLD"] },
+              "test_criteria": { "type": "string" }
+            }
+          }
+        },
+        "preferred_hypothesis": {
+          "type": ["string", "null"],
+          "description": "Always null until sealed by arifOS"
+        }
+      }
+    },
+    "VolumetricRangeBar": {
+      "type": "object",
+      "required": ["prospect_name", "p90", "p50", "p10", "unit"],
+      "properties": {
+        "component": { "type": "string", "const": "VolumetricRangeBar" },
+        "prospect_name": { "type": "string" },
+        "p90": { "type": "number" },
+        "p50": { "type": "number" },
+        "p10": { "type": "number" },
+        "mean": { "type": "number" },
+        "unit": { "type": "string", "enum": ["MMBOE", "BCF", "MMSTB"] },
+        "confidence_level": { "$ref": "#/definitions/EpistemicBand" }
+      }
+    },
+    "F13GateCard": {
+      "type": "object",
+      "required": ["gate_id", "tier", "reason", "verdict", "f13_assent_required"],
+      "properties": {
+        "component": { "type": "string", "const": "F13GateCard" },
+        "gate_id": { "type": "string" },
+        "tier": { "type": "string", "enum": ["T1", "T2", "T3"] },
+        "reason": { "type": "string" },
+        "verdict": { "type": "string", "enum": ["GO", "HOLD", "VETO"] },
+        "f13_assent_required": { "type": "boolean" },
+        "risk_flags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

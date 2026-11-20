@@ -272,13 +272,28 @@ _GEOX_DESTRUCTIVE_TOOLS = {
 }
 
 
-def _geox_annotations(tool_name: str) -> dict[str, bool]:
+_GEOX_TOOL_UI_MAP: dict[str, str] = {
+    "geox_well": "ui://geox/well-desk",
+    "geox_well_qc": "ui://geox/well-desk",
+    "geox_petrophysics": "ui://geox/well-desk",
+    "geox_seismic_interpret": "ui://geox/seismic-vision",
+    "geox_seismic_compute": "ui://geox/seismic-vision",
+    "geox_model": "ui://geox/earth-volume",
+    "geox_basin": "ui://geox/basin-explorer",
+    "geox_prospect": "ui://geox/risk-console",
+    "geox_claim": "ui://geox/risk-console",
+    "geox_calibration_register_witness": "ui://geox/calibration-witness",
+}
+
+
+def _geox_annotations(tool_name: str) -> dict[str, Any]:
     """Return MCP annotations for a GEOX tool based on its behavior.
 
     Always sets all four hints: readOnlyHint, destructiveHint, idempotentHint, openWorldHint.
+    Also injects SEP-1865 _meta.ui / annotations.ui for tools with associated MCP App UIs.
     """
     if tool_name in _GEOX_STATE_TOOLS:
-        base = dict(_GEOX_STATE_ANNOTATIONS)
+        base: dict[str, Any] = dict(_GEOX_STATE_ANNOTATIONS)
     elif "export" in tool_name:
         base = dict(_GEOX_EXPORT_ANNOTATIONS)
     else:
@@ -287,6 +302,8 @@ def _geox_annotations(tool_name: str) -> dict[str, bool]:
         base["openWorldHint"] = True
     if tool_name in _GEOX_DESTRUCTIVE_TOOLS:
         base["destructiveHint"] = True
+    if tool_name in _GEOX_TOOL_UI_MAP:
+        base["ui"] = {"resourceUri": _GEOX_TOOL_UI_MAP[tool_name]}
     return base
 
 
@@ -3755,6 +3772,21 @@ async def discovery_handler(request: Request) -> JSONResponse:
     )
 
 
+async def agent_card_handler(request: Request) -> JSONResponse:
+    """A2A v1.0 Agent Card — /.well-known/agent-card.json and agent.json."""
+    repo_root = Path(__file__).resolve().parents[2]
+    card_path = repo_root / ".well-known" / "agent-card.json"
+    if not card_path.exists():
+        card_path = Path("/opt/geox/.well-known/agent-card.json")
+    if card_path.exists():
+        try:
+            data = json.loads(card_path.read_text(encoding="utf-8"))
+            return JSONResponse(data, headers={"Access-Control-Allow-Origin": "*"})
+        except Exception as e:
+            return JSONResponse({"error": f"Failed to parse agent-card.json: {e}"}, status_code=500)
+    return JSONResponse({"error": "agent-card.json not found"}, status_code=404)
+
+
 async def mcp_server_card(request: Request) -> JSONResponse:
     """MCP Server Card — SEP-2127 HTTP discovery document."""
     return JSONResponse(
@@ -4348,6 +4380,8 @@ def create_app():
             Route("/adapters", adapters_handler, methods=["GET"]),
             Route("/.well-known/mcp.json", mcp_server_card, methods=["GET"]),
             Route("/.well-known/mcp/server.json", discovery_handler, methods=["GET"]),
+            Route("/.well-known/agent-card.json", agent_card_handler, methods=["GET"]),
+            Route("/.well-known/agent.json", agent_card_handler, methods=["GET"]),
             Route("/.well-known/webmcp", webmcp_manifest, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource", _geox_oauth_protected_resource, methods=["GET"]),
             Route("/.well-known/oauth-protected-resource/mcp", _geox_oauth_protected_resource, methods=["GET"]),

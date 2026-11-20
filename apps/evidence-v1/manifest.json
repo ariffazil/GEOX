@@ -1,0 +1,44 @@
+{
+  "schema_version": "io.modelcontextprotocol/ui/1.0",
+  "app_id": "geox.evidence.v1",
+  "name": "GEOX Evidence Viewer v1",
+  "version": "1.0.0-AAA",
+  "description": "Visual evidence panel for geological observations and claim falsification traces.",
+  "ui_entry": {
+    "type": "resource_uri",
+    "resource_uri": "ui://geox/evidence-v1"
+  },
+  "capabilities": {
+    "events": [
+      "app.initialize",
+      "tool.result",
+      "ui.action"
+    ],
+    "tools": [
+      "geox_observe",
+      "geox_claim",
+      "geox_contrast_metabolize"
+    ],
+    "render_modes": ["evidence_feed", "provenance_graph"],
+    "data_classes": ["OBS", "DER", "INT"]
+  },
+  "arifos": {
+    "constitutional_federation": "geox",
+    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "vault_route": "999_VAULT",
+    "human_judge": "888"
+  },
+  "fallback": {
+    "chain": ["inline", "text"]
+  },
+  "_meta": {
+    "ui": {
+      "csp": {
+        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081"],
+        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
+        "frameDomains": ["'none'"],
+        "baseUriDomains": ["'none'"]
+      }
+    }
+  }
+}

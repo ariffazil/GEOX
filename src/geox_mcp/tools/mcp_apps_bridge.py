@@ -835,6 +835,9 @@ def ui_tool_result(
         text = "[GEOX ERROR] Tool execution failed — check structuredContent for details."
 
     meta = ui_meta(app_id, params, **(extra_meta or {}))
+    meta["_ui_fallback"] = text
+    if isinstance(structured, dict):
+        structured.setdefault("_ui_fallback", text)
     return ToolResult(
         content=[TextContent(type="text", text=text)],
         structured_content=structured,
@@ -883,6 +886,9 @@ def wrap_as_ui_tool_result(
             content = [TextContent(type="text", text=f"{app_id} ready")]
         meta = dict(result.meta or {})
         meta.update(ui_meta(app_id, params))
+        fallback_txt = text or (content[0].text if content else f"{app_id} ready")
+        meta["_ui_fallback"] = fallback_txt
+        sc.setdefault("_ui_fallback", fallback_txt)
         return ToolResult(
             content=content,
             structured_content=sc,

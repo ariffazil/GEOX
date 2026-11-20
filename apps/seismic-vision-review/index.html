@@ -82,6 +82,8 @@
     const probeMcp = () => {
       if (window.parent && window.parent !== window) {
         setStatus("MCP-CONNECTED");
+        window.parent.postMessage({ jsonrpc: "2.0", id: 1, method: "ui/initialize", params: { clientInfo: { name: "seismic-vision-review", version: "1.3.0" }, protocolVersion: "2026-01-26" } }, "*");
+        window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, "*");
         window.parent.postMessage({ jsonrpc: "2.0", method: "ui/ready", params: { version: "1.3.0", app: "seismic-vision" } }, "*");
       } else {
         setStatus("STANDALONE");
