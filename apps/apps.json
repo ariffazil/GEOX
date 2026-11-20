@@ -6,7 +6,7 @@
     {
       "id": "well-desk",
       "name": "WellDesk",
-      "title": "GEOX WellDesk \u2014 1D+2D Well Log Viewer + Rock Physics Engine",
+      "title": "GEOX WellDesk — 1D+2D Well Log Viewer + Rock Physics Engine",
       "uri": "ui://geox/well-desk",
       "path": "apps/well-desk/index.html",
       "status": "active",
@@ -15,12 +15,13 @@
         "geox_well_desk",
         "geox_petrophysics"
       ],
-      "tools": []
+      "tools": [],
+      "host_binding": "aaa:mcp-apps/well-desk"
     },
     {
       "id": "prospect-ui",
       "name": "Basin Explorer",
-      "title": "GEOX Basin Explorer \u2014 AAA Grade",
+      "title": "GEOX Basin Explorer — AAA Grade",
       "uri": "ui://geox/prospect-ui",
       "path": "apps/prospect-ui/index.html",
       "status": "active",
@@ -48,7 +49,7 @@
     {
       "id": "geox-mcp-visual",
       "name": "GEOX Dashboard",
-      "title": "GEOX Dashboard \u03a9",
+      "title": "GEOX Dashboard Ω",
       "uri": "ui://geox/geox-mcp-visual",
       "path": "apps/geox-mcp-visual/index.html",
       "status": "active",
@@ -69,7 +70,8 @@
         "geox_prospect"
       ],
       "tools": [],
-      "note": "2026-07-16: geox_evidence and geox_doctrine DEREGISTERED. Using claim+prospect for risk assessment."
+      "note": "2026-07-16: geox_evidence and geox_doctrine DEREGISTERED. Using claim+prospect for risk assessment.",
+      "host_binding": "aaa:mcp-apps/judge-console"
     },
     {
       "id": "earth-volume",
@@ -82,7 +84,8 @@
         "geox_seismic_compute",
         "geox_seismic_interpret"
       ],
-      "tools": []
+      "tools": [],
+      "host_binding": "aaa:mcp-apps/earth-volume"
     },
     {
       "id": "attribute-audit",
@@ -123,12 +126,12 @@
         "geox_well_ingest"
       ],
       "tools": [],
-      "note": "2026-07-16: geox_vision DEREGISTERED. Planned \u2014 will use well_ingest + future digitization pipeline."
+      "note": "2026-07-16: geox_vision DEREGISTERED. Planned — will use well_ingest + future digitization pipeline."
     },
     {
       "id": "evidence-v1",
       "name": "EvidenceV1",
-      "title": "GEOX Evidence Surfaces \u2014 geox.evidence.v1 A2UI catalog viewer",
+      "title": "GEOX Evidence Surfaces — geox.evidence.v1 A2UI catalog viewer",
       "uri": "ui://geox/evidence-v1",
       "path": "apps/evidence-v1/index.html",
       "status": "active",
@@ -137,6 +140,7 @@
     }
   ],
   "generated_at": "2026-11-21T04:00:00Z",
-  "registry_note": "tools[] must be subset of CANONICAL_PUBLIC_SURFACE.json public_tools (ZEN-15). 2026-07-16: cleaned ghost tool references.",
-  "cleanup_log": "2026-07-16: Replaced 10 DEREGISTERED tool references with live ZEN-15 equivalents. 3 apps deprecated (seismic-vision-review, attribute-audit, georeference-map)."
+  "registry_note": "tools[] must be subset of CANONICAL_PUBLIC_SURFACE.json public_tools (ZEN-15). 2026-07-16: cleaned ghost tool references. | 2026-11-21 (FI-003 S8): host_binding documents the federation host door (aaa.arif-fazil.com/mcp-apps/*, SEP-1865) per app — one truth, two doors (organ /mcp + host).",
+  "cleanup_log": "2026-07-16: Replaced 10 DEREGISTERED tool references with live ZEN-15 equivalents. 3 apps deprecated (seismic-vision-review, attribute-audit, georeference-map).",
+  "updated": "2026-11-21"
 }
