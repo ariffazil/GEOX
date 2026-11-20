@@ -242,6 +242,19 @@ GEOX_APPS: dict[str, dict[str, Any]] = {
             },
         },
     },
+    "evidence_v1": {
+        "uri": "ui://geox/evidence-v1",
+        "title": "GEOX Evidence Surfaces",
+        "description": "geox.evidence.v1 A2UI catalog viewer — 4 honesty components self-demonstrating (EpistemicTagBadge, HumilityMarginBar, CoverageClassBanner, SourceFreshnessBadge)",
+        "widget_description": "Self-demonstrating viewer of the geox.evidence.v1 A2UI catalog: honesty component vocabulary, renderer-only formatters, and the fail-closed UI tool policy (21 OBSERVE-class allow, 5 always-deny). Zero MCP tools in the page shell.",
+        "render_mode": "panel",
+        "mime_type": "text/html;profile=mcp-app",
+        "resource_type": "rawHtml",
+        "html_path": "apps/evidence-v1/index.html",
+        # /apps/ static root is a July-2026 Cloudflare publish (stale vs git) —
+        # point at the organ-proxied live path (probe 200, 2026-11-21).
+        "external_url": "https://geox.arif-fazil.com/mcp-apps/evidence-v1/index.html",
+    },
 }
 
 
