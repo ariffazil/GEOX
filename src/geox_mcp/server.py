@@ -400,6 +400,12 @@ else:
     well_app = None
 
 mcp = FastMCP(**_mcp_kwargs)
+try:
+    from fastmcp_tasks import TasksExtension
+    if hasattr(mcp, "add_extension"):
+        mcp.add_extension(TasksExtension())
+except ImportError:
+    pass
 
 # ── Forge 2026-09-29 — Section-Image Slice + Bridge tools (kimi-code/FI-008) ──
 # Capability contracts + display_proxy tools + SEG-Y bridge.

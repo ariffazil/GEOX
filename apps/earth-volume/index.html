@@ -210,5 +210,39 @@
         // Initialize App
         bridge.init();
     </script>
+<script data-sep1865="mcp-gui-upgrade">
+(function(){
+  if(window.McpAppBridge)return;
+  var embedded=window.parent&&window.parent!==window;
+  var nid=1,pending=Object.create(null);
+  function post(m){if(!embedded)return false;window.parent.postMessage(m,"*");return true;}
+  function req(method,params){
+    if(!embedded)return Promise.reject(new Error("standalone_mode_no_host"));
+    var id="sep1865-"+(nid++);
+    return new Promise(function(res,rej){
+      pending[id]={res:res,rej:rej};
+      post({jsonrpc:"2.0",id:id,method:method,params:params||{}});
+      setTimeout(function(){if(pending[id]){delete pending[id];rej(new Error("timeout:"+method));}},15000);
+    });
+  }
+  function applyCtx(ctx){
+    if(!ctx||typeof ctx!=="object")return;
+    if(ctx.theme)document.documentElement.setAttribute("data-theme",String(ctx.theme));
+    window.dispatchEvent(new CustomEvent("mcp-host-context",{detail:ctx}));
+  }
+  window.addEventListener("message",function(ev){
+    var m=ev.data;if(!m||typeof m!=="object"||m.jsonrpc!=="2.0")return;
+    if(m.id&&pending[m.id]){var p=pending[m.id];delete pending[m.id];m.error?p.rej(m.error):p.res(m.result);return;}
+    if(m.method==="ui/notifications/host-context-changed")applyCtx(m.params);
+    if(m.method==="ui/notifications/tool-result")window.dispatchEvent(new CustomEvent("mcp-tool-result",{detail:m.params||null}));
+  });
+  window.McpAppBridge={
+    protocolVersion:"2026-01-26",
+    sendMessage:function(t){return req("ui/message",{role:"user",content:[{type:"text",text:String(t)}]});},
+    updateModelContext:function(c){return req("ui/update-model-context",{content:[{type:"text",text:JSON.stringify(c)}],structuredContent:c});},
+    callTool:function(n,a){return req("tools/call",{name:n,arguments:a||{}});}
+  };
+})();
+</script>
 </body>
 </html>
