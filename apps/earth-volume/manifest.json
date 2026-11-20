@@ -25,31 +25,75 @@
       "geox_observe",
       "geox_paleobiodb_query"
     ],
-    "render_modes": ["basin_map", "play_fairway", "deep_time", "sediment_routing", "thermal_history"],
-    "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"]
+    "render_modes": [
+      "basin_map",
+      "play_fairway",
+      "deep_time",
+      "sediment_routing",
+      "thermal_history"
+    ],
+    "data_classes": [
+      "SYNTHETIC",
+      "MEASURED",
+      "HYBRID"
+    ]
   },
   "arifos": {
     "constitutional_federation": "geox",
-    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "required_floors": [
+      "F1",
+      "F2",
+      "F4",
+      "F7",
+      "F9",
+      "F11",
+      "F13"
+    ],
     "physics_engine": "physics9",
     "vault_route": "999_VAULT",
     "human_judge": "888"
   },
   "fallback": {
-    "chain": ["inline", "external", "card", "text"]
+    "chain": [
+      "inline",
+      "external",
+      "card",
+      "text"
+    ]
   },
   "_meta": {
     "ui": {
       "csp": {
-        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071", "https://api.macrostrat.org"],
-        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
-        "frameDomains": ["'none'"],
-        "baseUriDomains": ["'none'"]
+        "connectDomains": [
+          "https://geox.arif-fazil.com",
+          "http://localhost:8081",
+          "https://api.macrostrat.org"
+        ],
+        "resourceDomains": [
+          "https://geox.arif-fazil.com",
+          "'self'",
+          "data:"
+        ],
+        "frameDomains": [
+          "'none'"
+        ],
+        "baseUriDomains": [
+          "'none'"
+        ]
       }
     }
   },
   "permissions": {
-    "compute": ["basin_model", "deep_time_reconstruct", "stratigraphy", "sediment_routing", "thermal_history"],
-    "network": ["vault_999_submit", "macrostrat_query"]
+    "compute": [
+      "basin_model",
+      "deep_time_reconstruct",
+      "stratigraphy",
+      "sediment_routing",
+      "thermal_history"
+    ],
+    "network": [
+      "vault_999_submit",
+      "macrostrat_query"
+    ]
   }
 }

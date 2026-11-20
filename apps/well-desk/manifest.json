@@ -25,8 +25,19 @@
       "geox_well_qc",
       "geox_workspace"
     ],
-    "render_modes": ["1d_track", "2d_correlation", "crossplot", "forward", "inverse", "metabolic"],
-    "data_classes": ["SYNTHETIC", "MEASURED", "HYBRID"],
+    "render_modes": [
+      "1d_track",
+      "2d_correlation",
+      "crossplot",
+      "forward",
+      "inverse",
+      "metabolic"
+    ],
+    "data_classes": [
+      "SYNTHETIC",
+      "MEASURED",
+      "HYBRID"
+    ],
     "petro_defaults": {
       "gr_clean": 15,
       "gr_shale": 150,
@@ -41,28 +52,63 @@
   },
   "arifos": {
     "constitutional_federation": "geox",
-    "required_floors": ["F1", "F2", "F4", "F7", "F9", "F11", "F13"],
+    "required_floors": [
+      "F1",
+      "F2",
+      "F4",
+      "F7",
+      "F9",
+      "F11",
+      "F13"
+    ],
     "physics_engine": "physics9",
     "vault_route": "999_VAULT",
     "human_judge": "888"
   },
   "fallback": {
-    "chain": ["inline", "external", "card", "text"]
+    "chain": [
+      "inline",
+      "external",
+      "card",
+      "text"
+    ]
   },
   "_meta": {
     "ui": {
       "csp": {
-        "connectDomains": ["https://geox.arif-fazil.com", "http://localhost:8081", "http://localhost:7071"],
-        "resourceDomains": ["https://geox.arif-fazil.com", "'self'", "data:"],
-        "frameDomains": ["'none'"],
-        "baseUriDomains": ["'none'"]
+        "connectDomains": [
+          "https://geox.arif-fazil.com",
+          "http://localhost:8081"
+        ],
+        "resourceDomains": [
+          "https://geox.arif-fazil.com",
+          "'self'",
+          "data:"
+        ],
+        "frameDomains": [
+          "'none'"
+        ],
+        "baseUriDomains": [
+          "'none'"
+        ]
       }
     }
   },
   "permissions": {
-    "file_system": ["read_las", "read_lis", "write_las", "export_png"],
-    "compute": ["forward_rock_physics", "inverse_rock_physics", "metabolic_convergence"],
-    "network": ["vault_999_submit"]
+    "file_system": [
+      "read_las",
+      "read_lis",
+      "write_las",
+      "export_png"
+    ],
+    "compute": [
+      "forward_rock_physics",
+      "inverse_rock_physics",
+      "metabolic_convergence"
+    ],
+    "network": [
+      "vault_999_submit"
+    ]
   },
   "schemas": {
     "events": "./schemas/well_desk_event_schema.json",
