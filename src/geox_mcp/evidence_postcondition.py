@@ -49,6 +49,10 @@ EVIDENCE_CONTRACTS: dict[str, list[str] | None] = {
     "geox_sequence": ["correlation", "zones", "tops", "strat_column"],
     "geox_subsurface_model": ["layers", "prisms", "model", "density_model"],
     "geox_geomechanics": ["moduli", "stress_polygon", "stress_polygon_vertices", "elastic_properties", "pressure", "sv_mpa"],
+    # ArtCraft S9b (2026-11-21): keys asserted by tests/test_artcraft_s9b.py
+    # on live SUCCESS paths (box+inspect / regular+cornerpoint exports).
+    "geox_grid": ["total_cells", "active_cells", "bulk_volume_m3"],
+    "geox_resqml_io": ["extent_kji", "bulk_volume_m3", "epc_sha256", "h5_sha256", "epc_bytes", "h5_bytes", "round_trip"],
     "geox_gravmag_studio": ["prisms", "forward_model", "residual", "anomaly"],
     "geox_lem_predict": ["predictions", "porosity", "sw", "lithology"],
     "geox_sediment_mass_balance": ["source_eroded_km3", "preserved_volumes", "bypassed"],

@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-11-12T10:25:12.147847+00:00",
+  "generated_at": "2026-11-21T01:58:12.144613+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
-  "public_count": 27,
+  "public_count": 29,
   "internal_count": 22,
   "public_tools": [
     "geox_basin",
@@ -14,6 +14,7 @@
     "geox_extract_native_trace",
     "geox_geomechanics",
     "geox_glof",
+    "geox_grid",
     "geox_list_registered_sources",
     "geox_map",
     "geox_model",
@@ -22,6 +23,7 @@
     "geox_petrophysics",
     "geox_prospect",
     "geox_register_native_source",
+    "geox_resqml_io",
     "geox_seismic_compute",
     "geox_seismic_ingest",
     "geox_seismic_interpret",
@@ -182,6 +184,17 @@
       "subfamily": "cascade"
     },
     {
+      "name": "geox_grid",
+      "domain": "earth.structure",
+      "axis": "reason",
+      "lane": "evidence",
+      "family": "unclassified",
+      "tier": "Z",
+      "description": "Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv arrays (dims, active cells, bulk volume) or generate a deterministic synthetic box grid. Pure compute, no filesystem access, dimension-capped.",
+      "ui": null,
+      "governance": {}
+    },
+    {
       "name": "geox_list_registered_sources",
       "domain": "earth.seismic",
       "axis": "compute",
@@ -296,6 +309,17 @@
         "action_class": "OBSERVE",
         "mutation": false
       }
+    },
+    {
+      "name": "geox_resqml_io",
+      "domain": "earth.structure",
+      "axis": "reason",
+      "lane": "evidence",
+      "family": "unclassified",
+      "tier": "Z",
+      "description": "RESQML grid export via resqpy: regular grids (extent_kji + increments) or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected); return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient scratch only; no persistent server state.",
+      "ui": null,
+      "governance": {}
     },
     {
       "name": "geox_seismic_compute",
@@ -452,6 +476,7 @@
     "research",
     "seismic",
     "structural",
+    "unclassified",
     "view"
   ],
   "tier_distribution": {
@@ -487,6 +512,10 @@
     ],
     "C": [
       "geox_glof"
+    ],
+    "Z": [
+      "geox_grid",
+      "geox_resqml_io"
     ]
   },
   "capability_packs": {

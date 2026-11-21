@@ -29,7 +29,7 @@ truth_rule: live :8081/health + tools/list beat any static count in prose
 
 [![License](https://img.shields.io/badge/license-BSL--1.1-blue?style=flat-square)](./LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-streamable__HTTP-0b7285?style=flat-square)](#connect-an-mcp-client)
-[![GEOX-27 Canonical Tools](https://img.shields.io/badge/GEOX-27_Canonical_Tools-0b7285?style=flat-square)](#current-verified-state)
+[![GEOX-29 Canonical Tools](https://img.shields.io/badge/GEOX-29_Canonical_Tools-0b7285?style=flat-square)](#current-verified-state)
 [![Surface drift gate](https://img.shields.io/github/actions/workflow/status/ariffazil/GEOX/surface-drift-gate.yml?label=surface-drift-gate&style=flat-square)](https://github.com/ariffazil/GEOX/actions/workflows/surface-drift-gate.yml)
 [![Security](https://img.shields.io/badge/security-reporting-green?style=flat-square)](./SECURITY.md)
 

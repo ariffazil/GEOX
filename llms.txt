@@ -1,7 +1,7 @@
-# GEOX — Earth Intelligence Sovereign Kernel (27 Public Tools)
+# GEOX — Earth Intelligence Sovereign Kernel (29 Public Tools)
 > Doctrine: Physics before narrative. Governed evidence only.
 > Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS
-> Capability families: 9 | Sprint 1 classified
+> Capability families: 10 | Sprint 1 classified
 
 ## 0. Where GEOX Lives
 
@@ -67,6 +67,11 @@
 ### 9. Structural Calibration
 
 - **geox_calibration_register_witness** [Tier B — Specialist]: Register a CalibrationWitness for structural interpretation. Validates schema, checks completeness blockers (missing axes, depth-without-velocity). Returns VOID on bad input, HOLD on missing calibration.
+
+### Unclassified
+
+- **geox_grid** [Tier Z — Internal]: Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv arrays (dims, active cells, bulk volume) or generate a deterministic synthetic box grid. Pure compute, no filesystem access, dimension-capped.
+- **geox_resqml_io** [Tier Z — Internal]: RESQML grid export via resqpy: regular grids (extent_kji + increments) or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected); return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient scratch only; no persistent server state.
 
 ## 2. Tier Legend
 - **Tier A (Core)**: Default discovery. All agents see these.

@@ -295,6 +295,8 @@ def test_actual_registered_tool_count():
         "seismic_volume_register.py": 1,
         "seismic_horizon_track.py": 1,
         "seismic_display_spectral_character.py": 1,
+        "artcraft_grid.py": 1,
+        "artcraft_resqml_io.py": 1,
     }
     expected = sum(expected_decorator_files.values())
 

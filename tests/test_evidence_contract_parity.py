@@ -18,7 +18,7 @@ from geox_mcp.registry import CANONICAL_PUBLIC_TOOLS
 def test_each_public_tool_has_exactly_one_contract() -> None:
     public = list(CANONICAL_PUBLIC_TOOLS)
     assert len(public) == len(set(public))
-    assert len(public) == 27
+    assert len(public) == 29
     for name in public:
         assert name in EVIDENCE_CONTRACTS, name
         assert EVIDENCE_CONTRACT_SCOPE[name] in ("public", "public_gap")
@@ -65,11 +65,11 @@ def test_gap_contract_does_not_false_fail_success() -> None:
 
 def test_compliance_pct_uses_the_public_27_not_internal_names() -> None:
     matrix = compliance_matrix()
-    assert matrix["public_tools"] == 27
-    assert matrix["enforced_count"] + matrix["gap_count"] == 27
+    assert matrix["public_tools"] == 29
+    assert matrix["enforced_count"] + matrix["gap_count"] == 29
     assert matrix["gap_count"] == 16
     assert matrix["internal_count"] == 23
-    assert matrix["compliance_pct"] == round(matrix["enforced_count"] / 27 * 100)
+    assert matrix["compliance_pct"] == round(matrix["enforced_count"] / 29 * 100)
     assert matrix["compliance_pct"] != 68
     assert "geox_gravmag_studio" in matrix["internal"]
     assert "geox_observe" in matrix["gaps"]

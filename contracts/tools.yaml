@@ -1,6 +1,6 @@
 # GEOX Earth Intelligence Tool Registry
 # SOT: src/geox_mcp/registry.py — CANONICAL_PUBLIC_TOOLS
-# Regenerated: 2026-11-12T10:09:34.515332+00:00
+# Regenerated: 2026-11-21T01:58:12.144613+00:00
 #
 # DITEMPA BUKAN DIBERI — Forged, Not Given.
 #
@@ -8,7 +8,7 @@
 # The single source of truth is src/geox_mcp/registry.py:CANONICAL_PUBLIC_TOOLS.
 # If tools.yaml and registry.py disagree, registry.py wins.
 
-schema_version: 2026.11.12
+schema_version: 2026.11.21
 organ: GEOX
 authority: ariffazil/geox
 mcp_transport: streamable-http
@@ -17,8 +17,8 @@ mcp_endpoints:
   kernel_gateway: https://mcp.arif-fazil.com/mcp
   local: http://127.0.0.1:8081/mcp
 health_endpoint: http://127.0.0.1:8081/health
-canonical_tool_count: 27
-contract_epoch: 2026-11-12-GEOX-27TOOLS-ZEN
+canonical_tool_count: 29
+contract_epoch: 2026-11-21-GEOX-29TOOLS-ZEN
 source_of_truth: src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS
 floor_enforcement: delegated-to-arifos
 physics_boundary: Physics9
@@ -112,6 +112,15 @@ tools:
       zen-33 state). Modes: run (full cascade in one call), inverse (Bayesian grid-search),
       mcmc (MCMC posterior), propagate (Saint-Venant 1D), phase (yield surface debug).
       Replaces 7 individual geox_glof_cascade_* tools (333 ARCHITECT 2026-09-19).'
+  geox_grid:
+    category: earth.structure
+    lane: evidence
+    family: unclassified
+    capability_tier: Z
+    risk_tier: readonly
+    description: 'Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv
+      arrays (dims, active cells, bulk volume) or generate a deterministic synthetic
+      box grid. Pure compute, no filesystem access, dimension-capped.'
   geox_list_registered_sources:
     category: earth.seismic
     lane: compute
@@ -182,6 +191,16 @@ tools:
     description: 'Register a native SEG-Y source for trace extraction. Validates file
       existence, computes SHA256, extracts binary header metadata. Authority downgrade:
       OPERATOR_APPROVED without actor → UNVERIFIED.'
+  geox_resqml_io:
+    category: earth.structure
+    lane: evidence
+    family: unclassified
+    capability_tier: Z
+    risk_tier: readonly
+    description: 'RESQML grid export via resqpy: regular grids (extent_kji + increments)
+      or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected);
+      return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip
+      read. Transient scratch only; no persistent server state.'
   geox_seismic_compute:
     category: earth.seismic
     lane: reasoning

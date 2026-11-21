@@ -193,7 +193,7 @@ GEOX_DOMAINS: dict[str, list[str]] = {
     "Source": ["geox_source"],
     "Spatial": ["geox_map", "geox_spatial"],
     "Structural": ["geox_calibration_register_witness"],
-    "Structure": ["geox_geomechanics"],
+    "Structure": ["geox_geomechanics", "geox_grid", "geox_resqml_io"],
     "Temporal": ["geox_temporal"],
     "Time": ["geox_deep_time"],
     "Well": ["geox_well", "geox_well_ingest", "geox_well_qc"],

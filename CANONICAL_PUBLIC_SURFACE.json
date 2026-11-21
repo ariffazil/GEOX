@@ -1,8 +1,8 @@
 {
   "schema": "geox.canonical_public_surface.v1",
-  "generated_at": "2026-10-08T09:49:16.988221+00:00",
+  "generated_at": "2026-11-21T01:07:57.092777+00:00",
   "source": "tools_manifest.yaml",
-  "public_count": 27,
+  "public_count": 29,
   "internal_count": 61,
   "public_tools": [
     "geox_well_ingest",
@@ -15,6 +15,8 @@
     "geox_paleobiodb_query",
     "geox_geomechanics",
     "geox_prospect",
+    "geox_grid",
+    "geox_resqml_io",
     "geox_well_qc",
     "geox_temporal",
     "geox_map",
@@ -91,7 +93,7 @@
       "domain": "earth.seismic",
       "axis": "compute",
       "lane": "reasoning",
-      "description": "Seismic computation: forward model, well tie, attributes, wavelet extraction, inversion.",
+      "description": "Seismic computation: AVO forward modeling (Zoeppritz, Shuey, LMR, Castagna) and 2D section attribute stack (amplitude, complex-trace, frequency and structure families).",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -117,7 +119,7 @@
       "domain": "earth.basin",
       "axis": "reason",
       "lane": "reasoning",
-      "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction.",
+      "description": "Unified basin intelligence: profile, resolve, macrostrat, backstrip, mass balance, thermal maturity, map context, deep time, tectonic reconstruction. Macrostrat-backed modes name the coverage class (u",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -163,6 +165,24 @@
         "mutation": false,
         "physics_guard_required": true
       }
+    },
+    {
+      "name": "geox_grid",
+      "domain": "earth.structure",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv arrays (dims, active cells, bulk volume) or generate a deterministic synthetic box grid. Pure compute, no filesyst",
+      "ui": null,
+      "governance": {}
+    },
+    {
+      "name": "geox_resqml_io",
+      "domain": "earth.structure",
+      "axis": "reason",
+      "lane": "evidence",
+      "description": "RESQML regular-grid export via resqpy: build an IJK regular grid (extent_kji + positive cell increments), return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient ",
+      "ui": null,
+      "governance": {}
     },
     {
       "name": "geox_well_qc",
@@ -230,7 +250,7 @@
       "domain": "earth.time",
       "axis": "compute",
       "lane": "compute",
-      "description": "Deep time: Earth state, dynamical systems, DDE reasoning. Modes: dde_reason.",
+      "description": "Deep time: Earth state, dynamical systems, DDE reasoning over the Macrostrat lexicon (columns, units, intervals). Modes: dde_reason. It reasons over the published lexicon, NOT over the literature know",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",
@@ -314,7 +334,7 @@
       "domain": "earth.registry",
       "axis": "compute",
       "lane": "compute",
-      "description": "Canonical registry probe: public surface truth (count, canonical_tools, verdict). Self-witness for surface SOT.",
+      "description": "Canonical registry probe: public surface truth (count, canonical_tools, verdict, live_counts, deployed build). Self-witness for surface SOT; the same surface reports the federation edge aggregate and ",
       "ui": null,
       "governance": {
         "action_class": "OBSERVE",

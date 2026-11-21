@@ -72,9 +72,9 @@ def test_federation_organs_topology():
 
 
 def test_geox_domain_topology():
-    """Verify all 27 canonical tools are covered across the 17 Earth domains."""
+    """Verify all 29 canonical tools are covered across the 17 Earth domains."""
     total_domain_tools = sum(len(tools) for tools in GEOX_DOMAINS.values())
-    assert total_domain_tools == 27
+    assert total_domain_tools == 29
     assert len(GEOX_DOMAINS) == 17
 
     all_mapped_tools = {tool for tools in GEOX_DOMAINS.values() for tool in tools}
@@ -172,7 +172,7 @@ def test_get_federation_topology():
     assert "arifos" in topo["organs"]
     assert "arifflow" in topo["organs"]
     assert "frame" in topo["organs"]
-    assert topo["geox_surface"]["canonical_tools_count"] == 27
+    assert topo["geox_surface"]["canonical_tools_count"] == 29
     assert topo["geox_surface"]["total_domains"] == 17
     assert topo["geox_surface"]["p0_promotion_gate"] == "HOLD"
 
@@ -205,4 +205,4 @@ def test_server_endpoints():
     status_data = res_status.json()
     assert "federation" in status_data
     assert status_data["federation"]["total_organs"] == 11
-    assert status_data["canonical_tools"] == 27
+    assert status_data["canonical_tools"] == 29

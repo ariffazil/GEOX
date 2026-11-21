@@ -2,13 +2,13 @@
   "info": {
     "description": "MCP Apps is the portable protocol. ChatGPT is one host and plugin-distribution environment. window.openai is optional progressive enhancement.",
     "title": "GEOX Earth Intelligence API",
-    "version": "2026.11.13"
+    "version": "2026.11.21"
   },
   "openapi": "3.0.0",
   "paths": {
     "/mcp": {
       "post": {
-        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 27 canonical plugin-exposed tools.",
+        "description": "Plugin submission, review and publication use metadata scanned or snapshotted from this live MCP endpoint. x-mcp-tools MUST equal the 29 canonical plugin-exposed tools.",
         "operationId": "mcpEndpoint",
         "summary": "MCP JSON-RPC 2.0 endpoint",
         "x-mcp-tools": [
@@ -270,6 +270,62 @@
             "domain": "earth.prospect",
             "lane": "judgment",
             "name": "geox_prospect",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv arrays (dims, active cells, bulk volume) or generate a deterministic synthetic box grid. Pure compute, no filesystem access, dimension-capped.",
+            "domain": "earth.structure",
+            "lane": "evidence",
+            "name": "geox_grid",
+            "parameters": {
+              "properties": {
+                "actor_id": {
+                  "description": "Calling actor identifier",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Tool-specific arguments",
+                  "type": "object"
+                },
+                "session_id": {
+                  "description": "arifOS constitutional session ID",
+                  "type": "string"
+                },
+                "trace_id": {
+                  "description": "Trace identifier propagated end-to-end",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          {
+            "axis": "reason",
+            "description": "RESQML grid export via resqpy: regular grids (extent_kji + increments) or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected); return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient scratch only; no persistent server state.",
+            "domain": "earth.structure",
+            "lane": "evidence",
+            "name": "geox_resqml_io",
             "parameters": {
               "properties": {
                 "actor_id": {

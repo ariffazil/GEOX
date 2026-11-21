@@ -1,15 +1,16 @@
 organ: GEOX
-version: 2026.11.12
+version: 2026.11.21
 sot_source: registry.py::CANONICAL_PUBLIC_TOOLS
 live_port: 8081
-public_count: 27
-regenerated: '2026-11-12T10:09:34.515332+00:00'
+public_count: 29
+regenerated: '2026-11-21T01:58:12.144613+00:00'
 regenerated_by: generate_all_surfaces.py (registry.py truth)
 sprint1_classified: true
 tier_distribution:
   A: 15
   B: 11
   C: 1
+  Z: 2
 tools:
 - name: geox_basin
   domain: earth.basin
@@ -144,6 +145,20 @@ tools:
     read_only: true
     destructive: false
     idempotent: true
+- name: geox_grid
+  domain: earth.structure
+  axis: reason
+  lane: evidence
+  family: unclassified
+  tier: Z
+  access: public
+  description: 'Corner-point grid compute via xtgeo: inspect caller-supplied coordsv/zcornsv/actnumsv
+    arrays (dims, active cells, bulk volume) or generate a deterministic synthetic
+    box grid. Pure compute, no filesystem access, dimension-capped.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
 - name: geox_list_registered_sources
   domain: earth.seismic
   axis: compute
@@ -250,6 +265,21 @@ tools:
   description: 'Register a native SEG-Y source for trace extraction. Validates file
     existence, computes SHA256, extracts binary header metadata. Authority downgrade:
     OPERATOR_APPROVED without actor → UNVERIFIED.'
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+- name: geox_resqml_io
+  domain: earth.structure
+  axis: reason
+  lane: evidence
+  family: unclassified
+  tier: Z
+  access: public
+  description: 'RESQML grid export via resqpy: regular grids (extent_kji + increments)
+    or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected);
+    return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip
+    read. Transient scratch only; no persistent server state.'
   annotations:
     read_only: true
     destructive: false
