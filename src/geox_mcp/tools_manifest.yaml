@@ -270,7 +270,7 @@ tools:
   lane: evidence
   face: surface
   visibility: public
-  description: 'RESQML regular-grid export via resqpy: build an IJK regular grid (extent_kji + positive cell increments), return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient scratch only; no persistent server state.'
+  description: 'RESQML grid export via resqpy: regular grids (extent_kji + increments) or ALIGNED corner-point grids (coordsv/zcornsv/actnumsv, split-pillar rejected); return base64 EPC + HDF5 with SHA-256 provenance, self-verified by round-trip read. Transient scratch only; no persistent server state.'
   input_schema_source: callable
   annotations:
     read_only: true

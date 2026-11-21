@@ -171,3 +171,50 @@ def test_resqml_555_boundary_no_persistent_state(tmp_path):
     assert "path" not in str(r["data"].get("epc_base64", ""))
     for key in ("epc_base64", "h5_base64", "epc_sha256", "h5_sha256"):
         assert key in r["data"]
+
+
+# ── S9b Phase 2: arbitrary ALIGNED corner-point → RESQML ───────────────────
+
+def test_resqml_cornerpoint_export_volume_verified():
+    a = _arrays(2, 3, 4)
+    r = _run(geox_resqml_io, mode="export_cornerpoint_epc",
+             title="artcraft cp phase2", session_id="ANON-test", **a)
+    assert r["status"] == "OK", r.get("error")
+    d = r["data"]
+    assert d["extent_kji"] == [4, 3, 2]
+    assert d["round_trip"]["grid_part_present"] is True
+    assert d["round_trip"]["volume_matches_xtgeo"] is True
+    assert d["xtgeo_bulk_volume_m3"] == pytest.approx(d["bulk_volume_m3"], rel=1e-6)
+    epc_raw = base64.b64decode(d["epc_base64"])
+    assert hashlib.sha256(epc_raw).hexdigest() == d["epc_sha256"]
+    assert "corner-point grid exported (aligned)" in r["_ui_fallback"]
+
+
+def test_resqml_cornerpoint_split_pillar_hold():
+    """A split-pillar grid (adjacent cells disagree at a pillar plane) => HOLD."""
+    a = _arrays(2, 2, 2)
+    # perturb one quadrant of one pillar plane: xtgeo-4 padded zcorn layout
+    z = np.asarray(a["zcornsv"], dtype=np.float64)
+    z[1, 1, 1, 2] += 25.0
+    a["zcornsv"] = z.tolist()
+    r = _run(geox_resqml_io, mode="export_cornerpoint_epc",
+             session_id="ANON-test", **a)
+    assert r["status"] == "HOLD"
+    assert "ALIGNED" in r["error"]
+
+
+def test_resqml_cornerpoint_bad_arrays_hold():
+    a = _arrays(2, 2, 2)
+    a["actnumsv"] = [[1, 1], [1, 1], [1, 1]]  # wrong vs zcorn-derived dims
+    r = _run(geox_resqml_io, mode="export_cornerpoint_epc",
+             session_id="ANON-test", **a)
+    assert r["status"] == "HOLD"
+    assert "falsification gate" in r["error"]
+
+
+def test_resqml_cornerpoint_cell_cap():
+    a = _arrays(64, 64, 64)  # 262,144 > 250,000 cap
+    r = _run(geox_resqml_io, mode="export_cornerpoint_epc",
+             session_id="ANON-test", **a)
+    assert r["status"] == "HOLD"
+    assert "exceeds cap" in r["error"]
