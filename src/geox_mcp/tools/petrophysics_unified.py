@@ -253,15 +253,39 @@ async def geox_petrophysics(
             phi_d = np.clip((r_mat - rhob) / max(r_mat - r_fl, 1e-6), 0, 0.4)
             # Shale-corrected effective porosity
             phi_e = phi_d * (1 - vsh)
-            # Archie Sw
+            # Archie Sw with clipping detection
             rw_eff = rw_ohm_m if rw_ohm_m is not None else rw
-            sw = np.sqrt(np.clip((archie_a * rw_eff) / (phi_e**archie_m * rt + 1e-6), 0, 1))
-            shc = 1 - sw
+            raw_sw_sq = (archie_a * rw_eff) / (phi_e**archie_m * rt + 1e-6)
+            raw_sw = np.sqrt(np.maximum(raw_sw_sq, 0))
+            sw_clipped_flag = bool(np.any(raw_sw > 1.0))
+            sw = np.clip(raw_sw, 0, 1.0)
+            shc = 1.0 - sw
             # Net pay flags (Vsh<0.5, phi>phi_cutoff, Sw<sw_cutoff)
             vsh_flag = vsh < vsh_cutoff
             phi_flag = phi_e > phi_cutoff
             sw_flag = sw < sw_cutoff
             net_pay = vsh_flag & phi_flag & sw_flag
+
+            # Input provenance tracking for petrophysics parameters
+            input_provenance = {
+                "rw_ohm_m": "OBS" if rw_ohm_m is not None else "DEFAULT",
+                "rho_matrix_g_cc": "OBS" if rho_matrix_g_cc is not None else "DEFAULT",
+                "rho_fluid_g_cc": "OBS" if rho_fluid_g_cc is not None else "DEFAULT",
+                "gr_clean": "OBS" if gr_clean != 15 else "DEFAULT",
+                "gr_shale": "OBS" if gr_shale != 150 else "DEFAULT",
+                "archie_a": "OBS" if archie_a != 1 else "DEFAULT",
+                "archie_m": "OBS" if archie_m != 2 else "DEFAULT",
+                "archie_n": "OBS" if archie_n != 2 else "DEFAULT",
+                "vsh_cutoff": "OBS" if vsh_cutoff != 0.5 else "DEFAULT",
+                "phi_cutoff": "OBS" if phi_cutoff != 0.1 else "DEFAULT",
+                "sw_cutoff": "OBS" if sw_cutoff != 0.6 else "DEFAULT",
+            }
+
+            computation_notes = []
+            if sw_clipped_flag:
+                computation_notes.append("sw_clipped_at_1.0: one or more Archie Sw samples exceeded 1.0 (unphysical water saturation) and were clipped to 1.0.")
+            if nphi.size > 0 and not np.all(np.isnan(nphi)):
+                computation_notes.append("nphi_unused_in_wyllie: NPHI curve supplied but unused in density-porosity (Wyllie) calculation.")
 
             # Stats
             def pct(a, p):
@@ -298,8 +322,8 @@ async def geox_petrophysics(
                 "params": {
                     "gr_clean": gr_clean,
                     "gr_shale": gr_shale,
-                    "rho_matrix_g_cc": rho_matrix_g_cc,
-                    "rho_fluid_g_cc": rho_fluid_g_cc,
+                    "rho_matrix_g_cc": r_mat,
+                    "rho_fluid_g_cc": r_fl,
                     "rw_ohm_m": rw_eff,
                     "archie_a": archie_a,
                     "archie_m": archie_m,
@@ -308,6 +332,9 @@ async def geox_petrophysics(
                     "phi_cutoff": phi_cutoff,
                     "sw_cutoff": sw_cutoff,
                 },
+                "input_provenance": input_provenance,
+                "computation_notes": computation_notes,
+                "sw_clipped_flag": sw_clipped_flag,
                 "band": "DERIVED",
                 "epistemic": {
                     "evidence_layer": "WELL",

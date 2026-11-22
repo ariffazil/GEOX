@@ -91,8 +91,8 @@ def solve_inverse_volumetrics(
     violations = []
     if net_pay_m <= 0:
         violations.append(f"net_pay_m must be positive, got {net_pay_m}")
-    if sw_min < 0.0 or sw_max >= 1.0 or sw_min > sw_max:
-        violations.append(f"sw_range must satisfy 0.0 <= min <= max < 1.0, got ({sw_min}, {sw_max})")
+    if sw_min < 0.0 or sw_max > 1.0 or sw_min > sw_max:
+        violations.append(f"sw_range must satisfy 0.0 <= min <= max <= 1.0, got ({sw_min}, {sw_max})")
     if phi_min <= 0.0 or phi_max >= 1.0 or phi_min > phi_max:
         violations.append(f"porosity_range must satisfy 0.0 < min <= max < 1.0, got ({phi_min}, {phi_max})")
     if p_min <= 0 or p_max <= 0 or p_min > p_max:

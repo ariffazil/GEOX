@@ -241,10 +241,12 @@ async def geox_prospect(
         }
         raw_res = solve_inverse_volumetrics(**inv_args)
         raw_res["prospect_ref"] = prospect_ref
+        raw_res["tool"] = "geox_prospect"
 
         if not raw_res.get("ok", True) or raw_res.get("physics_guard") == "FAIL":
             envelope = get_standard_envelope(
                 primary_artifact=raw_res,
+                tool_name="geox_prospect",
                 tool_class="compute",
                 execution_status=ExecutionStatus.ERROR,
                 governance_status=GovernanceStatus.VOID,
@@ -259,10 +261,18 @@ async def geox_prospect(
             envelope["epistemic_label"] = "REJECTED_UNPHYSICAL"
             envelope["forbidden_use"] = "unphysical inputs rejected"
             envelope["physics_guard"] = {"guard_passed": False, "violation": raw_res.get("error")}
+            # Suppress noisy APEX dump on unphysical rejection errors
+            envelope["apex"] = {
+                "emitted": False,
+                "reason": "REJECTED_UNPHYSICAL — apex calculation omitted on unphysical error",
+            }
             return envelope
 
         envelope = get_standard_envelope(
             primary_artifact=raw_res,
+            tool_name="geox_prospect",
+            tool_class="compute",
+            execution_status=ExecutionStatus.SUCCESS,
             tool_class="compute",
             execution_status=ExecutionStatus.SUCCESS,
             governance_status=GovernanceStatus.QUALIFY,

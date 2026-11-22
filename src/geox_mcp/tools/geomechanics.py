@@ -126,7 +126,7 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
                 ok=False,
                 result={
                     "input_state": s.to_dict(),
-                    "derived": derived,
+                    "derived": {},
                     "sanity_flags": sanity,
                     "grade": "REJECTED_UNPHYSICAL",
                 },
