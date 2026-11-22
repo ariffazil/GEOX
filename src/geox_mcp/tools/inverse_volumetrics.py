@@ -87,6 +87,32 @@ def solve_inverse_volumetrics(
     sw_min, sw_max = float(sw_range[0]), float(sw_range[1])
     geom_min, geom_max = float(geometry_factor_range[0]), float(geometry_factor_range[1])
 
+    # ── Physical bounds validation (Natural Law Input Gate) ──
+    violations = []
+    if net_pay_m <= 0:
+        violations.append(f"net_pay_m must be positive, got {net_pay_m}")
+    if sw_min < 0.0 or sw_max >= 1.0 or sw_min > sw_max:
+        violations.append(f"sw_range must satisfy 0.0 <= min <= max < 1.0, got ({sw_min}, {sw_max})")
+    if phi_min <= 0.0 or phi_max >= 1.0 or phi_min > phi_max:
+        violations.append(f"porosity_range must satisfy 0.0 < min <= max < 1.0, got ({phi_min}, {phi_max})")
+    if p_min <= 0 or p_max <= 0 or p_min > p_max:
+        violations.append(f"pressure_mpa_range must be positive with min <= max, got ({p_min}, {p_max})")
+    if geom_min <= 0 or geom_max > 1.0 or geom_min > geom_max:
+        violations.append(f"geometry_factor_range must satisfy 0.0 < min <= max <= 1.0, got ({geom_min}, {geom_max})")
+    if co2_fraction < 0.0 or co2_fraction >= 1.0:
+        violations.append(f"co2_fraction must satisfy 0.0 <= co2 < 1.0, got {co2_fraction}")
+    if recovery_factor <= 0.0 or recovery_factor > 1.0:
+        violations.append(f"recovery_factor must satisfy 0.0 < rf <= 1.0, got {recovery_factor}")
+
+    if violations:
+        return {
+            "ok": False,
+            "physics_guard": "FAIL",
+            "error": "PHYSICS_GUARD_VIOLATION: " + "; ".join(violations),
+            "epistemic_status": "REJECTED_UNPHYSICAL",
+            "required_effective_area_km2": None,
+        }
+
     # Sample uniform distributions via isolated Generator stream
     p_samples = rng.uniform(p_min, p_max, n)
     t_c_samples = rng.uniform(t_min, t_max, n)
@@ -164,23 +190,25 @@ def solve_inverse_volumetrics(
         annual_rate_tcf = float(production_rate_bscfd) * 0.365
         plateau_years = round(base_rec / annual_rate_tcf, 1)
 
-    # Input provenance tracking
+    # Input provenance tracking: defaults are DEFAULT/ASSUMPTION, NEVER OBS unless passed
     default_provenance = {
         "claimed_giip_tcf": "ASSUMPTION",
-        "net_pay_m": "OBS",
+        "net_pay_m": "DEFAULT",
         "porosity_range": "ASSUMPTION",
         "sw_range": "ASSUMPTION",
-        "pressure_mpa_range": "OBS",
-        "temperature_c_range": "OBS",
+        "pressure_mpa_range": "DEFAULT",
+        "temperature_c_range": "DEFAULT",
         "z_range": "ASSUMPTION",
         "geometry_factor_range": "ASSUMPTION",
-        "co2_fraction": "OBS",
+        "co2_fraction": "DEFAULT",
         "recovery_factor": "ASSUMPTION",
     }
     if input_provenance:
         default_provenance.update(input_provenance)
 
     return {
+        "ok": True,
+        "physics_guard": "PASS",
         "tool": "geox_prospect",
         "mode": "screen",
         "sub_mode": "inverse_volumetrics",

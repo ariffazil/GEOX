@@ -79,6 +79,32 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
             error=f"state dict must contain 'rho', 'vp', 'vs' (required Physics9 fields; aliases rho_kg_m3/vp_m_s/vs_m_s accepted). Got: {list(request.state.keys())}",
         )
 
+    # Hard physical input validation (natural law gate)
+    try:
+        vp_val = float(state["vp"])
+        vs_val = float(state["vs"])
+        rho_val = float(state["rho"])
+    except (ValueError, TypeError) as e:
+        return GeomechanicsResponse(
+            ok=False,
+            result={"grade": "REJECTED_UNPHYSICAL"},
+            error=f"PHYSICS_GUARD_VIOLATION: vp, vs, and rho must be numeric: {e}",
+        )
+
+    if vp_val <= 0 or vs_val <= 0 or rho_val <= 0:
+        return GeomechanicsResponse(
+            ok=False,
+            result={"grade": "REJECTED_UNPHYSICAL"},
+            error=f"PHYSICS_GUARD_VIOLATION: vp ({vp_val}), vs ({vs_val}), and rho ({rho_val}) must all be positive.",
+        )
+
+    if vs_val >= vp_val:
+        return GeomechanicsResponse(
+            ok=False,
+            result={"grade": "REJECTED_UNPHYSICAL"},
+            error=f"PHYSICS_GUARD_VIOLATION: vs ({vs_val}) >= vp ({vp_val}) is physically impossible for elastic rocks (violates positive bulk modulus and strain energy constraints).",
+        )
+
     try:
         # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully
         s = Physics13State.from_raw_dict(request.state)
@@ -88,12 +114,24 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
         sanity = []
         if derived["nu"] < 0.0 or derived["nu"] > 0.5:
             sanity.append("poisson_ratio_out_of_bounds")
-        if derived["K_GPa"] < 0:
-            sanity.append("bulk_modulus_negative")
-        if derived["G_GPa"] < 0:
-            sanity.append("shear_modulus_negative")
-        if derived["E_GPa"] < 0:
-            sanity.append("young_modulus_negative")
+        if derived["K_GPa"] <= 0:
+            sanity.append("bulk_modulus_non_positive")
+        if derived["G_GPa"] <= 0:
+            sanity.append("shear_modulus_non_positive")
+        if derived["E_GPa"] <= 0:
+            sanity.append("young_modulus_non_positive")
+
+        if sanity:
+            return GeomechanicsResponse(
+                ok=False,
+                result={
+                    "input_state": s.to_dict(),
+                    "derived": derived,
+                    "sanity_flags": sanity,
+                    "grade": "REJECTED_UNPHYSICAL",
+                },
+                error=f"PHYSICS_GUARD_VIOLATION: derived elastic properties violate physical bounds: {sanity}",
+            )
 
         result = {
             "input_state": s.to_dict(),

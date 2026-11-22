@@ -205,11 +205,20 @@ async def geox_prospect(
         )
 
         vp = volumetric_params or {}
+        # Normalize sw or sw_range from vp
+        raw_sw = sw_range if sw_range is not None else vp.get("sw_range")
+        if raw_sw is None and "sw" in vp:
+            raw_sw = (float(vp["sw"]), float(vp["sw"]))
+        if raw_sw is None:
+            raw_sw = (0.15, 0.35)
+        elif isinstance(raw_sw, (int, float)):
+            raw_sw = (float(raw_sw), float(raw_sw))
+
         inv_args = {
             "claimed_giip_tcf": claimed_giip_tcf if claimed_giip_tcf is not None else vp.get("claimed_giip_tcf", 5.0),
             "net_pay_m": net_pay_m if net_pay_m is not None else vp.get("net_pay_m", 600.0),
             "porosity_range": porosity_range if porosity_range is not None else vp.get("porosity_range", (0.15, 0.30)),
-            "sw_range": sw_range if sw_range is not None else vp.get("sw_range", (0.15, 0.35)),
+            "sw_range": raw_sw,
             "pressure_mpa_range": pressure_mpa_range
             if pressure_mpa_range is not None
             else vp.get("pressure_mpa_range", (50.0, 70.0)),
@@ -233,6 +242,25 @@ async def geox_prospect(
         raw_res = solve_inverse_volumetrics(**inv_args)
         raw_res["prospect_ref"] = prospect_ref
 
+        if not raw_res.get("ok", True) or raw_res.get("physics_guard") == "FAIL":
+            envelope = get_standard_envelope(
+                primary_artifact=raw_res,
+                tool_class="compute",
+                execution_status=ExecutionStatus.ERROR,
+                governance_status=GovernanceStatus.VOID,
+                artifact_status=ArtifactStatus.DRAFT,
+                claim_tag="REJECTED_UNPHYSICAL",
+                claim_state="INVALID",
+                evidence_refs=evidence_refs or [],
+                confidence_band={"computed": False, "band": "REJECTED_UNPHYSICAL"},
+                uncertainty="HIGH_ASSUMPTION",
+            )
+            envelope["claim_tag"] = "REJECTED_UNPHYSICAL"
+            envelope["epistemic_label"] = "REJECTED_UNPHYSICAL"
+            envelope["forbidden_use"] = "unphysical inputs rejected"
+            envelope["physics_guard"] = {"guard_passed": False, "violation": raw_res.get("error")}
+            return envelope
+
         envelope = get_standard_envelope(
             primary_artifact=raw_res,
             tool_class="compute",
@@ -248,6 +276,7 @@ async def geox_prospect(
         envelope["claim_tag"] = "ASSUMPTION"
         envelope["epistemic_label"] = "ASSUMPTION"
         envelope["forbidden_use"] = "not a reserve or drilling recommendation"
+        envelope["physics_guard"] = {"guard_passed": True}
         return envelope
 
     from geox_mcp.tools.prospect import geox_prospect_evaluate as _impl

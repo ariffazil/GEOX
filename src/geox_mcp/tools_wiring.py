@@ -917,6 +917,11 @@ def register_tools_on(mcp):
                     or ({"layer": "UNKNOWN", "confidence_cap": 0.10} if _sc_is_err else {"layer": "DER", "confidence_cap": 0.80}),
                     "net_pay": result.get("net_pay"),
                     "status": result.get("status", "INVALID" if _sc_is_err else "computed"),
+                    "n_samples": result.get("n_samples"),
+                    "vsh": result.get("vsh"),
+                    "phi_d": result.get("phi_d"),
+                    "phi_e": result.get("phi_e"),
+                    "sw": result.get("sw"),
                     # Pass through compact curve summaries if already small
                     "curves_available": list((result.get("curves") or {}).keys())
                     if isinstance(result.get("curves"), dict)

@@ -205,7 +205,49 @@ def main() -> int:
         return 1
     print(f"[SMOKE] Anomalous contrast OK | anomalies={len(pa_ac.get('anomalies', []))} | domain_law={ac.get('domain_law')}")
 
-    # ── 6. SHUTDOWN ──────────────────────────────────────────────────────────
+    # ── 6. GEOMECHANICS COMPUTE CHECKS (P0 Verification) ─────────────────────
+    print("[SMOKE] Verifying geox_geomechanics physical guards...")
+    # 6a. Impossible Vs >= Vp must be rejected
+    g_rej = _mcp_call("geox_geomechanics", {"state": {"vp": 2000, "vs": 3000, "rho": 2400}})
+    if g_rej.get("ok") is not False or "PHYSICS_GUARD_VIOLATION" not in str(g_rej.get("error")):
+        print("[SMOKE] FAIL: geomechanics failed to reject impossible vs >= vp:", g_rej)
+        proc.terminate()
+        return 1
+    # 6b. Valid moduli check
+    g_ok = _mcp_call("geox_geomechanics", {"state": {"vp": 3000, "vs": 1800, "rho": 2400}})
+    if g_ok.get("ok") is not True or g_ok.get("result", {}).get("grade") != "AAA":
+        print("[SMOKE] FAIL: geomechanics valid moduli failed:", g_ok)
+        proc.terminate()
+        return 1
+    print("[SMOKE] geox_geomechanics compute OK (physics guard verified)")
+
+    # ── 7. PROSPECT VOLUMETRICS CHECKS (P0 Verification) ─────────────────────
+    print("[SMOKE] Verifying geox_prospect physical guards & provenance...")
+    # 7a. Unphysical Sw >= 1.0 must be rejected
+    p_rej = _mcp_call("geox_prospect", {"prospect_ref": "SMOKE_PROSPECT", "mode": "screen", "volumetric_params": {"sw": 1.4}})
+    if p_rej.get("execution_status") != "ERROR" or p_rej.get("claim_tag") != "REJECTED_UNPHYSICAL":
+        print("[SMOKE] FAIL: prospect failed to reject sw >= 1.0:", p_rej)
+        proc.terminate()
+        return 1
+    # 7b. Provenance tracking: defaults must be DEFAULT, not OBS
+    p_ok = _mcp_call("geox_prospect", {"prospect_ref": "SMOKE_PROSPECT", "mode": "screen", "volumetric_params": {"sw": 0.25}})
+    prov_dict = p_ok.get("primary_artifact", {}).get("input_provenance", {})
+    if prov_dict.get("pressure_mpa_range") == "OBS" or prov_dict.get("net_pay_m") == "OBS":
+        print("[SMOKE] FAIL: prospect default provenance still marked as OBS:", prov_dict)
+        proc.terminate()
+        return 1
+    print("[SMOKE] geox_prospect compute OK (bounds & provenance verified)")
+
+    # ── 8. PETROPHYSICS DEMO WELL CURVES (P0 Verification) ───────────────────
+    print("[SMOKE] Verifying geox_petrophysics well_curves compute...")
+    petro = _mcp_call("geox_petrophysics", {"well_id": "DEMO_WELL_1"})
+    if petro.get("status") != "OK" or petro.get("n_samples") != 200:
+        print("[SMOKE] FAIL: geox_petrophysics DEMO_WELL_1 failed:", petro)
+        proc.terminate()
+        return 1
+    print(f"[SMOKE] geox_petrophysics compute OK (well={petro.get('well_id')}, n={petro.get('n_samples')})")
+
+    # ── 9. SHUTDOWN ──────────────────────────────────────────────────────────
     print("[SMOKE] Shutting down server...")
     proc.terminate()
     try:

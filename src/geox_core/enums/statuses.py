@@ -688,7 +688,7 @@ def get_standard_envelope(
         "semantic_density_score": round(_resolved_density, 4),
         "dim_spot_flag": bool(_resolved_dim_spot),
         # GAP 5: Ensure _ui_fallback is always provided for headless / CLI clients
-        "_ui_fallback": f"[{claim_tag}] {primary_artifact.get('verdict') or primary_artifact.get('status') or execution_status}. Confidence: {confidence_band.get('level', 'MODERATE') if confidence_band else 'MODERATE'}. Open in MCP Apps host for full visualization.",
+        "_ui_fallback": f"[{claim_tag}] {primary_artifact.get('verdict') or primary_artifact.get('status') or execution_status}. Confidence: {confidence_band.get('level', 'MODERATE') if isinstance(confidence_band, dict) else (confidence_band if confidence_band else 'MODERATE')}. Open in MCP Apps host for full visualization.",
     }
 
     # F2 Truth gate: auto-downgrade overclaimed states

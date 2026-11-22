@@ -114,6 +114,25 @@ async def geox_petrophysics(
     For exploratory Archie/Vsh/phi on curves without evidence store, use lem_inference.
     """
     # F2 PATCH (2026-09-18 · 333-AGI): mode-requirements validator.
+    # If well_id is provided without target_class/evidence_refs and mode is 'generate',
+    # auto-switch to 'well_curves' mode.
+    if mode == "generate" and well_id and not target_class and not evidence_refs:
+        mode = "well_curves"
+
+    # Auto-hydrate curves for well_curves mode if well_id provided but curves/depth_m missing
+    if mode == "well_curves" and well_id and (curves is None or depth_m is None):
+        try:
+            from geox_mcp.tools.integration_well import _load_well_curves_for_ui
+
+            loaded = _load_well_curves_for_ui(well_id)
+            if loaded.get("status") == "OK" or loaded.get("curves"):
+                if curves is None and loaded.get("curves"):
+                    curves = loaded.get("curves")
+                if depth_m is None:
+                    depth_m = loaded.get("depths") or loaded.get("depth_m")
+        except Exception:
+            pass
+
     # Previously the signature advertised params (well_id, curves, depth_m, ...)
     # that were silently dropped when mode="generate" (the default). Now we
     # validate mode-vs-required-params BEFORE any work, and emit a single
@@ -218,7 +237,7 @@ async def geox_petrophysics(
             gr = np.asarray(curves.get("GR") or curves.get("gr") or [], dtype=float)
             rhob = np.asarray(curves.get("RHOB") or curves.get("rhob") or [], dtype=float)
             nphi = np.asarray(curves.get("NPHI") or curves.get("nphi") or curves.get("NPHI_SAN") or [], dtype=float)
-            rt = np.asarray(curves.get("RT") or curves.get("rt") or curves.get("M2R9") or curves.get("ILD") or [], dtype=float)
+            rt = np.asarray(curves.get("RT") or curves.get("rt") or curves.get("RES") or curves.get("res") or curves.get("M2R9") or curves.get("ILD") or [], dtype=float)
             depth = np.asarray(depth_m, dtype=float)
             # Mask out NULL (-999.25 typical for LAS)
             null = -999.25
@@ -228,8 +247,10 @@ async def geox_petrophysics(
             rt = np.where(rt <= null, np.nan, rt)
             # Vshale (linear, GR 75-150 default — caller should override)
             vsh = np.clip((gr - gr_clean) / max(gr_shale - gr_clean, 1e-6), 0, 1)
-            # Density porosity (Wyllie)
-            phi_d = np.clip((rho_matrix_g_cc - rhob) / max(rho_matrix_g_cc - rho_fluid_g_cc, 1e-6), 0, 0.4)
+            # Density porosity (Wyllie) - resolve matrix and fluid density fallbacks
+            r_mat = rho_matrix_g_cc if rho_matrix_g_cc is not None else matrix_density
+            r_fl = rho_fluid_g_cc if rho_fluid_g_cc is not None else fluid_density
+            phi_d = np.clip((r_mat - rhob) / max(r_mat - r_fl, 1e-6), 0, 0.4)
             # Shale-corrected effective porosity
             phi_e = phi_d * (1 - vsh)
             # Archie Sw
