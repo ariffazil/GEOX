@@ -273,8 +273,6 @@ async def geox_prospect(
             tool_name="geox_prospect",
             tool_class="compute",
             execution_status=ExecutionStatus.SUCCESS,
-            tool_class="compute",
-            execution_status=ExecutionStatus.SUCCESS,
             governance_status=GovernanceStatus.QUALIFY,
             artifact_status=ArtifactStatus.DRAFT,
             claim_tag="ASSUMPTION",

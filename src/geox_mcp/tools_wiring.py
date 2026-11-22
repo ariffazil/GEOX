@@ -922,6 +922,9 @@ def register_tools_on(mcp):
                     "phi_d": result.get("phi_d"),
                     "phi_e": result.get("phi_e"),
                     "sw": result.get("sw"),
+                    "input_provenance": result.get("input_provenance"),
+                    "computation_notes": result.get("computation_notes"),
+                    "sw_clipped_flag": result.get("sw_clipped_flag"),
                     # Pass through compact curve summaries if already small
                     "curves_available": list((result.get("curves") or {}).keys())
                     if isinstance(result.get("curves"), dict)
