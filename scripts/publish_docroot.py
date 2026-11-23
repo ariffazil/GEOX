@@ -9,11 +9,13 @@ the same truth. Run after every surface regeneration.
 
 Usage: python3 scripts/publish_docroot.py [--dry-run]
 """
+
 from __future__ import annotations
 
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -23,16 +25,116 @@ DRY = "--dry-run" in sys.argv
 SURFACE = json.loads((REPO / "src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json").read_text())
 N = SURFACE["public_count"]
 LIVE = set(SURFACE["public_tools"])
-assert N == 27, f"registry truth says {N}; expected 27 — regenerate surfaces first"
+# 2026-11-23 (333-AGI): this assert was FROZEN at `== 27` while registry truth
+# moved to 29. The publisher could not run, so the docroot kept serving the
+# pre-consolidation counts (27 tools / 5 apps) while /profile, /llms.txt and
+# the GET /mcp card already said 29 — the site contradicted itself.
+# A truth surface may not be gated by a remembered literal. The count is now
+# read from the registry (the instrument that produced SURFACE) and
+# cross-checked against the live organ below.
+assert N == len(SURFACE["public_tools"]), f"surface self-inconsistent: public_count={N} vs {len(SURFACE['public_tools'])} names"
 
-SYNC = ["llms.txt", "tools.json", "CANONICAL_PUBLIC_SURFACE.json",
-        "GEOX_MCP_APPS_SURFACE.json", "apps.json"]
 
+# ── Live organ probe (2026-11-23, 333-AGI) ──
+# The docroot count must be MEASURED, not remembered. The organ (:8081) is the
+# only authority on how many tools it serves and how many ui:// resources it
+# exposes. If the probe fails we publish registry truth for tools and SKIP the
+# app-count write — never a remembered number.
+def live_probe(timeout: float = 12.0) -> dict:
+    import urllib.request
+
+    url = "http://127.0.0.1:8081/mcp"
+    hdrs = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
+    session = None
+
+    def rpc(payload, sid=None):
+        nonlocal session
+        h = dict(hdrs)
+        if sid:
+            h["Mcp-Session-Id"] = sid
+        req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers=h, method="POST")
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            body = r.read().decode()
+            session = r.headers.get("Mcp-Session-Id") or session
+        if body.lstrip()[:1] in ("{", "["):
+            return json.loads(body)
+        for line in body.splitlines():
+            if line.startswith("data:"):
+                try:
+                    return json.loads(line[5:].strip())
+                except Exception:
+                    pass
+        return {}
+
+    try:
+        rpc(
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-06-18",
+                    "capabilities": {},
+                    "clientInfo": {"name": "publish_docroot", "version": "1"},
+                },
+            }
+        )
+        try:
+            rpc({"jsonrpc": "2.0", "method": "notifications/initialized", "params": {}}, session)
+        except Exception:
+            pass
+        t = rpc({"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}}, session)
+        r = rpc({"jsonrpc": "2.0", "id": 3, "method": "resources/list", "params": {}}, session)
+    except Exception as e:
+        return {"ok": False, "error": str(e)[:160]}
+
+    tools = (t.get("result") or {}).get("tools") or []
+    resources = (r.get("result") or {}).get("resources") or []
+    uris = [str(x.get("uri", "")) for x in resources]
+    ui = sorted(u for u in uris if u.startswith("ui://"))
+    # 3 live ui:// resources are .html aliases of a sibling (workbench-v1.html,
+    # workspace-v1.html, gravmag-studio.html) — count them separately but state
+    # the distinct count too, so "apps" can never mean two things silently.
+    distinct = sorted({u[:-5] if u.endswith(".html") else u for u in ui})
+    return {
+        "ok": True,
+        "tools": len(tools),
+        "ui_resources": len(ui),
+        "ui_distinct": len(distinct),
+        "ui_uris": ui,
+        "tool_names": sorted(x.get("name", "") for x in tools),
+    }
+
+
+PROBE = live_probe()
+TOOLS_N = PROBE.get("tools") if PROBE.get("ok") else None
+UI_N = PROBE.get("ui_resources") if PROBE.get("ok") else None
+UI_DISTINCT = PROBE.get("ui_distinct") if PROBE.get("ok") else None
+if not PROBE.get("ok"):
+    print(
+        f"WARNING: live probe failed ({PROBE.get('error')}) — publishing registry "
+        f"truth for tools, SKIPPING app-count writes (never publish a remembered number)"
+    )
+elif TOOLS_N != N:
+    print(
+        f"WARNING: live tools/list={TOOLS_N} but registry truth={N} — "
+        f"registry is stale; publishing the LIVE number an agent actually gets"
+    )
+TOOLS_P = TOOLS_N if TOOLS_N is not None else N
+
+
+SYNC = ["llms.txt", "tools.json", "CANONICAL_PUBLIC_SURFACE.json", "GEOX_MCP_APPS_SURFACE.json", "apps.json"]
+
+# 2026-11-23 (333-AGI): generic count patterns. The old fixed-list versions
+# (25/31/32/42) could not see a count that was not on that list, which is how
+# "27" survived repeated publishes. Match ANY digits, write the measured value.
 PATCHES = {
-    "index.html": [(rf"{n} public MCP tools", f"{N} public MCP tools") for n in (25, 31, 32, 42)],
-    "profile.json": [(rf'"mcp_tools": {n}', f'"mcp_tools": {N}') for n in (25, 31, 32, 42)],
-    "llms-full.txt": [(rf"{n} tools", f"{N} tools") for n in (25, 31, 32, 42)]
-                     + [(rf"{n} governed MCP tools", f"{N} governed MCP tools") for n in (25, 31, 32)],
+    "index.html": [(r'"mcp_tools": \d+', f'"mcp_tools": {TOOLS_P}')]
+                  + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
+    "profile.json": [(r'"mcp_tools": \d+', f'"mcp_tools": {TOOLS_P}')]
+                     + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
+    "llms-full.txt": [(rf"\b{n} tools\b", f"{TOOLS_P} tools") for n in (25, 31, 32, 42)]
+                 + [(rf"\b{n} governed MCP tools\b", f"{TOOLS_P} governed MCP tools") for n in (25, 31, 32)],
 }
 
 receipt = {"generated_from": f"registry truth ({N} tools)", "synced": [], "patched": {}, "skipped": []}
@@ -45,8 +147,20 @@ APPS_DST = DOCROOT / "apps"
 if APPS_SRC.exists():
     APPS_DST.mkdir(parents=True, exist_ok=True)
     published = []
+    skipped_older = []
     for item in sorted(APPS_SRC.iterdir()):
         dst = APPS_DST / item.name
+        # 2026-11-23 (333-AGI): never overwrite a NEWER published artifact with an
+        # OLDER source. /opt/geox/apps is a build artifact that can lag the
+        # docroot copy; the old unconditional rmtree+copytree regressed the live
+        # gallery (docroot apps/index.html Nov 14 vs source Nov 12). Skipping is
+        # safe; overwriting backwards is not.
+        try:
+            if dst.exists() and dst.stat().st_mtime > item.stat().st_mtime:
+                skipped_older.append(item.name)
+                continue
+        except OSError:
+            pass
         if item.is_dir() and (item / "index.html").exists():
             if not DRY:
                 if dst.exists():
@@ -58,16 +172,24 @@ if APPS_SRC.exists():
                 shutil.copy2(item, dst)
             published.append(item.name)
     receipt["synced"].append(f"apps/ ({len(published)} items)")
+    if skipped_older:
+        receipt.setdefault("skipped", []).append(
+            f"apps/ — {len(skipped_older)} item(s) skipped: docroot copy is NEWER than source "
+            f"({', '.join(skipped_older[:8])}{'...' if len(skipped_older) > 8 else ''})")
 
 # ── Landing truth patch (minified bundle carries pre-consolidation counts) ──
 # Verified live truth only; unverified numbers are left untouched.
+# 2026-11-23 (333-AGI): every count below is now DERIVED from the measured
+# instrument (live probe above, falling back to registry truth) — never a
+# remembered literal. The frozen "27" was why the site contradicted itself.
 LANDING_PATCHES = [
-    ("42 tools, 18 GUI apps", "27 tools, GUI apps"),
-    ("42 tools. Live surface.", "27 tools. Live surface."),
-    ('"tools": 42', '"tools": 27'),
-    ("42 tools over SSE at :8081", "27 tools over streamable-http at :8081"),
-    ('"transport": "sse"', '"transport": "streamable-http"'),
-    ("42 tools · 18 apps", f"27 tools · {len(list(APPS_DST.glob('*/index.html')))} apps"),
+    (r'\b27 tools\b', f'{TOOLS_P} tools'),          # prose forms (4 sites)
+    (r'\b42 tools\b', f'{TOOLS_P} tools'),          # pre-consolidation legacy
+    (r'"mcp_tools": 27', f'"mcp_tools": {TOOLS_P}'),
+    (r'"mcp_tools": 42', f'"mcp_tools": {TOOLS_P}'),
+    (r'"tools": 27', f'"tools": {TOOLS_P}'),
+    (r'"tools": 42', f'"tools": {TOOLS_P}'),
+    (r'"transport": "sse"', '"transport": "streamable-http"'),
     # dead pre-consolidation sample invocations -> live canonical equivalents
     ("geox.egs_data_qc_bundle()", "geox.well_qc()"),
     ("geox.egs_query_uncertainty()", "geox.prospect()"),
@@ -76,27 +198,125 @@ LANDING_PATCHES = [
     ("geox.witness_well()", "geox.well()"),
     ("arifos.bridge_contract()", "arifos.arif_route()"),
 ]
+if UI_N is not None:
+    # The landing's fake-curl mirrors the real /profile body, so both must
+    # state the same measured app count (ui:// resources in live resources/list).
+    LANDING_PATCHES.append((f'"mcp_apps": 5', f'"mcp_apps": {UI_N}'))
 
-def patch_landing() -> None:
-    targets = [DOCROOT / "index.html"] + list((DOCROOT / "assets").glob("index-*.js"))
-    # static well-known manifest, if present on disk
+
+# ── MCP Apps manifest regeneration (2026-11-23, 333-AGI) ──
+# The shipped manifest advertised 17 widget names: 8 of them did not exist in
+# live resources/list, and 12 live surfaces were missing from it. An agent
+# reading widgets[] was reading a stale inventory dressed as a capability list.
+# Rebuild widgets[] from the live ui:// resources, and label which count is
+# which so "apps" can never silently mean two different things.
+def regenerate_wellknown_mcp_json() -> None:
     wk = DOCROOT / ".well-known" / "mcp.json"
-    if wk.exists():
-        targets.append(wk)
-    for f in targets:
-        if not f.exists():
-            continue
-        text = before = f.read_text()
-        hits = 0
-        for old, new in LANDING_PATCHES:
-            hits += text.count(old)
-            text = text.replace(old, new)
-        if text != before:
-            if not DRY:
-                f.write_text(text)
-            receipt["patched"][str(f.relative_to(DOCROOT))] = f"{hits} truth fixes"
+    if not wk.exists():
+        receipt["skipped"].append(".well-known/mcp.json (missing in docroot)")
+        return
+    if not PROBE.get("ok"):
+        receipt["skipped"].append(".well-known/mcp.json (live probe unavailable — counts left untouched)")
+        return
+    try:
+        m = json.loads(wk.read_text())
+    except Exception as e:
+        receipt["skipped"].append(f".well-known/mcp.json (unparseable: {str(e)[:60]})")
+        return
+
+    changed = []
+    old_tool_count = m.get("tool_count")
+    if old_tool_count != TOOLS_P:
+        changed.append(f"tool_count {old_tool_count} -> {TOOLS_P}")
+        m["tool_count"] = TOOLS_P
+    desc = m.get("description", "")
+    new_desc = re.sub(r"\b\d+ canonical tools\b", f"{TOOLS_P} canonical tools", desc)
+    if new_desc != desc:
+        m["description"] = new_desc
+        changed.append("description tool count")
+    note = m.get("widgets_note", "")
+    new_note = re.sub(r"count \d+", f"count {TOOLS_P}", note)
+    if "Live ui:// resources" not in new_note:
+        new_note = new_note.replace(
+            "Live apps: https://geox.arif-fazil.com/apps.json.",
+            f"Live apps: https://geox.arif-fazil.com/apps.json. "
+            f"Live ui:// resources (resources/list): {UI_N} ({UI_DISTINCT} distinct, "
+            f"{UI_N - UI_DISTINCT} .html aliases).",
+        )
+    if new_note != note:
+        m["widgets_note"] = new_note
+        changed.append("widgets_note")
+
+    live_ids = set()
+    for u in PROBE.get("ui_uris", []):
+        base = u[len("ui://geox/") :] if u.startswith("ui://geox/") else u
+        live_ids.add("geox.app." + base.replace("-", "_").replace(".", "_"))
+    live_ids = sorted(live_ids)
+    if m.get("widgets") != live_ids:
+        changed.append(f"widgets[] {len(m.get('widgets', []))} -> {len(live_ids)} (live)")
+        m["widgets"] = live_ids
+
+    m["ui_resources_measured_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    m["ui_resources_source"] = "live MCP resources/list (:8081) via publish_docroot live_probe"
+    m["ui_resources_count"] = UI_N
+    m["ui_resources_distinct"] = UI_DISTINCT
+
+    if changed:
+        if not DRY:
+            wk.write_text(json.dumps(m, indent=2, ensure_ascii=False) + "\n")
+        receipt["patched"][".well-known/mcp.json"] = changed
+    else:
+        receipt["patched"][".well-known/mcp.json"] = "unchanged (already live-truth)"
+
+
+# ── Bundle patch with cache-busting rotation ──
+# /assets/* is served with `cache-control: max-age=14400` and the bundle
+# filename carries a content hash. Patching a content-hashed file in place
+# would leave browsers and the Cloudflare edge serving the OLD bytes for up to
+# 4 hours — a change that is PRODUCED but not DELIVERED. So: patch the bundle
+# index.html actually references, write it under a fresh date tag, and repoint
+# index.html (served DYNAMIC, so it propagates immediately).
+def patch_landing() -> None:
+    idx = DOCROOT / "index.html"
+    if not idx.exists():
+        receipt["skipped"].append("index.html (missing in docroot)")
+        return
+    html = idx.read_text()
+    m = re.search(r"assets/(index-[A-Za-z0-9_.-]+\.js)", html)
+    if not m:
+        receipt["skipped"].append("index.html (no bundle reference found)")
+        return
+    bundle_name = m.group(1)
+    bundle = DOCROOT / "assets" / bundle_name
+    if not bundle.exists():
+        receipt["skipped"].append(f"assets/{bundle_name} (missing in docroot)")
+        return
+
+    text = before = bundle.read_text()
+    hits = 0
+    for pat, rep in LANDING_PATCHES:
+        n = len(re.findall(pat, text))
+        if n:
+            hits += n
+            text = re.sub(pat, rep, text)
+    if text == before:
+        receipt["patched"][f"assets/{bundle_name}"] = "unchanged (counts already live-truth)"
+        return
+
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%d")
+    stem = bundle_name[:-3] if bundle_name.endswith(".js") else bundle_name
+    base = stem.rsplit(".r", 1)[0] if ".r" in stem else stem
+    new_name = f"{base}.r{stamp}.js"
+
+    if not DRY:
+        (DOCROOT / "assets" / new_name).write_text(text)
+        idx.write_text(html.replace(f"assets/{bundle_name}", f"assets/{new_name}"))
+    receipt["patched"][f"assets/{bundle_name} -> assets/{new_name}"] = f"{hits} truth fixes"
+    receipt["superseded_bundle"] = f"assets/{bundle_name}"
+
 
 patch_landing()
+regenerate_wellknown_mcp_json()
 
 # ── Earth Witness CTA banner + nav injection (v2, 2026-10-03) ──
 # v1 was a static bar; sovereign still couldn't see a button IN the nav.
@@ -105,7 +325,9 @@ patch_landing()
 # re-asserting after React re-renders. Owned by this publisher; replace-block
 # semantics via versioned markers.
 BANNER_OPEN = "<!-- EARTH-WITNESS-CTA:v3:START (owned by scripts/publish_docroot.py) -->"
-BANNER = BANNER_OPEN + """
+BANNER = (
+    BANNER_OPEN
+    + """
 <style>
 /* v3 2026-10-05 FI-008: mobile repair — v2 bar covered/overflowed the SPA nav
    on narrow screens (external audit 2026-10-05). Wrap + compact + hide the
@@ -121,7 +343,7 @@ BANNER = BANNER_OPEN + """
 </style>
 <div id="ew-cta-bar">
   <a class="ew-cta-main" href="/observe/">🪨 Earth Witness — Tanya Bumi</a>
-  <span class="ew-cta-sub"><a href="/apps/" style="color:#8fb3ff;font-weight:600">Apps &amp; GUIs (17)</a> &middot; <a href="https://arif-fazil.com/earth/sabah-observatory/" style="color:#34d399;font-weight:600" target="_blank">Sabah Observatory ↗</a><span class="ew-hide-sm"> &middot; <a href="/gui/" style="color:#8fb3ff">Operator Cockpit</a></span></span>
+  <span class="ew-cta-sub"><a href="/apps/" style="color:#8fb3ff;font-weight:600">Apps &amp; GUIs (__APPS_COUNT__)</a> &middot; <a href="https://arif-fazil.com/earth/sabah-observatory/" style="color:#34d399;font-weight:600" target="_blank">Sabah Observatory ↗</a><span class="ew-hide-sm"> &middot; <a href="/gui/" style="color:#8fb3ff">Operator Cockpit</a></span></span>
 </div>
 <script>
 (function(){
@@ -168,9 +390,39 @@ BANNER = BANNER_OPEN + """
 </script>
 <!-- EARTH-WITNESS-CTA:v3:END -->
 """
+)
+
+
+# 2026-11-23 (333-AGI): the banner carried a frozen "(17)". It is now the
+# MEASURED ui:// resource count, same instrument as the manifest.
+def _manifest_app_count() -> int | None:
+    """Count the apps the /apps/ registry page actually renders.
+
+    The /apps/ page fetches /apps.json (the public MCP Apps manifest), so the
+    banner number must be that manifest's size. UI_N is the ui:// RESOURCE
+    count (a different surface, 25) — using it here would state a number the
+    linked page does not show.
+    """
+    for src_path in (REPO / "apps.json", DOCROOT / "apps.json"):
+        if not src_path.exists():
+            continue
+        try:
+            d = json.loads(src_path.read_text())
+        except Exception:
+            continue
+        lst = d.get("apps")
+        if isinstance(lst, list):
+            return len(lst)
+    return None
+
+
+APPS_MANIFEST_N = _manifest_app_count()
+BANNER = BANNER.replace("__APPS_COUNT__", str(APPS_MANIFEST_N) if APPS_MANIFEST_N else "?")
+
 
 def inject_banner(text: str) -> tuple[str, bool]:
     import re as _re
+
     # 2026-10-05 FI-008 root-cause fix: the old pattern required ":START -->"
     # verbatim, but v2/v3 markers are annotated ("...START (owned by ...) -->")
     # so it NEVER matched and every publish INSERTED another banner
@@ -189,6 +441,7 @@ def inject_banner(text: str) -> tuple[str, bool]:
         if idx != -1:
             return text[: idx + len(anchor)] + BANNER + text[idx + len(anchor) :], True
     return text, False
+
 
 for name in ("index.html",):
     p = DOCROOT / name
@@ -228,18 +481,61 @@ for name, subs in PATCHES.items():
 
 print(json.dumps(receipt, indent=1))
 
-# Postcondition: no stale counts left in docroot count-bearing lines
+# Postcondition: no stale counts left anywhere in the docroot count-bearing lines.
+# 2026-11-23 (333-AGI): the old check only knew a fixed list of retired counts
+# (31/42) — it could not see "27", which is why repeated publishes left it in
+# place and the site shipped three different tool counts. Now ANY count that
+# disagrees with the measured instrument fails the publish.
 stale = []
-for name in ("index.html", "profile.json", "llms.txt", "llms-full.txt", "tools.json"):
-    p = DOCROOT / name
-    if not p.exists():
+_COUNT_FIELDS = (
+    (r'"mcp_tools":\s*(\d+)', "TOOLS_P"),
+    (r'"tools":\s*(\d+)', "TOOLS_P"),
+    (r'"tool_count":\s*(\d+)', "TOOLS_P"),
+    (r'"public_count":\s*(\d+)', "TOOLS_P"),
+    (r'"mcp_apps":\s*(\d+)', "UI_N"),
+    (r'\((\d+) Public Tools\)', "TOOLS_P"),
+)
+
+
+def _scan_counts(label, text):
+    for pat, which in _COUNT_FIELDS:
+        expected = TOOLS_P if which == "TOOLS_P" else UI_N
+        if expected is None:
+            continue
+        for m in re.finditer(pat, text):
+            val = int(m.group(1))
+            if val != expected:
+                stale.append(f"{label}: {pat} -> {val} != measured {expected}")
+
+
+_SCAN_FILES = ("index.html", "profile.json", "llms.txt", "llms-full.txt", "tools.json")
+for name in _SCAN_FILES:
+    f = DOCROOT / name
+    if not f.exists():
         continue
-    text = p.read_text()
+    text = f.read_text()
+    _scan_counts(name, text)
     for bad in ("31 public MCP tools", "31 governed MCP tools", "42 tools",
-                '"mcp_tools": 31', "42 governed"):
+                '"mcp_tools": 31', "42 governed", "27 tools", '"mcp_tools": 27',
+                '"mcp_apps": 5'):
         if bad in text:
             stale.append(f"{name}: {bad}")
+
+# the shipped bundle carries the landing's counts — scan the file index.html
+# actually references, not every index-*.js in the folder
+_idx = DOCROOT / "index.html"
+if _idx.exists():
+    _m = re.search(r"assets/(index-[A-Za-z0-9_.-]+\.js)", _idx.read_text())
+    if _m:
+        _b = DOCROOT / "assets" / _m.group(1)
+        if _b.exists():
+            _scan_counts(f"assets/{_m.group(1)}", _b.read_text())
+
 if stale:
-    print("STALE REMNANTS:", stale)
-    sys.exit(1)
-print(f"POSTCONDITION OK: docroot count-bearing lines all state {N}")
+    if DRY:
+        print("STALE REMNANTS (dry-run — nothing written; these are the would-be fixes):", stale)
+    else:
+        print("STALE REMNANTS:", stale)
+        sys.exit(1)
+print(f"POSTCONDITION OK: docroot count-bearing lines all state {TOOLS_P} tools"
+      + (f" / {UI_N} apps" if UI_N is not None else ""))
