@@ -176,6 +176,15 @@ async def geox_geomechanics(
         )
 
     # Default: derive_moduli
+    from geox_mcp.tools.geomechanics import GeomechanicsRequest
     from geox_mcp.tools.geomechanics import geox_geomechanics as _impl
 
-    return await _impl(state=kwargs.get("state", {}))
+    # T1 (2026-11-24): the wrapper used to call _impl(state=...), but the
+    # implementation takes a GeomechanicsRequest. That TypeError was swallowed
+    # upstream and the request model's field defaults (vp 3000 / vs 1500 /
+    # rho 2500) produced a result graded AAA — a silent default presented as a
+    # measurement. Build the request explicitly so the implementation's own
+    # alias mapping and validation run, and return a dict (the response is a
+    # pydantic model, not a dict).
+    _resp = await _impl(GeomechanicsRequest(state=kwargs.get("state") or {}))
+    return _resp.model_dump() if hasattr(_resp, "model_dump") else _resp
