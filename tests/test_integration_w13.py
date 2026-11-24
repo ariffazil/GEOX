@@ -51,8 +51,11 @@ class TestGeomechanics:
 
     def test_invalid_state_returns_error(self):
         r = asyncio.run(geox_geomechanics(GeomechanicsRequest(state={"rho": -1, "vp": 1000, "vs": 500, "rho_e": 1, "chi": 0, "k": 1, "P": 1, "T": 100, "phi": 0.5})))
-        # Negative density violates Physics9 bounds
-        assert r.result["sanity_flags"] == [] or "bulk_modulus_negative" in r.result["sanity_flags"] or r.result["grade"] == "RAW"
+        # Negative density violates Physics9 bounds -> natural-law input gate rejects it
+        # (65df3cd7: non-physical geomechanics inputs return REJECTED_UNPHYSICAL, no moduli)
+        assert r.ok is False
+        assert r.result["grade"] == "REJECTED_UNPHYSICAL"
+        assert "derived" not in r.result
 
     def test_godel_wall_known_for_aaa_state(self):
         r = asyncio.run(geox_geomechanics(GeomechanicsRequest(state=SANDSTONE.to_dict())))

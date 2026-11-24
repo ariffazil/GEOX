@@ -132,6 +132,8 @@ async def test_geox_prospect_inverse_volumetrics_reference_match():
         production_rate_bscfd=1.0,
         samples=200_000,
         seed=42,
+        # 65df3cd7: a value is OBS only when the caller declares it so
+        input_provenance={"net_pay_m": "OBS"},
     )
 
     art = res.get("primary_artifact") if "primary_artifact" in res else res
