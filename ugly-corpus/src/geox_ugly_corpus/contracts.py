@@ -202,6 +202,20 @@ def run_contracts(fixtures: list[Fixture]) -> list[Result]:
         )
     )
 
+    # ── Envelope honesty: an uncomputed guard must not attest a pass ─────────
+    from geox_core.enums.statuses import get_standard_envelope
+
+    env = get_standard_envelope({"probe": "ugly-corpus"})
+    guard = env.get("physics_guard") or {}
+    results.append(
+        Result(
+            "GUARD-uncomputed-is-not-pass",
+            guard.get("guard_passed") is not True,
+            f"a tool that runs no guard must not emit guard_passed=True (got {guard.get('guard_passed')!r})",
+            {"physics_guard": guard},
+        )
+    )
+
     # ── Corpus self-checks: determinism, synthetic provenance, real ugliness ──
     with tempfile.TemporaryDirectory() as first, tempfile.TemporaryDirectory() as second:
         digest_a = manifest_digest(build_corpus(Path(first)))

@@ -14,7 +14,7 @@ GEOX UGLY CORPUS v0.1.0 — 100% synthetic, seed 20261124
 [PASS] QC-missing-source-fails-closed: an unregistered/missing source must return ERROR+HOLD+NO_VALID_EVIDENCE with qc_passed=False
 [PASS] G1-inverted-interval-refused: top>base must refuse, got status='INVALID'
 ...
-13/13 contracts passed in 2.48s (budget 60s) → PASS
+14/14 contracts passed in 2.70s (budget 60s) → PASS
 ```
 
 ## What it measures
@@ -30,6 +30,7 @@ GEOX UGLY CORPUS v0.1.0 — 100% synthetic, seed 20261124
 | `G1-inverted-interval-refused` | depth top > base is refused as `INVALID` |
 | `G1-negative-porosity-refused` | negative porosity cutoff is refused as `INVALID` |
 | `G1-superluminal-velocity-refused` | 8000 m/s in sedimentary rock returns `ERROR/HOLD/REJECTED/NO_VALID_EVIDENCE` |
+| `GUARD-uncomputed-is-not-pass` | an envelope from a tool that ran no physics guard must not emit `guard_passed: True` |
 | `corpus-determinism` | two builds produce the same SHA-256 manifest |
 | `corpus-synthetic-provenance` | every fixture header names the generator and the seed |
 | `corpus-ugly-is-actually-ugly` | the ugly fixture really is ugly (duplicate depths, ≥50% nulls, impossible RHOB) |
