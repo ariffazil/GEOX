@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "geox-ugly-corpus"
+version = "0.1.0"
+description = "100% synthetic, public-safe benchmark for GEOX truth contracts: Law L5 raw-vs-computed separation, fail-closed QC, physics refusal. No real well data."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "BSL-1.1" }
+authors = [{ name = "Muhammad Arif bin Fazil", email = "arifbfazil@gmail.com" }]
+keywords = ["geox", "benchmark", "synthetic", "well-logs", "truth-contracts"]
+
+[project.optional-dependencies]
+geox = ["arifos-geox>=2026.7.24"]
+
+[project.scripts]
+geox-ugly = "geox_ugly_corpus.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/geox_ugly_corpus"]
