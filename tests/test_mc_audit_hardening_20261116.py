@@ -119,7 +119,8 @@ class TestPhase1ConventionAndReceipt:
 
     def test_inverse_volumetrics_emits_receipt(self):
         res = solve_inverse_volumetrics(samples=2000, seed=7)
-        assert res["percentile_convention"] == "statistical_ascending"
+        # 2026-11-24: SPE-PRMS ordering (P90 = low), data flipped to match the label
+        assert res["percentile_convention"] == "petroleum_descending"
         assert PhysicsGuard().validate_mc_receipt(res["mc_receipt"]).status == "PASS"
 
 

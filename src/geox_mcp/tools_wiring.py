@@ -5652,6 +5652,7 @@ def register_tools_on(mcp):
             production_data: list[dict[str, Any]],
             forecast_years: int = 5,
             threshold_bpd: float = 250000.0,
+            method: str = "regression",
             session_id: str | None = None,
             actor_id: str | None = None,
             trace_id: str | None = None,
@@ -5663,6 +5664,7 @@ def register_tools_on(mcp):
                     "production_data": production_data,
                     "forecast_years": forecast_years,
                     "threshold_bpd": threshold_bpd,
+                    "method": method,
                 },
                 session_id=session_id,
                 actor_id=actor_id,
@@ -5987,6 +5989,7 @@ def register_tools_on(mcp):
         production_data: list[dict[str, Any]] | None = None,
         forecast_years: int = 5,
         threshold_bpd: float = 250000.0,
+        decline_method: str = "regression",
         reserves_start: float | None = None,
         additions: float | None = None,
         production: float | None = None,
@@ -6007,6 +6010,7 @@ def register_tools_on(mcp):
 
         Modes:
           decline         — Fit exponential decline curve to production history
+                            (decline_method: regression [default] | endpoint)
           rrr             — Compute Reserve Replacement Ratio (additions / production)
           basin_lifecycle — Classify basin lifecycle stage: growth, plateau, decline, mature
           cadence         — Analyse exploration licensing cadence: award rate, pipeline lag
@@ -6016,6 +6020,7 @@ def register_tools_on(mcp):
                 production_data=production_data or [],
                 forecast_years=forecast_years,
                 threshold_bpd=threshold_bpd,
+                method=decline_method,
                 session_id=session_id,
                 actor_id=actor_id,
                 trace_id=trace_id,

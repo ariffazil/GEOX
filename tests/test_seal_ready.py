@@ -104,7 +104,14 @@ def test_T3_percentile_convention_is_declared_prms():
     out = fn(**kw) or {}
     conv = out.get("percentile_convention")
     assert conv is not None, "percentile convention not declared"
-    assert "prms" in str(conv).lower(), f"convention is {conv!r}; B6 requires SPE-PRMS declared"
+    # B6: SPE-PRMS ordering, using the federation vocabulary (guards.VALID_PERCENTILE_CONVENTIONS).
+    assert conv == "petroleum_descending", f"convention is {conv!r}; B6 requires SPE-PRMS (P90 = low)"
+    assert "prms" in str(out.get("percentile_convention_note", "")).lower()
+    # The data must obey the declared label, not just the label text.
+    for dist in (out.get("all_targets_area_km2") or {}).values():
+        assert dist["p90_km2"] <= dist["p50_km2"] <= dist["p10_km2"], dist
+    e = out.get("expansion_factor_scf_per_rcf") or {}
+    assert e["p90"] <= e["p50"] <= e["p10"], e
 
 
 # ── T4: temporal decline must state method, window, unit ─────────────────

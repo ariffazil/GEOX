@@ -19,17 +19,31 @@ import numpy as np
 logger = logging.getLogger("geox.canonical.inverse_volumetrics")
 
 
+_INV_DEFAULTS: dict[str, Any] = {
+    "claimed_giip_tcf": 5.0,
+    "net_pay_m": 600.0,
+    "porosity_range": (0.15, 0.30),
+    "sw_range": (0.15, 0.35),
+    "pressure_mpa_range": (50.0, 70.0),
+    "temperature_c_range": (140.0, 170.0),
+    "z_range": (1.05, 1.25),
+    "geometry_factor_range": (0.3, 0.6),
+    "co2_fraction": 0.0,
+    "recovery_factor": 0.70,
+}
+
+
 def solve_inverse_volumetrics(
-    claimed_giip_tcf: float | list[float] = 5.0,
-    net_pay_m: float = 600.0,
-    porosity_range: tuple[float, float] | list[float] = (0.15, 0.30),
-    sw_range: tuple[float, float] | list[float] = (0.15, 0.35),
-    pressure_mpa_range: tuple[float, float] | list[float] = (50.0, 70.0),
-    temperature_c_range: tuple[float, float] | list[float] = (140.0, 170.0),
-    z_range: tuple[float, float] | list[float] = (1.05, 1.25),
-    geometry_factor_range: tuple[float, float] | list[float] = (0.3, 0.6),
-    co2_fraction: float = 0.0,
-    recovery_factor: float = 0.70,
+    claimed_giip_tcf: float | list[float] | None = None,
+    net_pay_m: float | None = None,
+    porosity_range: tuple[float, float] | list[float] | None = None,
+    sw_range: tuple[float, float] | list[float] | None = None,
+    pressure_mpa_range: tuple[float, float] | list[float] | None = None,
+    temperature_c_range: tuple[float, float] | list[float] | None = None,
+    z_range: tuple[float, float] | list[float] | None = None,
+    geometry_factor_range: tuple[float, float] | list[float] | None = None,
+    co2_fraction: float | None = None,
+    recovery_factor: float | None = None,
     recoverable_tcf: float | None = None,
     production_rate_bscfd: float | None = None,
     samples: int = 200_000,
@@ -60,6 +74,27 @@ def solve_inverse_volumetrics(
         seed: Random seed for repeatability (default 42).
         input_provenance: Dict mapping parameter names to 'OBS' or 'ASSUMPTION'.
     """
+    # T2 (2026-11-24): None = not supplied. Resolve defaults here so provenance can
+    # tell a caller's value (INPUT) from a default (DEFAULT/ASSUMPTION).
+    _given = {
+        "claimed_giip_tcf": claimed_giip_tcf, "net_pay_m": net_pay_m, "porosity_range": porosity_range,
+        "sw_range": sw_range, "pressure_mpa_range": pressure_mpa_range, "temperature_c_range": temperature_c_range,
+        "z_range": z_range, "geometry_factor_range": geometry_factor_range, "co2_fraction": co2_fraction,
+        "recovery_factor": recovery_factor,
+    }
+    supplied_fields = sorted(k for k, v in _given.items() if v is not None)
+    defaults_applied = sorted(k for k, v in _given.items() if v is None)
+    claimed_giip_tcf = _INV_DEFAULTS["claimed_giip_tcf"] if claimed_giip_tcf is None else claimed_giip_tcf
+    net_pay_m = _INV_DEFAULTS["net_pay_m"] if net_pay_m is None else net_pay_m
+    porosity_range = _INV_DEFAULTS["porosity_range"] if porosity_range is None else porosity_range
+    sw_range = _INV_DEFAULTS["sw_range"] if sw_range is None else sw_range
+    pressure_mpa_range = _INV_DEFAULTS["pressure_mpa_range"] if pressure_mpa_range is None else pressure_mpa_range
+    temperature_c_range = _INV_DEFAULTS["temperature_c_range"] if temperature_c_range is None else temperature_c_range
+    z_range = _INV_DEFAULTS["z_range"] if z_range is None else z_range
+    geometry_factor_range = _INV_DEFAULTS["geometry_factor_range"] if geometry_factor_range is None else geometry_factor_range
+    co2_fraction = _INV_DEFAULTS["co2_fraction"] if co2_fraction is None else co2_fraction
+    recovery_factor = _INV_DEFAULTS["recovery_factor"] if recovery_factor is None else recovery_factor
+
     rng = np.random.default_rng(seed)
     n = int(samples)
 
@@ -129,9 +164,11 @@ def solve_inverse_volumetrics(
     # Gas expansion factor E (scf/rcf)
     e_samples = (p_samples / p_std) * (t_std / t_k_samples) / z_samples
 
-    e_p10 = float(np.percentile(e_samples, 10))
+    # petroleum_descending (SPE-PRMS sense): P90 = LOW (exceeded with 90 % probability)
+    # = statistical 10th percentile; P10 = HIGH = statistical 90th percentile.
+    e_p10 = float(np.percentile(e_samples, 90))
     e_p50 = float(np.percentile(e_samples, 50))
-    e_p90 = float(np.percentile(e_samples, 90))
+    e_p90 = float(np.percentile(e_samples, 10))
 
     # Area calculation: A (m2) = GIIP (scf) / (net_pay * geom * phi * (1 - Sw) * m3_to_rcf * E)
     # A (km2) = A (m2) / 1e6
@@ -145,9 +182,9 @@ def solve_inverse_volumetrics(
         denom = float(net_pay_m) * geom_samples * phi_samples * (1.0 - sw_samples) * m3_to_rcf * e_samples
         area_km2_samples = (giip_scf / denom) / 1e6
 
-        p10_area = float(np.percentile(area_km2_samples, 10))
+        p10_area = float(np.percentile(area_km2_samples, 90))  # HIGH (petroleum_descending)
         p50_area = float(np.percentile(area_km2_samples, 50))
-        p90_area = float(np.percentile(area_km2_samples, 90))
+        p90_area = float(np.percentile(area_km2_samples, 10))  # LOW
         area_se = float(np.std(area_km2_samples) / np.sqrt(n))
         if primary_area_se is None:
             primary_area_se = area_se
@@ -203,6 +240,9 @@ def solve_inverse_volumetrics(
         "co2_fraction": "DEFAULT",
         "recovery_factor": "ASSUMPTION",
     }
+    # Supplied by the caller -> INPUT (its own provenance is the caller's to declare).
+    for _f in supplied_fields:
+        default_provenance[_f] = "INPUT"
     if input_provenance:
         default_provenance.update(input_provenance)
 
@@ -240,21 +280,23 @@ def solve_inverse_volumetrics(
             "samples": n,
             "seed": seed,
         },
-        "percentile_convention": "spe_prms_p90_low",
+        "percentile_convention": "petroleum_descending",
         "percentile_convention_note": (
-            "SPE-PRMS: P90 is the LOW estimate and P10 the HIGH. Raw statistical percentiles "
-            "are not the PRMS labels; do not read them as such."
+            "SPE-PRMS sense: P90 is the LOW case (exceeded with 90 % probability) and P10 the HIGH; "
+            "p90 <= p50 <= p10 in every distribution above."
         ),
         "mc_receipt": {
             "seed": seed,
             "n_sims": n,
             "standard_error": round(primary_area_se if primary_area_se is not None else 0.0, 6),
-            "percentile_convention": "spe_prms_p90_low",
+            "percentile_convention": "petroleum_descending",
         "percentile_convention_note": (
-            "SPE-PRMS: P90 is the LOW estimate and P10 the HIGH. Raw statistical percentiles "
-            "are not the PRMS labels; do not read them as such."
+            "SPE-PRMS sense: P90 is the LOW case (exceeded with 90 % probability) and P10 the HIGH; "
+            "p90 <= p50 <= p10 in every distribution above."
         ),
             "rng_stream": "np.random.default_rng",
         },
         "input_provenance": default_provenance,
+        "supplied_fields": supplied_fields,
+        "defaults_applied": defaults_applied,
     }

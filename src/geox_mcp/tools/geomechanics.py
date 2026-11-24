@@ -27,6 +27,23 @@ from geox_core.physics.parameters import (
 from geox_core.physics.state import Physics13State
 
 
+# Physics13 fields from_raw_dict() fills with defaults when absent (rho/vp/vs are required above).
+_OPTIONAL_STATE_FIELDS = ("rho_e", "chi", "k", "P", "T", "phi", "epsilon", "delta", "gamma")
+
+
+def _grade_supplied(s: Physics13State, supplied: dict) -> tuple[str, list[str]]:
+    """Physics13State.grade(), but only over bounds the caller actually supplied.
+
+    A defaulted phi (0.2) always sits inside 0.02-0.45, so grading it would turn a
+    default into evidence. Returns (grade, fields_checked).
+    """
+    checks = [("vp", 1500 <= s.vp <= 6000), ("rho", 1000 <= s.rho <= 5000)]
+    if "phi" in supplied:
+        checks.append(("phi", 0.02 <= s.phi <= 0.45))
+    grade = "AAA" if all(ok for _, ok in checks) else "RAW"
+    return grade, [name for name, _ in checks]
+
+
 class GeomechanicsRequest(BaseModel):
     state: dict = Field(..., description="Physics13State as dict — partial fields OK, from_raw_dict() coerces")
     thickness_m: float | None = Field(
@@ -106,9 +123,19 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
         )
 
     try:
-        # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully
-        s = Physics13State.from_raw_dict(request.state)
-        derived = forward_physics9(s)
+        # A1 fix: from_raw_dict() handles partial/mixed-type dicts gracefully.
+        # T1 (2026-11-24): pass the alias-NORMALISED dict. Passing request.state
+        # validated vp_m_s=4000 above and then silently computed with vp=3000.
+        s = Physics13State.from_raw_dict(state)
+        derived: dict[str, float | None] = dict(forward_physics9(s))
+
+        # Which Physics13 fields were filled by from_raw_dict defaults, not the caller.
+        defaults_applied = [f for f in _OPTIONAL_STATE_FIELDS if f not in state]
+        # Derived scalars that depend on a defaulted input are not evidence — null them.
+        if "k" in defaults_applied or "rho" not in state:
+            derived["thermal_diff"] = None
+        if "phi" in defaults_applied or "P" in defaults_applied:
+            derived["fatigue_proxy"] = None
 
         # Sanity-check derived moduli against classical bounds
         sanity = []
@@ -133,11 +160,15 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
                 error=f"PHYSICS_GUARD_VIOLATION: derived elastic properties violate physical bounds: {sanity}",
             )
 
+        grade, grade_basis = _grade_supplied(s, state)
         result = {
             "input_state": s.to_dict(),
             "derived": derived,
+            "moduli": {k: derived[k] for k in ("K_GPa", "G_GPa", "E_GPa", "nu")},
+            "defaults_applied": defaults_applied,
             "sanity_flags": sanity,
-            "grade": s.grade(),
+            "grade": grade,
+            "grade_basis": grade_basis,
             "epistemic_provenance": {
                 "rung": 3,
                 "grounding": "elastic_moduli_from_pwave_swave_density",
@@ -149,11 +180,11 @@ async def geox_geomechanics(request: GeomechanicsRequest) -> GeomechanicsRespons
                 ),
             },
             "godel_wall": {
-                "state": "KNOWN" if not sanity and s.grade() == "AAA" else "UNDECIDABLE_YET",
+                "state": "KNOWN" if not sanity and grade == "AAA" else "UNDECIDABLE_YET",
                 "reason": (
                     "Physics9 bounds satisfied + sanity OK."
-                    if not sanity and s.grade() == "AAA"
-                    else f"Sanity flags: {sanity} or grade {s.grade()}"
+                    if not sanity and grade == "AAA"
+                    else f"Sanity flags: {sanity} or grade {grade}"
                 ),
             },
         }

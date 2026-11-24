@@ -31,8 +31,12 @@ async def temporal_decline(
     production_data: list[dict[str, Any]],
     forecast_years: int = 5,
     threshold_bpd: float = 250000.0,
+    method: str = "regression",
 ) -> dict[str, Any]:
     """Fit exponential decline curve to production history and forecast.
+
+    method: "regression" (default; log-linear least squares over all points) or
+    "endpoint" (first/last points only, the pre-2026-11-24 behaviour).
 
     Algorithm: exponential decline D = -ln(Q_end/Q_start) / dt,
     forecast Q(t) = Q_current * exp(-D * t).
@@ -90,6 +94,9 @@ async def temporal_decline(
             "recoverable": True,
         }
 
+    if method not in ("regression", "endpoint"):
+        return {"success": False, "error": f"method must be 'regression' or 'endpoint', got {method!r}", "recoverable": True}
+
     # Exponential decline q(t) = q0·exp(−D·t)  ⇒  ln q = ln q0 − D·t.
     # Least-squares on (t, ln q) over ALL points (old code used first/last only).
     n_pts = len(years)
@@ -101,8 +108,10 @@ async def temporal_decline(
     ss_tot = sum((lq - lq_mean) ** 2 for lq in ln_q)
     ss_res = sum((lq - (lq_mean + slope * (t - t_mean))) ** 2 for t, lq in zip(years, ln_q, strict=True))
     r_squared = 1.0 if ss_tot == 0 else 1.0 - ss_res / ss_tot
+    if method == "endpoint":
+        slope = (ln_q[-1] - ln_q[0]) / dt
     fit = {
-        "method": "log_linear_least_squares",
+        "method": "log_linear_least_squares" if method == "regression" else "endpoint_two_point",
         "model": "exponential q(t)=q0*exp(-D*t)",
         "n_points": n_pts,
         "r_squared": round(r_squared, 6),
@@ -145,6 +154,9 @@ async def temporal_decline(
             "decline_rate_pct_annual": decline_rate_pct,
             "trend": trend,
             "fit": fit,
+            "method": fit["method"],
+            "window": {"start_year": years[0], "end_year": years[-1], "n_points": n_pts},
+            "rate_unit": "per year (exponential, annual-effective %)",
             "forecast": forecast,
             "forecast_years": forecast_years,
             "threshold_bpd": threshold_bpd,

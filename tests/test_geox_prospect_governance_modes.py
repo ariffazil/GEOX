@@ -163,8 +163,10 @@ async def test_geox_prospect_inverse_volumetrics_reference_match():
 
     # Check provenance
     provenance = art.get("input_provenance", {})
-    assert provenance.get("net_pay_m") == "OBS"
-    assert provenance.get("porosity_range") == "ASSUMPTION"
+    assert provenance.get("net_pay_m") == "OBS"  # caller-declared provenance wins
+    # T2 (2026-11-24): a supplied value is INPUT; only unsupplied fields are DEFAULT/ASSUMPTION
+    assert provenance.get("porosity_range") == "INPUT"
+    assert "porosity_range" in art.get("supplied_fields", [])
 
     # Check forbidden use
     assert "not a reserve or drilling recommendation" in art.get("forbidden_use", "").lower()

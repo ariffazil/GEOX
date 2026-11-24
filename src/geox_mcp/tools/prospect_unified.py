@@ -209,28 +209,27 @@ async def geox_prospect(
         raw_sw = sw_range if sw_range is not None else vp.get("sw_range")
         if raw_sw is None and "sw" in vp:
             raw_sw = (float(vp["sw"]), float(vp["sw"]))
-        if raw_sw is None:
-            raw_sw = (0.15, 0.35)
-        elif isinstance(raw_sw, (int, float)):
+        # None stays None: the solver resolves the default and tags it DEFAULT (T2).
+        if isinstance(raw_sw, (int, float)):
             raw_sw = (float(raw_sw), float(raw_sw))
 
         inv_args = {
-            "claimed_giip_tcf": claimed_giip_tcf if claimed_giip_tcf is not None else vp.get("claimed_giip_tcf", 5.0),
-            "net_pay_m": net_pay_m if net_pay_m is not None else vp.get("net_pay_m", 600.0),
-            "porosity_range": porosity_range if porosity_range is not None else vp.get("porosity_range", (0.15, 0.30)),
+            "claimed_giip_tcf": claimed_giip_tcf if claimed_giip_tcf is not None else vp.get("claimed_giip_tcf"),
+            "net_pay_m": net_pay_m if net_pay_m is not None else vp.get("net_pay_m"),
+            "porosity_range": porosity_range if porosity_range is not None else vp.get("porosity_range"),
             "sw_range": raw_sw,
             "pressure_mpa_range": pressure_mpa_range
             if pressure_mpa_range is not None
-            else vp.get("pressure_mpa_range", (50.0, 70.0)),
+            else vp.get("pressure_mpa_range"),
             "temperature_c_range": temperature_c_range
             if temperature_c_range is not None
-            else vp.get("temperature_c_range", (140.0, 170.0)),
-            "z_range": z_range if z_range is not None else vp.get("z_range", (1.05, 1.25)),
+            else vp.get("temperature_c_range"),
+            "z_range": z_range if z_range is not None else vp.get("z_range"),
             "geometry_factor_range": geometry_factor_range
             if geometry_factor_range is not None
-            else vp.get("geometry_factor_range", (0.3, 0.6)),
-            "co2_fraction": co2_fraction if co2_fraction is not None else vp.get("co2_fraction", 0.0),
-            "recovery_factor": recovery_factor if recovery_factor is not None else vp.get("recovery_factor", 0.70),
+            else vp.get("geometry_factor_range"),
+            "co2_fraction": co2_fraction if co2_fraction is not None else vp.get("co2_fraction"),
+            "recovery_factor": recovery_factor if recovery_factor is not None else vp.get("recovery_factor"),
             "recoverable_tcf": recoverable_tcf if recoverable_tcf is not None else vp.get("recoverable_tcf"),
             "production_rate_bscfd": production_rate_bscfd
             if production_rate_bscfd is not None
