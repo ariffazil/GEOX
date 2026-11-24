@@ -183,6 +183,7 @@ def test_contract_baseline_required_and_property_names_types_still_present_live(
 # ---------- T_COUNT_INVARIANT ----------
 
 
+# S2 fix landed (XPASS on live ba713f97b, 2026-11-24) — xfail removed, now a regression guard
 def test_count_invariant_tools_total_equals_public_plus_nonpublic(surface):
     """INVARIANT: live_counts.tools_total == len(public) + len(nonpublic)."""
     lc = surface["live_counts"]
@@ -193,6 +194,7 @@ def test_count_invariant_tools_total_equals_public_plus_nonpublic(surface):
     )
 
 
+# S2 fix landed (XPASS on live ba713f97b, 2026-11-24) — xfail removed, now a regression guard
 def test_count_invariant_public_and_nonpublic_names_fully_account_for_tools_total(surface):
     """INVARIANT: set(public)|set(nonpublic) must equal the registry count — no name counted twice."""
     lc = surface["live_counts"]
@@ -257,6 +259,7 @@ def test_annotations_readonly_hint_present_and_boolean_on_every_public_tool(live
     assert not bad, f"ANNOTATION INVARIANT VIOLATED: readOnlyHint missing/non-boolean on {sorted(bad)}"
 
 
+# S4 fix landed (XPASS on live ba713f97b, 2026-11-24) — xfail removed, now a regression guard
 def test_annotations_destructive_hint_true_on_geox_claim_and_geox_prospect(live_tools):
     """INVARIANT: irreversible modes must be visible as destructiveHint=true."""
     liars = [
@@ -267,6 +270,7 @@ def test_annotations_destructive_hint_true_on_geox_claim_and_geox_prospect(live_
     assert not liars, f"ANNOTATION UNDER-DECLARATION: destructiveHint not true on {liars}"
 
 
+# S4 fix landed (XPASS on live ba713f97b, 2026-11-24) — xfail removed, now a regression guard
 def test_annotations_openworld_hint_true_on_external_source_tools(live_tools):
     """INVARIANT: tools reading external/public data declare openWorldHint=true."""
     external = ("geox_paleobiodb_query", "geox_spatial", "geox_deep_time", "geox_map")

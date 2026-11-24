@@ -72,21 +72,47 @@ def estimate_toc_deltalogr(
     resistivity_ohm_m: float,
     sonic_us_ft: float | None = None,
     density_gcc: float | None = None,
-    lom: float = 7.0,
-    baseline_resistivity: float = 2.0,
-    baseline_sonic: float = 90.0,
+    lom: float | None = None,
+    baseline_resistivity: float | None = None,
+    baseline_sonic: float | None = None,
 ) -> dict[str, Any]:
-    delta_log_r = (
-        math.log10(resistivity_ohm_m / baseline_resistivity) if resistivity_ohm_m > 0 and baseline_resistivity > 0 else 0.0
-    )
-    if sonic_us_ft is not None and baseline_sonic > 0:
-        delta_log_r += 0.02 * (sonic_us_ft - baseline_sonic)
-    elif density_gcc is not None:
-        vp_ms = 310 * (density_gcc * 1000) ** 0.25
-        dt_us_ft = 1e6 / vp_ms * 3.28084
-        delta_log_r += 0.02 * (dt_us_ft - baseline_sonic)
+    """Passey et al. (1990) sonic/resistivity ΔlogR TOC estimate.
+
+    ΔlogR = log10(R / R_baseline) + 0.02 · (Δt − Δt_baseline)
+    TOC   = ΔlogR · 10^(2.297 − 0.1688 · LOM)
+
+    Fails loud (ValueError) on inputs that would otherwise yield a believable
+    wrong number. None = not supplied → default applied and listed in
+    ``defaults_applied`` (confidence capped at LOW).
+    """
+    defaults_applied: list[str] = []
+    if lom is None:
+        lom = _LOM_DEFAULT
+        defaults_applied.append("lom")
+    if baseline_resistivity is None:
+        baseline_resistivity = _BASELINE_RT_DEFAULT
+        defaults_applied.append("baseline_resistivity")
+    if baseline_sonic is None:
+        baseline_sonic = _BASELINE_DT_DEFAULT
+        defaults_applied.append("baseline_sonic")
+
+    if resistivity_ohm_m is None or resistivity_ohm_m <= 0:
+        raise ValueError(f"resistivity_ohm_m must be > 0 for ΔlogR (got {resistivity_ohm_m})")
+    if baseline_resistivity <= 0 or baseline_sonic <= 0:
+        raise ValueError(
+            f"baseline_resistivity and baseline_sonic must be > 0 (got {baseline_resistivity}, {baseline_sonic})"
+        )
+    if sonic_us_ft is None:
+        # The previous density→sonic conversion was not a published Passey form
+        # (ρ=2.4 g/cc gave Δt≈1512 µs/ft). Refuse rather than invent a porosity track.
+        raise ValueError(
+            "ΔlogR needs sonic_us_ft (Passey 1990 sonic overlay); density-only input is not supported"
+            + (f" (density_gcc={density_gcc} ignored)" if density_gcc is not None else "")
+        )
+
+    delta_log_r = math.log10(resistivity_ohm_m / baseline_resistivity) + 0.02 * (sonic_us_ft - baseline_sonic)
     toc = max(0.0, delta_log_r * (10 ** (2.297 - 0.1688 * lom)))
-    conf = "LOW" if (lom < 2 or lom > 11 or (sonic_us_ft is None and density_gcc is None)) else "MEDIUM"
+    conf = "LOW" if (lom < 2 or lom > 11 or defaults_applied) else "MEDIUM"
     q = classify_toc(toc)
     return {
         "toc_wt_pct": round(toc, 3),
@@ -97,5 +123,19 @@ def estimate_toc_deltalogr(
         "confidence": conf,
         "quality": q["quality"],
         "generation_potential": q["generation_potential"],
-        "epistemic": "DER — ΔlogR. Calibrate with Rock-Eval for A-grade.",
+        "inputs_used": {
+            "resistivity_ohm_m": resistivity_ohm_m,
+            "sonic_us_ft": sonic_us_ft,
+            "baseline_resistivity_ohm_m": baseline_resistivity,
+            "baseline_sonic_us_ft": baseline_sonic,
+            "lom": lom,
+        },
+        "defaults_applied": defaults_applied,
+        "epistemic": "DER — ΔlogR. Baselines must be picked in a non-source fine-grained interval; "
+        "calibrate with Rock-Eval for A-grade.",
     }
+
+
+_LOM_DEFAULT = 7.0
+_BASELINE_RT_DEFAULT = 2.0
+_BASELINE_DT_DEFAULT = 90.0

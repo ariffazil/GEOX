@@ -78,23 +78,46 @@ async def temporal_decline(
             "recoverable": True,
         }
 
-    rate_ratio = rates[-1] / rates[0] if rates[0] > 0 else 1.0
-    if rate_ratio <= 0:
+    _nonpos = [(y, q) for y, q in zip(years, rates, strict=True) if q <= 0]
+    if _nonpos:
+        # A zero/negative rate has no logarithm; the old endpoint ratio silently
+        # turned rates[0] == 0 into "stable, 0 % decline".
         return {
             "success": False,
-            "error": "Invalid rate ratio (negative or zero rates)",
+            "error": "Exponential decline needs positive rates at every point; "
+            f"got {len(_nonpos)} non-positive (first: year={_nonpos[0][0]}, rate={_nonpos[0][1]}). "
+            "Drop shut-in periods or fit them separately.",
             "recoverable": True,
         }
 
-    # Exponential decline constant
-    if rate_ratio >= 1.0:
+    # Exponential decline q(t) = q0·exp(−D·t)  ⇒  ln q = ln q0 − D·t.
+    # Least-squares on (t, ln q) over ALL points (old code used first/last only).
+    n_pts = len(years)
+    ln_q = [math.log(q) for q in rates]
+    t_mean = sum(years) / n_pts
+    lq_mean = sum(ln_q) / n_pts
+    s_tt = sum((t - t_mean) ** 2 for t in years)
+    slope = sum((t - t_mean) * (lq - lq_mean) for t, lq in zip(years, ln_q, strict=True)) / s_tt
+    ss_tot = sum((lq - lq_mean) ** 2 for lq in ln_q)
+    ss_res = sum((lq - (lq_mean + slope * (t - t_mean))) ** 2 for t, lq in zip(years, ln_q, strict=True))
+    r_squared = 1.0 if ss_tot == 0 else 1.0 - ss_res / ss_tot
+    fit = {
+        "method": "log_linear_least_squares",
+        "model": "exponential q(t)=q0*exp(-D*t)",
+        "n_points": n_pts,
+        "r_squared": round(r_squared, 6),
+        "nominal_decline_per_year": round(-slope, 6),
+    }
+
+    annual_factor = math.exp(slope)  # q(t+1)/q(t)
+    if slope >= 0:
         # No decline — growth or flat
         d_const = 0.0
         decline_rate_pct = 0.0
-        trend = "growth" if rate_ratio > 1.01 else "stable"
+        trend = "growth" if annual_factor > 1.01 else "stable"
     else:
-        d_const = -math.log(rate_ratio) / dt
-        decline_rate_pct = round((1.0 - math.exp(-d_const)) * 100.0, 2)
+        d_const = -slope
+        decline_rate_pct = round((1.0 - annual_factor) * 100.0, 2)
         trend = "decline"
 
     # Forecast — project forward
@@ -121,6 +144,7 @@ async def temporal_decline(
             "current_rate_bpd": current_rate,
             "decline_rate_pct_annual": decline_rate_pct,
             "trend": trend,
+            "fit": fit,
             "forecast": forecast,
             "forecast_years": forecast_years,
             "threshold_bpd": threshold_bpd,

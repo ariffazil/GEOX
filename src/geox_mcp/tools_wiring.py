@@ -5783,9 +5783,9 @@ def register_tools_on(mcp):
             resistivity_ohm_m: float | None = None,
             sonic_us_ft: float | None = None,
             density_gcc: float | None = None,
-            lom: float = 7.0,
-            baseline_resistivity: float = 2.0,
-            baseline_sonic: float = 90.0,
+            lom: float | None = None,
+            baseline_resistivity: float | None = None,
+            baseline_sonic: float | None = None,
         ) -> dict[str, Any]:
             results: dict[str, Any] = {"mode": mode}
             try:
@@ -5802,15 +5802,21 @@ def register_tools_on(mcp):
                         )
                     results["maturity"] = _mat
                 if mode in ("deltalogr", "full") and depth_m is not None and resistivity_ohm_m is not None:
-                    results["deltalogr"] = estimate_toc_deltalogr(
-                        depth_m,
-                        resistivity_ohm_m,
-                        sonic_us_ft,
-                        density_gcc,
-                        lom,
-                        baseline_resistivity,
-                        baseline_sonic,
-                    )
+                    try:
+                        results["deltalogr"] = estimate_toc_deltalogr(
+                            depth_m,
+                            resistivity_ohm_m,
+                            sonic_us_ft,
+                            density_gcc,
+                            lom,
+                            baseline_resistivity,
+                            baseline_sonic,
+                        )
+                    except ValueError as _dlr_err:
+                        # Loud, but do not discard the other modes' results in mode=full.
+                        if mode == "deltalogr":
+                            return {"error": f"DELTALOGR_INPUT_REJECTED: {_dlr_err}", "mode": mode}
+                        results["deltalogr"] = {"error": f"DELTALOGR_INPUT_REJECTED: {_dlr_err}"}
                 if "toc" in results:
                     if "kerogen" in results:
                         _pm = {"oil": "oil_prone", "oil_gas": "oil_gas", "gas": "gas_prone", "none": "none"}
@@ -6264,9 +6270,9 @@ def register_tools_on(mcp):
         resistivity_ohm_m: float | None = None,
         sonic_us_ft: float | None = None,
         density_gcc: float | None = None,
-        lom: float = 7.0,
-        baseline_resistivity: float = 2.0,
-        baseline_sonic: float = 90.0,
+        lom: float | None = None,
+        baseline_resistivity: float | None = None,
+        baseline_sonic: float | None = None,
         # diagenesis params
         measured_porosity: float | None = None,
         lithology: str = "sandstone",
@@ -6322,9 +6328,9 @@ def register_tools_on(mcp):
         resistivity_ohm_m=None,
         sonic_us_ft=None,
         density_gcc=None,
-        lom=7.0,
-        baseline_resistivity=2.0,
-        baseline_sonic=90.0,
+        lom=None,
+        baseline_resistivity=None,
+        baseline_sonic=None,
     ):
         """[SHIM→geox_source(mode=source_rock)]"""
         return await _source_unified(

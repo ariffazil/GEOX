@@ -327,7 +327,7 @@ def _generate_synthetic_profile(
 
 async def geox_contrast_metabolize(
     *,
-    mode: str = "synthetic",
+    mode: str | None = None,
     impedance_profile: list[float] | None = None,
     depth_profile: list[float] | None = None,
     segy_path: str | None = None,
@@ -365,6 +365,19 @@ async def geox_contrast_metabolize(
     stage_map = {"contrast": "isolate", "measure": "measure", "classify": "classify"}
 
     # ── Input resolution ──────────────────────────────────────────────────────
+    # No silent fixture: a bare call used to run on a synthetic profile and return
+    # ok=True anomalies/hypotheses indistinguishable from a real run.
+    if mode is None:
+        if impedance_profile is not None or depth_profile is not None:
+            mode = "profile"
+        else:
+            return {
+                "ok": False,
+                "error": "No input: supply impedance_profile + depth_profile (mode=profile), "
+                "or pass mode='synthetic' explicitly for the fixture demo.",
+                "recoverable": True,
+            }
+    data_source = {"synthetic": "SYNTHETIC_FIXTURE", "profile": "CALLER_PROFILE", "segy": "SEGY"}.get(mode)
     if mode == "synthetic":
         impedance, depth_m = _generate_synthetic_profile()
     elif mode == "profile":
@@ -417,6 +430,12 @@ async def geox_contrast_metabolize(
         "ok": True,
         "tool": "geox_contrast_metabolize",
         "mode": mode,
+        "data_source": data_source,
+        **(
+            {"data_source_note": "SYNTHETIC fixture profile — demo only, not geological evidence"}
+            if data_source == "SYNTHETIC_FIXTURE"
+            else {}
+        ),
         "substrate_class": SUBSTRATE_CLASS,
         "authority_ceiling": AUTHORITY_CEILING,
         "local_verdict": "QUALIFIED_CANDIDATE",
