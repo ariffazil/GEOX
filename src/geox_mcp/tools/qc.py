@@ -150,16 +150,18 @@ async def geox_data_qc_bundle(
     store_entry = _get_artifact(artifact_ref)
     las_path = store_entry.get("las_path") if store_entry else None
 
-    # If no path stored (e.g. manually registered artifact), return shallow pass
+    # No readable source ⇒ QC did not run. Fail closed: a missing file cannot pass QC.
     if not las_path or not os.path.exists(las_path):
         _record_latest_qc(
             artifact_ref,
             {
-                "qc_overall": "SHALLOW",
-                "qc_passed": True,
-                "flags": ["QC_ENGINE_SKIPPED: no LAS path in store"],
-                "limitations": ["Artifact registered but LAS path unavailable."],
-                "claim_state": "QC_VERIFIED",
+                "qc_overall": "NOT_RUN",
+                "qc_passed": False,
+                "flags": ["SOURCE_MISSING", "QC_ENGINE_SKIPPED"],
+                "limitations": [
+                    "QC not executed: no readable LAS source at the stored path.",
+                ],
+                "claim_state": "NO_VALID_EVIDENCE",
             },
         )
         envelope = get_standard_envelope(
@@ -168,14 +170,17 @@ async def geox_data_qc_bundle(
                 "artifact_ref": artifact_ref,
                 "artifact_type": artifact_type,
                 "artifact_status": "REGISTERED_NO_PATH",
-                "qc_passed": True,
-                "flags": ["QC_ENGINE_SKIPPED: no LAS path in store"],
-                "claim_state": "INGESTED",
-                "warning": "Artifact registered but LAS path unavailable — shallow pass only. NOT QC_VERIFIED.",
+                "qc_passed": False,
+                "qc_overall": "NOT_RUN",
+                "flags": ["SOURCE_MISSING", "QC_ENGINE_SKIPPED"],
+                "claim_state": "NO_VALID_EVIDENCE",
+                "warning": "Source missing — QC did not run. NO_VALID_EVIDENCE.",
             },
             tool_class="qc",
-            execution_status=ExecutionStatus.SUCCESS,
+            execution_status=ExecutionStatus.ERROR,
+            governance_status=GovernanceStatus.HOLD,
             artifact_status=ArtifactStatus.DRAFT,
+            claim_state="NO_VALID_EVIDENCE",  # missing source cannot be INGESTED, let alone QC_VERIFIED
             claim_tag="HYPOTHESIS",
         )
         return enrich_envelope_with_metabolic(envelope, "geox_data_qc_bundle")
