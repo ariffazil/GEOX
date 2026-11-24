@@ -3561,6 +3561,13 @@ async def health_handler(request: Request) -> JSONResponse:
             # ── Tool surface visibility (T₁ audit fix 2026-07-19) ───
             "tools_loaded": _public_count,
             "canonical_tools": _public_count,
+            "tool_count": _public_count,
+            "mcp": {
+                "tool_count": _public_count,
+                "source": "tools/list",
+                "observed_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+                "status": "measured",
+            },
             # ── P0-1 canonical surface audit (2026-07-25 · FI-008) ───
             # Drift is observable, not fatal. The /drift endpoint exposes
             # the full report; /health exposes the headline counts so a
