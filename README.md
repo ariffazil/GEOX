@@ -7,7 +7,8 @@ role: Earth — physics_grounded_earth_intelligence
 public_mcp: https://geox.arif-fazil.com/mcp
 federation_topology: "1 of 12 Public MCP Doors in the arifOS federation (Earth). arifFlow is the box-only metabolism engine."
 canonical_tools_expected: 29
-observed_tools_live: 29 (observed 2026-11-22T23:36:39Z via :8081/health tools_loaded + /tools)
+observed_tools_live: 29 public / 29 total (live registry probe 2026-11-24; the older
+  "90 registered" figure came from a stale AGENTS.md and is withdrawn)
 truth_rule: live :8081/health + tools/list beat any static count in prose
 -->
 
@@ -35,6 +36,10 @@ truth_rule: live :8081/health + tools/list beat any static count in prose
 
 <!-- Badge note: the GEOX-NN Canonical Tools badge is GENERATED from registry.py and CI-gated by surface-drift-gate.yml — do not hand-edit its count. -->
 
+> **Maturity: prototype.** 0 external users · 0 paying customers · 1 public benchmark
+> dataset (Volve). The value today is the physics gate and the labelling discipline, not
+> adoption. Roadmap and honest scorecard: [FUTURE.md](./FUTURE.md).
+>
 > **It computes. It does not adjudicate. It does not seal.**
 > Authority ceiling `555_COMPUTE_ONLY` · domain law: natural law (geology, geophysics, physics, stratigraphy) · [BSL-1.1](#license--security) (evaluation use free; production needs a license).
 
@@ -42,6 +47,12 @@ truth_rule: live :8081/health + tools/list beat any static count in prose
 
 ## What works today
 
+- **A golden benchmark, not a smoke test.** [`tests/test_golden_volve.py`](./tests/test_golden_volve.py)
+  scores GEOX against the published Volve answer key (Sodir STOIIP 18.70 ×10⁶ Sm³,
+  recoverable 10.17, PVT STAT550B Pb 235.5 bar / Bo 1.388) with functional cases, an explicit
+  `UNMEASURED` set, a conflict register, and negative tests. A missing statistical dependency
+  now fails loud (`SAF_UNAVAILABLE:DEPENDENCY_MISSING`) instead of silently skipping five
+  analyses. Audited externally; see [FUTURE.md](./FUTURE.md).
 - **Seismic interpretation bundles with physics gates.** Every bundle carries ≥3 rival stratigraphic hypotheses with explicit falsifiers; `preferred_hypothesis` is always `null` — GEOX qualifies candidates, arifOS seals ([contracts/tools.yaml](./contracts/tools.yaml)).
 - **Petrophysics behind QC.** LAS ingest → depth/physical-range QC → Vsh, porosity, Sw, net-pay. Logs that fail physical range checks are refused, not interpreted.
 - **Earth Witness v1 — image evidence (`geox_observe`).** Rock / core / outcrop / fossil / seismic-display image → governed `EarthObservationPacket`: competing hypotheses **with their falsifiers**, and `INPUT_REQUIRED` when diagnostics (scale, acid test, polarity) are missing — never a guess. EarthBench 7/7, forbidden-claim rate 0 ([report](./reports/earth_witness/04_earthbench.md)).
@@ -51,6 +62,14 @@ truth_rule: live :8081/health + tools/list beat any static count in prose
 
 ## What is not yet proven
 
+- **No external user has ever run GEOX on their own data.** No paying customer, no
+  independent case study. Until that happens the market value is zero, regardless of code.
+- **No real seismic cube is held inside the system.** Interpretation paths are exercised on
+  synthetic or fixture data; structure in our own reports is built from well picks only.
+- **Provenance was mislabelled until 2026-11-24.** A supplied `Rw` was tagged `DEFAULT`
+  because provenance inspected an alias rather than the effective value. Fixed, with
+  `defaults_applied[]` now explicit. Assume older outputs under-report which parameters
+  were actually supplied.
 - External security evaluation — none published ([SECURITY.md](./SECURITY.md)).
 - Earth Witness chat is local-only; public exposure is a pending Class-B decision.
 - Five public tools belong to no capability pack — callable but undiscoverable ([gap row](#evidence--gaps)).
