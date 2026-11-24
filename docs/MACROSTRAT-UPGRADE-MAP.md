@@ -18,7 +18,7 @@ unit, ada poligon peta umum".
 
 | Thing | Value | Label |
 |---|---|---|
-| Live organ | :8081, 27/27 public tools, surface_drift ok (gap 0) | OBS |
+| Live organ | :8081, 29/29 public tools, surface_drift ok (gap 0) — re-probed 2026-11-24 | OBS |
 | /health status | `degraded`, kernel_verdict HOLD | OBS |
 | Degraded cause | `geox_source_drift.drift=true` — deployed HEAD `7b480f90f` ≠ origin/main `ad150e7a`, 28 files apart | OBS |
 | Repo topology | THREE trees on THREE history lines: origin/main (ad150e7a) · `<review-tree>` feat branch (00583d3f) · `<deploy-tree>` deployed (7b480f90f). None is an ancestor of the others. | OBS |

@@ -21,7 +21,7 @@
 | **UI App applets** | registered | 3 applet templates (mission_board, health_dashboard, well_desk_dashboard) | `src/geox_mcp/tools/ui_applets.py` |
 | **WebMCP HTTP endpoints** | 5 | `/.well-known/webmcp`, `/webmcp`, `/webmcp/tools`, `/webmcp/status`, `/webmcp/call/{tool}` | `src/geox_mcp/webmcp.py` |
 
-**Total MCP primitives: 88+** (56 tools + 17+ resources + 11 prompts + 4 mounted sub-servers + WebMCP endpoints).
+**MCP primitives (live-probed 2026-11-24): 29 tools · 56 resources · 32 prompts** (+ 4 mounted sub-servers + 5 WebMCP endpoints).
 
 ---
 
@@ -286,9 +286,9 @@ Enforced in `src/geox_mcp/registry.py` per-tool lane assignment and in the `is_g
 
 | Spec Section | GEOX Coverage |
 |--------------|---------------|
-| **Tools** (`server/tools.md`) | ✅ 56 tools with `inputSchema`/`outputSchema` (Pydantic v2 → JSON Schema 2020-12) |
-| **Resources** (`server/resources.md`) | ✅ 17+ templates with URIs, MIME types, descriptions |
-| **Prompts** (`server/prompts.md`) | ✅ 11 parameterized templates |
+| **Tools** (`server/tools.md`) | ✅ 29 tools with `inputSchema`/`outputSchema` (Pydantic v2 → JSON Schema 2020-12) |
+| **Resources** (`server/resources.md`) | ✅ 56 resources with URIs, MIME types, descriptions |
+| **Prompts** (`server/prompts.md`) | ✅ 32 parameterized templates |
 | **Logging** (`server/utilities/logging.md`) | ✅ Server-sent logging via Python `logging` |
 | **Progress** (`basic/utilities/progress.md`) | ✅ Supported via `ctx.report_progress` (where used) |
 | **Cancellation** (`basic/utilities/cancellation.md`) | ✅ Inherited from FastMCP |

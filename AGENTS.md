@@ -52,9 +52,11 @@ arifOS (888_JUDGE / arif_seal) determines constitutional truth
 
 ---
 
-## 4. Canonical Tool Surfaces (27 Live Tools on :8081)
+## 4. Canonical Tool Surfaces (29 Public Tools of 90 on :8081)
 
-Derived canonically from `/root/GEOX/tools_sot.yaml`:
+Derived canonically from `/root/GEOX/tools_sot.yaml`; live-probed 2026-11-24: `tools/list`
+returned **29 public tools** (90 registered incl. internal; `public_count` in
+`src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json` = 29).
 
 | Domain | Family | Primary Tools | Role |
 | :--- | :--- | :--- | :--- |

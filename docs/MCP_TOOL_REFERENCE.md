@@ -1,4 +1,10 @@
-# MCP Tool Reference — GEOX 54 Canonical Tools
+# MCP Tool Reference — GEOX (historical snapshot: 54 tools, 2026-06-21)
+
+> ⚠ **STALE SNAPSHOT — do not use these counts as current.** This file records the
+> 2026-06-21 surface (54/56 tools, itself internally inconsistent). The current canonical
+> public surface is **29 tools** (`registry.py::CANONICAL_PUBLIC_TOOLS`, generated to
+> `src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json`; live-probed 2026-11-24:
+> `tools/list` = 29 public of 90 registered). Retained for historical per-tool detail only.
 
 > **Last verified:** 2026-06-21 (commit `657b9eb0`, 54 tools live on `geox-mcp.service`)
 > **Source of truth:** `src/geox_mcp/registry.py` (CANONICAL_PUBLIC_TOOLS, GEOX_TOOL_MANIFEST)
@@ -10,7 +16,9 @@
 
 ## Overview
 
-GEOX exposes **56 canonical MCP tools** organized into **4 lanes** by authority level. Every tool output carries:
+GEOX exposed **56 tools at snapshot time** (2026-06-22; the 54/56 mismatch is part of why
+this file is marked stale) organized into **4 lanes** by authority level. The current public
+surface is 29 — see `src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json`. Every tool output carries:
 - `outputSchema` (Pydantic v2)
 - `epistemic_provenance` (rung 1-7 + grounding source)
 - `godel_wall` verdict (KNOWN / UNKNOWN / UNDECIDABLE_YET / SEALED / VOID)

@@ -46,9 +46,9 @@ The sovereign federation comprises 11 coordinated organs:
 
 ---
 
-## 3. GEOX 17 Earth Domains $\times$ 27 Canonical Tools Matrix
+## 3. GEOX 17 Earth Domains $\times$ 29 Canonical Tools Matrix
 
-GEOX exposes 27 public canonical tools structured across 17 Earth domains:
+GEOX exposes 29 public canonical tools structured across 17 Earth domains (live-probed 2026-11-24: `tools/list` = 29 public of 90 registered):
 
 | Domain | Tools | Description |
 | :--- | :--- | :--- |

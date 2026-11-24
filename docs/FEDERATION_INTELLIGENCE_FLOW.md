@@ -328,7 +328,7 @@ The OAuth layer is W15, not W14. Auth before coherence is auth-on-a-broken-door.
 
 ## What Stays The Same (no change)
 
-- 56 canonical tools (W16+ FORGE 2026-06-22)
+- 56 canonical tools at the 2026-06-22 snapshot (current public surface: 29 — re-probed 2026-11-24)
 - Physics9 bounds (unchanged)
 - Steel Security Layer (non-blocking, no pre-commit hooks)
 - F1-F13 floors (unchanged)
@@ -384,7 +384,7 @@ nats pub arifos.well.operator.arif '{"fatigue": 0.9, "decision_class": "C5"}'
 ## References
 
 - **Copilot's diagnosis:** `/root/CONTEXT.md` references + previous turn
-- **AGENTS.md:** `/root/GEOX/AGENTS.md` (Steel Security Layer, 56 tools, F13 SOVEREIGN)
+- **AGENTS.md:** `/root/GEOX/AGENTS.md` (Steel Security Layer, F13 SOVEREIGN; 56 was the 2026-06 snapshot — current public surface 29)
 - **PAI Receipt:** `/root/GEOX/src/geox_mcp/pai_receipt.py`
 - **ACP (Agent Control Plane):** `/root/GEOX/src/geox_core/governance/acp_logic.py`
 - **NATS topic conventions:** `arifos.{organ}.{stream_type}.{subject}` (existing convention)

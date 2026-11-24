@@ -50,7 +50,7 @@ in live GEOX.* Measured 2026-11-12:
 |---|---|---|
 | Is it instantiated at startup? | **YES** — `EarthGraph()` at import, `init_egs_state()` called at server.py:396 | source + live journal |
 | Is it ever mutated? | **NO** — journal at every start: `EGS state initialized: graph v1, claims=0, provenance_chains=0` (incl. the running PID 1421087, started 2026-11-11T16:06:09Z) | `journalctl -u geox-mcp` |
-| Is it exposed on the MCP surface? | **NO** — `register_egs_tools(mcp)` is COMMENTED OUT at server.py:399; none of the 27 public tools is an egs_* tool | live tools/list + source |
+| Is it exposed on the MCP surface? | **NO** — `register_egs_tools(mcp)` is COMMENTED OUT at server.py:399; none of the 29 public tools is an egs_* tool | live tools/list + source |
 | Is it reachable via `geox_basin` "mode expansion" as its docstring claims? | **NO** — `basin.py` has zero EGS references; the docstring overclaims | source |
 | Does the one live EGS-resident tool touch it? | **NO** — `geox_temporal` (decline/rrr/basin_lifecycle/cadence) imports only fastmcp/logging/math | source |
 
