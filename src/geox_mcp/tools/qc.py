@@ -12,6 +12,7 @@ from geox_core.enums.statuses import (
     enrich_envelope_with_metabolic,
     get_standard_envelope,
 )
+from geox_core.curve_origin import classify_curve_origin, measure_completeness
 from geox_mcp.tools._helpers import (
     _CURVE_RANGES,
     CANONICAL_ALIASES,
@@ -125,6 +126,7 @@ async def geox_data_qc_bundle(
     present_curves = []
     missing_curves = []
     completeness_score = 0.0
+    completeness: dict[str, Any] = {}
 
     if not artifact_ref or not _artifact_exists(artifact_ref):
         envelope = get_standard_envelope(
@@ -259,6 +261,9 @@ async def geox_data_qc_bundle(
                     "null_pct": round(float(np.isnan(arr_float).sum() / max(arr_float.size, 1) * 100.0), 3),
                     "min": float(np.nanmin(valid)) if valid.size else None,
                     "max": float(np.nanmax(valid)) if valid.size else None,
+                    # Law L5/L10: origin is screening evidence from the mnemonic,
+                    # never provenance. Always low confidence, always with a basis.
+                    **classify_curve_origin(mnemonic),
                 }
             for canon, (lo, hi, unit) in _CURVE_RANGES.items():
                 # Find the mnemonic in raw_curves via aliases
@@ -284,13 +289,19 @@ async def geox_data_qc_bundle(
             curve_mnemonics_upper = {k.upper() for k in raw_curves.keys()}
             present_curves = []
             missing_curves = []
+            present_origins: dict[str, str] = {}
             for canon, aliases in CANONICAL_ALIASES.items():
-                found = any(a in curve_mnemonics_upper for a in aliases)
-                if found:
+                match = next((a for a in aliases if a in curve_mnemonics_upper), None)
+                if match is not None:
                     present_curves.append(canon)
+                    present_origins[canon] = classify_curve_origin(match)["origin"]
                 else:
                     missing_curves.append(canon)
-            completeness_score = round(len(present_curves) / len(CANONICAL_ALIASES), 2)
+            completeness = measure_completeness(present_origins, len(CANONICAL_ALIASES))
+            # Law L5: inventory completeness counts every present curve; physical
+            # completeness counts origin=measured only. A computed curve satisfies
+            # the first and must never satisfy the second.
+            completeness_score = completeness["completeness_inventory_score"]
 
     except Exception:
         # Fall through to the standard LASIngestor QC path
@@ -830,6 +841,12 @@ async def geox_data_qc_bundle(
                 response["completeness_score"] = completeness_score
                 response["present_curves"] = present_curves
                 response["missing_curves"] = missing_curves
+                # Law L5: the two measures travel together so no caller can read
+                # inventory completeness as physical completeness by accident.
+                response["completeness_inventory_score"] = completeness.get("completeness_inventory_score", 0.0)
+                response["completeness_measured_score"] = completeness.get("completeness_measured_score", 0.0)
+                response["measured_curves"] = completeness.get("measured_curves", [])
+                response["inventory_only_curves"] = completeness.get("inventory_only_curves", [])
             # EUREKA FORGE (2026-06-02): surface SAF statistical-rigor
             # summary in the response so downstream consumers can see
             # the assumption check + outlier audit.

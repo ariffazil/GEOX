@@ -85,7 +85,10 @@ class TestG2EpistemicHonesty:
 
     def test_g2_1_derived_curves_tagged_semantic(self, q15_well_data):
         """Derived curves → type='semantic' (derived, algorithmically traceable)."""
-        pytest.skip("Covered by ingest_open_source_data.py")
+        pytest.skip(
+            "Invariant now covered locally by tests/test_curve_origin_l5.py "
+            "(L5/L10 origin separation, added 2026-11-24)"
+        )
 
     def test_g2_1_sealed_actions_tagged_governance(self):
         """Sealed actions (judgments) → type='governance' with confidence=1.0."""
