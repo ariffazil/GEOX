@@ -48,42 +48,17 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-# === Helper for MCP tool invocation ===
-
-def call_geox_tool(tool_name: str, arguments: dict[str, Any]) -> dict[str, Any]:
-    """Invoke a GEOX MCP tool via HTTP. Returns parsed response."""
-    import requests  # type: ignore
-    url = f"http://{GEOX_MCP_HOST}:{GEOX_MCP_PORT}/mcp"
-    # GEOX MCP uses standard MCP HTTP transport — implement minimal client here
-    # (In production, use the MCP client SDK; this is a stub for tests)
-    raise NotImplementedError(
-        "GEOX MCP client not yet wired. See geox-mcp package for the proper client."
-    )
-
-
 # === G-1 — Physics sanity ===
+#
+# MOVED 2026-11-24 (FI-003). The three G-1 tests that lived here wrapped
+# ``call_geox_tool`` — a stub raising NotImplementedError unconditionally —
+# inside ``pytest.raises((ValueError, RuntimeError, NotImplementedError))``.
+# Two of them passed green without executing any GEOX code. They now live in
+# tests/test_g1_physics_refusal.py, call the tools in-process, and assert the
+# returned refusal state ({"status": "INVALID"} / envelope ERROR+HOLD+REJECTED).
+#
+# See TEST_TRUTH_AUDIT.md for the rest of this module's skip inventory.
 
-class TestG1PhysicsSanity:
-    """G-1: GEOX refuses non-physical geology."""
-
-    def test_g1_negative_porosity_refused(self):
-        """Negative porosity is unphysical — GEOX must refuse."""
-        with pytest.raises((ValueError, RuntimeError, NotImplementedError)) as excinfo:
-            call_geox_tool("geox_petrophysics_porosity", {"porosity": -0.15, "method": "density"})
-        # If implementation raises ValueError, that's the refusal — pass.
-        # If NotImplementedError, the MCP client isn't wired — test framework issue, not GEOX failure.
-        if isinstance(excinfo.value, NotImplementedError):
-            pytest.skip("GEOX MCP client not wired — see geox_mcp.client")
-
-    def test_g1_inverted_depth_refused(self):
-        """Inverted depth (top > bottom) is unphysical — GEOX must refuse."""
-        with pytest.raises((ValueError, RuntimeError, NotImplementedError)):
-            call_geox_tool("geox_petrophysics_interval", {"top_depth_m": 3500, "bottom_depth_m": 1500})
-
-    def test_g1_superluminal_velocity_refused(self):
-        """Seismic velocity > ~6000 m/s in sedimentary rock is unphysical — GEOX must flag."""
-        with pytest.raises((ValueError, RuntimeError, NotImplementedError)):
-            call_geox_tool("geox_seismic_compute", {"mode": "synthetic", "vp": [8000.0], "rho": [2.5]})
 
 
 # === G-2 — Epistemic honesty ===
