@@ -266,11 +266,16 @@ async def geox_petrophysics(
             sw_flag = sw < sw_cutoff
             net_pay = vsh_flag & phi_flag & sw_flag
 
-            # Input provenance tracking for petrophysics parameters
+            # Input provenance tracking for petrophysics parameters.
+            # F02 (2026-11-24): provenance previously inspected only the
+            # rw_ohm_m ALIAS, so a caller passing rw=<value> was labelled
+            # DEFAULT although rw_eff used that value. Provenance must describe
+            # what the computation actually consumed — including the case where
+            # the effective value came from the companion scalar default.
             input_provenance = {
-                "rw_ohm_m": "OBS" if rw_ohm_m is not None else "DEFAULT",
-                "rho_matrix_g_cc": "OBS" if rho_matrix_g_cc is not None else "DEFAULT",
-                "rho_fluid_g_cc": "OBS" if rho_fluid_g_cc is not None else "DEFAULT",
+                "rw_ohm_m": "OBS" if (rw_ohm_m is not None or rw != 0.05) else "DEFAULT",
+                "rho_matrix_g_cc": "OBS" if (rho_matrix_g_cc is not None or matrix_density != 2.65) else "DEFAULT",
+                "rho_fluid_g_cc": "OBS" if (rho_fluid_g_cc is not None or fluid_density != 1.0) else "DEFAULT",
                 "gr_clean": "OBS" if gr_clean != 15 else "DEFAULT",
                 "gr_shale": "OBS" if gr_shale != 150 else "DEFAULT",
                 "archie_a": "OBS" if archie_a != 1 else "DEFAULT",
@@ -279,6 +284,15 @@ async def geox_petrophysics(
                 "vsh_cutoff": "OBS" if vsh_cutoff != 0.5 else "DEFAULT",
                 "phi_cutoff": "OBS" if phi_cutoff != 0.1 else "DEFAULT",
                 "sw_cutoff": "OBS" if sw_cutoff != 0.6 else "DEFAULT",
+            }
+            # Explicit list of parameters that fell back to a default, so a
+            # consumer does not have to scan the dict to know.
+            defaults_applied = sorted(k for k, v in input_provenance.items() if v == "DEFAULT")
+            # The values the equations actually used (post-alias resolution).
+            resolved_values = {
+                "rw_ohm_m_used": float(rw_eff),
+                "rho_matrix_g_cc_used": float(r_mat),
+                "rho_fluid_g_cc_used": float(r_fl),
             }
 
             computation_notes = []
@@ -333,6 +347,8 @@ async def geox_petrophysics(
                     "sw_cutoff": sw_cutoff,
                 },
                 "input_provenance": input_provenance,
+                "defaults_applied": defaults_applied,
+                "resolved_values": resolved_values,
                 "computation_notes": computation_notes,
                 "sw_clipped_flag": sw_clipped_flag,
                 "band": "DERIVED",

@@ -24,6 +24,7 @@ DITEMPA BUKAN DIBERI
 """
 
 import functools
+import os
 import traceback
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -324,7 +325,14 @@ def classify_error(error: Exception, source_tool: str = None, source_organ: str 
         "timestamp": datetime.now(UTC).isoformat(),
         "source_tool": source_tool,
         "source_organ": source_organ,
-        "original_error": traceback.format_exc() if error.__traceback__ else None,
+        # Audit 2026-11-24: never leak a Python traceback to an unauthenticated
+        # (ANON) caller — internal paths, secrets in frames, and env values can
+        # leak. Debug detail is emitted only when GEOX_DEBUG_TRACEBACK=1 (ops).
+        "original_error": (
+            traceback.format_exc()
+            if (error.__traceback__ and os.environ.get("GEOX_DEBUG_TRACEBACK") == "1")
+            else None
+        ),
     }
 
 

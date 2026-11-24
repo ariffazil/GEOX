@@ -414,8 +414,29 @@ async def geox_data_qc_bundle(
                     limitations.append(
                         f"SAF stat_outliers: {_n_outliers} outliers ({_n_outliers / len(_depth):.1%} of depth samples) — investigate before parametric use."
                     )
+        except ImportError as _saf_exc:
+            # F04/G3 (2026-11-24): a missing statistical dependency must FAIL
+            # LOUD. Previously a broad except embedded the error string and the
+            # five SAF analyses vanished without touching the verdict.
+            _saf_summary = {
+                "status": "UNAVAILABLE",
+                "error_class": "DEPENDENCY_MISSING",
+                "error": str(_saf_exc)[:200],
+                "remediation": "install the SAF dependency into the service venv (e.g. pip install blake3)",
+            }
+            flags.append("SAF_UNAVAILABLE:DEPENDENCY_MISSING")
+            limitations.append(
+                f"SAF statistical analyses NOT RUN — dependency missing: {str(_saf_exc)[:120]}. "
+                "QC verdict is univariate-only; do not read it as statistically validated."
+            )
         except Exception as _saf_exc:
-            _saf_summary = {"embed_skipped": str(_saf_exc)[:120]}
+            _saf_summary = {
+                "status": "ERROR",
+                "error_class": "SAF_RUNTIME_ERROR",
+                "error": str(_saf_exc)[:200],
+            }
+            flags.append("SAF_UNAVAILABLE:RUNTIME_ERROR")
+            limitations.append(f"SAF statistical analyses failed: {str(_saf_exc)[:120]}")
 
         # EUREKA FORGE (2026-06-03): group-wise one-way ANOVA + Welch ANOVA.
         # When the artifact has a categorical grouping column (e.g. facies,
