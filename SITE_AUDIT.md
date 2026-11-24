@@ -67,8 +67,9 @@ and its source. The site should practise what the tools enforce.
 
 - Do not add a marketing hero image carousel. It signals product maturity GEOX does not have.
 - Do not publish a benchmark number that is not reproducible from the repo.
-- Do not list "90 tools" anywhere — the live registry says 29 total; the 90 figure came
-  from a stale AGENTS.md and has been corrected in the repo.
+- Do not quote a bare "90 tools" or a bare "29 tools" without its scope: 29 is the
+  public/discovery surface, 90 is the runtime total (39 internal). Both are true; mixing
+  them is how this figure got wrong twice.
 - Do not show a tool count as a health metric.
 
 ---

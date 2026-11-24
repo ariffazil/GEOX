@@ -7,8 +7,10 @@ role: Earth — physics_grounded_earth_intelligence
 public_mcp: https://geox.arif-fazil.com/mcp
 federation_topology: "1 of 12 Public MCP Doors in the arifOS federation (Earth). arifFlow is the box-only metabolism engine."
 canonical_tools_expected: 29
-observed_tools_live: 29 public / 29 total (live registry probe 2026-11-24; the older
-  "90 registered" figure came from a stale AGENTS.md and is withdrawn)
+observed_tools_live: 29 public · 39 internal · 90 runtime + 2 backward-compat
+  (live import log 2026-11-24: "29 public + 39 internal = 90 runtime"; SACRED_SURFACE
+  has 90 entries). Public count is the discovery surface; 90 is the runtime total.
+  Do not conflate the two scopes.
 truth_rule: live :8081/health + tools/list beat any static count in prose
 -->
 
