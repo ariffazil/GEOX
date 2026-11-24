@@ -22,8 +22,6 @@ from __future__ import annotations
 
 import asyncio
 
-import pytest
-
 from geox_mcp.tools.petrophysics_unified import geox_petrophysics
 from geox_mcp.tools.seismic_compute import geox_seismic_compute
 
@@ -69,20 +67,35 @@ def test_g1_superluminal_velocity_refused():
     assert result.get("claim_state") == "NO_VALID_EVIDENCE"
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "GEOX-PHYS-GUARD-DEFAULT: get_standard_envelope() falls back to "
-        "{'guard_passed': True} when a tool supplies no physics_guard, so a "
-        "REJECTED output still attests that physics passed. strict=True so this "
-        "turns into a failure the moment it is fixed, forcing the marker's removal."
-    ),
-)
 def test_g1_rejected_output_must_not_attest_physics_pass():
-    """A rejected output must never carry a passing physics attestation."""
+    """A rejected output must never carry a passing physics attestation.
+
+    Regression lock for GEOX-PHYS-GUARD-DEFAULT: get_standard_envelope() used to
+    fall back to {"guard_passed": True} when a tool supplied no physics_guard, so
+    an output the system had just REJECTED still attested that physics passed.
+    An uncomputed guard is now null — "not evaluated", never "passed".
+    """
     result = _run(geox_seismic_compute(**SUPERLUMINAL))
+
     guard = result.get("physics_guard") or {}
-    assert guard.get("guard_passed") is not True, (
-        "rejected output still attests guard_passed=True — an uncomputed guard "
-        "has been reported as passed"
+    assert guard.get("guard_passed") is None, (
+        f"rejected output attests guard_passed={guard.get('guard_passed')!r}; "
+        "an uncomputed guard must be null, never True"
     )
+
+
+def test_supplied_physics_guard_is_preserved():
+    """The fix must not over-correct: a tool that does supply a guard keeps it."""
+    from geox_core.enums.statuses import get_standard_envelope
+
+    envelope = get_standard_envelope(
+        {"tool": "probe"},
+        physics_guard={"guard_passed": True, "physics_version": "probe-v1"},
+    )
+    assert envelope["physics_guard"]["guard_passed"] is True
+
+    envelope_fail = get_standard_envelope(
+        {"tool": "probe"},
+        physics_guard={"guard_passed": False, "violations": ["x"]},
+    )
+    assert envelope_fail["physics_guard"]["guard_passed"] is False

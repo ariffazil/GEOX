@@ -636,7 +636,12 @@ def get_standard_envelope(
         "claim_tag": claim_tag,
         "claim_state": claim_state,
         "confidence_band": confidence_band,
-        "physics_guard": physics_guard or {"guard_passed": True, "physics_version": PHYSICS_GUARD_VERSION},
+        # An uncomputed guard must never attest a pass. A tool that does not run
+        # PhysicsGuard supplies nothing, and None means "not evaluated" — not
+        # "evaluated and passed". Callers that need a verdict must supply one.
+        "physics_guard": physics_guard
+        if physics_guard is not None
+        else {"guard_passed": None, "physics_version": PHYSICS_GUARD_VERSION},
         "uncertainty": uncertainty,
         "evidence_refs": evidence_refs or [],
         "audit_receipt": audit_receipt
