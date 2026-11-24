@@ -268,7 +268,7 @@ def tools_for_profile(profile: str = "default") -> list[str]:
       default       → earth_core only
       specialist    → earth_core + earth_specialist
       research/full → those two plus earth_research
-      earth_witness → the five witness-spine tools only
+      earth_witness → the five witness-spine tools + geox_surface_status
     earth_witness is operator-gated. It is not in default, specialist, or research.
     """
     profiles = _get_discovery_profiles()

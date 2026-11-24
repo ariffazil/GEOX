@@ -1,6 +1,6 @@
 {
   "schema": "geox.canonical_public_surface.v2",
-  "generated_at": "2026-11-21T01:58:12.144613+00:00",
+  "generated_at": "2026-11-24T04:15:18.894767+00:00",
   "source": "registry.py::CANONICAL_PUBLIC_TOOLS",
   "public_count": 29,
   "internal_count": 22,
@@ -594,7 +594,7 @@
     "earth_witness": {
       "tier": "operator",
       "label": "Earth Witness",
-      "description": "Operator-gated. These five tools are callable on the public surface and are unlisted from default, specialist, and research discovery by design. This pack is the decision; it is not a missing pack.",
+      "description": "Operator-gated. The five witness-spine tools plus geox_surface_status (the RT1 recovery tool) are callable on the public surface and are unlisted from default, specialist, and research discovery by design. This pack is the decision; it is not a missing pack.",
       "intent": "Register native sources, list them, extract a display proxy or a native trace, and write a calibration witness.",
       "discovery": "unlisted_by_design",
       "tools": [
