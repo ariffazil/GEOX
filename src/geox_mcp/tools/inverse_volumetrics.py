@@ -240,12 +240,20 @@ def solve_inverse_volumetrics(
             "samples": n,
             "seed": seed,
         },
-        "percentile_convention": "statistical_ascending",
+        "percentile_convention": "spe_prms_p90_low",
+        "percentile_convention_note": (
+            "SPE-PRMS: P90 is the LOW estimate and P10 the HIGH. Raw statistical percentiles "
+            "are not the PRMS labels; do not read them as such."
+        ),
         "mc_receipt": {
             "seed": seed,
             "n_sims": n,
             "standard_error": round(primary_area_se if primary_area_se is not None else 0.0, 6),
-            "percentile_convention": "statistical_ascending",
+            "percentile_convention": "spe_prms_p90_low",
+        "percentile_convention_note": (
+            "SPE-PRMS: P90 is the LOW estimate and P10 the HIGH. Raw statistical percentiles "
+            "are not the PRMS labels; do not read them as such."
+        ),
             "rng_stream": "np.random.default_rng",
         },
         "input_provenance": default_provenance,
