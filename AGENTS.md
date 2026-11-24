@@ -99,3 +99,35 @@ returned **29 public tools** (90 registered incl. internal; `public_count` in
 > **Invariant:** CAPABILITY ≠ AUTHORITY  
 > **Doctrine:** Govern capabilities, not implementations.  
 > **Motto:** DITEMPA BUKAN DIBERI ⚒️
+
+---
+
+## 8. Deployment & Publication (single owner)
+
+**Live model:** systemd `geox-mcp.service`, `WorkingDirectory=/opt/geox`, editable venv
+`/opt/geox/.venv`, public `:8081` / `https://geox.arif-fazil.com/mcp`.
+
+**Deploy:** `scripts/deploy_geox_service.sh` is the ONLY deploy path. It checks out
+GitHub `origin/main` into `/opt/geox`, refuses on an incomplete tree, runs an import
+smoke **before** restart, then restarts and probes; on failure it rolls back to the last
+live commit. `--check` verifies without restarting.
+
+**Publication (raw repo → GitHub):** `/root/scripts/mirror-cycle.sh /root/geox-push-mirror
+/root/GEOX https://github.com/ariffazil/GEOX main --legacy-filter-args --allow-rewrite`.
+Use `--legacy-filter-args` for GEOX: the script's default manifest is AAA's path-manifest,
+which default-denies generic names and would drop `geox/`, `tools.json`, `pyproject.toml`.
+
+**Surface generators (one owner per artifact):**
+- `tools.json` · `.well-known/tools.json` · `.well-known/openapi.json` · `llms.txt`
+  → `scripts/generate_public_registry.py`
+- `src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json` · `contracts/tools.yaml` ·
+  `tools_sot.yaml` · README badge → `scripts/generate_all_surfaces.py`
+- publish → `scripts/publish_docroot.py` (reads the SOT; no root mirror)
+- `scripts/regenerate_surface.py` is RETIRED (fails closed). `tests/test_single_writer_surface.py`
+  prevents duplicate authority.
+
+**Auto-deploy:** NOT built. There is no signed receiver for `deploy.arif-fazil.com/deploy`
+(no Caddy vhost, no `/deploy` handler) and GitHub Actions is billing-locked, so push does
+not deploy. Deploy is manual via the script above. Do not add a webhook to a non-existent
+receiver.
+

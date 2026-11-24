@@ -57,7 +57,8 @@ def test_well_known_openapi_x_mcp_tools_aligned():
 
 
 def test_canonical_public_surface_json_aligned():
-    path = ROOT / "CANONICAL_PUBLIC_SURFACE.json"
+    # Single source of truth (the root mirror was retired 2026-11-24).
+    path = ROOT / "src" / "geox_mcp" / "generated" / "CANONICAL_PUBLIC_SURFACE.json"
     assert path.exists()
     payload = json.loads(path.read_text(encoding="utf-8"))
     assert payload.get("public_count") == len(CANON)

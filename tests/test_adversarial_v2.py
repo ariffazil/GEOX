@@ -385,8 +385,8 @@ def test_T9_surface_truth_consistency():
     else:
         manifest_tools = set(manifest_tools_raw)
 
-    # Read CANONICAL_PUBLIC_SURFACE.json
-    canon_path = root / "CANONICAL_PUBLIC_SURFACE.json"
+    # Read the generated SOT (root mirror retired 2026-11-24 — single source)
+    canon_path = root / "src" / "geox_mcp" / "generated" / "CANONICAL_PUBLIC_SURFACE.json"
     with open(canon_path) as f:
         canon = json.load(f)
     canon_tools = set(t.get("name") for t in canon.get("tools", []))

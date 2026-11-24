@@ -219,169 +219,27 @@ def regenerate_canonical_public_surface_json(dry_run: bool) -> None:
 
 
 def regenerate_tools_json(dry_run: bool) -> None:
-    """Regenerate tools.json (root)."""
-    path = ROOT / "tools.json"
-    before = path.read_text() if path.exists() else ""
+    """RETIRED WRITER — tools.json is owned by scripts/generate_public_registry.py.
 
-    # Read existing to preserve internal list if present
-    existing = {}
-    if path.exists():
-        try:
-            existing = json.loads(before)
-        except json.JSONDecodeError:
-            pass
-
-    data = {
-        "app_export": TRUTH_SORTED,
-        "internal": existing.get("internal", []),
-        "manifest_path": "src/geox_mcp/registry.py::CANONICAL_PUBLIC_TOOLS",
-        "public": TRUTH_SORTED,
-        "version": datetime.now(timezone.utc).strftime("%Y.%m.%d"),
-        "policy": f"Generated {NOW_UTC} — public = registry.py::CANONICAL_PUBLIC_TOOLS ({TRUTH_COUNT} tools)",
-    }
-
-    after = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
-    diff_label("tools.json", before, after)
-
-    if not dry_run:
-        if content_sha256(before) == content_sha256(after):  # clock churn != drift
-            print(f"  = tools.json unchanged ({TRUTH_COUNT} tools) — skipped write")
-        else:
-            path.write_text(after)
-            print(f"  ✓ Wrote tools.json ({TRUTH_COUNT} tools)")
-    else:
-        print(f"  → Would write tools.json ({TRUTH_COUNT} tools)")
+    Kept only as a fail-closed tombstone: two writers produced different shapes and
+    fought each other (a generation could silently flip the file's schema). Calling
+    this now raises so duplication cannot be reintroduced quietly.
+    """
+    raise RuntimeError(
+        "retired: tools.json is owned by scripts/generate_public_registry.py "
+        "(see tests/test_single_writer_surface.py)"
+    )
 
 
 def regenerate_llms_txt(dry_run: bool) -> None:
-    """Regenerate llms.txt header and tool list."""
-    path = ROOT / "llms.txt"
-    before = path.read_text() if path.exists() else ""
+    """RETIRED WRITER — llms.txt is owned by scripts/generate_public_registry.py.
 
-    # Group tools by family
-    family_groups: dict[str, list[dict]] = {}
-    for name in TRUTH_SORTED:
-        meta = get_tool_metadata(name)
-        fam = meta.get("family", "unclassified")
-        family_groups.setdefault(fam, []).append({"name": name, "meta": meta, "tier": meta.get("tier", "Z")})
-
-    family_labels = {
-        "evidence": "1. Evidence & Orientation",
-        "ingest": "2. Data Intake & QC",
-        "interpret": "3. Earth Interpretation",
-        "model": "4. Integration & Models",
-        "prospect": "5. Prospect & Decision",
-        "view": "6. Presentation",
-        "research": "7. Research / Cascade Lab",
-        "seismic": "8. Seismic Sources & Traces",
-        "structural": "9. Structural Calibration",
-    }
-    tier_labels = {"A": "Core", "B": "Specialist", "C": "Research", "Z": "Internal"}
-
-    tool_lines = []
-    ordered_families = [
-        "evidence",
-        "ingest",
-        "interpret",
-        "model",
-        "prospect",
-        "view",
-        "research",
-        "seismic",
-        "structural",
-    ]
-    leftover_families = [f for f in family_groups if f not in ordered_families]
-    for fam_key in ordered_families + leftover_families:
-        group = family_groups.get(fam_key, [])
-        if not group:
-            continue
-        label = family_labels.get(fam_key, fam_key.title())
-        tool_lines.append(f"### {label}")
-        tool_lines.append("")
-        for item in sorted(group, key=lambda x: x["name"]):
-            name = item["name"]
-            meta = item["meta"]
-            tier = item["tier"]
-            desc = meta["description"] or f"GEOX tool: {name}"
-            tier_label = tier_labels.get(tier, tier)
-            tool_lines.append(f"- **{name}** [Tier {tier} — {tier_label}]: {desc}")
-        tool_lines.append("")
-
-    lines = [
-        f"# GEOX — Earth Intelligence Sovereign Kernel ({TRUTH_COUNT} Public Tools)",
-        "> Doctrine: Physics before narrative. Governed evidence only.",
-        "> Surface: generated from registry.py::CANONICAL_PUBLIC_TOOLS",
-        f"> Capability families: {len(family_groups)} | Sprint 1 classified",
-        "",
-        "## 0. Where GEOX Lives",
-        "",
-        "- Canonical url: https://geox.arif-fazil.com",
-        "- MCP endpoint: https://geox.arif-fazil.com/mcp (streamable HTTP)",
-        "- Health: https://geox.arif-fazil.com/health",
-        "- Agent card: https://geox.arif-fazil.com/.well-known/agent-card.json",
-        "- Discovery: https://geox.arif-fazil.com/.well-known/mcp.json · /.well-known/mcp/server.json",
-        "- Public data served from: Macrostrat (CC-BY 4.0) · Paleobiology Database (public domain)",
-        "",
-        "## 1. Capability Graph — Tool Surface",
-        "",
-    ]
-    lines.extend(tool_lines)
-    lines.extend(
-        [
-            "## 2. Tier Legend",
-            "- **Tier A (Core)**: Default discovery. All agents see these.",
-            "- **Tier B (Specialist)**: Opt-in after task declaration.",
-            "- **Tier C (Research)**: Advanced/research. Not visible by default.",
-            "",
-            "## 3. Capability Packs",
-            "",
-            "### earth_core (Tier A — 13 tools)",
-            "Default discovery surface. Basin context, data validation, well/seismic interpretation, prospect assessment.",
-            "",
-            "### earth_specialist (Tier B — 6 tools)",
-            "Opt-in. Seismic computation, geomechanics, data ingestion, paleobiology.",
-            "",
-            "### earth_research (Tier C — 7 tools)",
-            "Advanced/research only. Sub-packs:",
-            "- **cascade** (5): GLOF cascade simulation (initialize, step, phase, metabolize, propagate)",
-            "- **inversion** (2): Bayesian inference (inverse, mcmc_inverse)",
-            "- **restoration** (0): Structural restoration (PLANNED)",
-            "- **simulation** (0): Stratigraphic simulation (PLANNED)",
-            "- **uncertainty** (0): Uncertainty quantification (PLANNED)",
-            "",
-            "## 4. Workflow Packs",
-            "",
-            "### well_to_correlation (7 steps → CorrelationPackage)",
-            "basin → well → well_qc → petrophysics → deep_time → model → map",
-            "",
-            "### seismic_to_prospect (8 steps → ProspectEvidencePackage)",
-            "basin → seismic_ingest → seismic_compute → seismic_interpret → geomechanics → model → prospect → claim",
-            "",
-            "### basin_screening (8 steps → PlayFairwaySummary)",
-            "basin → spatial → temporal → source → deep_time → claim → prospect → map",
-            "",
-            "### glof_uncertainty (6 steps → UncertaintyReport)",
-            "initialize → propagate → phase → inverse → mcmc_inverse → metabolize",
-            "",
-            "## 5. Agent Reasoning Logic",
-            "- Evidence before interpretation.",
-            "- Governance stays server-side.",
-            "- App-enabled workspace URI: `ui://geox/workspace-v1.html` (text/html;profile=mcp-app).",
-        ]
+    Fail-closed tombstone, same reason as regenerate_tools_json.
+    """
+    raise RuntimeError(
+        "retired: llms.txt is owned by scripts/generate_public_registry.py "
+        "(see tests/test_single_writer_surface.py)"
     )
-
-    after = "\n".join(lines) + "\n"
-    diff_label("llms.txt", before, after)
-
-    if not dry_run:
-        if content_sha256(before) == content_sha256(after):  # clock churn != drift
-            print("  = llms.txt unchanged \u2014 skipped write")
-        else:
-            path.write_text(after)
-            print(f"  ✓ Wrote llms.txt ({TRUTH_COUNT} tools)")
-
-    else:
-        print(f"  → Would write llms.txt ({TRUTH_COUNT} tools)")
 
 
 def regenerate_contracts_tools_yaml(dry_run: bool) -> None:
@@ -632,8 +490,11 @@ def run_check() -> int:
             ROOT / "src" / "geox_mcp" / "generated" / "CANONICAL_PUBLIC_SURFACE.json",
             regenerate_canonical_public_surface_json,
         ),
-        ("tools.json", ROOT / "tools.json", regenerate_tools_json),
-        ("llms.txt", ROOT / "llms.txt", regenerate_llms_txt),
+        # tools.json / llms.txt are OWNED by scripts/generate_public_registry.py
+        # (the transport-mirror generator asserted by
+        # tests/test_transport_manifest.py::test_generated_artifacts_are_reproducible).
+        # Two writers produced different shapes and fought each other; this gate no
+        # longer owns them. See tests/test_single_writer_surface.py.
         ("contracts/tools.yaml", ROOT / "contracts" / "tools.yaml", regenerate_contracts_tools_yaml),
         ("README.md", ROOT / "README.md", regenerate_readme_badge),
     ]
@@ -710,8 +571,7 @@ def main() -> int:
     surfaces = [
         ("tools_sot.yaml", regenerate_tools_sot_yaml),
         ("CANONICAL_PUBLIC_SURFACE.json", regenerate_canonical_public_surface_json),
-        ("tools.json", regenerate_tools_json),
-        ("llms.txt", regenerate_llms_txt),
+        # tools.json / llms.txt — owned by scripts/generate_public_registry.py (single writer).
         ("contracts/tools.yaml", regenerate_contracts_tools_yaml),
         ("README.md", regenerate_readme_badge),
     ]

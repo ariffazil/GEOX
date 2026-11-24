@@ -123,7 +123,15 @@ elif TOOLS_N != N:
 TOOLS_P = TOOLS_N if TOOLS_N is not None else N
 
 
-SYNC = ["llms.txt", "tools.json", "CANONICAL_PUBLIC_SURFACE.json", "GEOX_MCP_APPS_SURFACE.json", "apps.json"]
+SYNC = {
+    "llms.txt": "llms.txt",
+    "tools.json": "tools.json",
+    # Canonical surface is published FROM the single generated SOT, not from a
+    # hand-mirrored root copy (the root copy was a duplicate current-state source).
+    "src/geox_mcp/generated/CANONICAL_PUBLIC_SURFACE.json": "CANONICAL_PUBLIC_SURFACE.json",
+    "GEOX_MCP_APPS_SURFACE.json": "GEOX_MCP_APPS_SURFACE.json",
+    "apps.json": "apps.json",
+}
 
 # 2026-11-23 (333-AGI): generic count patterns. The old fixed-list versions
 # (25/31/32/42) could not see a count that was not on that list, which is how
@@ -453,14 +461,14 @@ for name in ("index.html",):
         p.write_text(new_text)
     receipt["patched"][f"{name}#ew-cta"] = "injected v2" if changed else "already present"
 
-for name in SYNC:
-    src, dst = REPO / name, DOCROOT / name
+for src_name, dst_name in SYNC.items():
+    src, dst = REPO / src_name, DOCROOT / dst_name
     if not src.exists():
-        receipt["skipped"].append(f"{name} (missing in repo)")
+        receipt["skipped"].append(f"{src_name} (missing in repo)")
         continue
     if not DRY:
         dst.write_text(src.read_text())
-    receipt["synced"].append(name)
+    receipt["synced"].append(dst_name)
 
 for name, subs in PATCHES.items():
     p = DOCROOT / name
