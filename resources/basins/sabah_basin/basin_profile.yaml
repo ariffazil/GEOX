@@ -12,6 +12,11 @@
 # DO NOT cite from this file until audited. The verified NW-Borneo model lives in
 # nw_borneo_collision_system + layang_layang_basin/sabah_trough/kinabalu_basin.
 
+# Lookup metadata only (2026-11-25): geox_basin(basin_name="Sabah") answered "Basin data
+# not found" because this profile declared no aliases and the tool's fallback scans the
+# aliases lists. "Sabah Basin", "Sabah Trough" and "Kinabalu" already resolved.
+# Changes no geological content; data_status below still governs how the file may be used.
+aliases: ["Sabah"]
 basin_id: SABAH_BASIN
 basin_name: Sabah Basin
 data_status: QUARANTINE_PENDING_AUDIT

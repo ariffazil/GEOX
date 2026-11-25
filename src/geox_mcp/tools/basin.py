@@ -37,7 +37,10 @@ RESOURCES_DIR = Path(os.environ.get("GEOX_RESOURCES_DIR", str(_REPO_ROOT / "reso
 
 
 def _normalize_name(name: str) -> str:
-    return name.lower().replace(" ", "_").replace("-", "_")
+    # 2026-11-25: strip first. Without it "Malay Basin " and " Sabah " missed BOTH the
+    # canonical-dir lookup and the alias scan ("Basin not found:  Sabah ") — a lookup
+    # key must not fail on invisible characters.
+    return name.strip().lower().replace(" ", "_").replace("-", "_")
 
 
 # ── Declared-contradiction detection (2026-10-28, 333-AGI) ───────────────
@@ -935,8 +938,7 @@ async def geox_basin_profile(
                             "Generalized map polygons present — rock package and age "
                             "are known; formation-level unit polygons are not."
                             if data
-                            else "No mapped bedrock at this point — over ocean or "
-                            "outside every mapped area."
+                            else "No mapped bedrock at this point — over ocean or outside every mapped area."
                         ),
                         "lithology_summary": dict(sorted(lith_summary.items(), key=lambda x: -x[1])[:15]),
                         "upstream_api": await client.get_api_version(),
