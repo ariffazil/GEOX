@@ -91,10 +91,11 @@
     "geox_glof_cascade_inverse",
     "geox_glof_cascade_metabolize",
     "geox_glof_cascade_mcmc_inverse",
-    "geox_glof_cascade_propagate"
+    "geox_glof_cascade_propagate",
+    "geox_structural_reconstruction"
   ],
   "manifest_path": "src/geox_mcp/tools_manifest.yaml",
-  "policy": "Generated 2026.11.24 \u2014 app_export \u2282 public (29 of 29 tools plugin-exposed)",
+  "policy": "Generated 2026.11.25 \u2014 app_export \u2282 public (29 of 29 tools plugin-exposed)",
   "public": [
     "geox_well_ingest",
     "geox_petrophysics",
@@ -126,5 +127,5 @@
     "geox_extract_native_trace",
     "geox_list_registered_sources"
   ],
-  "version": "2026.11.24"
+  "version": "2026.11.25"
 }

@@ -1,0 +1,5 @@
+{
+  "base_fixture": "fault_growth_synthetic.json",
+  "fixture_id": "shale_transfer",
+  "mobile_shale": {"in_plane_m2": 0, "out_of_plane_m2": 224000}
+}

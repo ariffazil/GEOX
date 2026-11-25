@@ -1,0 +1,6 @@
+{
+  "base_fixture": "fault_growth_synthetic.json",
+  "fixture_id": "post_spreading",
+  "timing_claim": "post-spreading",
+  "well_tied": false
+}

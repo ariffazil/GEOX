@@ -8,12 +8,11 @@ Read-only: probes live MCP + /health, reads baseline JSON. stdlib only.
 Skips cleanly if GEOX (:8081) is unreachable or the baseline file is absent.
 
 EXPECTED RED TODAY (xfail strict=True, marker removed in the SAME commit as its fix):
-  count-invariant x2      -> fix: S2 (duplicate removal OR honest counter with duplicate names)
   health-parity x2        -> fix: S1 (one probe, named fields, derived status)
-  annotations destructive -> fix: S4
-  annotations openworld   -> fix: S4
   geox_workspace ghost    -> fix: HOLD-3 (drop llms.txt claim) or restore tool
   contrast_metabolize flat-> fix: S3
+Markers removed 2026-11-25 because the live assertions already pass:
+  count-invariant x2, annotations destructive, annotations openworld.
 Plain-red today (no marker, must go green by the fix):
   test_health_reasons_never_contain_the_literal_kernel_not_SEAL
 """
@@ -184,9 +183,6 @@ def test_contract_baseline_required_and_property_names_types_still_present_live(
 # ---------- T_COUNT_INVARIANT ----------
 
 
-@pytest.mark.xfail(
-    strict=True, reason="S2 fix: honest counter (duplicate names reported) or duplicate removal after 888 decision"
-)
 def test_count_invariant_tools_total_equals_public_plus_nonpublic(surface):
     """INVARIANT: live_counts.tools_total == len(public) + len(nonpublic)."""
     lc = surface["live_counts"]
@@ -197,7 +193,6 @@ def test_count_invariant_tools_total_equals_public_plus_nonpublic(surface):
     )
 
 
-@pytest.mark.xfail(strict=True, reason="S2 fix: same — duplicates must be named, not absorbed")
 def test_count_invariant_public_and_nonpublic_names_fully_account_for_tools_total(surface):
     """INVARIANT: set(public)|set(nonpublic) must equal the registry count — no name counted twice."""
     lc = surface["live_counts"]
@@ -262,7 +257,6 @@ def test_annotations_readonly_hint_present_and_boolean_on_every_public_tool(live
     assert not bad, f"ANNOTATION INVARIANT VIOLATED: readOnlyHint missing/non-boolean on {sorted(bad)}"
 
 
-@pytest.mark.xfail(strict=True, reason="S4 fix: destructiveHint=true on geox_claim + geox_prospect")
 def test_annotations_destructive_hint_true_on_geox_claim_and_geox_prospect(live_tools):
     """INVARIANT: irreversible modes must be visible as destructiveHint=true."""
     liars = [
@@ -273,7 +267,6 @@ def test_annotations_destructive_hint_true_on_geox_claim_and_geox_prospect(live_
     assert not liars, f"ANNOTATION UNDER-DECLARATION: destructiveHint not true on {liars}"
 
 
-@pytest.mark.xfail(strict=True, reason="S4 fix: openWorldHint=true on paleobiodb_query/spatial/deep_time/map")
 def test_annotations_openworld_hint_true_on_external_source_tools(live_tools):
     """INVARIANT: tools reading external/public data declare openWorldHint=true."""
     external = ("geox_paleobiodb_query", "geox_spatial", "geox_deep_time", "geox_map")

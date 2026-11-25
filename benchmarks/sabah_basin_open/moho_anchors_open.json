@@ -1,0 +1,35 @@
+{
+  "fixture_id": "moho_anchors_open",
+  "kind": "moho",
+  "authorization_class": "OPEN_SOURCE_PUBLIC",
+  "interpolate": false,
+  "moho_gap_km": [230, 540],
+  "well_tied": false,
+  "anchors": [
+    {
+      "id": "A_crocker",
+      "chainage_km": 600,
+      "depth_km": 60,
+      "attached": false,
+      "source": "Gilligan et al. 2026 JGR doi:10.1029/2025JB031499"
+    },
+    {
+      "id": "A_central_sabah",
+      "chainage_km": 200,
+      "depth_km": 24,
+      "attached": false,
+      "source": "Gilligan et al. 2026 JGR doi:10.1029/2025JB031499"
+    }
+  ],
+  "crustal_thickness_km": {
+    "min": 20,
+    "max": 25,
+    "dip_direction": "SE",
+    "placement": "dipping_SE_beneath_sabah_trough_foredeep_and_fold_thrust_belt",
+    "source": "Vijayan, Foss and Stagg 2013 JAES — Dangerous Grounds crust thins toward 20-25 km under the trough without a tectonic discontinuity"
+  },
+  "flexural_faults": {
+    "placement": "upper_part_of_bending_lower_plate",
+    "kinematic_use": false
+  }
+}

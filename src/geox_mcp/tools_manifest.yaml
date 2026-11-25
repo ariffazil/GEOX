@@ -1880,6 +1880,28 @@ tools:
     mutation: false
   family: seismic
   tier: B
+- name: geox_structural_reconstruction
+  domain: earth.structure
+  axis: verify
+  lane: reasoning
+  face: internal
+  visibility: internal
+  description: 'Deterministic structural restoration, depth-domain admission, and five-axis kinematic falsification. Returns one gate receipt. Does not emit a calibrated probability.'
+  input_schema_source: callable
+  annotations:
+    read_only: true
+    destructive: false
+    idempotent: true
+  ui: null
+  plugin:
+    exposed: false
+  governance:
+    action_class: OBSERVE
+    mutation: false
+    physics_guard_required: true
+  family: research
+  tier: Z
+  subfamily: unclassified
 sprint1_classified: true
 family_count: 7
 tier_distribution:
