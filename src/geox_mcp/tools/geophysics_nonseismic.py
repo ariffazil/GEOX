@@ -66,7 +66,7 @@ async def geox_gravity_magnetic_forward(
         out = a.forward(payload)
         return GravityMagneticForwardResponse(ok=True, mode=a.mode, output=out)
     except Exception as e:
-        return GravityMagneticForwardResponse(ok=False, mode="unknown", error=str(e))
+        return GravityMagneticForwardResponse(ok=False, mode="simulation", error=str(e))
 
 
 # ───────────────────────────── EMAG2v3 GRID FETCH ────────────────────────────────

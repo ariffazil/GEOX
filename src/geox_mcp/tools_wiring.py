@@ -343,8 +343,9 @@ def register_tools_on(mcp):
             )
             result = await _impl(**args)
             if isinstance(result, dict):
-                from geox_mcp.result_truth import result_is_error as _result_is_error
+                from geox_mcp.result_truth import normalize_result_truth, result_is_error as _result_is_error
 
+                result = normalize_result_truth(result)
                 _is_err_ingest = _result_is_error(result)
                 result = {
                     **result,
@@ -357,6 +358,7 @@ def register_tools_on(mcp):
                         "authority_claim": "ADVISORY" if _is_err_ingest else "EVIDENCE",
                     },
                 }
+                result = normalize_result_truth(result)
             # PR2: 3-channel UI return so hosts open Well Witness after ingest
             from geox_mcp.tools.mcp_apps_bridge import wrap_as_ui_tool_result
 
@@ -7900,9 +7902,10 @@ def register_tools_on(mcp):
             # Detect error state in dict results (F2: empty error="" is NOT failure)
             _is_err = False
             if isinstance(result, dict):
-                from geox_mcp.result_truth import result_is_error as _result_is_error
+                from geox_mcp.result_truth import result_is_error as _result_is_error, normalize_result_truth
 
-                _is_err = _result_is_error(result)
+                result = normalize_result_truth(result)
+                _is_err = result.get("isError", False)
                 # ENFORCE: empty evidence with ok: true → isError: true
                 _meta_keys = {
                     "ok",
@@ -7927,6 +7930,7 @@ def register_tools_on(mcp):
                 if not _has_evidence and not _is_err and result.get("ok") is not False:
                     logger.warning(f"EVIDENCE_GAP: {_tool} returned ok but no evidence fields")
                     result["isError"] = True
+                    result["ok"] = False
                     result.setdefault(
                         "error",
                         "Tool returned no evidence — transport success ≠ evidence success",
@@ -7935,13 +7939,16 @@ def register_tools_on(mcp):
                 elif _is_err:
                     result["isError"] = True
                     # Keep ok consistent with isError when ok claimed success
-                    if result.get("ok") is True:
-                        result["ok"] = False
+                    result["ok"] = False
                 else:
                     result["isError"] = False
+                    result["ok"] = True
                     # Clear vacuous error keys so clients don't misread
                     if result.get("error") == "":
                         result.pop("error", None)
+
+                # Ensure normalize_result_truth invariants (confidence, mode, ok/isError)
+                result = normalize_result_truth(result)
 
                 # Inject outputSchema reference from canonical registry
                 from geox_mcp.tools.mcp_apps_bridge import get_output_schema

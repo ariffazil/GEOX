@@ -2851,6 +2851,28 @@ class McpSessionGuardMiddleware(BaseHTTPMiddleware):
 
         method = msg.get("method") or ""
         sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
+        if not sid:
+            auth_hdr = request.headers.get("authorization") or request.headers.get("Authorization") or ""
+            if auth_hdr.lower().startswith("bearer "):
+                sid = auth_hdr.split(" ", 1)[1].strip()
+
+        # Fail-closed if session id is malformed or forged
+        if sid:
+            import re
+            if not re.match(r"^(?:[a-f0-9]{32}|[a-f0-9-]{36}|ANON-[a-zA-Z0-9_-]+)$", sid, re.IGNORECASE):
+                logger.warning("SESSION_GUARD: malformed/forged session id rejected: %s", sid)
+                return JSONResponse(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": msg.get("id"),
+                        "error": {
+                            "code": -32600,
+                            "message": "Invalid Request: invalid or forged Mcp-Session-Id.",
+                        },
+                    },
+                    status_code=400,
+                    headers={"X-MCP-Session-Guard": "complete-400"},
+                )
         if method and not sid and method not in self.SESSIONLESS_METHODS:
             logger.warning("SESSION_GUARD: session-less %s rejected with complete 400", method)
             return JSONResponse(
@@ -2901,6 +2923,28 @@ class McpLifecycleMiddleware(BaseHTTPMiddleware):
 
         method = msg.get("method") or ""
         sid = request.headers.get("mcp-session-id") or request.headers.get("Mcp-Session-Id") or ""
+        if not sid:
+            auth_hdr = request.headers.get("authorization") or request.headers.get("Authorization") or ""
+            if auth_hdr.lower().startswith("bearer "):
+                sid = auth_hdr.split(" ", 1)[1].strip()
+
+        # Fail-closed if session id is malformed or forged
+        if sid:
+            import re
+            if not re.match(r"^(?:[a-f0-9]{32}|[a-f0-9-]{36}|ANON-[a-zA-Z0-9_-]+)$", sid, re.IGNORECASE):
+                logger.warning("SESSION_GUARD: malformed/forged session id rejected: %s", sid)
+                return JSONResponse(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": msg.get("id"),
+                        "error": {
+                            "code": -32600,
+                            "message": "Invalid Request: invalid or forged Mcp-Session-Id.",
+                        },
+                    },
+                    status_code=400,
+                    headers={"X-MCP-Session-Guard": "complete-400"},
+                )
 
         # Client completed handshake
         if method in ("notifications/initialized", "initialized") and sid:

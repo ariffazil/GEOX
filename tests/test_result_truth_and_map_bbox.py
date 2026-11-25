@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from geox_mcp.result_truth import result_is_error, truthy_error
+from geox_mcp.result_truth import normalize_result_truth, result_is_error, truthy_error
 from geox_mcp.tools.deep_time.data_loaders import load_biotic_realm, load_ice_extent
 from geox_mcp.tools.deep_time.vector import _mass_extinctions_in_interval
 from geox_mcp.tools.earth_map import geox_map_layers_list
@@ -59,3 +59,56 @@ def test_kpg_mass_extinction_present_at_66() -> None:
     assert events, "K-Pg must be listed at 66 Ma"
     blob = " ".join(str(e.value) + " " + str(e.notes) for e in events)
     assert "K-Pg" in blob
+
+
+def test_ok_false_yields_is_error_true() -> None:
+    res = normalize_result_truth({"ok": False, "error": "Disk failed"})
+    assert res["isError"] is True
+    assert res["ok"] is False
+
+    res2 = normalize_result_truth({"error": "Unknown anomaly"})
+    assert res2["isError"] is True
+    assert res2["ok"] is False
+
+
+def test_ok_true_yields_is_error_false() -> None:
+    res = normalize_result_truth({"ok": True, "data": {"grid": [1, 2, 3]}})
+    assert res["isError"] is False
+    assert res["ok"] is True
+
+    # Stale isError: True must be overridden by ok: True if no real error
+    res2 = normalize_result_truth({"ok": True, "isError": True, "data": "clean"})
+    assert res2["isError"] is False
+    assert res2["ok"] is True
+
+
+def test_single_confidence_field_unification() -> None:
+    res = normalize_result_truth({
+        "ok": True,
+        "payload_confidence": 0.88,
+        "claimed_confidence": 0.95,
+        "epistemic_confidence": 0.70,
+    })
+    assert "confidence" in res
+    assert res["confidence"] == 0.88
+    assert "payload_confidence" not in res
+    assert "claimed_confidence" not in res
+    assert "epistemic_confidence" not in res
+
+
+def test_mode_never_unknown() -> None:
+    res_err = normalize_result_truth({"ok": False, "mode": "unknown", "error": "failed"})
+    assert res_err["mode"] != "unknown"
+    assert res_err["mode"] in ("production", "simulation", "observed")
+    assert res_err["mode"] == "simulation"
+
+    res_ok = normalize_result_truth({"ok": True, "mode": "unknown", "data": 123})
+    assert res_ok["mode"] != "unknown"
+    assert res_ok["mode"] in ("production", "simulation", "observed")
+    assert res_ok["mode"] == "production"
+
+    res_missing = normalize_result_truth({"ok": True, "data": 456})
+    assert res_missing["mode"] != "unknown"
+    assert res_missing["mode"] in ("production", "simulation", "observed")
+    assert res_missing["mode"] == "production"
+

@@ -65,7 +65,7 @@ async def geox_prithvi_eo_inference(
         out = a.infer(payload, request.task)
         return PrithviEOInferenceResponse(ok=True, mode=a.mode, output=out)
     except Exception as e:
-        return PrithviEOInferenceResponse(ok=False, mode="unknown", error=str(e))
+        return PrithviEOInferenceResponse(ok=False, mode="simulation", error=str(e))
 
 
 # Future Phase A tools will land here (when 888 deploys):
