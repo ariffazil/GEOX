@@ -138,11 +138,19 @@ SYNC = {
 # "27" survived repeated publishes. Match ANY digits, write the measured value.
 PATCHES = {
     "index.html": [(r'"mcp_tools": \d+', f'"mcp_tools": {TOOLS_P}')]
-                  + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
+    + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
     "profile.json": [(r'"mcp_tools": \d+', f'"mcp_tools": {TOOLS_P}')]
-                     + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
+    + ([(r'"mcp_apps": \d+', f'"mcp_apps": {UI_N}')] if UI_N is not None else []),
     "llms-full.txt": [(rf"\b{n} tools\b", f"{TOOLS_P} tools") for n in (25, 31, 32, 42)]
-                 + [(rf"\b{n} governed MCP tools\b", f"{TOOLS_P} governed MCP tools") for n in (25, 31, 32)],
+    + [(rf"\b{n} governed MCP tools\b", f"{TOOLS_P} governed MCP tools") for n in (25, 31, 32)],
+    # 2026-11-25 (333-AGI): the skills catalog is static text. The copy live on the site
+    # said "44 ... skills" (July build, linking a stylesheet that 404s); the tracked copy
+    # said "27 ... tools" while the surface was 29. Both strings are count-bearing, so
+    # they take the measured value like every other count on this site.
+    "apps/site/catalog.html": [
+        (r"\b\d+ Canonical Earth Intelligence tools\b", f"{TOOLS_P} Canonical Earth Intelligence tools"),
+        (r"Search \d+ tools\b", f"Search {TOOLS_P} tools"),
+    ],
 }
 
 receipt = {"generated_from": f"registry truth ({N} tools)", "synced": [], "patched": {}, "skipped": []}
@@ -183,7 +191,8 @@ if APPS_SRC.exists():
     if skipped_older:
         receipt.setdefault("skipped", []).append(
             f"apps/ — {len(skipped_older)} item(s) skipped: docroot copy is NEWER than source "
-            f"({', '.join(skipped_older[:8])}{'...' if len(skipped_older) > 8 else ''})")
+            f"({', '.join(skipped_older[:8])}{'...' if len(skipped_older) > 8 else ''})"
+        )
 
 # ── Landing truth patch (minified bundle carries pre-consolidation counts) ──
 # Verified live truth only; unverified numbers are left untouched.
@@ -191,8 +200,8 @@ if APPS_SRC.exists():
 # instrument (live probe above, falling back to registry truth) — never a
 # remembered literal. The frozen "27" was why the site contradicted itself.
 LANDING_PATCHES = [
-    (r'\b27 tools\b', f'{TOOLS_P} tools'),          # prose forms (4 sites)
-    (r'\b42 tools\b', f'{TOOLS_P} tools'),          # pre-consolidation legacy
+    (r"\b27 tools\b", f"{TOOLS_P} tools"),  # prose forms (4 sites)
+    (r"\b42 tools\b", f"{TOOLS_P} tools"),  # pre-consolidation legacy
     (r'"mcp_tools": 27', f'"mcp_tools": {TOOLS_P}'),
     (r'"mcp_tools": 42', f'"mcp_tools": {TOOLS_P}'),
     (r'"tools": 27', f'"tools": {TOOLS_P}'),
@@ -205,6 +214,14 @@ LANDING_PATCHES = [
     ("geox.egs_scenario_audit()", "geox.claim()"),
     ("geox.witness_well()", "geox.well()"),
     ("arifos.bridge_contract()", "arifos.arif_route()"),
+    # 2026-11-25 (333-AGI): the home ticker rendered "VAULT_999_CONNECTED" as a live
+    # status. It is a static string: the organ's /contract handler hardcodes
+    # "vault_connected": True whatever the kernel's state, and GEOX has no vault of its
+    # own (it can only ask arifOS to seal, via geox_mcp/tools/claims.py). A status no
+    # instrument measures is removed, not reworded: the ticker states the authority
+    # ceiling /health reports (authority_ceiling). If that ever changes in server.py,
+    # this replacement string must change with it.
+    ("VAULT_999_CONNECTED", "AUTHORITY: 555_COMPUTE_ONLY"),
 ]
 if UI_N is not None:
     # The landing's fake-curl mirrors the real /profile body, so both must
@@ -500,8 +517,10 @@ _COUNT_FIELDS = (
     (r'"tools":\s*(\d+)', "TOOLS_P"),
     (r'"tool_count":\s*(\d+)', "TOOLS_P"),
     (r'"public_count":\s*(\d+)', "TOOLS_P"),
+    (r"(\d+) Canonical Earth Intelligence tools\b", "TOOLS_P"),
+    (r"Search (\d+) tools\b", "TOOLS_P"),
     (r'"mcp_apps":\s*(\d+)', "UI_N"),
-    (r'\((\d+) Public Tools\)', "TOOLS_P"),
+    (r"\((\d+) Public Tools\)", "TOOLS_P"),
 )
 
 
@@ -516,16 +535,23 @@ def _scan_counts(label, text):
                 stale.append(f"{label}: {pat} -> {val} != measured {expected}")
 
 
-_SCAN_FILES = ("index.html", "profile.json", "llms.txt", "llms-full.txt", "tools.json")
+_SCAN_FILES = ("index.html", "profile.json", "llms.txt", "llms-full.txt", "tools.json", "apps/site/catalog.html")
 for name in _SCAN_FILES:
     f = DOCROOT / name
     if not f.exists():
         continue
     text = f.read_text()
     _scan_counts(name, text)
-    for bad in ("31 public MCP tools", "31 governed MCP tools", "42 tools",
-                '"mcp_tools": 31', "42 governed", "27 tools", '"mcp_tools": 27',
-                '"mcp_apps": 5'):
+    for bad in (
+        "31 public MCP tools",
+        "31 governed MCP tools",
+        "42 tools",
+        '"mcp_tools": 31',
+        "42 governed",
+        "27 tools",
+        '"mcp_tools": 27',
+        '"mcp_apps": 5',
+    ):
         if bad in text:
             stale.append(f"{name}: {bad}")
 
@@ -545,5 +571,6 @@ if stale:
     else:
         print("STALE REMNANTS:", stale)
         sys.exit(1)
-print(f"POSTCONDITION OK: docroot count-bearing lines all state {TOOLS_P} tools"
-      + (f" / {UI_N} apps" if UI_N is not None else ""))
+print(
+    f"POSTCONDITION OK: docroot count-bearing lines all state {TOOLS_P} tools" + (f" / {UI_N} apps" if UI_N is not None else "")
+)
