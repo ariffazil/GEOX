@@ -278,18 +278,30 @@ async def test_t6_independent_witnesses_no_averaging():
 
 @pytest.mark.skipif(not os.path.exists("/root/GEOX"), reason="local GEOX deployment not present (CI)")
 def test_t9_surface_truth_31():
+    """Surface truth is read from the package's single source of truth.
+
+    2026-11-25: this read the root ``CANONICAL_PUBLIC_SURFACE.json``, which the
+    single-writer refactor retired (``tests/test_single_writer_surface.py`` requires
+    the root copy to be absent), from a hardcoded ``/root/GEOX`` path that is only
+    one checkout. Resolve both paths from the imported package so the test holds in
+    any worktree. It was failing on production ba713f97 with FileNotFoundError.
+    """
+    import geox_mcp
+
     from geox_mcp.surface_manifest import load_surface_manifest, public_tool_names
 
     load_surface_manifest.cache_clear()
     names = public_tool_names()
     assert len(names) == 29
-    snap = json.loads(Path("/root/GEOX/CANONICAL_PUBLIC_SURFACE.json").read_text())
+    pkg_root = Path(geox_mcp.__file__).resolve().parent  # src/geox_mcp
+    repo_root = pkg_root.parent.parent  # the checkout
+    snap = json.loads((pkg_root / "generated" / "CANONICAL_PUBLIC_SURFACE.json").read_text())
     assert snap["public_count"] == 29
     assert set(snap["public_tools"]) == set(names)
     # ZEN_15 archived
-    zen_path = Path("/root/GEOX/docs/ZEN_15_SURFACE.ARCHIVED.md")
+    zen_path = repo_root / "docs" / "ZEN_15_SURFACE.ARCHIVED.md"
     if not zen_path.exists():
-        zen_path = Path("/root/GEOX/docs/archive/ZEN_15_SURFACE_ARCHIVED_2026-07-24.md")
+        zen_path = repo_root / "docs" / "archive" / "ZEN_15_SURFACE_ARCHIVED_2026-07-24.md"
     zen = zen_path.read_text()
     assert "ARCHIVED" in zen or "NOT RUNTIME" in zen.upper()
 
