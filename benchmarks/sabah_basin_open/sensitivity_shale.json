@@ -1,0 +1,7 @@
+{
+  "base_fixture": "fault_growth_synthetic.json",
+  "fixture_id": "sensitivity_shale",
+  "sensitivity": {
+    "mobile_shale_out_of_plane_m2": [0, 1000000000]
+  }
+}

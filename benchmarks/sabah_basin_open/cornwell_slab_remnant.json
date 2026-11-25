@@ -1,0 +1,15 @@
+{
+  "fixture_id": "cornwell_slab_remnant",
+  "kind": "mantle_context",
+  "authorization_class": "OPEN_SOURCE_PUBLIC",
+  "body_id": "Body_V1",
+  "depth_km_min": 45,
+  "depth_km_max": 55,
+  "dip": "gently_westward",
+  "citation_status": "RANGE_SUPPLIED_AS_OPEN_CONSTRAINT",
+  "doi": null,
+  "merged_into_crustal_anchors": false,
+  "kinematic_use": false,
+  "well_tied": false,
+  "igneous": {"label": "oceanic"}
+}

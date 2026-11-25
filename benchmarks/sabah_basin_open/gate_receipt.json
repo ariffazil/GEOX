@@ -1,0 +1,287 @@
+{
+  "authorization_class": "SYNTHETIC",
+  "authorization_classes": [
+    "OPEN_SOURCE_PUBLIC",
+    "SYNTHETIC"
+  ],
+  "benchmark_id": "sabah_basin_open",
+  "claims_refused": [],
+  "equations": {
+    "depositional_thickness": "T0 = T_solid / (1 - phi0)",
+    "extension": "(L_deformed - L_restored) / L_restored",
+    "porosity": "phi(z) = phi0 * exp(-c * z)",
+    "solid": "T_solid = T_present * (1 - phi_bar)"
+  },
+  "extension": {
+    "L_deformed_m": 10004.498987955,
+    "L_restored_m": 9204.139068919,
+    "bed_length_horizontal_m": 9200.0,
+    "extension": 0.086956521739,
+    "ok": true,
+    "rigid_close_vertical_mismatch_m": 24.0,
+    "secant": 1.000449898796
+  },
+  "failures": [],
+  "fixtures": {
+    "collision_label": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [
+        "H_unconf_1=collision_onset"
+      ],
+      "crustal_extension_area_m2": 280000.0,
+      "gap_area_m2": 280000.0,
+      "input_hash": "aa981c0b94d2f8c3a3b770329c28995caf55041367187986f2325962b392e0f1",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": false,
+      "verdicts": {
+        "driver": "REQUIRED_WITHIN_TESTED_SET",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "BLOCKED",
+        "timing": "BLOCKED"
+      }
+    },
+    "cornwell_slab_remnant": {
+      "authorization_class": "OPEN_SOURCE_PUBLIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": null,
+      "gap_area_m2": null,
+      "input_hash": "d202bff03d65e488b028f11c1416f68dd0dbeb4b16348a419fef56f26216456f",
+      "interpolated": null,
+      "kind": "mantle_context",
+      "merged_into_crustal_anchors": false,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": null,
+      "verdicts": {
+        "driver": "UNRESOLVED",
+        "geometry": "UNRESOLVED",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "fault_growth_synthetic": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": 280000.0,
+      "gap_area_m2": 280000.0,
+      "input_hash": "4edc757e9b633f957858eed261717d220e0da05ab0d4d38675970cabc4d40466",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": false,
+      "verdicts": {
+        "driver": "REQUIRED_WITHIN_TESTED_SET",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "moho_anchors_open": {
+      "authorization_class": "OPEN_SOURCE_PUBLIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": null,
+      "gap_area_m2": null,
+      "input_hash": "0d8f183db0e544acde8bacdad40b0e0c0eb2277ac12c901d7ab55d06b9429459",
+      "interpolated": false,
+      "kind": "moho",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": "UNCONSTRAINED",
+      "shale_transfer_flagged": null,
+      "verdicts": {
+        "driver": "UNRESOLVED",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "moho_gap_anchor_blocked": {
+      "authorization_class": "OPEN_SOURCE_PUBLIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": null,
+      "gap_area_m2": null,
+      "input_hash": "b2ef26359ad6421c1ec1ddfdc8441322491c30adfa2a1f674bcdaccbabc631d9",
+      "interpolated": false,
+      "kind": "moho",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": "UNCONSTRAINED",
+      "shale_transfer_flagged": null,
+      "verdicts": {
+        "driver": "BLOCKED",
+        "geometry": "BLOCKED",
+        "igneous_identity": "BLOCKED",
+        "regional_link": "BLOCKED",
+        "timing": "BLOCKED"
+      }
+    },
+    "post_spreading": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [
+        "post-spreading"
+      ],
+      "crustal_extension_area_m2": 280000.0,
+      "gap_area_m2": 280000.0,
+      "input_hash": "df22b451feb789f8548e2276275c7e78aed1ffa8e86b5ccf008a6ccbe0e93fb9",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": false,
+      "verdicts": {
+        "driver": "REQUIRED_WITHIN_TESTED_SET",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "sabah_trough_open_constraints": {
+      "authorization_class": "OPEN_SOURCE_PUBLIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": null,
+      "gap_area_m2": null,
+      "input_hash": "c3b5abb3f4fd1aebaa7361016c50fce325a20ca04d3e9b0b9714971d40a02fe0",
+      "interpolated": null,
+      "kind": "open_constraints",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": null,
+      "verdicts": {
+        "driver": "UNRESOLVED",
+        "geometry": "UNRESOLVED",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "sensitivity_shale": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": 280000.0,
+      "gap_area_m2": 280000.0,
+      "input_hash": "f917ef18c16d83b860e40958bb4c686fc2ddea93eba4028ddb4a7a6b30a1cb74",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": false,
+      "verdicts": {
+        "driver": "UNRESOLVED",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "shale_transfer": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": 56000.0,
+      "gap_area_m2": 280000.0,
+      "input_hash": "85013f7b51e6b20675635f086c29e845870500680fac2a07e72143839a921484",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": true,
+      "verdicts": {
+        "driver": "NOT_REQUIRED_WITHIN_TESTED_SET",
+        "geometry": "ADMISSIBLE",
+        "igneous_identity": "UNRESOLVED",
+        "regional_link": "UNRESOLVED",
+        "timing": "BLOCKED"
+      }
+    },
+    "time_domain": {
+      "authorization_class": "SYNTHETIC",
+      "claims_refused": [],
+      "crustal_extension_area_m2": null,
+      "gap_area_m2": null,
+      "input_hash": "6f6d64048c509556fc68c780a38126f30cd9cd30a2c1644eb439626b8b3c4cdc",
+      "interpolated": null,
+      "kind": "section",
+      "merged_into_crustal_anchors": null,
+      "moho_gap_state": null,
+      "shale_transfer_flagged": null,
+      "verdicts": {
+        "driver": "BLOCKED",
+        "geometry": "BLOCKED",
+        "igneous_identity": "BLOCKED",
+        "regional_link": "BLOCKED",
+        "timing": "BLOCKED"
+      }
+    }
+  },
+  "float_round_decimals": {
+    "lengths_m": 9,
+    "ratios": 12
+  },
+  "input_hash": "9fd78c69b824d0d91348bfd75317a30d3b298d010fcaa81a07fa97c1def71830",
+  "input_hash_of": "fixture_ids_and_hashes",
+  "legacy_k_restore": "NOT_USED",
+  "material": {
+    "accounted_m2": 0.0,
+    "area_domain": "present_day_depth",
+    "crustal_extension_area_m2": 280000.0,
+    "explain_threshold_m2": 224000.0,
+    "explains_gap": false,
+    "gap_area_m2": 280000.0,
+    "in_plane_m2": 0.0,
+    "mean_growth_thickness_m": 350.0,
+    "out_of_plane_m2": 0.0,
+    "shale_missing": false,
+    "shale_transfer_flagged": false
+  },
+  "missing_inputs": [
+    "overburden_above_shallowest_horizon"
+  ],
+  "parameter_bounds": {
+    "growth_ratio_min": {
+      "parameter_class": "ASSUMED",
+      "value": 1.15
+    },
+    "heave_extension_min": {
+      "parameter_class": "ASSUMED",
+      "value": 0.02
+    },
+    "shale_explain_fraction": {
+      "parameter_class": "ASSUMED",
+      "value": 0.8
+    }
+  },
+  "primary_fixture": "fault_growth_synthetic",
+  "reality_discipline": {
+    "collision_label_regional": "BLOCKED",
+    "cornwell_merged_into_crustal_anchors": false,
+    "moho_gap_state": "UNCONSTRAINED",
+    "moho_in_gap_blocked": true,
+    "moho_interpolated": false,
+    "post_spreading_timing": "BLOCKED",
+    "sensitivity_driver": "UNRESOLVED",
+    "shale_crustal_not_full_heave": true,
+    "shale_transfer_flagged": true,
+    "time_domain_geometry": "BLOCKED"
+  },
+  "reality_discipline_pass": true,
+  "residual_mismatches": [
+    {
+      "id": "rigid_close_vertical_mismatch",
+      "meaning": "slope * heave after a rigid hanging-wall translation",
+      "value_m": 24.0
+    }
+  ],
+  "schema": "structural-reconstruction-1",
+  "verdicts": {
+    "driver": "REQUIRED_WITHIN_TESTED_SET",
+    "geometry": "ADMISSIBLE",
+    "igneous_identity": "UNRESOLVED",
+    "regional_link": "UNRESOLVED",
+    "timing": "BLOCKED"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "fixture_id": "moho_gap_anchor_blocked",
+  "kind": "moho",
+  "authorization_class": "OPEN_SOURCE_PUBLIC",
+  "interpolate": false,
+  "moho_gap_km": [230, 540],
+  "well_tied": false,
+  "anchors": [
+    {
+      "id": "A_gap_probe",
+      "chainage_km": 300,
+      "depth_km": 40,
+      "attached": false,
+      "source": "probe_of_unconstrained_gap"
+    }
+  ]
+}

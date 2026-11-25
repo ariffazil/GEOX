@@ -1,0 +1,12 @@
+{
+  "base_fixture": "fault_growth_synthetic.json",
+  "fixture_id": "collision_label",
+  "regional_claims": [
+    {
+      "horizon_id": "H_unconf_1",
+      "equated_to": "collision_onset",
+      "structural_proof": false,
+      "independent_structural_observation": false
+    }
+  ]
+}

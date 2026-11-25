@@ -4462,6 +4462,7 @@ def create_app():
     app.add_middleware(McpSessionGuardMiddleware)
 
     # Dynamic FastMCP Tool & Resource Registration
+    from geox_core.engines.structural_reconstruction.mcp_tool import register_structural_reconstruction
     from geox_mcp.apps.workbench import register_workbench
     from geox_mcp.tools.mcp_apps_bridge import enrich_mcp_tools_with_apps, register_mcp_apps_resources
     from geox_mcp.tools_wiring import register_tools_on
@@ -4471,6 +4472,7 @@ def create_app():
     register_workbench(mcp)
     register_mcp_apps_resources(mcp)
     register_tools_on(mcp)
+    register_structural_reconstruction(mcp)
     enrich_mcp_tools_with_apps(mcp)
 
     return app

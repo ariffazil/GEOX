@@ -1,0 +1,7 @@
+{
+  "base_fixture": "fault_growth_synthetic.json",
+  "fixture_id": "time_domain",
+  "domain": "time",
+  "z_unit": "ms",
+  "velocity_realizations": []
+}

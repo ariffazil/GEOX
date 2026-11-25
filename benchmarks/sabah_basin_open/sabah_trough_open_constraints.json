@@ -1,0 +1,22 @@
+{
+  "fixture_id": "sabah_trough_open_constraints",
+  "kind": "open_constraints",
+  "authorization_class": "OPEN_SOURCE_PUBLIC",
+  "well_tied": false,
+  "heat_flow": {
+    "min_mW_m2": 54.4,
+    "max_mW_m2": 89.3,
+    "caveat": "bimodal seamounts and shallow-probe hydrology",
+    "citation_status": "RANGE_SUPPLIED_AS_OPEN_CONSTRAINT",
+    "doi": null,
+    "kinematic_use": false
+  },
+  "tmi": {
+    "min_nT": -90,
+    "max_nT": 64,
+    "caveat": "low-latitude masking; N-S strike insensitivity",
+    "citation_status": "RANGE_SUPPLIED_AS_OPEN_CONSTRAINT",
+    "doi": null,
+    "kinematic_use": false
+  }
+}

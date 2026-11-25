@@ -1,0 +1,50 @@
+{
+  "fixture_id": "fault_growth_synthetic",
+  "kind": "section",
+  "authorization_class": "SYNTHETIC",
+  "domain": "depth",
+  "z_unit": "m",
+  "z_positive": "down",
+  "note": "Generic kinematic section. Not a real seismic line.",
+  "velocity_realizations": [
+    {"id": "V1", "depth_scale": 1.0}
+  ],
+  "lateral_uncertainty_m": 25,
+  "paleoslope": 0.03,
+  "datum_horizon_id": "H1",
+  "datum_z0_m": 3000,
+  "force_flatten": false,
+  "pins_m": {"x_min": 0, "x_max": 10000},
+  "fault": {
+    "id": "F1",
+    "trace_x_m": 5000,
+    "heave_m": 800,
+    "throw_m": 400,
+    "sense": "normal",
+    "hanging_wall": "x_greater"
+  },
+  "intervals": [
+    {
+      "id": "H3_H2",
+      "top_id": "H3",
+      "base_id": "H2",
+      "fw_thickness_m": 180,
+      "hw_thickness_m": 180,
+      "lithology": "shale",
+      "role": "drape"
+    },
+    {
+      "id": "H2_H1",
+      "top_id": "H2",
+      "base_id": "H1",
+      "fw_thickness_m": 200,
+      "hw_thickness_m": 500,
+      "lithology": "shale",
+      "role": "growth"
+    }
+  ],
+  "mobile_shale": {"in_plane_m2": 0, "out_of_plane_m2": 0},
+  "well_tied": false,
+  "igneous": null,
+  "regional_claims": []
+}
