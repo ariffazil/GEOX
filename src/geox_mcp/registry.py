@@ -79,8 +79,44 @@ CANONICAL_PUBLIC_TOOLS: list[str] = list(SURFACE_TOOLS)
 # Runtime = public + explicitly internal tools.
 CANONICAL_RUNTIME_TOOLS: list[str] = runtime_tool_names()
 
-# Legacy alias routing table intentionally empty until explicit migrations exist.
-LEGACY_ALIAS_MAP: dict[str, str] = {}
+# Phase C Consolidated Surface (<=15 canonical tools via mode= dispatch).
+# Backward-compatible LEGACY_ALIAS_MAP preserves all 29 legacy tool names.
+CONSOLIDATED_PUBLIC_TOOLS: list[str] = [
+    "geox_well",                # mode=ingest|qc|view|petro|pda (Appraisal/Development)
+    "geox_seismic",             # mode=register|extract|list|ingest|interpret|compute (Exploration)
+    "geox_basin",               # Exploration
+    "geox_deep_time",           # Exploration
+    "geox_map",                 # Exploration
+    "geox_spatial",             # Exploration
+    "geox_prospect",            # Exploration / Appraisal
+    "geox_observe",             # Exploration
+    "geox_contrast_metabolize", # Exploration
+    "geox_source",              # Exploration
+    "geox_geomechanics",        # Appraisal / Abandonment (incl. mode=integrity for P&A / CCS-MRV)
+    "geox_model",               # Development (grid/resqml optional extras)
+    "geox_temporal",            # Production
+    "geox_claim",               # Cross-cutting (incl. calibration witness)
+    "geox_surface_status",      # Cross-cutting
+]
+
+# Legacy alias routing table: maps 29 legacy tool names -> consolidated target.
+LEGACY_ALIAS_MAP: dict[str, str] = {
+    "geox_well_ingest": "geox_well:ingest",
+    "geox_well_qc": "geox_well:qc",
+    "geox_petrophysics": "geox_well:petro",
+    "geox_seismic_ingest": "geox_seismic:ingest",
+    "geox_seismic_interpret": "geox_seismic:interpret",
+    "geox_seismic_compute": "geox_seismic:compute",
+    "geox_register_native_source": "geox_seismic:register",
+    "geox_extract_native_trace": "geox_seismic:extract",
+    "geox_list_registered_sources": "geox_seismic:list",
+    "geox_extract_display_proxy": "geox_seismic:proxy",
+    "geox_calibration_register_witness": "geox_claim:calibration_witness",
+    "geox_grid": "geox_model:grid",
+    "geox_resqml_io": "geox_model:resqml",
+    "geox_glof": "geox_observe:glof",
+    "geox_paleobiodb_query": "geox_deep_time:paleobiodb",
+}
 
 # Canonical registry rows consumed by governance, status, and discovery helpers.
 from geox.obs import LIFECYCLE_STAGES as _OBS_LIFECYCLE_STAGES, lifecycle_stage_for as _obs_lifecycle_stage_for
