@@ -1,6 +1,7 @@
 """SEP-1865 MCP App registration for ui://geox/well-forensic-desk.html (FastMCP 4.1.4)."""
 from __future__ import annotations
 
+from importlib import resources as _resources
 from pathlib import Path
 from typing import Any
 
@@ -12,7 +13,17 @@ APP_URI = "ui://geox/well-forensic-desk.html"
 APP_MIME = "text/html;profile=mcp-app"
 _BASE = Path(__file__).resolve().parents[2] / "ui-apps" / "well-forensic-desk"
 APP_DIST_HTML = _BASE / "dist" / "index.html"
-APP_HTML_PATH = APP_DIST_HTML if APP_DIST_HTML.exists() else (_BASE / "index.html")
+APP_PACKAGED_HTML = Path(__file__).resolve().parent / "ui_apps" / "well_forensic_desk.html"
+APP_HTML_PATH = APP_PACKAGED_HTML if APP_PACKAGED_HTML.exists() else APP_DIST_HTML
+
+
+def read_well_forensic_html() -> str:
+    """Read the bundled single-file HTML from wheel package data (works from any cwd)."""
+    try:
+        pkg_file = _resources.files("geox_mcp.ui_apps").joinpath("well_forensic_desk.html")
+        return pkg_file.read_text(encoding="utf-8")
+    except Exception:
+        return APP_HTML_PATH.read_text(encoding="utf-8")
 
 
 def register_well_forensic_app(mcp: Any) -> None:
@@ -20,8 +31,7 @@ def register_well_forensic_app(mcp: Any) -> None:
 
     @mcp.resource(APP_URI, mime_type=APP_MIME, meta={"ui": {"prefersBorder": False}})
     def well_forensic_desk_resource() -> str:
-        target = APP_DIST_HTML if APP_DIST_HTML.exists() else APP_HTML_PATH
-        return target.read_text(encoding="utf-8")
+        return read_well_forensic_html()
 
     @mcp.tool(
         name="geox_well_pda",
