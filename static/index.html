@@ -1,1085 +1,299 @@
 <!DOCTYPE html>
-<html lang="en" data-ring="ORGAN" data-organ="geox">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GEOX · Earth Intelligence · arifOS Federation</title>
-  <meta name="description" content="GEOX — Earth intelligence for the arifOS federation. 33 tools: basin analysis, seismic interpretation, petrophysics, prospect evaluation. Evidence-gated, human-decided. Natural Law domain." />
-  <meta property="og:title" content="GEOX · Earth Intelligence" />
-  <meta property="og:description" content="Sovereign Earth intelligence. 33 tools. Basin, seismic, petrophysics, prospects — all governed by NATURAL_LAW." />
-  <meta name="robots" content="index, follow" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #050505;
-      --bg2: #0a0a10;
-      --gold: #d4af37;
-      --cyan: #00c9a7;
-      --red: #ef4444;
-      --emerald: #10b981;
-      --amber: #f59e0b;
-      --border: rgba(255,255,255,0.07);
-      --border2: rgba(255,255,255,0.12);
-      --text: #e2e2e5;
-      --muted: rgba(255,255,255,0.4);
-      --dim: rgba(255,255,255,0.18);
-      --mono: 'JetBrains Mono', monospace;
-      --sans: 'Inter', sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { text-decoration: none; color: inherit; }
-
-    /* ── TOP BAR ── */
-    #topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(5,5,5,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .topbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      height: 3.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .topbar-brand {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      flex-shrink: 0;
-    }
-
-    .topbar-status {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex: 1;
-      justify-content: center;
-    }
-
-    .status-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: var(--mono);
-      font-size: 0.625rem;
-      font-weight: 700;
-      padding: 0.25rem 0.6rem;
-      border-radius: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .status-pill.green { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); color: var(--emerald); }
-    .status-pill.gold { background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.3); color: var(--gold); }
-    .status-pill.red { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--red); }
-    .status-pill.gray { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); }
-
-    .dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-    .dot.pulse { animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-    .topbar-nav {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      flex-shrink: 0;
-    }
-
-    .topbar-nav a {
-      font-family: var(--mono);
-      font-size: 0.625rem;
-      font-weight: 500;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.3rem 0.7rem;
-      border: 1px solid transparent;
-      border-radius: 3px;
-      transition: all 0.15s;
-    }
-    .topbar-nav a:hover { color: var(--text); border-color: var(--border2); }
-
-    /* ── TAB BAR ── */
-    .tabbar {
-      border-bottom: 1px solid var(--border);
-      background: rgba(5,5,5,0.95);
-    }
-    .tabbar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      display: flex;
-      gap: 0.25rem;
-      overflow-x: auto;
-    }
-    .tab-btn {
-      font-family: var(--mono);
-      font-size: 0.625rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.75rem 1rem;
-      border: none;
-      border-bottom: 2px solid transparent;
-      background: transparent;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .tab-btn:hover { color: var(--text); }
-    .tab-btn.active { color: var(--text); border-bottom-color: var(--gold); background: rgba(212,175,55,0.04); }
-
-    /* ── MAIN ── */
-    .main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem 4rem;
-    }
-
-    /* HERO */
-    .hero {
-      padding: 3rem 0 2.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 2.5rem;
-    }
-    .hero-kicker {
-      font-family: var(--mono);
-      font-size: 0.625rem;
-      font-weight: 700;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.3em;
-      margin-bottom: 1rem;
-    }
-    .hero h1 {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      color: #fff;
-      margin-bottom: 1rem;
-    }
-    .hero h1 span.gold { color: var(--gold); }
-    .hero h1 span.dim { color: rgba(255,255,255,0.2); }
-
-    .hero-sub {
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 300;
-      max-width: 600px;
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.4rem;
-      background: var(--gold);
-      color: #000;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s;
-      border-radius: 2px;
-    }
-    .btn-primary:hover { background: #e8c55a; }
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 1.4rem;
-      background: transparent;
-      color: var(--dim);
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      border: 1px solid var(--border2);
-      cursor: pointer;
-      transition: all 0.15s;
-      border-radius: 2px;
-    }
-    .btn-outline:hover { color: var(--text); border-color: var(--gold); }
-
-    /* METRICS BAR */
-    .metrics-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      margin-bottom: 2.5rem;
-      overflow: hidden;
-    }
-    .metric {
-      padding: 1.25rem 1.5rem;
-      border-right: 1px solid var(--border);
-    }
-    .metric:last-child { border-right: none; }
-    .metric-val {
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-    .metric-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.2rem;
-    }
-    .metric-sub {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--dim);
-      font-style: italic;
-    }
-
-    /* SECTION HEADER */
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-    .section-num {
-      font-family: var(--mono);
-      font-size: 2rem;
-      font-weight: 900;
-      color: rgba(255,255,255,0.06);
-      font-style: italic;
-      line-height: 1;
-    }
-    .section-title {
-      font-family: var(--mono);
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .section-badge {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: var(--emerald);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    /* COCKPIT CARDS */
-    .cockpit-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-    }
-    .cockpit-card {
-      display: block;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      transition: all 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-    .cockpit-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 60%, rgba(212,175,55,0.03));
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .cockpit-card:hover { border-color: rgba(212,175,55,0.35); transform: translateY(-1px); }
-    .cockpit-card:hover::before { opacity: 1; }
-    .cockpit-card:hover .cc-title { color: var(--gold); }
-
-    .cc-tag {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      font-weight: 700;
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.5rem;
-      opacity: 0.7;
-    }
-    .cc-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
-    .cc-title {
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.4rem;
-      transition: color 0.15s;
-    }
-    .cc-desc {
-      font-size: 0.75rem;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.5;
-      margin-bottom: 0.75rem;
-    }
-    .cc-link {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--cyan);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-    .cc-status {
-      position: absolute;
-      top: 0.75rem;
-      right: 0.75rem;
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 2px;
-    }
-    .cc-status.live { background: rgba(16,185,129,0.15); color: var(--emerald); }
-    .cc-status.ext { background: rgba(212,175,55,0.1); color: var(--gold); }
-    .cc-status.gui { background: rgba(0,201,167,0.1); color: var(--cyan); }
-
-    /* TOOL GRID */
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.4rem;
-      margin-bottom: 2.5rem;
-    }
-    .tool-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.65rem 0.9rem;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      transition: all 0.15s;
-    }
-    .tool-row:hover { border-color: var(--border2); background: rgba(255,255,255,0.04); }
-    .tool-name {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.65);
-      font-weight: 500;
-    }
-    .tool-row:hover .tool-name { color: #fff; }
-    .tool-desc {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      color: var(--dim);
-      max-width: 280px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .tool-badge {
-      font-family: var(--mono);
-      font-size: 0.5rem;
-      font-weight: 700;
-      padding: 0.15rem 0.4rem;
-      border-radius: 2px;
-      flex-shrink: 0;
-      margin-left: 0.5rem;
-    }
-    .tool-badge.gold { background: rgba(212,175,55,0.1); color: var(--gold); }
-    .tool-badge.cyan { background: rgba(0,201,167,0.1); color: var(--cyan); }
-    .tool-badge.gray { background: rgba(255,255,255,0.05); color: var(--muted); }
-
-    /* ATTESTATION GRID */
-    .attest-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 2.5rem;
-    }
-    .attest-card {
-      padding: 1rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--bg2);
-    }
-    .attest-key {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
-    }
-    .attest-val {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #fff;
-      word-break: break-all;
-    }
-    .attest-val.emerald { color: var(--emerald); }
-    .attest-val.gold { color: var(--gold); }
-    .attest-val.cyan { color: var(--cyan); }
-    .attest-val.red { color: var(--red); }
-
-    /* TABS CONTENT */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .footer-brand {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--dim);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-    .footer-links {
-      display: flex;
-      gap: 1.5rem;
-    }
-    .footer-links a {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--dim);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      transition: color 0.15s;
-    }
-    .footer-links a:hover { color: var(--gold); }
-
-    /* LOADING SPINNER */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner {
-      width: 12px; height: 12px;
-      border: 2px solid var(--border);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      display: inline-block;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .cockpit-grid { grid-template-columns: repeat(2, 1fr); }
-      .tool-grid { grid-template-columns: 1fr; }
-      .attest-grid { grid-template-columns: repeat(2, 1fr); }
-      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .cockpit-grid { grid-template-columns: 1fr; }
-      .attest-grid { grid-template-columns: 1fr; }
-      .metrics-bar { grid-template-columns: repeat(2, 1fr); }
-      .topbar-status { display: none; }
-      .hero h1 { font-size: 2.5rem; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEOX — Evidence Before Verdict | Earth Intelligence Organ</title>
+<meta name="description" content="GEOX (555_COMPUTE_ONLY · NATURAL_LAW) — physics-grounded subsurface intelligence organ. Computes falsifiable evidence; hands off to judge/human; never seals.">
+<style>
+:root {
+  --bg: #070a0f; --panel: #101620; --card: #141c28; --ink: #edf2f7;
+  --muted: #9aa7b8; --line: #243044; --ember: #e4572e; --ok: #34d399;
+  --warn: #fbbf24; --bad: #fb7185;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.55 var(--font-sans); }
+a { color: #f3c2b4; text-decoration: none; }
+a:hover { text-decoration: underline; color: #fff; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
+header.top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem; border-bottom: 1px solid var(--line); padding-bottom: .9rem; margin-bottom: 1.2rem; }
+.brand { font-family: var(--font-mono); font-weight: 700; letter-spacing: .06em; font-size: 1rem; color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.chip { font-family: var(--font-mono); font-size: .78rem; padding: .2rem .6rem; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--muted); }
+.chip.accent { border-color: var(--ember); color: #f3c2b4; }
+.chip.ok { border-color: var(--ok); color: #a7f3d0; }
+nav.tabs { display: flex; flex-wrap: wrap; gap: .45rem; margin-bottom: 1.2rem; }
+nav.tabs button { min-height: 40px; padding: .45rem .9rem; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 600 .88rem var(--font-mono); cursor: pointer; }
+nav.tabs button.active { background: var(--ember); color: #190b07; border-color: var(--ember); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+h1 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); line-height: 1.18; margin: .2rem 0 .6rem; }
+h2 { font-size: 1.15rem; margin: 1.3rem 0 .6rem; }
+.lede { max-width: 72ch; color: #d7dee8; margin: 0 0 1rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin: 1rem 0; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin: 1rem 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: .95rem 1rem; }
+.card .k { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.card .v { font-size: 1.2rem; font-weight: 700; margin-top: .25rem; }
+.card p { margin: .35rem 0 0; font-size: .9rem; color: #cfd8e3; }
+pre.code { background: #090d14; border: 1px solid var(--line); border-radius: 8px; padding: .75rem .9rem; overflow-x: auto; font: .84rem/1.45 var(--font-mono); color: #e2e8f0; margin: .5rem 0; }
+.btn-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .7rem; }
+.btn { display: inline-flex; align-items: center; min-height: 38px; padding: .35rem .85rem; border-radius: 7px; font-weight: 650; font-size: .88rem; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--ember); color: #190b07; border-color: var(--ember); }
+.filter-bar { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
+.filter-bar button { padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); font: 600 .8rem var(--font-mono); cursor: pointer; }
+.filter-bar button.active { background: var(--ember); color: #190b07; border-color: var(--ember); }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+th, td { border-bottom: 1px solid var(--line); padding: .5rem .55rem; text-align: left; vertical-align: top; }
+thead th { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); text-transform: uppercase; }
+details { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: .6rem .9rem; margin-top: .8rem; }
+summary { cursor: pointer; font-family: var(--font-mono); font-weight: 600; font-size: .85rem; }
+footer { margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
+footer nav { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-bottom: .5rem; }
+@media (max-width: 820px) { .grid-4, .grid-2 { grid-template-columns: 1fr; } }
+</style>
 </head>
 <body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">GEOX · EARTH INTELLIGENCE ORGAN</div>
+    <div class="chips">
+      <span class="chip accent">555_COMPUTE_ONLY · NATURAL_LAW</span>
+      <span class="chip">Maturity: v-rc1 prototype</span>
+      <span class="chip ok" id="hdr-status">Probing /health…</span>
+    </div>
+  </header>
 
-<!-- TOP BAR -->
-<div id="topbar">
-  <div class="topbar-inner">
-    <div class="topbar-brand">Φ GEOX · NATURAL LAW</div>
-    <div class="topbar-status">
-      <div class="status-pill green" id="status-health">
-        <div class="dot pulse"></div>
-        <span id="status-text">PROBING…</span>
-      </div>
-      <div class="status-pill gold" id="status-tools">
-        <span id="tools-count">— TOOLS</span>
-      </div>
-      <div class="status-pill gray" id="status-drift">
-        <span id="drift-text">DRIFT: —</span>
-      </div>
-      <div class="status-pill gray">
-        <span id="version-text">—</span>
-      </div>
-    </div>
-    <nav class="topbar-nav">
-      <a href="https://arif-fazil.com" target="_blank">← arif-fazil.com</a>
-      <a href="https://aaa.arif-fazil.com" target="_blank">AAA</a>
-      <a href="/health" target="_blank">Health</a>
-      <a href="/llms.txt" target="_blank">llms.txt</a>
-    </nav>
-  </div>
+  <nav class="tabs" role="tablist" aria-label="GEOX views">
+    <button type="button" class="active" data-tab="t-overview" role="tab">00. Overview</button>
+    <button type="button" data-tab="t-app" role="tab">01. SEP-1865 MCP App</button>
+    <button type="button" data-tab="t-tools" role="tab">02. MCP Tools</button>
+    <button type="button" data-tab="t-obs" role="tab">03. Attestation &amp; Observability</button>
+  </nav>
 
-  <!-- TAB BAR -->
-  <div class="tabbar">
-    <div class="tabbar-inner">
-      <button class="tab-btn active" onclick="switchTab('overview', this)">🌍 00. Overview</button>
-      <button class="tab-btn" onclick="switchTab('cockpits', this)">🎯 01. Decision Cockpits</button>
-      <button class="tab-btn" onclick="switchTab('tools', this)">🔌 02. MCP Tools (33)</button>
-      <button class="tab-btn" onclick="switchTab('attestation', this)">⚖️ 03. Attestation</button>
-      <button class="tab-btn" onclick="switchTab('gui', this)">🖥️ 04. GUI Apps</button>
-    </div>
-  </div>
-</div>
-
-<div class="main">
-
-  <!-- ══════════════════════════════ TAB 00: OVERVIEW ══════════════════════════════ -->
-  <div class="tab-content active" id="tab-overview">
-    <section class="hero">
-      <div class="hero-kicker">GEOX · Earth Intelligence · arifOS Federation Organ · Port 8081</div>
-      <h1>
-        Earth<span class="gold">.</span><br />
-        <span class="dim">Intelligence</span>
-      </h1>
-      <p class="hero-sub">
-        Sovereign Earth intelligence. Basin analysis, seismic interpretation, petrophysics, prospect evaluation.
-        Evidence-gated by constitutional floors. Human-decided. Sealed to VAULT999.
-      </p>
-      <div class="hero-actions">
-        <a href="#" onclick="switchTab('cockpits', document.querySelector('[onclick*=cockpits]')); return false;" class="btn-primary">
-          Enter Decision Cockpits →
-        </a>
-        <a href="#" onclick="switchTab('tools', document.querySelector('[onclick*=tools]')); return false;" class="btn-outline">
-          Browse 33 MCP Tools
-        </a>
-        <a href="https://geox.arif-fazil.com/mcp" target="_blank" class="btn-outline">
-          MCP Gateway ↗
-        </a>
-      </div>
-    </section>
-
-    <!-- LIVE METRICS -->
-    <div class="metrics-bar" id="metrics-bar">
-      <div class="metric">
-        <div class="metric-label">Status</div>
-        <div class="metric-val" style="color: var(--emerald); font-size:1.3rem;" id="m-status">—</div>
-        <div class="metric-sub" id="m-verdict">—</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Tools Loaded</div>
-        <div class="metric-val" style="color: var(--gold);" id="m-tools">—</div>
-        <div class="metric-sub" id="m-drift">drift: —</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Domain Law</div>
-        <div class="metric-val" style="color: var(--cyan); font-size:1rem; padding-top:0.4rem;" id="m-law">—</div>
-        <div class="metric-sub" id="m-version">—</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">Deploy Drift</div>
-        <div class="metric-val" style="font-size:1.2rem;" id="m-deploy-drift">—</div>
-        <div class="metric-sub" id="m-commit">—</div>
-      </div>
-    </div>
-
-    <!-- QUICK COCKPITS PREVIEW -->
-    <div class="section-header">
-      <div class="section-num">01.</div>
-      <div class="section-title">Decision Cockpits</div>
-      <div class="section-badge">
-        <div class="dot pulse" style="background: var(--emerald);"></div>
-        LIVE
-      </div>
-    </div>
-    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr); margin-bottom:2rem;">
-      <a href="/cockpit/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // AAA-Grade</div>
-        <div class="cc-icon">🌍</div>
-        <div class="cc-title">Earth Cockpit</div>
-        <div class="cc-desc">Federation cockpit for Earth intelligence. Basin, seismic, petrophysics, prospect — all organs unified.</div>
-        <div class="cc-link">→ Open Cockpit</div>
-      </a>
-      <a href="/apps/prospect-ui/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // Prospect</div>
-        <div class="cc-icon">🎯</div>
-        <div class="cc-title">Prospect Forge</div>
-        <div class="cc-desc">Definitive cockpit for prospect maturation. Volumetrics, POS, EVOI, risk assessment with governed verdicts.</div>
-        <div class="cc-link">→ Open Decision Surface</div>
-      </a>
-      <a href="/apps/well-desk/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // Well</div>
-        <div class="cc-icon">🛢️</div>
-        <div class="cc-title">Well Witness</div>
-        <div class="cc-desc">Integrated well correlation with petrophysical ToAC audit. Trust-graded interpretation for high-stakes targets.</div>
-        <div class="cc-link">→ Open Well Desk</div>
-      </a>
-    </div>
-
-    <!-- ATTESTATION QUICK VIEW -->
-    <div class="section-header">
-      <div class="section-num">Ω</div>
-      <div class="section-title">Live Attestation</div>
-    </div>
-    <div class="attest-grid" id="attest-quick">
-      <div class="attest-card"><div class="attest-key">Identity</div><div class="attest-val cyan" id="aq-identity">loading…</div></div>
-      <div class="attest-card"><div class="attest-key">Physics Hash</div><div class="attest-val" id="aq-hash" style="font-size:0.6rem; color: var(--dim);">loading…</div></div>
-      <div class="attest-card"><div class="attest-key">Surface Drift</div><div class="attest-val" id="aq-surface">loading…</div></div>
-      <div class="attest-card"><div class="attest-key">Deploy Commit</div><div class="attest-val" id="aq-commit" style="font-size:0.65rem;">loading…</div></div>
-      <div class="attest-card"><div class="attest-key">Schema Version</div><div class="attest-val gold" id="aq-schema">loading…</div></div>
-      <div class="attest-card"><div class="attest-key">APEX — G Score</div><div class="attest-val" id="aq-gscore">loading…</div></div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════ TAB 01: COCKPITS ══════════════════════════════ -->
-  <div class="tab-content" id="tab-cockpits">
-    <div class="section-header" style="margin-top:2rem;">
-      <div class="section-num">01.</div>
-      <div class="section-title">Decision Cockpits & GUI Apps</div>
-    </div>
-    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr);">
-      <a href="/cockpit/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // Federation</div>
-        <div class="cc-icon">🌍</div>
-        <div class="cc-title">Earth Cockpit</div>
-        <div class="cc-desc">Federation-grade cockpit. Basin, seismic, petrophysics, prospect unified under one governance surface.</div>
-        <div class="cc-link">→ Open Cockpit</div>
-      </a>
-      <a href="/apps/prospect-ui/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // Prospect</div>
-        <div class="cc-icon">🎯</div>
-        <div class="cc-title">Prospect Forge</div>
-        <div class="cc-desc">Prospect maturation with volumetrics, POS, EVOI, Kill Matrix K001-K007, bias referee, governed verdicts.</div>
-        <div class="cc-link">→ Open Decision Surface</div>
-      </a>
-      <a href="/apps/well-desk/" class="cockpit-card">
-        <div class="cc-status live">LIVE</div>
-        <div class="cc-tag">GEOX // Well</div>
-        <div class="cc-icon">🛢️</div>
-        <div class="cc-title">Well Witness Desk</div>
-        <div class="cc-desc">Well correlation, petrophysical ToAC audit. Trust-graded interpretation with full provenance trail.</div>
-        <div class="cc-link">→ Open Well Desk</div>
-      </a>
-      <a href="/apps/ac-risk/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // Analog</div>
-        <div class="cc-icon">⚖️</div>
-        <div class="cc-title">AC Risk Console</div>
-        <div class="cc-desc">Analog calibration and risk assessment console for geological targets. Evidence-gate before allocation.</div>
-        <div class="cc-link">→ Open AC Risk</div>
-      </a>
-      <a href="/apps/seismic-review/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // Seismic</div>
-        <div class="cc-icon">📡</div>
-        <div class="cc-title">Seismic Review</div>
-        <div class="cc-desc">Seismic section review, attribute audit, visual interpretation with well-tie quality control.</div>
-        <div class="cc-link">→ Open Seismic Review</div>
-      </a>
-      <a href="/apps/geox-mcp-visual/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // MCP Visual</div>
-        <div class="cc-icon">🧠</div>
-        <div class="cc-title">MCP Visual Inspector</div>
-        <div class="cc-desc">Interactive MCP tool inspector. Browse all 33 tools, test calls, view schema, inspect responses live.</div>
-        <div class="cc-link">→ Open Inspector</div>
-      </a>
-      <a href="/apps/earth-volume/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // 3D</div>
-        <div class="cc-icon">🌐</div>
-        <div class="cc-title">Earth Volume</div>
-        <div class="cc-desc">3D volumetric rendering for subsurface models. GemPy implicit modeling visualization interface.</div>
-        <div class="cc-link">→ Open 3D Volume</div>
-      </a>
-      <a href="/apps/judge-console/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // Judge</div>
-        <div class="cc-icon">⚖️</div>
-        <div class="cc-title">Judge Console</div>
-        <div class="cc-desc">Constitutional judgment surface for GEOX evidence chains. F1-F13 floor check, claim verdict, seal.</div>
-        <div class="cc-link">→ Open Judge Console</div>
-      </a>
-      <a href="/apps/georeference/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // Geo</div>
-        <div class="cc-icon">📍</div>
-        <div class="cc-title">Georeference Tool</div>
-        <div class="cc-desc">H3 spatial indexing, coordinate transformation, georeferencing for seismic and map assets.</div>
-        <div class="cc-link">→ Open Georeference</div>
-      </a>
-      <a href="/apps/analog-digitizer/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // Analog</div>
-        <div class="cc-icon">✏️</div>
-        <div class="cc-title">Analog Digitizer</div>
-        <div class="cc-desc">Digitize analog well logs, maps, and seismic sections with provenance tracking for interpretation.</div>
-        <div class="cc-link">→ Open Digitizer</div>
-      </a>
-      <a href="/gui/lem/" class="cockpit-card">
-        <div class="cc-status gui">GUI</div>
-        <div class="cc-tag">GEOX // ML</div>
-        <div class="cc-icon">🤖</div>
-        <div class="cc-title">LEM Dashboard</div>
-        <div class="cc-desc">LEM inference dashboard. Predict rock properties (porosity, Sw, lithology) from seismic attributes.</div>
-        <div class="cc-link">→ Open LEM</div>
-      </a>
-      <a href="https://wealth.arif-fazil.com/apps/capital_judge/" target="_blank" class="cockpit-card">
-        <div class="cc-status ext">WEALTH</div>
-        <div class="cc-tag">WEALTH // Capital</div>
-        <div class="cc-icon">💰</div>
-        <div class="cc-title">Capital Judge</div>
-        <div class="cc-desc">Sovereign capital allocation engine. Bridges geological truth to financial consequence via CapitalX.</div>
-        <div class="cc-link">→ Open Capital Judge ↗</div>
-      </a>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════ TAB 02: MCP TOOLS ══════════════════════════════ -->
-  <div class="tab-content" id="tab-tools">
-    <div class="section-header" style="margin-top:2rem;">
-      <div class="section-num">02.</div>
-      <div class="section-title">MCP Tools</div>
-      <div class="section-badge" id="tools-badge">
-        <div class="spinner"></div>
-        LOADING…
-      </div>
-    </div>
-    <p style="font-size:0.75rem; color:var(--muted); margin-bottom:1.25rem; font-family:var(--mono);">
-      Live from <code style="color:var(--gold);">geox.arif-fazil.com/tools</code> · JSON-RPC 2.0 · streamable-http
+  <!-- 00. OVERVIEW -->
+  <section id="t-overview" class="tab-panel active">
+    <h1>GEOX — Evidence before verdict.</h1>
+    <p class="lede">
+      Physics-grounded Earth intelligence organ (<code>555_COMPUTE_ONLY</code> · <code>NATURAL_LAW</code>).
+      Computes falsifiable subsurface evidence; hands off to judge/human; never seals.
     </p>
-    <div class="tool-grid" id="tool-list">
-      <div style="color:var(--muted); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">
-        <div class="spinner" style="margin:0 auto 0.75rem;"></div>
-        Loading tools from live MCP endpoint…
+
+    <div class="grid-4" role="region" aria-label="Live proof bar">
+      <div class="card">
+        <div class="k">Service Status</div>
+        <div class="v" id="k-status">Loading…</div>
+        <p id="k-status-sub">Live from <code>/health</code></p>
+      </div>
+      <div class="card">
+        <div class="k">Canonical Tools</div>
+        <div class="v" id="k-tools">—</div>
+        <p id="k-tools-sub">Live from <code>/tools</code> (zero hardcoded counts)</p>
+      </div>
+      <div class="card">
+        <div class="k">Verified Benchmarks</div>
+        <div class="v">Volve 10/10 · 8/8</div>
+        <p>Well Forensic 8/8 faults · 0% FP on clean control</p>
+      </div>
+      <div class="card">
+        <div class="k">Air-Gap Footprint</div>
+        <div class="v">9 core deps</div>
+        <p>0 outbound sockets · 3.1 s cold wheel install</p>
       </div>
     </div>
 
-    <div style="margin-top:1.5rem; padding:1rem; background:rgba(212,175,55,0.04); border:1px solid rgba(212,175,55,0.15); border-radius:6px;">
-      <div style="font-family:var(--mono); font-size:0.6rem; color:var(--gold); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.5rem;">MCP Endpoint</div>
-      <div style="font-family:var(--mono); font-size:0.65rem; color:var(--muted);">
-        <code>POST geox.arif-fazil.com/mcp</code> · JSON-RPC 2.0 · <code>tools/call</code><br />
-        <code>GET geox.arif-fazil.com/tools</code> · Live tool manifest<br />
-        <code>GET geox.arif-fazil.com/health</code> · Health + attestation
+    <h2>30-Second Connect</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="k">A. Remote Streamable-HTTP MCP</div>
+        <pre class="code" id="cmd-remote">https://geox.arif-fazil.com/mcp</pre>
+        <div class="btn-row">
+          <button type="button" class="btn primary" data-copy="cmd-remote">Copy endpoint</button>
+          <a class="btn" href="/tools">Inspect /tools JSON</a>
+          <a class="btn" href="/health">Inspect /health JSON</a>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════ TAB 03: ATTESTATION ══════════════════════════════ -->
-  <div class="tab-content" id="tab-attestation">
-    <div class="section-header" style="margin-top:2rem;">
-      <div class="section-num">03.</div>
-      <div class="section-title">Live Attestation</div>
-      <div class="section-badge" id="attest-badge">
-        <div class="spinner"></div>
-        LOADING…
-      </div>
-    </div>
-    <div class="attest-grid" id="attest-full">
-      <div style="color:var(--muted); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">
-        <div class="spinner" style="margin:0 auto 0.75rem;"></div>
-        Probing arifOS attestation stream…
+      <div class="card">
+        <div class="k">B. Air-Gapped Local Stdio (VDI / Offline)</div>
+        <pre class="code" id="cmd-local">geox --airgap --stdio --data-dir ~/.geox</pre>
+        <div class="btn-row">
+          <button type="button" class="btn primary" data-copy="cmd-local">Copy CLI command</button>
+        </div>
       </div>
     </div>
 
-    <div style="margin-top:1.5rem; padding:1rem; background:var(--bg2); border:1px solid var(--border); border-radius:6px;">
-      <div style="font-family:var(--mono); font-size:0.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.75rem;">Raw Health Payload</div>
-      <pre id="health-raw" style="font-family:var(--mono); font-size:0.6rem; color: rgba(255,255,255,0.4); overflow-x:auto; max-height:400px; overflow-y:auto;">Loading…</pre>
+    <h2>Public Earth Surfaces &amp; Honesty Ledger</h2>
+    <div class="btn-row">
+      <a class="btn" href="https://arif-fazil.com/earth/kinabalu-cross-section.html">NW Sabah &amp; Kinabalu Cross-Section (T-KIN-XS-833)</a>
+      <a class="btn" href="https://arif-fazil.com/earth/lifecycle/">GEOX E&amp;P Lifecycle Observability</a>
+      <a class="btn" href="https://github.com/ariffazil/GEOX/blob/main/FUTURE.md">FUTURE.md (Honest Gaps &amp; Kill Rule)</a>
     </div>
-  </div>
+  </section>
 
-  <!-- ══════════════════════════════ TAB 04: GUI APPS ══════════════════════════════ -->
-  <div class="tab-content" id="tab-gui">
-    <div class="section-header" style="margin-top:2rem;">
-      <div class="section-num">04.</div>
-      <div class="section-title">Interactive GUI Apps</div>
-      <div class="section-badge">
-        <div class="dot" style="background: var(--cyan);"></div>
-        MCP App Standard · SEP-1865
+  <!-- 01. SEP-1865 MCP APP -->
+  <section id="t-app" class="tab-panel">
+    <h2>SEP-1865 Single-File MCP App</h2>
+    <div class="card">
+      <div class="k">ui://geox/well-forensic-desk.html · text/html;profile=mcp-app</div>
+      <div class="v">Well Forensic Desk (452 KiB · 0 CDN · CSP default-src 'none')</div>
+      <p>
+        Deterministic subsurface pre-flight auditor bundled inside the Python wheel. Detects all 8 real-world
+        well-data failure classes (KB datum shift, ×3.28084 Vp/Vs unit corruption, % vs v/v porosity, sonic header lie,
+        1-sample sentinel stubs &amp; blindspots, UWI/TDR/CSV-LAS drift, rock-physics lookalike trap, and stratigraphic age inversion)
+        and persists geologist triage decisions via <code>callServerTool</code>.
+      </p>
+      <div class="btn-row">
+        <a class="btn primary" href="/apps/well-forensic-desk/">Open Read-Only Web Preview (SYNTH-DW-01)</a>
+        <a class="btn" href="/tools">Verify geox_well_pda tool</a>
       </div>
     </div>
-    <div class="cockpit-grid" style="grid-template-columns: repeat(3,1fr);">
-      <a href="/apps/geox-mcp-visual/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">🔌</div>
-        <div class="cc-title">MCP Visual Inspector</div>
-        <div class="cc-desc">Browse, inspect, and test all 33 GEOX MCP tools interactively. Live tool schema view.</div>
-        <div class="cc-link">→ Open Inspector</div>
-      </a>
-      <a href="/apps/earth-volume/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">🌐</div>
-        <div class="cc-title">Earth Volume Viewer</div>
-        <div class="cc-desc">3D subsurface model rendering via GemPy implicit modeling. Load workspace, visualize structure.</div>
-        <div class="cc-link">→ Open Viewer</div>
-      </a>
-      <a href="/apps/judge-console/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">⚖️</div>
-        <div class="cc-title">Judge Console</div>
-        <div class="cc-desc">Invoke geox_falsify, geox_contradiction_scan, geox_claim — governed verdict surface.</div>
-        <div class="cc-link">→ Open Console</div>
-      </a>
-      <a href="/apps/attribute-audit/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">📊</div>
-        <div class="cc-title">Attribute Audit</div>
-        <div class="cc-desc">Seismic attribute quality audit. Validate attribute consistency against well penetrations.</div>
-        <div class="cc-link">→ Open Audit</div>
-      </a>
-      <a href="/gui/lem/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">🤖</div>
-        <div class="cc-title">LEM Inference</div>
-        <div class="cc-desc">geox_lem_predict live dashboard. Predict porosity, Sw, lithology from seismic attributes.</div>
-        <div class="cc-link">→ Open LEM</div>
-      </a>
-      <a href="/cockpit/webmcp/" class="cockpit-card">
-        <div class="cc-status gui">MCP APP</div>
-        <div class="cc-icon">🖥️</div>
-        <div class="cc-title">WebMCP Terminal</div>
-        <div class="cc-desc">Browser-native MCP terminal. Call any GEOX tool via JSON-RPC directly from the browser.</div>
-        <div class="cc-link">→ Open Terminal</div>
-      </a>
-    </div>
-  </div>
+  </section>
 
-</div><!-- /main -->
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      Φ GEOX · Earth Intelligence · arifOS Federation · v<span id="footer-version">—</span> · DITEMPA BUKAN DIBERI 🇲🇾
+  <!-- 02. MCP TOOLS -->
+  <section id="t-tools" class="tab-panel">
+    <h2>Live MCP Tools by E&amp;P Lifecycle Stage</h2>
+    <p class="lede">Populated live from <code>/tools</code>. Compact mode-dispatch envelopes target &lt;400 tokens with explicit <code>defaults_applied[]</code>, <code>falsifiers[]</code>, and SHA-256 receipts.</p>
+    <div class="filter-bar" id="stage-filters" role="group" aria-label="Filter tools by lifecycle stage">
+      <button type="button" class="active" data-stage="ALL">All</button>
+      <button type="button" data-stage="Exploration">Exploration</button>
+      <button type="button" data-stage="Appraisal">Appraisal</button>
+      <button type="button" data-stage="Development">Development</button>
+      <button type="button" data-stage="Production">Production</button>
+      <button type="button" data-stage="Abandonment">Abandonment</button>
+      <button type="button" data-stage="Cross-cutting">Cross-cutting</button>
     </div>
-    <div class="footer-links">
-      <a href="/health" target="_blank">/health ↗</a>
-      <a href="/tools" target="_blank">/tools ↗</a>
-      <a href="/llms.txt" target="_blank">llms.txt ↗</a>
-      <a href="https://arifos.arif-fazil.com" target="_blank">arifOS ↗</a>
-      <a href="https://aaa.arif-fazil.com" target="_blank">AAA ↗</a>
+    <div class="card">
+      <table>
+        <thead><tr><th>Tool</th><th>Stage</th><th>Description</th></tr></thead>
+        <tbody id="tools-tbody"><tr><td colspan="3">Loading <code>/tools</code>…</td></tr></tbody>
+      </table>
     </div>
-  </div>
-</footer>
+  </section>
 
+  <!-- 03. ATTESTATION & OBSERVABILITY -->
+  <section id="t-obs" class="tab-panel">
+    <h2>Runtime Attestation &amp; Observability</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="k">Surface &amp; Deployment Drift</div>
+        <div class="v" id="obs-drift">Loading…</div>
+        <p id="obs-sha">Waiting for <code>/health</code>…</p>
+      </div>
+      <div class="card">
+        <div class="k">EarthGraph Persistent Seed (~/.geox/earthgraph.db)</div>
+        <div class="v">3 Public Reference Basins</div>
+        <p>NW Sabah (T-KIN-XS-833) · Equinor Volve (open licence) · F3 Netherlands 3D SEG-Y (CC-BY-SA)</p>
+      </div>
+    </div>
+    <details>
+      <summary>Raw /health JSON payload</summary>
+      <pre class="code" id="raw-health">Loading…</pre>
+    </details>
+  </section>
+
+  <footer>
+    <nav aria-label="Verified routes">
+      <a href="/">Home</a>
+      <a href="/health">/health</a>
+      <a href="/tools">/tools</a>
+      <a href="/llms.txt">/llms.txt</a>
+      <a href="/apps/well-forensic-desk/">/apps/well-forensic-desk/</a>
+    </nav>
+    <p id="ftr-meta">GEOX · 555_COMPUTE_ONLY · Build SHA: loading… · Version: loading…</p>
+    <p>Ditempa bukan diberi · © 2026 Muhammad Arif bin Fazil</p>
+  </footer>
+</div>
 <script>
-  // ── Tab switching ──
-  function switchTab(id, btn) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    document.getElementById('tab-' + id).classList.add('active');
-    if (btn) btn.classList.add('active');
-  }
+(function () {
+  var STAGE_MAP = {
+    geox_basin: "Exploration", geox_deep_time: "Exploration", geox_map: "Exploration",
+    geox_spatial: "Exploration", geox_seismic_ingest: "Exploration", geox_seismic_interpret: "Exploration",
+    geox_seismic_compute: "Exploration", geox_contrast_metabolize: "Exploration", geox_source: "Exploration",
+    geox_observe: "Exploration", geox_paleobiodb_query: "Exploration", geox_prospect: "Exploration", geox_glof: "Exploration",
+    geox_well_ingest: "Appraisal", geox_well_qc: "Appraisal", geox_petrophysics: "Appraisal", geox_geomechanics: "Appraisal",
+    geox_well_pda: "Appraisal",
+    geox_grid: "Development", geox_resqml_io: "Development", geox_model: "Development", geox_well: "Development",
+    geox_temporal: "Production",
+    geox_surface_status: "Cross-cutting", geox_claim: "Cross-cutting",
+    geox_calibration_register_witness: "Cross-cutting", geox_extract_display_proxy: "Cross-cutting",
+    geox_register_native_source: "Cross-cutting", geox_extract_native_trace: "Cross-cutting",
+    geox_list_registered_sources: "Cross-cutting"
+  };
 
-  // ── Fetch health ──
-  async function fetchHealth() {
-    try {
-      const res = await fetch('/health');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const d = await res.json();
+  document.querySelectorAll("nav.tabs button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("nav.tabs button, .tab-panel").forEach(function (el) { el.classList.remove("active"); });
+      b.classList.add("active");
+      var pane = document.getElementById(b.getAttribute("data-tab"));
+      if (pane) pane.classList.add("active");
+    });
+  });
 
-      // Top bar
-      const healthy = d.status === 'healthy';
-      const sp = document.getElementById('status-text');
-      const sh = document.getElementById('status-health');
-      sp.textContent = healthy ? `HEALTHY · ${d.service || 'geox'}` : 'DEGRADED';
-      sh.className = 'status-pill ' + (healthy ? 'green' : 'red');
-      sh.querySelector('.dot').className = 'dot' + (healthy ? ' pulse' : '');
+  document.querySelectorAll("[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = document.getElementById(btn.getAttribute("data-copy"));
+      if (el && navigator.clipboard) {
+        navigator.clipboard.writeText(el.textContent.trim()).then(function () {
+          var prev = btn.textContent;
+          btn.textContent = "Copied";
+          setTimeout(function () { btn.textContent = prev; }, 1500);
+        });
+      }
+    });
+  });
 
-      document.getElementById('tools-count').textContent = `${d.tools_loaded || d.canonical_tools || '?'} TOOLS`;
-      document.getElementById('version-text').textContent = d.version || '—';
-
-      const sd = d.surface_drift;
-      const driftText = sd ? (sd.ok ? `DRIFT: NONE (${sd.drift_count})` : `DRIFT: ${sd.drift_count} GAPS`) : 'DRIFT: —';
-      document.getElementById('drift-text').textContent = driftText;
-      document.getElementById('status-drift').className = 'status-pill ' + (sd?.ok ? 'green' : 'red');
-
-      // Metrics
-      document.getElementById('m-status').textContent = d.status?.toUpperCase() || '—';
-      document.getElementById('m-status').style.color = healthy ? 'var(--emerald)' : 'var(--red)';
-      document.getElementById('m-verdict').textContent = `verdict: ${d.kernel_verdict || '—'}`;
-      document.getElementById('m-tools').textContent = d.tools_loaded || '—';
-      document.getElementById('m-drift').textContent = sd ? `drift: ${sd.drift_count} · gap: ${sd.gap_count}` : '—';
-      document.getElementById('m-law').textContent = d.domain_law || '—';
-      document.getElementById('m-version').textContent = d.version || '—';
-
-      const dd = d.deployment_drift;
-      document.getElementById('m-deploy-drift').textContent = dd ? (dd.drift ? 'DRIFTED' : 'ALIGNED') : '—';
-      document.getElementById('m-deploy-drift').style.color = dd ? (dd.drift ? 'var(--red)' : 'var(--emerald)') : 'var(--muted)';
-      document.getElementById('m-commit').textContent = dd?.built_commit ? `commit: ${dd.built_commit}` : '—';
-      document.getElementById('footer-version').textContent = (d.version || '—').replace('v','');
-
-      // Quick attestation
-      document.getElementById('aq-identity').textContent = d.identity?.value || d.identity_hash || '—';
-      document.getElementById('aq-hash').textContent = (d.physics_manifest_hash || '—').substring(0,40) + '…';
-      const sdok = sd?.ok;
-      document.getElementById('aq-surface').textContent = sd ? `${sd.ok ? 'CLEAN' : 'DRIFTED'} · ${sd.canonical_count}/${sd.live_count}` : '—';
-      document.getElementById('aq-surface').className = 'attest-val ' + (sdok ? 'emerald' : 'red');
-      document.getElementById('aq-commit').textContent = dd ? `src: ${dd.source_commit?.substring(0,8)} · built: ${dd.built_commit} · ${dd.status}` : '—';
-      document.getElementById('aq-schema').textContent = d.federation_schema_version || '—';
-      const g = d.apex_scalars?.G?.value;
-      document.getElementById('aq-gscore').textContent = g !== undefined ? g.toFixed(3) : '—';
-      document.getElementById('aq-gscore').className = 'attest-val ' + (g >= 0.8 ? 'emerald' : g >= 0.5 ? 'gold' : 'red');
-
-      // Full attestation tab
-      populateFullAttestation(d);
-
-      // Raw payload
-      document.getElementById('health-raw').textContent = JSON.stringify(d, null, 2).substring(0, 3000);
-      document.getElementById('attest-badge').innerHTML = '<div class="dot" style="background:var(--emerald)"></div>LIVE';
-
-    } catch(e) {
-      document.getElementById('status-text').textContent = 'OFFLINE';
-      document.getElementById('status-health').className = 'status-pill red';
-      document.getElementById('health-raw').textContent = `Error: ${e.message}`;
-      document.getElementById('attest-badge').innerHTML = '<div class="dot" style="background:var(--red)"></div>ERROR';
+  var allTools = [];
+  var activeStage = "ALL";
+  function renderTools() {
+    var tbody = document.getElementById("tools-tbody");
+    var rows = activeStage === "ALL" ? allTools : allTools.filter(function (t) {
+      return (t.lifecycle_stage || STAGE_MAP[t.name] || "Cross-cutting") === activeStage;
+    });
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="3">No live tools in stage <code>' + activeStage + '</code> (GAP — planned as mode of <code>geox_geomechanics</code> / <code>geox_integrity</code>).</td></tr>';
+      return;
     }
+    tbody.innerHTML = rows.map(function (t) {
+      var st = t.lifecycle_stage || STAGE_MAP[t.name] || "Cross-cutting";
+      return "<tr><td><code>" + t.name + "</code></td><td>" + st + "</td><td>" + (t.description || "") + "</td></tr>";
+    }).join("");
   }
 
-  function populateFullAttestation(d) {
-    const fields = [
-      { key: 'Status', val: d.status, cls: d.status === 'healthy' ? 'emerald' : 'red' },
-      { key: 'Service', val: d.service },
-      { key: 'Version', val: d.version, cls: 'gold' },
-      { key: 'Kernel Verdict', val: d.kernel_verdict },
-      { key: 'Domain Law', val: d.domain_law, cls: 'cyan' },
-      { key: 'Profile', val: d.profile },
-      { key: 'Federation Schema', val: d.federation_schema_version, cls: 'gold' },
-      { key: 'Tools Loaded', val: d.tools_loaded },
-      { key: 'Canonical Tools', val: d.canonical_tools },
-      { key: 'Identity Algorithm', val: d.identity?.algorithm },
-      { key: 'Identity Value', val: d.identity?.value, cls: 'cyan' },
-      { key: 'Identity Verified', val: d.identity?.verified?.toString(), cls: d.identity?.verified ? 'emerald' : 'red' },
-      { key: 'Physics Manifest', val: d.physics_manifest_hash, small: true },
-      { key: 'Surface Drift OK', val: d.surface_drift?.ok?.toString(), cls: d.surface_drift?.ok ? 'emerald' : 'red' },
-      { key: 'Surface Drift Count', val: d.surface_drift?.drift_count },
-      { key: 'Gap Count', val: d.surface_drift?.gap_count },
-      { key: 'Deploy Drift', val: d.deployment_drift?.drift?.toString(), cls: d.deployment_drift?.drift ? 'red' : 'emerald' },
-      { key: 'Deploy Status', val: d.deployment_drift?.status },
-      { key: 'Source Commit', val: d.deployment_drift?.source_commit?.substring(0,16) + '…', cls: 'cyan' },
-      { key: 'Built Commit', val: d.deployment_drift?.built_commit },
-      { key: 'APEX G Score', val: d.apex_scalars?.G?.value?.toFixed(3), cls: (d.apex_scalars?.G?.value || 0) >= 0.8 ? 'emerald' : 'gold' },
-    ];
+  document.querySelectorAll("#stage-filters button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll("#stage-filters button").forEach(function (x) { x.classList.remove("active"); });
+      b.classList.add("active");
+      activeStage = b.getAttribute("data-stage");
+      renderTools();
+    });
+  });
 
-    const grid = document.getElementById('attest-full');
-    grid.innerHTML = fields.map(f => `
-      <div class="attest-card">
-        <div class="attest-key">${f.key}</div>
-        <div class="attest-val ${f.cls || ''}" style="${f.small ? 'font-size:0.55rem; word-break:break-all;' : ''}">${f.val || '—'}</div>
-      </div>
-    `).join('');
-  }
+  fetch("/health").then(function (r) { return r.json(); }).then(function (h) {
+    var st = String(h.status || "unknown").toUpperCase();
+    document.getElementById("hdr-status").textContent = "Status: " + st;
+    document.getElementById("k-status").textContent = st;
+    document.getElementById("k-status-sub").textContent = "Registry: " + (h.registry_state || "UNKNOWN") + " · Version: " + (h.version || "—");
+    var sd = h.surface_drift || {};
+    var gd = h.geox_source_drift || {};
+    document.getElementById("obs-drift").textContent = "Surface drift: " + (sd.ok ? "0 (OK)" : "DRIFT") + " · Repo drift: " + (gd.drift ? "TRUE" : "0");
+    document.getElementById("obs-sha").textContent = "Deployed SHA: " + (h.git_version || "unknown") + " · Surface: " + (h.version || "unknown");
+    document.getElementById("raw-health").textContent = JSON.stringify(h, null, 2);
+    document.getElementById("ftr-meta").textContent = "GEOX · 555_COMPUTE_ONLY · Build SHA: " + (h.git_version || "unknown") + " · Version: " + (h.version || "unknown");
+  }).catch(function () {
+    document.getElementById("hdr-status").textContent = "Offline preview";
+    document.getElementById("k-status").textContent = "OFFLINE";
+  });
 
-  // ── Fetch tools ──
-  async function fetchTools() {
-    const list = document.getElementById('tool-list');
-    const badge = document.getElementById('tools-badge');
-    try {
-      const res = await fetch('/tools');
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const d = await res.json();
-      const tools = d.tools || [];
-      badge.innerHTML = `<div class="dot" style="background:var(--emerald)"></div>${tools.length} TOOLS LIVE`;
-
-      const CATEGORIES = {
-        well: { badge: 'WELL', cls: 'cyan' },
-        seismic: { badge: 'SEISMIC', cls: 'gold' },
-        basin: { badge: 'BASIN', cls: 'cyan' },
-        prospect: { badge: 'PROSPECT', cls: 'gold' },
-        claim: { badge: 'CLAIM', cls: 'gray' },
-        map: { badge: 'MAP', cls: 'gray' },
-        geomech: { badge: 'GEOMECH', cls: 'cyan' },
-        default: { badge: 'GEOX', cls: 'gray' },
-      };
-
-      list.innerHTML = tools.map(t => {
-        const name = t.name || '';
-        const desc = t.description || '';
-        let cat = CATEGORIES.default;
-        if (name.includes('well')) cat = CATEGORIES.well;
-        else if (name.includes('seismic')) cat = CATEGORIES.seismic;
-        else if (name.includes('basin') || name.includes('backstrip') || name.includes('thermal')) cat = CATEGORIES.basin;
-        else if (name.includes('prospect')) cat = CATEGORIES.prospect;
-        else if (name.includes('claim') || name.includes('falsify') || name.includes('evidence') || name.includes('contradiction')) cat = CATEGORIES.claim;
-        else if (name.includes('map')) cat = CATEGORIES.map;
-        else if (name.includes('geomech')) cat = CATEGORIES.geomech;
-
-        return `
-          <div class="tool-row">
-            <div>
-              <div class="tool-name">${name}</div>
-              <div class="tool-desc">${desc.substring(0,80)}${desc.length > 80 ? '…' : ''}</div>
-            </div>
-            <div class="tool-badge ${cat.cls}">${cat.badge}</div>
-          </div>
-        `;
-      }).join('');
-
-      document.querySelector('[onclick*=tools]').textContent = `🔌 02. MCP Tools (${tools.length})`;
-    } catch(e) {
-      badge.innerHTML = `<div class="dot" style="background:var(--red)"></div>ERROR`;
-      list.innerHTML = `<div style="color:var(--red); font-family:var(--mono); font-size:0.7rem; grid-column:1/-1; padding:2rem; text-align:center;">Failed to load tools: ${e.message}</div>`;
-    }
-  }
-
-  // ── Boot ──
-  fetchHealth();
-  fetchTools();
-  setInterval(fetchHealth, 30000);
+  fetch("/tools").then(function (r) { return r.json(); }).then(function (d) {
+    allTools = d.tools || [];
+    document.getElementById("k-tools").textContent = String(allTools.length) + " live";
+    renderTools();
+  }).catch(function () {
+    document.getElementById("k-tools").textContent = "Offline";
+  });
+})();
 </script>
 </body>
 </html>
