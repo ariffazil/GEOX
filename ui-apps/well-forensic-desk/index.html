@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:;">
+<title>GEOX Well Forensic Desk (SEP-1865 MCP App)</title>
+<style>
+:root {
+  --bg: var(--color-background-primary, #0b1017);
+  --panel: var(--color-background-secondary, #131a24);
+  --ink: var(--color-text-primary, #edf2f7);
+  --muted: var(--color-text-secondary, #94a3b8);
+  --border: var(--color-border-primary, #293548);
+  --ok: #34d399; --warn: #fbbf24; --bad: #fb7185; --accent: #e4572e;
+}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 12px; background: var(--bg); color: var(--ink); font: 13px/1.45 system-ui, sans-serif; }
+.hdr { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px; }
+.hdr h1 { margin: 0; font-size: 15px; }
+.banner { padding: 8px 10px; border-radius: 6px; margin-bottom: 10px; font-weight: 600; border: 1px solid var(--border); background: var(--panel); }
+.banner.bad { border-color: var(--bad); color: #fecdd3; }
+.banner.ok { border-color: var(--ok); color: #a7f3d0; }
+.grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.card h2 { margin: 0 0 6px; font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+button { background: var(--accent); color: #1a0c08; border: 0; border-radius: 6px; padding: 6px 10px; font-weight: 700; cursor: pointer; }
+button.sec { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+svg { width: 100%; height: auto; display: block; background: #0f1620; border-radius: 4px; }
+.hyp { border-left: 3px solid var(--warn); padding: 4px 8px; margin: 6px 0; font-size: 12px; }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>GEOX Well Forensic Desk (SEP-1865)</h1>
+  <div>
+    <button type="button" id="btn-run">Run Pre-Flight QC</button>
+    <button type="button" class="sec" id="btn-save">Save Pick</button>
+  </div>
+</div>
+<div id="banner" class="banner ok" role="status">READY — Click a depth track interval or run pre-flight QC (offline, zero external CDN).</div>
+<div class="grid">
+  <section class="card">
+    <h2>Composite Track (GR · RHOB/NPHI/NMR · Vp/Vs)</h2>
+    <svg id="log-svg" viewBox="0 0 360 220" role="img" aria-label="Synthetic composite well log track">
+      <title>Composite Well Log Track</title>
+      <desc>Interactive depth intervals; click to push depth context to the MCP host agent.</desc>
+      <rect x="0" y="0" width="360" height="220" fill="#0f1620"/>
+      <line x1="120" y1="0" x2="120" y2="220" stroke="#293548"/>
+      <line x1="240" y1="0" x2="240" y2="220" stroke="#293548"/>
+      <polyline points="30,10 55,50 40,95 85,140 60,185 75,210" fill="none" stroke="#34d399" stroke-width="2"/>
+      <polyline points="150,10 175,55 210,100 195,145 165,190 180,210" fill="none" stroke="#fbbf24" stroke-width="2"/>
+      <polyline points="270,10 295,60 325,110 305,155 280,200" fill="none" stroke="#e4572e" stroke-width="2"/>
+      <rect id="zone-a" x="0" y="75" width="360" height="55" fill="#e4572e" fill-opacity="0.16" style="cursor:pointer"/>
+      <text x="8" y="92" fill="#edf2f7" font-size="11">Click zone: 1800–1950 m MD</text>
+    </svg>
+  </section>
+  <section class="card">
+    <h2>Rival Lithology Hypotheses &amp; Falsifiers</h2>
+    <div id="hyps">
+      <div class="hyp"><strong>H1:</strong> Hydrated volcaniclastic/smectite buildup — <em>Falsifier:</em> Core XRD &gt;85% calcite.</div>
+      <div class="hyp"><strong>H2:</strong> Argillaceous carbonate / marl — <em>Falsifier:</em> PEF &lt;2.8 b/e + low Ca.</div>
+      <div class="hyp"><strong>H3:</strong> Overpressured mudstone — <em>Falsifier:</em> MDT proves normal pressure &amp; Sw=1.0.</div>
+    </div>
+  </section>
+</div>
+<script>
+(function () {
+  var rpcId = 1;
+  function postHost(method, params) {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ jsonrpc: "2.0", id: rpcId++, method: method, params: params || {} }, "*");
+    }
+  }
+  window.addEventListener("message", function (ev) {
+    var msg = ev.data || {};
+    if (msg.method === "ui/notifications/host-context-changed" && msg.params && msg.params.theme) {
+      document.documentElement.dataset.theme = msg.params.theme;
+    }
+    if (msg.method === "ui/notifications/tool-result" && msg.params && msg.params.structuredContent) {
+      var sc = msg.params.structuredContent;
+      var b = document.getElementById("banner");
+      b.textContent = "VERDICT: " + sc.verdict + " · sha256=" + String(sc.sha256 || "").slice(0, 12);
+      b.className = "banner " + (sc.verdict === "PASS" || sc.verdict === "READY" ? "ok" : "bad");
+    }
+  });
+  document.getElementById("zone-a").addEventListener("click", function () {
+    document.getElementById("banner").textContent = "Selected interval 1800–1950 m MD → pushed to model context.";
+    postHost("ui/update-model-context", { content: [{ type: "text", text: "Selected well interval: 1800-1950 m MD" }] });
+  });
+  document.getElementById("btn-run").addEventListener("click", function () {
+    postHost("tools/call", { name: "geox_well_pda", arguments: { mode: "all" } });
+  });
+  document.getElementById("btn-save").addEventListener("click", function () {
+    postHost("tools/call", { name: "geox_well_pda", arguments: { mode: "save_pick", interval_m: [1800, 1950] } });
+  });
+})();
+</script>
+</body>
+</html>
