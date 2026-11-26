@@ -7849,14 +7849,25 @@ def register_tools_on(mcp):
         _status = "healthy" if _smoke_pass else "degraded"
         _verdict = "REGISTRY_PASS" if _smoke_pass else "SMOKE_FAIL"
 
-        return {
+        # Phase B observability health metrics (source_sha vs deployed_sha, telemetry p50/p95/tokens/errors)
+        from geox.obs import current_git_sha as _obs_git_sha, summarize_telemetry as _obs_summary
+        from geox_mcp.registry import TOOL_LIFECYCLE_MAP as _TOOL_LIFECYCLE_MAP
+
+        _source_sha = f"geox-{_obs_git_sha()}"
+        _drift = bool(deployed_sha != "unknown" and _source_sha != "geox-unknown" and deployed_sha != _source_sha)
+        _obs_metrics = _obs_summary()
+
+        payload = {
             "status": _status,
             "organ": "GEOX",
             "surface_version": GEOX_VERSION,
             "public_count": len(CANONICAL_PUBLIC_TOOLS),
             "public_count_target": len(CANONICAL_PUBLIC_TOOLS),
             "canonical_tools": sorted(list(CANONICAL_PUBLIC_TOOLS)),
+            "lifecycle_map": _TOOL_LIFECYCLE_MAP,
+            "source_sha": _source_sha,
             "deployed_git_sha": deployed_sha,
+            "drift": _drift,
             "live_counts": live_counts,
             "canonical_counts": {"tools": len(CANONICAL_PUBLIC_TOOLS)},
             "smoke_test": {
@@ -7869,6 +7880,20 @@ def register_tools_on(mcp):
             "actor_id": actor_id,
             "trace_id": trace_id,
         }
+        if str(mode or "").strip().lower() == "health":
+            payload["health_observability"] = {
+                "source_sha": _source_sha,
+                "deployed_sha": deployed_sha,
+                "drift": _drift,
+                "tool_count": live_counts.get("tools"),
+                "tool_count_target": len(CANONICAL_PUBLIC_TOOLS),
+                "p50_ms": _obs_metrics["p50_ms"],
+                "p95_ms": _obs_metrics["p95_ms"],
+                "avg_resp_tokens": _obs_metrics["avg_resp_tokens"],
+                "error_rate_by_stage": _obs_metrics["error_rate_by_stage"],
+                "telemetry_samples": _obs_metrics["count"],
+            }
+        return payload
 
     logger.info("ZEN CONSOLIDATION: merged tools + shims registered")
 
@@ -7992,7 +8017,9 @@ def register_tools_on(mcp):
 
             return result
 
-        _comp.fn = _evidence_wrapper
+        from geox.obs import observed as _geox_observed
+
+        _comp.fn = _geox_observed(tool_name=_tool_name)(_evidence_wrapper)
         _EVIDENCE_WRAPPED += 1
 
     logger.info(

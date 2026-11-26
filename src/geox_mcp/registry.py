@@ -83,7 +83,20 @@ CANONICAL_RUNTIME_TOOLS: list[str] = runtime_tool_names()
 LEGACY_ALIAS_MAP: dict[str, str] = {}
 
 # Canonical registry rows consumed by governance, status, and discovery helpers.
-GEOX_TOOL_MANIFEST: list[dict[str, Any]] = manifest_entries_for_registry()
+from geox.obs import LIFECYCLE_STAGES as _OBS_LIFECYCLE_STAGES, lifecycle_stage_for as _obs_lifecycle_stage_for
+
+GEOX_TOOL_MANIFEST: list[dict[str, Any]] = [
+    {**entry, "lifecycle_stage": _obs_lifecycle_stage_for(entry.get("name", ""))}
+    for entry in manifest_entries_for_registry()
+]
+
+TOOL_LIFECYCLE_MAP: dict[str, str] = {
+    t: _obs_lifecycle_stage_for(t) for t in SURFACE_TOOLS
+}
+
+
+def get_tool_lifecycle_stage(tool_name: str) -> str:
+    return _obs_lifecycle_stage_for(tool_name)
 
 
 def get_tool_domain(tool_name: str) -> str:
