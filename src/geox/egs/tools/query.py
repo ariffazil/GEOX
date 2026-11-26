@@ -19,14 +19,20 @@ from geox.egs.engines.geometry import bounding_box_intersects
 from geox.egs.models.claims import ClaimEnvelope, ClaimStatus
 from geox.egs.models.entities import EarthGraph
 from geox.egs.models.provenance import ProvenanceChain
+from geox.egs.storage import load_claims, load_or_seed_earthgraph, save_claims, save_earthgraph
 
 logger = logging.getLogger("geox.egs.tools.query")
 
-# Global EGS state — the authoritative earth graph
-# In production, this would be persisted to a database
-_EGS_GRAPH: EarthGraph = EarthGraph()
-_EGS_CLAIMS: dict[str, ClaimEnvelope] = {}
+# Global EGS state — persisted to ~/.geox/earthgraph.db (boots non-empty)
+_EGS_GRAPH: EarthGraph = load_or_seed_earthgraph()
+_EGS_CLAIMS: dict[str, ClaimEnvelope] = load_claims()
 _EGS_PROVENANCE: dict[str, ProvenanceChain] = {}
+
+
+def persist_state() -> None:
+    """Flush EarthGraph and claims to SQLite (~/.geox/earthgraph.db)."""
+    save_earthgraph(_EGS_GRAPH)
+    save_claims(_EGS_CLAIMS)
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
