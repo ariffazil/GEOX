@@ -4,11 +4,15 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from geox.envelope import compact_envelope
+from geox.forensics.well_audit import run_well_forensic_audit
 from geox.forensics.well_pda import geox_well_pda
 
 APP_URI = "ui://geox/well-forensic-desk.html"
 APP_MIME = "text/html;profile=mcp-app"
-APP_HTML_PATH = Path(__file__).resolve().parents[2] / "ui-apps" / "well-forensic-desk" / "index.html"
+_BASE = Path(__file__).resolve().parents[2] / "ui-apps" / "well-forensic-desk"
+APP_DIST_HTML = _BASE / "dist" / "index.html"
+APP_HTML_PATH = APP_DIST_HTML if APP_DIST_HTML.exists() else (_BASE / "index.html")
 
 
 def register_well_forensic_app(mcp: Any) -> None:
@@ -16,7 +20,8 @@ def register_well_forensic_app(mcp: Any) -> None:
 
     @mcp.resource(APP_URI, mime_type=APP_MIME, meta={"ui": {"prefersBorder": False}})
     def well_forensic_desk_resource() -> str:
-        return APP_HTML_PATH.read_text(encoding="utf-8")
+        target = APP_DIST_HTML if APP_DIST_HTML.exists() else APP_HTML_PATH
+        return target.read_text(encoding="utf-8")
 
     @mcp.tool(
         name="geox_well_pda",
@@ -30,6 +35,24 @@ def register_well_forensic_app(mcp: Any) -> None:
             },
         },
     )
-    def geox_well_pda_tool(mode: str = "all", payload: dict[str, Any] | None = None) -> dict[str, Any]:
+    def geox_well_pda_tool(
+        mode: str = "all",
+        pack_dir: str | None = None,
+        payload: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Subsurface Pre-Flight Auditor (accepts {} empty arguments for default dashboard)."""
+        m = mode.strip().lower()
+        if m in ("forensic_audit", "forensic_slice") and pack_dir:
+            return run_well_forensic_audit(pack_dir, mode=m)
+        if m == "triage_decision":
+            dec = (payload or {}).get("decision", "FLAG_REVIEW")
+            well = (payload or {}).get("well", "UNKNOWN")
+            return compact_envelope(
+                tool="geox_well_pda",
+                verdict="RECORDED",
+                epistemic="OBS",
+                summary=f"Recorded geologist triage decision {dec} for {well}.",
+                data={"well": well, "decision": dec},
+                artifact_uri=APP_URI,
+            )
         return geox_well_pda(mode=mode, payload=payload)

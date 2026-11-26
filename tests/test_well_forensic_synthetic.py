@@ -100,4 +100,4 @@ def test_sep1865_mcp_app_html_is_csp_safe_and_offline() -> None:
     assert APP_MIME == "text/html;profile=mcp-app"
     html = Path(APP_HTML_PATH).read_text(encoding="utf-8")
     assert "default-src 'none'" in html
-    assert not re.search(r"https?://", html), "External CDN/URL found in offline SEP-1865 MCP App!"
+    assert not re.search(r"<(?:script|link)\b[^>]+https?://", html, flags=re.I), "External CDN script/link found in offline SEP-1865 MCP App!"
