@@ -161,7 +161,12 @@ class MacrostratClient:
     # ── Core HTTP ────────────────────────────────────────────────────────
 
     async def _request(
-        self, endpoint: str, params: dict[str, Any] | None = None, use_cache: bool = True, cache_ttl: float = 86400.0
+        self,
+        endpoint: str,
+        params: dict[str, Any] | None = None,
+        use_cache: bool = True,
+        cache_ttl: float = 86400.0,
+        timeout: float | None = None,
     ) -> dict[str, Any]:
         """Make a Macrostrat API request with multi-layer caching.
 
@@ -191,7 +196,7 @@ class MacrostratClient:
 
         # Layer 3: live HTTP
         try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
+            async with httpx.AsyncClient(timeout=timeout if timeout is not None else self.timeout) as client:
                 url = f"{self.base_url}/{endpoint.lstrip('/')}"
                 resp = await client.get(url, params=params)
                 resp.raise_for_status()
@@ -228,12 +233,18 @@ class MacrostratClient:
         strat_name_id: int | None = None,
         project_id: int | None = None,
         all_units: bool = False,
+        use_cache: bool = True,
         **extra: Any,
     ) -> dict[str, Any]:
         """Get rock units from Macrostrat.
 
         Returns units near a point, within a radius, or in a bbox.
         The richest endpoint — lithology, age, thickness, formation names.
+
+        ``use_cache=False`` forces a live request. The persistent cache has a
+        24h TTL, so a call that is supposed to exercise the network can be
+        served a 24h-old entry instead and never reach the wire — which is how
+        the timeout test came to assert a successful response.
         """
         params: dict[str, Any] = {"format": "json"}
         if all_units:
@@ -258,7 +269,7 @@ class MacrostratClient:
         if project_id:
             params["project_id"] = project_id
         params.update(extra)
-        return await self._request("units", params)
+        return await self._request("units", params, use_cache=use_cache)
 
     # ── Columns ──────────────────────────────────────────────────────────
 
@@ -482,17 +493,116 @@ class MacrostratClient:
         """Get database statistics."""
         return await self._request("stats", {"all": True})
 
+    # ── Point query (single-call map_query_v2) ───────────────────────────
+
+    async def get_mobile_point(self, lat: float, lng: float, z: int = 8, source: str | None = None) -> dict[str, Any]:
+        """One-call point query: elevation + map polygons + regions + hasColumns.
+
+        Replaces the 2-3 call fan-out (units + geologic_units/map + version)
+        for point clicks. Upstream answers from the carto compilation when
+        ``source`` is given (v2.6.0), otherwise the legacy build.
+        """
+        params: dict[str, Any] = {"lat": lat, "lng": lng, "z": int(z)}
+        if source:
+            params["source"] = source
+        return await self._request("mobile/map_query_v2", params)
+
+    def summarize_mobile_point(self, raw: dict[str, Any]) -> dict[str, Any]:
+        """Normalize a ``map_query_v2`` payload into the GEOX coverage contract.
+
+        coverage_class (measured 2026-11-27, both regression points):
+          unit_polygon — hasColumns true AND map polygons present (Denver z=8)
+          map_polygon  — polygons without unit-level columns
+          none         — no polygons (offshore Brunei 5.3,115.0) — a coverage
+                         statement, never "no bedrock here".
+        """
+        success = raw.get("success", {}) if isinstance(raw, dict) else {}
+        data = success.get("data", {}) if isinstance(success, dict) else {}
+        if not isinstance(data, dict):
+            data = {}
+
+        map_units_raw = data.get("mapData") or []
+        if not isinstance(map_units_raw, list):
+            map_units_raw = []
+        has_columns = bool(data.get("hasColumns"))
+        regions = data.get("regions") or []
+
+        if has_columns and map_units_raw:
+            coverage_class = "unit_polygon"
+            coverage_explanation = (
+                "Unit-level polygons present — formation names, lithology and age "
+                "resolve from a measured stratigraphic column."
+            )
+        elif map_units_raw:
+            coverage_class = "map_polygon"
+            coverage_explanation = (
+                "Generalized map polygon present — rock package and age are known; "
+                "no unit-level column resolves formation detail."
+            )
+        else:
+            coverage_class = "none"
+            coverage_explanation = (
+                "No mapped bedrock at this point. Over ocean or outside every mapped "
+                "area — a coverage statement, not a query failure."
+            )
+
+        map_units = [
+            {
+                k: m.get(k)
+                for k in (
+                    "map_id",
+                    "source_id",
+                    "name",
+                    "age",
+                    "strat_name",
+                    "lith",
+                    "descrip",
+                    "b_int",
+                    "t_int",
+                    "color",
+                    "scale",
+                    "ref",
+                )
+                if isinstance(m, dict) and k in m
+            }
+            for m in map_units_raw[:20]
+        ]
+        refs_count = sum(len(m.get("refs") or []) for m in map_units_raw if isinstance(m, dict))
+
+        return {
+            "coverage_class": coverage_class,
+            "coverage_explanation": coverage_explanation,
+            "has_columns": has_columns,
+            "elevation_m": data.get("elevation"),
+            "region_count": len(regions) if isinstance(regions, list) else 0,
+            "regions": regions[:10] if isinstance(regions, list) else [],
+            "map_polygon_count": len(map_units_raw),
+            "map_units": map_units,
+            "units": map_units,
+            "unit_count": len(map_units),
+            "refs_count": refs_count,
+        }
+
     # ── API Build ────────────────────────────────────────────────────────
 
-    async def get_api_version(self) -> dict[str, Any]:
+    async def get_api_version(self, use_cache: bool = True, timeout: float | None = None) -> dict[str, Any]:
         """Get the running Macrostrat API build (version, commit, build date).
 
         Upstream moved API v2 into UW-Macrostrat/macrostrat (services/api-v2)
         on 2026-10-20 and ships releases as api-v2-vX.Y.Z. This build stamp is
         how GEOX answers "which upstream am I talking to" at runtime instead of
         guessing from a file or from memory.
+
+        Point receipts pass ``use_cache=False`` with a short timeout so the
+        recorded commit is the live one, not a 24h-old cache entry.
         """
-        raw = await self._request("version")
+        # Only pass timeout when set: keeps the call shape stable for stubs and
+        # for callers that never needed a per-call deadline (measured 2026-11-27:
+        # two unit tests stubbed _request without a timeout kwarg).
+        kwargs: dict[str, Any] = {"use_cache": use_cache}
+        if timeout is not None:
+            kwargs["timeout"] = timeout
+        raw = await self._request("version", **kwargs)
         if not isinstance(raw, dict) or "error" in raw:
             return {"available": False, "error": raw.get("error") if isinstance(raw, dict) else "bad_payload"}
         return {

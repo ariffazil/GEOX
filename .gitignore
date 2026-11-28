@@ -88,6 +88,11 @@ data/volve_wells/
 # Generated renders
 data/renders/
 geox/seismic/rsi/geox_out/*.png
+# The package moved from the repo root into src/geox/ (one package tree), and a
+# gitignore pattern containing a slash is anchored to the .gitignore's own
+# directory. The old rule stopped matching the moment the tree moved, so the
+# generated RSI panels came back as untracked files. Same rule, src/ prefix.
+src/geox/seismic/rsi/geox_out/*.png
 
 # Test run artifacts
 data/egs/receipts/TEST-*.json

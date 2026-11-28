@@ -1126,6 +1126,19 @@ def compact_structured_for_ui(
         "play_fairways",
         "unit_count",
         "coverage",
+        # 2026-11-27 FI-008: point-click provenance must survive the compact
+        # boundary. Measured: Denver z=8 returned upstream_api=null while
+        # Brunei kept 2.6.0 — the build stamp was dropped purely by payload
+        # size, so the receipt could not name the build that answered.
+        "upstream_api",
+        "coords",
+        "coverage_class",
+        "has_columns",
+        "refs_count",
+        # 2026-11-27 FI-008: CC-BY attribution is a licence obligation, not a
+        # cosmetic field. Compaction has no right to drop it.
+        "attribution",
+        "source",
         "sample_units",
         "centroid",
         "stratigraphic_range_ma",
@@ -1180,7 +1193,39 @@ def compact_structured_for_ui(
             base[f"{k}_total"] = len(v)
         elif isinstance(v, dict) and json_dumps_len(v) > 4000:
             # keep only shallow keys
-            base[k] = {sk: sv for sk, sv in list(v.items())[:15] if not isinstance(sv, (list, dict))}
+            # 2026-11-27 FI-008: keep SMALL nested dicts (provenance stamps such
+            # as upstream_api) instead of dropping every dict. Measured: Denver
+            # z=8 compacted interpreted{} to shallow keys only, so upstream_api
+            # vanished while Brunei (small payload) kept it — the receipt could
+            # not name the build that answered. Lists still drop; dicts > 600 B
+            # still drop.
+            base[k] = {
+                sk: sv
+                for sk, sv in list(v.items())[:15]
+                if not isinstance(sv, list)
+                and (not isinstance(sv, dict) or json_dumps_len(sv) <= 600)
+            }
+            # 2026-11-27 FI-008: the [:15] slice is positional, so provenance
+            # can fall past it. Measured: attribution was key #16 on the Denver
+            # point payload and was dropped, breaking the CC-BY obligation while
+            # the same payload kept it on small Brunei. Re-add explicitly.
+            for _pk in (
+                "upstream_api",
+                "coords",
+                "coverage_class",
+                "has_columns",
+                "unit_count",
+                "refs_count",
+                "source",
+                "license",
+                "attribution",
+            ):
+                if _pk in v and _pk not in base[k]:
+                    _pv = v[_pk]
+                    if not isinstance(_pv, list) and (
+                        not isinstance(_pv, dict) or json_dumps_len(_pv) <= 600
+                    ):
+                        base[k][_pk] = _pv
             base[f"{k}_compacted"] = True
         else:
             base[k] = v

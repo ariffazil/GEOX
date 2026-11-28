@@ -406,6 +406,11 @@ class TestMacrostratClientErrorHandling:
         """Client should not hang on slow endpoints."""
         import httpx
         client.timeout = 0.001  # Force timeout
-        result = await client.get_units(lat=43.07, lng=-89.40)
+        # use_cache=False is load-bearing: the persistent cache has a 24h TTL
+        # and this exact point is a warmed key, so a cached call never reaches
+        # the wire, never times out, and returns success instead of an error.
+        # The test was therefore red on any warm cache and green on any cold
+        # one — it measured cache state, not timeout handling.
+        result = await client.get_units(lat=43.07, lng=-89.40, use_cache=False)
         assert "error" in result
         client.timeout = 30.0  # Reset

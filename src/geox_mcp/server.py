@@ -399,6 +399,14 @@ _mcp_kwargs: dict[str, Any] = {
         "Canonical GEOX Registry & MCP App Control Plane. DITEMPA BUKAN DIBERI — One Sovereign Kernel. Live tool count is a runtime fact (geox_surface_status)."
     ),
     "tasks": True,
+    # SEP-2549 cache hints (2026-07-28 wire). NOTE (measured 2026-11-27): the
+    # SDK applies these only on a modern-negotiated session; GEOX bridges
+    # internally to 2025-11-25, so the hint is INERT here. The actual wire fix
+    # is _CacheableListResponseMiddleware (covers tools/list + resources/list +
+    # templates + prompts + resources/read). Kept as the upstream-correct
+    # declaration for the day the era bridge is lifted.
+    "cache_ttl": 60,
+    "cache_scope": "private",
     # MCP logging: SEP-2577 deprecated — maintenance only; default min warning.
     "client_log_level": "warning",
     # MCP spec 2026-07-28 compliance: declare listChanged capabilities
@@ -3049,9 +3057,12 @@ class McpProtocolVersionMiddleware(BaseHTTPMiddleware):
 # can cache the tool catalog per the new spec. GEOX tool catalog changes only
 # on registry updates — 5-min private TTL is correct.
 class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
-    """Augment tools/list responses with cacheScope + ttlMs per MCP 2026-07-28 SEP-2549.
+    """Augment cacheable MCP results with cacheScope + ttlMs per SEP-2549.
 
     Federation consistency. cacheScope=private (per-host), ttlMs=300000 (5 min).
+    Applies to tools/list, resources/list, resources/templates/list,
+    prompts/list and resources/read — every SDK-cacheable result, not just
+    tools/list (the 2026-10-07 version covered only tools/list).
     """
 
     async def dispatch(self, request: Request, call_next):
@@ -3065,7 +3076,18 @@ class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
         except Exception:
             return await call_next(request)
 
-        if req_data.get("method") != "tools/list":
+        # SEP-2549 applies to EVERY SDK-cacheable result, not just tools/list.
+        # Measured 2026-11-27: strict mcp-types clients rejected resources/list
+        # with "cacheScope/ttlMs Field required" because only tools/list was
+        # augmented here. resources/read is included for the same reason.
+        _cacheable_methods = {
+            "tools/list",
+            "resources/list",
+            "resources/templates/list",
+            "prompts/list",
+            "resources/read",
+        }
+        if req_data.get("method") not in _cacheable_methods:
             return await call_next(request)
 
         # Replay the body for downstream (BaseHTTPMiddleware consumed it)
@@ -3075,6 +3097,14 @@ class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
         request._receive = replay_receive
 
         response = await call_next(request)
+
+        # Only JSON-RPC JSON bodies can be rewritten. SSE responses must pass
+        # through untouched: the old code consumed body_iterator for every
+        # response, so an SSE read_resource returned an empty stream and the
+        # client lost its session (measured 2026-11-27: "missing Mcp-Session-Id
+        # header" on the next request).
+        if "application/json" not in response.headers.get("content-type", ""):
+            return response
 
         # Read + augment response body
         try:
@@ -3088,7 +3118,12 @@ class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
         try:
             data = json.loads(full_body)
             result = data.get("result")
-            if isinstance(result, dict) and "tools" in result and "cacheScope" not in result:
+            _cacheable_keys = ("tools", "resources", "resourceTemplates", "prompts", "contents")
+            if (
+                isinstance(result, dict)
+                and any(k in result for k in _cacheable_keys)
+                and "cacheScope" not in result
+            ):
                 result["cacheScope"] = "private"
                 result["ttlMs"] = 300000
                 result["resultType"] = "complete"
@@ -3124,7 +3159,10 @@ class _CacheableListResponseMiddleware(BaseHTTPMiddleware):
                 for k, v in response.headers.items():
                     if k.lower() not in ("content-length", "content-type"):
                         new_resp.headers[k] = v
-                logger.debug("CACHEABLE_LIST: augmented tools/list with cacheScope=private ttlMs=300000")
+                logger.debug(
+                    "CACHEABLE_LIST: augmented %s with cacheScope=private ttlMs=300000",
+                    req_data.get("method"),
+                )
                 return new_resp
         except Exception as e:
             logger.debug("CACHEABLE_LIST: response augmentation skipped: %s", e)

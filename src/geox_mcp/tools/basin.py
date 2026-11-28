@@ -427,6 +427,7 @@ async def geox_basin_profile(
         "play_fairway",
         "risk",
         "contradiction_scan",
+        "macrostrat_point",
         "macrostrat_units",
         "macrostrat_columns",
         "macrostrat_lithologies",
@@ -443,6 +444,7 @@ async def geox_basin_profile(
     actor_id: str | None = None,
     lat: float | None = None,
     lng: float | None = None,
+    z: int = 8,
 ) -> dict:
     """Retrieve basin-level intelligence, regional geology, petroleum system details, or stratigraphic frameworks.
 
@@ -804,7 +806,27 @@ async def geox_basin_profile(
                         actor_id=actor_id,
                     )
 
-                if mode == "macrostrat_units":
+                if mode == "macrostrat_point":
+                    # GAP #1 (2026-11-27): single-call point click. One upstream
+                    # request replaces units + geologic_units/map, and carries
+                    # elevation / regions / hasColumns / refs that the fan-out
+                    # dropped. /version is fetched UNCACHED so the receipt's
+                    # commit is the build that actually answered.
+                    raw = await client.get_mobile_point(lat=lat, lng=lng, z=z)
+                    point = client.summarize_mobile_point(raw)
+                    mode_data = {
+                        **point,
+                        "coords": {"lat": lat, "lng": lng, "z": int(z)},
+                        "upstream_api": await client.get_api_version(use_cache=False, timeout=3.0),
+                        "source": "macrostrat.org/api/v2/mobile/map_query_v2",
+                        "license": "CC-BY-4.0",
+                        "attribution": client.attribution_markdown(),
+                    }
+                    if isinstance(raw, dict) and raw.get("error"):
+                        mode_data["upstream_error"] = raw["error"]
+                    evidence_loaded.append("macrostrat.org/api/v2/mobile/map_query_v2")
+
+                elif mode == "macrostrat_units":
                     raw = await client.get_units(lat=lat, lng=lng, radius_km=100)
                     items = client.get_units_summary(raw)
                     # F2 TRUTH: name the coverage class beside the count. A bare

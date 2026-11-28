@@ -139,6 +139,7 @@ async def geox_basin(
     macrostrat_mode: str = "macrostrat_units",
     lat: float | None = None,
     lng: float | None = None,
+    z: int = 8,
     age_ma: float | None = None,
     age_top_ma: float | None = None,
     age_bot_ma: float | None = None,
@@ -256,6 +257,7 @@ async def geox_basin(
             include_missing_evidence=kwargs.get("include_missing_evidence", True),
             lat=kwargs.get("lat"),
             lng=kwargs.get("lng"),
+            z=kwargs.get("z", 8),
         )
 
     if mode == "deep_time":

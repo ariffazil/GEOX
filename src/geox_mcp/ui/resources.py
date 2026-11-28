@@ -180,8 +180,14 @@ def register_project_state_resource(mcp: FastMCP) -> None:
 
 
 def register_all_ui_resources(mcp: FastMCP) -> None:
-    """Register every GEOX UI resource — workspace + GravMag Studio + URI aliases + GeoProjectState."""
+    """Register every GEOX UI resource — workspace + GravMag Studio + URI aliases + GeoProjectState + A2UI."""
     register_workspace_resource(mcp)
     register_gravmag_studio_resource(mcp)
     register_alias_resources(mcp)
     register_project_state_resource(mcp)
+
+    # A2UI v1.0 over MCP (a2ui:// layouts). Separate surface from ui:// MCP Apps:
+    # an A2UI renderer mounts these natively; it never executes the HTML widget.
+    from geox_mcp.ui.a2ui import register_a2ui_resources
+
+    register_a2ui_resources(mcp)

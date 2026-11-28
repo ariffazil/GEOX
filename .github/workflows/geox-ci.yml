@@ -13,6 +13,9 @@ on:
   pull_request:
     branches: [main, "feat/**"]
   workflow_dispatch:
+  schedule:
+    # Nightly epistemic gate (off-minute so it does not collide with fleet jobs)
+    - cron: "43 2 * * *"
 
 permissions:
   contents: read
@@ -152,6 +155,38 @@ jobs:
           else
             echo "✅ No adjudication patterns in GEOX source"
           fi
+
+  epistemic-live:
+    name: "Epistemic Live Gate (Brunei / Denver)"
+    # Network + deployed-surface gate. Nightly and on demand only: a Macrostrat
+    # outage must not masquerade as a GEOX regression on every PR.
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install
+        run: pip install -e ".[dev]" 2>/dev/null || pip install -e .
+      - name: Upstream coverage truth (Brunei none / Denver unit_polygon)
+        run: |
+          set -o pipefail
+          PYTHONPATH=src python -m pytest -q --tb=short \
+            -o cache_dir=/tmp/.pytest_cache \
+            tests/integration/test_macrostrat_point_epistemic_gate.py \
+            -m integration -k "upstream"
+      - name: GEOX end-to-end (deployed MCP surface)
+        env:
+          GEOX_LIVE_MCP: "1"
+          GEOX_MCP_URL: "https://geox.arif-fazil.com/mcp/"
+        run: |
+          set -o pipefail
+          PYTHONPATH=src python -m pytest -q --tb=short \
+            -o cache_dir=/tmp/.pytest_cache \
+            tests/integration/test_macrostrat_point_epistemic_gate.py \
+            -m integration -k "geox"
 
   report:
     if: (always()) && (github.actor != 'dependabot[bot]' && github.actor != 
